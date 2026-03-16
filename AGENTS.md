@@ -63,3 +63,5 @@ Pull requests should include:
 
 ## Security & Architecture Notes
 Do not commit secrets, tokens, or private download URLs. Preserve Spring Modulith boundaries: no cross-module internal imports, no circular dependencies, and no business logic in controllers or infrastructure adapters.
+
+Use [`architecture.md`](C:\github\tellpalv2\architecture.md) at the repository root as the canonical backend architecture reference. For backend design, planning, schema, module boundary, and implementation decisions, consult this document first and keep new work aligned with it.
