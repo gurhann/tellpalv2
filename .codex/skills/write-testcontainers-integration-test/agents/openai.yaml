@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Testcontainers Integration Test"
+  short_description: "Write Testcontainers integration tests"
+  default_prompt: "Use $write-testcontainers-integration-test to create a Spring Boot integration test with PostgreSQL Testcontainers and explain the tested behavior and database verification logic."

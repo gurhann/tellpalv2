@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spring Modulith Boundary Check"
+  short_description: "Check Spring Modulith boundaries"
+  default_prompt: "Use $spring-modulith-boundary-check to review module boundaries, list violations, explain why they matter, and suggest refactoring steps."

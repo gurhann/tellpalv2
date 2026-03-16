@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Decomposition"
+  short_description: "Break work into atomic tasks"
+  default_prompt: "Use $task-decomposition to break a large backend task into small implementation steps with dependencies, files, acceptance criteria, and verification."

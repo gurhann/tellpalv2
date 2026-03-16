@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write JPA Entity"
+  short_description: "Write DDD JPA entity classes"
+  default_prompt: "Use $write-jpa-entity to create a JPA entity for a Spring Modulith module and explain the aggregate design, mappings, relationships, and constraints."

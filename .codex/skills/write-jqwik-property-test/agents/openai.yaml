@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write jqwik Property Test"
+  short_description: "Write jqwik property tests"
+  default_prompt: "Use $write-jqwik-property-test to create a jqwik property-based test class and explain the invariant, generators, and edge cases covered."

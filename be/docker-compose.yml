@@ -1,0 +1,24 @@
+version: '3.8'
+
+# Development only - do not use these credentials in production
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tellpal-postgres
+    environment:
+      POSTGRES_DB: tellpal
+      POSTGRES_USER: tellpal
+      POSTGRES_PASSWORD: tellpal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tellpal -d tellpal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
