@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Spring Service"
+  short_description: "Write DDD Spring service classes"
+  default_prompt: "Use $write-spring-service to create a Spring service for a Modulith module and explain the business logic, transaction boundaries, and repository interactions."

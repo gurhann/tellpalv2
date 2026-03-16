@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Flyway Migration"
+  short_description: "Write PostgreSQL Flyway migrations"
+  default_prompt: "Use $write-flyway-migration to create a safe PostgreSQL 15 Flyway SQL migration and explain the schema decisions, constraints, and indexes."

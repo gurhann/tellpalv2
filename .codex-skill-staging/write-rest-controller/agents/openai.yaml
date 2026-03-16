@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write REST Controller"
+  short_description: "Write Spring REST controllers"
+  default_prompt: "Use $write-rest-controller to create a thin Spring REST controller with DTOs and explain the endpoint structure and request-response flow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Maven Tests"
+  short_description: "Run Maven tests and summarize failures"
+  default_prompt: "Use $run-maven-tests to run the Maven test suite, summarize failing tests or compilation errors, and suggest concise fix hints."
