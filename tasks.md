@@ -247,7 +247,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Dil baglamli contributor baglari ve siralama degerleri veritabaninda temsil edilir.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F04-T03` `TODO`
+- `F04-T03` `DONE`
   - Objective: Content aggregate, localization, story page ve contributor domain modelini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/domain/**`
   - Dependencies: `F04-T01`, `F04-T02`
