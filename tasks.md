@@ -650,7 +650,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Dil bazli curated ordering ve published category filtreleri sorgu katmaninda toplanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F12-T03` `TODO`
+- `F12-T03` `DONE`
   - Objective: Public content controller'larini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/mobile/**`
   - Dependencies: `F12-T01`
