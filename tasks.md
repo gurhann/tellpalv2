@@ -721,7 +721,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F14-T01` `TODO`
+- `F14-T01` `DONE`
   - Objective: Tum moduller icin boundary ve architecture testlerini sertlestirmek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/**/ApplicationModules*.java`
   - Dependencies: `F12-T05`
