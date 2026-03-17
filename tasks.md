@@ -293,7 +293,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `categories`, `category_localizations`, `category_contents` tablolari slug, status ve ordering kisitlariyla olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F05-T02` `TODO`
+- `F05-T02` `DONE`
   - Objective: Category domain modeli ve repository adaptorlari olusturmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/domain/**`, `be/src/main/java/com/tellpal/v2/category/infrastructure/persistence/**`
   - Dependencies: `F05-T01`
