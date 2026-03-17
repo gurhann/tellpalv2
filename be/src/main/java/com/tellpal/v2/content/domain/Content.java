@@ -5,6 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +34,7 @@ public class Content extends BaseJpaEntity {
     private boolean active;
 
     @Column(name = "age_range")
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     private Integer ageRange;
 
     @Column(name = "page_count")
