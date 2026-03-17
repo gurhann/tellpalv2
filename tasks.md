@@ -339,7 +339,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Request auth extraction, problem details/error mapping ve request logging ortaklasir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F06-T02` `TODO`
+- `F06-T02` `DONE`
   - Objective: Content admin endpoint'lerini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/admin/**`
   - Dependencies: `F06-T01`, `F04-T05`
