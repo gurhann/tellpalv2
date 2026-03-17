@@ -31,6 +31,14 @@ public final class AssetProcessingCommands {
         }
     }
 
+    public record RecoverExpiredAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+
+        public RecoverExpiredAssetProcessingCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            languageCode = requireLanguageCode(languageCode);
+        }
+    }
+
     public record CompleteAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
 
         public CompleteAssetProcessingCommand {

@@ -177,6 +177,17 @@ public class AssetProcessing extends BaseJpaEntity {
         this.failedAt = null;
     }
 
+    public void recoverExpiredLease(Instant nextAttemptAt, String errorCode, String errorMessage) {
+        requireStatus(AssetProcessingStatus.PROCESSING);
+        this.status = AssetProcessingStatus.PENDING;
+        this.nextAttemptAt = requireInstant(nextAttemptAt, "Next attempt time must not be null");
+        this.leaseExpiresAt = null;
+        this.completedAt = null;
+        this.failedAt = null;
+        this.lastErrorCode = normalizeOptionalText(errorCode);
+        this.lastErrorMessage = normalizeOptionalText(errorMessage);
+    }
+
     private void clearFailureDetails() {
         lastErrorCode = null;
         lastErrorMessage = null;

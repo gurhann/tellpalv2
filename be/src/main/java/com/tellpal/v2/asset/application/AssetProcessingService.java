@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand;
+import com.tellpal.v2.asset.api.AssetProcessingCommands.RecoverExpiredAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
@@ -81,6 +82,19 @@ public class AssetProcessingService implements AssetProcessingApi {
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
         assetProcessing.retry(Instant.now(clock));
+        AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
+        publishStatusChanged(saved);
+        return AssetProcessingMapper.toRecord(saved);
+    }
+
+    @Override
+    @Transactional
+    public AssetProcessingRecord recoverExpiredLease(RecoverExpiredAssetProcessingCommand command) {
+        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        assetProcessing.recoverExpiredLease(
+                Instant.now(clock),
+                "LEASE_EXPIRED",
+                "Processing lease expired before completion");
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
         return AssetProcessingMapper.toRecord(saved);

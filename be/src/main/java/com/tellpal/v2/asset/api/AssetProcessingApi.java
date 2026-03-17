@@ -11,6 +11,8 @@ public interface AssetProcessingApi {
 
     AssetProcessingRecord retry(AssetProcessingCommands.RetryAssetProcessingCommand command);
 
+    AssetProcessingRecord recoverExpiredLease(AssetProcessingCommands.RecoverExpiredAssetProcessingCommand command);
+
     AssetProcessingRecord complete(AssetProcessingCommands.CompleteAssetProcessingCommand command);
 
     AssetProcessingRecord fail(AssetProcessingCommands.FailAssetProcessingCommand command);

@@ -31,6 +31,12 @@ server:
   shutdown: graceful
 
 tellpal:
+  asset:
+    processing:
+      poller:
+        enabled: ${TELLPAL_ASSET_PROCESSING_POLLER_ENABLED:true}
+        fixed-delay-ms: ${TELLPAL_ASSET_PROCESSING_POLLER_DELAY_MS:5000}
+        batch-size: ${TELLPAL_ASSET_PROCESSING_POLLER_BATCH_SIZE:10}
   security:
     admin:
       jwt-issuer: ${TELLPAL_ADMIN_JWT_ISSUER:tellpal-v2-admin}

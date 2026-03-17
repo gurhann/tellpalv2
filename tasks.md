@@ -597,7 +597,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Manual start, retry, completion/failure ve content'e readiness bildirimi service katmaninda yonetilir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F11-T04` `TODO`
+- `F11-T04` `DONE`
   - Objective: Worker/poller altyapisini ve storage path builder'ini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/infrastructure/processing/**`, `be/src/main/java/com/tellpal/v2/asset/infrastructure/storage/**`
   - Dependencies: `F11-T03`
