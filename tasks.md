@@ -438,7 +438,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `firebase_uid` unique kisiti ve tek primary profile icin partial unique index olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F08-T02` `TODO`
+- `F08-T02` `DONE`
   - Objective: AppUser aggregate'i, UserProfile child entity'si ve persistence katmanini olusturmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/user/domain/**`, `be/src/main/java/com/tellpal/v2/user/infrastructure/persistence/**`
   - Dependencies: `F08-T01`
