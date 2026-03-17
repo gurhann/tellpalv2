@@ -689,7 +689,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Hangi input dosyalarinin nasil okunacagi ve dry-run davranisinin ne oldugu yazili hale gelir.
   - Verify: Dokuman ve komut sinifi derlenir
 
-- `F13-T02` `TODO`
+- `F13-T02` `DONE`
   - Objective: Legacy user/profile import service'ini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/user/infrastructure/firebase/migration/**`, `be/src/main/java/com/tellpal/v2/user/application/**`
   - Dependencies: `F13-T01`
