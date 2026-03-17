@@ -749,7 +749,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Test, verify, Flyway, Modulith docs ve packaging adimlari otomasyona baglanir.
   - Verify: `cd be && ./mvnw verify`
 
-- `F14-T05` `TODO`
+- `F14-T05` `DONE`
   - Objective: Local runbook, sample bootstrap verisi ve operasyon notlarini yazmak.
   - Files/modules: `be/docs/local-development.md`, `be/docs/release-checklist.md`, `be/docs/bootstrap-notes.md`
   - Dependencies: `F14-T04`
