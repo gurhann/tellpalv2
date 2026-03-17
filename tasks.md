@@ -452,9 +452,9 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Firebase token'dan app user bulma/yaratma ve default profile olusturma akisi service seviyesinde calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F08-T04` `TODO`
+- `F08-T04` `DONE`
   - Objective: Mobile profile endpoint'lerini eklemek.
-  - Files/modules: `be/src/main/java/com/tellpal/v2/user/web/public/**`
+  - Files/modules: `be/src/main/java/com/tellpal/v2/user/web/mobile/**`
   - Dependencies: `F08-T03`
   - Done when: Profil okuma ve guncelleme endpoint'leri Firebase auth baglami ile calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
@@ -500,7 +500,7 @@ Bir feature ancak su durumda kapanabilir:
 
 - `F09-T04` `TODO`
   - Objective: Mobile event ingest endpoint'lerini expose etmek.
-  - Files/modules: `be/src/main/java/com/tellpal/v2/event/web/public/**`
+  - Files/modules: `be/src/main/java/com/tellpal/v2/event/web/mobile/**`
   - Dependencies: `F09-T03`
   - Done when: Content/app event ve batch endpoint'leri Firebase auth ile korunur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
@@ -652,21 +652,21 @@ Bir feature ancak su durumda kapanabilir:
 
 - `F12-T03` `TODO`
   - Objective: Public content controller'larini expose etmek.
-  - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/public/**`
+  - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/mobile/**`
   - Dependencies: `F12-T01`
   - Done when: `/api/contents` liste ve detay endpoint'leri isFree, package refs ve optimized cover refs ile cevap verir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
 - `F12-T04` `TODO`
   - Objective: Public category controller'larini expose etmek.
-  - Files/modules: `be/src/main/java/com/tellpal/v2/category/web/public/**`
+  - Files/modules: `be/src/main/java/com/tellpal/v2/category/web/mobile/**`
   - Dependencies: `F12-T02`
   - Done when: `/api/categories` ve kategori bazli content listeleme endpoint'leri curation sirasini korur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
 - `F12-T05` `TODO`
   - Objective: Public delivery integration testlerini eklemek.
-  - Files/modules: `be/src/test/java/com/tellpal/v2/**/web/public/**`
+  - Files/modules: `be/src/test/java/com/tellpal/v2/**/web/mobile/**`
   - Dependencies: `F12-T03`, `F12-T04`
   - Done when: Language filtering, completed-only visibility ve default freeKey fallback HTTP seviyesinde test edilir.
   - Verify: `cd be && ./mvnw -q -Dtest=*Public* test`

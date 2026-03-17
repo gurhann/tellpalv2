@@ -136,7 +136,7 @@ Her modül mümkün olduğunca şu iç yapıyı izler:
 `web/` altındaki adapter'lar kullanım amacına göre ayrılır:
 
 - `web/admin`
-- `web/public`
+- `web/mobile`
 - `web/webhook`
 
 ## 7. Modül Sınırları ve Sorumluluklar
