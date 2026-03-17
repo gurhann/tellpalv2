@@ -68,4 +68,28 @@ public final class ContentApplicationExceptions {
             super("Contributor not found: " + contributorId);
         }
     }
+
+    public static final class ContentFreeAccessAlreadyExistsException extends RuntimeException {
+
+        public ContentFreeAccessAlreadyExistsException(String accessKey, Long contentId, LanguageCode languageCode) {
+            super("Content free-access entry already exists for key "
+                    + accessKey
+                    + ", content "
+                    + contentId
+                    + " and language "
+                    + languageCode.value());
+        }
+    }
+
+    public static final class ContentFreeAccessNotFoundException extends RuntimeException {
+
+        public ContentFreeAccessNotFoundException(String accessKey, Long contentId, LanguageCode languageCode) {
+            super("Content free-access entry not found for key "
+                    + accessKey
+                    + ", content "
+                    + contentId
+                    + " and language "
+                    + languageCode.value());
+        }
+    }
 }

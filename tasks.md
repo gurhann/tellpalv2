@@ -399,7 +399,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Localization publish/archive gecis kurallari merkezi policy ile yurutulur.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F07-T03` `TODO`
+- `F07-T03` `DONE`
   - Objective: Free-access application service ve query kurallarini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/application/**`, `be/src/main/java/com/tellpal/v2/content/api/**`
   - Dependencies: `F07-T01`, `F04-T05`
