@@ -134,7 +134,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F02-T01` `TODO`
+- `F02-T01` `DONE`
   - Objective: Admin schema migration'larini olusturmak.
   - Files/modules: `be/src/main/resources/db/migration/V3__create_admin_tables.sql`
   - Dependencies: `F01-T04`
