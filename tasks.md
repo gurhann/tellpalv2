@@ -240,7 +240,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Content tipi, external key, age range, localization status ve story page kisitlari semada olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F04-T02` `TODO`
+- `F04-T02` `DONE`
   - Objective: `contributors` ve `content_contributors` migration'larini eklemek.
   - Files/modules: `be/src/main/resources/db/migration/V6__create_contributor_tables.sql`
   - Dependencies: `F04-T01`
