@@ -201,7 +201,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Asset sahipligi `asset` modulunde kalir ve `shared` icine entity tasinmaz.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F03-T03` `TODO`
+- `F03-T03` `DONE`
   - Objective: Diger moduller icin `asset.api` contract'larini ve storage abstraction'ini tanimlamak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/api/**`, `be/src/main/java/com/tellpal/v2/asset/infrastructure/storage/**`
   - Dependencies: `F03-T02`

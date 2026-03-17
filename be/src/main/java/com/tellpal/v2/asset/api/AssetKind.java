@@ -1,0 +1,15 @@
+package com.tellpal.v2.asset.api;
+
+public enum AssetKind {
+
+    ORIGINAL_IMAGE,
+    ORIGINAL_AUDIO,
+    THUMBNAIL_PHONE,
+    THUMBNAIL_TABLET,
+    DETAIL_PHONE,
+    DETAIL_TABLET,
+    OPTIMIZED_AUDIO,
+    CONTENT_ZIP,
+    CONTENT_ZIP_PART1,
+    CONTENT_ZIP_PART2
+}
