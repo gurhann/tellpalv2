@@ -1,0 +1,47 @@
+[
+  {
+    "firebaseUid": "firebase-user-1",
+    "legacyEventKey": "firebase-content-1",
+    "contentExternalKey": "moonlight-story",
+    "languageCode": "tr",
+    "firebaseEventType": "START_CONTENT",
+    "occurredAt": "2026-03-17T08:15:00Z",
+    "sessionId": "11111111-1111-1111-1111-111111111111",
+    "leftPage": null,
+    "engagementSeconds": 12,
+    "metadata": {
+      "source": "firebase-export",
+      "device": "ios"
+    }
+  },
+  {
+    "firebaseUid": "firebase-user-1",
+    "legacyEventKey": "firebase-content-2",
+    "contentExternalKey": "moonlight-story",
+    "languageCode": "tr",
+    "firebaseEventType": "LEFT_CONTENT",
+    "occurredAt": "2026-03-17T08:17:00Z",
+    "sessionId": "11111111-1111-1111-1111-111111111111",
+    "leftPage": 4,
+    "engagementSeconds": 67,
+    "metadata": {
+      "source": "firebase-export",
+      "device": "ios"
+    }
+  },
+  {
+    "firebaseUid": "firebase-user-2",
+    "legacyEventKey": "firebase-content-3",
+    "contentExternalKey": "forest-meditation",
+    "languageCode": "en",
+    "firebaseEventType": "FINISH_CONTENT",
+    "occurredAt": "2026-03-17T09:00:00Z",
+    "sessionId": "22222222-2222-2222-2222-222222222222",
+    "leftPage": null,
+    "engagementSeconds": 480,
+    "metadata": {
+      "source": "firebase-export",
+      "device": "android"
+    }
+  }
+]

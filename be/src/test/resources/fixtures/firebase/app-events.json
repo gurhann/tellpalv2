@@ -1,0 +1,35 @@
+[
+  {
+    "firebaseUid": "firebase-user-1",
+    "legacyEventKey": "firebase-app-1",
+    "eventType": "APP_OPENED",
+    "contentExternalKey": null,
+    "occurredAt": "2026-03-17T08:20:00Z",
+    "payload": {
+      "source": "firebase-export",
+      "platform": "ios"
+    }
+  },
+  {
+    "firebaseUid": "firebase-user-1",
+    "legacyEventKey": "firebase-app-2",
+    "eventType": "LOCKED_CONTENT_CLICKED",
+    "contentExternalKey": "moonlight-story",
+    "occurredAt": "2026-03-17T08:21:00Z",
+    "payload": {
+      "source": "firebase-export",
+      "platform": "ios"
+    }
+  },
+  {
+    "firebaseUid": "firebase-user-2",
+    "legacyEventKey": "firebase-app-3",
+    "eventType": "PAYWALL_SHOWN",
+    "contentExternalKey": null,
+    "occurredAt": "2026-03-17T09:05:00Z",
+    "payload": {
+      "source": "firebase-export",
+      "platform": "android"
+    }
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "firebaseUid": "firebase-user-1",
+    "allowMarketing": true,
+    "defaultProfile": {
+      "displayName": "Ada",
+      "ageRange": "3-5",
+      "avatarMediaId": null,
+      "favoriteGenres": ["sleep", "animals"],
+      "mainPurposes": ["bedtime"]
+    }
+  },
+  {
+    "firebaseUid": "firebase-user-2",
+    "allowMarketing": false,
+    "defaultProfile": {
+      "displayName": "Sam",
+      "ageRange": "6-8",
+      "avatarMediaId": null,
+      "favoriteGenres": ["calm", "nature"],
+      "mainPurposes": ["focus"]
+    }
+  }
+]

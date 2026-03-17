@@ -48,7 +48,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `DONE` |
 | `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `DONE` |
 | `F12` | Public content/category delivery API'leri | content, category, asset.api | `F05`, `F07`, `F11` | `DONE` |
-| `F13` | Firebase legacy migration ve import akislari | user, event | `F08`, `F09` | `TODO` |
+| `F13` | Firebase legacy migration ve import akislari | user, event | `F08`, `F09` | `DONE` |
 | `F14` | Hardening, modulith boundary sertlestirme ve release readiness | tum moduller | `F02`-`F13` | `TODO` |
 
 ## Global Exit Criteria
@@ -703,7 +703,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `legacy_event_key` unique kurali korunarak event import edilebilir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F13-T04` `TODO`
+- `F13-T04` `DONE`
   - Objective: Firebase migration integration testlerini fixture verisi ile eklemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/**/migration/**`, `be/src/test/resources/fixtures/firebase/**`
   - Dependencies: `F13-T02`, `F13-T03`

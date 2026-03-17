@@ -2,6 +2,9 @@ package com.tellpal.v2.shared.domain;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum LanguageCode {
     TR("tr"),
     EN("en"),
@@ -15,10 +18,12 @@ public enum LanguageCode {
         this.value = value;
     }
 
+    @JsonValue
     public String value() {
         return value;
     }
 
+    @JsonCreator
     public static LanguageCode from(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Language code must not be blank");
