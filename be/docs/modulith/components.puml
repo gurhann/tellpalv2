@@ -29,23 +29,23 @@ System_Boundary("TellPalApplication_boundary", "TellPalApplication", $tags="") {
 
 }
 
-Rel(TellPalApplication.TellPalApplication.Admin, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Asset, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.User, TellPalApplication.TellPalApplication.Shared, "depends on", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.User, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "listens to", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.Shared, "depends on", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.Content, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.User, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Purchase, TellPalApplication.TellPalApplication.Shared, "depends on", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Purchase, TellPalApplication.TellPalApplication.Event, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Purchase, TellPalApplication.TellPalApplication.User, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Purchase, TellPalApplication.TellPalApplication.Content, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.Shared, "depends on", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.Content, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Event, TellPalApplication.TellPalApplication.User, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Asset, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.User, TellPalApplication.TellPalApplication.Shared, "depends on", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.User, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Admin, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Category, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Category, TellPalApplication.TellPalApplication.Content, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Category, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "listens to", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
-Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 hide stereotypes

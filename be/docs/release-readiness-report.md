@@ -2,7 +2,8 @@
 
 ## Scope
 
-This report records the backend release-readiness result at the end of `F14`.
+This report records the current backend release-readiness result after `F14`
+and the follow-up test-agent hardening step.
 
 Execution date: `2026-03-17`
 
@@ -15,15 +16,16 @@ Execution date: `2026-03-17`
 
 - `./mvnw test`
   - result: `BUILD SUCCESS`
-  - finished at: `2026-03-17T20:36:41+03:00`
+  - finished at: `2026-03-17T21:45:34+03:00`
   - suite summary: `Tests run: 124, Failures: 0, Errors: 0, Skipped: 0`
 - `./mvnw verify`
   - result: `BUILD SUCCESS`
-  - finished at: `2026-03-17T20:39:04+03:00`
+  - finished at: `2026-03-17T21:48:03+03:00`
   - surefire summary: `Tests run: 124, Failures: 0, Errors: 0, Skipped: 0`
   - failsafe summary: `ApplicationModulesDocumentationIT` passed
   - packaging: repackaged Boot jar created under `be/target/`
   - docs generation: Modulith docs regenerated under `be/docs/modulith/`
+  - runtime note: Mockito/ByteBuddy dynamic-agent warnings no longer appear
 
 ## Quality Gates Covered
 
@@ -53,8 +55,9 @@ Execution date: `2026-03-17`
 
 ## Known Non-Blocking Notes
 
-- JDK 25 still emits Mockito/ByteBuddy dynamic-agent warnings.
-- Those warnings did not fail `test` or `verify`.
+- The remaining JVM note is the CDS sharing warning emitted after the explicit
+  test javaagent is attached.
+- That warning did not fail `test` or `verify`.
 
 ## Remaining Watch Items
 

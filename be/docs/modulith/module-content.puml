@@ -24,10 +24,10 @@ System_Boundary("TellPalApplication_boundary", "TellPalApplication", $tags="") {
 
 }
 
-Rel(TellPalApplication.TellPalApplication.Asset, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "listens to", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Asset, "uses", $techn="", $tags="", $link="")
 Rel(TellPalApplication.TellPalApplication.Content, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
+Rel(TellPalApplication.TellPalApplication.Asset, TellPalApplication.TellPalApplication.Shared, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 hide stereotypes
