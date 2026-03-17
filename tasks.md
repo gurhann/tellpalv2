@@ -37,7 +37,7 @@ Bu backlog su kaynaklarla hizalidir:
 | Feature | Hedef Cikti | Ana Moduller | Bagimliliklar | Durum |
 |---|---|---|---|---|
 | `F01` | Maven wrapper ile calisan backend iskeleti, temel config, Flyway baslangici ve test tabani | platform, shared | Yok | `DONE` |
-| `F02` | Admin identity, rol modeli, JWT auth ve refresh token rotasyonu | admin, shared | `F01` | `TODO` |
+| `F02` | Admin identity, rol modeli, JWT auth ve refresh token rotasyonu | admin, shared | `F01` | `DONE` |
 | `F03` | Asset registry, storage abstraction ve media metadata sahipligi | asset, shared | `F01` | `TODO` |
 | `F04` | Content write model, localizations, story pages ve contributor baglari | content, shared, asset.api | `F01`, `F03` | `TODO` |
 | `F05` | Category write model ve dil bazli curation | category, content.api, asset.api | `F01`, `F03`, `F04` | `TODO` |
@@ -169,7 +169,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `/api/admin/auth/login`, `/refresh`, `/logout` endpoint'leri ince controller olarak calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F02-T06` `TODO`
+- `F02-T06` `DONE`
   - Objective: Admin auth integration ve property testlerini eklemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/admin/**`
   - Dependencies: `F02-T05`
