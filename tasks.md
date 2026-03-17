@@ -208,7 +208,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Asset query/register contract'lari ve Firebase/local stub adapter yuzleri olusur.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F03-T04` `TODO`
+- `F03-T04` `DONE`
   - Objective: Asset register/update/query application service'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/application/**`
   - Dependencies: `F03-T02`, `F03-T03`

@@ -6,7 +6,7 @@ create table media_assets (
     kind varchar(50) not null,
     mime_type varchar(255) null,
     byte_size bigint null,
-    checksum_sha256 char(64) null,
+    checksum_sha256 varchar(64) null,
     cached_download_url text null,
     download_url_cached_at timestamptz null,
     download_url_expires_at timestamptz null,
