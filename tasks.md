@@ -445,7 +445,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Kullanici ve profil sahipligi `user` modulunde netlesir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F08-T03` `TODO`
+- `F08-T03` `DONE`
   - Objective: Firebase token verify abstraction ve user resolution service'ini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/user/infrastructure/firebase/**`, `be/src/main/java/com/tellpal/v2/user/application/**`, `be/src/main/java/com/tellpal/v2/user/api/**`
   - Dependencies: `F08-T02`

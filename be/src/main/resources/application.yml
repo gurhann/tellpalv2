@@ -38,3 +38,8 @@ tellpal:
       access-token-ttl: ${TELLPAL_ADMIN_ACCESS_TOKEN_TTL:PT1H}
       refresh-token-ttl: ${TELLPAL_ADMIN_REFRESH_TOKEN_TTL:P30D}
       bcrypt-strength: ${TELLPAL_ADMIN_BCRYPT_STRENGTH:10}
+    firebase:
+      stub-tokens-enabled: ${TELLPAL_FIREBASE_STUB_TOKENS_ENABLED:false}
+      project-id: ${TELLPAL_FIREBASE_PROJECT_ID:}
+      credentials-path: ${TELLPAL_FIREBASE_CREDENTIALS_PATH:}
+      check-revoked: ${TELLPAL_FIREBASE_CHECK_REVOKED:false}

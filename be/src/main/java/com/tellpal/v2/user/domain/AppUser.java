@@ -65,6 +65,15 @@ public class AppUser extends BaseJpaEntity {
                 .findFirst();
     }
 
+    public UserProfile ensurePrimaryProfile() {
+        return primaryProfile()
+                .orElseGet(() -> {
+                    UserProfile profile = UserProfile.createDefaultPrimary(this);
+                    profiles.add(profile);
+                    return profile;
+                });
+    }
+
     public void updateMarketingConsent(boolean allowMarketing) {
         this.allowMarketing = allowMarketing;
     }

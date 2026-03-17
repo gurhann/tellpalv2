@@ -11,3 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+tellpal:
+  security:
+    firebase:
+      stub-tokens-enabled: true
