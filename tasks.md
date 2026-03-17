@@ -187,7 +187,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F03-T01` `TODO`
+- `F03-T01` `DONE`
   - Objective: `media_assets` tablosunu olusturan migration'i yazmak.
   - Files/modules: `be/src/main/resources/db/migration/V4__create_media_assets_table.sql`
   - Dependencies: `F01-T04`
