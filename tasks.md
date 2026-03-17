@@ -431,7 +431,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F08-T01` `TODO`
+- `F08-T01` `DONE`
   - Objective: `app_users` ve `user_profiles` migration'larini yazmak.
   - Files/modules: `be/src/main/resources/db/migration/V9__create_user_tables.sql`
   - Dependencies: `F01-T04`
