@@ -7,6 +7,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtException;
 
 class AdminJwtServiceTest {
 
-    private static final Instant FIXED_NOW = Instant.parse("2026-03-17T09:15:00Z");
+    private static final Instant FIXED_NOW = Instant.now().plus(Duration.ofMinutes(5)).truncatedTo(ChronoUnit.SECONDS);
     private static final AdminSecurityProperties PROPERTIES = new AdminSecurityProperties(
             "tellpal-v2-admin",
             "change-me-change-me-change-me-32-bytes",
