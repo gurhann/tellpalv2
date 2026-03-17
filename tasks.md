@@ -636,7 +636,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F12-T01` `TODO`
+- `F12-T01` `DONE`
   - Objective: Public content query modelini ve service katmanini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/application/query/**`, `be/src/main/java/com/tellpal/v2/content/api/**`
   - Dependencies: `F07-T03`, `F11-T03`
