@@ -523,7 +523,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F10-T01` `TODO`
+- `F10-T01` `DONE`
   - Objective: Purchase lookup tablolarini, product catalog'u ve purchase event semasini olusturmak.
   - Files/modules: `be/src/main/resources/db/migration/V11__create_purchase_tables.sql`
   - Dependencies: `F09-T01`
