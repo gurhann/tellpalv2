@@ -254,7 +254,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `STORY` ve story-disindaki tipler icin kurallar domain icinde ifade edilir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F04-T04` `TODO`
+- `F04-T04` `DONE`
   - Objective: Content repository adaptorleri ile `content.api` contract'larini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/infrastructure/persistence/**`, `be/src/main/java/com/tellpal/v2/content/api/**`
   - Dependencies: `F04-T03`
