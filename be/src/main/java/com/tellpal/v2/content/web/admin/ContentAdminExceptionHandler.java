@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetMediaTypeMismatchException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetReferenceNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessAlreadyExistsException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLocalizationAlreadyExistsException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLocalizationNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
@@ -17,7 +19,11 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPage
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
-@RestControllerAdvice(basePackageClasses = {ContentAdminController.class, StoryPageAdminController.class})
+@RestControllerAdvice(basePackageClasses = {
+        ContentAdminController.class,
+        StoryPageAdminController.class,
+        FreeAccessAdminController.class
+})
 public class ContentAdminExceptionHandler {
 
     private final AdminProblemDetailsFactory problemDetailsFactory;
@@ -89,6 +95,30 @@ public class ContentAdminExceptionHandler {
                 "Contributor not found",
                 exception.getMessage(),
                 "contributor_not_found",
+                request);
+    }
+
+    @ExceptionHandler(ContentFreeAccessAlreadyExistsException.class)
+    ProblemDetail handleContentFreeAccessAlreadyExists(
+            ContentFreeAccessAlreadyExistsException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Content free access already exists",
+                exception.getMessage(),
+                "content_free_access_exists",
+                request);
+    }
+
+    @ExceptionHandler(ContentFreeAccessNotFoundException.class)
+    ProblemDetail handleContentFreeAccessNotFound(
+            ContentFreeAccessNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Content free access not found",
+                exception.getMessage(),
+                "content_free_access_not_found",
                 request);
     }
 

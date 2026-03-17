@@ -1,7 +1,5 @@
 package com.tellpal.v2.admin.infrastructure.security;
 
-import java.time.Clock;
-
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +25,6 @@ import com.tellpal.v2.shared.web.admin.AdminRequestLoggingFilter;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(AdminSecurityProperties.class)
 public class AdminSecurityConfiguration {
-
-    @Bean
-    Clock adminSecurityClock() {
-        return Clock.systemUTC();
-    }
 
     @Bean
     PasswordEncoder adminPasswordEncoder(AdminSecurityProperties properties) {

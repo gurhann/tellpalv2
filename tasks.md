@@ -406,7 +406,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `default` key, explicit `freeKey` ve unknown-key fallback mantigi service seviyesinde calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F07-T04` `TODO`
+- `F07-T04` `DONE`
   - Objective: Free-access ve publication admin endpoint'lerini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/admin/**`
   - Dependencies: `F07-T02`, `F07-T03`, `F06-T01`

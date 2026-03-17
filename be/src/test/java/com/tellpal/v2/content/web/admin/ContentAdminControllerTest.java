@@ -1,6 +1,8 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Instant;
+import java.time.Clock;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNo
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
 import com.tellpal.v2.content.application.ContentManagementService;
+import com.tellpal.v2.content.application.ContentPublicationService;
 import com.tellpal.v2.content.application.StoryPageManagementService;
 import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
@@ -46,6 +50,12 @@ class ContentAdminControllerTest {
 
     @MockitoBean
     private StoryPageManagementService storyPageManagementService;
+
+    @MockitoBean
+    private ContentPublicationService contentPublicationService;
+
+    @MockitoBean
+    private Clock clock;
 
     @MockitoBean
     private AdminAuthenticationFacade adminAuthenticationFacade;
@@ -198,5 +208,84 @@ class ContentAdminControllerTest {
                 .andExpect(jsonPath("$.languageCode").value("en"))
                 .andExpect(jsonPath("$.processingStatus").value("COMPLETED"))
                 .andExpect(jsonPath("$.visibleToMobile").value(true));
+    }
+
+    @Test
+    void publishLocalizationReturnsUpdatedLocalization() throws Exception {
+        when(contentPublicationService.publishLocalization(any())).thenReturn(new ContentLocalizationRecord(
+                51L,
+                LanguageCode.TR,
+                "Ay Isigi",
+                "Gece masali",
+                null,
+                11L,
+                null,
+                8,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                Instant.parse("2026-03-17T09:00:00Z"),
+                false));
+
+        mockMvc.perform(post("/api/admin/contents/51/localizations/tr/publish")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.languageCode").value("tr"))
+                .andExpect(jsonPath("$.status").value("PUBLISHED"))
+                .andExpect(jsonPath("$.publishedAt").value("2026-03-17T09:00:00Z"));
+    }
+
+    @Test
+    void publishLocalizationWithoutBodyUsesClockInstant() throws Exception {
+        Instant publishedAt = Instant.parse("2026-03-17T10:15:00Z");
+        when(clock.instant()).thenReturn(publishedAt);
+        when(contentPublicationService.publishLocalization(any())).thenReturn(new ContentLocalizationRecord(
+                51L,
+                LanguageCode.TR,
+                "Ay Isigi",
+                "Gece masali",
+                null,
+                11L,
+                null,
+                8,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                publishedAt,
+                false));
+
+        mockMvc.perform(post("/api/admin/contents/51/localizations/tr/publish"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.publishedAt").value("2026-03-17T10:15:00Z"));
+
+        verify(contentPublicationService).publishLocalization(argThat(command ->
+                command.contentId().equals(51L)
+                        && command.languageCode() == LanguageCode.TR
+                        && command.publishedAt().equals(publishedAt)));
+    }
+
+    @Test
+    void archiveLocalizationReturnsUpdatedLocalization() throws Exception {
+        when(contentPublicationService.archiveLocalization(any())).thenReturn(new ContentLocalizationRecord(
+                51L,
+                LanguageCode.TR,
+                "Ay Isigi",
+                "Gece masali",
+                null,
+                11L,
+                null,
+                8,
+                LocalizationStatus.ARCHIVED,
+                ProcessingStatus.COMPLETED,
+                Instant.parse("2026-03-17T09:00:00Z"),
+                false));
+
+        mockMvc.perform(post("/api/admin/contents/51/localizations/tr/archive"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.languageCode").value("tr"))
+                .andExpect(jsonPath("$.status").value("ARCHIVED"));
     }
 }

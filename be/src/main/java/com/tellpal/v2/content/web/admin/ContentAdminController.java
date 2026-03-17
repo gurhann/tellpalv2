@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.time.Clock;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +20,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
+import com.tellpal.v2.content.application.ContentPublicationCommands.PublishContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
+import com.tellpal.v2.content.application.ContentPublicationCommands.ArchiveContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentPublicationService;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
@@ -32,9 +37,16 @@ import com.tellpal.v2.shared.web.admin.AdminApiController;
 public class ContentAdminController {
 
     private final ContentManagementService contentManagementService;
+    private final ContentPublicationService contentPublicationService;
+    private final Clock clock;
 
-    public ContentAdminController(ContentManagementService contentManagementService) {
+    public ContentAdminController(
+            ContentManagementService contentManagementService,
+            ContentPublicationService contentPublicationService,
+            Clock clock) {
         this.contentManagementService = contentManagementService;
+        this.contentPublicationService = contentPublicationService;
+        this.clock = clock;
     }
 
     @PostMapping
@@ -81,6 +93,26 @@ public class ContentAdminController {
             @Valid @RequestBody UpdateContentLocalizationProcessingRequest request) {
         return AdminContentLocalizationResponse.from(contentManagementService.markLocalizationProcessingStatus(
                 request.toCommand(contentId, languageCode)));
+    }
+
+    @PostMapping("/{contentId}/localizations/{languageCode}/publish")
+    public AdminContentLocalizationResponse publishLocalization(
+            @PathVariable Long contentId,
+            @PathVariable String languageCode,
+            @RequestBody(required = false) PublishContentLocalizationRequest request) {
+        PublishContentLocalizationRequest effectiveRequest = request == null
+                ? new PublishContentLocalizationRequest(null)
+                : request;
+        return AdminContentLocalizationResponse.from(contentPublicationService.publishLocalization(
+                effectiveRequest.toCommand(contentId, languageCode, clock)));
+    }
+
+    @PostMapping("/{contentId}/localizations/{languageCode}/archive")
+    public AdminContentLocalizationResponse archiveLocalization(
+            @PathVariable Long contentId,
+            @PathVariable String languageCode) {
+        return AdminContentLocalizationResponse.from(contentPublicationService.archiveLocalization(
+                new ArchiveContentLocalizationCommand(contentId, LanguageCode.from(languageCode))));
     }
 }
 
@@ -166,5 +198,13 @@ record UpdateContentLocalizationProcessingRequest(
 
     MarkContentLocalizationProcessingCommand toCommand(Long contentId, String languageCode) {
         return new MarkContentLocalizationProcessingCommand(contentId, LanguageCode.from(languageCode), processingStatus);
+    }
+}
+
+record PublishContentLocalizationRequest(java.time.Instant publishedAt) {
+
+    PublishContentLocalizationCommand toCommand(Long contentId, String languageCode, Clock clock) {
+        java.time.Instant effectivePublishedAt = publishedAt == null ? java.time.Instant.now(clock) : publishedAt;
+        return new PublishContentLocalizationCommand(contentId, LanguageCode.from(languageCode), effectivePublishedAt);
     }
 }
