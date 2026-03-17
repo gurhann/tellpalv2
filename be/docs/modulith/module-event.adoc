@@ -1,0 +1,13 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.tellpal.v2.event`
+|Spring components
+|_Services_
+
+* `c.t.v.e.api.EventTrackingApi`, `c.t.v.e.api.EventAttributionApi` (via `c.t.v.e.application.EventTrackingService`)
+|Bean references
+|* `c.t.v.c.api.ContentLookupApi` (in Content)
+* `c.t.v.u.api.UserLookupApi` (in User)
+* `c.t.v.u.api.UserResolutionApi` (in User)
+|===

@@ -1,0 +1,17 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.tellpal.v2.content`
+|Spring components
+|_Services_
+
+* `c.t.v.c.api.ContentFreeAccessApi` (via `c.t.v.c.application.ContentFreeAccessService`)
+* `c.t.v.c.api.ContentLookupApi`, `c.t.v.c.api.ContentLocalizationLookupApi` (via `c.t.v.c.application.ContentLookupService`)
+* `c.t.v.c.api.PublicContentQueryApi` (via `c.t.v.c.application.query.PublicContentQueryService`)
+|Bean references
+|* `c.t.v.a.api.AssetRegistryApi` (in Asset)
+* `c.t.v.a.api.ContentAssetBundleApi` (in Asset)
+* `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)
+|Events listened to
+|* `c.t.v.a.api.AssetProcessingStatusChangedEvent` 
+|===

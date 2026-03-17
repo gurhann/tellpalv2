@@ -1,0 +1,9 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.tellpal.v2.purchase`
+|Bean references
+|* `c.t.v.e.api.EventAttributionApi` (in Event)
+* `c.t.v.u.api.UserLookupApi` (in User)
+* `c.t.v.c.api.ContentLookupApi` (in Content)
+|===

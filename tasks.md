@@ -742,7 +742,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Missing secret fail-fast, error sanitization ve production-safe varsayilanlar tanimlanir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F14-T04` `TODO`
+- `F14-T04` `DONE`
   - Objective: Maven verify zinciri, docs generation ve CI workflow tabanini kurmak.
   - Files/modules: `be/pom.xml`, `.github/workflows/backend-verify.yml`, `be/docs/**`
   - Dependencies: `F14-T01`, `F14-T02`, `F14-T03`

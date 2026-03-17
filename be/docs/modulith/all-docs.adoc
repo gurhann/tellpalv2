@@ -1,0 +1,35 @@
+== TellPalApplication
+plantuml::components.puml[,,format=svg]
+
+== Shared
+plantuml::module-shared.puml[,,format=svg]
+include::module-shared.adoc[]
+
+== Admin
+plantuml::module-admin.puml[,,format=svg]
+include::module-admin.adoc[]
+
+== Asset
+plantuml::module-asset.puml[,,format=svg]
+include::module-asset.adoc[]
+
+== Content
+plantuml::module-content.puml[,,format=svg]
+include::module-content.adoc[]
+
+== User
+plantuml::module-user.puml[,,format=svg]
+include::module-user.adoc[]
+
+== Category
+plantuml::module-category.puml[,,format=svg]
+include::module-category.adoc[]
+
+== Event
+plantuml::module-event.puml[,,format=svg]
+include::module-event.adoc[]
+
+== Purchase
+plantuml::module-purchase.puml[,,format=svg]
+include::module-purchase.adoc[]
+

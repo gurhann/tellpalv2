@@ -1,0 +1,7 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.tellpal.v2.admin`
+|Bean references
+|* `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)
+|===

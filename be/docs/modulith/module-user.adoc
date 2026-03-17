@@ -1,0 +1,11 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.tellpal.v2.user`
+|Spring components
+|_Services_
+
+* `c.t.v.u.api.UserResolutionApi`, `c.t.v.u.api.UserLookupApi` (via `c.t.v.u.application.UserResolutionService`)
+|Bean references
+|* `c.t.v.a.api.AssetRegistryApi` (in Asset)
+|===
