@@ -477,7 +477,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F09-T01` `TODO`
+- `F09-T01` `DONE`
   - Objective: Event tablolarini ve analytics index'lerini yaratan migration'i yazmak.
   - Files/modules: `be/src/main/resources/db/migration/V10__create_event_tables.sql`
   - Dependencies: `F08-T01`, `F04-T01`
