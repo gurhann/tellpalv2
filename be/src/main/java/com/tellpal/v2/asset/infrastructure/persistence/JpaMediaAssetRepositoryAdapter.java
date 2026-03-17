@@ -1,7 +1,9 @@
 package com.tellpal.v2.asset.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.tellpal.v2.asset.domain.MediaAsset;
@@ -20,6 +22,11 @@ public class JpaMediaAssetRepositoryAdapter implements MediaAssetRepository {
     @Override
     public Optional<MediaAsset> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<MediaAsset> findRecent(int limit) {
+        return repository.findAllByOrderByCreatedAtDesc(PageRequest.of(0, limit));
     }
 
     @Override

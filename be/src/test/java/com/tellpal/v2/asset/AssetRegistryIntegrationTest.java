@@ -126,4 +126,38 @@ class AssetRegistryIntegrationTest extends PostgresIntegrationTestBase {
                 "ORIGINAL_AUDIO"))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
+
+    @Test
+    void listRecentReturnsNewestAssetsFirstAndHonorsLimit() throws Exception {
+        AssetRecord first = assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.LOCAL_STUB,
+                "/assets/first.jpg",
+                AssetKind.ORIGINAL_IMAGE,
+                "image/jpeg",
+                100L,
+                SAMPLE_CHECKSUM));
+        Thread.sleep(10L);
+        AssetRecord second = assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.LOCAL_STUB,
+                "/assets/second.jpg",
+                AssetKind.ORIGINAL_IMAGE,
+                "image/jpeg",
+                200L,
+                SAMPLE_CHECKSUM));
+        Thread.sleep(10L);
+        AssetRecord third = assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.LOCAL_STUB,
+                "/assets/third.jpg",
+                AssetKind.ORIGINAL_IMAGE,
+                "image/jpeg",
+                300L,
+                SAMPLE_CHECKSUM));
+
+        assertThat(assetRegistryApi.listRecent(2))
+                .extracting(AssetRecord::assetId)
+                .containsExactly(third.assetId(), second.assetId());
+        assertThat(assetRegistryApi.listRecent(5))
+                .extracting(AssetRecord::assetId)
+                .containsExactly(third.assetId(), second.assetId(), first.assetId());
+    }
 }

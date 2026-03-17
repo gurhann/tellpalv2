@@ -353,7 +353,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Category CRUD, localization ve ordering endpoint'leri hazir olur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F06-T04` `TODO`
+- `F06-T04` `DONE`
   - Objective: Media asset registry endpoint'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/web/admin/**`
   - Dependencies: `F06-T01`, `F03-T04`

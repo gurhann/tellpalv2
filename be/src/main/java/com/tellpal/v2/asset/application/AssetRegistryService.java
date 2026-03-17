@@ -2,6 +2,7 @@ package com.tellpal.v2.asset.application;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -49,6 +50,15 @@ public class AssetRegistryService implements AssetRegistryApi {
         MediaAsset mediaAsset = MediaAsset.register(provider, objectPath, kind);
         mediaAsset.updateMetadata(command.mimeType(), command.byteSize(), command.checksumSha256());
         return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AssetRecord> listRecent(int limit) {
+        int sanitizedLimit = sanitizeLimit(limit);
+        return mediaAssetRepository.findRecent(sanitizedLimit).stream()
+                .map(AssetApiMapper::toRecord)
+                .toList();
     }
 
     @Override
@@ -104,5 +114,12 @@ public class AssetRegistryService implements AssetRegistryApi {
             throw new IllegalArgumentException("Asset ID must be positive");
         }
         return assetId;
+    }
+
+    private static int sanitizeLimit(int limit) {
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Asset list limit must be positive");
+        }
+        return Math.min(limit, 100);
     }
 }
