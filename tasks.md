@@ -696,7 +696,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Firebase UID bazli upsert ve default profile olusturma import akisinda desteklenir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F13-T03` `TODO`
+- `F13-T03` `DONE`
   - Objective: Legacy content/app event import service'ini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/event/infrastructure/firebase/migration/**`, `be/src/main/java/com/tellpal/v2/event/application/**`
   - Dependencies: `F13-T01`
