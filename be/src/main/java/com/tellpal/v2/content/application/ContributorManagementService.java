@@ -1,5 +1,7 @@
 package com.tellpal.v2.content.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,14 @@ public class ContributorManagementService {
                 contributorRepository.save(Contributor.create(command.displayName())));
     }
 
+    @Transactional(readOnly = true)
+    public List<ContributorRecord> listContributors(int limit) {
+        int sanitizedLimit = sanitizeLimit(limit);
+        return contributorRepository.findRecent(sanitizedLimit).stream()
+                .map(ContentManagementMapper::toContributorRecord)
+                .toList();
+    }
+
     @Transactional
     public ContributorRecord renameContributor(RenameContributorCommand command) {
         Contributor contributor = loadContributor(command.contributorId());
@@ -68,5 +78,12 @@ public class ContributorManagementService {
     private Content loadContent(Long contentId) {
         return contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
+    }
+
+    private static int sanitizeLimit(int limit) {
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Contributor list limit must be positive");
+        }
+        return Math.min(limit, 100);
     }
 }

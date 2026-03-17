@@ -14,6 +14,7 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLo
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContentExternalKeyException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @RestControllerAdvice(basePackageClasses = {ContentAdminController.class, StoryPageAdminController.class})
@@ -78,6 +79,16 @@ public class ContentAdminExceptionHandler {
                 "Story page not found",
                 exception.getMessage(),
                 "story_page_not_found",
+                request);
+    }
+
+    @ExceptionHandler(ContributorNotFoundException.class)
+    ProblemDetail handleContributorNotFound(ContributorNotFoundException exception, HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Contributor not found",
+                exception.getMessage(),
+                "contributor_not_found",
                 request);
     }
 

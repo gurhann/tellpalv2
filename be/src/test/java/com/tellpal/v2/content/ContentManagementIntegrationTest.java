@@ -164,6 +164,25 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(row.get("sort_order")).isEqualTo(0);
     }
 
+    @Test
+    void listContributorsReturnsNewestFirstAndHonorsLimit() throws Exception {
+        ContributorRecord first = contributorManagementService.createContributor(
+                new CreateContributorCommand("Aylin"));
+        Thread.sleep(10L);
+        ContributorRecord second = contributorManagementService.createContributor(
+                new CreateContributorCommand("Baris"));
+        Thread.sleep(10L);
+        ContributorRecord third = contributorManagementService.createContributor(
+                new CreateContributorCommand("Cem"));
+
+        assertThat(contributorManagementService.listContributors(2))
+                .extracting(ContributorRecord::contributorId)
+                .containsExactly(third.contributorId(), second.contributorId());
+        assertThat(contributorManagementService.listContributors(5))
+                .extracting(ContributorRecord::contributorId)
+                .containsExactly(third.contributorId(), second.contributorId(), first.contributorId());
+    }
+
     private Long registerImageAsset(String objectPath) {
         return assetRegistryApi.register(new RegisterMediaAssetCommand(
                 AssetStorageProvider.LOCAL_STUB,

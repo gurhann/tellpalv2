@@ -1,7 +1,9 @@
 package com.tellpal.v2.content.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.tellpal.v2.content.domain.Contributor;
@@ -19,6 +21,11 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     @Override
     public Optional<Contributor> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<Contributor> findRecent(int limit) {
+        return repository.findAllByOrderByCreatedAtDesc(PageRequest.of(0, limit));
     }
 
     @Override

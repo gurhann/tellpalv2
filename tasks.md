@@ -360,7 +360,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Asset create/list/update endpoint'leri `asset.application` uzerinden calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F06-T05` `TODO`
+- `F06-T05` `DONE`
   - Objective: Contributor yonetimi icin admin endpoint'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/web/admin/**`
   - Dependencies: `F06-T02`, `F04-T05`
