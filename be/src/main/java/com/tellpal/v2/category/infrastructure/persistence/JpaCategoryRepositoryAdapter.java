@@ -1,5 +1,6 @@
 package com.tellpal.v2.category.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,11 @@ public class JpaCategoryRepositoryAdapter implements CategoryRepository {
     @Override
     public boolean existsBySlug(String slug) {
         return repository.existsBySlug(slug);
+    }
+
+    @Override
+    public List<Category> findAllActive() {
+        return repository.findAllByActiveTrue();
     }
 
     @Override

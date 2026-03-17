@@ -1,5 +1,6 @@
 package com.tellpal.v2.category.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository {
@@ -9,6 +10,8 @@ public interface CategoryRepository {
     Optional<Category> findBySlug(String slug);
 
     boolean existsBySlug(String slug);
+
+    List<Category> findAllActive();
 
     Category save(Category category);
 }

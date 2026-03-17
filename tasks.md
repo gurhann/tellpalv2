@@ -643,7 +643,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Language, freeKey, processing_status ve published filtreleri tek yerde uygulanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F12-T02` `TODO`
+- `F12-T02` `DONE`
   - Objective: Public category query modelini ve service katmanini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/application/query/**`, `be/src/main/java/com/tellpal/v2/category/api/**`
   - Dependencies: `F05-T04`, `F12-T01`
