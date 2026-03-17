@@ -155,7 +155,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: BCrypt, SHA-256, JWT secret config ve admin security filter chain hazir olur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F02-T04` `TODO`
+- `F02-T04` `DONE`
   - Objective: Login, refresh rotation, logout ve role assignment application service'lerini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/admin/application/**`, `be/src/main/java/com/tellpal/v2/admin/api/**`
   - Dependencies: `F02-T02`, `F02-T03`

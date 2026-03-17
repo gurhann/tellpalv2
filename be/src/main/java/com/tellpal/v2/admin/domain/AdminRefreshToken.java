@@ -81,6 +81,10 @@ public class AdminRefreshToken extends BaseJpaEntity {
         return refreshTokenHash;
     }
 
+    public AdminUser getAdminUser() {
+        return adminUser;
+    }
+
     public String getReplacedByTokenHash() {
         return replacedByTokenHash;
     }
