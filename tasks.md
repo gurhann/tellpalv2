@@ -41,7 +41,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F03` | Asset registry, storage abstraction ve media metadata sahipligi | asset, shared | `F01` | `DONE` |
 | `F04` | Content write model, localizations, story pages ve contributor baglari | content, shared, asset.api | `F01`, `F03` | `DONE` |
 | `F05` | Category write model ve dil bazli curation | category, content.api, asset.api | `F01`, `F03`, `F04` | `DONE` |
-| `F06` | CMS admin API'leri ve admin-web adapter tabani | admin, content, category, asset | `F02`, `F03`, `F04`, `F05` | `TODO` |
+| `F06` | CMS admin API'leri ve admin-web adapter tabani | admin, content, category, asset | `F02`, `F03`, `F04`, `F05` | `DONE` |
 | `F07` | Editorial publication policy ve A/B free-access yonetimi | content, category, admin web | `F04`, `F06` | `TODO` |
 | `F08` | Mobile user ve profile yonetimi, Firebase UID esleme | user, shared, asset.api | `F01`, `F03` | `TODO` |
 | `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `TODO` |
@@ -367,7 +367,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Contributor create/update/list ve content'e baglama operasyonlari HTTP seviyesinde acilir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F06-T06` `TODO`
+- `F06-T06` `DONE`
   - Objective: Admin API integration test paketini yazmak.
   - Files/modules: `be/src/test/java/com/tellpal/v2/**/web/admin/**`
   - Dependencies: `F06-T02`, `F06-T03`, `F06-T04`, `F06-T05`

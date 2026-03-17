@@ -37,6 +37,11 @@ import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 @Import({AssetAdminExceptionHandler.class, AdminApiExceptionHandler.class, AdminProblemDetailsFactory.class})
 class AssetAdminControllerTest {
 
+    private static final String SAMPLE_CHECKSUM =
+            "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+    private static final String UPDATED_CHECKSUM =
+            "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -59,9 +64,9 @@ class AssetAdminControllerTest {
                                   "kind": "ORIGINAL_IMAGE",
                                   "mimeType": "image/jpeg",
                                   "byteSize": 1024,
-                                  "checksumSha256": "abcdef"
+                                  "checksumSha256": "%s"
                                 }
-                                """))
+                                """.formatted(SAMPLE_CHECKSUM)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/admin/media/11"))
                 .andExpect(jsonPath("$.assetId").value(11))
@@ -103,9 +108,9 @@ class AssetAdminControllerTest {
                                 {
                                   "mimeType": "image/webp",
                                   "byteSize": 2048,
-                                  "checksumSha256": "updated"
+                                  "checksumSha256": "%s"
                                 }
-                                """))
+                                """.formatted(UPDATED_CHECKSUM)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.assetId").value(11))
                 .andExpect(jsonPath("$.mimeType").value("image/jpeg"))
@@ -155,7 +160,7 @@ class AssetAdminControllerTest {
                 objectPath.endsWith(".mp3") ? AssetKind.ORIGINAL_AUDIO : AssetKind.ORIGINAL_IMAGE,
                 "image/jpeg",
                 1024L,
-                "abcdef",
+                SAMPLE_CHECKSUM,
                 cachedDownloadUrl,
                 cachedDownloadUrl == null ? null : createdAt.plusSeconds(60),
                 cachedDownloadUrl == null ? null : createdAt.plusSeconds(3600),
