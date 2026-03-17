@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.user.api.AppUserReference;
+import com.tellpal.v2.user.api.AppUserProfileReference;
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
 import com.tellpal.v2.user.api.UserAuthenticationException;
 import com.tellpal.v2.user.api.UserLookupApi;
@@ -50,6 +51,26 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
         }
         return appUserRepository.findByFirebaseUid(firebaseUid.trim())
                 .map(UserApiMapper::toAppUserReference);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.Optional<AppUserProfileReference> findPrimaryProfileByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new IllegalArgumentException("User ID must be positive");
+        }
+        return appUserRepository.findById(userId)
+                .map(UserApiMapper::toPrimaryProfileReference);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.Optional<AppUserProfileReference> findPrimaryProfileByFirebaseUid(String firebaseUid) {
+        if (firebaseUid == null || firebaseUid.isBlank()) {
+            throw new IllegalArgumentException("Firebase UID must not be blank");
+        }
+        return appUserRepository.findByFirebaseUid(firebaseUid.trim())
+                .map(UserApiMapper::toPrimaryProfileReference);
     }
 
     private VerifiedFirebaseToken verifyToken(String idToken) {

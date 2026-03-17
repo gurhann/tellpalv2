@@ -1,5 +1,7 @@
 package com.tellpal.v2.event.infrastructure.persistence;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tellpal.v2.event.domain.AppEvent;
 import com.tellpal.v2.event.domain.AppEventRepository;
+import com.tellpal.v2.event.domain.AppEventType;
 
 @Repository
 public class JpaAppEventRepositoryAdapter implements AppEventRepository {
@@ -25,6 +28,18 @@ public class JpaAppEventRepositoryAdapter implements AppEventRepository {
     @Override
     public Optional<AppEvent> findByProfileIdAndLegacyEventKey(Long profileId, String legacyEventKey) {
         return repository.findByProfileIdAndLegacyEventKey(profileId, legacyEventKey);
+    }
+
+    @Override
+    public List<AppEvent> findAttributionCandidates(
+            Long profileId,
+            Instant occurredAfterInclusive,
+            Instant occurredBeforeInclusive) {
+        return repository.findByProfileIdAndEventTypeInAndOccurredAtBetweenOrderByOccurredAtDesc(
+                profileId,
+                List.of(AppEventType.LOCKED_CONTENT_CLICKED, AppEventType.PAYWALL_SHOWN),
+                occurredAfterInclusive,
+                occurredBeforeInclusive);
     }
 
     @Override

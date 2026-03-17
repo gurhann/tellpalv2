@@ -43,4 +43,25 @@ public final class PurchaseApplicationExceptions {
             super(message);
         }
     }
+
+    public static final class PurchaseEventNotFoundException extends RuntimeException {
+
+        public PurchaseEventNotFoundException(Long purchaseEventId) {
+            super("Purchase event not found: " + purchaseEventId);
+        }
+    }
+
+    public static final class PurchaseAttributionUserNotFoundException extends RuntimeException {
+
+        public PurchaseAttributionUserNotFoundException(Long purchaseEventId) {
+            super("Unable to resolve an app user for purchase event " + purchaseEventId);
+        }
+    }
+
+    public static final class AttributedContentNotFoundException extends RuntimeException {
+
+        public AttributedContentNotFoundException(Long contentId) {
+            super("Attributed content not found: " + contentId);
+        }
+    }
 }

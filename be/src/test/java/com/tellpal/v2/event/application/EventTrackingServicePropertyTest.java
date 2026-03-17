@@ -177,6 +177,19 @@ class EventTrackingServicePropertyTest {
         }
 
         @Override
+        public List<AppEvent> findAttributionCandidates(Long profileId, java.time.Instant occurredAfterInclusive,
+                java.time.Instant occurredBeforeInclusive) {
+            return events.values().stream()
+                    .filter(event -> event.getProfileId().equals(profileId))
+                    .filter(event -> !event.getOccurredAt().isBefore(occurredAfterInclusive))
+                    .filter(event -> !event.getOccurredAt().isAfter(occurredBeforeInclusive))
+                    .filter(event -> event.getEventType() == AppEventType.LOCKED_CONTENT_CLICKED
+                            || event.getEventType() == AppEventType.PAYWALL_SHOWN)
+                    .sorted(java.util.Comparator.comparing(AppEvent::getOccurredAt).reversed())
+                    .toList();
+        }
+
+        @Override
         public boolean existsById(UUID eventId) {
             return events.containsKey(eventId);
         }

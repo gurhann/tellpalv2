@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.content.api.ContentLookupApi;
+import com.tellpal.v2.event.api.AppEventAttributionCandidate;
+import com.tellpal.v2.event.api.EventAttributionApi;
 import com.tellpal.v2.event.api.EventTrackingApi;
 import com.tellpal.v2.event.api.EventTrackingCommands.RecordAppEventCommand;
 import com.tellpal.v2.event.api.EventTrackingCommands.RecordBatchEventsCommand;
@@ -25,7 +27,7 @@ import com.tellpal.v2.event.domain.ContentEvent;
 import com.tellpal.v2.event.domain.ContentEventRepository;
 
 @Service
-public class EventTrackingService implements EventTrackingApi {
+public class EventTrackingService implements EventTrackingApi, EventAttributionApi {
 
     private final ContentEventRepository contentEventRepository;
     private final AppEventRepository appEventRepository;
@@ -74,6 +76,27 @@ public class EventTrackingService implements EventTrackingApi {
             receipts.add(recordAppEventInternal(appCommand));
         });
         return new EventBatchIngestResult(receipts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AppEventAttributionCandidate> findAttributionCandidates(
+            Long profileId,
+            Instant occurredAfterInclusive,
+            Instant occurredBeforeInclusive) {
+        if (profileId == null || profileId <= 0) {
+            throw new IllegalArgumentException("Profile ID must be positive");
+        }
+        if (occurredAfterInclusive == null || occurredBeforeInclusive == null) {
+            throw new IllegalArgumentException("Attribution window bounds must not be null");
+        }
+        if (occurredAfterInclusive.isAfter(occurredBeforeInclusive)) {
+            throw new IllegalArgumentException("Attribution window start must not be after its end");
+        }
+        return appEventRepository.findAttributionCandidates(profileId, occurredAfterInclusive, occurredBeforeInclusive)
+                .stream()
+                .map(EventApiMapper::toAttributionCandidate)
+                .toList();
     }
 
     private EventIngestReceipt recordContentEventInternal(RecordContentEventCommand command) {

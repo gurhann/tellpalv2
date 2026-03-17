@@ -551,7 +551,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Raw payload saklanir, lookup validation yapilir ve duplicate `revenuecat_event_id` reddedilir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F10-T05` `TODO`
+- `F10-T05` `DONE`
   - Objective: Attribution service'ini event/user/content API'lerine baglayarak yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/purchase/application/**`
   - Dependencies: `F10-T04`, `F09-T03`, `F08-T03`, `F04-T04`
