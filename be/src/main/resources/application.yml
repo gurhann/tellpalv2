@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: tellpal-v2-backend
+  profiles:
+    default: local
+  datasource:
+    url: ${TELLPAL_DB_URL:jdbc:postgresql://localhost:5432/tellpal_v2}
+    username: ${TELLPAL_DB_USERNAME:tellpal}
+    password: ${TELLPAL_DB_PASSWORD:tellpal}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+server:
+  shutdown: graceful

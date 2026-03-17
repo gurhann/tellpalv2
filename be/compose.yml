@@ -1,0 +1,24 @@
+name: tellpal-v2
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tellpal-v2-postgres
+    environment:
+      POSTGRES_DB: ${TELLPAL_DB_NAME:-tellpal_v2}
+      POSTGRES_USER: ${TELLPAL_DB_USERNAME:-tellpal}
+      POSTGRES_PASSWORD: ${TELLPAL_DB_PASSWORD:-tellpal}
+      TZ: UTC
+    ports:
+      - "${TELLPAL_DB_PORT:-5432}:5432"
+    volumes:
+      - tellpal-v2-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TELLPAL_DB_USERNAME:-tellpal} -d ${TELLPAL_DB_NAME:-tellpal_v2}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  tellpal-v2-postgres-data:
