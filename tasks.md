@@ -682,7 +682,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F13-T01` `TODO`
+- `F13-T01` `DONE`
   - Objective: Import giris formatini, staging dizinini ve dry-run komut contract'ini tanimlamak.
   - Files/modules: `be/docs/firebase-migration.md`, `be/src/main/java/com/tellpal/v2/user/infrastructure/firebase/migration/**`
   - Dependencies: `F08-T03`, `F09-T03`

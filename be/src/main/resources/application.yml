@@ -52,3 +52,13 @@ tellpal:
   purchase:
     revenuecat:
       authorization-header: ${TELLPAL_REVENUECAT_AUTHORIZATION_HEADER:}
+  firebase-migration:
+    enabled: ${TELLPAL_FIREBASE_MIGRATION_ENABLED:false}
+    dry-run: ${TELLPAL_FIREBASE_MIGRATION_DRY_RUN:true}
+    staging-dir: ${TELLPAL_FIREBASE_MIGRATION_STAGING_DIR:be/var/firebase-migration}
+    users-file-name: ${TELLPAL_FIREBASE_MIGRATION_USERS_FILE:users.json}
+    content-events-file-name: ${TELLPAL_FIREBASE_MIGRATION_CONTENT_EVENTS_FILE:content-events.json}
+    app-events-file-name: ${TELLPAL_FIREBASE_MIGRATION_APP_EVENTS_FILE:app-events.json}
+    import-users: ${TELLPAL_FIREBASE_MIGRATION_IMPORT_USERS:true}
+    import-content-events: ${TELLPAL_FIREBASE_MIGRATION_IMPORT_CONTENT_EVENTS:true}
+    import-app-events: ${TELLPAL_FIREBASE_MIGRATION_IMPORT_APP_EVENTS:true}
