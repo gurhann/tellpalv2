@@ -141,7 +141,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `admin_users`, `admin_roles`, `admin_user_roles`, `admin_refresh_tokens` tablolari; unique ve check kisitlariyla birlikte kurulur ve temel rol kayitlari seed edilir.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F02-T02` `TODO`
+- `F02-T02` `DONE`
   - Objective: Admin domain modeli ve repository katmanini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/admin/domain/**`, `be/src/main/java/com/tellpal/v2/admin/infrastructure/persistence/**`
   - Dependencies: `F02-T01`, `F01-T05`
