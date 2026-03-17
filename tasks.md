@@ -194,7 +194,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Provider, object path, media type, kind, metadata ve signed URL cache kolonlari PostgreSQL 15 uyumlu sekilde olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F03-T02` `TODO`
+- `F03-T02` `DONE`
   - Objective: `MediaAsset` aggregate'i, enum'lari ve persistence adaptorunu kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/domain/**`, `be/src/main/java/com/tellpal/v2/asset/infrastructure/persistence/**`
   - Dependencies: `F03-T01`, `F01-T05`
