@@ -35,7 +35,7 @@ public class RevenueCatWebhookExceptionHandler {
         return create(
                 HttpStatus.UNAUTHORIZED,
                 "RevenueCat authorization failed",
-                exception.getMessage(),
+                "Webhook request could not be authorized",
                 "revenuecat_authorization_failed",
                 request);
     }
@@ -51,7 +51,7 @@ public class RevenueCatWebhookExceptionHandler {
         return create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid RevenueCat payload",
-                exception.getMessage(),
+                "Webhook payload is invalid",
                 "revenuecat_invalid_payload",
                 request);
     }
@@ -67,7 +67,7 @@ public class RevenueCatWebhookExceptionHandler {
         return create(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 "Unknown lookup value",
-                exception.getMessage(),
+                "Webhook payload contains an unsupported lookup value",
                 "purchase_lookup_invalid",
                 request);
     }
@@ -87,7 +87,7 @@ public class RevenueCatWebhookExceptionHandler {
         return create(
                 HttpStatus.CONFLICT,
                 "Purchase attribution failed",
-                exception.getMessage(),
+                "Webhook could not be attributed",
                 "purchase_attribution_failed",
                 request);
     }
@@ -119,7 +119,7 @@ public class RevenueCatWebhookExceptionHandler {
         return create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid request",
-                exception.getMessage(),
+                "Request parameters are invalid",
                 "invalid_request",
                 request);
     }

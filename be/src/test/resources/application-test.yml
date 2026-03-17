@@ -15,5 +15,7 @@ tellpal:
       poller:
         enabled: false
   security:
+    admin:
+      jwt-secret: change-me-change-me-change-me-32-bytes
     firebase:
       stub-tokens-enabled: true

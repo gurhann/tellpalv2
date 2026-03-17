@@ -735,7 +735,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Request ID, auth fail, webhook fail ve processing transition loglari standardize edilir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F14-T03` `TODO`
+- `F14-T03` `DONE`
   - Objective: Security hardening ve config validation katmanini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/shared/infrastructure/security/**`, `be/src/main/resources/application.yml`
   - Dependencies: `F02-T05`, `F10-T06`, `F12-T05`

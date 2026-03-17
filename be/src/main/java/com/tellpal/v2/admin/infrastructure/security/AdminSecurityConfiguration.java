@@ -93,11 +93,12 @@ public class AdminSecurityConfiguration {
     AuthenticationEntryPoint adminAuthenticationEntryPoint() {
         return (request, response, exception) -> {
             log.warn(
-                    "admin_auth_failed status={} method={} path={} clientIp={} reason={}",
+                    "admin_auth_failed status={} method={} path={} clientIp={} requestId={} reason={}",
                     HttpStatus.UNAUTHORIZED.value(),
                     request.getMethod(),
                     request.getRequestURI(),
                     AdminWebRequestSupport.resolveClientIp(request),
+                    AdminWebRequestSupport.resolveRequestId(request),
                     exception.getMessage());
             response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         };
