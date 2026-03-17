@@ -392,7 +392,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `(access_key, content_id, language_code)` benzersizligi ve `default` anahtarini destekleyen tablo olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F07-T02` `TODO`
+- `F07-T02` `DONE`
   - Objective: Publication policy domain/application mantigini tanimlamak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/domain/**`, `be/src/main/java/com/tellpal/v2/content/application/**`
   - Dependencies: `F04-T05`
