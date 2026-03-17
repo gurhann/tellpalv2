@@ -346,7 +346,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Content create/update, localization yonetimi ve story page endpoint'leri application service'leri kullanir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F06-T03` `TODO`
+- `F06-T03` `DONE`
   - Objective: Category ve curation admin endpoint'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/web/admin/**`
   - Dependencies: `F06-T01`, `F05-T04`
