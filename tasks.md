@@ -45,7 +45,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F07` | Editorial publication policy ve A/B free-access yonetimi | content, category, admin web | `F04`, `F06` | `DONE` |
 | `F08` | Mobile user ve profile yonetimi, Firebase UID esleme | user, shared, asset.api | `F01`, `F03` | `DONE` |
 | `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `DONE` |
-| `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `TODO` |
+| `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `DONE` |
 | `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `TODO` |
 | `F12` | Public content/category delivery API'leri | content, category, asset.api | `F05`, `F07`, `F11` | `TODO` |
 | `F13` | Firebase legacy migration ve import akislari | user, event | `F08`, `F09` | `TODO` |
@@ -558,7 +558,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Son `LOCKED_CONTENT_CLICKED`, yoksa son `PAYWALL_SHOWN` secimi 24 saat penceresinde uygulanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F10-T06` `TODO`
+- `F10-T06` `DONE`
   - Objective: Webhook endpoint'i ve purchase integration/property testlerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/purchase/web/webhook/**`, `be/src/test/java/com/tellpal/v2/purchase/**`
   - Dependencies: `F10-T05`
