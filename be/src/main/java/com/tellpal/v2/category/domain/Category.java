@@ -85,6 +85,12 @@ public class Category extends BaseJpaEntity {
                 .findFirst();
     }
 
+    public boolean hasPublishedLocalization(LanguageCode languageCode) {
+        return findLocalization(languageCode)
+                .map(CategoryLocalization::isPublished)
+                .orElse(false);
+    }
+
     public Optional<CategoryContent> findCuratedContent(LanguageCode languageCode, Long contentId) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         Long requiredContentId = requirePositiveId(contentId, "Curated content ID must be positive");
@@ -115,7 +121,7 @@ public class Category extends BaseJpaEntity {
     }
 
     public CategoryContent addContent(LanguageCode languageCode, Long contentId, int displayOrder) {
-        requireLocalizationPresence(languageCode);
+        requirePublishedLocalization(languageCode);
         if (findCuratedContent(languageCode, contentId).isPresent()) {
             throw new IllegalArgumentException("Curated content already exists for category and language");
         }
@@ -126,6 +132,7 @@ public class Category extends BaseJpaEntity {
     }
 
     public CategoryContent updateContentOrder(LanguageCode languageCode, Long contentId, int displayOrder) {
+        requirePublishedLocalization(languageCode);
         CategoryContent curatedContent = findCuratedContent(languageCode, contentId)
                 .orElseThrow(() -> new IllegalArgumentException("Curated content not found for category"));
         requireDisplayOrderAvailability(languageCode, displayOrder, contentId);
@@ -151,9 +158,9 @@ public class Category extends BaseJpaEntity {
         return localization;
     }
 
-    private void requireLocalizationPresence(LanguageCode languageCode) {
-        if (findLocalization(languageCode).isEmpty()) {
-            throw new IllegalStateException("Category localization must exist before curation");
+    private void requirePublishedLocalization(LanguageCode languageCode) {
+        if (!hasPublishedLocalization(languageCode)) {
+            throw new IllegalStateException("Published category localization must exist before curation");
         }
     }
 

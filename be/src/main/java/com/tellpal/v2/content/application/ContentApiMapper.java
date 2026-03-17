@@ -1,8 +1,11 @@
 package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.content.api.ContentApiType;
+import com.tellpal.v2.content.api.ContentLocalizationReference;
 import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.domain.Content;
+import com.tellpal.v2.content.domain.ContentLocalization;
+import com.tellpal.v2.content.domain.LocalizationStatus;
 
 final class ContentApiMapper {
 
@@ -21,5 +24,13 @@ final class ContentApiMapper {
                 content.isActive(),
                 content.getAgeRange(),
                 content.getPageCount());
+    }
+
+    static ContentLocalizationReference toLocalizationReference(Long contentId, ContentLocalization localization) {
+        return new ContentLocalizationReference(
+                contentId,
+                localization.getLanguageCode(),
+                localization.getStatus() == LocalizationStatus.PUBLISHED,
+                localization.isVisibleToMobile());
     }
 }

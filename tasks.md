@@ -307,7 +307,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Diger moduller kategori sorgulari icin API kontratina baglanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F05-T04` `TODO`
+- `F05-T04` `DONE`
   - Objective: Category create/update/localization/curation application service'lerini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/application/**`
   - Dependencies: `F05-T02`, `F05-T03`, `F04-T04`
