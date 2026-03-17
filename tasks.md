@@ -46,7 +46,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F08` | Mobile user ve profile yonetimi, Firebase UID esleme | user, shared, asset.api | `F01`, `F03` | `DONE` |
 | `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `DONE` |
 | `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `DONE` |
-| `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `TODO` |
+| `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `DONE` |
 | `F12` | Public content/category delivery API'leri | content, category, asset.api | `F05`, `F07`, `F11` | `TODO` |
 | `F13` | Firebase legacy migration ve import akislari | user, event | `F08`, `F09` | `TODO` |
 | `F14` | Hardening, modulith boundary sertlestirme ve release readiness | tum moduller | `F02`-`F13` | `TODO` |
@@ -618,7 +618,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: CMS tarafindan processing baslatma, yeniden deneme ve durum sorgulama endpoint'leri calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F11-T07` `TODO`
+- `F11-T07` `DONE`
   - Objective: Asset processing integration testlerini eklemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/asset/**`, `be/src/test/java/com/tellpal/v2/content/**`
   - Dependencies: `F11-T05`, `F11-T06`

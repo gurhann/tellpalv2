@@ -1,8 +1,7 @@
 package com.tellpal.v2.content.application;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.context.event.EventListener;
 
 import com.tellpal.v2.asset.api.AssetProcessingStatusChangedEvent;
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
@@ -17,7 +16,7 @@ class AssetProcessingStatusListener {
         this.contentManagementService = contentManagementService;
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     void on(AssetProcessingStatusChangedEvent event) {
         contentManagementService.markLocalizationProcessingStatus(new MarkContentLocalizationProcessingCommand(
                 event.contentId(),
