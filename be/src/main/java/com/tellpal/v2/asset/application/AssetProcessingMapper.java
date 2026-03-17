@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.application;
 
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
+import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingState;
 import com.tellpal.v2.asset.domain.AssetProcessing;
 
@@ -18,6 +19,11 @@ final class AssetProcessingMapper {
                 processingId,
                 assetProcessing.getContentId(),
                 assetProcessing.getLanguageCode(),
+                AssetProcessingContentType.valueOf(assetProcessing.getContentType().name()),
+                assetProcessing.getExternalKey(),
+                assetProcessing.getCoverSourceAssetId(),
+                assetProcessing.getAudioSourceAssetId(),
+                assetProcessing.getPageCount(),
                 AssetProcessingState.valueOf(assetProcessing.getStatus().name()),
                 assetProcessing.getAttemptCount(),
                 assetProcessing.getNextAttemptAt(),

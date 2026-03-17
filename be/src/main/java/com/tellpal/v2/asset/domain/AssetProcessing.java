@@ -23,6 +23,22 @@ public class AssetProcessing extends BaseJpaEntity {
     private LanguageCode languageCode;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "content_type", length = 20)
+    private ProcessingContentType contentType;
+
+    @Column(name = "external_key", length = 180)
+    private String externalKey;
+
+    @Column(name = "cover_source_asset_id")
+    private Long coverSourceAssetId;
+
+    @Column(name = "audio_source_asset_id")
+    private Long audioSourceAssetId;
+
+    @Column(name = "page_count")
+    private Integer pageCount;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private AssetProcessingStatus status;
 
@@ -53,16 +69,41 @@ public class AssetProcessing extends BaseJpaEntity {
     protected AssetProcessing() {
     }
 
-    private AssetProcessing(Long contentId, LanguageCode languageCode, Instant nextAttemptAt) {
+    private AssetProcessing(
+            Long contentId,
+            LanguageCode languageCode,
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            Instant nextAttemptAt) {
         this.contentId = requirePositiveId(contentId, "Content ID must be positive");
         this.languageCode = requireLanguageCode(languageCode);
+        refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
         this.status = AssetProcessingStatus.PENDING;
         this.attemptCount = 0;
         this.nextAttemptAt = requireInstant(nextAttemptAt, "Next attempt time must not be null");
     }
 
-    public static AssetProcessing schedule(Long contentId, LanguageCode languageCode, Instant nextAttemptAt) {
-        return new AssetProcessing(contentId, languageCode, nextAttemptAt);
+    public static AssetProcessing schedule(
+            Long contentId,
+            LanguageCode languageCode,
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            Instant nextAttemptAt) {
+        return new AssetProcessing(
+                contentId,
+                languageCode,
+                contentType,
+                externalKey,
+                coverSourceAssetId,
+                audioSourceAssetId,
+                pageCount,
+                nextAttemptAt);
     }
 
     public Long getContentId() {
@@ -71,6 +112,26 @@ public class AssetProcessing extends BaseJpaEntity {
 
     public LanguageCode getLanguageCode() {
         return languageCode;
+    }
+
+    public ProcessingContentType getContentType() {
+        return contentType;
+    }
+
+    public String getExternalKey() {
+        return externalKey;
+    }
+
+    public Long getCoverSourceAssetId() {
+        return coverSourceAssetId;
+    }
+
+    public Long getAudioSourceAssetId() {
+        return audioSourceAssetId;
+    }
+
+    public Integer getPageCount() {
+        return pageCount;
     }
 
     public AssetProcessingStatus getStatus() {
@@ -127,6 +188,29 @@ public class AssetProcessing extends BaseJpaEntity {
         return status == AssetProcessingStatus.PROCESSING
                 && leaseExpiresAt != null
                 && !leaseExpiresAt.isAfter(requiredReferenceTime);
+    }
+
+    public void refreshContext(
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount) {
+        ProcessingContentType requiredContentType = requireContentType(contentType);
+        String requiredExternalKey = requireText(externalKey, "External key must not be blank");
+        Long normalizedCoverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
+        Long normalizedAudioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
+        Integer normalizedPageCount = normalizePageCount(requiredContentType, pageCount);
+
+        if (requiredContentType.requiresSingleAudioAsset() && normalizedAudioSourceAssetId == null) {
+            throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
+        }
+
+        this.contentType = requiredContentType;
+        this.externalKey = requiredExternalKey;
+        this.coverSourceAssetId = normalizedCoverSourceAssetId;
+        this.audioSourceAssetId = normalizedAudioSourceAssetId;
+        this.pageCount = normalizedPageCount;
     }
 
     public void start(Instant startedAt, Duration leaseDuration) {
@@ -207,6 +291,13 @@ public class AssetProcessing extends BaseJpaEntity {
         return value;
     }
 
+    private static ProcessingContentType requireContentType(ProcessingContentType contentType) {
+        if (contentType == null) {
+            throw new IllegalArgumentException("Processing content type must not be null");
+        }
+        return contentType;
+    }
+
     private static LanguageCode requireLanguageCode(LanguageCode languageCode) {
         if (languageCode == null) {
             throw new IllegalArgumentException("Language code must not be null");
@@ -234,5 +325,36 @@ public class AssetProcessing extends BaseJpaEntity {
         }
         String normalized = value.trim();
         return normalized.isEmpty() ? null : normalized;
+    }
+
+    private static String requireText(String value, String message) {
+        String normalized = normalizeOptionalText(value);
+        if (normalized == null) {
+            throw new IllegalArgumentException(message);
+        }
+        return normalized;
+    }
+
+    private static Long normalizePositiveId(Long value, String message) {
+        if (value == null) {
+            return null;
+        }
+        if (value <= 0) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private static Integer normalizePageCount(ProcessingContentType contentType, Integer pageCount) {
+        if (contentType.supportsStoryPackages()) {
+            if (pageCount == null || pageCount < 0) {
+                throw new IllegalArgumentException("Story processing requires a non-negative page count");
+            }
+            return pageCount;
+        }
+        if (pageCount != null) {
+            throw new IllegalArgumentException("Page count is only supported for story processing");
+        }
+        return null;
     }
 }

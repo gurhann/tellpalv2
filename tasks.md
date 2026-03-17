@@ -604,7 +604,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Uygulama restart oldugunda is kaybi yasatmayan db-backed polling modeli kurulur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F11-T05` `TODO`
+- `F11-T05` `DONE`
   - Objective: Image/audio optimization ve ZIP packaging adapter'larini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/infrastructure/media/**`
   - Dependencies: `F11-T04`

@@ -23,6 +23,7 @@ import com.tellpal.v2.asset.api.AssetProcessingStatusChangedEvent;
 import com.tellpal.v2.asset.domain.AssetProcessing;
 import com.tellpal.v2.asset.domain.AssetProcessingRepository;
 import com.tellpal.v2.asset.domain.AssetProcessingStatus;
+import com.tellpal.v2.asset.domain.ProcessingContentType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyCompletedException;
@@ -56,11 +57,16 @@ public class AssetProcessingService implements AssetProcessingApi {
                 command.contentId(),
                 command.languageCode());
         if (existingProcessing.isPresent()) {
-            return handleExistingSchedule(existingProcessing.get());
+            return handleExistingSchedule(existingProcessing.get(), command);
         }
         AssetProcessing created = AssetProcessing.schedule(
                 command.contentId(),
                 command.languageCode(),
+                ProcessingContentType.valueOf(command.contentType().name()),
+                command.externalKey(),
+                command.coverSourceAssetId(),
+                command.audioSourceAssetId(),
+                command.pageCount(),
                 Instant.now(clock));
         AssetProcessing saved = saveNewProcessing(created);
         publishStatusChanged(saved);
@@ -81,6 +87,12 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        assetProcessing.refreshContext(
+                ProcessingContentType.valueOf(command.contentType().name()),
+                command.externalKey(),
+                command.coverSourceAssetId(),
+                command.audioSourceAssetId(),
+                command.pageCount());
         assetProcessing.retry(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -135,10 +147,18 @@ public class AssetProcessingService implements AssetProcessingApi {
                 .toList();
     }
 
-    private AssetProcessingRecord handleExistingSchedule(AssetProcessing assetProcessing) {
+    private AssetProcessingRecord handleExistingSchedule(
+            AssetProcessing assetProcessing,
+            ScheduleAssetProcessingCommand command) {
         AssetProcessingStatus status = assetProcessing.getStatus();
         if (status == AssetProcessingStatus.PENDING) {
-            return AssetProcessingMapper.toRecord(assetProcessing);
+            assetProcessing.refreshContext(
+                    ProcessingContentType.valueOf(command.contentType().name()),
+                    command.externalKey(),
+                    command.coverSourceAssetId(),
+                    command.audioSourceAssetId(),
+                    command.pageCount());
+            return AssetProcessingMapper.toRecord(assetProcessingRepository.save(assetProcessing));
         }
         if (status == AssetProcessingStatus.PROCESSING) {
             throw new AssetProcessingAlreadyRunningException(

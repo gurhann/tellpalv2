@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.springframework.stereotype.Component;
 
+import com.tellpal.v2.asset.api.AssetKind;
+import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 @Component
@@ -19,6 +21,40 @@ public class AssetProcessingPathBuilder {
 
     public String packagesRoot(String contentType, String externalKey, LanguageCode languageCode) {
         return buildRoot(contentType, externalKey, languageCode, "packages");
+    }
+
+    public String coverVariantPath(AssetProcessingRecord assetProcessingRecord, AssetKind assetKind) {
+        String root = processedRoot(
+                assetProcessingRecord.contentType().name(),
+                assetProcessingRecord.externalKey(),
+                assetProcessingRecord.languageCode());
+        return switch (assetKind) {
+            case THUMBNAIL_PHONE -> root + "cover-thumbnail-phone.webp";
+            case THUMBNAIL_TABLET -> root + "cover-thumbnail-tablet.webp";
+            case DETAIL_PHONE -> root + "cover-detail-phone.webp";
+            case DETAIL_TABLET -> root + "cover-detail-tablet.webp";
+            default -> throw new IllegalArgumentException("Unsupported cover variant kind: " + assetKind);
+        };
+    }
+
+    public String optimizedAudioPath(AssetProcessingRecord assetProcessingRecord) {
+        return processedRoot(
+                assetProcessingRecord.contentType().name(),
+                assetProcessingRecord.externalKey(),
+                assetProcessingRecord.languageCode()) + "audio-optimized.m4a";
+    }
+
+    public String packagePath(AssetProcessingRecord assetProcessingRecord, AssetKind assetKind) {
+        String root = packagesRoot(
+                assetProcessingRecord.contentType().name(),
+                assetProcessingRecord.externalKey(),
+                assetProcessingRecord.languageCode());
+        return switch (assetKind) {
+            case CONTENT_ZIP -> root + assetProcessingRecord.externalKey() + ".zip";
+            case CONTENT_ZIP_PART1 -> root + assetProcessingRecord.externalKey() + "_part1.zip";
+            case CONTENT_ZIP_PART2 -> root + assetProcessingRecord.externalKey() + "_part2.zip";
+            default -> throw new IllegalArgumentException("Unsupported package kind: " + assetKind);
+        };
     }
 
     private String buildRoot(String contentType, String externalKey, LanguageCode languageCode, String folder) {
