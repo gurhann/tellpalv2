@@ -261,7 +261,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Diger moduller content'i ID ve API kontratlari uzerinden gorebilir; entity import'u yapmaz.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F04-T05` `TODO`
+- `F04-T05` `DONE`
   - Objective: Content create/update, localization management, story page management ve contributor assignment service'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/content/application/**`
   - Dependencies: `F04-T03`, `F04-T04`, `F03-T03`

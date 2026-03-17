@@ -2,6 +2,7 @@ package com.tellpal.v2.content.domain;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -54,6 +55,13 @@ public class StoryPage extends BaseJpaEntity {
         return Collections.unmodifiableSet(localizations);
     }
 
+    public Optional<StoryPageLocalization> findLocalization(LanguageCode languageCode) {
+        LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
+        return localizations.stream()
+                .filter(candidate -> candidate.getLanguageCode() == requiredLanguageCode)
+                .findFirst();
+    }
+
     public void updateIllustrationMediaId(Long illustrationMediaId) {
         this.illustrationMediaId = normalizePositiveId(
                 illustrationMediaId,
@@ -61,9 +69,7 @@ public class StoryPage extends BaseJpaEntity {
     }
 
     public StoryPageLocalization upsertLocalization(LanguageCode languageCode, String bodyText, Long audioMediaId) {
-        StoryPageLocalization localization = localizations.stream()
-                .filter(candidate -> candidate.getLanguageCode() == requireLanguageCode(languageCode))
-                .findFirst()
+        StoryPageLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode));
         localization.update(bodyText, audioMediaId);
         return localization;

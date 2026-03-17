@@ -110,6 +110,10 @@ public class ContentLocalization extends BaseJpaEntity {
         return publishedAt;
     }
 
+    public boolean isVisibleToMobile() {
+        return status == LocalizationStatus.PUBLISHED && processingStatus == ProcessingStatus.COMPLETED;
+    }
+
     public void updateContent(
             String title,
             String description,

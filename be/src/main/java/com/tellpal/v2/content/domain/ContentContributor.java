@@ -79,6 +79,10 @@ public class ContentContributor extends BaseJpaEntity {
         return this.role == role && this.languageCode == languageCode;
     }
 
+    public boolean matchesAssignment(Long contributorId, ContributorRole role, LanguageCode languageCode) {
+        return hasContributor(contributorId) && matchesRoleAndLanguage(role, languageCode);
+    }
+
     public boolean hasContributor(Long contributorId) {
         Long id = contributor.getId();
         return id != null && id.equals(contributorId);

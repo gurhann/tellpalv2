@@ -2,6 +2,7 @@ package com.tellpal.v2.content.domain;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -47,16 +48,20 @@ public class Content extends BaseJpaEntity {
     protected Content() {
     }
 
-    private Content(ContentType type, String externalKey, Integer ageRange) {
+    private Content(ContentType type, String externalKey, Integer ageRange, boolean active) {
         this.type = requireType(type);
         this.externalKey = requireText(externalKey, "Content external key must not be blank");
-        this.active = true;
+        this.active = active;
         this.ageRange = normalizeAgeRange(ageRange);
         this.pageCount = type.supportsStoryPages() ? 0 : null;
     }
 
     public static Content create(ContentType type, String externalKey, Integer ageRange) {
-        return new Content(type, externalKey, ageRange);
+        return create(type, externalKey, ageRange, true);
+    }
+
+    public static Content create(ContentType type, String externalKey, Integer ageRange, boolean active) {
+        return new Content(type, externalKey, ageRange, active);
     }
 
     public ContentType getType() {
@@ -91,6 +96,22 @@ public class Content extends BaseJpaEntity {
         return Collections.unmodifiableSet(contributors);
     }
 
+    public Optional<ContentLocalization> findLocalization(LanguageCode languageCode) {
+        LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
+        return localizations.stream()
+                .filter(candidate -> candidate.getLanguageCode() == requiredLanguageCode)
+                .findFirst();
+    }
+
+    public Optional<StoryPage> findStoryPage(int pageNumber) {
+        if (pageNumber <= 0) {
+            throw new IllegalArgumentException("Story page number must be positive");
+        }
+        return storyPages.stream()
+                .filter(candidate -> candidate.getPageNumber() == pageNumber)
+                .findFirst();
+    }
+
     public void updateDetails(String externalKey, Integer ageRange, boolean active) {
         this.externalKey = requireText(externalKey, "Content external key must not be blank");
         this.ageRange = normalizeAgeRange(ageRange);
@@ -108,9 +129,8 @@ public class Content extends BaseJpaEntity {
             LocalizationStatus status,
             ProcessingStatus processingStatus,
             java.time.Instant publishedAt) {
-        ContentLocalization localization = localizations.stream()
-                .filter(candidate -> candidate.getLanguageCode() == requireLanguageCode(languageCode))
-                .findFirst()
+        validateLocalizationFieldsForType(bodyText, audioMediaId);
+        ContentLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode, title, status, processingStatus));
         localization.updateContent(title, description, bodyText, coverMediaId, audioMediaId, durationMinutes);
         localization.markStatus(status, publishedAt);
@@ -144,6 +164,11 @@ public class Content extends BaseJpaEntity {
             LanguageCode languageCode,
             String creditName,
             int sortOrder) {
+        Long contributorId = requireContributorId(contributor);
+        if (contributors.stream()
+                .anyMatch(assignment -> assignment.matchesAssignment(contributorId, role, languageCode))) {
+            throw new IllegalArgumentException("Contributor assignment already exists for role and language");
+        }
         requireContributorSortOrderAvailability(role, languageCode, sortOrder);
         ContentContributor assignment = new ContentContributor(
                 this,
@@ -173,6 +198,27 @@ public class Content extends BaseJpaEntity {
 
     private void syncPageCount() {
         pageCount = storyPages.size();
+    }
+
+    private void validateLocalizationFieldsForType(String bodyText, Long audioMediaId) {
+        boolean hasBodyText = bodyText != null && !bodyText.isBlank();
+        boolean hasAudioMedia = audioMediaId != null;
+        if (type == ContentType.STORY) {
+            if (hasBodyText) {
+                throw new IllegalArgumentException("Story localizations must not store body text");
+            }
+            if (hasAudioMedia) {
+                throw new IllegalArgumentException("Story localizations must not store a single audio media reference");
+            }
+            return;
+        }
+        if ((type == ContentType.AUDIO_STORY || type == ContentType.MEDITATION) && !hasBodyText) {
+            throw new IllegalArgumentException("Body text is required for audio stories and meditations");
+        }
+        if ((type == ContentType.AUDIO_STORY || type == ContentType.MEDITATION || type == ContentType.LULLABY)
+                && !hasAudioMedia) {
+            throw new IllegalArgumentException("Audio media is required for non-story content localizations");
+        }
     }
 
     private void ensureStoryType() {
@@ -209,6 +255,14 @@ public class Content extends BaseJpaEntity {
             throw new IllegalArgumentException("Contributor role must not be null");
         }
         return role;
+    }
+
+    private static Long requireContributorId(Contributor contributor) {
+        Long contributorId = contributor.getId();
+        if (contributorId == null || contributorId <= 0) {
+            throw new IllegalStateException("Contributor must be persisted before content assignment");
+        }
+        return contributorId;
     }
 
     private static LanguageCode requireLanguageCode(LanguageCode languageCode) {
