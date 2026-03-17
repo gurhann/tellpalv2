@@ -300,7 +300,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Category aggregate'i localization ve curation child kayitlariyla birlikte tanimlanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F05-T03` `TODO`
+- `F05-T03` `DONE`
   - Objective: `category.api` contract'larini olusturmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/api/**`
   - Dependencies: `F05-T02`
