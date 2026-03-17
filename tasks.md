@@ -576,7 +576,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F11-T01` `TODO`
+- `F11-T01` `DONE`
   - Objective: `asset_processing` tablosunu ve localization `processing_status` kolonunu eklemek.
   - Files/modules: `be/src/main/resources/db/migration/V12__create_asset_processing_tables.sql`
   - Dependencies: `F07-T01`, `F04-T01`
