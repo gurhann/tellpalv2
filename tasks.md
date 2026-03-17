@@ -537,7 +537,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `SubscriptionProduct`, `PurchaseEvent`, `PurchaseContextSnapshot` aggregate sahiplikleri netlesir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F10-T03` `TODO`
+- `F10-T03` `DONE`
   - Objective: Product catalog application service ve admin kontratlarini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/purchase/application/**`, `be/src/main/java/com/tellpal/v2/purchase/api/**`
   - Dependencies: `F10-T02`

@@ -6,6 +6,8 @@ public interface SubscriptionProductRepository {
 
     Optional<SubscriptionProduct> findById(Long productId);
 
+    java.util.List<SubscriptionProduct> findAllOrdered();
+
     Optional<SubscriptionProduct> findByStoreCodeAndProductId(String storeCode, String productId);
 
     boolean existsByStoreCodeAndProductId(String storeCode, String productId);

@@ -22,6 +22,11 @@ public class JpaSubscriptionProductRepositoryAdapter implements SubscriptionProd
     }
 
     @Override
+    public java.util.List<SubscriptionProduct> findAllOrdered() {
+        return repository.findAllByOrderByStoreCodeAscProductIdAsc();
+    }
+
+    @Override
     public Optional<SubscriptionProduct> findByStoreCodeAndProductId(String storeCode, String productId) {
         return repository.findByStoreCodeAndProductId(storeCode, productId);
     }

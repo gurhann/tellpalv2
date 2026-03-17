@@ -8,6 +8,8 @@ import com.tellpal.v2.purchase.domain.SubscriptionProduct;
 
 interface SpringDataSubscriptionProductRepository extends JpaRepository<SubscriptionProduct, Long> {
 
+    java.util.List<SubscriptionProduct> findAllByOrderByStoreCodeAscProductIdAsc();
+
     Optional<SubscriptionProduct> findByStoreCodeAndProductId(String storeCode, String productId);
 
     boolean existsByStoreCodeAndProductId(String storeCode, String productId);
