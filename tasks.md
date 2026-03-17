@@ -286,7 +286,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F05-T01` `TODO`
+- `F05-T01` `DONE`
   - Objective: Category semasini olusturan migration'lari eklemek.
   - Files/modules: `be/src/main/resources/db/migration/V7__create_category_tables.sql`
   - Dependencies: `F04-T01`
