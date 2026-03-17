@@ -2,6 +2,7 @@ package com.tellpal.v2.admin.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import com.tellpal.v2.admin.domain.AdminRoleRepository;
 import com.tellpal.v2.admin.domain.AdminUser;
 import com.tellpal.v2.admin.domain.AdminUserRepository;
 import com.tellpal.v2.admin.infrastructure.security.AdminPasswordHasher;
+import com.tellpal.v2.shared.web.admin.AdminWebRequestSupport;
 import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
 @SpringBootTest
@@ -56,6 +58,7 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
 
         MvcResult result = mockMvc.perform(post("/api/admin/auth/login")
                         .contentType("application/json")
+                        .header(AdminWebRequestSupport.REQUEST_ID_HEADER, "req-login-001")
                         .content("""
                                 {
                                   "username": "admin-root",
@@ -63,6 +66,7 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
                                 }
                                 """))
                 .andExpect(status().isOk())
+                .andExpect(header().string(AdminWebRequestSupport.REQUEST_ID_HEADER, "req-login-001"))
                 .andReturn();
 
         JsonNode payload = readPayload(result);

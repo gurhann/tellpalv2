@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.tellpal.v2.admin.api.AdminAuthenticationApi;
 import com.tellpal.v2.admin.api.AdminAuthenticationResult;
 import com.tellpal.v2.admin.api.AdminLoginCommand;
 import com.tellpal.v2.admin.api.AdminLogoutCommand;
 import com.tellpal.v2.admin.api.AdminRefreshCommand;
+import com.tellpal.v2.shared.web.admin.AdminApiController;
+import com.tellpal.v2.shared.web.admin.AdminWebRequestSupport;
 
-@RestController
+@AdminApiController
 @RequestMapping("/api/admin/auth")
 public class AdminAuthController {
 
@@ -34,7 +35,7 @@ public class AdminAuthController {
                 request.username(),
                 request.password(),
                 httpServletRequest.getHeader("User-Agent"),
-                resolveClientIp(httpServletRequest))));
+                AdminWebRequestSupport.resolveClientIp(httpServletRequest))));
     }
 
     @PostMapping("/refresh")
@@ -44,20 +45,12 @@ public class AdminAuthController {
         return AdminAuthenticationResponse.from(adminAuthenticationApi.refresh(new AdminRefreshCommand(
                 request.refreshToken(),
                 httpServletRequest.getHeader("User-Agent"),
-                resolveClientIp(httpServletRequest))));
+                AdminWebRequestSupport.resolveClientIp(httpServletRequest))));
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@Valid @RequestBody AdminLogoutRequest request) {
         adminAuthenticationApi.logout(new AdminLogoutCommand(request.refreshToken()));
-    }
-
-    private static String resolveClientIp(HttpServletRequest request) {
-        String forwardedFor = request.getHeader("X-Forwarded-For");
-        if (forwardedFor == null || forwardedFor.isBlank()) {
-            return request.getRemoteAddr();
-        }
-        return forwardedFor.split(",", 2)[0].trim();
     }
 }

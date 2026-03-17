@@ -332,7 +332,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F06-T01` `TODO`
+- `F06-T01` `DONE`
   - Objective: Admin web ortak katmanini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/shared/web/admin/**`, `be/src/main/java/com/tellpal/v2/admin/web/admin/**`
   - Dependencies: `F02-T05`

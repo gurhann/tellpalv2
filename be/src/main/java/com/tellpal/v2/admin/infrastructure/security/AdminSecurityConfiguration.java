@@ -18,7 +18,11 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
+import com.tellpal.v2.shared.web.admin.AdminRequestLoggingFilter;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(AdminSecurityProperties.class)
@@ -52,7 +56,8 @@ public class AdminSecurityConfiguration {
     @Order(1)
     SecurityFilterChain adminSecurityFilterChain(
             HttpSecurity http,
-            AdminJwtAuthenticationConverter authenticationConverter) throws Exception {
+            AdminJwtAuthenticationConverter authenticationConverter,
+            AdminRequestLoggingFilter adminRequestLoggingFilter) throws Exception {
         http.securityMatcher("/api/admin/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -67,8 +72,14 @@ public class AdminSecurityConfiguration {
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter)))
                 .securityContext(AbstractHttpConfigurer::disable)
                 .requestCache(AbstractHttpConfigurer::disable)
-                .anonymous(Customizer.withDefaults());
+                .anonymous(Customizer.withDefaults())
+                .addFilterAfter(adminRequestLoggingFilter, AuthorizationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    AdminRequestLoggingFilter adminRequestLoggingFilter(AdminAuthenticationFacade authenticationFacade) {
+        return new AdminRequestLoggingFilter(authenticationFacade);
     }
 }

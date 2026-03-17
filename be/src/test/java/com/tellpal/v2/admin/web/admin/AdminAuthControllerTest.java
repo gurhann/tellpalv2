@@ -21,10 +21,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.tellpal.v2.admin.api.AdminAuthenticationApi;
 import com.tellpal.v2.admin.api.AdminAuthenticationResult;
 import com.tellpal.v2.admin.application.AdminAuthenticationFailedException;
+import com.tellpal.v2.shared.web.admin.AdminApiExceptionHandler;
+import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
+import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @WebMvcTest(AdminAuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import(AdminAuthExceptionHandler.class)
+@Import({AdminAuthExceptionHandler.class, AdminApiExceptionHandler.class, AdminProblemDetailsFactory.class})
 class AdminAuthControllerTest {
 
     @Autowired
@@ -32,6 +35,9 @@ class AdminAuthControllerTest {
 
     @MockitoBean
     private AdminAuthenticationApi adminAuthenticationApi;
+
+    @MockitoBean
+    private AdminAuthenticationFacade adminAuthenticationFacade;
 
     @Test
     void loginReturnsAuthenticationPayload() throws Exception {
@@ -115,6 +121,9 @@ class AdminAuthControllerTest {
                                 """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.title").value("Authentication failed"))
-                .andExpect(jsonPath("$.detail").value("Invalid admin credentials"));
+                .andExpect(jsonPath("$.detail").value("Invalid admin credentials"))
+                .andExpect(jsonPath("$.errorCode").value("auth_failed"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty())
+                .andExpect(jsonPath("$.path").value("/api/admin/auth/login"));
     }
 }
