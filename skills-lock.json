@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "ddd:software-architecture": {
+      "source": "neolabhq/context-engineering-kit",
+      "sourceType": "github",
+      "computedHash": "852757a240fc6d6eaca761c1f3658fb82d103d54e359b59c324696d3415dfb77"
+    }
+  }
+}
