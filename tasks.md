@@ -657,7 +657,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `/api/contents` liste ve detay endpoint'leri isFree, package refs ve optimized cover refs ile cevap verir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F12-T04` `TODO`
+- `F12-T04` `DONE`
   - Objective: Public category controller'larini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/category/web/mobile/**`
   - Dependencies: `F12-T02`
