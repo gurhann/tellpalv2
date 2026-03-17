@@ -233,7 +233,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F04-T01` `TODO`
+- `F04-T01` `DONE`
   - Objective: `contents`, `content_localizations` ve `story_pages` migration'larini yazmak.
   - Files/modules: `be/src/main/resources/db/migration/V5__create_content_tables.sql`
   - Dependencies: `F03-T01`
