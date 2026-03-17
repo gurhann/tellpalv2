@@ -162,7 +162,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Refresh token zinciri hash ile saklanir, rotate edilir ve reuse durumlari reddedilir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F02-T05` `TODO`
+- `F02-T05` `DONE`
   - Objective: Admin auth web adapter'larini ve DTO'larini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/admin/web/admin/**`
   - Dependencies: `F02-T04`
