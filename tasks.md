@@ -484,7 +484,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `content_events`, `app_events`, unique/event index'leri ve partial unique legacy index'leri olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F09-T02` `TODO`
+- `F09-T02` `DONE`
   - Objective: ContentEvent ve AppEvent domain modelini ve persistence katmanini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/event/domain/**`, `be/src/main/java/com/tellpal/v2/event/infrastructure/persistence/**`
   - Dependencies: `F09-T01`
