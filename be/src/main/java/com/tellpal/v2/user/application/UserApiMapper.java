@@ -1,5 +1,6 @@
 package com.tellpal.v2.user.application;
 
+import com.tellpal.v2.user.api.AppUserReference;
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
 import com.tellpal.v2.user.domain.AppUser;
 import com.tellpal.v2.user.domain.UserProfile;
@@ -10,6 +11,15 @@ final class UserApiMapper {
     }
 
     static AuthenticatedAppUser toAuthenticatedAppUser(AppUser appUser) {
+        AppUserReference reference = toAppUserReference(appUser);
+        return new AuthenticatedAppUser(
+                reference.userId(),
+                reference.primaryProfileId(),
+                reference.firebaseUid(),
+                reference.allowMarketing());
+    }
+
+    static AppUserReference toAppUserReference(AppUser appUser) {
         AppUser requiredAppUser = requireAppUser(appUser);
         UserProfile primaryProfile = requiredAppUser.primaryProfile()
                 .orElseThrow(() -> new IllegalStateException("App user must have a primary profile"));
@@ -21,7 +31,7 @@ final class UserApiMapper {
         if (primaryProfileId == null || primaryProfileId <= 0) {
             throw new IllegalStateException("Primary profile must be persisted before it can be exposed");
         }
-        return new AuthenticatedAppUser(
+        return new AppUserReference(
                 userId,
                 primaryProfileId,
                 requiredAppUser.getFirebaseUid(),

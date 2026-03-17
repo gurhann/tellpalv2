@@ -544,8 +544,8 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Product create/update/deactivate operasyonlari controller-disinda service katmaninda toplanir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F10-T04` `TODO`
-  - Objective: RevenueCat signature verify adapter ve webhook ingest service'ini eklemek.
+- `F10-T04` `DONE`
+  - Objective: RevenueCat authorization-header verify adapter ve webhook ingest service'ini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/purchase/infrastructure/revenuecat/**`, `be/src/main/java/com/tellpal/v2/purchase/application/**`
   - Dependencies: `F10-T02`, `F10-T03`, `F08-T03`
   - Done when: Raw payload saklanir, lookup validation yapilir ve duplicate `revenuecat_event_id` reddedilir.

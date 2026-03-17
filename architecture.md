@@ -333,7 +333,7 @@ Namespace:
 
 Kural:
 
-- Signature doğrulaması controller sınırında yapılır.
+- RevenueCat `Authorization` header doğrulaması controller sınırında yapılır.
 - Doğrulama başarısızsa event işlenmez.
 
 ## 11. Temel İş Akışları
@@ -417,14 +417,14 @@ Storage yolu standardı:
 
 ### 13.3 Webhook güvenliği
 
-- RevenueCat imzası doğrulanmadan payload işlenmez.
+- RevenueCat `Authorization` header değeri doğrulanmadan payload işlenmez.
 - Raw payload sadece doğrulanmış istekler için saklanır.
 
 ### 13.4 Gizli bilgiler
 
 - JWT signing key
 - Firebase service account bilgileri
-- RevenueCat webhook secret
+- RevenueCat webhook `Authorization` header değeri
 - Veritabanı bağlantı bilgileri
 
 tamamı environment veya secret manager üzerinden sağlanır; repoya yazılmaz.

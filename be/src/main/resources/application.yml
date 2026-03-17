@@ -43,3 +43,6 @@ tellpal:
       project-id: ${TELLPAL_FIREBASE_PROJECT_ID:}
       credentials-path: ${TELLPAL_FIREBASE_CREDENTIALS_PATH:}
       check-revoked: ${TELLPAL_FIREBASE_CHECK_REVOKED:false}
+  purchase:
+    revenuecat:
+      authorization-header: ${TELLPAL_REVENUECAT_AUTHORIZATION_HEADER:}

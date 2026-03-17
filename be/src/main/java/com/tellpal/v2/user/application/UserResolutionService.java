@@ -3,15 +3,17 @@ package com.tellpal.v2.user.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tellpal.v2.user.api.AppUserReference;
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
 import com.tellpal.v2.user.api.UserAuthenticationException;
+import com.tellpal.v2.user.api.UserLookupApi;
 import com.tellpal.v2.user.api.UserResolutionApi;
 import com.tellpal.v2.user.application.UserApplicationExceptions.FirebaseTokenVerificationException;
 import com.tellpal.v2.user.domain.AppUser;
 import com.tellpal.v2.user.domain.AppUserRepository;
 
 @Service
-public class UserResolutionService implements UserResolutionApi {
+public class UserResolutionService implements UserResolutionApi, UserLookupApi {
 
     private final AppUserRepository appUserRepository;
     private final FirebaseTokenVerifier firebaseTokenVerifier;
@@ -38,6 +40,16 @@ public class UserResolutionService implements UserResolutionApi {
 
         AppUser persistedUser = requiresSave ? appUserRepository.save(appUser) : appUser;
         return UserApiMapper.toAuthenticatedAppUser(persistedUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.Optional<AppUserReference> findByFirebaseUid(String firebaseUid) {
+        if (firebaseUid == null || firebaseUid.isBlank()) {
+            throw new IllegalArgumentException("Firebase UID must not be blank");
+        }
+        return appUserRepository.findByFirebaseUid(firebaseUid.trim())
+                .map(UserApiMapper::toAppUserReference);
     }
 
     private VerifiedFirebaseToken verifyToken(String idToken) {
