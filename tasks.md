@@ -491,7 +491,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Event kayitlari immutable davranis varsayimiyla modellenir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F09-T03` `TODO`
+- `F09-T03` `DONE`
   - Objective: Single ve batch ingest application service'lerini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/event/application/**`, `be/src/main/java/com/tellpal/v2/event/api/**`
   - Dependencies: `F09-T02`, `F08-T03`, `F04-T04`
