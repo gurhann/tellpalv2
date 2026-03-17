@@ -728,7 +728,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Illegal internal package erisimleri ve circular dependency'ler test ile yakalanir.
   - Verify: `cd be && ./mvnw -q -Dtest=*ApplicationModules* test`
 
-- `F14-T02` `TODO`
+- `F14-T02` `DONE`
   - Objective: Structured logging, request ID ve actuator/micrometer tabanini eklemek.
   - Files/modules: `be/src/main/resources/application.yml`, `be/src/main/java/com/tellpal/v2/shared/infrastructure/observability/**`
   - Dependencies: `F12-T05`

@@ -2,6 +2,8 @@ package com.tellpal.v2.purchase.web.webhook;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,10 +20,18 @@ import com.tellpal.v2.purchase.application.PurchaseApplicationExceptions.Revenue
 @RestControllerAdvice(basePackageClasses = RevenueCatWebhookController.class)
 public class RevenueCatWebhookExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(RevenueCatWebhookExceptionHandler.class);
+
     @ExceptionHandler(RevenueCatAuthorizationFailedException.class)
     ProblemDetail handleAuthorizationFailure(
             RevenueCatAuthorizationFailedException exception,
             HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.UNAUTHORIZED.value(),
+                request.getRequestURI(),
+                "revenuecat_authorization_failed",
+                exception.getMessage());
         return create(
                 HttpStatus.UNAUTHORIZED,
                 "RevenueCat authorization failed",
@@ -32,6 +42,12 @@ public class RevenueCatWebhookExceptionHandler {
 
     @ExceptionHandler(RevenueCatPayloadFormatException.class)
     ProblemDetail handleInvalidPayload(RevenueCatPayloadFormatException exception, HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.BAD_REQUEST.value(),
+                request.getRequestURI(),
+                "revenuecat_invalid_payload",
+                exception.getMessage());
         return create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid RevenueCat payload",
@@ -42,6 +58,12 @@ public class RevenueCatWebhookExceptionHandler {
 
     @ExceptionHandler(InvalidPurchaseLookupValueException.class)
     ProblemDetail handleUnknownLookup(InvalidPurchaseLookupValueException exception, HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                request.getRequestURI(),
+                "purchase_lookup_invalid",
+                exception.getMessage());
         return create(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 "Unknown lookup value",
@@ -56,6 +78,12 @@ public class RevenueCatWebhookExceptionHandler {
             AttributedContentNotFoundException.class
     })
     ProblemDetail handleAttributionConflict(RuntimeException exception, HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.CONFLICT.value(),
+                request.getRequestURI(),
+                "purchase_attribution_failed",
+                exception.getMessage());
         return create(
                 HttpStatus.CONFLICT,
                 "Purchase attribution failed",
@@ -66,6 +94,12 @@ public class RevenueCatWebhookExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ProblemDetail handleUnreadableBody(HttpMessageNotReadableException exception, HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.BAD_REQUEST.value(),
+                request.getRequestURI(),
+                "invalid_body",
+                "Request body could not be parsed");
         return create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid request body",
@@ -76,6 +110,12 @@ public class RevenueCatWebhookExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     ProblemDetail handleIllegalArgument(IllegalArgumentException exception, HttpServletRequest request) {
+        log.warn(
+                "revenuecat_webhook_failed status={} path={} errorCode={} reason={}",
+                HttpStatus.BAD_REQUEST.value(),
+                request.getRequestURI(),
+                "invalid_request",
+                exception.getMessage());
         return create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid request",

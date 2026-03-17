@@ -6,6 +6,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +39,7 @@ import static com.tellpal.v2.asset.application.AssetProcessingApplicationExcepti
 public class AssetProcessingService implements AssetProcessingApi {
 
     private static final Duration DEFAULT_LEASE_DURATION = Duration.ofMinutes(10);
+    private static final Logger log = LoggerFactory.getLogger(AssetProcessingService.class);
 
     private final Clock clock;
     private final AssetProcessingRepository assetProcessingRepository;
@@ -236,6 +239,16 @@ public class AssetProcessingService implements AssetProcessingApi {
     }
 
     private void publishStatusChanged(AssetProcessing assetProcessing) {
+        log.info(
+                "asset_processing_transition contentId={} languageCode={} status={} contentType={} externalKey={} attemptCount={} errorCode={} leaseExpiresAt={}",
+                assetProcessing.getContentId(),
+                assetProcessing.getLanguageCode().value(),
+                assetProcessing.getStatus(),
+                assetProcessing.getContentType(),
+                assetProcessing.getExternalKey(),
+                assetProcessing.getAttemptCount(),
+                assetProcessing.getLastErrorCode(),
+                assetProcessing.getLeaseExpiresAt());
         eventPublisher.publishEvent(new AssetProcessingStatusChangedEvent(
                 assetProcessing.getContentId(),
                 assetProcessing.getLanguageCode(),

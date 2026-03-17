@@ -25,7 +25,21 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics,httpexchanges
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  httpexchanges:
+    recording:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} requestId=%X{requestId:-none} %msg%n"
 
 server:
   shutdown: graceful

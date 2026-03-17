@@ -1,6 +1,9 @@
 package com.tellpal.v2.admin.infrastructure.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -16,15 +19,20 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
 import com.tellpal.v2.shared.web.admin.AdminRequestLoggingFilter;
+import com.tellpal.v2.shared.web.admin.AdminWebRequestSupport;
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(AdminSecurityProperties.class)
 public class AdminSecurityConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminSecurityConfiguration.class);
 
     @Bean
     PasswordEncoder adminPasswordEncoder(AdminSecurityProperties properties) {
@@ -50,7 +58,9 @@ public class AdminSecurityConfiguration {
     SecurityFilterChain adminSecurityFilterChain(
             HttpSecurity http,
             AdminJwtAuthenticationConverter authenticationConverter,
-            AdminRequestLoggingFilter adminRequestLoggingFilter) throws Exception {
+            AdminRequestLoggingFilter adminRequestLoggingFilter,
+            AuthenticationEntryPoint adminAuthenticationEntryPoint,
+            AccessDeniedHandler adminAccessDeniedHandler) throws Exception {
         http.securityMatcher("/api/admin/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -61,6 +71,9 @@ public class AdminSecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/admin/auth/**").permitAll()
                         .anyRequest().authenticated())
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(adminAuthenticationEntryPoint)
+                        .accessDeniedHandler(adminAccessDeniedHandler))
                 .oauth2ResourceServer(resourceServer -> resourceServer
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter)))
                 .securityContext(AbstractHttpConfigurer::disable)
@@ -74,5 +87,34 @@ public class AdminSecurityConfiguration {
     @Bean
     AdminRequestLoggingFilter adminRequestLoggingFilter(AdminAuthenticationFacade authenticationFacade) {
         return new AdminRequestLoggingFilter(authenticationFacade);
+    }
+
+    @Bean
+    AuthenticationEntryPoint adminAuthenticationEntryPoint() {
+        return (request, response, exception) -> {
+            log.warn(
+                    "admin_auth_failed status={} method={} path={} clientIp={} reason={}",
+                    HttpStatus.UNAUTHORIZED.value(),
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    AdminWebRequestSupport.resolveClientIp(request),
+                    exception.getMessage());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        };
+    }
+
+    @Bean
+    AccessDeniedHandler adminAccessDeniedHandler() {
+        return (request, response, exception) -> {
+            log.warn(
+                    "admin_auth_failed status={} method={} path={} clientIp={} requestId={} reason={}",
+                    HttpStatus.FORBIDDEN.value(),
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    AdminWebRequestSupport.resolveClientIp(request),
+                    AdminWebRequestSupport.resolveRequestId(request),
+                    exception.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
+        };
     }
 }
