@@ -590,7 +590,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `AssetProcessing` aggregate'i retry ve terminal-state kurallariyla olusur.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F11-T03` `TODO`
+- `F11-T03` `DONE`
   - Objective: Processing application service, content readiness event'leri ve retry akisini yazmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/application/**`, `be/src/main/java/com/tellpal/v2/asset/api/**`, `be/src/main/java/com/tellpal/v2/content/api/**`
   - Dependencies: `F11-T02`, `F04-T04`, `F07-T02`
