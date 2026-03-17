@@ -44,7 +44,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F06` | CMS admin API'leri ve admin-web adapter tabani | admin, content, category, asset | `F02`, `F03`, `F04`, `F05` | `DONE` |
 | `F07` | Editorial publication policy ve A/B free-access yonetimi | content, category, admin web | `F04`, `F06` | `DONE` |
 | `F08` | Mobile user ve profile yonetimi, Firebase UID esleme | user, shared, asset.api | `F01`, `F03` | `DONE` |
-| `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `TODO` |
+| `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `DONE` |
 | `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `TODO` |
 | `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `TODO` |
 | `F12` | Public content/category delivery API'leri | content, category, asset.api | `F05`, `F07`, `F11` | `TODO` |
@@ -505,7 +505,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Content/app event ve batch endpoint'leri Firebase auth ile korunur.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F09-T05` `TODO`
+- `F09-T05` `DONE`
   - Objective: Event tracking property ve integration testlerini eklemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/event/**`
   - Dependencies: `F09-T04`
