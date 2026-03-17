@@ -42,7 +42,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F04` | Content write model, localizations, story pages ve contributor baglari | content, shared, asset.api | `F01`, `F03` | `DONE` |
 | `F05` | Category write model ve dil bazli curation | category, content.api, asset.api | `F01`, `F03`, `F04` | `DONE` |
 | `F06` | CMS admin API'leri ve admin-web adapter tabani | admin, content, category, asset | `F02`, `F03`, `F04`, `F05` | `DONE` |
-| `F07` | Editorial publication policy ve A/B free-access yonetimi | content, category, admin web | `F04`, `F06` | `TODO` |
+| `F07` | Editorial publication policy ve A/B free-access yonetimi | content, category, admin web | `F04`, `F06` | `DONE` |
 | `F08` | Mobile user ve profile yonetimi, Firebase UID esleme | user, shared, asset.api | `F01`, `F03` | `TODO` |
 | `F09` | Offline-first event ingest ve analytics index tabani | event, user.api, content.api | `F04`, `F08` | `TODO` |
 | `F10` | RevenueCat product catalog, webhook ingest ve attribution | purchase, user.api, event.api, content.api | `F04`, `F08`, `F09` | `TODO` |
@@ -413,7 +413,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Publication state gecisleri ve free-access CRUD operasyonlari controller seviyesinde acilir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F07-T05` `TODO`
+- `F07-T05` `DONE`
   - Objective: Publication ve free-access kurallari icin test paketini eklemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/content/**`
   - Dependencies: `F07-T04`
