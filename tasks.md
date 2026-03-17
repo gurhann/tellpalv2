@@ -530,7 +530,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `subscription_products`, purchase lookup tablolari, `purchase_events` ve `purchase_context_snapshots` olusur.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F10-T02` `TODO`
+- `F10-T02` `DONE`
   - Objective: Purchase domain modeli ve persistence katmanini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/purchase/domain/**`, `be/src/main/java/com/tellpal/v2/purchase/infrastructure/persistence/**`
   - Dependencies: `F10-T01`
