@@ -5,9 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,17 +18,8 @@ class LanguageSeedIntegrationTest extends PostgresIntegrationTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private DataSource dataSource;
-
     @Test
     void seedsSupportedLanguagesAsActiveRecords() {
-        Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .load()
-                .migrate();
-
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 "select code, display_name, is_active from languages order by code");
 

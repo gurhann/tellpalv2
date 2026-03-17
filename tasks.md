@@ -38,7 +38,7 @@ Bu backlog su kaynaklarla hizalidir:
 |---|---|---|---|---|
 | `F01` | Maven wrapper ile calisan backend iskeleti, temel config, Flyway baslangici ve test tabani | platform, shared | Yok | `DONE` |
 | `F02` | Admin identity, rol modeli, JWT auth ve refresh token rotasyonu | admin, shared | `F01` | `DONE` |
-| `F03` | Asset registry, storage abstraction ve media metadata sahipligi | asset, shared | `F01` | `TODO` |
+| `F03` | Asset registry, storage abstraction ve media metadata sahipligi | asset, shared | `F01` | `DONE` |
 | `F04` | Content write model, localizations, story pages ve contributor baglari | content, shared, asset.api | `F01`, `F03` | `TODO` |
 | `F05` | Category write model ve dil bazli curation | category, content.api, asset.api | `F01`, `F03`, `F04` | `TODO` |
 | `F06` | CMS admin API'leri ve admin-web adapter tabani | admin, content, category, asset | `F02`, `F03`, `F04`, `F05` | `TODO` |
@@ -215,7 +215,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Asset kaydi, metadata guncelleme ve signed URL cache yenileme akislari service seviyesinde calisir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F03-T05` `TODO`
+- `F03-T05` `DONE`
   - Objective: Asset repository ve migration davranisini integration test ile kilitlemek.
   - Files/modules: `be/src/test/java/com/tellpal/v2/asset/**`
   - Dependencies: `F03-T04`
