@@ -611,7 +611,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Cover variants, optimized audio ve story/non-story ZIP naming kurallari kodlanir.
   - Verify: `cd be && ./mvnw -q -DskipTests test-compile`
 
-- `F11-T06` `TODO`
+- `F11-T06` `DONE`
   - Objective: Processing trigger/status admin endpoint'lerini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/web/admin/**`
   - Dependencies: `F11-T03`, `F06-T04`

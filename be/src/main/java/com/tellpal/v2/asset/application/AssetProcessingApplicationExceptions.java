@@ -24,6 +24,16 @@ public final class AssetProcessingApplicationExceptions {
         }
     }
 
+    public static final class AssetProcessingAlreadyPendingException extends RuntimeException {
+
+        public AssetProcessingAlreadyPendingException(Long contentId, LanguageCode languageCode) {
+            super("Asset processing is already pending for content "
+                    + contentId
+                    + " and language "
+                    + languageCode.value());
+        }
+    }
+
     public static final class AssetProcessingAlreadyCompletedException extends RuntimeException {
 
         public AssetProcessingAlreadyCompletedException(Long contentId, LanguageCode languageCode) {

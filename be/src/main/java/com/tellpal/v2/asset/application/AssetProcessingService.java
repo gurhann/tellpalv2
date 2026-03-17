@@ -27,6 +27,7 @@ import com.tellpal.v2.asset.domain.ProcessingContentType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyCompletedException;
+import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyPendingException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyRunningException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingNotFoundException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
@@ -77,6 +78,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord start(StartAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        ensureStartable(assetProcessing);
         assetProcessing.start(Instant.now(clock), DEFAULT_LEASE_DURATION);
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -87,6 +89,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        ensureRetryable(assetProcessing);
         assetProcessing.refreshContext(
                 ProcessingContentType.valueOf(command.contentType().name()),
                 command.externalKey(),
@@ -190,6 +193,46 @@ public class AssetProcessingService implements AssetProcessingApi {
                     assetProcessing.getContentId(),
                     assetProcessing.getLanguageCode());
         }
+    }
+
+    private void ensureStartable(AssetProcessing assetProcessing) {
+        AssetProcessingStatus status = assetProcessing.getStatus();
+        if (status == AssetProcessingStatus.PENDING) {
+            return;
+        }
+        if (status == AssetProcessingStatus.PROCESSING) {
+            throw new AssetProcessingAlreadyRunningException(
+                    assetProcessing.getContentId(),
+                    assetProcessing.getLanguageCode());
+        }
+        if (status == AssetProcessingStatus.COMPLETED) {
+            throw new AssetProcessingAlreadyCompletedException(
+                    assetProcessing.getContentId(),
+                    assetProcessing.getLanguageCode());
+        }
+        throw new AssetProcessingRetryRequiredException(
+                assetProcessing.getContentId(),
+                assetProcessing.getLanguageCode());
+    }
+
+    private void ensureRetryable(AssetProcessing assetProcessing) {
+        AssetProcessingStatus status = assetProcessing.getStatus();
+        if (status == AssetProcessingStatus.FAILED) {
+            return;
+        }
+        if (status == AssetProcessingStatus.PENDING) {
+            throw new AssetProcessingAlreadyPendingException(
+                    assetProcessing.getContentId(),
+                    assetProcessing.getLanguageCode());
+        }
+        if (status == AssetProcessingStatus.PROCESSING) {
+            throw new AssetProcessingAlreadyRunningException(
+                    assetProcessing.getContentId(),
+                    assetProcessing.getLanguageCode());
+        }
+        throw new AssetProcessingAlreadyCompletedException(
+                assetProcessing.getContentId(),
+                assetProcessing.getLanguageCode());
     }
 
     private void publishStatusChanged(AssetProcessing assetProcessing) {

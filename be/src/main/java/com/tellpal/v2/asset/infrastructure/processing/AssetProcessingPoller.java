@@ -52,17 +52,25 @@ public class AssetProcessingPoller {
 
     private void recoverExpiredLeases(Instant now) {
         for (AssetProcessing expired : assetProcessingRepository.findExpiredLeases(now, batchSize)) {
-            assetProcessingApi.recoverExpiredLease(new RecoverExpiredAssetProcessingCommand(
-                    expired.getContentId(),
-                    expired.getLanguageCode()));
+            try {
+                assetProcessingApi.recoverExpiredLease(new RecoverExpiredAssetProcessingCommand(
+                        expired.getContentId(),
+                        expired.getLanguageCode()));
+            } catch (RuntimeException ignored) {
+                // Another worker may already have advanced the job; polling should continue.
+            }
         }
     }
 
     private void processPendingJobs(Instant now, AssetProcessingJobExecutor jobExecutor) {
         for (AssetProcessing pending : assetProcessingRepository.findPendingBefore(now, batchSize)) {
-            jobExecutor.process(assetProcessingApi.start(new StartAssetProcessingCommand(
-                    pending.getContentId(),
-                    pending.getLanguageCode())));
+            try {
+                jobExecutor.process(assetProcessingApi.start(new StartAssetProcessingCommand(
+                        pending.getContentId(),
+                        pending.getLanguageCode())));
+            } catch (RuntimeException ignored) {
+                // Skip conflicted jobs and continue polling the remaining batch.
+            }
         }
     }
 
