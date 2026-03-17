@@ -583,7 +583,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `PENDING -> PROCESSING -> COMPLETED|FAILED` durum makinasi semada temsil edilir.
   - Verify: `cd be && ./mvnw flyway:migrate`
 
-- `F11-T02` `TODO`
+- `F11-T02` `DONE`
   - Objective: Processing domain modeli ve persistence katmanini kurmak.
   - Files/modules: `be/src/main/java/com/tellpal/v2/asset/domain/**`, `be/src/main/java/com/tellpal/v2/asset/infrastructure/persistence/**`
   - Dependencies: `F11-T01`, `F03-T02`
