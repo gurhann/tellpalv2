@@ -1,4 +1,4 @@
-package com.tellpal.v2.user.web.mobile;
+package com.tellpal.v2.event.web.mobile;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,14 +13,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.tellpal.v2.user.application.UserApplicationExceptions.AppUserNotFoundException;
-import com.tellpal.v2.user.application.UserApplicationExceptions.AssetMediaTypeMismatchException;
-import com.tellpal.v2.user.application.UserApplicationExceptions.AssetReferenceNotFoundException;
-import com.tellpal.v2.user.application.UserApplicationExceptions.UserProfileNotFoundException;
+import com.tellpal.v2.event.application.EventApplicationExceptions.ReferencedContentNotFoundException;
 import com.tellpal.v2.user.api.UserAuthenticationException;
 
-@RestControllerAdvice(basePackageClasses = ProfileMobileController.class)
-public class UserMobileExceptionHandler {
+@RestControllerAdvice(basePackageClasses = EventMobileController.class)
+public class EventMobileExceptionHandler {
 
     @ExceptionHandler(UserAuthenticationException.class)
     ProblemDetail handleInvalidFirebaseToken(
@@ -29,31 +26,11 @@ public class UserMobileExceptionHandler {
         return create(HttpStatus.UNAUTHORIZED, "Invalid Firebase token", exception.getMessage(), "firebase_auth_error", request);
     }
 
-    @ExceptionHandler(AppUserNotFoundException.class)
-    ProblemDetail handleAppUserNotFound(AppUserNotFoundException exception, HttpServletRequest request) {
-        return create(HttpStatus.NOT_FOUND, "App user not found", exception.getMessage(), "app_user_not_found", request);
-    }
-
-    @ExceptionHandler(UserProfileNotFoundException.class)
-    ProblemDetail handleUserProfileNotFound(UserProfileNotFoundException exception, HttpServletRequest request) {
-        return create(HttpStatus.NOT_FOUND, "User profile not found", exception.getMessage(), "user_profile_not_found", request);
-    }
-
-    @ExceptionHandler(AssetReferenceNotFoundException.class)
-    ProblemDetail handleAssetReferenceNotFound(AssetReferenceNotFoundException exception, HttpServletRequest request) {
-        return create(HttpStatus.BAD_REQUEST, "Invalid avatar reference", exception.getMessage(), "asset_not_found", request);
-    }
-
-    @ExceptionHandler(AssetMediaTypeMismatchException.class)
-    ProblemDetail handleAssetMediaTypeMismatch(
-            AssetMediaTypeMismatchException exception,
+    @ExceptionHandler(ReferencedContentNotFoundException.class)
+    ProblemDetail handleReferencedContentNotFound(
+            ReferencedContentNotFoundException exception,
             HttpServletRequest request) {
-        return create(
-                HttpStatus.BAD_REQUEST,
-                "Invalid avatar media type",
-                exception.getMessage(),
-                "asset_media_type_mismatch",
-                request);
+        return create(HttpStatus.BAD_REQUEST, "Invalid content reference", exception.getMessage(), "content_not_found", request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

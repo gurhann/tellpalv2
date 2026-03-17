@@ -498,7 +498,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Duplicate insert'ler unique constraint ve idempotent cevap mantigiyla ele alinir.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F09-T04` `TODO`
+- `F09-T04` `DONE`
   - Objective: Mobile event ingest endpoint'lerini expose etmek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/event/web/mobile/**`
   - Dependencies: `F09-T03`

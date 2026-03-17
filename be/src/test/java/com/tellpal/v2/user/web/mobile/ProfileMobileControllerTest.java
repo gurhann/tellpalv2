@@ -20,8 +20,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
+import com.tellpal.v2.user.api.UserAuthenticationException;
 import com.tellpal.v2.user.api.UserResolutionApi;
-import com.tellpal.v2.user.application.UserApplicationExceptions.FirebaseTokenVerificationException;
 import com.tellpal.v2.user.application.UserApplicationExceptions.UserProfileNotFoundException;
 import com.tellpal.v2.user.application.UserProfileResults.UserProfileRecord;
 import com.tellpal.v2.user.application.UserProfileService;
@@ -148,7 +148,7 @@ class ProfileMobileControllerTest {
     @Test
     void invalidFirebaseTokenReturnsUnauthorizedProblemDetails() throws Exception {
         when(userResolutionApi.resolveOrCreateByIdToken(eq("stub:expired-token")))
-                .thenThrow(new FirebaseTokenVerificationException("Token expired"));
+                .thenThrow(new UserAuthenticationException("Token expired"));
 
         mockMvc.perform(get("/api/profiles")
                         .header("Authorization", "Bearer stub:expired-token"))

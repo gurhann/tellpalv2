@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
+import com.tellpal.v2.user.api.UserAuthenticationException;
 import com.tellpal.v2.user.api.UserResolutionApi;
+import com.tellpal.v2.user.application.UserApplicationExceptions.FirebaseTokenVerificationException;
 import com.tellpal.v2.user.domain.AppUser;
 import com.tellpal.v2.user.domain.AppUserRepository;
 
@@ -24,7 +26,7 @@ public class UserResolutionService implements UserResolutionApi {
     @Override
     @Transactional
     public AuthenticatedAppUser resolveOrCreateByIdToken(String idToken) {
-        VerifiedFirebaseToken verifiedToken = firebaseTokenVerifier.verify(idToken);
+        VerifiedFirebaseToken verifiedToken = verifyToken(idToken);
         AppUser appUser = appUserRepository.findByFirebaseUid(verifiedToken.firebaseUid())
                 .orElseGet(() -> AppUser.create(verifiedToken.firebaseUid(), false));
 
@@ -36,5 +38,13 @@ public class UserResolutionService implements UserResolutionApi {
 
         AppUser persistedUser = requiresSave ? appUserRepository.save(appUser) : appUser;
         return UserApiMapper.toAuthenticatedAppUser(persistedUser);
+    }
+
+    private VerifiedFirebaseToken verifyToken(String idToken) {
+        try {
+            return firebaseTokenVerifier.verify(idToken);
+        } catch (FirebaseTokenVerificationException exception) {
+            throw new UserAuthenticationException(exception.getMessage(), exception);
+        }
     }
 }
