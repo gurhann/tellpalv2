@@ -385,7 +385,7 @@ Bir feature ancak su durumda kapanabilir:
 
 #### Atomic Tasks
 
-- `F07-T01` `TODO`
+- `F07-T01` `DONE`
   - Objective: `content_free_access` semasini ve ilgili kisitlari eklemek.
   - Files/modules: `be/src/main/resources/db/migration/V8__create_content_free_access_table.sql`
   - Dependencies: `F04-T01`
