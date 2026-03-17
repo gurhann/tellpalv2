@@ -49,7 +49,7 @@ Bu backlog su kaynaklarla hizalidir:
 | `F11` | Asset processing worker, packaging ve readiness akisi | asset, content.api, admin web | `F03`, `F04`, `F06`, `F07` | `DONE` |
 | `F12` | Public content/category delivery API'leri | content, category, asset.api | `F05`, `F07`, `F11` | `DONE` |
 | `F13` | Firebase legacy migration ve import akislari | user, event | `F08`, `F09` | `DONE` |
-| `F14` | Hardening, modulith boundary sertlestirme ve release readiness | tum moduller | `F02`-`F13` | `TODO` |
+| `F14` | Hardening, modulith boundary sertlestirme ve release readiness | tum moduller | `F02`-`F13` | `DONE` |
 
 ## Global Exit Criteria
 
@@ -756,7 +756,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: Lokal kurulum, secret beklentileri, bootstrap notlari ve release checklist'i yazili hale gelir.
   - Verify: Dokumanlar ve migration compile/flyway seviyesinde dogrulanir
 
-- `F14-T06` `TODO`
+- `F14-T06` `DONE`
   - Objective: Son release verification turunu ve kalan acik risk listesini cikarmak.
   - Files/modules: `be/docs/release-readiness-report.md`
   - Dependencies: `F14-T05`
