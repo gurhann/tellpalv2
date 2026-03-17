@@ -1,0 +1,55 @@
+package com.tellpal.v2.admin.infrastructure.security;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.security.oauth2.jwt.JwtException;
+
+class AdminJwtServiceTest {
+
+    private static final Instant FIXED_NOW = Instant.parse("2026-03-17T09:15:00Z");
+    private static final AdminSecurityProperties PROPERTIES = new AdminSecurityProperties(
+            "tellpal-v2-admin",
+            "change-me-change-me-change-me-32-bytes",
+            Duration.ofHours(1),
+            Duration.ofDays(30),
+            10);
+
+    private final AdminSecurityConfiguration configuration = new AdminSecurityConfiguration();
+    private final Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
+    private final AdminJwtService jwtService = new AdminJwtService(
+            clock,
+            configuration.adminJwtEncoder(PROPERTIES),
+            configuration.adminJwtDecoder(PROPERTIES),
+            PROPERTIES);
+
+    @Test
+    void issuesAndDecodesAccessTokens() {
+        AdminAccessTokenSubject subject = new AdminAccessTokenSubject(42L, "admin-root", Set.of("ADMIN", "VIEWER"));
+
+        IssuedAdminAccessToken issuedToken = jwtService.issueAccessToken(subject);
+        AdminAccessTokenClaims decodedClaims = jwtService.decodeAccessToken(issuedToken.tokenValue());
+
+        assertThat(issuedToken.tokenValue()).isNotBlank();
+        assertThat(issuedToken.claims().adminUserId()).isEqualTo(42L);
+        assertThat(issuedToken.claims().username()).isEqualTo("admin-root");
+        assertThat(issuedToken.claims().roleCodes()).containsExactlyInAnyOrder("ADMIN", "VIEWER");
+        assertThat(issuedToken.claims().issuedAt()).isEqualTo(FIXED_NOW);
+        assertThat(issuedToken.claims().expiresAt()).isEqualTo(FIXED_NOW.plus(PROPERTIES.accessTokenTtl()));
+
+        assertThat(decodedClaims).isEqualTo(issuedToken.claims());
+    }
+
+    @Test
+    void rejectsMalformedTokens() {
+        assertThatThrownBy(() -> jwtService.decodeAccessToken("not-a-jwt"))
+                .isInstanceOf(JwtException.class);
+    }
+}

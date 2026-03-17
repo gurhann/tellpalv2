@@ -148,7 +148,7 @@ Bir feature ancak su durumda kapanabilir:
   - Done when: `AdminUser`, `AdminRole`, `AdminRefreshToken` ve repository adaptorlari DDD sinirlariyla olusur.
   - Verify: `cd be && ./mvnw -q -DskipTests compile`
 
-- `F02-T03` `TODO`
+- `F02-T03` `DONE`
   - Objective: Password hashing, token hashing, JWT sign/verify ve Spring Security config'ini eklemek.
   - Files/modules: `be/src/main/java/com/tellpal/v2/admin/infrastructure/security/**`, `be/src/main/resources/application.yml`
   - Dependencies: `F02-T02`

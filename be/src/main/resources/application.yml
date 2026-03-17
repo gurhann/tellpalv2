@@ -29,3 +29,12 @@ management:
 
 server:
   shutdown: graceful
+
+tellpal:
+  security:
+    admin:
+      jwt-issuer: ${TELLPAL_ADMIN_JWT_ISSUER:tellpal-v2-admin}
+      jwt-secret: ${TELLPAL_ADMIN_JWT_SECRET:change-me-change-me-change-me-32-bytes}
+      access-token-ttl: ${TELLPAL_ADMIN_ACCESS_TOKEN_TTL:PT1H}
+      refresh-token-ttl: ${TELLPAL_ADMIN_REFRESH_TOKEN_TTL:P30D}
+      bcrypt-strength: ${TELLPAL_ADMIN_BCRYPT_STRENGTH:10}
