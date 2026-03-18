@@ -1,3 +1,4 @@
 be/target/
 be/.jqwik-database
 be/.env
+be/var/
