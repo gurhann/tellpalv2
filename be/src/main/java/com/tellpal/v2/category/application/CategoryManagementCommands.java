@@ -6,11 +6,17 @@ import com.tellpal.v2.category.domain.CategoryType;
 import com.tellpal.v2.category.domain.LocalizationStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by category management application services.
+ */
 public final class CategoryManagementCommands {
 
     private CategoryManagementCommands() {
     }
 
+    /**
+     * Command for creating a category aggregate.
+     */
     public record CreateCategoryCommand(String slug, CategoryType type, boolean premium, boolean active) {
 
         public CreateCategoryCommand {
@@ -19,6 +25,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for updating category identity and flags.
+     */
     public record UpdateCategoryCommand(Long categoryId, String slug, CategoryType type, boolean premium, boolean active) {
 
         public UpdateCategoryCommand {
@@ -28,6 +37,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for creating a category localization.
+     */
     public record CreateCategoryLocalizationCommand(
             Long categoryId,
             LanguageCode languageCode,
@@ -42,6 +54,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for updating a category localization.
+     */
     public record UpdateCategoryLocalizationCommand(
             Long categoryId,
             LanguageCode languageCode,
@@ -56,6 +71,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for adding curated content to a category.
+     */
     public record AddCategoryContentCommand(Long categoryId, LanguageCode languageCode, Long contentId, int displayOrder) {
 
         public AddCategoryContentCommand {
@@ -63,6 +81,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for changing the order of curated category content.
+     */
     public record UpdateCategoryContentOrderCommand(
             Long categoryId,
             LanguageCode languageCode,
@@ -74,6 +95,9 @@ public final class CategoryManagementCommands {
         }
     }
 
+    /**
+     * Command for removing curated content from a category.
+     */
     public record RemoveCategoryContentCommand(Long categoryId, LanguageCode languageCode, Long contentId) {
 
         public RemoveCategoryContentCommand {

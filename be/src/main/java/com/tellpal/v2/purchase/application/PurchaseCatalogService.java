@@ -15,6 +15,9 @@ import com.tellpal.v2.purchase.application.PurchaseApplicationExceptions.Subscri
 import com.tellpal.v2.purchase.domain.SubscriptionProduct;
 import com.tellpal.v2.purchase.domain.SubscriptionProductRepository;
 
+/**
+ * Application service for maintaining the subscription product catalog.
+ */
 @Service
 public class PurchaseCatalogService implements PurchaseCatalogApi {
 
@@ -25,6 +28,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Creates a new subscription product after verifying the catalog location is unique.
+     */
     @Transactional
     public SubscriptionProductRecord createProduct(CreateSubscriptionProductCommand command) {
         ensureCatalogLocationAvailable(null, command.storeCode(), command.productId());
@@ -39,6 +45,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Updates an existing subscription product and preserves catalog uniqueness.
+     */
     @Transactional
     public SubscriptionProductRecord updateProduct(UpdateSubscriptionProductCommand command) {
         SubscriptionProduct subscriptionProduct = loadProduct(command.subscriptionProductId());
@@ -53,6 +62,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Deactivates a subscription product without deleting it.
+     */
     @Transactional
     public SubscriptionProductRecord deactivateProduct(Long subscriptionProductId) {
         SubscriptionProduct subscriptionProduct = loadProduct(subscriptionProductId);
@@ -61,6 +73,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Lists all catalog products for admin read flows.
+     */
     @Transactional(readOnly = true)
     public List<SubscriptionProductRecord> listProducts() {
         return subscriptionProductRepository.findAllOrdered().stream()
@@ -69,6 +84,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Finds one catalog product by ID.
+     */
     @Transactional(readOnly = true)
     public Optional<SubscriptionProductRecord> findById(Long subscriptionProductId) {
         if (subscriptionProductId == null || subscriptionProductId <= 0) {
@@ -79,6 +97,9 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
     }
 
     @Override
+    /**
+     * Finds one catalog product by store code and product ID.
+     */
     @Transactional(readOnly = true)
     public Optional<SubscriptionProductRecord> findByStoreAndProductId(String storeCode, String productId) {
         return subscriptionProductRepository.findByStoreCodeAndProductId(

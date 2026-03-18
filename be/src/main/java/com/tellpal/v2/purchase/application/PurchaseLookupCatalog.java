@@ -1,5 +1,8 @@
 package com.tellpal.v2.purchase.application;
 
+/**
+ * Read-only lookup port for validating normalized purchase lookup codes.
+ */
 public interface PurchaseLookupCatalog {
 
     boolean hasActiveEventType(String code);

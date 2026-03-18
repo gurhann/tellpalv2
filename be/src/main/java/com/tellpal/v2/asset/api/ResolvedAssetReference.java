@@ -2,6 +2,9 @@ package com.tellpal.v2.asset.api;
 
 import java.time.Instant;
 
+/**
+ * Resolved reference to a concrete asset that can be delivered to a client or downstream adapter.
+ */
 public record ResolvedAssetReference(
         Long assetId,
         AssetKind kind,

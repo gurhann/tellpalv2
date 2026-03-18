@@ -5,6 +5,9 @@ import jakarta.persistence.Converter;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * JPA converter for persisting {@link LanguageCode} values as text columns.
+ */
 @Converter(autoApply = true)
 public class LanguageCodeAttributeConverter implements AttributeConverter<LanguageCode, String> {
 

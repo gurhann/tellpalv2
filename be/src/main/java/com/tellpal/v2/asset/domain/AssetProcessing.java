@@ -12,6 +12,12 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root that tracks the asset processing lifecycle for one content localization.
+ *
+ * <p>The aggregate owns source asset context, retry timing, worker lease state, and the transition
+ * history needed to move between pending, processing, failed, and completed states.
+ */
 @Entity
 @Table(name = "asset_processing")
 public class AssetProcessing extends BaseJpaEntity {
@@ -190,6 +196,12 @@ public class AssetProcessing extends BaseJpaEntity {
                 && !leaseExpiresAt.isAfter(requiredReferenceTime);
     }
 
+    /**
+     * Replaces the source context used by the next processing attempt.
+     *
+     * <p>Non-story content requires a single audio source asset, while story processing owns page
+     * count instead.
+     */
     public void refreshContext(
             ProcessingContentType contentType,
             String externalKey,
@@ -213,6 +225,9 @@ public class AssetProcessing extends BaseJpaEntity {
         this.pageCount = normalizedPageCount;
     }
 
+    /**
+     * Starts processing and acquires a lease for the worker.
+     */
     public void start(Instant startedAt, Duration leaseDuration) {
         requireStatus(AssetProcessingStatus.PENDING);
         Instant requiredStartedAt = requireInstant(startedAt, "Start time must not be null");
@@ -227,6 +242,9 @@ public class AssetProcessing extends BaseJpaEntity {
         clearFailureDetails();
     }
 
+    /**
+     * Marks the current processing attempt as completed.
+     */
     public void complete(Instant completedAt) {
         requireStatus(AssetProcessingStatus.PROCESSING);
         Instant requiredCompletedAt = requireInstant(completedAt, "Completion time must not be null");
@@ -237,6 +255,9 @@ public class AssetProcessing extends BaseJpaEntity {
         clearFailureDetails();
     }
 
+    /**
+     * Marks the current processing attempt as failed with diagnostic details.
+     */
     public void fail(String errorCode, String errorMessage, Instant failedAt) {
         requireStatus(AssetProcessingStatus.PROCESSING);
         String normalizedErrorCode = normalizeOptionalText(errorCode);
@@ -252,6 +273,9 @@ public class AssetProcessing extends BaseJpaEntity {
         this.lastErrorMessage = normalizedErrorMessage;
     }
 
+    /**
+     * Moves a failed entry back to pending so a later worker can try again.
+     */
     public void retry(Instant nextAttemptAt) {
         requireStatus(AssetProcessingStatus.FAILED);
         this.status = AssetProcessingStatus.PENDING;
@@ -261,6 +285,9 @@ public class AssetProcessing extends BaseJpaEntity {
         this.failedAt = null;
     }
 
+    /**
+     * Releases an expired worker lease and returns the entry to pending.
+     */
     public void recoverExpiredLease(Instant nextAttemptAt, String errorCode, String errorMessage) {
         requireStatus(AssetProcessingStatus.PROCESSING);
         this.status = AssetProcessingStatus.PENDING;

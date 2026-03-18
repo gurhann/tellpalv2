@@ -19,6 +19,12 @@ import org.hibernate.type.SqlTypes;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Immutable content event record.
+ *
+ * <p>Legacy keys act as alternate idempotency inputs, and page-specific fields are only valid for
+ * compatible event types.
+ */
 @Entity
 @Table(name = "content_events")
 @Immutable
@@ -93,6 +99,9 @@ public class ContentEvent {
         this.legacyEventKey = normalizeOptionalText(legacyEventKey);
     }
 
+    /**
+     * Records a new immutable content event.
+     */
     public static ContentEvent record(
             UUID eventId,
             Long profileId,

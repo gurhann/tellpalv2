@@ -1,5 +1,8 @@
 package com.tellpal.v2.category.api;
 
+/**
+ * Stable reference to a category aggregate exposed outside the module.
+ */
 public record CategoryReference(
         Long categoryId,
         CategoryApiType type,

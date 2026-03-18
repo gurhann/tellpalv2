@@ -1,5 +1,8 @@
 package com.tellpal.v2.user.api;
 
+/**
+ * Stable module-facing reference to an application user and its primary profile.
+ */
 public record AppUserReference(
         Long userId,
         Long primaryProfileId,

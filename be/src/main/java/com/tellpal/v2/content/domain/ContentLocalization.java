@@ -14,6 +14,11 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Localized content state for a single language.
+ *
+ * <p>Mobile visibility requires both {@code PUBLISHED} status and {@code COMPLETED} processing.
+ */
 @Entity
 @Table(name = "content_localizations")
 public class ContentLocalization extends BaseJpaEntity {
@@ -110,10 +115,16 @@ public class ContentLocalization extends BaseJpaEntity {
         return publishedAt;
     }
 
+    /**
+     * Returns whether this localization is eligible for mobile delivery.
+     */
     public boolean isVisibleToMobile() {
         return status == LocalizationStatus.PUBLISHED && processingStatus == ProcessingStatus.COMPLETED;
     }
 
+    /**
+     * Updates localized text and asset references without changing workflow state.
+     */
     public void updateContent(
             String title,
             String description,
@@ -129,6 +140,9 @@ public class ContentLocalization extends BaseJpaEntity {
         this.durationMinutes = normalizeNonNegative(durationMinutes, "Duration minutes must not be negative");
     }
 
+    /**
+     * Updates publication state and persists the publish timestamp when entering {@code PUBLISHED}.
+     */
     public void markStatus(LocalizationStatus status, Instant publishedAt) {
         LocalizationStatus nextStatus = requireStatus(status);
         if (nextStatus == LocalizationStatus.PUBLISHED && publishedAt == null) {

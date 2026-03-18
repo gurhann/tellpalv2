@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Category-owned curated content link scoped by language and display order.
+ */
 @Entity
 @Table(name = "category_contents")
 public class CategoryContent extends BaseJpaEntity {

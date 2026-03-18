@@ -21,6 +21,12 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Immutable purchase event recorded from client or RevenueCat sources.
+ *
+ * <p>The aggregate stores both normalized lookup-backed fields and the raw provider payload used to
+ * derive them.
+ */
 @Entity
 @Table(name = "purchase_events")
 @Immutable
@@ -248,6 +254,9 @@ public class PurchaseEvent {
         validateConsistency();
     }
 
+    /**
+     * Records a new immutable purchase event.
+     */
     public static PurchaseEvent record(
             Long appUserId,
             String sourceAppUserId,

@@ -4,11 +4,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Collections;
 
+/**
+ * Command types used by RevenueCat webhook ingest services.
+ */
 public final class RevenueCatWebhookCommands {
 
     private RevenueCatWebhookCommands() {
     }
 
+    /**
+     * Command for processing one RevenueCat webhook request.
+     */
     public record ProcessRevenueCatWebhookCommand(String authorizationHeader, Map<String, Object> payload) {
 
         public ProcessRevenueCatWebhookCommand {

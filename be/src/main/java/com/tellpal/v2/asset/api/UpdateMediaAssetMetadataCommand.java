@@ -1,5 +1,8 @@
 package com.tellpal.v2.asset.api;
 
+/**
+ * Command for updating mutable metadata on an existing media asset.
+ */
 public record UpdateMediaAssetMetadataCommand(
         Long assetId,
         String mimeType,

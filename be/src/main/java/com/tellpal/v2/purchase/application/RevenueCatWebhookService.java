@@ -29,6 +29,12 @@ import com.tellpal.v2.purchase.domain.SubscriptionProductRepository;
 import com.tellpal.v2.user.api.AppUserReference;
 import com.tellpal.v2.user.api.UserLookupApi;
 
+/**
+ * Application service for validating and ingesting RevenueCat webhook events.
+ *
+ * <p>The service keeps the raw payload, normalizes lookup-backed fields, and deduplicates events by
+ * RevenueCat event ID.
+ */
 @Service
 public class RevenueCatWebhookService {
 
@@ -54,6 +60,9 @@ public class RevenueCatWebhookService {
         this.userLookupApi = userLookupApi;
     }
 
+    /**
+     * Validates authorization and payload shape, then records one RevenueCat purchase event.
+     */
     @Transactional
     public RevenueCatWebhookReceipt process(ProcessRevenueCatWebhookCommand command) {
         verifyAuthorization(command.authorizationHeader());

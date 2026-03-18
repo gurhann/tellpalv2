@@ -1,5 +1,8 @@
 package com.tellpal.v2.event.domain;
 
+/**
+ * Application event types tracked for analytics and attribution.
+ */
 public enum AppEventType {
     APP_OPENED,
     ONBOARDING_STARTED,

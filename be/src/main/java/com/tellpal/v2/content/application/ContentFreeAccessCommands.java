@@ -2,11 +2,17 @@ package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by content free-access management services.
+ */
 public final class ContentFreeAccessCommands {
 
     private ContentFreeAccessCommands() {
     }
 
+    /**
+     * Command for granting localized free access to a content item.
+     */
     public record GrantContentFreeAccessCommand(String accessKey, Long contentId, LanguageCode languageCode) {
 
         public GrantContentFreeAccessCommand {
@@ -16,6 +22,9 @@ public final class ContentFreeAccessCommands {
         }
     }
 
+    /**
+     * Command for revoking localized free access from a content item.
+     */
     public record RevokeContentFreeAccessCommand(String accessKey, Long contentId, LanguageCode languageCode) {
 
         public RevokeContentFreeAccessCommand {

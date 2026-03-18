@@ -3,6 +3,12 @@ package com.tellpal.v2.admin.api;
 import java.time.Instant;
 import java.util.Set;
 
+/**
+ * Authentication payload returned after a successful admin login or refresh flow.
+ *
+ * <p>The result always contains a new access token and a refresh token that represents the current
+ * session state after the operation completes.
+ */
 public record AdminAuthenticationResult(
         Long adminUserId,
         String username,

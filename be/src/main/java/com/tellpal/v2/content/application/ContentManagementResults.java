@@ -6,11 +6,17 @@ import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Result types returned by content management application services.
+ */
 public final class ContentManagementResults {
 
     private ContentManagementResults() {
     }
 
+    /**
+     * Snapshot of one content localization after a management operation.
+     */
     public record ContentLocalizationRecord(
             Long contentId,
             LanguageCode languageCode,
@@ -34,6 +40,9 @@ public final class ContentManagementResults {
         }
     }
 
+    /**
+     * Snapshot of one story page after a management operation.
+     */
     public record StoryPageRecord(Long contentId, int pageNumber, Long illustrationMediaId, int localizationCount) {
 
         public StoryPageRecord {
@@ -48,6 +57,9 @@ public final class ContentManagementResults {
         }
     }
 
+    /**
+     * Snapshot of one localized story page after a management operation.
+     */
     public record StoryPageLocalizationRecord(
             Long contentId,
             int pageNumber,

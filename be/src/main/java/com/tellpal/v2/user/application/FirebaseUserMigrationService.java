@@ -15,6 +15,9 @@ import com.tellpal.v2.user.domain.UserProfile;
 import com.tellpal.v2.user.infrastructure.firebase.migration.LegacyFirebaseUserImportRecord;
 import com.tellpal.v2.user.infrastructure.firebase.migration.LegacyFirebaseUserImportRecord.LegacyFirebaseDefaultProfile;
 
+/**
+ * Application service for importing legacy Firebase users into the current user aggregate model.
+ */
 @Service
 public class FirebaseUserMigrationService {
 
@@ -28,6 +31,9 @@ public class FirebaseUserMigrationService {
         this.userAssetReferenceValidator = userAssetReferenceValidator;
     }
 
+    /**
+     * Imports legacy users, optionally running in dry-run mode.
+     */
     @Transactional
     public FirebaseUserImportSummary importUsers(List<LegacyFirebaseUserImportRecord> records, boolean dryRun) {
         List<LegacyFirebaseUserImportRecord> safeRecords = records == null ? List.of() : List.copyOf(records);

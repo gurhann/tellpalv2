@@ -12,6 +12,12 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for a stored media object and its mutable delivery metadata.
+ *
+ * <p>The storage location and asset kind are stable identity, while metadata and cached signed
+ * download URLs can be refreshed over time.
+ */
 @Entity
 @Table(name = "media_assets")
 public class MediaAsset extends BaseJpaEntity {
@@ -105,12 +111,21 @@ public class MediaAsset extends BaseJpaEntity {
         return downloadUrlExpiresAt;
     }
 
+    /**
+     * Updates mutable metadata discovered for the stored object.
+     */
     public void updateMetadata(String mimeType, Long byteSize, String checksumSha256) {
         this.mimeType = normalizeOptionalText(mimeType);
         this.byteSize = normalizeByteSize(byteSize);
         this.checksumSha256 = normalizeChecksum(checksumSha256);
     }
 
+    /**
+     * Replaces the cached signed download URL for this asset.
+     *
+     * <p>The expiry must be after the cache timestamp so callers never persist an already-expired
+     * URL.
+     */
     public void updateDownloadUrlCache(String downloadUrl, Instant cachedAt, Instant expiresAt) {
         this.cachedDownloadUrl = requireText(downloadUrl, "Cached download URL must not be blank");
         this.downloadUrlCachedAt = requireInstant(cachedAt, "Download URL cached timestamp must not be null");

@@ -2,6 +2,11 @@ package com.tellpal.v2.content.api;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Lightweight visibility snapshot for a single content localization.
+ *
+ * <p>{@code visibleToMobile} reflects both publication state and processing readiness.
+ */
 public record ContentLocalizationReference(
         Long contentId,
         LanguageCode languageCode,

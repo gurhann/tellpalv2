@@ -2,6 +2,9 @@ package com.tellpal.v2.asset.api;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Domain-facing integration event emitted after a persisted processing status transition.
+ */
 public record AssetProcessingStatusChangedEvent(
         Long contentId,
         LanguageCode languageCode,

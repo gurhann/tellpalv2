@@ -17,6 +17,12 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Immutable application event record.
+ *
+ * <p>Some event types require a content reference, and optional legacy keys act as alternate
+ * idempotency inputs during migration.
+ */
 @Entity
 @Table(name = "app_events")
 @Immutable
@@ -71,6 +77,9 @@ public class AppEvent {
         this.legacyEventKey = normalizeOptionalText(legacyEventKey);
     }
 
+    /**
+     * Records a new immutable application event.
+     */
     public static AppEvent record(
             UUID eventId,
             Long profileId,

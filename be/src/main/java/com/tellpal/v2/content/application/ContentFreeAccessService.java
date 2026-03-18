@@ -21,6 +21,9 @@ import com.tellpal.v2.content.domain.ContentFreeAccessRepository;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application service for maintaining and resolving localized free-access overrides for content.
+ */
 @Service
 public class ContentFreeAccessService implements ContentFreeAccessApi {
 
@@ -36,6 +39,9 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
         this.contentFreeAccessRepository = contentFreeAccessRepository;
     }
 
+    /**
+     * Grants free access to a localized content item for the requested access key.
+     */
     @Transactional
     public ContentFreeAccessRecord grantFreeAccess(GrantContentFreeAccessCommand command) {
         String accessKey = normalizeAccessKey(command.accessKey());
@@ -54,6 +60,9 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
         return ContentFreeAccessMapper.toRecord(savedEntry);
     }
 
+    /**
+     * Revokes an existing free-access entry.
+     */
     @Transactional
     public void revokeFreeAccess(RevokeContentFreeAccessCommand command) {
         contentFreeAccessRepository.findByAccessKeyAndContentIdAndLanguageCode(
@@ -70,6 +79,9 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
                         });
     }
 
+    /**
+     * Lists all free-access entries stored under the effective access key.
+     */
     @Transactional(readOnly = true)
     public List<ContentFreeAccessRecord> listFreeAccessEntries(String accessKey) {
         return contentFreeAccessRepository.findByAccessKey(normalizeRequestedAccessKey(accessKey)).stream()
@@ -78,6 +90,10 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
     }
 
     @Override
+    /**
+     * Resolves the effective localized free-access set, falling back to the default key when
+     * needed.
+     */
     @Transactional(readOnly = true)
     public ResolvedContentFreeAccessSet resolveFreeAccess(LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
@@ -92,6 +108,9 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
     }
 
     @Override
+    /**
+     * Checks whether one content item belongs to the effective localized free-access set.
+     */
     @Transactional(readOnly = true)
     public boolean isContentFree(Long contentId, LanguageCode languageCode, String requestedAccessKey) {
         Long requiredContentId = requireContentId(contentId);

@@ -18,6 +18,12 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Immutable attribution snapshot captured for a purchase event.
+ *
+ * <p>The snapshot stores the resolved user/profile context and remains stable even if the live user
+ * data changes later.
+ */
 @Entity
 @Table(name = "purchase_context_snapshots")
 @Immutable
@@ -78,6 +84,9 @@ public class PurchaseContextSnapshot {
         this.profileSnapshot = PurchaseDomainValidator.copyJsonMap(profileSnapshot);
     }
 
+    /**
+     * Captures a new immutable purchase attribution snapshot.
+     */
     public static PurchaseContextSnapshot capture(
             Long purchaseEventId,
             Long appUserId,

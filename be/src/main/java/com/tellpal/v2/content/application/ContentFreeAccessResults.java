@@ -2,11 +2,17 @@ package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Result types returned by content free-access management services.
+ */
 public final class ContentFreeAccessResults {
 
     private ContentFreeAccessResults() {
     }
 
+    /**
+     * Snapshot of one persisted free-access entry.
+     */
     public record ContentFreeAccessRecord(
             Long freeAccessId,
             String accessKey,

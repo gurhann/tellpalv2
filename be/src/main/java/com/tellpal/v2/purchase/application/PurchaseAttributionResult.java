@@ -4,6 +4,9 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Snapshot view returned after purchase attribution has been resolved and persisted.
+ */
 public record PurchaseAttributionResult(
         Long snapshotId,
         Long purchaseEventId,

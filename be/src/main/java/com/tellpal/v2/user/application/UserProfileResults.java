@@ -2,11 +2,17 @@ package com.tellpal.v2.user.application;
 
 import java.util.List;
 
+/**
+ * Result types returned by user profile application services.
+ */
 public final class UserProfileResults {
 
     private UserProfileResults() {
     }
 
+    /**
+     * Snapshot of one user profile after a read or update operation.
+     */
     public record UserProfileRecord(
             Long userId,
             Long profileId,

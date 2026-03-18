@@ -3,6 +3,9 @@ package com.tellpal.v2.category.api;
 import com.tellpal.v2.asset.api.ResolvedAssetReference;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Public read model for one localized category and its image.
+ */
 public record PublicCategoryView(
         Long categoryId,
         CategoryApiType type,

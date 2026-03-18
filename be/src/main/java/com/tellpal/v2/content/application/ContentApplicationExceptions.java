@@ -3,6 +3,9 @@ package com.tellpal.v2.content.application;
 import com.tellpal.v2.asset.api.AssetMediaType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application-layer exceptions raised by content use cases.
+ */
 public final class ContentApplicationExceptions {
 
     private ContentApplicationExceptions() {

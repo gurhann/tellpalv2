@@ -3,6 +3,9 @@ package com.tellpal.v2.content.api;
 import com.tellpal.v2.asset.api.ResolvedAssetReference;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Public read model for one localized story page and its deliverable assets.
+ */
 public record PublicStoryPage(
         Long contentId,
         int pageNumber,

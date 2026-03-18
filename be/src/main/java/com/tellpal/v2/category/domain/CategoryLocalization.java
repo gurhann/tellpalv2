@@ -14,6 +14,9 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Localized category presentation state for a single language.
+ */
 @Entity
 @Table(name = "category_localizations")
 public class CategoryLocalization extends BaseJpaEntity {
@@ -79,6 +82,9 @@ public class CategoryLocalization extends BaseJpaEntity {
         return publishedAt;
     }
 
+    /**
+     * Returns whether this localization is available for curation and public read flows.
+     */
     public boolean isPublished() {
         return status == LocalizationStatus.PUBLISHED;
     }

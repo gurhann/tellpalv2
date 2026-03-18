@@ -11,11 +11,17 @@ import com.tellpal.v2.event.domain.AppEventType;
 import com.tellpal.v2.event.domain.ContentEventType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by the event tracking API.
+ */
 public final class EventTrackingCommands {
 
     private EventTrackingCommands() {
     }
 
+    /**
+     * Command for recording one content event.
+     */
     public record RecordContentEventCommand(
             UUID eventId,
             Long profileId,
@@ -53,6 +59,9 @@ public final class EventTrackingCommands {
         }
     }
 
+    /**
+     * Command for recording one application event.
+     */
     public record RecordAppEventCommand(
             UUID eventId,
             Long profileId,
@@ -79,6 +88,9 @@ public final class EventTrackingCommands {
         }
     }
 
+    /**
+     * Command for recording a mixed batch of content and application events.
+     */
     public record RecordBatchEventsCommand(
             List<RecordContentEventCommand> contentEvents,
             List<RecordAppEventCommand> appEvents) {

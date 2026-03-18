@@ -27,6 +27,9 @@ import com.tellpal.v2.event.infrastructure.firebase.migration.LegacyFirebaseCont
 import com.tellpal.v2.user.api.AppUserProfileReference;
 import com.tellpal.v2.user.api.UserLookupApi;
 
+/**
+ * Application service for importing legacy Firebase content and app events.
+ */
 @Service
 public class FirebaseEventMigrationService {
 
@@ -49,6 +52,9 @@ public class FirebaseEventMigrationService {
         this.clock = clock;
     }
 
+    /**
+     * Imports legacy Firebase content events, optionally in dry-run mode.
+     */
     @Transactional
     public FirebaseEventImportSummary importContentEvents(
             List<LegacyFirebaseContentEventImportRecord> records,
@@ -72,6 +78,9 @@ public class FirebaseEventMigrationService {
         return new FirebaseEventImportSummary(dryRun, safeRecords.size(), createdCount, skippedCount, entries);
     }
 
+    /**
+     * Imports legacy Firebase app events, optionally in dry-run mode.
+     */
     @Transactional
     public FirebaseEventImportSummary importAppEvents(List<LegacyFirebaseAppEventImportRecord> records, boolean dryRun) {
         List<LegacyFirebaseAppEventImportRecord> safeRecords = records == null ? List.of() : List.copyOf(records);

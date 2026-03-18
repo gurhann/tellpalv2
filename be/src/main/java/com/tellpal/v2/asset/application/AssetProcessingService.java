@@ -35,6 +35,12 @@ import static com.tellpal.v2.asset.application.AssetProcessingApplicationExcepti
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingLocalizationNotFoundException;
 
+/**
+ * Application service that orchestrates the asset processing state machine.
+ *
+ * <p>The service persists workflow transitions, enforces allowed lifecycle moves, and publishes a
+ * status-changed event after each stored transition.
+ */
 @Service
 public class AssetProcessingService implements AssetProcessingApi {
 
@@ -54,6 +60,10 @@ public class AssetProcessingService implements AssetProcessingApi {
         this.eventPublisher = eventPublisher;
     }
 
+    /**
+     * Schedules processing for a localization or refreshes the source context of an existing
+     * pending entry.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord schedule(ScheduleAssetProcessingCommand command) {
@@ -77,6 +87,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Transitions a pending entry into processing and acquires a lease for the worker.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord start(StartAssetProcessingCommand command) {
@@ -88,6 +101,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Re-queues a failed entry after replacing its source processing context.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
@@ -105,6 +121,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Recovers a stuck processing entry whose lease has expired.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord recoverExpiredLease(RecoverExpiredAssetProcessingCommand command) {
@@ -118,6 +137,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Marks an in-flight processing entry as completed.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord complete(CompleteAssetProcessingCommand command) {
@@ -128,6 +150,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Marks an in-flight processing entry as failed and stores worker diagnostics.
+     */
     @Override
     @Transactional
     public AssetProcessingRecord fail(FailAssetProcessingCommand command) {
@@ -138,6 +163,9 @@ public class AssetProcessingService implements AssetProcessingApi {
         return AssetProcessingMapper.toRecord(saved);
     }
 
+    /**
+     * Returns the current processing snapshot for a content localization when it exists.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<AssetProcessingRecord> findByLocalization(Long contentId, LanguageCode languageCode) {
@@ -145,6 +173,9 @@ public class AssetProcessingService implements AssetProcessingApi {
                 .map(AssetProcessingMapper::toRecord);
     }
 
+    /**
+     * Returns recent processing entries for operational screens and jobs.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<AssetProcessingRecord> listRecent(int limit) {

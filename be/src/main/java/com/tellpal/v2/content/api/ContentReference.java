@@ -1,5 +1,8 @@
 package com.tellpal.v2.content.api;
 
+/**
+ * Stable reference to a content aggregate exposed outside the module.
+ */
 public record ContentReference(
         Long contentId,
         ContentApiType type,

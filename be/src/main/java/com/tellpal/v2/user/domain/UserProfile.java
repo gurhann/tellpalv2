@@ -13,6 +13,9 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * User-owned profile entity carrying personalization and audience metadata.
+ */
 @Entity
 @Table(name = "user_profiles")
 public class UserProfile extends BaseJpaEntity {
@@ -84,6 +87,9 @@ public class UserProfile extends BaseJpaEntity {
         return primary;
     }
 
+    /**
+     * Replaces mutable profile fields and primary-profile state.
+     */
     public void update(
             String displayName,
             String ageRange,

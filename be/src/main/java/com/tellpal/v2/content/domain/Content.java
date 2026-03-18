@@ -19,6 +19,12 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for content identity, localizations, story pages, and contributor assignments.
+ *
+ * <p>The aggregate owns type-specific localization rules, story page count synchronization, and
+ * contributor uniqueness per role and language.
+ */
 @Entity
 @Table(name = "contents")
 public class Content extends BaseJpaEntity {
@@ -122,6 +128,12 @@ public class Content extends BaseJpaEntity {
         this.active = active;
     }
 
+    /**
+     * Creates or updates one localization while enforcing content-type-specific field rules.
+     *
+     * <p>Story localizations cannot carry body text or a single audio asset, while non-story types
+     * may require them.
+     */
     public ContentLocalization upsertLocalization(
             LanguageCode languageCode,
             String title,
@@ -142,6 +154,9 @@ public class Content extends BaseJpaEntity {
         return localization;
     }
 
+    /**
+     * Adds a story page and updates aggregate-owned page count.
+     */
     public StoryPage addStoryPage(int pageNumber, Long illustrationMediaId) {
         ensureStoryType();
         if (storyPages.stream().anyMatch(page -> page.getPageNumber() == pageNumber)) {
@@ -153,6 +168,9 @@ public class Content extends BaseJpaEntity {
         return storyPage;
     }
 
+    /**
+     * Removes a story page and updates aggregate-owned page count.
+     */
     public void removeStoryPage(int pageNumber) {
         ensureStoryType();
         boolean removed = storyPages.removeIf(page -> page.getPageNumber() == pageNumber);
@@ -162,6 +180,11 @@ public class Content extends BaseJpaEntity {
         syncPageCount();
     }
 
+    /**
+     * Assigns a contributor when the role/language/link combination is not already present.
+     *
+     * <p>Sort order is unique per role and language inside the aggregate.
+     */
     public ContentContributor assignContributor(
             Contributor contributor,
             ContributorRole role,

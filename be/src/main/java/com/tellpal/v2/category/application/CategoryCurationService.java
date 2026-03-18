@@ -17,6 +17,12 @@ import com.tellpal.v2.category.domain.CategoryLocalization;
 import com.tellpal.v2.category.domain.CategoryRepository;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application service for language-scoped category curation.
+ *
+ * <p>Curation is only allowed for published localizations and enforces unique display order per
+ * language.
+ */
 @Service
 public class CategoryCurationService {
 
@@ -30,6 +36,9 @@ public class CategoryCurationService {
         this.contentReferenceValidator = contentReferenceValidator;
     }
 
+    /**
+     * Adds content to the curated list of a published localized category.
+     */
     @Transactional
     public CategoryContentRecord addContent(AddCategoryContentCommand command) {
         Category category = loadCategory(command.categoryId());
@@ -45,6 +54,9 @@ public class CategoryCurationService {
                         .orElse(categoryContent));
     }
 
+    /**
+     * Updates the display order of a curated content link.
+     */
     @Transactional
     public CategoryContentRecord updateContentOrder(UpdateCategoryContentOrderCommand command) {
         Category category = loadCategory(command.categoryId());
@@ -61,6 +73,9 @@ public class CategoryCurationService {
                         .orElse(categoryContent));
     }
 
+    /**
+     * Removes a curated content link from the category.
+     */
     @Transactional
     public void removeContent(RemoveCategoryContentCommand command) {
         Category category = loadCategory(command.categoryId());

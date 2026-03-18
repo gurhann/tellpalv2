@@ -2,17 +2,26 @@ package com.tellpal.v2.user.application;
 
 import java.util.List;
 
+/**
+ * Result types returned by legacy Firebase user migration services.
+ */
 public final class UserMigrationResults {
 
     private UserMigrationResults() {
     }
 
+    /**
+     * Outcome of one migrated Firebase user.
+     */
     public enum FirebaseUserImportStatus {
         WOULD_CREATE,
         CREATED,
         SKIPPED_EXISTING
     }
 
+    /**
+     * Per-user result entry emitted during Firebase user migration.
+     */
     public record FirebaseUserImportEntry(
             String firebaseUid,
             FirebaseUserImportStatus status,
@@ -32,6 +41,9 @@ public final class UserMigrationResults {
         }
     }
 
+    /**
+     * Aggregate summary for a Firebase user migration run.
+     */
     public record FirebaseUserImportSummary(
             boolean dryRun,
             int processedCount,

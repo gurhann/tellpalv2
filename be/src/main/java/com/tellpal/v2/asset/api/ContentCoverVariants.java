@@ -1,5 +1,8 @@
 package com.tellpal.v2.asset.api;
 
+/**
+ * Generated cover image variants grouped by target surface.
+ */
 public record ContentCoverVariants(
         ResolvedAssetReference thumbnailPhone,
         ResolvedAssetReference thumbnailTablet,

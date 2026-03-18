@@ -4,11 +4,17 @@ import java.time.Instant;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by content publication application services.
+ */
 public final class ContentPublicationCommands {
 
     private ContentPublicationCommands() {
     }
 
+    /**
+     * Command for publishing a content localization.
+     */
     public record PublishContentLocalizationCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -23,6 +29,9 @@ public final class ContentPublicationCommands {
         }
     }
 
+    /**
+     * Command for archiving a content localization.
+     */
     public record ArchiveContentLocalizationCommand(Long contentId, LanguageCode languageCode) {
 
         public ArchiveContentLocalizationCommand {

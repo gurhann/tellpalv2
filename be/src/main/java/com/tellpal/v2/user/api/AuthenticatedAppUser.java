@@ -1,5 +1,8 @@
 package com.tellpal.v2.user.api;
 
+/**
+ * Authenticated user view returned after resolving an ID token.
+ */
 public record AuthenticatedAppUser(
         Long userId,
         Long primaryProfileId,

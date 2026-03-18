@@ -9,6 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+/**
+ * Base JPA entity with generated ID and audit timestamps managed by a shared listener.
+ */
 @MappedSuperclass
 @EntityListeners(AuditableEntityListener.class)
 public abstract class BaseJpaEntity {

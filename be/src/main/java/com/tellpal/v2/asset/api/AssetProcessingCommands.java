@@ -2,11 +2,18 @@ package com.tellpal.v2.asset.api;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by the asset processing lifecycle API.
+ */
 public final class AssetProcessingCommands {
 
     private AssetProcessingCommands() {
     }
 
+    /**
+     * Requests scheduling for a content localization, including the source assets needed to build
+     * derived outputs.
+     */
     public record ScheduleAssetProcessingCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -30,6 +37,9 @@ public final class AssetProcessingCommands {
         }
     }
 
+    /**
+     * Requests lease acquisition for a pending processing entry.
+     */
     public record StartAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
 
         public StartAssetProcessingCommand {
@@ -38,6 +48,9 @@ public final class AssetProcessingCommands {
         }
     }
 
+    /**
+     * Requests a retry for a failed processing entry and refreshes its source context.
+     */
     public record RetryAssetProcessingCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -61,6 +74,9 @@ public final class AssetProcessingCommands {
         }
     }
 
+    /**
+     * Requests recovery for an in-flight processing entry whose worker lease expired.
+     */
     public record RecoverExpiredAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
 
         public RecoverExpiredAssetProcessingCommand {
@@ -69,6 +85,9 @@ public final class AssetProcessingCommands {
         }
     }
 
+    /**
+     * Requests completion of an in-flight processing entry.
+     */
     public record CompleteAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
 
         public CompleteAssetProcessingCommand {
@@ -77,6 +96,9 @@ public final class AssetProcessingCommands {
         }
     }
 
+    /**
+     * Requests failure of an in-flight processing entry with worker-provided diagnostics.
+     */
     public record FailAssetProcessingCommand(
             Long contentId,
             LanguageCode languageCode,

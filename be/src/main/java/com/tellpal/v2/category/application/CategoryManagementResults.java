@@ -5,11 +5,17 @@ import java.time.Instant;
 import com.tellpal.v2.category.domain.LocalizationStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Result types returned by category management application services.
+ */
 public final class CategoryManagementResults {
 
     private CategoryManagementResults() {
     }
 
+    /**
+     * Snapshot of one category localization after a management operation.
+     */
     public record CategoryLocalizationRecord(
             Long categoryId,
             LanguageCode languageCode,
@@ -28,6 +34,9 @@ public final class CategoryManagementResults {
         }
     }
 
+    /**
+     * Snapshot of one curated content link after a management operation.
+     */
     public record CategoryContentRecord(Long categoryId, LanguageCode languageCode, Long contentId, int displayOrder) {
 
         public CategoryContentRecord {

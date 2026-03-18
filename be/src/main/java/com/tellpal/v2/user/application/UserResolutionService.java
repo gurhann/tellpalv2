@@ -13,6 +13,9 @@ import com.tellpal.v2.user.application.UserApplicationExceptions.FirebaseTokenVe
 import com.tellpal.v2.user.domain.AppUser;
 import com.tellpal.v2.user.domain.AppUserRepository;
 
+/**
+ * Application service for token-based user resolution and lightweight user lookups.
+ */
 @Service
 public class UserResolutionService implements UserResolutionApi, UserLookupApi {
 
@@ -27,6 +30,9 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
     }
 
     @Override
+    /**
+     * Verifies a Firebase token, creates the user when missing, and guarantees a primary profile.
+     */
     @Transactional
     public AuthenticatedAppUser resolveOrCreateByIdToken(String idToken) {
         VerifiedFirebaseToken verifiedToken = verifyToken(idToken);
@@ -44,6 +50,9 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
     }
 
     @Override
+    /**
+     * Looks up a user by Firebase UID.
+     */
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserReference> findByFirebaseUid(String firebaseUid) {
         if (firebaseUid == null || firebaseUid.isBlank()) {
@@ -54,6 +63,9 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
     }
 
     @Override
+    /**
+     * Returns the primary profile for a known user ID.
+     */
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserProfileReference> findPrimaryProfileByUserId(Long userId) {
         if (userId == null || userId <= 0) {
@@ -64,6 +76,9 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
     }
 
     @Override
+    /**
+     * Returns the primary profile for a known Firebase UID.
+     */
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserProfileReference> findPrimaryProfileByFirebaseUid(String firebaseUid) {
         if (firebaseUid == null || firebaseUid.isBlank()) {

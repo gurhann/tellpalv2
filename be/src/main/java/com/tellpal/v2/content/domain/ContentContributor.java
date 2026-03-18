@@ -12,6 +12,9 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Content-owned contributor assignment scoped by role and optional language.
+ */
 @Entity
 @Table(name = "content_contributors")
 public class ContentContributor extends BaseJpaEntity {
@@ -88,6 +91,9 @@ public class ContentContributor extends BaseJpaEntity {
         return id != null && id.equals(contributorId);
     }
 
+    /**
+     * Updates presentation-specific credit fields for the assignment.
+     */
     public void updateCredit(String creditName, int sortOrder) {
         this.creditName = normalizeOptionalText(creditName);
         this.sortOrder = requireNonNegative(sortOrder);

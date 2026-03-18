@@ -9,6 +9,9 @@ import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
 import com.tellpal.v2.category.domain.CategoryRepository;
 
+/**
+ * Read-only application service for category identity lookup.
+ */
 @Service
 @Transactional(readOnly = true)
 public class CategoryLookupService implements CategoryLookupApi {
@@ -20,12 +23,18 @@ public class CategoryLookupService implements CategoryLookupApi {
     }
 
     @Override
+    /**
+     * Finds a category by ID and maps it to the module-facing reference type.
+     */
     public Optional<CategoryReference> findById(Long categoryId) {
         return categoryRepository.findById(requireCategoryId(categoryId))
                 .map(CategoryApiMapper::toReference);
     }
 
     @Override
+    /**
+     * Finds a category by slug and maps it to the module-facing reference type.
+     */
     public Optional<CategoryReference> findBySlug(String slug) {
         return categoryRepository.findBySlug(requireSlug(slug))
                 .map(CategoryApiMapper::toReference);

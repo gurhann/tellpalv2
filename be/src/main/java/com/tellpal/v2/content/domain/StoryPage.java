@@ -17,6 +17,9 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Story-owned page aggregate member and owner of localized page content.
+ */
 @Entity
 @Table(name = "story_pages")
 public class StoryPage extends BaseJpaEntity {
@@ -68,6 +71,9 @@ public class StoryPage extends BaseJpaEntity {
                 "Illustration media ID must be positive");
     }
 
+    /**
+     * Creates or updates localized body and audio content for this page.
+     */
     public StoryPageLocalization upsertLocalization(LanguageCode languageCode, String bodyText, Long audioMediaId) {
         StoryPageLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode));

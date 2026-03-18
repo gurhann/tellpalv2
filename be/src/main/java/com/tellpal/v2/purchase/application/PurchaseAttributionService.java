@@ -24,6 +24,12 @@ import com.tellpal.v2.purchase.domain.PurchaseEventRepository;
 import com.tellpal.v2.user.api.AppUserProfileReference;
 import com.tellpal.v2.user.api.UserLookupApi;
 
+/**
+ * Application service for creating attribution snapshots for purchase events.
+ *
+ * <p>The service selects the best matching app event in a bounded lookback window and stores a
+ * stable profile snapshot alongside the attribution result.
+ */
 @Service
 public class PurchaseAttributionService {
 
@@ -48,6 +54,10 @@ public class PurchaseAttributionService {
         this.contentLookupApi = contentLookupApi;
     }
 
+    /**
+     * Creates an attribution snapshot for a purchase event, reusing an existing snapshot when one
+     * was already captured.
+     */
     @Transactional
     public PurchaseAttributionResult createSnapshot(Long purchaseEventId) {
         if (purchaseEventId == null || purchaseEventId <= 0) {

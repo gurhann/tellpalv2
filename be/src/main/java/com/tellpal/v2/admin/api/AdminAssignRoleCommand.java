@@ -1,5 +1,8 @@
 package com.tellpal.v2.admin.api;
 
+/**
+ * Command for assigning a role to an existing admin user.
+ */
 public record AdminAssignRoleCommand(Long adminUserId, String roleCode) {
 
     public AdminAssignRoleCommand {

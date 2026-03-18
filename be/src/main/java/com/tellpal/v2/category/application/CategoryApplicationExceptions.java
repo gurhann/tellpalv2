@@ -3,6 +3,9 @@ package com.tellpal.v2.category.application;
 import com.tellpal.v2.asset.api.AssetMediaType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application-layer exceptions raised by category use cases.
+ */
 public final class CategoryApplicationExceptions {
 
     private CategoryApplicationExceptions() {

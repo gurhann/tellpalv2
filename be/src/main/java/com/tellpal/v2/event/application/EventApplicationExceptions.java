@@ -1,5 +1,8 @@
 package com.tellpal.v2.event.application;
 
+/**
+ * Application-layer exceptions raised by event ingest use cases.
+ */
 public final class EventApplicationExceptions {
 
     private EventApplicationExceptions() {

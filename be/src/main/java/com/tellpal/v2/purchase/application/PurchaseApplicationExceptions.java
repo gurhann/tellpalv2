@@ -1,5 +1,8 @@
 package com.tellpal.v2.purchase.application;
 
+/**
+ * Application-layer exceptions raised by purchase use cases.
+ */
 public final class PurchaseApplicationExceptions {
 
     private PurchaseApplicationExceptions() {

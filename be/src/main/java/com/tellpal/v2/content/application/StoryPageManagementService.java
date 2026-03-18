@@ -18,6 +18,9 @@ import com.tellpal.v2.content.domain.StoryPage;
 import com.tellpal.v2.content.domain.StoryPageLocalization;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application service for maintaining story pages and their localized page content.
+ */
 @Service
 public class StoryPageManagementService {
 
@@ -31,6 +34,9 @@ public class StoryPageManagementService {
         this.assetReferenceValidator = assetReferenceValidator;
     }
 
+    /**
+     * Adds a story page to story content and synchronizes page count ownership in the aggregate.
+     */
     @Transactional
     public StoryPageRecord addStoryPage(AddStoryPageCommand command) {
         Content content = loadContent(command.contentId());
@@ -41,6 +47,9 @@ public class StoryPageManagementService {
                 contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
     }
 
+    /**
+     * Updates illustration metadata for an existing story page.
+     */
     @Transactional
     public StoryPageRecord updateStoryPage(UpdateStoryPageCommand command) {
         Content content = loadContent(command.contentId());
@@ -52,6 +61,9 @@ public class StoryPageManagementService {
                 contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
     }
 
+    /**
+     * Removes a story page from the aggregate.
+     */
     @Transactional
     public void removeStoryPage(RemoveStoryPageCommand command) {
         Content content = loadContent(command.contentId());
@@ -60,6 +72,9 @@ public class StoryPageManagementService {
         contentRepository.save(content);
     }
 
+    /**
+     * Creates or replaces the localized body and audio content for one story page.
+     */
     @Transactional
     public StoryPageLocalizationRecord upsertStoryPageLocalization(UpsertStoryPageLocalizationCommand command) {
         Content content = loadContent(command.contentId());

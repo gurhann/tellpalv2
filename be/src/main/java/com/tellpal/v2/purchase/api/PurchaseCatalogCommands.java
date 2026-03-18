@@ -7,11 +7,17 @@ import java.util.Locale;
 import com.tellpal.v2.purchase.domain.BillingPeriodUnit;
 import com.tellpal.v2.purchase.domain.SubscriptionProductType;
 
+/**
+ * Command types used by the purchase catalog API.
+ */
 public final class PurchaseCatalogCommands {
 
     private PurchaseCatalogCommands() {
     }
 
+    /**
+     * Command for creating a subscription product entry in the catalog.
+     */
     public record CreateSubscriptionProductCommand(
             String storeCode,
             String productId,
@@ -30,6 +36,9 @@ public final class PurchaseCatalogCommands {
         }
     }
 
+    /**
+     * Command for updating an existing subscription product entry.
+     */
     public record UpdateSubscriptionProductCommand(
             Long subscriptionProductId,
             String storeCode,

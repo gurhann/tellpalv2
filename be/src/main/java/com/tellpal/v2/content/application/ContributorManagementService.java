@@ -18,6 +18,9 @@ import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.Contributor;
 import com.tellpal.v2.content.domain.ContributorRepository;
 
+/**
+ * Application service for managing contributors and their assignments to content.
+ */
 @Service
 public class ContributorManagementService {
 
@@ -31,12 +34,18 @@ public class ContributorManagementService {
         this.contentRepository = contentRepository;
     }
 
+    /**
+     * Creates a contributor identity that can later be assigned to content.
+     */
     @Transactional
     public ContributorRecord createContributor(CreateContributorCommand command) {
         return ContentManagementMapper.toContributorRecord(
                 contributorRepository.save(Contributor.create(command.displayName())));
     }
 
+    /**
+     * Lists recent contributors for admin workflows.
+     */
     @Transactional(readOnly = true)
     public List<ContributorRecord> listContributors(int limit) {
         int sanitizedLimit = sanitizeLimit(limit);
@@ -45,6 +54,9 @@ public class ContributorManagementService {
                 .toList();
     }
 
+    /**
+     * Renames an existing contributor.
+     */
     @Transactional
     public ContributorRecord renameContributor(RenameContributorCommand command) {
         Contributor contributor = loadContributor(command.contributorId());
@@ -52,6 +64,9 @@ public class ContributorManagementService {
         return ContentManagementMapper.toContributorRecord(contributorRepository.save(contributor));
     }
 
+    /**
+     * Assigns a contributor to content for one role and language combination.
+     */
     @Transactional
     public ContentContributorRecord assignContentContributor(AssignContentContributorCommand command) {
         Content content = loadContent(command.contentId());

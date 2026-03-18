@@ -19,6 +19,12 @@ import com.tellpal.v2.content.api.PublicContentQueryApi;
 import com.tellpal.v2.content.api.PublicContentSummary;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Read-model service for mobile-facing category queries.
+ *
+ * <p>The service exposes only active categories with published localizations and resolves curated
+ * content through the public content query API.
+ */
 @Service
 @Transactional(readOnly = true)
 public class PublicCategoryQueryService implements PublicCategoryQueryApi {
@@ -37,6 +43,9 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
     }
 
     @Override
+    /**
+     * Lists visible localized categories for one language and optional type filter.
+     */
     public List<PublicCategoryView> listCategories(LanguageCode languageCode, CategoryApiType type) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findAllActive().stream()
@@ -49,6 +58,9 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
     }
 
     @Override
+    /**
+     * Finds one visible localized category by slug.
+     */
     public Optional<PublicCategoryView> findCategory(String slug, LanguageCode languageCode) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findBySlug(requireSlug(slug))
@@ -58,6 +70,9 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
     }
 
     @Override
+    /**
+     * Lists curated content summaries for a visible localized category.
+     */
     public List<PublicContentSummary> listCategoryContents(String slug, LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findBySlug(requireSlug(slug))

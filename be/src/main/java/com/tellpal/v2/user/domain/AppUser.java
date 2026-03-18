@@ -13,6 +13,12 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for a Firebase-backed application user and its owned profiles.
+ *
+ * <p>The aggregate guarantees there is at most one primary profile and can create a default primary
+ * profile for new users.
+ */
 @Entity
 @Table(name = "app_users")
 public class AppUser extends BaseJpaEntity {
@@ -65,6 +71,9 @@ public class AppUser extends BaseJpaEntity {
                 .findFirst();
     }
 
+    /**
+     * Ensures the aggregate has a primary profile, creating a default one when needed.
+     */
     public UserProfile ensurePrimaryProfile() {
         return primaryProfile()
                 .orElseGet(() -> {
@@ -78,6 +87,9 @@ public class AppUser extends BaseJpaEntity {
         this.allowMarketing = allowMarketing;
     }
 
+    /**
+     * Adds a new profile and unsets other primary profiles when the new one is primary.
+     */
     public UserProfile addProfile(
             String displayName,
             String ageRange,
@@ -100,6 +112,9 @@ public class AppUser extends BaseJpaEntity {
         return profile;
     }
 
+    /**
+     * Updates an existing profile and enforces the single-primary-profile rule.
+     */
     public UserProfile updateProfile(
             Long profileId,
             String displayName,

@@ -3,6 +3,9 @@ package com.tellpal.v2.event.api;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Candidate app event that can be used to attribute a purchase or another downstream action.
+ */
 public record AppEventAttributionCandidate(
         UUID eventId,
         Long profileId,

@@ -18,6 +18,9 @@ import com.tellpal.v2.category.domain.CategoryLocalization;
 import com.tellpal.v2.category.domain.CategoryRepository;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application service for creating and updating categories and their localizations.
+ */
 @Service
 public class CategoryManagementService {
 
@@ -31,6 +34,9 @@ public class CategoryManagementService {
         this.assetReferenceValidator = assetReferenceValidator;
     }
 
+    /**
+     * Creates a new category after verifying slug uniqueness.
+     */
     @Transactional
     public CategoryReference createCategory(CreateCategoryCommand command) {
         ensureSlugAvailable(null, command.slug());
@@ -42,6 +48,9 @@ public class CategoryManagementService {
         return CategoryApiMapper.toReference(savedCategory);
     }
 
+    /**
+     * Updates core category metadata while preserving aggregate identity.
+     */
     @Transactional
     public CategoryReference updateCategory(UpdateCategoryCommand command) {
         Category category = loadCategory(command.categoryId());
@@ -50,6 +59,9 @@ public class CategoryManagementService {
         return CategoryApiMapper.toReference(categoryRepository.save(category));
     }
 
+    /**
+     * Creates a new localized category view after validating the image asset reference.
+     */
     @Transactional
     public CategoryLocalizationRecord createLocalization(CreateCategoryLocalizationCommand command) {
         Category category = loadCategory(command.categoryId());
@@ -70,6 +82,9 @@ public class CategoryManagementService {
                         .orElse(localization));
     }
 
+    /**
+     * Replaces localized category content for one language.
+     */
     @Transactional
     public CategoryLocalizationRecord updateLocalization(UpdateCategoryLocalizationCommand command) {
         Category category = loadCategory(command.categoryId());

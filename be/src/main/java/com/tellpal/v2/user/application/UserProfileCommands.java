@@ -2,11 +2,17 @@ package com.tellpal.v2.user.application;
 
 import java.util.List;
 
+/**
+ * Command types used by user profile application services.
+ */
 public final class UserProfileCommands {
 
     private UserProfileCommands() {
     }
 
+    /**
+     * Command for updating a user profile and optionally making it primary.
+     */
     public record UpdateUserProfileCommand(
             Long userId,
             Long profileId,

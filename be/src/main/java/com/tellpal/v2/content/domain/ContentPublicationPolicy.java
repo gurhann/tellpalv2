@@ -4,8 +4,17 @@ import java.time.Instant;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Domain policy for publishing and archiving content localizations.
+ *
+ * <p>Story publication requires at least one page and complete page localizations for the target
+ * language.
+ */
 public final class ContentPublicationPolicy {
 
+    /**
+     * Publishes a localization after validating type-specific readiness rules.
+     */
     public void publish(Content content, ContentLocalization localization, Instant publishedAt) {
         Content requiredContent = requireContent(content);
         ContentLocalization requiredLocalization = requireLocalization(localization);
@@ -14,6 +23,9 @@ public final class ContentPublicationPolicy {
         requiredLocalization.markStatus(LocalizationStatus.PUBLISHED, requiredPublishedAt);
     }
 
+    /**
+     * Archives a localization while preserving its existing publish timestamp.
+     */
     public void archive(ContentLocalization localization) {
         requireLocalization(localization).markStatus(LocalizationStatus.ARCHIVED, localization.getPublishedAt());
     }

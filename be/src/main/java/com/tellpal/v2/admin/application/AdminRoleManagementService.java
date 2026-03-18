@@ -13,6 +13,12 @@ import com.tellpal.v2.admin.domain.AdminRoleRepository;
 import com.tellpal.v2.admin.domain.AdminUser;
 import com.tellpal.v2.admin.domain.AdminUserRepository;
 
+/**
+ * Application service for mutating admin role assignments.
+ *
+ * <p>The service loads the admin aggregate and role reference, then applies the assignment within
+ * a single transaction so role changes are persisted atomically.
+ */
 @Service
 public class AdminRoleManagementService implements AdminRoleManagementApi {
 
@@ -29,6 +35,12 @@ public class AdminRoleManagementService implements AdminRoleManagementApi {
         this.adminRoleRepository = adminRoleRepository;
     }
 
+    /**
+     * Assigns a role to an existing admin user.
+     *
+     * <p>The command fails when the admin user or role does not exist. Repeating the same
+     * assignment leaves the aggregate unchanged.
+     */
     @Override
     @Transactional
     public void assignRole(AdminAssignRoleCommand command) {

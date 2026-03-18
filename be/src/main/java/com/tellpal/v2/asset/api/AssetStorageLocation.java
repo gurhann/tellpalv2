@@ -1,5 +1,8 @@
 package com.tellpal.v2.asset.api;
 
+/**
+ * Logical location of a stored media object, identified by provider and object path.
+ */
 public record AssetStorageLocation(AssetStorageProvider provider, String objectPath) {
 
     public AssetStorageLocation {

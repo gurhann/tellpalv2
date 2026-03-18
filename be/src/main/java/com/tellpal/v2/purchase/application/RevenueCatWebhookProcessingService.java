@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.purchase.application.RevenueCatWebhookCommands.ProcessRevenueCatWebhookCommand;
 
+/**
+ * Application service that composes RevenueCat ingest with purchase attribution snapshot creation.
+ */
 @Service
 public class RevenueCatWebhookProcessingService {
 
@@ -22,6 +25,9 @@ public class RevenueCatWebhookProcessingService {
         this.purchaseAttributionService = purchaseAttributionService;
     }
 
+    /**
+     * Processes a RevenueCat webhook and immediately creates its attribution snapshot.
+     */
     @Transactional
     public RevenueCatWebhookProcessingResult process(ProcessRevenueCatWebhookCommand command) {
         RevenueCatWebhookResults.RevenueCatWebhookReceipt receipt = revenueCatWebhookService.process(command);

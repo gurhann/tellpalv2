@@ -21,6 +21,12 @@ import com.tellpal.v2.asset.api.ResolvedAssetReference;
 import com.tellpal.v2.asset.infrastructure.storage.AssetProcessingPathBuilder;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Read-model service that resolves generated delivery assets for a content localization.
+ *
+ * <p>The service only exposes bundles for completed processing entries and derives generated object
+ * paths from the stored processing context.
+ */
 @Service
 @Transactional(readOnly = true)
 public class ContentAssetBundleService implements ContentAssetBundleApi {
@@ -38,6 +44,9 @@ public class ContentAssetBundleService implements ContentAssetBundleApi {
         this.assetProcessingPathBuilder = assetProcessingPathBuilder;
     }
 
+    /**
+     * Resolves delivery assets for a localization when processing has completed successfully.
+     */
     @Override
     public Optional<ContentDeliveryAssets> findForLocalization(Long contentId, LanguageCode languageCode) {
         return assetProcessingApi.findByLocalization(requireContentId(contentId), requireLanguageCode(languageCode))

@@ -2,6 +2,9 @@ package com.tellpal.v2.asset.api;
 
 import java.time.Instant;
 
+/**
+ * Snapshot of a registered media asset and its cached download metadata.
+ */
 public record AssetRecord(
         Long assetId,
         AssetStorageLocation storageLocation,

@@ -13,6 +13,12 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Admin aggregate root for credentials, activation state, and assigned roles.
+ *
+ * <p>Role assignments are owned by the aggregate and kept unique by role code. Authentication
+ * flows may update {@code lastLoginAt}, but token state itself lives outside this aggregate.
+ */
 @Entity
 @Table(name = "admin_users")
 public class AdminUser extends BaseJpaEntity {
@@ -84,6 +90,12 @@ public class AdminUser extends BaseJpaEntity {
         lastLoginAt = loggedInAt;
     }
 
+    /**
+     * Assigns a role to this admin user when it is not already linked.
+     *
+     * <p>Role assignment is idempotent by role code to prevent duplicate links inside the
+     * aggregate.
+     */
     public void assignRole(AdminRole role, Instant assignedAt) {
         if (role == null) {
             throw new IllegalArgumentException("Role must not be null");

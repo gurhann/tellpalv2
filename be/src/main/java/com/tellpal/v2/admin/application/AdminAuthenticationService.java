@@ -24,6 +24,13 @@ import com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasher;
 import com.tellpal.v2.admin.infrastructure.security.AdminSecurityProperties;
 import com.tellpal.v2.admin.infrastructure.security.IssuedAdminAccessToken;
 
+/**
+ * Application service that orchestrates admin authentication, refresh token rotation, and logout.
+ *
+ * <p>This service coordinates admin aggregates, refresh token persistence, password verification,
+ * and JWT issuance inside transactional use cases so that token state changes stay consistent with
+ * the stored session model.
+ */
 @Service
 public class AdminAuthenticationService implements AdminAuthenticationApi {
 
@@ -57,6 +64,12 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
         this.adminSecurityProperties = adminSecurityProperties;
     }
 
+    /**
+     * Verifies admin credentials, records the login timestamp, and opens a new authenticated
+     * session.
+     *
+     * <p>Disabled users and invalid credentials fail before any token is issued.
+     */
     @Override
     @Transactional
     public AdminAuthenticationResult login(AdminLoginCommand command) {
@@ -75,6 +88,12 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
         return issueAuthentication(adminUser, issuedAt, command.userAgent(), command.ipAddress());
     }
 
+    /**
+     * Replaces a valid refresh token with a new token pair.
+     *
+     * <p>The current token is marked as rotated and revoked in the same transaction. Reuse,
+     * revocation, and expiry are treated as business failures.
+     */
     @Override
     @Transactional
     public AdminAuthenticationResult refresh(AdminRefreshCommand command) {
@@ -106,6 +125,12 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
         return issueAuthentication(adminUser, issuedAt, command.userAgent(), command.ipAddress(), replacementToken);
     }
 
+    /**
+     * Revokes the active session represented by the provided refresh token.
+     *
+     * <p>The operation is intentionally tolerant of already revoked or missing tokens so logout can
+     * be retried safely.
+     */
     @Override
     @Transactional
     public void logout(AdminLogoutCommand command) {

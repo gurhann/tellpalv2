@@ -6,6 +6,9 @@ import java.util.List;
 import com.tellpal.v2.purchase.domain.BillingPeriodUnit;
 import com.tellpal.v2.purchase.domain.SubscriptionProductType;
 
+/**
+ * Snapshot of a subscription product as exposed outside the purchase module.
+ */
 public record SubscriptionProductRecord(
         Long id,
         String storeCode,

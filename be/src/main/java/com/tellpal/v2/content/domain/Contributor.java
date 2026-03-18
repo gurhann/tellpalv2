@@ -6,6 +6,9 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for contributor identity shared across content assignments.
+ */
 @Entity
 @Table(name = "contributors")
 public class Contributor extends BaseJpaEntity {
@@ -20,6 +23,9 @@ public class Contributor extends BaseJpaEntity {
         this.displayName = requireText(displayName, "Contributor display name must not be blank");
     }
 
+    /**
+     * Creates a contributor with a stable display name.
+     */
     public static Contributor create(String displayName) {
         return new Contributor(displayName);
     }
@@ -28,6 +34,9 @@ public class Contributor extends BaseJpaEntity {
         return displayName;
     }
 
+    /**
+     * Renames the contributor.
+     */
     public void rename(String displayName) {
         this.displayName = requireText(displayName, "Contributor display name must not be blank");
     }

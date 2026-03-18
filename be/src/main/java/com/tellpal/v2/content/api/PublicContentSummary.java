@@ -3,6 +3,9 @@ package com.tellpal.v2.content.api;
 import com.tellpal.v2.asset.api.ContentDeliveryAssets;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Public list view for a visible content localization.
+ */
 public record PublicContentSummary(
         Long contentId,
         ContentApiType type,

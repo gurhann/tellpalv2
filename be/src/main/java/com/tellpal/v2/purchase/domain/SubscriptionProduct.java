@@ -14,6 +14,9 @@ import org.hibernate.type.SqlTypes;
 
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for subscription product catalog entries.
+ */
 @Entity
 @Table(name = "subscription_products")
 public class SubscriptionProduct extends BaseJpaEntity {
@@ -66,6 +69,9 @@ public class SubscriptionProduct extends BaseJpaEntity {
         this.active = active;
     }
 
+    /**
+     * Registers a new active subscription product in the catalog.
+     */
     public static SubscriptionProduct register(
             String storeCode,
             String productId,
@@ -111,6 +117,9 @@ public class SubscriptionProduct extends BaseJpaEntity {
         return active;
     }
 
+    /**
+     * Replaces the mutable catalog definition while keeping the product identity.
+     */
     public void updateCatalogDefinition(
             SubscriptionProductType productType,
             BillingPeriodUnit billingPeriodUnit,
@@ -126,6 +135,9 @@ public class SubscriptionProduct extends BaseJpaEntity {
                 "Entitlement ID entries must not be blank");
     }
 
+    /**
+     * Updates the store-scoped product identity fields.
+     */
     public void renameProduct(String storeCode, String productId) {
         this.storeCode = PurchaseDomainValidator.requireCode(storeCode, "Store code must not be blank");
         this.productId = PurchaseDomainValidator.requireText(productId, "Product ID must not be blank");

@@ -4,6 +4,9 @@ import java.util.Set;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Effective free-access set resolved for one language and access key.
+ */
 public record ResolvedContentFreeAccessSet(
         LanguageCode languageCode,
         String accessKey,
@@ -19,6 +22,9 @@ public record ResolvedContentFreeAccessSet(
         contentIds = contentIds == null ? Set.of() : Set.copyOf(contentIds);
     }
 
+    /**
+     * Checks whether the resolved access set contains the given content ID.
+     */
     public boolean contains(Long contentId) {
         if (contentId == null || contentId <= 0) {
             throw new IllegalArgumentException("Content ID must be positive");

@@ -7,11 +7,17 @@ import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by content management application services.
+ */
 public final class ContentManagementCommands {
 
     private ContentManagementCommands() {
     }
 
+    /**
+     * Command for creating a content aggregate.
+     */
     public record CreateContentCommand(ContentType type, String externalKey, Integer ageRange, boolean active) {
 
         public CreateContentCommand {
@@ -21,6 +27,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for updating core content metadata.
+     */
     public record UpdateContentCommand(Long contentId, String externalKey, Integer ageRange, boolean active) {
 
         public UpdateContentCommand {
@@ -30,6 +39,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for creating a new content localization.
+     */
     public record CreateContentLocalizationCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -57,6 +69,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for updating an existing content localization.
+     */
     public record UpdateContentLocalizationCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -84,6 +99,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for changing only the processing status of a localization.
+     */
     public record MarkContentLocalizationProcessingCommand(
             Long contentId,
             LanguageCode languageCode,
@@ -96,6 +114,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for adding a story page.
+     */
     public record AddStoryPageCommand(Long contentId, int pageNumber, Long illustrationMediaId) {
 
         public AddStoryPageCommand {
@@ -105,6 +126,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for updating one story page.
+     */
     public record UpdateStoryPageCommand(Long contentId, int pageNumber, Long illustrationMediaId) {
 
         public UpdateStoryPageCommand {
@@ -114,6 +138,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for removing a story page.
+     */
     public record RemoveStoryPageCommand(Long contentId, int pageNumber) {
 
         public RemoveStoryPageCommand {
@@ -122,6 +149,9 @@ public final class ContentManagementCommands {
         }
     }
 
+    /**
+     * Command for creating or updating one localized story page entry.
+     */
     public record UpsertStoryPageLocalizationCommand(
             Long contentId,
             int pageNumber,

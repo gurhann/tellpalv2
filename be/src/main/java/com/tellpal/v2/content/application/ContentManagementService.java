@@ -20,6 +20,12 @@ import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Application service for creating and updating content aggregates and their localizations.
+ *
+ * <p>The service enforces external key uniqueness, validates referenced assets, and coordinates
+ * localization processing state transitions inside the content aggregate.
+ */
 @Service
 public class ContentManagementService {
 
@@ -33,6 +39,9 @@ public class ContentManagementService {
         this.assetReferenceValidator = assetReferenceValidator;
     }
 
+    /**
+     * Creates a new content aggregate with its stable identity fields.
+     */
     @Transactional
     public ContentReference createContent(CreateContentCommand command) {
         ensureExternalKeyAvailable(null, command.externalKey());
@@ -44,6 +53,9 @@ public class ContentManagementService {
         return ContentApiMapper.toReference(savedContent);
     }
 
+    /**
+     * Updates core content metadata without changing localization state.
+     */
     @Transactional
     public ContentReference updateContent(UpdateContentCommand command) {
         Content content = loadContent(command.contentId());
@@ -52,6 +64,9 @@ public class ContentManagementService {
         return ContentApiMapper.toReference(contentRepository.save(content));
     }
 
+    /**
+     * Creates a new localization for existing content after validating referenced assets.
+     */
     @Transactional
     public ContentLocalizationRecord createLocalization(CreateContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
@@ -76,6 +91,9 @@ public class ContentManagementService {
                         .orElse(localization));
     }
 
+    /**
+     * Replaces localization content fields and visibility-related metadata for one language.
+     */
     @Transactional
     public ContentLocalizationRecord updateLocalization(UpdateContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
@@ -98,6 +116,9 @@ public class ContentManagementService {
                         .orElse(localization));
     }
 
+    /**
+     * Updates only the processing status of an existing localization.
+     */
     @Transactional
     public ContentLocalizationRecord markLocalizationProcessingStatus(
             MarkContentLocalizationProcessingCommand command) {
@@ -110,6 +131,9 @@ public class ContentManagementService {
                         .orElse(localization));
     }
 
+    /**
+     * Convenience operation for marking a localization as processing-complete.
+     */
     @Transactional
     public ContentLocalizationRecord markAsReady(Long contentId, LanguageCode languageCode) {
         return markLocalizationProcessingStatus(new MarkContentLocalizationProcessingCommand(

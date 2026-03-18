@@ -10,6 +10,11 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Localized story-page content owned by a single story page.
+ *
+ * <p>Each localization carries body text and per-page audio for one language.
+ */
 @Entity
 @Table(name = "story_page_localizations")
 public class StoryPageLocalization extends BaseJpaEntity {
@@ -47,6 +52,9 @@ public class StoryPageLocalization extends BaseJpaEntity {
         return audioMediaId;
     }
 
+    /**
+     * Replaces localized body text and audio metadata for this page.
+     */
     public void update(String bodyText, Long audioMediaId) {
         this.bodyText = normalizeOptionalText(bodyText);
         this.audioMediaId = normalizePositiveId(audioMediaId);

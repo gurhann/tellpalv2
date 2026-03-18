@@ -26,6 +26,12 @@ import com.tellpal.v2.event.domain.AppEventRepository;
 import com.tellpal.v2.event.domain.ContentEvent;
 import com.tellpal.v2.event.domain.ContentEventRepository;
 
+/**
+ * Application service for event ingest and attribution lookup.
+ *
+ * <p>The service validates referenced content, deduplicates by event ID and legacy key, and keeps
+ * event receipts stable for callers.
+ */
 @Service
 public class EventTrackingService implements EventTrackingApi, EventAttributionApi {
 
@@ -46,6 +52,9 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
     }
 
     @Override
+    /**
+     * Records one content event after verifying the referenced content exists.
+     */
     @Transactional
     public EventIngestReceipt recordContentEvent(RecordContentEventCommand command) {
         requireContentExists(command.contentId());
@@ -53,6 +62,9 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
     }
 
     @Override
+    /**
+     * Records one application event, validating optional content references when present.
+     */
     @Transactional
     public EventIngestReceipt recordAppEvent(RecordAppEventCommand command) {
         if (command.contentId() != null) {
@@ -62,6 +74,9 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
     }
 
     @Override
+    /**
+     * Records a mixed batch of content and application events.
+     */
     @Transactional
     public EventBatchIngestResult recordBatchEvents(RecordBatchEventsCommand command) {
         List<EventIngestReceipt> receipts = new ArrayList<>();
@@ -79,6 +94,9 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
     }
 
     @Override
+    /**
+     * Returns attribution candidates inside the requested window for a profile.
+     */
     @Transactional(readOnly = true)
     public List<AppEventAttributionCandidate> findAttributionCandidates(
             Long profileId,

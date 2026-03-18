@@ -4,6 +4,12 @@ import java.time.Instant;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Snapshot of the persisted processing state for one content localization.
+ *
+ * <p>The record exposes both workflow state and the source asset context needed to derive delivery
+ * outputs.
+ */
 public record AssetProcessingRecord(
         Long processingId,
         Long contentId,

@@ -3,11 +3,17 @@ package com.tellpal.v2.content.application;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Command types used by contributor management application services.
+ */
 public final class ContributorManagementCommands {
 
     private ContributorManagementCommands() {
     }
 
+    /**
+     * Command for creating a contributor.
+     */
     public record CreateContributorCommand(String displayName) {
 
         public CreateContributorCommand {
@@ -15,6 +21,9 @@ public final class ContributorManagementCommands {
         }
     }
 
+    /**
+     * Command for renaming a contributor.
+     */
     public record RenameContributorCommand(Long contributorId, String displayName) {
 
         public RenameContributorCommand {
@@ -23,6 +32,9 @@ public final class ContributorManagementCommands {
         }
     }
 
+    /**
+     * Command for assigning a contributor to content.
+     */
     public record AssignContentContributorCommand(
             Long contentId,
             Long contributorId,

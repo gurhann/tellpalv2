@@ -3,11 +3,17 @@ package com.tellpal.v2.content.application;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Result types returned by contributor management application services.
+ */
 public final class ContributorManagementResults {
 
     private ContributorManagementResults() {
     }
 
+    /**
+     * Snapshot of one contributor after a management operation.
+     */
     public record ContributorRecord(Long contributorId, String displayName) {
 
         public ContributorRecord {
@@ -16,6 +22,9 @@ public final class ContributorManagementResults {
         }
     }
 
+    /**
+     * Snapshot of one contributor assignment to content.
+     */
     public record ContentContributorRecord(
             Long contentId,
             Long contributorId,

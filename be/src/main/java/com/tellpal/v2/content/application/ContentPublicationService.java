@@ -13,6 +13,12 @@ import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentPublicationPolicy;
 import com.tellpal.v2.content.domain.ContentRepository;
 
+/**
+ * Application service for publishing and archiving content localizations.
+ *
+ * <p>The service delegates publication readiness checks to {@link ContentPublicationPolicy} so story
+ * content cannot be published before its page localizations are complete.
+ */
 @Service
 public class ContentPublicationService {
 
@@ -23,6 +29,9 @@ public class ContentPublicationService {
         this.contentRepository = contentRepository;
     }
 
+    /**
+     * Publishes a localization when all type-specific publication prerequisites are met.
+     */
     @Transactional
     public ContentLocalizationRecord publishLocalization(PublishContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
@@ -34,6 +43,9 @@ public class ContentPublicationService {
                         .orElse(localization));
     }
 
+    /**
+     * Archives a published or draft localization without deleting it.
+     */
     @Transactional
     public ContentLocalizationRecord archiveLocalization(ArchiveContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());

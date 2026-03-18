@@ -13,6 +13,9 @@ import com.tellpal.v2.user.domain.AppUser;
 import com.tellpal.v2.user.domain.AppUserRepository;
 import com.tellpal.v2.user.domain.UserProfile;
 
+/**
+ * Application service for reading and updating user profile data.
+ */
 @Service
 public class UserProfileService {
 
@@ -26,6 +29,9 @@ public class UserProfileService {
         this.assetReferenceValidator = assetReferenceValidator;
     }
 
+    /**
+     * Lists all profiles owned by a user.
+     */
     @Transactional(readOnly = true)
     public List<UserProfileRecord> listProfiles(Long userId) {
         AppUser appUser = loadAppUser(userId);
@@ -34,6 +40,9 @@ public class UserProfileService {
                 .toList();
     }
 
+    /**
+     * Returns one profile owned by a user.
+     */
     @Transactional(readOnly = true)
     public UserProfileRecord getProfile(Long userId, Long profileId) {
         AppUser appUser = loadAppUser(userId);
@@ -42,6 +51,9 @@ public class UserProfileService {
         return UserProfileMapper.toRecord(userId, profile);
     }
 
+    /**
+     * Updates profile content and optionally changes which profile is primary.
+     */
     @Transactional
     public UserProfileRecord updateProfile(UpdateUserProfileCommand command) {
         AppUser appUser = loadAppUser(command.userId());

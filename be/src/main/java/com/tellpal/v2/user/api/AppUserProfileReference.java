@@ -2,6 +2,9 @@ package com.tellpal.v2.user.api;
 
 import java.util.List;
 
+/**
+ * Lightweight view of a user's primary or selected profile.
+ */
 public record AppUserProfileReference(
         Long userId,
         Long profileId,

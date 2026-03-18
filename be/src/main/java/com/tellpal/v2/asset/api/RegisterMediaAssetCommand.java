@@ -1,5 +1,8 @@
 package com.tellpal.v2.asset.api;
 
+/**
+ * Command for registering a newly discovered media object in storage.
+ */
 public record RegisterMediaAssetCommand(
         AssetStorageProvider provider,
         String objectPath,

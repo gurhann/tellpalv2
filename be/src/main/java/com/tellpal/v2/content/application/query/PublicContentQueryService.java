@@ -27,6 +27,12 @@ import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.StoryPage;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Read-model service for mobile-facing content queries.
+ *
+ * <p>The service only exposes active content with mobile-visible localizations and joins generated
+ * delivery assets plus free-access state into the returned views.
+ */
 @Service
 @Transactional(readOnly = true)
 public class PublicContentQueryService implements PublicContentQueryApi {
@@ -48,6 +54,9 @@ public class PublicContentQueryService implements PublicContentQueryApi {
     }
 
     @Override
+    /**
+     * Lists visible content summaries for one language and optional type filter.
+     */
     public List<PublicContentSummary> listContents(LanguageCode languageCode, String requestedAccessKey, ContentApiType type) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         Set<Long> freeContentIds = resolveFreeContentIds(requiredLanguageCode, requestedAccessKey);
@@ -62,6 +71,9 @@ public class PublicContentQueryService implements PublicContentQueryApi {
     }
 
     @Override
+    /**
+     * Returns visible content summaries in the caller-provided ID order.
+     */
     public List<PublicContentSummary> listContentsByIds(
             List<Long> contentIds,
             LanguageCode languageCode,
@@ -82,6 +94,9 @@ public class PublicContentQueryService implements PublicContentQueryApi {
     }
 
     @Override
+    /**
+     * Returns public details for a visible content localization.
+     */
     public Optional<PublicContentDetails> findContent(Long contentId, LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         Set<Long> freeContentIds = resolveFreeContentIds(requiredLanguageCode, requestedAccessKey);
@@ -96,6 +111,9 @@ public class PublicContentQueryService implements PublicContentQueryApi {
     }
 
     @Override
+    /**
+     * Returns localized story pages for visible story content.
+     */
     public Optional<List<PublicStoryPage>> findStoryPages(Long contentId, LanguageCode languageCode) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return contentRepository.findById(requireContentId(contentId))

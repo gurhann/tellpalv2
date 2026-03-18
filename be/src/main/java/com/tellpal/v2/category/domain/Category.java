@@ -17,6 +17,12 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Aggregate root for category identity, localized presentation, and curated content ordering.
+ *
+ * <p>Curated content is owned per language and display order must remain unique within that
+ * language scope.
+ */
 @Entity
 @Table(name = "categories")
 public class Category extends BaseJpaEntity {
@@ -106,6 +112,9 @@ public class Category extends BaseJpaEntity {
         this.active = active;
     }
 
+    /**
+     * Creates or updates one localized category view.
+     */
     public CategoryLocalization upsertLocalization(
             LanguageCode languageCode,
             String name,
@@ -120,6 +129,9 @@ public class Category extends BaseJpaEntity {
         return localization;
     }
 
+    /**
+     * Adds curated content for one language after verifying publication state and order uniqueness.
+     */
     public CategoryContent addContent(LanguageCode languageCode, Long contentId, int displayOrder) {
         requirePublishedLocalization(languageCode);
         if (findCuratedContent(languageCode, contentId).isPresent()) {
@@ -131,6 +143,9 @@ public class Category extends BaseJpaEntity {
         return categoryContent;
     }
 
+    /**
+     * Updates the display order of a curated content link for one language.
+     */
     public CategoryContent updateContentOrder(LanguageCode languageCode, Long contentId, int displayOrder) {
         requirePublishedLocalization(languageCode);
         CategoryContent curatedContent = findCuratedContent(languageCode, contentId)

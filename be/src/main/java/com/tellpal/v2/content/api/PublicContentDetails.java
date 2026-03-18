@@ -5,6 +5,11 @@ import java.time.Instant;
 import com.tellpal.v2.asset.api.ContentDeliveryAssets;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+/**
+ * Public delivery view for a single content localization.
+ *
+ * <p>The record combines localized text fields, access state, and resolved generated assets.
+ */
 public record PublicContentDetails(
         Long contentId,
         ContentApiType type,

@@ -7,6 +7,9 @@ import jakarta.persistence.Table;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 
+/**
+ * Grant that marks one content localization free for a specific access key.
+ */
 @Entity
 @Table(name = "content_free_access")
 public class ContentFreeAccess extends BaseJpaEntity {
@@ -29,6 +32,9 @@ public class ContentFreeAccess extends BaseJpaEntity {
         this.languageCode = requireLanguageCode(languageCode);
     }
 
+    /**
+     * Creates a free-access grant for one content item and language.
+     */
     public static ContentFreeAccess grant(String accessKey, Long contentId, LanguageCode languageCode) {
         return new ContentFreeAccess(accessKey, contentId, languageCode);
     }

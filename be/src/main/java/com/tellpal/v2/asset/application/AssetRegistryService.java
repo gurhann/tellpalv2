@@ -21,6 +21,9 @@ import com.tellpal.v2.asset.domain.StorageProvider;
 import com.tellpal.v2.asset.infrastructure.storage.AssetStorageClientRegistry;
 import com.tellpal.v2.asset.infrastructure.storage.StorageSignedDownloadUrl;
 
+/**
+ * Application service for registering assets and maintaining mutable storage-backed metadata.
+ */
 @Service
 public class AssetRegistryService implements AssetRegistryApi {
 
@@ -37,6 +40,11 @@ public class AssetRegistryService implements AssetRegistryApi {
         this.assetStorageClientRegistry = assetStorageClientRegistry;
     }
 
+    /**
+     * Registers a new asset for a unique storage location.
+     *
+     * <p>Registration fails if the same provider and object path are already known.
+     */
     @Override
     @Transactional
     public AssetRecord register(RegisterMediaAssetCommand command) {
@@ -52,6 +60,9 @@ public class AssetRegistryService implements AssetRegistryApi {
         return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
     }
 
+    /**
+     * Returns recent assets for operational read use cases.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<AssetRecord> listRecent(int limit) {
@@ -61,6 +72,9 @@ public class AssetRegistryService implements AssetRegistryApi {
                 .toList();
     }
 
+    /**
+     * Finds a registered asset by persistent identifier.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<AssetRecord> findById(Long assetId) {
@@ -68,6 +82,9 @@ public class AssetRegistryService implements AssetRegistryApi {
                 .map(AssetApiMapper::toRecord);
     }
 
+    /**
+     * Finds a registered asset by provider and object path.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<AssetRecord> findByStorageLocation(AssetStorageLocation storageLocation) {
@@ -80,6 +97,9 @@ public class AssetRegistryService implements AssetRegistryApi {
                 .map(AssetApiMapper::toRecord);
     }
 
+    /**
+     * Replaces mutable metadata such as MIME type, byte size, and checksum for an existing asset.
+     */
     @Override
     @Transactional
     public AssetRecord updateMetadata(UpdateMediaAssetMetadataCommand command) {
@@ -88,6 +108,9 @@ public class AssetRegistryService implements AssetRegistryApi {
         return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
     }
 
+    /**
+     * Refreshes the cached signed download URL using the storage client for the asset provider.
+     */
     @Override
     @Transactional
     public AssetRecord refreshDownloadUrlCache(RefreshMediaAssetDownloadUrlCommand command) {
