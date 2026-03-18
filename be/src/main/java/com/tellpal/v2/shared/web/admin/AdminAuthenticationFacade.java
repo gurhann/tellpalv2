@@ -8,13 +8,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
+/**
+ * Extracts the authenticated admin principal from the current Spring Security context.
+ */
 @Component
 public class AdminAuthenticationFacade {
 
+    /**
+     * Returns the current authenticated admin when the request is backed by a valid JWT principal.
+     */
     public Optional<AuthenticatedAdmin> currentAdmin() {
         return currentAdmin(SecurityContextHolder.getContext().getAuthentication());
     }
 
+    /**
+     * Converts the authentication object into the normalized admin view used by admin web handlers.
+     */
     public Optional<AuthenticatedAdmin> currentAdmin(Authentication authentication) {
         if (!(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken)
                 || !authentication.isAuthenticated()) {

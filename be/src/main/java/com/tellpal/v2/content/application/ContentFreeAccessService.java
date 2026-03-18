@@ -89,11 +89,11 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
                 .toList();
     }
 
-    @Override
     /**
      * Resolves the effective localized free-access set, falling back to the default key when
      * needed.
      */
+    @Override
     @Transactional(readOnly = true)
     public ResolvedContentFreeAccessSet resolveFreeAccess(LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
@@ -107,10 +107,10 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
         return ContentFreeAccessMapper.toResolvedSet(requiredLanguageCode, resolvedAccessKey, entries);
     }
 
-    @Override
     /**
      * Checks whether one content item belongs to the effective localized free-access set.
      */
+    @Override
     @Transactional(readOnly = true)
     public boolean isContentFree(Long contentId, LanguageCode languageCode, String requestedAccessKey) {
         Long requiredContentId = requireContentId(contentId);

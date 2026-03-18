@@ -42,10 +42,10 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
         this.assetRegistryApi = assetRegistryApi;
     }
 
-    @Override
     /**
      * Lists visible localized categories for one language and optional type filter.
      */
+    @Override
     public List<PublicCategoryView> listCategories(LanguageCode languageCode, CategoryApiType type) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findAllActive().stream()
@@ -57,10 +57,10 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
                 .toList();
     }
 
-    @Override
     /**
      * Finds one visible localized category by slug.
      */
+    @Override
     public Optional<PublicCategoryView> findCategory(String slug, LanguageCode languageCode) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findBySlug(requireSlug(slug))
@@ -69,10 +69,10 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
                         .map(localization -> toView(category, localization)));
     }
 
-    @Override
     /**
      * Lists curated content summaries for a visible localized category.
      */
+    @Override
     public List<PublicContentSummary> listCategoryContents(String slug, LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findBySlug(requireSlug(slug))

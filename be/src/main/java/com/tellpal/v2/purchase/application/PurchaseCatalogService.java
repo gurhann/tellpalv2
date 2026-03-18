@@ -27,10 +27,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
         this.subscriptionProductRepository = subscriptionProductRepository;
     }
 
-    @Override
     /**
      * Creates a new subscription product after verifying the catalog location is unique.
      */
+    @Override
     @Transactional
     public SubscriptionProductRecord createProduct(CreateSubscriptionProductCommand command) {
         ensureCatalogLocationAvailable(null, command.storeCode(), command.productId());
@@ -44,10 +44,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
         return PurchaseCatalogMapper.toRecord(subscriptionProductRepository.save(subscriptionProduct));
     }
 
-    @Override
     /**
      * Updates an existing subscription product and preserves catalog uniqueness.
      */
+    @Override
     @Transactional
     public SubscriptionProductRecord updateProduct(UpdateSubscriptionProductCommand command) {
         SubscriptionProduct subscriptionProduct = loadProduct(command.subscriptionProductId());
@@ -61,10 +61,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
         return PurchaseCatalogMapper.toRecord(subscriptionProductRepository.save(subscriptionProduct));
     }
 
-    @Override
     /**
      * Deactivates a subscription product without deleting it.
      */
+    @Override
     @Transactional
     public SubscriptionProductRecord deactivateProduct(Long subscriptionProductId) {
         SubscriptionProduct subscriptionProduct = loadProduct(subscriptionProductId);
@@ -72,10 +72,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
         return PurchaseCatalogMapper.toRecord(subscriptionProductRepository.save(subscriptionProduct));
     }
 
-    @Override
     /**
      * Lists all catalog products for admin read flows.
      */
+    @Override
     @Transactional(readOnly = true)
     public List<SubscriptionProductRecord> listProducts() {
         return subscriptionProductRepository.findAllOrdered().stream()
@@ -83,10 +83,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
                 .toList();
     }
 
-    @Override
     /**
      * Finds one catalog product by ID.
      */
+    @Override
     @Transactional(readOnly = true)
     public Optional<SubscriptionProductRecord> findById(Long subscriptionProductId) {
         if (subscriptionProductId == null || subscriptionProductId <= 0) {
@@ -96,10 +96,10 @@ public class PurchaseCatalogService implements PurchaseCatalogApi {
                 .map(PurchaseCatalogMapper::toRecord);
     }
 
-    @Override
     /**
      * Finds one catalog product by store code and product ID.
      */
+    @Override
     @Transactional(readOnly = true)
     public Optional<SubscriptionProductRecord> findByStoreAndProductId(String storeCode, String productId) {
         return subscriptionProductRepository.findByStoreCodeAndProductId(

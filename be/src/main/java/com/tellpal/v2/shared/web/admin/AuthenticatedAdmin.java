@@ -2,6 +2,9 @@ package com.tellpal.v2.shared.web.admin;
 
 import java.util.Set;
 
+/**
+ * Normalized authenticated admin principal exposed to admin controllers and error handlers.
+ */
 public record AuthenticatedAdmin(Long adminUserId, String username, Set<String> roleCodes) {
 
     public AuthenticatedAdmin {

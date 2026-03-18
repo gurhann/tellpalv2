@@ -14,6 +14,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Provides shared validation and security error responses for admin REST controllers.
+ */
 @RestControllerAdvice(annotations = AdminApiController.class)
 public class AdminApiExceptionHandler {
 

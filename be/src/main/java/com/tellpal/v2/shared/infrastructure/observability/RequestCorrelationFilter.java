@@ -13,6 +13,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Ensures every request carries a correlation id in both headers and logging context.
+ */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RequestCorrelationFilter extends OncePerRequestFilter {

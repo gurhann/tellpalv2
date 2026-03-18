@@ -29,10 +29,10 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
         this.firebaseTokenVerifier = firebaseTokenVerifier;
     }
 
-    @Override
     /**
      * Verifies a Firebase token, creates the user when missing, and guarantees a primary profile.
      */
+    @Override
     @Transactional
     public AuthenticatedAppUser resolveOrCreateByIdToken(String idToken) {
         VerifiedFirebaseToken verifiedToken = verifyToken(idToken);
@@ -49,10 +49,10 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
         return UserApiMapper.toAuthenticatedAppUser(persistedUser);
     }
 
-    @Override
     /**
      * Looks up a user by Firebase UID.
      */
+    @Override
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserReference> findByFirebaseUid(String firebaseUid) {
         if (firebaseUid == null || firebaseUid.isBlank()) {
@@ -62,10 +62,10 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
                 .map(UserApiMapper::toAppUserReference);
     }
 
-    @Override
     /**
      * Returns the primary profile for a known user ID.
      */
+    @Override
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserProfileReference> findPrimaryProfileByUserId(Long userId) {
         if (userId == null || userId <= 0) {
@@ -75,10 +75,10 @@ public class UserResolutionService implements UserResolutionApi, UserLookupApi {
                 .map(UserApiMapper::toPrimaryProfileReference);
     }
 
-    @Override
     /**
      * Returns the primary profile for a known Firebase UID.
      */
+    @Override
     @Transactional(readOnly = true)
     public java.util.Optional<AppUserProfileReference> findPrimaryProfileByFirebaseUid(String firebaseUid) {
         if (firebaseUid == null || firebaseUid.isBlank()) {

@@ -4,17 +4,38 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Loads and persists {@link Content} aggregates for management and publication use cases.
+ */
 public interface ContentRepository {
 
+    /**
+     * Returns the aggregate identified by the internal content id when it exists.
+     */
     Optional<Content> findById(Long id);
 
+    /**
+     * Resolves a content aggregate by the externally visible key used across modules and admin tools.
+     */
     Optional<Content> findByExternalKey(String externalKey);
 
+    /**
+     * Checks whether an external key is already reserved by another content aggregate.
+     */
     boolean existsByExternalKey(String externalKey);
 
+    /**
+     * Returns active aggregates that can still participate in read and curation flows.
+     */
     List<Content> findAllActive();
 
+    /**
+     * Loads the active aggregates for the provided ids and ignores inactive or missing entries.
+     */
     List<Content> findAllActiveByIdIn(Collection<Long> contentIds);
 
+    /**
+     * Persists the current aggregate state, including nested localizations and story pages.
+     */
     Content save(Content content);
 }

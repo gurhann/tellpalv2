@@ -25,28 +25,28 @@ public class ContentLookupService implements ContentLookupApi, ContentLocalizati
         this.contentRepository = contentRepository;
     }
 
-    @Override
     /**
      * Finds content by ID and maps it to the module-facing reference type.
      */
+    @Override
     public Optional<ContentReference> findById(Long contentId) {
         return contentRepository.findById(requireContentId(contentId))
                 .map(ContentApiMapper::toReference);
     }
 
-    @Override
     /**
      * Finds content by external key and maps it to the module-facing reference type.
      */
+    @Override
     public Optional<ContentReference> findByExternalKey(String externalKey) {
         return contentRepository.findByExternalKey(requireExternalKey(externalKey))
                 .map(ContentApiMapper::toReference);
     }
 
-    @Override
     /**
      * Returns visibility state for one localized content entry when it exists.
      */
+    @Override
     public Optional<ContentLocalizationReference> findLocalization(Long contentId, LanguageCode languageCode) {
         Long requiredContentId = requireContentId(contentId);
         return contentRepository.findById(requiredContentId)

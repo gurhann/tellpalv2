@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import com.tellpal.v2.purchase.application.PurchaseApplicationExceptions.RevenueCatAuthorizationFailedException;
 import com.tellpal.v2.purchase.application.RevenueCatAuthorizationVerifier;
 
+/**
+ * Verifies webhook requests by matching the configured RevenueCat authorization header value.
+ */
 @Component
 public class HeaderValueRevenueCatAuthorizationVerifier implements RevenueCatAuthorizationVerifier {
 
@@ -18,6 +21,9 @@ public class HeaderValueRevenueCatAuthorizationVerifier implements RevenueCatAut
                 : expectedAuthorizationHeader.trim();
     }
 
+    /**
+     * Rejects requests whose authorization header is missing, blank or different from the configured secret.
+     */
     @Override
     public void verify(String authorizationHeader) {
         if (expectedAuthorizationHeader.isBlank()) {

@@ -22,19 +22,19 @@ public class CategoryLookupService implements CategoryLookupApi {
         this.categoryRepository = categoryRepository;
     }
 
-    @Override
     /**
      * Finds a category by ID and maps it to the module-facing reference type.
      */
+    @Override
     public Optional<CategoryReference> findById(Long categoryId) {
         return categoryRepository.findById(requireCategoryId(categoryId))
                 .map(CategoryApiMapper::toReference);
     }
 
-    @Override
     /**
      * Finds a category by slug and maps it to the module-facing reference type.
      */
+    @Override
     public Optional<CategoryReference> findBySlug(String slug) {
         return categoryRepository.findBySlug(requireSlug(slug))
                 .map(CategoryApiMapper::toReference);

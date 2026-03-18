@@ -51,20 +51,20 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
         this.clock = clock;
     }
 
-    @Override
     /**
      * Records one content event after verifying the referenced content exists.
      */
+    @Override
     @Transactional
     public EventIngestReceipt recordContentEvent(RecordContentEventCommand command) {
         requireContentExists(command.contentId());
         return recordContentEventInternal(command);
     }
 
-    @Override
     /**
      * Records one application event, validating optional content references when present.
      */
+    @Override
     @Transactional
     public EventIngestReceipt recordAppEvent(RecordAppEventCommand command) {
         if (command.contentId() != null) {
@@ -73,10 +73,10 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
         return recordAppEventInternal(command);
     }
 
-    @Override
     /**
      * Records a mixed batch of content and application events.
      */
+    @Override
     @Transactional
     public EventBatchIngestResult recordBatchEvents(RecordBatchEventsCommand command) {
         List<EventIngestReceipt> receipts = new ArrayList<>();
@@ -93,10 +93,10 @@ public class EventTrackingService implements EventTrackingApi, EventAttributionA
         return new EventBatchIngestResult(receipts);
     }
 
-    @Override
     /**
      * Returns attribution candidates inside the requested window for a profile.
      */
+    @Override
     @Transactional(readOnly = true)
     public List<AppEventAttributionCandidate> findAttributionCandidates(
             Long profileId,

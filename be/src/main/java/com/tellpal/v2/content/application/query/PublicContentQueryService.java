@@ -53,10 +53,10 @@ public class PublicContentQueryService implements PublicContentQueryApi {
         this.assetRegistryApi = assetRegistryApi;
     }
 
-    @Override
     /**
      * Lists visible content summaries for one language and optional type filter.
      */
+    @Override
     public List<PublicContentSummary> listContents(LanguageCode languageCode, String requestedAccessKey, ContentApiType type) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         Set<Long> freeContentIds = resolveFreeContentIds(requiredLanguageCode, requestedAccessKey);
@@ -70,10 +70,10 @@ public class PublicContentQueryService implements PublicContentQueryApi {
                 .toList();
     }
 
-    @Override
     /**
      * Returns visible content summaries in the caller-provided ID order.
      */
+    @Override
     public List<PublicContentSummary> listContentsByIds(
             List<Long> contentIds,
             LanguageCode languageCode,
@@ -93,10 +93,10 @@ public class PublicContentQueryService implements PublicContentQueryApi {
                 .toList();
     }
 
-    @Override
     /**
      * Returns public details for a visible content localization.
      */
+    @Override
     public Optional<PublicContentDetails> findContent(Long contentId, LanguageCode languageCode, String requestedAccessKey) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         Set<Long> freeContentIds = resolveFreeContentIds(requiredLanguageCode, requestedAccessKey);
@@ -110,10 +110,10 @@ public class PublicContentQueryService implements PublicContentQueryApi {
                                 loadAssets(content.getId(), requiredLanguageCode))));
     }
 
-    @Override
     /**
      * Returns localized story pages for visible story content.
      */
+    @Override
     public Optional<List<PublicStoryPage>> findStoryPages(Long contentId, LanguageCode languageCode) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return contentRepository.findById(requireContentId(contentId))

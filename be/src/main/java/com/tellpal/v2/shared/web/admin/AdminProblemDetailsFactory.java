@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Component;
 
+/**
+ * Builds admin-facing RFC 7807 responses enriched with request and actor metadata.
+ */
 @Component
 public class AdminProblemDetailsFactory {
 
@@ -15,6 +18,9 @@ public class AdminProblemDetailsFactory {
         this.authenticationFacade = authenticationFacade;
     }
 
+    /**
+     * Creates a problem details payload for the current admin request.
+     */
     public ProblemDetail create(
             HttpStatusCode status,
             String title,
