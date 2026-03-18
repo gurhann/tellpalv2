@@ -23,8 +23,18 @@ import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCate
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/categories/{categoryId}/localizations/{languageCode}/contents")
+@Tag(name = "Admin Category Curation", description = "Curated content assignment endpoints for category localizations.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class CategoryCurationAdminController {
 
     private final CategoryCurationService categoryCurationService;
@@ -34,6 +44,15 @@ public class CategoryCurationAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Add curated content", description = "Adds one content item to a localized category curation list.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Curated content added"),
+            @ApiResponse(responseCode = "400", description = "Add request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category localization or content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Category curation state does not allow the change", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminCategoryContentResponse> addCuratedContent(
             @PathVariable Long categoryId,
             @PathVariable String languageCode,
@@ -48,6 +67,14 @@ public class CategoryCurationAdminController {
     }
 
     @PutMapping("/{contentId}")
+    @Operation(summary = "Update curated content order", description = "Changes the display order for one curated content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Curated content order updated"),
+            @ApiResponse(responseCode = "400", description = "Update request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Curated content entry was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminCategoryContentResponse updateCuratedContentOrder(
             @PathVariable Long categoryId,
             @PathVariable String languageCode,
@@ -59,6 +86,13 @@ public class CategoryCurationAdminController {
 
     @DeleteMapping("/{contentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Remove curated content", description = "Removes one content item from a localized category curation list.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Curated content removed"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Curated content entry was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public void removeCuratedContent(
             @PathVariable Long categoryId,
             @PathVariable String languageCode,

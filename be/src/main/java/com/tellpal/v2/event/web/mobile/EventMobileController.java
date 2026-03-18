@@ -27,8 +27,18 @@ import com.tellpal.v2.event.domain.ContentEventType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.user.api.AuthenticatedAppUser;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/events")
+@Tag(name = "Mobile Events", description = "Authenticated event ingestion endpoints for mobile clients.")
+@SecurityRequirement(name = "mobileBearerAuth")
 public class EventMobileController {
 
     private final AuthenticatedMobileEventUserResolver authenticatedMobileEventUserResolver;
@@ -42,6 +52,12 @@ public class EventMobileController {
     }
 
     @PostMapping("/content")
+    @Operation(summary = "Record a content event", description = "Records one content-scoped event for the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content event receipt returned"),
+            @ApiResponse(responseCode = "400", description = "Content event request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public EventReceiptResponse recordContentEvent(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Valid @RequestBody RecordContentEventRequest request) {
@@ -50,6 +66,12 @@ public class EventMobileController {
     }
 
     @PostMapping("/app")
+    @Operation(summary = "Record an app event", description = "Records one application-level event for the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "App event receipt returned"),
+            @ApiResponse(responseCode = "400", description = "App event request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public EventReceiptResponse recordAppEvent(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Valid @RequestBody RecordAppEventRequest request) {
@@ -58,6 +80,12 @@ public class EventMobileController {
     }
 
     @PostMapping("/batch")
+    @Operation(summary = "Record a batch of events", description = "Records a mixed batch of content and application events for the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Batch event receipt returned"),
+            @ApiResponse(responseCode = "400", description = "Batch request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public EventBatchResponse recordBatchEvents(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Valid @RequestBody RecordBatchEventsRequest request) {

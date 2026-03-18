@@ -25,6 +25,7 @@ Read order:
 - `ADR-0002`: each top-level module owns its `domain` and `infrastructure` packages and may expose only `api`.
 - `ADR-0003`: public contracts and use-case flows use concise English documentation.
 - `ADR-0004`: `shared` is a small stable kernel, not a dumping ground.
+- `ADR-0005`: REST endpoints use OpenAPI-based documentation with operation-level summaries, auth, and core error responses.
 
 ## Coding and Documentation Defaults
 
@@ -33,6 +34,8 @@ Read order:
 - Comments stay behavior-oriented and avoid boilerplate restatement of names.
 - Method-level Javadoc is placed above annotations for consistency.
 - `TODO` and `FIXME` comments require owner, reason, and exit condition.
+- REST controllers use OpenAPI annotations for summaries, auth requirements, and core `ProblemDetail` responses.
+- API docs are disabled by default and enabled only in local or explicitly configured environments.
 
 ## Module Interaction Defaults
 

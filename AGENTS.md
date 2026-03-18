@@ -43,12 +43,16 @@ This repository follows a reusable engineering standards package under
 That package defines:
 
 - comment and Javadoc rules
+- REST API documentation rules
 - ADR format
 - project-memory format
 - agent bootstrap guidance for future projects
 
 When changing a durable engineering policy or architectural default, update
 `be/docs/project-memory.md` and the relevant ADR.
+
+When adding or changing REST controllers, follow the OpenAPI policy in
+`standards/rest-api-documentation-standard.md`.
 
 ## Build, Test, and Development Commands
 Run commands from `be/`:

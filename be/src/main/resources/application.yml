@@ -1,6 +1,8 @@
 spring:
   application:
     name: tellpal-v2-backend
+  config:
+    import: optional:classpath:application-api-docs.yml
   profiles:
     default: local
   datasource:
@@ -45,6 +47,11 @@ server:
   shutdown: graceful
 
 tellpal:
+  api-docs:
+    enabled: ${TELLPAL_API_DOCS_ENABLED:false}
+    title: ${TELLPAL_API_DOCS_TITLE:TellPal V2 Backend API}
+    description: ${TELLPAL_API_DOCS_DESCRIPTION:Internal OpenAPI documentation for admin, mobile, and webhook endpoints.}
+    version: ${TELLPAL_API_DOCS_VERSION:v1}
   asset:
     processing:
       poller:

@@ -27,8 +27,18 @@ import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin")
+@Tag(name = "Admin Contributors", description = "Contributor management and assignment endpoints.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class ContributorAdminController {
 
     private final ContributorManagementService contributorManagementService;
@@ -38,6 +48,13 @@ public class ContributorAdminController {
     }
 
     @PostMapping("/contributors")
+    @Operation(summary = "Create a contributor", description = "Creates a reusable contributor profile for content credits.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Contributor created"),
+            @ApiResponse(responseCode = "400", description = "Contributor request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminContributorResponse> createContributor(
             @Valid @RequestBody CreateContributorRequest request) {
         AdminContributorResponse response = AdminContributorResponse.from(
@@ -50,6 +67,13 @@ public class ContributorAdminController {
     }
 
     @GetMapping("/contributors")
+    @Operation(summary = "List contributors", description = "Returns recent contributor profiles for admin selection flows.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributors returned"),
+            @ApiResponse(responseCode = "400", description = "List request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public List<AdminContributorResponse> listContributors(
             @RequestParam(name = "limit", defaultValue = "20") @Min(value = 1, message = "limit must be positive")
             int limit) {
@@ -59,6 +83,14 @@ public class ContributorAdminController {
     }
 
     @PutMapping("/contributors/{contributorId}")
+    @Operation(summary = "Rename a contributor", description = "Updates the display name of an existing contributor.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributor renamed"),
+            @ApiResponse(responseCode = "400", description = "Rename request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Contributor was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContributorResponse renameContributor(
             @PathVariable Long contributorId,
             @Valid @RequestBody RenameContributorRequest request) {
@@ -67,6 +99,15 @@ public class ContributorAdminController {
     }
 
     @PostMapping("/contents/{contentId}/contributors")
+    @Operation(summary = "Assign a contributor to content", description = "Adds one contributor credit to a localized content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Contributor assigned to content"),
+            @ApiResponse(responseCode = "400", description = "Assignment request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or contributor was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Contributor assignment conflicts with existing content state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminContentContributorResponse> assignContributor(
             @PathVariable Long contentId,
             @Valid @RequestBody AssignContentContributorRequest request) {

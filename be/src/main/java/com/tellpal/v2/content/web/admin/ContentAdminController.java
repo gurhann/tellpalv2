@@ -32,8 +32,18 @@ import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/contents")
+@Tag(name = "Admin Contents", description = "Content creation, localization, and publication endpoints.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class ContentAdminController {
 
     private final ContentManagementService contentManagementService;
@@ -50,6 +60,14 @@ public class ContentAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Create content", description = "Creates a new content aggregate with its base metadata.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Content created"),
+            @ApiResponse(responseCode = "400", description = "Content request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Content external key is already in use", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminContentResponse> createContent(@Valid @RequestBody CreateContentRequest request) {
         AdminContentResponse response = AdminContentResponse.from(contentManagementService.createContent(request.toCommand()));
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -60,6 +78,15 @@ public class ContentAdminController {
     }
 
     @PutMapping("/{contentId}")
+    @Operation(summary = "Update content", description = "Updates the base metadata of an existing content aggregate.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content updated"),
+            @ApiResponse(responseCode = "400", description = "Content update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Content external key is already in use", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContentResponse updateContent(
             @PathVariable Long contentId,
             @Valid @RequestBody UpdateContentRequest request) {
@@ -67,6 +94,15 @@ public class ContentAdminController {
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}")
+    @Operation(summary = "Create content localization", description = "Creates one localized content representation for a language.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Content localization created"),
+            @ApiResponse(responseCode = "400", description = "Localization request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Content localization already exists", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminContentLocalizationResponse> createLocalization(
             @PathVariable Long contentId,
             @PathVariable String languageCode,
@@ -78,6 +114,14 @@ public class ContentAdminController {
     }
 
     @PutMapping("/{contentId}/localizations/{languageCode}")
+    @Operation(summary = "Update content localization", description = "Updates one localized content representation.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content localization updated"),
+            @ApiResponse(responseCode = "400", description = "Localization update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContentLocalizationResponse updateLocalization(
             @PathVariable Long contentId,
             @PathVariable String languageCode,
@@ -87,6 +131,14 @@ public class ContentAdminController {
     }
 
     @PatchMapping("/{contentId}/localizations/{languageCode}/processing-status")
+    @Operation(summary = "Update localization processing status", description = "Marks the processing status of one content localization.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Processing status updated"),
+            @ApiResponse(responseCode = "400", description = "Processing status request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContentLocalizationResponse updateLocalizationProcessingStatus(
             @PathVariable Long contentId,
             @PathVariable String languageCode,
@@ -96,6 +148,15 @@ public class ContentAdminController {
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}/publish")
+    @Operation(summary = "Publish content localization", description = "Publishes one localized content item after publication rules are satisfied.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content localization published"),
+            @ApiResponse(responseCode = "400", description = "Publish request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Publication preconditions are not satisfied", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContentLocalizationResponse publishLocalization(
             @PathVariable Long contentId,
             @PathVariable String languageCode,
@@ -108,6 +169,13 @@ public class ContentAdminController {
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}/archive")
+    @Operation(summary = "Archive content localization", description = "Archives one localized content item and removes it from public visibility.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content localization archived"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminContentLocalizationResponse archiveLocalization(
             @PathVariable Long contentId,
             @PathVariable String languageCode) {

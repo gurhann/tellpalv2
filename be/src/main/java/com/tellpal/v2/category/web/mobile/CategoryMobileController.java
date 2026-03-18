@@ -12,8 +12,16 @@ import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.PublicCategoryQueryApi;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/categories")
+@Tag(name = "Mobile Categories", description = "Public category discovery endpoints for mobile clients.")
 public class CategoryMobileController {
 
     private final PublicCategoryQueryApi publicCategoryQueryApi;
@@ -23,6 +31,11 @@ public class CategoryMobileController {
     }
 
     @GetMapping
+    @Operation(summary = "List visible categories", description = "Returns visible categories for one language and optional type filter.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Categories returned"),
+            @ApiResponse(responseCode = "400", description = "Category query is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public List<MobileCategoryResponse> listCategories(
             @RequestParam("lang") String languageCode,
             @RequestParam(name = "type", required = false) CategoryApiType type) {
@@ -32,6 +45,12 @@ public class CategoryMobileController {
     }
 
     @GetMapping("/{slug}")
+    @Operation(summary = "Get one category", description = "Returns one visible category by slug for the requested language.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category returned"),
+            @ApiResponse(responseCode = "400", description = "Category query is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public MobileCategoryResponse getCategory(
             @PathVariable String slug,
             @RequestParam("lang") String languageCode) {
@@ -41,6 +60,12 @@ public class CategoryMobileController {
     }
 
     @GetMapping("/{slug}/contents")
+    @Operation(summary = "List category contents", description = "Returns visible content summaries curated under one category localization.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category contents returned"),
+            @ApiResponse(responseCode = "400", description = "Category content query is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public List<MobileCategoryContentResponse> listCategoryContents(
             @PathVariable String slug,
             @RequestParam("lang") String languageCode,

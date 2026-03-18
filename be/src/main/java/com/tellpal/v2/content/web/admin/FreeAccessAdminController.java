@@ -20,8 +20,18 @@ import com.tellpal.v2.content.application.ContentFreeAccessService;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/free-access")
+@Tag(name = "Admin Free Access", description = "Free-access grant management endpoints.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class FreeAccessAdminController {
 
     private final ContentFreeAccessService contentFreeAccessService;
@@ -31,6 +41,15 @@ public class FreeAccessAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Grant free access", description = "Creates a free-access grant for one localized content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Free-access grant created"),
+            @ApiResponse(responseCode = "400", description = "Grant request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Free-access grant already exists", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminContentFreeAccessResponse> grantFreeAccess(
             @Valid @RequestBody CreateContentFreeAccessRequest request) {
         AdminContentFreeAccessResponse response = AdminContentFreeAccessResponse.from(
@@ -43,6 +62,12 @@ public class FreeAccessAdminController {
     }
 
     @GetMapping
+    @Operation(summary = "List free-access grants", description = "Returns all free-access grants for one access key or the effective default set.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Free-access grants returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public java.util.List<AdminContentFreeAccessResponse> listFreeAccessEntries(
             @RequestParam(name = "accessKey", required = false) String accessKey) {
         return contentFreeAccessService.listFreeAccessEntries(accessKey).stream()
@@ -51,6 +76,13 @@ public class FreeAccessAdminController {
     }
 
     @DeleteMapping("/{accessKey}/languages/{languageCode}/contents/{contentId}")
+    @Operation(summary = "Revoke free access", description = "Removes one free-access grant for a localized content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Free-access grant removed"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Free-access grant was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<Void> revokeFreeAccess(
             @PathVariable String accessKey,
             @PathVariable String languageCode,

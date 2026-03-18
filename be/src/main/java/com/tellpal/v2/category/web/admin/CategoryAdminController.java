@@ -28,8 +28,18 @@ import com.tellpal.v2.category.domain.LocalizationStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/categories")
+@Tag(name = "Admin Categories", description = "Category management endpoints for admin users.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class CategoryAdminController {
 
     private final CategoryLookupApi categoryLookupApi;
@@ -43,6 +53,14 @@ public class CategoryAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a category", description = "Creates a new category aggregate with its base metadata.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Category created"),
+            @ApiResponse(responseCode = "400", description = "Category request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Category slug is already in use", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminCategoryResponse> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
         AdminCategoryResponse response = AdminCategoryResponse.from(
                 categoryManagementService.createCategory(request.toCommand()));
@@ -54,6 +72,13 @@ public class CategoryAdminController {
     }
 
     @GetMapping("/{categoryId}")
+    @Operation(summary = "Get one category", description = "Returns category metadata for one category identifier.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminCategoryResponse getCategory(@PathVariable Long categoryId) {
         return categoryLookupApi.findById(categoryId)
                 .map(AdminCategoryResponse::from)
@@ -61,6 +86,15 @@ public class CategoryAdminController {
     }
 
     @PutMapping("/{categoryId}")
+    @Operation(summary = "Update a category", description = "Updates the core metadata of an existing category.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category updated"),
+            @ApiResponse(responseCode = "400", description = "Category update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Category slug is already in use", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminCategoryResponse updateCategory(
             @PathVariable Long categoryId,
             @Valid @RequestBody UpdateCategoryRequest request) {
@@ -68,6 +102,15 @@ public class CategoryAdminController {
     }
 
     @PostMapping("/{categoryId}/localizations/{languageCode}")
+    @Operation(summary = "Create a category localization", description = "Creates localized category content for one language.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Category localization created"),
+            @ApiResponse(responseCode = "400", description = "Localization request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Category localization already exists", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminCategoryLocalizationResponse> createLocalization(
             @PathVariable Long categoryId,
             @PathVariable String languageCode,
@@ -79,6 +122,14 @@ public class CategoryAdminController {
     }
 
     @PutMapping("/{categoryId}/localizations/{languageCode}")
+    @Operation(summary = "Update a category localization", description = "Updates one localized category representation.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category localization updated"),
+            @ApiResponse(responseCode = "400", description = "Localization update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminCategoryLocalizationResponse updateLocalization(
             @PathVariable Long categoryId,
             @PathVariable String languageCode,

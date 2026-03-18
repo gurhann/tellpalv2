@@ -22,8 +22,18 @@ import com.tellpal.v2.content.application.StoryPageManagementService;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/contents/{contentId}/story-pages")
+@Tag(name = "Admin Story Pages", description = "Story page management endpoints for story content.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class StoryPageAdminController {
 
     private final StoryPageManagementService storyPageManagementService;
@@ -33,6 +43,15 @@ public class StoryPageAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Add a story page", description = "Creates one story page under a story content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Story page created"),
+            @ApiResponse(responseCode = "400", description = "Story page request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Story page conflicts with current content state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminStoryPageResponse> addStoryPage(
             @PathVariable Long contentId,
             @Valid @RequestBody AddStoryPageRequest request) {
@@ -46,6 +65,14 @@ public class StoryPageAdminController {
     }
 
     @PutMapping("/{pageNumber}")
+    @Operation(summary = "Update a story page", description = "Updates illustration metadata for one story page.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Story page updated"),
+            @ApiResponse(responseCode = "400", description = "Story page update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Story page was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminStoryPageResponse updateStoryPage(
             @PathVariable Long contentId,
             @PathVariable int pageNumber,
@@ -56,11 +83,26 @@ public class StoryPageAdminController {
 
     @DeleteMapping("/{pageNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Remove a story page", description = "Deletes one story page from a story content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Story page removed"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Story page was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public void removeStoryPage(@PathVariable Long contentId, @PathVariable int pageNumber) {
         storyPageManagementService.removeStoryPage(new RemoveStoryPageCommand(contentId, pageNumber));
     }
 
     @PutMapping("/{pageNumber}/localizations/{languageCode}")
+    @Operation(summary = "Upsert story page localization", description = "Creates or updates one localized story page payload.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Story page localization upserted"),
+            @ApiResponse(responseCode = "400", description = "Localization request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Story page or content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminStoryPageLocalizationResponse upsertStoryPageLocalization(
             @PathVariable Long contentId,
             @PathVariable int pageNumber,

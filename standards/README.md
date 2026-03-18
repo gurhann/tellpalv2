@@ -5,6 +5,7 @@ This directory is the seed content for a standalone `engineering-standards` repo
 It packages reusable standards for:
 
 - code comments and Javadoc
+- REST API documentation
 - architecture decision records
 - project memory
 - Codex/agent bootstrap
@@ -15,6 +16,7 @@ consume the files directly during project bootstrap.
 ## Contents
 
 - `commenting-standard.md`
+- `rest-api-documentation-standard.md`
 - `decision-record-standard.md`
 - `project-bootstrap-checklist.md`
 - `templates/`

@@ -19,8 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tellpal.v2.user.application.UserProfileCommands.UpdateUserProfileCommand;
 import com.tellpal.v2.user.application.UserProfileService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/profiles")
+@Tag(name = "Mobile Profiles", description = "Authenticated mobile profile lookup and update endpoints.")
+@SecurityRequirement(name = "mobileBearerAuth")
 public class ProfileMobileController {
 
     private final AuthenticatedMobileUserResolver authenticatedMobileUserResolver;
@@ -34,6 +44,12 @@ public class ProfileMobileController {
     }
 
     @GetMapping
+    @Operation(summary = "List user profiles", description = "Returns profiles that belong to the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profiles returned"),
+            @ApiResponse(responseCode = "400", description = "Profile request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public List<MobileUserProfileResponse> listProfiles(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         Long userId = authenticatedMobileUserResolver.resolveCurrentUser(authorizationHeader).userId();
@@ -43,6 +59,13 @@ public class ProfileMobileController {
     }
 
     @GetMapping("/{profileId}")
+    @Operation(summary = "Get one profile", description = "Returns one profile owned by the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile returned"),
+            @ApiResponse(responseCode = "400", description = "Profile request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Profile was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public MobileUserProfileResponse getProfile(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @PathVariable Long profileId) {
@@ -51,6 +74,13 @@ public class ProfileMobileController {
     }
 
     @PutMapping("/{profileId}")
+    @Operation(summary = "Update one profile", description = "Updates one profile that belongs to the authenticated mobile user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Profile updated"),
+            @ApiResponse(responseCode = "400", description = "Profile update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Firebase bearer token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Profile was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public MobileUserProfileResponse updateProfile(
             @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @PathVariable Long profileId,

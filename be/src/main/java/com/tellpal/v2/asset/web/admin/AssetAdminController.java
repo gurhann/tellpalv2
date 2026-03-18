@@ -26,8 +26,18 @@ import com.tellpal.v2.asset.api.UpdateMediaAssetMetadataCommand;
 import com.tellpal.v2.asset.application.MediaAssetNotFoundException;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @AdminApiController
 @RequestMapping("/api/admin/media")
+@Tag(name = "Admin Assets", description = "Media asset registration and metadata management endpoints.")
+@SecurityRequirement(name = "adminBearerAuth")
 public class AssetAdminController {
 
     private final AssetRegistryApi assetRegistryApi;
@@ -37,6 +47,14 @@ public class AssetAdminController {
     }
 
     @PostMapping
+    @Operation(summary = "Register a media asset", description = "Creates a media asset record for an uploaded object.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Media asset registered"),
+            @ApiResponse(responseCode = "400", description = "Asset request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Media asset already exists", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminAssetResponse> registerAsset(@Valid @RequestBody RegisterMediaAssetRequest request) {
         AdminAssetResponse response = AdminAssetResponse.from(assetRegistryApi.register(request.toCommand()));
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -47,6 +65,13 @@ public class AssetAdminController {
     }
 
     @GetMapping
+    @Operation(summary = "List recent media assets", description = "Returns recent media asset records ordered by recency.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Recent media assets returned"),
+            @ApiResponse(responseCode = "400", description = "List request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public List<AdminAssetResponse> listRecentAssets(
             @RequestParam(name = "limit", defaultValue = "20") @Min(value = 1, message = "limit must be positive")
             int limit) {
@@ -56,6 +81,13 @@ public class AssetAdminController {
     }
 
     @GetMapping("/{assetId}")
+    @Operation(summary = "Get one media asset", description = "Returns the stored metadata for one media asset.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Media asset returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Media asset was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminAssetResponse getAsset(@PathVariable Long assetId) {
         return assetRegistryApi.findById(assetId)
                 .map(AdminAssetResponse::from)
@@ -63,6 +95,14 @@ public class AssetAdminController {
     }
 
     @PutMapping("/{assetId}/metadata")
+    @Operation(summary = "Update media asset metadata", description = "Updates mutable metadata fields for one media asset.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Media asset metadata updated"),
+            @ApiResponse(responseCode = "400", description = "Metadata request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Media asset was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminAssetResponse updateAssetMetadata(
             @PathVariable Long assetId,
             @Valid @RequestBody UpdateAssetMetadataRequest request) {
@@ -70,6 +110,13 @@ public class AssetAdminController {
     }
 
     @PostMapping("/{assetId}/download-url-cache/refresh")
+    @Operation(summary = "Refresh cached download URL", description = "Refreshes the cached signed download URL for one media asset.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Cached download URL refreshed"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Media asset was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminAssetResponse refreshDownloadUrlCache(@PathVariable Long assetId) {
         return AdminAssetResponse.from(assetRegistryApi.refreshDownloadUrlCache(
                 new RefreshMediaAssetDownloadUrlCommand(assetId)));

@@ -13,6 +13,8 @@ spring:
         format_sql: true
 
 tellpal:
+  api-docs:
+    enabled: true
   security:
     admin:
       jwt-secret: change-me-change-me-change-me-32-bytes

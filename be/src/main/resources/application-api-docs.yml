@@ -1,0 +1,6 @@
+springdoc:
+  api-docs:
+    enabled: ${tellpal.api-docs.enabled:false}
+  swagger-ui:
+    enabled: ${tellpal.api-docs.enabled:false}
+    path: /swagger-ui.html
