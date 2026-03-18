@@ -16,6 +16,7 @@ Read order:
 
 - `AGENTS.md`
 - `architecture.md`
+- `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
 - `be/docs/adr/`
 
