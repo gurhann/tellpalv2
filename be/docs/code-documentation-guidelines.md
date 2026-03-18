@@ -2,50 +2,66 @@
 
 ## Purpose
 
-This repository uses code documentation to make module contracts and business flows easier to read.
-The primary audience is backend engineers reading the codebase, not external API consumers.
+This repository uses code documentation to expose module contracts, business flows, and non-obvious
+rules without turning the codebase into comment-heavy noise. The primary audience is backend
+engineers and autonomous agents working in the repository, not external API consumers.
 
 Documentation should help a reader answer:
 
-- Why does this type exist?
+- Why does this type or package exist?
 - When should this use case be called?
-- Which business failures or state transitions matter?
-- Which package is safe to depend on from another module?
+- Which failures, side effects, or state transitions matter?
+- Which module boundary is safe to depend on?
 
-`architecture.md` remains the canonical high-level architecture reference. Javadoc should complement it,
-not restate it.
+`architecture.md` remains the canonical high-level architecture reference. `be/docs/project-memory.md`
+and `be/docs/adr/` store durable project decisions. Code comments should complement those artifacts,
+not restate them.
 
-## Where Javadoc Is Required
+## Comment Types
 
-Javadoc is required for:
+Use the following comment types:
 
+- `Package doc`: for exposed `api` packages and other public package boundaries
+- `Type doc`: for public contracts, important services, aggregates, and other meaningful public types
+- `Use-case method doc`: for public business methods with validation, side effects, or failure semantics
+- `Domain rule comment`: for invariants, state transitions, idempotency, and visibility rules
+- `Inline local comment`: for a local rule that is hard to infer while scanning the method body
+- `Decision comment`: rarely, for a surprising implementation choice that should point back to ADRs or project memory
+- `TODO/FIXME`: only with owner, reason, and exit condition
+
+## Where Documentation Is Required
+
+Documentation is required for:
+
+- `api` package documentation
 - module-facing interfaces in `api`
-- command, result, and record types in `api`
+- command, result, reference, and record types in `api`
 - public application service classes
-- public methods that carry business behavior, validation, or error semantics
-- domain methods with non-obvious invariants, state transitions, idempotency, or visibility rules
+- public methods that carry business behavior, validation, side effects, or error semantics
+- domain methods and code blocks with non-obvious invariants, state transitions, idempotency, or visibility rules
 
-Package-level documentation is required for `api` packages that expose contracts to adapters or other modules.
+## Where Documentation Should Be Avoided
 
-## Where Javadoc Should Be Avoided
-
-Do not add Javadoc for:
+Do not add documentation for:
 
 - obvious getters and setters
 - trivial mappers that only translate one type to another
-- annotations or framework wiring that are already self-explanatory
+- framework annotations or wiring that are already self-explanatory
 - comments that simply repeat the method or class name
+- response DTOs or plumbing code whose intent is already clear from names
 
-If a type is only infrastructure plumbing and its intent is already clear from names, prefer no comment.
+If a type is only infrastructure plumbing and its intent is already obvious, prefer no comment.
 
 ## Style Rules
 
-- Write Javadoc in English.
-- Keep it short and behavior-oriented.
-- Prefer describing preconditions, outcomes, side effects, and failure semantics.
+- Write durable comments and Javadoc in English.
+- Keep them short and behavior-oriented.
+- Prefer describing preconditions, outcomes, side effects, ownership, and failure semantics.
 - Avoid verbose `@param` and `@return` sections unless they add real information beyond the signature.
 - Prefer one short summary line plus one short paragraph when extra context is needed.
-- Use inline comments sparingly, only for local rules that are easy to miss while scanning the method body.
+- Place method-level Javadoc above annotations for consistency.
+- Use inline comments sparingly and only for local rules that are easy to miss while scanning the code.
+- Do not leave `TODO` or `FIXME` comments without owner, reason, and exit condition.
 
 ## Recommended Templates
 

@@ -1,16 +1,17 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is now organized for multiple apps. The Spring Boot backend lives under [`be/`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be), so all backend code, build files, and backend docs should stay there.
+This repository is now organized for multiple apps. The Spring Boot backend lives under `be/`, so
+all backend code, build files, and backend docs should stay there.
 
 Key backend paths:
 
-- [`be/src/main/java`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java): application code
-- [`be/src/main/resources`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/resources): config and Flyway migrations
-- [`be/src/test/java`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java): JUnit, jqwik, and integration tests
-- [`be/docs`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/docs): schema and database design docs
-- [`be/pom.xml`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/pom.xml): Maven build
-- [`.codex/skills`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/.codex/skills): team-shared Codex skills for backend work
+- `be/src/main/java`: application code
+- `be/src/main/resources`: config and Flyway migrations
+- `be/src/test/java`: JUnit, jqwik, and integration tests
+- `be/docs`: schema and database design docs
+- `be/pom.xml`: Maven build
+- `.codex/skills`: team-shared Codex skills for backend work
 
 Treat each top-level package under `com.tellpal.v2` as a Spring Modulith module.
 
@@ -25,9 +26,32 @@ Shared project skills currently include:
 - `spring-modulith-boundary-check`
 - `task-decomposition`
 - `run-maven-tests`
+- `apply-project-standards`
+
+## Standards Read Order
+Before planning or implementing work, read documents in this order when they exist:
+
+1. `AGENTS.md`
+2. `be/docs/project-memory.md`
+3. relevant files under `be/docs/adr`
+4. `architecture.md` and other project-specific design docs
+
+## Standards Package
+This repository follows a reusable engineering standards package under
+`standards/`.
+
+That package defines:
+
+- comment and Javadoc rules
+- ADR format
+- project-memory format
+- agent bootstrap guidance for future projects
+
+When changing a durable engineering policy or architectural default, update
+`be/docs/project-memory.md` and the relevant ADR.
 
 ## Build, Test, and Development Commands
-Run commands from [`be/`](/Users/gurhankucuk/Documents/GitHub/tellpalv2/be):
+Run commands from `be/`:
 
 - `cd be && ./mvnw test`: run the full test suite
 - `cd be && ./mvnw verify`: run full verification, including integration checks
@@ -64,4 +88,6 @@ Pull requests should include:
 ## Security & Architecture Notes
 Do not commit secrets, tokens, or private download URLs. Preserve Spring Modulith boundaries: no cross-module internal imports, no circular dependencies, and no business logic in controllers or infrastructure adapters.
 
-Use [`architecture.md`](C:\github\tellpalv2\architecture.md) at the repository root as the canonical backend architecture reference. For backend design, planning, schema, module boundary, and implementation decisions, consult this document first and keep new work aligned with it.
+Use `architecture.md` at the repository root as the canonical backend architecture reference. For
+backend design, planning, schema, module boundary, and implementation decisions, consult this
+document first and keep new work aligned with it.
