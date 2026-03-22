@@ -20,5 +20,25 @@ services:
       retries: 5
       start_period: 10s
 
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tellpal-v2-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      TELLPAL_DB_URL: jdbc:postgresql://postgres:5432/${TELLPAL_DB_NAME:-tellpal_v2}
+      TELLPAL_DB_NAME: ${TELLPAL_DB_NAME:-tellpal_v2}
+      TELLPAL_DB_PORT: 5432
+      TELLPAL_DB_USERNAME: ${TELLPAL_DB_USERNAME:-tellpal}
+      TELLPAL_DB_PASSWORD: ${TELLPAL_DB_PASSWORD:-tellpal}
+      TELLPAL_API_DOCS_ENABLED: "true"
+      TELLPAL_ADMIN_JWT_SECRET: change-me-change-me-change-me-32-bytes
+      TELLPAL_FIREBASE_STUB_TOKENS_ENABLED: "true"
+    ports:
+      - "8080:8080"
+
 volumes:
   tellpal-v2-postgres-data:
