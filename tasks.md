@@ -1,9 +1,4 @@
 # TellPal v2 Backend Detailed Task Backlog
-
-Bu dosya, mevcut repo durumuna gore sifirdan uygulanabilir backend backlog'udur.
-`be/` dizini henuz mevcut olmadigi icin onceki planlarda gecen hicbir feature veya task uygulanmis kabul edilmez.
-Bu nedenle bu dosyadaki tum task'lar varsayilan olarak `TODO` durumundadir.
-
 Bu backlog su kaynaklarla hizalidir:
 
 - `architecture.md`
