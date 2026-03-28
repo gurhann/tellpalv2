@@ -5,6 +5,21 @@
       "source": "neolabhq/context-engineering-kit",
       "sourceType": "github",
       "computedHash": "852757a240fc6d6eaca761c1f3658fb82d103d54e359b59c324696d3415dfb77"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    },
+    "senior-frontend": {
+      "source": "davila7/claude-code-templates",
+      "sourceType": "github",
+      "computedHash": "e0e83f80d3eb965b1e36acb8a336333a5db1152ddacdc07e19bd715187a6a455"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
     }
   }
 }
