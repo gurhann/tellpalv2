@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { hasScaffoldSession } from "@/app/scaffold-session"
+} from "@/components/ui/card";
+import { hasScaffoldSession } from "@/app/scaffold-session";
 
 export function NotFoundRoute() {
-  const target = hasScaffoldSession() ? "/contents" : "/login"
+  const target = hasScaffoldSession() ? "/contents" : "/login";
 
   return (
     <main className="min-h-screen bg-background px-6 py-16 text-foreground">
@@ -34,5 +34,5 @@ export function NotFoundRoute() {
         </Card>
       </div>
     </main>
-  )
+  );
 }

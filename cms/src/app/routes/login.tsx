@@ -1,29 +1,28 @@
-import { useMemo } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { enableScaffoldSession } from "@/app/scaffold-session"
-import { cmsShieldIcon as ShieldIcon } from "@/app/navigation"
+} from "@/components/ui/card";
+import { enableScaffoldSession } from "@/app/scaffold-session";
+import { cmsShieldIcon as ShieldIcon } from "@/app/navigation";
 
 export function LoginRoute() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const targetPath = useMemo(() => {
-    const state = location.state as { from?: string } | null
-    return state?.from || "/contents"
-  }, [location.state])
+    const state = location.state as { from?: string } | null;
+    return state?.from || "/contents";
+  }, [location.state]);
 
   function handleEnterWorkspace() {
-    enableScaffoldSession()
-    navigate(targetPath, { replace: true })
+    enableScaffoldSession();
+    navigate(targetPath, { replace: true });
   }
 
   return (
@@ -39,9 +38,9 @@ export function LoginRoute() {
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   TellPal CMS
                 </p>
-                <CardTitle className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                <h1 className="font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
                   Login route is ready
-                </CardTitle>
+                </h1>
                 <CardDescription className="max-w-2xl text-sm leading-6 sm:text-base">
                   This is the route skeleton login screen. Real authentication
                   will replace the temporary scaffold session in the next task.
@@ -74,14 +73,20 @@ export function LoginRoute() {
 
           <Card className="border border-border/70 bg-card/95 shadow-2xl shadow-slate-950/5 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-xl">Temporary route access</CardTitle>
+              <h2 className="font-heading text-xl font-medium">
+                Temporary route access
+              </h2>
               <CardDescription>
                 Use this only to inspect the shell and route skeleton before the
                 real auth flow exists.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full" type="button" onClick={handleEnterWorkspace}>
+              <Button
+                className="w-full"
+                type="button"
+                onClick={handleEnterWorkspace}
+              >
                 Enter scaffold workspace
               </Button>
               <p className="text-sm text-muted-foreground">
@@ -92,5 +97,5 @@ export function LoginRoute() {
         </div>
       </div>
     </main>
-  )
+  );
 }

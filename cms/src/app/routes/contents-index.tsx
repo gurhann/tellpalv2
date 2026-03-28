@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from "@/components/layout/route-placeholder"
+import { RoutePlaceholder } from "@/components/layout/route-placeholder";
 
 export function ContentsIndexRoute() {
   return (
@@ -12,5 +12,5 @@ export function ContentsIndexRoute() {
         "Navigate to localized detail workspaces",
       ]}
     />
-  )
+  );
 }

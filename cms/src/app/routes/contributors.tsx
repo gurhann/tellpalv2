@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from "@/components/layout/route-placeholder"
+import { RoutePlaceholder } from "@/components/layout/route-placeholder";
 
 export function ContributorsRoute() {
   return (
@@ -12,5 +12,5 @@ export function ContributorsRoute() {
         "Content assignment workflows",
       ]}
     />
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from "@/components/layout/route-placeholder"
+import { RoutePlaceholder } from "@/components/layout/route-placeholder";
 
 export function MediaRoute() {
   return (
@@ -12,5 +12,5 @@ export function MediaRoute() {
         "Metadata editing and URL refresh actions",
       ]}
     />
-  )
+  );
 }

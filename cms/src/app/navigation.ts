@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react"
+import type { LucideIcon } from "lucide-react";
 import {
   BookOpenText,
   FolderKanban,
@@ -7,14 +7,14 @@ import {
   Sparkles,
   Users,
   Workflow,
-} from "lucide-react"
+} from "lucide-react";
 
 export type CmsNavigationItem = {
-  label: string
-  description: string
-  path: string
-  icon: LucideIcon
-}
+  label: string;
+  description: string;
+  path: string;
+  icon: LucideIcon;
+};
 
 export const cmsNavigationItems: CmsNavigationItem[] = [
   {
@@ -53,7 +53,7 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     path: "/free-access",
     icon: Sparkles,
   },
-]
+];
 
 export function getRouteMeta(pathname: string) {
   if (pathname.startsWith("/contents/") && pathname.endsWith("/story-pages")) {
@@ -61,15 +61,16 @@ export function getRouteMeta(pathname: string) {
       title: "Story Pages",
       eyebrow: "Contents",
       description: "Manage story page structure and localized page payloads.",
-    }
+    };
   }
 
   if (pathname.startsWith("/contents/")) {
     return {
       title: "Content Detail",
       eyebrow: "Contents",
-      description: "Edit core metadata, localizations, and publication actions.",
-    }
+      description:
+        "Edit core metadata, localizations, and publication actions.",
+    };
   }
 
   if (pathname.startsWith("/categories/")) {
@@ -77,26 +78,26 @@ export function getRouteMeta(pathname: string) {
       title: "Category Detail",
       eyebrow: "Categories",
       description: "Manage category metadata, localizations, and curation.",
-    }
+    };
   }
 
-  const directMatch = cmsNavigationItems.find((item) =>
-    pathname === item.path || pathname.startsWith(`${item.path}/`)
-  )
+  const directMatch = cmsNavigationItems.find(
+    (item) => pathname === item.path || pathname.startsWith(`${item.path}/`),
+  );
 
   if (directMatch) {
     return {
       title: directMatch.label,
       eyebrow: "TellPal CMS",
       description: directMatch.description,
-    }
+    };
   }
 
   return {
     title: "Workspace",
     eyebrow: "TellPal CMS",
     description: "Admin route skeleton for the CMS workspace.",
-  }
+  };
 }
 
-export const cmsShieldIcon = ShieldCheck
+export const cmsShieldIcon = ShieldCheck;

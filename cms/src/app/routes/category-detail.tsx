@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 
-import { RoutePlaceholder } from "@/components/layout/route-placeholder"
+import { RoutePlaceholder } from "@/components/layout/route-placeholder";
 
 export function CategoryDetailRoute() {
-  const { categoryId = "unknown" } = useParams()
+  const { categoryId = "unknown" } = useParams();
 
   return (
     <RoutePlaceholder
@@ -16,5 +16,5 @@ export function CategoryDetailRoute() {
         "Category curation workspace",
       ]}
     />
-  )
+  );
 }

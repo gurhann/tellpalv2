@@ -1,11 +1,11 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
 
-import { cmsNavigationItems } from "@/app/navigation"
-import { cn } from "@/lib/utils"
+import { cmsNavigationItems } from "@/app/navigation";
+import { cn } from "@/lib/utils";
 
 type SideNavProps = {
-  onNavigate?: () => void
-}
+  onNavigate?: () => void;
+};
 
 export function SideNav({ onNavigate }: SideNavProps) {
   return (
@@ -22,7 +22,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
 
       <nav className="flex-1 space-y-1 px-3 py-4">
         {cmsNavigationItems.map((item) => {
-          const Icon = item.icon
+          const Icon = item.icon;
 
           return (
             <NavLink
@@ -34,7 +34,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                   "flex items-start gap-3 rounded-2xl px-3 py-3 transition-colors",
                   isActive
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10"
-                    : "hover:bg-muted"
+                    : "hover:bg-muted",
                 )
               }
             >
@@ -45,7 +45,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                       "mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-xl border",
                       isActive
                         ? "border-primary-foreground/20 bg-primary-foreground/10"
-                        : "border-border/70 bg-background"
+                        : "border-border/70 bg-background",
                     )}
                   >
                     <Icon className="size-4" />
@@ -57,7 +57,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                         "mt-1 text-xs leading-5",
                         isActive
                           ? "text-primary-foreground/80"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                     >
                       {item.description}
@@ -66,9 +66,9 @@ export function SideNav({ onNavigate }: SideNavProps) {
                 </>
               )}
             </NavLink>
-          )
+          );
         })}
       </nav>
     </div>
-  )
+  );
 }

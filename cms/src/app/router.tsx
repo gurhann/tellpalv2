@@ -1,49 +1,58 @@
-import { Navigate, Outlet, createBrowserRouter, useLocation } from "react-router-dom"
+import {
+  Navigate,
+  Outlet,
+  createBrowserRouter,
+  useLocation,
+} from "react-router-dom";
 
-import { AppShell } from "@/components/layout/app-shell"
-import { hasScaffoldSession } from "@/app/scaffold-session"
-import { CategoriesIndexRoute } from "@/app/routes/categories-index"
-import { CategoryDetailRoute } from "@/app/routes/category-detail"
-import { ContentDetailRoute } from "@/app/routes/content-detail"
-import { ContentsIndexRoute } from "@/app/routes/contents-index"
-import { ContributorsRoute } from "@/app/routes/contributors"
-import { FreeAccessRoute } from "@/app/routes/free-access"
-import { LoginRoute } from "@/app/routes/login"
-import { MediaProcessingRoute } from "@/app/routes/media-processing"
-import { MediaRoute } from "@/app/routes/media"
-import { NotFoundRoute } from "@/app/routes/not-found"
-import { StoryPagesRoute } from "@/app/routes/story-pages"
+import { AppShell } from "@/components/layout/app-shell";
+import { hasScaffoldSession } from "@/app/scaffold-session";
+import { CategoriesIndexRoute } from "@/app/routes/categories-index";
+import { CategoryDetailRoute } from "@/app/routes/category-detail";
+import { ContentDetailRoute } from "@/app/routes/content-detail";
+import { ContentsIndexRoute } from "@/app/routes/contents-index";
+import { ContributorsRoute } from "@/app/routes/contributors";
+import { FreeAccessRoute } from "@/app/routes/free-access";
+import { LoginRoute } from "@/app/routes/login";
+import { MediaProcessingRoute } from "@/app/routes/media-processing";
+import { MediaRoute } from "@/app/routes/media";
+import { NotFoundRoute } from "@/app/routes/not-found";
+import { StoryPagesRoute } from "@/app/routes/story-pages";
 
 function RootRedirect() {
-  return <Navigate replace to={hasScaffoldSession() ? "/contents" : "/login"} />
+  return (
+    <Navigate replace to={hasScaffoldSession() ? "/contents" : "/login"} />
+  );
 }
 
 function RequireScaffoldSession() {
-  const location = useLocation()
+  const location = useLocation();
 
   if (!hasScaffoldSession()) {
     return (
       <Navigate
         replace
         to="/login"
-        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+        state={{
+          from: `${location.pathname}${location.search}${location.hash}`,
+        }}
       />
-    )
+    );
   }
 
-  return <AppShell />
+  return <AppShell />;
 }
 
 function LoginRedirect() {
   if (hasScaffoldSession()) {
-    return <Navigate replace to="/contents" />
+    return <Navigate replace to="/contents" />;
   }
 
-  return <LoginRoute />
+  return <LoginRoute />;
 }
 
 function ProtectedOutlet() {
-  return <Outlet />
+  return <Outlet />;
 }
 
 export const router = createBrowserRouter([
@@ -81,4 +90,4 @@ export const router = createBrowserRouter([
     path: "*",
     element: <NotFoundRoute />,
   },
-])
+]);

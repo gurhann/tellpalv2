@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom"
-import { useState } from "react"
+import { Outlet } from "react-router-dom";
+import { useState } from "react";
 
-import { SideNav } from "@/components/layout/side-nav"
-import { TopBar } from "@/components/layout/top-bar"
+import { SideNav } from "@/components/layout/side-nav";
+import { TopBar } from "@/components/layout/top-bar";
 
 export function AppShell() {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -25,5 +25,5 @@ export function AppShell() {
         </div>
       </div>
     </div>
-  )
+  );
 }

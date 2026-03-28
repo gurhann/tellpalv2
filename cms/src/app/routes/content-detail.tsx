@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 
-import { RoutePlaceholder } from "@/components/layout/route-placeholder"
+import { RoutePlaceholder } from "@/components/layout/route-placeholder";
 
 export function ContentDetailRoute() {
-  const { contentId = "unknown" } = useParams()
+  const { contentId = "unknown" } = useParams();
 
   return (
     <RoutePlaceholder
@@ -16,5 +16,5 @@ export function ContentDetailRoute() {
         "Publish and archive actions",
       ]}
     />
-  )
+  );
 }
