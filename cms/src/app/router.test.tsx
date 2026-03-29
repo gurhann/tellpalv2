@@ -231,8 +231,11 @@ describe("CMS router auth flow", () => {
       screen.getByRole("tablist", { name: /content localization tabs/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("A calm walk through a moonlit garden."),
-    ).toBeVisible();
+      screen.getByRole("button", { name: /save localization/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /publish locale/i }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
   });
 

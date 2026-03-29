@@ -1,22 +1,9 @@
-import {
-  ArrowRight,
-  Archive,
-  BookOpenText,
-  Layers3,
-  LoaderCircle,
-  Send,
-} from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, BookOpenText, Layers3, LoaderCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FormSection } from "@/components/forms/form-section";
-import { type LanguageBadgeTone } from "@/components/language/language-badge";
-import {
-  LanguageTabs,
-  type LanguageTabItem,
-} from "@/components/language/language-tabs";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,84 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ContentForm } from "@/features/contents/components/content-form";
-import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
+import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import type { ContentLocalizationViewModel } from "@/features/contents/model/content-view-model";
+import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
-
-function getLocalizationTone(
-  localization: ContentLocalizationViewModel,
-): LanguageBadgeTone {
-  if (localization.isArchived) {
-    return "muted";
-  }
-
-  if (localization.processingStatus === "FAILED") {
-    return "destructive";
-  }
-
-  if (localization.isPublished && localization.isProcessingComplete) {
-    return "success";
-  }
-
-  if (
-    localization.status === "DRAFT" ||
-    localization.processingStatus === "PENDING" ||
-    localization.processingStatus === "PROCESSING"
-  ) {
-    return "warning";
-  }
-
-  return "info";
-}
-
-function formatPublishedAt(publishedAt: string | null) {
-  if (!publishedAt) {
-    return "Not published";
-  }
-
-  const timestamp = new Date(publishedAt);
-
-  if (Number.isNaN(timestamp.getTime())) {
-    return publishedAt;
-  }
-
-  return `${timestamp.toISOString().slice(0, 16).replace("T", " ")} UTC`;
-}
-
-function getLocalizationDescription(
-  localization: ContentLocalizationViewModel,
-) {
-  const parts = [localization.statusLabel, localization.processingStatusLabel];
-
-  if (localization.visibleToMobile) {
-    parts.push("Mobile visible");
-  }
-
-  if (localization.hasAudioAsset) {
-    parts.push("Audio attached");
-  } else if (localization.hasCoverAsset) {
-    parts.push("Cover attached");
-  }
-
-  return parts.join(" / ");
-}
-
-function getBodyTextSummary(
-  localization: ContentLocalizationViewModel,
-  supportsStoryPages: boolean,
-) {
-  if (localization.bodyText) {
-    return localization.bodyText;
-  }
-
-  if (supportsStoryPages) {
-    return "Story copy is authored on the story pages route for this language.";
-  }
-
-  return "No body text has been provided for this localization yet.";
-}
 
 export function ContentDetailRoute() {
   const { contentId = "" } = useParams();
@@ -113,29 +27,15 @@ export function ContentDetailRoute() {
   const contentQuery = useContentDetail(
     hasValidContentId ? parsedContentId : null,
   );
-  const [activeLanguage, setActiveLanguage] = useState("");
   const content = contentQuery.content;
-  const localizationTabs: LanguageTabItem[] = content
-    ? content.localizations.map((localization) => ({
-        code: localization.languageCode,
-        label: localization.languageLabel,
-        tone: getLocalizationTone(localization),
-        meta: localization.statusLabel,
-        description: getLocalizationDescription(localization),
-      }))
-    : [];
-  const resolvedActiveLanguage =
-    localizationTabs.find((item) => item.code === activeLanguage)?.code ??
-    localizationTabs[0]?.code ??
-    "";
   const canOpenStoryPages = content?.summary.supportsStoryPages ?? false;
   const routeTitle =
     content?.primaryLocalization?.title ??
     (hasValidContentId ? `Content #${parsedContentId}` : "Content Detail");
   const routeDescription = content
-    ? `Metadata editing is now live for ${content.summary.externalKey}. Localization and publication mutations remain disabled until later content tasks.`
+    ? `Metadata editing and localization workspaces are live for ${content.summary.externalKey}. Publish and archive actions now run inside each language tab.`
     : hasValidContentId
-      ? "The CMS is loading content metadata and localization snapshots from the admin API. Metadata editing becomes available as soon as the detail query resolves."
+      ? "The CMS is loading content metadata and localization snapshots from the admin API. Metadata editing and locale workspaces become available as soon as the detail query resolves."
       : "This route expects a valid numeric content id from the content registry.";
 
   function renderToolbar() {
@@ -178,131 +78,6 @@ export function ContentDetailRoute() {
             Inline loading, error, and not-found states stay inside this shell.
           </p>
         </div>
-      </div>
-    );
-  }
-
-  function renderLocalizationWorkspace(item: LanguageTabItem) {
-    const localization = content?.localizations.find(
-      (entry) => entry.languageCode === item.code,
-    );
-
-    if (!content || !localization) {
-      return null;
-    }
-
-    return (
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>{localization.title}</CardTitle>
-            <CardDescription>
-              Read-only localization snapshot from the content detail query.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Description</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {localization.description ??
-                  "No description has been provided."}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Body text</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {getBodyTextSummary(
-                  localization,
-                  content.summary.supportsStoryPages,
-                )}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Publishing</p>
-              <dl className="mt-2 space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Status</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.statusLabel}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Processing</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.processingStatusLabel}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Published at</dt>
-                  <dd className="font-medium text-foreground">
-                    {formatPublishedAt(localization.publishedAt)}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Assets and visibility
-              </p>
-              <dl className="mt-2 space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Cover asset</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.hasCoverAsset
-                      ? `Attached (#${localization.coverAssetId})`
-                      : "Missing"}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Audio asset</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.hasAudioAsset
-                      ? `Attached (#${localization.audioAssetId})`
-                      : "Missing"}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Mobile visibility</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.visibleToMobile ? "Visible" : "Hidden"}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt>Duration</dt>
-                  <dd className="font-medium text-foreground">
-                    {localization.durationMinutes === null
-                      ? "Not set"
-                      : `${localization.durationMinutes} min`}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Locale Actions</CardTitle>
-            <CardDescription>
-              Mutation entry points remain visible but disabled in this
-              read-only task.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              Publish state: {localization.statusLabel}
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              Processing state: {localization.processingStatusLabel}
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              Asset presence:{" "}
-              {localization.hasCoverAsset || localization.hasAudioAsset
-                ? "Bindings detected"
-                : "No asset bindings yet"}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     );
   }
@@ -383,24 +158,7 @@ export function ContentDetailRoute() {
       );
     }
 
-    if (content.localizations.length === 0) {
-      return (
-        <EmptyState
-          description="This content record exists, but it does not have any localization snapshots yet."
-          title="No localizations yet"
-        />
-      );
-    }
-
-    return (
-      <LanguageTabs
-        items={localizationTabs}
-        listLabel="Content localization tabs"
-        onValueChange={setActiveLanguage}
-        renderContent={renderLocalizationWorkspace}
-        value={resolvedActiveLanguage}
-      />
-    );
+    return <ContentLocalizationTabs content={content} />;
   }
 
   return (
@@ -409,29 +167,19 @@ export function ContentDetailRoute() {
       title={routeTitle}
       description={routeDescription}
       actions={
-        <>
-          {canOpenStoryPages ? (
-            <Button asChild variant="outline">
-              <Link to={`/contents/${parsedContentId}/story-pages`}>
-                <BookOpenText className="size-4" />
-                Open story pages
-              </Link>
-            </Button>
-          ) : (
-            <Button disabled type="button" variant="outline">
+        canOpenStoryPages ? (
+          <Button asChild variant="outline">
+            <Link to={`/contents/${parsedContentId}/story-pages`}>
               <BookOpenText className="size-4" />
-              Story pages unavailable
-            </Button>
-          )}
+              Open story pages
+            </Link>
+          </Button>
+        ) : (
           <Button disabled type="button" variant="outline">
-            <Archive className="size-4" />
-            Archive locale
+            <BookOpenText className="size-4" />
+            Story pages unavailable
           </Button>
-          <Button disabled type="button">
-            <Send className="size-4" />
-            Publish locale
-          </Button>
-        </>
+        )
       }
       toolbar={renderToolbar()}
       aside={
@@ -440,7 +188,8 @@ export function ContentDetailRoute() {
             <CardHeader>
               <CardTitle>Operations Snapshot</CardTitle>
               <CardDescription>
-                Read-only status summary from the content detail query.
+                Live status summary from the content detail query and
+                per-language mutation workspace.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -480,7 +229,7 @@ export function ContentDetailRoute() {
               </div>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
                 <Layers3 className="size-3.5" />
-                Shared detail action region ready
+                Per-language edit and publication controls live
               </div>
             </CardContent>
           </Card>
@@ -489,18 +238,19 @@ export function ContentDetailRoute() {
             <CardHeader>
               <CardTitle>Next Detail Tasks</CardTitle>
               <CardDescription>
-                Metadata editing is live. The next tasks expand localization
-                mutation and richer diagnostics.
+                Metadata and localization editing are live. The next task
+                expands deeper processing diagnostics around assets and
+                follow-up.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                Base metadata now saves through the admin API with field-level
-                validation and conflict handling.
+                Base metadata and locale changes now save through the admin API
+                with field-level validation mapping.
               </div>
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                `M03-T04` wires publish, archive, and localization mutation
-                flows.
+                Publish and archive actions now live inside each language tab,
+                including backend conflict surfaces.
               </div>
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                 `M03-T05` expands processing visibility around assets and
@@ -532,7 +282,8 @@ export function ContentDetailRoute() {
           <CardTitle>Route Integration Preview</CardTitle>
           <CardDescription>
             The detail shell stays connected to the story pages child route
-            while this task focuses only on read/query binding.
+            while this task focuses on localization editing and publication
+            control.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">

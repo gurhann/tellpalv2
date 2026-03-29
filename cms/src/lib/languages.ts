@@ -6,6 +6,13 @@ const languageLabels = {
   de: "German",
 } as const;
 
+export const supportedCmsLanguageOptions = Object.entries(languageLabels).map(
+  ([code, label]) => ({
+    code,
+    label,
+  }),
+);
+
 export function normalizeLanguageCode(code: string) {
   return code.trim().toLowerCase();
 }
