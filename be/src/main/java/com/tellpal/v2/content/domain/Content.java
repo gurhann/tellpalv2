@@ -129,6 +129,13 @@ public class Content extends BaseJpaEntity {
     }
 
     /**
+     * Deactivates the aggregate without removing localized or editorial history.
+     */
+    public void deactivate() {
+        this.active = false;
+    }
+
+    /**
      * Creates or updates one localization while enforcing content-type-specific field rules.
      *
      * <p>Story localizations cannot carry body text or a single audio asset, while non-story types

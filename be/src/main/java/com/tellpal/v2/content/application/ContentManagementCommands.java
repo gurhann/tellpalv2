@@ -40,6 +40,16 @@ public final class ContentManagementCommands {
     }
 
     /**
+     * Command for deactivating one content aggregate.
+     */
+    public record DeleteContentCommand(Long contentId) {
+
+        public DeleteContentCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+        }
+    }
+
+    /**
      * Command for creating a new content localization.
      */
     public record CreateContentLocalizationCommand(

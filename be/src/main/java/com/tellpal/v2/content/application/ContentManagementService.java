@@ -10,6 +10,7 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNo
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContentExternalKeyException;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.DeleteContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand;
@@ -62,6 +63,16 @@ public class ContentManagementService {
         ensureExternalKeyAvailable(command.contentId(), command.externalKey());
         content.updateDetails(command.externalKey(), command.ageRange(), command.active());
         return ContentApiMapper.toReference(contentRepository.save(content));
+    }
+
+    /**
+     * Deactivates a content aggregate while preserving editorial data for admin reads.
+     */
+    @Transactional
+    public void deleteContent(DeleteContentCommand command) {
+        Content content = loadContent(command.contentId());
+        content.deactivate();
+        contentRepository.save(content);
     }
 
     /**

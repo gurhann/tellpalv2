@@ -11,6 +11,7 @@ import java.time.Clock;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import com.tellpal.v2.content.api.AdminContentQueryApi;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.DeleteContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
 import com.tellpal.v2.content.application.ContentPublicationCommands.PublishContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentCommand;
@@ -95,6 +97,21 @@ public class ContentAdminController {
         return adminContentQueryApi.findContent(contentId)
                 .map(AdminContentReadResponse::from)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
+    }
+
+    @DeleteMapping("/{contentId}")
+    @Operation(
+            summary = "Delete content",
+            description = "Deactivates one content aggregate and preserves its editorial history for admin reads.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Content deleted"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public ResponseEntity<Void> deleteContent(@PathVariable Long contentId) {
+        contentManagementService.deleteContent(new DeleteContentCommand(contentId));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping

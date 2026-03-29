@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -254,6 +255,43 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$.externalKey").value("moonlight-story"))
                 .andExpect(jsonPath("$.localizations[0].title").value("Ay Isigi"))
                 .andExpect(jsonPath("$.localizations[0].processingStatus").value("COMPLETED"));
+    }
+
+    @Test
+    void deleteContentDeactivatesAggregateAndPreservesAdminReadAccess() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "STORY",
+                                  "externalKey": "delete-me-story",
+                                  "ageRange": 5,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(delete("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNoContent());
+
+        Boolean active = jdbcTemplate.queryForObject(
+                "select is_active from contents where id = ?",
+                Boolean.class,
+                contentId);
+        assertThat(active).isFalse();
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(contentId))
+                .andExpect(jsonPath("$.active").value(false));
     }
 
     private Long registerImageAsset(String objectPath) {

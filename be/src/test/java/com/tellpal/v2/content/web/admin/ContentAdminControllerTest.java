@@ -2,8 +2,10 @@ package com.tellpal.v2.content.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -137,6 +139,14 @@ class ContentAdminControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Content not found"))
                 .andExpect(jsonPath("$.errorCode").value("content_not_found"));
+    }
+
+    @Test
+    void deleteContentReturnsNoContent() throws Exception {
+        doNothing().when(contentManagementService).deleteContent(any());
+
+        mockMvc.perform(delete("/api/admin/contents/51"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
