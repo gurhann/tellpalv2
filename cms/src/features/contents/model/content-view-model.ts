@@ -97,6 +97,27 @@ export type StoryPageLocalizationViewModel = {
   hasAudioAsset: boolean;
 };
 
+export function createContentReadViewModel(
+  summary: ContentSummaryViewModel,
+  localizations: ContentLocalizationViewModel[] = [],
+): ContentReadViewModel {
+  return {
+    summary,
+    localizations,
+    primaryLocalization: localizations[0] ?? null,
+    localizationCount: localizations.length,
+    publishedLocalizationCount: localizations.filter(
+      (localization) => localization.isPublished,
+    ).length,
+    processingCompleteLocalizationCount: localizations.filter(
+      (localization) => localization.isProcessingComplete,
+    ).length,
+    visibleToMobileLocalizationCount: localizations.filter(
+      (localization) => localization.visibleToMobile,
+    ).length,
+  };
+}
+
 export function mapAdminContent(
   content: AdminContentResponse,
 ): ContentSummaryViewModel {
@@ -124,27 +145,20 @@ export function mapAdminContentRead(
 ): ContentReadViewModel {
   const localizations = content.localizations.map(mapAdminContentLocalization);
 
-  return {
-    summary: mapAdminContent(content),
-    localizations,
-    primaryLocalization: localizations[0] ?? null,
-    localizationCount: localizations.length,
-    publishedLocalizationCount: localizations.filter(
-      (localization) => localization.isPublished,
-    ).length,
-    processingCompleteLocalizationCount: localizations.filter(
-      (localization) => localization.isProcessingComplete,
-    ).length,
-    visibleToMobileLocalizationCount: localizations.filter(
-      (localization) => localization.visibleToMobile,
-    ).length,
-  };
+  return createContentReadViewModel(mapAdminContent(content), localizations);
 }
 
 export function mapAdminContentReadList(
   contents: AdminContentReadResponse[],
 ): ContentReadViewModel[] {
   return contents.map(mapAdminContentRead);
+}
+
+export function mapAdminContentSummaryToRead(
+  content: AdminContentResponse,
+  localizations: ContentLocalizationViewModel[] = [],
+): ContentReadViewModel {
+  return createContentReadViewModel(mapAdminContent(content), localizations);
 }
 
 export function mapAdminContentLocalization(

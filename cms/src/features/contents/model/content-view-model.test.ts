@@ -8,9 +8,11 @@ import type {
   AdminStoryPageResponse,
 } from "@/features/contents/api/story-page-admin";
 import {
+  createContentReadViewModel,
   mapAdminContent,
   mapAdminContentRead,
   mapAdminContentLocalization,
+  mapAdminContentSummaryToRead,
   mapAdminStoryPage,
   mapAdminStoryPageLocalization,
 } from "@/features/contents/model/content-view-model";
@@ -204,6 +206,51 @@ describe("content view model mappers", () => {
       processingCompleteLocalizationCount: 1,
       visibleToMobileLocalizationCount: 1,
     });
+  });
+
+  it("can hydrate a read view model from summary metadata and existing localizations", () => {
+    const summaryDto: AdminContentResponse = {
+      contentId: 21,
+      type: "MEDITATION",
+      externalKey: "meditation.rain-room",
+      active: false,
+      ageRange: 8,
+      pageCount: null,
+    };
+
+    const localizations = [
+      mapAdminContentLocalization({
+        contentId: 21,
+        languageCode: "en",
+        title: "Rain Room Reset",
+        description: "A short breathing reset with rain ambience.",
+        bodyText: "Breathe in for four counts and relax your shoulders.",
+        coverMediaId: null,
+        audioMediaId: 1,
+        durationMinutes: 6,
+        status: "DRAFT",
+        processingStatus: "PENDING",
+        publishedAt: null,
+        visibleToMobile: false,
+      }),
+    ];
+
+    expect(mapAdminContentSummaryToRead(summaryDto, localizations)).toEqual(
+      createContentReadViewModel(
+        {
+          id: 21,
+          type: "MEDITATION",
+          typeLabel: "Meditation",
+          externalKey: "meditation.rain-room",
+          active: false,
+          ageRange: 8,
+          pageCount: null,
+          supportsStoryPages: false,
+          hasPages: false,
+        },
+        localizations,
+      ),
+    );
   });
 
   it("maps story pages and localized page data", () => {

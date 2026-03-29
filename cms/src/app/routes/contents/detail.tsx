@@ -11,6 +11,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
+import { FormSection } from "@/components/forms/form-section";
 import { type LanguageBadgeTone } from "@/components/language/language-badge";
 import {
   LanguageTabs,
@@ -24,10 +25,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import type { ContentLocalizationViewModel } from "@/features/contents/model/content-view-model";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
+import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
 
 function getLocalizationTone(
   localization: ContentLocalizationViewModel,
@@ -130,9 +133,9 @@ export function ContentDetailRoute() {
     content?.primaryLocalization?.title ??
     (hasValidContentId ? `Content #${parsedContentId}` : "Content Detail");
   const routeDescription = content
-    ? `Read-only summary for ${content.summary.externalKey}. Editing, publishing, and locale mutations stay disabled until later content tasks.`
+    ? `Metadata editing is now live for ${content.summary.externalKey}. Localization and publication mutations remain disabled until later content tasks.`
     : hasValidContentId
-      ? "The CMS is loading content metadata and localization snapshots from the admin API. Editing and publish actions remain disabled in this task."
+      ? "The CMS is loading content metadata and localization snapshots from the admin API. Metadata editing becomes available as soon as the detail query resolves."
       : "This route expects a valid numeric content id from the content registry.";
 
   function renderToolbar() {
@@ -486,13 +489,14 @@ export function ContentDetailRoute() {
             <CardHeader>
               <CardTitle>Next Detail Tasks</CardTitle>
               <CardDescription>
-                The detail shell now reads live backend state; the next tasks
-                activate mutations and richer diagnostics.
+                Metadata editing is live. The next tasks expand localization
+                mutation and richer diagnostics.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                `M03-T03` enables metadata editing and server validation.
+                Base metadata now saves through the admin API with field-level
+                validation and conflict handling.
               </div>
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                 `M03-T04` wires publish, archive, and localization mutation
@@ -508,6 +512,20 @@ export function ContentDetailRoute() {
       }
     >
       {renderDetailContent()}
+
+      {content ? (
+        <FormSection
+          description="Update the base content metadata. Content type is fixed after creation, while external key, age range, and active state can be changed here."
+          title="Metadata"
+        >
+          <ContentForm
+            key={`${content.summary.id}-${content.summary.externalKey}-${content.summary.ageRange}-${content.summary.active}`}
+            contentId={content.summary.id}
+            initialValues={mapContentReadToFormValues(content)}
+            mode="update"
+          />
+        </FormSection>
+      ) : null}
 
       <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
         <CardHeader>
