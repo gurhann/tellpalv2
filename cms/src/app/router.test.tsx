@@ -169,6 +169,28 @@ describe("CMS router auth flow", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders the content detail shell for /contents/:contentId", async () => {
+    renderRouter({
+      initialEntries: ["/contents/42"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: /content #42/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /open story pages/i }),
+    ).toHaveAttribute("href", "/contents/42/story-pages");
+    expect(
+      screen.getByRole("tablist", { name: /content localization tabs/i }),
+    ).toBeInTheDocument();
+  });
+
   it("logs out from the top bar and returns the user to /login", async () => {
     const logoutImpl = vi.fn().mockResolvedValue(undefined);
 

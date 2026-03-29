@@ -55,37 +55,39 @@ export function LanguageTabs({
       value={resolvedValue}
       onValueChange={onValueChange}
     >
-      <TabsList
-        aria-label={listLabel}
-        className={cn(
-          "h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl bg-muted/30 p-2",
-          listClassName,
-        )}
-        variant="line"
-      >
-        {items.map((item) => (
-          <TabsTrigger
-            key={item.code}
-            className="min-w-40 flex-none items-start justify-start rounded-xl border border-transparent px-3 py-2 text-left data-active:border-border/70 data-active:bg-background"
-            disabled={item.disabled}
-            value={item.code}
-          >
-            <div className="space-y-2">
-              <LanguageBadge
-                code={item.code}
-                label={item.label}
-                meta={item.meta}
-                tone={item.tone}
-              />
-              {item.description ? (
-                <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">
-                  {item.description}
-                </p>
-              ) : null}
-            </div>
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="overflow-x-auto pb-2">
+        <TabsList
+          aria-label={listLabel}
+          className={cn(
+            "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-2xl bg-muted/30 p-2",
+            listClassName,
+          )}
+          variant="line"
+        >
+          {items.map((item) => (
+            <TabsTrigger
+              key={item.code}
+              className="min-h-[5.5rem] min-w-40 flex-none items-start justify-start whitespace-normal rounded-xl border border-transparent px-3 py-2 text-left after:hidden data-active:border-border/70 data-active:bg-background"
+              disabled={item.disabled}
+              value={item.code}
+            >
+              <div className="flex min-h-full w-full flex-col items-start gap-2">
+                <LanguageBadge
+                  code={item.code}
+                  label={item.label}
+                  meta={item.meta}
+                  tone={item.tone}
+                />
+                {item.description ? (
+                  <p className="line-clamp-2 max-w-full text-xs leading-5 text-muted-foreground">
+                    {item.description}
+                  </p>
+                ) : null}
+              </div>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
 
       {renderContent
         ? items.map((item) => (

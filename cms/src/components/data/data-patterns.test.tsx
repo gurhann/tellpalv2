@@ -192,6 +192,15 @@ describe("Shared data and language patterns", () => {
 
     render(<LanguageTabsHarness />);
 
+    const tabList = screen.getByRole("tablist", { name: /language tabs/i });
+
+    expect(tabList.parentElement).toHaveClass("overflow-x-auto", "pb-2");
+    expect(tabList).toHaveClass("w-max", "min-w-full", "items-stretch");
+    expect(screen.getByRole("tab", { name: /turkish/i })).toHaveClass(
+      "min-h-[5.5rem]",
+      "whitespace-normal",
+      "after:hidden",
+    );
     expect(screen.getByText("tr workspace")).toBeVisible();
 
     fireEvent.mouseDown(screen.getByRole("tab", { name: /english/i }));
