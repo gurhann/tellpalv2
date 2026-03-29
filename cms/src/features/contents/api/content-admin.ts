@@ -88,9 +88,22 @@ export const adminContentLocalizationResponseSchema = z.object({
   visibleToMobile: z.boolean(),
 });
 
+export const adminContentReadResponseSchema = adminContentResponseSchema.extend(
+  {
+    localizations: z.array(adminContentLocalizationResponseSchema),
+  },
+);
+
+export const adminContentReadListResponseSchema = z.array(
+  adminContentReadResponseSchema,
+);
+
 export type AdminContentResponse = z.infer<typeof adminContentResponseSchema>;
 export type AdminContentLocalizationResponse = z.infer<
   typeof adminContentLocalizationResponseSchema
+>;
+export type AdminContentReadResponse = z.infer<
+  typeof adminContentReadResponseSchema
 >;
 
 export const contentAdminBacklogDependencies = {
@@ -100,6 +113,16 @@ export const contentAdminBacklogDependencies = {
 } as const;
 
 export const contentAdminApi = {
+  listContents() {
+    return apiClient.get<AdminContentReadResponse[]>(basePath, {
+      responseSchema: adminContentReadListResponseSchema,
+    });
+  },
+  getContent(contentId: number) {
+    return apiClient.get<AdminContentReadResponse>(`${basePath}/${contentId}`, {
+      responseSchema: adminContentReadResponseSchema,
+    });
+  },
   createContent(input: CreateContentInput) {
     return apiClient.post<AdminContentResponse>(basePath, {
       body: input,

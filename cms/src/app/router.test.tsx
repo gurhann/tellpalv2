@@ -2,9 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cmsRoutes } from "@/app/router";
+import { storyContentViewModel } from "@/features/contents/test/fixtures";
 import {
   AuthContext,
   type AuthContextValue,
@@ -12,18 +13,51 @@ import {
 import type { AuthSessionState } from "@/features/auth/model/session-store";
 import type { AdminSessionPayload, ApiProblemDetail } from "@/types/api";
 
+const contentHookMocks = vi.hoisted(() => ({
+  useContentList: vi.fn(),
+  useContentDetail: vi.fn(),
+}));
+
+vi.mock("@/features/contents/queries/use-content-list", () => ({
+  useContentList: contentHookMocks.useContentList,
+}));
+
+vi.mock("@/features/contents/queries/use-content-detail", () => ({
+  useContentDetail: contentHookMocks.useContentDetail,
+}));
+
 function makeSession(
   overrides: Partial<AdminSessionPayload> = {},
 ): AdminSessionPayload {
   return {
     adminUserId: 7,
-    username: "bootstrap-admin",
+    username: "admin",
     roleCodes: ["ADMIN"],
     accessToken: "access-token",
     accessTokenExpiresAt: "2026-03-28T10:00:00Z",
     refreshToken: "refresh-token",
     refreshTokenExpiresAt: "2026-03-29T10:00:00Z",
     ...overrides,
+  };
+}
+
+function makeContentListState() {
+  return {
+    contents: [storyContentViewModel],
+    isLoading: false,
+    isFetching: false,
+    problem: null,
+    refetch: vi.fn(),
+  };
+}
+
+function makeContentDetailState() {
+  return {
+    content: storyContentViewModel,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn(),
   };
 }
 
@@ -117,6 +151,13 @@ function renderRouter(options: {
   };
 }
 
+beforeEach(() => {
+  contentHookMocks.useContentList.mockReset();
+  contentHookMocks.useContentDetail.mockReset();
+  contentHookMocks.useContentList.mockReturnValue(makeContentListState());
+  contentHookMocks.useContentDetail.mockReturnValue(makeContentDetailState());
+});
+
 describe("CMS router auth flow", () => {
   it("redirects protected routes to login when the session is missing", async () => {
     renderRouter({
@@ -169,7 +210,7 @@ describe("CMS router auth flow", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders the content detail shell for /contents/:contentId", async () => {
+  it("renders live content detail data for /contents/:contentId", async () => {
     renderRouter({
       initialEntries: ["/contents/42"],
       authState: {
@@ -181,7 +222,7 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /content #42/i }),
+      await screen.findByRole("heading", { name: /evening garden/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /open story pages/i }),
@@ -189,6 +230,10 @@ describe("CMS router auth flow", () => {
     expect(
       screen.getByRole("tablist", { name: /content localization tabs/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("A calm walk through a moonlit garden."),
+    ).toBeVisible();
+    expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
   });
 
   it("logs out from the top bar and returns the user to /login", async () => {

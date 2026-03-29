@@ -1,5 +1,6 @@
 import type {
   AdminContentLocalizationResponse,
+  AdminContentReadResponse,
   AdminContentResponse,
   ContentLocalizationStatus,
   ContentProcessingStatus,
@@ -66,6 +67,16 @@ export type ContentLocalizationViewModel = {
   isProcessingComplete: boolean;
 };
 
+export type ContentReadViewModel = {
+  summary: ContentSummaryViewModel;
+  localizations: ContentLocalizationViewModel[];
+  primaryLocalization: ContentLocalizationViewModel | null;
+  localizationCount: number;
+  publishedLocalizationCount: number;
+  processingCompleteLocalizationCount: number;
+  visibleToMobileLocalizationCount: number;
+};
+
 export type StoryPageViewModel = {
   contentId: number;
   pageNumber: number;
@@ -106,6 +117,34 @@ export function mapAdminContentList(
   contents: AdminContentResponse[],
 ): ContentSummaryViewModel[] {
   return contents.map(mapAdminContent);
+}
+
+export function mapAdminContentRead(
+  content: AdminContentReadResponse,
+): ContentReadViewModel {
+  const localizations = content.localizations.map(mapAdminContentLocalization);
+
+  return {
+    summary: mapAdminContent(content),
+    localizations,
+    primaryLocalization: localizations[0] ?? null,
+    localizationCount: localizations.length,
+    publishedLocalizationCount: localizations.filter(
+      (localization) => localization.isPublished,
+    ).length,
+    processingCompleteLocalizationCount: localizations.filter(
+      (localization) => localization.isProcessingComplete,
+    ).length,
+    visibleToMobileLocalizationCount: localizations.filter(
+      (localization) => localization.visibleToMobile,
+    ).length,
+  };
+}
+
+export function mapAdminContentReadList(
+  contents: AdminContentReadResponse[],
+): ContentReadViewModel[] {
+  return contents.map(mapAdminContentRead);
 }
 
 export function mapAdminContentLocalization(
