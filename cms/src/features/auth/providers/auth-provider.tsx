@@ -9,7 +9,11 @@ import { adminAuthApi } from "@/features/auth/api/admin-auth";
 import { tokenStorage } from "@/features/auth/lib/token-storage";
 import { authSessionStore } from "@/features/auth/model/session-store";
 import { AuthContext } from "@/features/auth/providers/auth-context";
-import { configureApiClientAuth, resetApiClientAuth } from "@/lib/http/client";
+import {
+  ApiClientError,
+  configureApiClientAuth,
+  resetApiClientAuth,
+} from "@/lib/http/client";
 import type { ApiProblemDetail, AdminSessionPayload } from "@/types/api";
 
 function useAuthController() {
@@ -28,9 +32,20 @@ function useAuthController() {
     }
 
     return authSessionStore.refresh(async () => {
-      const session = await adminAuthApi.refresh({ refreshToken });
-      tokenStorage.setRefreshToken(session.refreshToken);
-      return session;
+      try {
+        const session = await adminAuthApi.refresh({ refreshToken });
+        tokenStorage.setRefreshToken(session.refreshToken);
+        return session;
+      } catch (error) {
+        if (
+          error instanceof ApiClientError &&
+          [401, 403, 409].includes(error.status)
+        ) {
+          tokenStorage.clearRefreshToken();
+        }
+
+        throw error;
+      }
     });
   }, []);
 
