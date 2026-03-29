@@ -2,6 +2,7 @@ package com.tellpal.v2.admin.infrastructure.security;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,7 +15,8 @@ public record AdminSecurityProperties(
         String jwtSecret,
         Duration accessTokenTtl,
         Duration refreshTokenTtl,
-        int bcryptStrength) {
+        int bcryptStrength,
+        CorsProperties cors) {
 
     private static final int MIN_JWT_SECRET_BYTES = 32;
 
@@ -34,6 +36,7 @@ public record AdminSecurityProperties(
         if (bcryptStrength < 10 || bcryptStrength > 31) {
             throw new IllegalArgumentException("Admin BCrypt strength must be between 10 and 31");
         }
+        cors = cors == null ? new CorsProperties(List.of()) : cors;
     }
 
     public SecretKey jwtSecretKey() {
@@ -42,5 +45,17 @@ public record AdminSecurityProperties(
             throw new IllegalArgumentException("Admin JWT secret must be at least 32 bytes");
         }
         return new SecretKeySpec(secretBytes, "HmacSHA256");
+    }
+
+    public record CorsProperties(List<String> allowedOrigins) {
+
+        public CorsProperties {
+            allowedOrigins = allowedOrigins == null
+                    ? List.of()
+                    : allowedOrigins.stream()
+                            .filter(origin -> origin != null && !origin.isBlank())
+                            .map(String::trim)
+                            .toList();
+        }
     }
 }

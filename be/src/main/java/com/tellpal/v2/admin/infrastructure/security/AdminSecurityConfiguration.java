@@ -1,5 +1,7 @@
 package com.tellpal.v2.admin.infrastructure.security;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,6 +25,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
 import com.tellpal.v2.shared.web.admin.AdminRequestLoggingFilter;
@@ -62,6 +67,7 @@ public class AdminSecurityConfiguration {
             AuthenticationEntryPoint adminAuthenticationEntryPoint,
             AccessDeniedHandler adminAccessDeniedHandler) throws Exception {
         http.securityMatcher("/api/admin/**")
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -82,6 +88,20 @@ public class AdminSecurityConfiguration {
                 .addFilterAfter(adminRequestLoggingFilter, AuthorizationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(AdminSecurityProperties properties) {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(properties.cors().allowedOrigins());
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of(AdminWebRequestSupport.REQUEST_ID_HEADER));
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/admin/**", configuration);
+        return source;
     }
 
     @Bean

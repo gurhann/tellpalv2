@@ -21,7 +21,8 @@ class AdminJwtServiceTest {
             "change-me-change-me-change-me-32-bytes",
             Duration.ofHours(1),
             Duration.ofDays(30),
-            10);
+            10,
+            new AdminSecurityProperties.CorsProperties(java.util.List.of()));
 
     private final AdminSecurityConfiguration configuration = new AdminSecurityConfiguration();
     private final Clock clock = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);

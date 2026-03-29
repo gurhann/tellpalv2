@@ -14,7 +14,7 @@ describe("App shell bootstrap", () => {
     );
 
     expect(
-      await screen.findByRole("heading", { name: /login route is ready/i }),
+      await screen.findByRole("heading", { name: /sign in to tellpal cms/i }),
     ).toBeInTheDocument();
   });
 });

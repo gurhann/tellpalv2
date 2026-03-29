@@ -14,7 +14,8 @@ class AdminPasswordHasherTest {
             "change-me-change-me-change-me-32-bytes",
             Duration.ofHours(1),
             Duration.ofDays(30),
-            10);
+            10,
+            new AdminSecurityProperties.CorsProperties(java.util.List.of()));
 
     private final AdminPasswordHasher passwordHasher = new AdminPasswordHasher(
             new AdminSecurityConfiguration().adminPasswordEncoder(PROPERTIES));

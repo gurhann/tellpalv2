@@ -1,6 +1,8 @@
 package com.tellpal.v2.admin.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -28,6 +31,7 @@ import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = "tellpal.security.admin.cors.allowed-origins=http://localhost:5173")
 class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired
@@ -112,6 +116,17 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
                                 }
                                 """))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void loginPreflightAllowsConfiguredLocalCmsOrigin() throws Exception {
+        mockMvc.perform(options("/api/admin/auth/login")
+                        .header("Origin", "http://localhost:5173")
+                        .header("Access-Control-Request-Method", "POST")
+                        .header("Access-Control-Request-Headers", "content-type"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .andExpect(header().string("Access-Control-Allow-Methods", containsString("POST")));
     }
 
     @Test
