@@ -1,3 +1,4 @@
+import { resolveLanguageLabel } from "@/lib/languages";
 import { cn } from "@/lib/utils";
 
 export type LanguageBadgeTone =
@@ -17,14 +18,6 @@ type LanguageBadgeProps = {
   className?: string;
 };
 
-const languageLabels: Record<string, string> = {
-  tr: "Turkish",
-  en: "English",
-  es: "Spanish",
-  pt: "Portuguese",
-  de: "German",
-};
-
 function getToneClassName(tone: LanguageBadgeTone) {
   switch (tone) {
     case "muted":
@@ -41,10 +34,6 @@ function getToneClassName(tone: LanguageBadgeTone) {
     default:
       return "border-primary/15 bg-primary/8 text-primary";
   }
-}
-
-function resolveLanguageLabel(code: string) {
-  return languageLabels[code.toLowerCase()] ?? code.toUpperCase();
 }
 
 export function LanguageBadge({
