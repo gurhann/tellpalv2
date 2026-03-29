@@ -16,6 +16,7 @@ Read order:
 
 - `AGENTS.md`
 - `architecture.md`
+- `be/docs/admin-api-rules.md`
 - `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
 - `be/docs/adr/`
@@ -49,6 +50,13 @@ Read order:
 - Prefer tests that validate business rules, persistence constraints, and module boundaries.
 - Use Maven wrapper commands from `be/`.
 - Add integration coverage when changes affect persistence, transactions, migrations, or REST flows.
+
+## Local Development Defaults
+
+- The backend does not auto-seed sample CMS content for local environments.
+- `be/docs/admin-api-rules.md` is the canonical CMS admin validation and precondition reference for frontend and local seed work.
+- When preparing local CMS sample data, create records through admin APIs or controlled SQL and follow the content localization validation rules documented in `be/docs/bootstrap-notes.md`.
+- Local CMS verification is easier with a mixed sample set: one story with story pages and localizations, one active non-story item, and one inactive item.
 
 ## Review Red Flags
 

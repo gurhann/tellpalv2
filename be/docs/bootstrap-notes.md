@@ -48,6 +48,28 @@ normal controlled operator process.
 2. `cd be && ./mvnw flyway:migrate`
 3. `cd be && ./mvnw spring-boot:run`
 
+## Local CMS Sample Data Notes
+
+The backend does not seed sample CMS content automatically. When local CMS
+screens need realistic data, prefer creating it through admin APIs instead of
+hard-coded frontend fixtures.
+
+Current content localization validation rules to remember:
+
+- `STORY` localizations must not include `bodyText`.
+- Story narrative text belongs in `story_page_localizations`, not in
+  `content_localizations`.
+- `AUDIO_STORY` and `MEDITATION` localizations require `bodyText`.
+- Non-story localizations require an `audioMediaId`.
+- Local development can satisfy `audioMediaId` with `LOCAL_STUB`
+  `ORIGINAL_AUDIO` assets in `media_assets`.
+
+Recommended local CMS seed shape:
+
+- one active `STORY` with at least two localizations and multiple story pages
+- one active non-story content item with draft or processing localizations
+- one inactive content item to validate admin read and filtering behavior
+
 ## Manual Bootstrap Expectations
 
 - Non-local environments must provide `TELLPAL_ADMIN_JWT_SECRET`.

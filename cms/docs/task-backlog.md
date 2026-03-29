@@ -12,11 +12,17 @@ Kaynak gercekler repo icindeki mevcut backend kodu, `architecture.md`, `.kiro/sp
 - `be/src/main/java/com/tellpal/v2/content/web/admin/*.java`
 - `be/src/main/java/com/tellpal/v2/category/web/admin/*.java`
 - `be/src/main/java/com/tellpal/v2/asset/web/admin/*.java`
+- `be/docs/admin-api-rules.md`
+
+## CMS Rulebook Notu
+
+- `M03-T02` ve sonrasi CMS query/form/mutation task'larina baslamadan once `be/docs/admin-api-rules.md` okunmalidir.
+- Yeni bir backend validation veya precondition ogrenilirse once kod veya test kaynaginda dogrulanir, sonra rulebook guncellenir, sonra frontend task devam eder.
 
 ## Mevcut Gercek Durum
 
 - Backend admin API hazir ve testlerle korunuyor.
-- Repo icinde henuz `cms/` adli bir frontend uygulamasi yok.
+- Repo icinde `cms/` workspace'i artik mevcut; bu backlog kalan feature ve integration islerini yonetir.
 - Backend controller gercegi ile eski tasarim notlari bire bir ortusmuyor; bu dokuman controller gercegini esas alir.
 - Tasarim sistemi olarak `shadcn/ui` kullanilacak.
 - Kapsam `Editorial Core` ile sinirlidir; `user`, `event` ve `purchase` admin ekranlari bu backlog disindadir.
