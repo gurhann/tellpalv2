@@ -62,6 +62,15 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 }
                                 """))
                 .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/admin/contents"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/admin/contents/1"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/api/admin/contents/1"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -292,6 +301,21 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(contentId))
                 .andExpect(jsonPath("$.active").value(false));
+    }
+
+    @Test
+    void missingReadAndDeleteEndpointsReturnNotFoundForUnknownContent() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(get("/api/admin/contents/999")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_not_found"));
+
+        mockMvc.perform(delete("/api/admin/contents/999")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_not_found"));
     }
 
     private Long registerImageAsset(String objectPath) {

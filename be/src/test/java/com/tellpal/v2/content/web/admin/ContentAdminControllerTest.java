@@ -142,11 +142,54 @@ class ContentAdminControllerTest {
     }
 
     @Test
+    void getContentReturnsMetadataAndLocalizations() throws Exception {
+        when(adminContentQueryApi.findContent(51L)).thenReturn(Optional.of(new AdminContentView(
+                51L,
+                ContentApiType.STORY,
+                "moonlight-story",
+                true,
+                5,
+                2,
+                List.of(new AdminContentLocalizationView(
+                        51L,
+                        LanguageCode.EN,
+                        "Moonlight",
+                        "Calming audio",
+                        null,
+                        11L,
+                        null,
+                        8,
+                        "PUBLISHED",
+                        "COMPLETED",
+                        Instant.parse("2026-03-17T09:00:00Z"),
+                        true)))));
+
+        mockMvc.perform(get("/api/admin/contents/51"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(51))
+                .andExpect(jsonPath("$.externalKey").value("moonlight-story"))
+                .andExpect(jsonPath("$.localizations[0].languageCode").value("en"))
+                .andExpect(jsonPath("$.localizations[0].title").value("Moonlight"));
+    }
+
+    @Test
     void deleteContentReturnsNoContent() throws Exception {
         doNothing().when(contentManagementService).deleteContent(any());
 
         mockMvc.perform(delete("/api/admin/contents/51"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteMissingContentReturnsNotFoundProblemDetails() throws Exception {
+        org.mockito.Mockito.doThrow(new ContentNotFoundException(51L))
+                .when(contentManagementService)
+                .deleteContent(any());
+
+        mockMvc.perform(delete("/api/admin/contents/51"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Content not found"))
+                .andExpect(jsonPath("$.errorCode").value("content_not_found"));
     }
 
     @Test
