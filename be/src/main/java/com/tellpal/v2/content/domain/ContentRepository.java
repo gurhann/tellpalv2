@@ -15,6 +15,11 @@ public interface ContentRepository {
     Optional<Content> findById(Long id);
 
     /**
+     * Loads one aggregate with its localization state for admin read flows.
+     */
+    Optional<Content> findByIdForAdminRead(Long id);
+
+    /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */
     Optional<Content> findByExternalKey(String externalKey);
@@ -28,6 +33,11 @@ public interface ContentRepository {
      * Returns active aggregates that can still participate in read and curation flows.
      */
     List<Content> findAllActive();
+
+    /**
+     * Returns all aggregates with localization state for admin list and detail screens.
+     */
+    List<Content> findAllForAdminRead();
 
     /**
      * Loads the active aggregates for the provided ids and ignores inactive or missing entries.

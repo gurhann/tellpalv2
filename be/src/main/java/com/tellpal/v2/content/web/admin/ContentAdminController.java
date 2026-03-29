@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.util.List;
 import java.time.Clock;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tellpal.v2.content.api.AdminContentQueryApi;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
@@ -46,17 +50,51 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @SecurityRequirement(name = "adminBearerAuth")
 public class ContentAdminController {
 
+    private final AdminContentQueryApi adminContentQueryApi;
     private final ContentManagementService contentManagementService;
     private final ContentPublicationService contentPublicationService;
     private final Clock clock;
 
     public ContentAdminController(
+            AdminContentQueryApi adminContentQueryApi,
             ContentManagementService contentManagementService,
             ContentPublicationService contentPublicationService,
             Clock clock) {
+        this.adminContentQueryApi = adminContentQueryApi;
         this.contentManagementService = contentManagementService;
         this.contentPublicationService = contentPublicationService;
         this.clock = clock;
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "List content",
+            description = "Returns content metadata and localized snapshots for CMS list screens, including inactive entries.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content list returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminContentReadResponse> listContents() {
+        return adminContentQueryApi.listContents().stream()
+                .map(AdminContentReadResponse::from)
+                .toList();
+    }
+
+    @GetMapping("/{contentId}")
+    @Operation(
+            summary = "Get one content",
+            description = "Returns content metadata and localized snapshots for one content aggregate.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Content returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminContentReadResponse getContent(@PathVariable Long contentId) {
+        return adminContentQueryApi.findContent(contentId)
+                .map(AdminContentReadResponse::from)
+                .orElseThrow(() -> new ContentNotFoundException(contentId));
     }
 
     @PostMapping

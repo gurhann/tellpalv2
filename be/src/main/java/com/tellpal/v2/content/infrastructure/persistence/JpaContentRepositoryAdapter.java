@@ -24,6 +24,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
+    public Optional<Content> findByIdForAdminRead(Long id) {
+        return repository.findByIdForAdminRead(id);
+    }
+
+    @Override
     public Optional<Content> findByExternalKey(String externalKey) {
         return repository.findByExternalKey(externalKey);
     }
@@ -36,6 +41,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     @Override
     public List<Content> findAllActive() {
         return repository.findAllByActiveTrue();
+    }
+
+    @Override
+    public List<Content> findAllForAdminRead() {
+        return repository.findAllForAdminRead();
     }
 
     @Override

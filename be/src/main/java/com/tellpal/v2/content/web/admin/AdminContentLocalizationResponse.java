@@ -2,6 +2,7 @@ package com.tellpal.v2.content.web.admin;
 
 import java.time.Instant;
 
+import com.tellpal.v2.content.api.AdminContentLocalizationView;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 
 public record AdminContentLocalizationResponse(
@@ -32,5 +33,21 @@ public record AdminContentLocalizationResponse(
                 record.processingStatus().name(),
                 record.publishedAt(),
                 record.visibleToMobile());
+    }
+
+    static AdminContentLocalizationResponse from(AdminContentLocalizationView view) {
+        return new AdminContentLocalizationResponse(
+                view.contentId(),
+                view.languageCode().value(),
+                view.title(),
+                view.description(),
+                view.bodyText(),
+                view.coverMediaId(),
+                view.audioMediaId(),
+                view.durationMinutes(),
+                view.status(),
+                view.processingStatus(),
+                view.publishedAt(),
+                view.visibleToMobile());
     }
 }

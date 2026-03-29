@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -13,7 +14,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 import java.time.Clock;
+import java.util.List;
+import java.util.Optional;
 
+import com.tellpal.v2.content.api.AdminContentLocalizationView;
+import com.tellpal.v2.content.api.AdminContentQueryApi;
+import com.tellpal.v2.content.api.AdminContentView;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -47,6 +53,9 @@ class ContentAdminControllerTest {
 
     @MockitoBean
     private ContentManagementService contentManagementService;
+
+    @MockitoBean
+    private AdminContentQueryApi adminContentQueryApi;
 
     @MockitoBean
     private StoryPageManagementService storyPageManagementService;
@@ -86,6 +95,48 @@ class ContentAdminControllerTest {
                 .andExpect(jsonPath("$.type").value("STORY"))
                 .andExpect(jsonPath("$.externalKey").value("moonlight-story"))
                 .andExpect(jsonPath("$.pageCount").value(0));
+    }
+
+    @Test
+    void listContentsReturnsMetadataAndLocalizationSnapshots() throws Exception {
+        when(adminContentQueryApi.listContents()).thenReturn(List.of(new AdminContentView(
+                51L,
+                ContentApiType.STORY,
+                "moonlight-story",
+                false,
+                5,
+                2,
+                List.of(new AdminContentLocalizationView(
+                        51L,
+                        LanguageCode.TR,
+                        "Ay Isigi",
+                        "Gece masali",
+                        null,
+                        11L,
+                        null,
+                        8,
+                        "PUBLISHED",
+                        "COMPLETED",
+                        Instant.parse("2026-03-17T09:00:00Z"),
+                        true)))));
+
+        mockMvc.perform(get("/api/admin/contents"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contentId").value(51))
+                .andExpect(jsonPath("$[0].active").value(false))
+                .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[0].localizations[0].processingStatus").value("COMPLETED"));
+    }
+
+    @Test
+    void getMissingContentReturnsNotFoundProblemDetails() throws Exception {
+        when(adminContentQueryApi.findContent(88L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/admin/contents/88"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Content not found"))
+                .andExpect(jsonPath("$.errorCode").value("content_not_found"));
     }
 
     @Test

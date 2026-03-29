@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -183,6 +184,76 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("duplicate_external_key"));
+    }
+
+    @Test
+    void listAndGetContentReturnLocalizationSnapshotsForAdminReadFlows() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult activeContentResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "STORY",
+                                  "externalKey": "moonlight-story",
+                                  "ageRange": 5,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long activeContentId = readPayload(activeContentResult).get("contentId").asLong();
+
+        MvcResult inactiveContentResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "AUDIO_STORY",
+                                  "externalKey": "quiet-audio",
+                                  "ageRange": 7,
+                                  "active": false
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long inactiveContentId = readPayload(inactiveContentResult).get("contentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", activeContentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Ay Isigi",
+                                  "description": "Gece masali",
+                                  "status": "PUBLISHED",
+                                  "processingStatus": "COMPLETED",
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.visibleToMobile").value(true));
+
+        mockMvc.perform(get("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].contentId").value(activeContentId))
+                .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[1].contentId").value(inactiveContentId))
+                .andExpect(jsonPath("$[1].active").value(false))
+                .andExpect(jsonPath("$[1].localizations.length()").value(0));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", activeContentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(activeContentId))
+                .andExpect(jsonPath("$.externalKey").value("moonlight-story"))
+                .andExpect(jsonPath("$.localizations[0].title").value("Ay Isigi"))
+                .andExpect(jsonPath("$.localizations[0].processingStatus").value("COMPLETED"));
     }
 
     private Long registerImageAsset(String objectPath) {
