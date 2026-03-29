@@ -223,9 +223,6 @@ describe("LoginForm", () => {
     await screen.findByRole("heading", { name: /contents page/i });
 
     expect(authValue.setSession).toHaveBeenCalledWith(session);
-    expect(window.localStorage.getItem("tellpal.cms.scaffold-session")).toBe(
-      "active",
-    );
   });
 
   it("returns to the requested route after a successful login", async () => {

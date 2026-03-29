@@ -1,9 +1,8 @@
 import { Menu } from "lucide-react";
 import { useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { getRouteMeta } from "@/app/navigation";
-import { clearScaffoldSession } from "@/app/scaffold-session";
 import { SideNav } from "@/components/layout/side-nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +11,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { LogoutButton } from "@/features/auth/components/logout-button";
+import { useAuth } from "@/features/auth/providers/use-auth";
 
 type TopBarProps = {
   mobileNavOpen: boolean;
@@ -19,18 +20,13 @@ type TopBarProps = {
 };
 
 export function TopBar({ mobileNavOpen, onMobileNavOpenChange }: TopBarProps) {
+  const auth = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
 
   const routeMeta = useMemo(
     () => getRouteMeta(location.pathname),
     [location.pathname],
   );
-
-  function handleSignOut() {
-    clearScaffoldSession();
-    navigate("/login", { replace: true });
-  }
 
   return (
     <>
@@ -61,9 +57,20 @@ export function TopBar({ mobileNavOpen, onMobileNavOpenChange }: TopBarProps) {
             </div>
           </div>
 
-          <Button type="button" variant="outline" onClick={handleSignOut}>
-            Exit scaffold
-          </Button>
+          <div className="flex items-center gap-3">
+            {auth.session ? (
+              <div className="hidden text-right sm:block">
+                <p className="text-sm font-medium text-foreground">
+                  {auth.session.username}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {auth.session.roleCodes.join(", ")}
+                </p>
+              </div>
+            ) : null}
+
+            <LogoutButton />
+          </div>
         </div>
       </header>
 

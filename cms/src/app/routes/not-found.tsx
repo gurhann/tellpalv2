@@ -8,10 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { hasScaffoldSession } from "@/app/scaffold-session";
+import { AuthLoadingScreen } from "@/features/auth/components/auth-loading-screen";
+import { useAuth } from "@/features/auth/providers/use-auth";
 
 export function NotFoundRoute() {
-  const target = hasScaffoldSession() ? "/contents" : "/login";
+  const auth = useAuth();
+
+  if (!auth.isBootstrapped && !auth.session) {
+    return <AuthLoadingScreen />;
+  }
+
+  const target = auth.session ? "/contents" : "/login";
 
   return (
     <main className="min-h-screen bg-background px-6 py-16 text-foreground">

@@ -2,11 +2,11 @@ import {
   Navigate,
   Outlet,
   createBrowserRouter,
+  type RouteObject,
   useLocation,
 } from "react-router-dom";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { hasScaffoldSession } from "@/app/scaffold-session";
 import { CategoriesIndexRoute } from "@/app/routes/categories-index";
 import { CategoryDetailRoute } from "@/app/routes/category-detail";
 import { ContentDetailRoute } from "@/app/routes/content-detail";
@@ -18,34 +18,59 @@ import { MediaProcessingRoute } from "@/app/routes/media-processing";
 import { MediaRoute } from "@/app/routes/media";
 import { NotFoundRoute } from "@/app/routes/not-found";
 import { StoryPagesRoute } from "@/app/routes/story-pages";
+import { AuthLoadingScreen } from "@/features/auth/components/auth-loading-screen";
+import { useAuth } from "@/features/auth/providers/use-auth";
 
 function RootRedirect() {
-  return (
-    <Navigate replace to={hasScaffoldSession() ? "/contents" : "/login"} />
-  );
+  const auth = useAuth();
+
+  if (auth.session) {
+    return <Navigate replace to="/contents" />;
+  }
+
+  if (!auth.isBootstrapped || auth.status === "bootstrapping") {
+    return <AuthLoadingScreen />;
+  }
+
+  return <Navigate replace to="/login" />;
 }
 
-function RequireScaffoldSession() {
+function RequireAuthenticatedSession() {
+  const auth = useAuth();
   const location = useLocation();
 
-  if (!hasScaffoldSession()) {
+  if (auth.session) {
+    return <AppShell />;
+  }
+
+  if (!auth.isBootstrapped || auth.status === "bootstrapping") {
     return (
-      <Navigate
-        replace
-        to="/login"
-        state={{
-          from: `${location.pathname}${location.search}${location.hash}`,
-        }}
-      />
+      <AuthLoadingScreen description="The CMS is restoring access before protected routes are rendered." />
     );
   }
 
-  return <AppShell />;
+  return (
+    <Navigate
+      replace
+      to="/login"
+      state={{
+        from: `${location.pathname}${location.search}${location.hash}`,
+      }}
+    />
+  );
 }
 
 function LoginRedirect() {
-  if (hasScaffoldSession()) {
+  const auth = useAuth();
+
+  if (auth.session) {
     return <Navigate replace to="/contents" />;
+  }
+
+  if (!auth.isBootstrapped || auth.status === "bootstrapping") {
+    return (
+      <AuthLoadingScreen description="The CMS is checking whether an existing refresh token can restore your session." />
+    );
   }
 
   return <LoginRoute />;
@@ -55,7 +80,7 @@ function ProtectedOutlet() {
   return <Outlet />;
 }
 
-export const router = createBrowserRouter([
+export const cmsRoutes: RouteObject[] = [
   {
     path: "/",
     element: <RootRedirect />,
@@ -65,7 +90,7 @@ export const router = createBrowserRouter([
     element: <LoginRedirect />,
   },
   {
-    element: <RequireScaffoldSession />,
+    element: <RequireAuthenticatedSession />,
     children: [
       {
         element: <ProtectedOutlet />,
@@ -90,4 +115,6 @@ export const router = createBrowserRouter([
     path: "*",
     element: <NotFoundRoute />,
   },
-]);
+];
+
+export const router = createBrowserRouter(cmsRoutes);

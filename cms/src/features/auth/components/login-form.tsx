@@ -2,7 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { enableScaffoldSession } from "@/app/scaffold-session";
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -81,8 +80,6 @@ export function LoginForm({ targetPath }: LoginFormProps) {
     try {
       const session = await loginMutation.mutateAsync(values);
       auth.setSession(session);
-      // Protected routes still use the scaffold gate until M02-T03 rewires navigation.
-      enableScaffoldSession();
       navigate(targetPath, { replace: true });
     } catch (error) {
       if (error instanceof ApiClientError) {
