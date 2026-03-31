@@ -17,6 +17,7 @@ import { ContentLocalizationTabs } from "@/features/contents/components/localiza
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
 import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
+import { ContentContributorEntryCard } from "@/features/contributors/components/content-contributor-entry-card";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
 
@@ -250,6 +251,8 @@ export function ContentDetailRoute() {
               </div>
             </CardContent>
           </Card>
+
+          <ContentContributorEntryCard content={content} />
         </>
       }
     >
