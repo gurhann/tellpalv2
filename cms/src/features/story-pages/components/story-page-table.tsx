@@ -22,7 +22,7 @@ function getLocalizationSummary(storyPage: StoryPageReadViewModel) {
   if (storyPage.localizationCount === 0) {
     return {
       title: "No localizations yet",
-      detail: "Add localized page payloads in the next task.",
+      detail: "Open Edit to create localized page payloads.",
     };
   }
 

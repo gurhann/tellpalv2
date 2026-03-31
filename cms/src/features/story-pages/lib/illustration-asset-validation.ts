@@ -1,7 +1,11 @@
 import { assetAdminApi } from "@/features/assets/api/asset-admin";
 import { ApiClientError } from "@/lib/http/client";
 
-export async function validateIllustrationAssetId(assetId: number | null) {
+async function validateMediaAssetId(
+  assetId: number | null,
+  expectedMediaType: "IMAGE" | "AUDIO",
+  missingMessage: string,
+) {
   if (assetId === null) {
     return null;
   }
@@ -9,8 +13,8 @@ export async function validateIllustrationAssetId(assetId: number | null) {
   try {
     const asset = await assetAdminApi.getAsset(assetId);
 
-    if (asset.mediaType !== "IMAGE") {
-      return `Asset #${assetId} must reference an IMAGE asset.`;
+    if (asset.mediaType !== expectedMediaType) {
+      return `Asset #${assetId} must reference an ${expectedMediaType} asset.`;
     }
 
     return null;
@@ -27,6 +31,22 @@ export async function validateIllustrationAssetId(assetId: number | null) {
       return error.problem.detail;
     }
 
-    return "The illustration asset could not be validated.";
+    return missingMessage;
   }
+}
+
+export async function validateIllustrationAssetId(assetId: number | null) {
+  return validateMediaAssetId(
+    assetId,
+    "IMAGE",
+    "The illustration asset could not be validated.",
+  );
+}
+
+export async function validateAudioAssetId(assetId: number | null) {
+  return validateMediaAssetId(
+    assetId,
+    "AUDIO",
+    "The audio asset could not be validated.",
+  );
 }

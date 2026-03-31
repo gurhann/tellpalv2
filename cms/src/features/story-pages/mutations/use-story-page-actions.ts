@@ -4,6 +4,7 @@ import {
   storyPageAdminApi,
   type AddStoryPageInput,
   type AdminStoryPageResponse,
+  type AdminStoryPageLocalizationResponse,
   type UpdateStoryPageInput,
 } from "@/features/contents/api/story-page-admin";
 import { queryKeys } from "@/lib/query-keys";
@@ -13,6 +14,9 @@ type UseStoryPageActionsOptions = {
   onAddSuccess?: (storyPage: AdminStoryPageResponse) => void;
   onUpdateSuccess?: (storyPage: AdminStoryPageResponse) => void;
   onDeleteSuccess?: (pageNumber: number) => void;
+  onLocalizationSuccess?: (
+    localization: AdminStoryPageLocalizationResponse,
+  ) => void;
 };
 
 export function useStoryPageActions({
@@ -20,6 +24,7 @@ export function useStoryPageActions({
   onAddSuccess,
   onUpdateSuccess,
   onDeleteSuccess,
+  onLocalizationSuccess,
 }: UseStoryPageActionsOptions) {
   const queryClient = useQueryClient();
 
@@ -78,13 +83,49 @@ export function useStoryPageActions({
     },
   });
 
+  const upsertStoryPageLocalization = useMutation({
+    mutationFn: async ({
+      pageNumber,
+      languageCode,
+      input,
+    }: {
+      pageNumber: number;
+      languageCode: string;
+      input: {
+        bodyText?: string | null;
+        audioMediaId?: number | null;
+      };
+    }) =>
+      storyPageAdminApi.upsertStoryPageLocalization(
+        contentId,
+        pageNumber,
+        languageCode,
+        input,
+      ),
+    onSuccess: async (localization) => {
+      await Promise.all([
+        invalidateStoryPageQueries(localization.pageNumber),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contents.storyPageLocalization(
+            contentId,
+            localization.pageNumber,
+            localization.languageCode,
+          ),
+        }),
+      ]);
+      onLocalizationSuccess?.(localization);
+    },
+  });
+
   return {
     addStoryPage,
     updateStoryPage,
     removeStoryPage,
+    upsertStoryPageLocalization,
     isPending:
       addStoryPage.isPending ||
       updateStoryPage.isPending ||
-      removeStoryPage.isPending,
+      removeStoryPage.isPending ||
+      upsertStoryPageLocalization.isPending,
   };
 }

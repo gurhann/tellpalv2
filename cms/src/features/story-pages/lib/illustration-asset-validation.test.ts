@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 import { assetAdminApi } from "@/features/assets/api/asset-admin";
 import { ApiClientError } from "@/lib/http/client";
 
-import { validateIllustrationAssetId } from "./illustration-asset-validation";
+import {
+  validateAudioAssetId,
+  validateIllustrationAssetId,
+} from "./illustration-asset-validation";
 
 vi.mock("@/features/assets/api/asset-admin", () => ({
   assetAdminApi: {
@@ -78,5 +81,25 @@ describe("validateIllustrationAssetId", () => {
     await expect(validateIllustrationAssetId(999)).resolves.toBe(
       "Asset #999 was not found.",
     );
+  });
+
+  it("accepts audio assets for story page localizations", async () => {
+    vi.mocked(assetAdminApi.getAsset).mockResolvedValue({
+      assetId: 3,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/audio/midnight-river-en.mp3",
+      mediaType: "AUDIO",
+      kind: "ORIGINAL_AUDIO",
+      mimeType: "audio/mpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-03-31T12:00:00Z",
+      updatedAt: "2026-03-31T12:00:00Z",
+    });
+
+    await expect(validateAudioAssetId(3)).resolves.toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
@@ -14,12 +14,16 @@ const contentDetailHookMocks = vi.hoisted(() => ({
 }));
 const storyPageHookMocks = vi.hoisted(() => ({
   useStoryPages: vi.fn(),
+  useStoryPage: vi.fn(),
 }));
 const storyPageMutationMocks = vi.hoisted(() => ({
   useStoryPageActions: vi.fn(),
 }));
 const recentImageAssetHookMocks = vi.hoisted(() => ({
   useRecentImageAssets: vi.fn(),
+}));
+const recentAudioAssetHookMocks = vi.hoisted(() => ({
+  useRecentAudioAssets: vi.fn(),
 }));
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
@@ -28,6 +32,7 @@ vi.mock("@/features/contents/queries/use-content-detail", () => ({
 
 vi.mock("@/features/story-pages/queries/use-story-pages", () => ({
   useStoryPages: storyPageHookMocks.useStoryPages,
+  useStoryPage: storyPageHookMocks.useStoryPage,
 }));
 
 vi.mock("@/features/story-pages/mutations/use-story-page-actions", () => ({
@@ -36,6 +41,10 @@ vi.mock("@/features/story-pages/mutations/use-story-page-actions", () => ({
 
 vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
   useRecentImageAssets: recentImageAssetHookMocks.useRecentImageAssets,
+}));
+
+vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
+  useRecentAudioAssets: recentAudioAssetHookMocks.useRecentAudioAssets,
 }));
 
 function makeDetailState(overrides: Record<string, unknown> = {}) {
@@ -78,13 +87,25 @@ describe("StoryPagesRoute", () => {
   it("renders the story-only route shell for STORY content", () => {
     contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockReturnValue({
+      storyPage: storyPageViewModels[0],
+      isLoading: false,
+      problem: null,
+    });
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
     recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
       assets: [],
       isLoading: false,
       isSuccess: true,
@@ -113,13 +134,25 @@ describe("StoryPagesRoute", () => {
       makeDetailState({ content: inactiveContentViewModel }),
     );
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockReturnValue({
+      storyPage: storyPageViewModels[0],
+      isLoading: false,
+      problem: null,
+    });
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
     recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
       assets: [],
       isLoading: false,
       isSuccess: true,
@@ -137,5 +170,48 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.queryByText(/story page collection/i),
     ).not.toBeInTheDocument();
+  });
+
+  it("opens the page editor with parent language workspaces", () => {
+    contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
+    storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockReturnValue({
+      storyPage: storyPageViewModels[0],
+      isLoading: false,
+      problem: null,
+    });
+    storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+      addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getAllByRole("button", { name: /edit/i })[0]!);
+
+    expect(
+      screen.getByRole("heading", { name: /edit story page/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/localized page workspaces/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/english/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/turkish/i).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /save page localization/i }).length,
+    ).toBeGreaterThan(0);
   });
 });

@@ -24,21 +24,33 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  LanguageTabs,
+  type LanguageTabItem,
+} from "@/components/language/language-tabs";
 import type {
   ContentReadViewModel,
   StoryPageReadViewModel,
 } from "@/features/contents/model/content-view-model";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
+import { StoryPageLocalizationForm } from "@/features/story-pages/components/story-page-localization-form";
+import { StoryPageForm } from "@/features/story-pages/components/story-page-form";
 import { StoryPageTable } from "@/features/story-pages/components/story-page-table";
 import { StoryContentGuard } from "@/features/story-pages/guards/story-content-guard";
 import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
 import { useStoryPageActions } from "@/features/story-pages/mutations/use-story-page-actions";
 import { useRecentImageAssets } from "@/features/story-pages/queries/use-recent-image-assets";
-import { useStoryPages } from "@/features/story-pages/queries/use-story-pages";
+import {
+  useStoryPage,
+  useStoryPages,
+} from "@/features/story-pages/queries/use-story-pages";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
-import type { AdminStoryPageResponse } from "@/features/contents/api/story-page-admin";
+import type {
+  AdminStoryPageLocalizationResponse,
+  AdminStoryPageResponse,
+} from "@/features/contents/api/story-page-admin";
 
 type StoryPageFieldErrors = {
   pageNumber?: string;
@@ -331,186 +343,191 @@ function CreateStoryPageDialog({
 }
 
 type EditStoryPageDialogProps = {
-  storyPage: StoryPageReadViewModel | null;
+  content: ContentReadViewModel;
+  pageNumber: number | null;
   isPending: boolean;
   onClose: () => void;
-  onUpdate: (input: {
+  onUpdateStoryPage: (input: {
     pageNumber: number;
     illustrationMediaId: number | null;
   }) => Promise<AdminStoryPageResponse>;
+  onUpsertLocalization: (input: {
+    pageNumber: number;
+    languageCode: string;
+    bodyText: string | null;
+    audioMediaId: number | null;
+  }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
-function EditStoryPageDialog({
-  storyPage,
-  isPending,
-  onClose,
-  onUpdate,
-}: EditStoryPageDialogProps) {
-  const [illustrationAssetId, setIllustrationAssetId] = useState(
-    storyPage?.illustrationAssetId?.toString() ?? "",
-  );
-  const [fieldError, setFieldError] = useState<string | undefined>();
-  const [problem, setProblem] = useState<ApiProblemDetail | null>(null);
-  const recentImageAssetsQuery = useRecentImageAssets({
-    enabled: storyPage !== null,
-  });
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!storyPage) {
-      return;
-    }
-
-    setFieldError(undefined);
-    setProblem(null);
-
-    const parsedIllustrationAssetId = parseOptionalPositiveInteger(
-      illustrationAssetId,
-      "Illustration asset id",
-    );
-
-    if (parsedIllustrationAssetId.error) {
-      setFieldError(parsedIllustrationAssetId.error);
-      return;
-    }
-
-    const illustrationAssetError = await validateIllustrationAssetId(
-      parsedIllustrationAssetId.value,
-    );
-
-    if (illustrationAssetError) {
-      setFieldError(illustrationAssetError);
-      return;
-    }
-
-    try {
-      await toastMutation(
-        onUpdate({
-          pageNumber: storyPage.pageNumber,
-          illustrationMediaId: parsedIllustrationAssetId.value,
-        }),
-        {
-          loading: "Saving story page...",
-          success: (updatedStoryPage) =>
-            `Page ${updatedStoryPage.pageNumber} saved.`,
-        },
-      );
-
-      onClose();
-    } catch (error) {
-      if (error instanceof ApiClientError) {
-        const serverFieldErrors = getProblemFieldErrors(error.problem);
-        if (serverFieldErrors.illustrationMediaId) {
-          setFieldError(serverFieldErrors.illustrationMediaId);
-          return;
-        }
-
-        if (error.problem.errorCode === "asset_media_type_mismatch") {
-          setFieldError(error.problem.detail);
-          return;
-        }
-      }
-
-      setProblem(
-        getFallbackProblem(error, "The story page changes could not be saved."),
-      );
-    }
+function describeLocalizationState(
+  localization: StoryPageReadViewModel["primaryLocalization"],
+) {
+  if (!localization) {
+    return {
+      meta: "Missing",
+      description: "No localized page payload exists yet for this language.",
+      tone: "muted" as const,
+    };
   }
 
+  if (localization.hasBodyText && localization.hasAudioAsset) {
+    return {
+      meta: "Ready",
+      description: "Body copy and audio binding are both present.",
+      tone: "success" as const,
+    };
+  }
+
+  if (!localization.hasBodyText && !localization.hasAudioAsset) {
+    return {
+      meta: "Incomplete",
+      description: "This language is missing both body copy and audio.",
+      tone: "warning" as const,
+    };
+  }
+
+  return {
+    meta: "Incomplete",
+    description: localization.hasBodyText
+      ? "Audio binding is still missing for this language."
+      : "Narrative body copy is still missing for this language.",
+    tone: "warning" as const,
+  };
+}
+
+function buildLocalizationTabItems(
+  content: ContentReadViewModel,
+  storyPage: StoryPageReadViewModel,
+) {
+  return content.localizations.map((contentLocalization) => {
+    const storyPageLocalization =
+      storyPage.localizations.find(
+        (localization) =>
+          localization.languageCode === contentLocalization.languageCode,
+      ) ?? null;
+    const state = describeLocalizationState(storyPageLocalization);
+
+    return {
+      code: contentLocalization.languageCode,
+      label: contentLocalization.languageLabel,
+      meta: state.meta,
+      description: state.description,
+      tone: state.tone,
+    } satisfies LanguageTabItem;
+  });
+}
+
+function EditStoryPageDialog({
+  content,
+  pageNumber,
+  isPending,
+  onClose,
+  onUpdateStoryPage,
+  onUpsertLocalization,
+}: EditStoryPageDialogProps) {
+  const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
+  const [activeLanguageCode, setActiveLanguageCode] = useState(
+    content.localizations[0]?.languageCode ?? "",
+  );
+
+  if (pageNumber === null) {
+    return null;
+  }
+  const storyPage = storyPageQuery.storyPage;
+
+  const languageItems = storyPage
+    ? buildLocalizationTabItems(content, storyPage)
+    : [];
+
   return (
-    <Dialog
-      open={storyPage !== null}
-      onOpenChange={(open) => !open && onClose()}
-    >
-      <DialogContent className="sm:max-w-lg">
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Edit story page</DialogTitle>
           <DialogDescription>
-            Update illustration metadata for page {storyPage?.pageNumber ?? "?"}
-            . Localized body and audio editing land in the next task.
+            Update page metadata plus localized body/audio payloads for page{" "}
+            {pageNumber}.
           </DialogDescription>
         </DialogHeader>
 
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          {problem ? <ProblemAlert problem={problem} /> : null}
+        {storyPageQuery.problem ? (
+          <ProblemAlert problem={storyPageQuery.problem} />
+        ) : null}
 
-          <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-            <p className="text-sm font-medium text-foreground">
-              Page {storyPage?.pageNumber ?? "?"}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Page numbers are fixed after creation. This action only updates
-              the illustration asset reference.
-            </p>
+        {storyPageQuery.isLoading && !storyPage ? (
+          <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground">
+            Loading the latest story page metadata and localized page
+            payloads...
           </div>
+        ) : null}
 
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="story-page-edit-illustration"
-            >
-              Illustration asset id
-            </label>
-            <Input
-              id="story-page-edit-illustration"
-              inputMode="numeric"
-              min={1}
-              placeholder="Optional"
-              type="number"
-              value={illustrationAssetId}
-              onChange={(event) => setIllustrationAssetId(event.target.value)}
-              disabled={isPending}
+        {storyPage ? (
+          <div className="grid gap-6">
+            <StoryPageForm
+              storyPage={storyPage}
+              isPending={isPending}
+              onSave={onUpdateStoryPage}
             />
-            <FieldError error={fieldError} />
-            <p className="text-sm text-muted-foreground">
-              Illustration links can reference only `IMAGE` assets.
-            </p>
-            {recentImageAssetsQuery.assets.length > 0 ? (
-              <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Recent Image Assets
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {recentImageAssetsQuery.assets.map((asset) => (
-                    <Button
-                      key={asset.assetId}
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setIllustrationAssetId(String(asset.assetId))
-                      }
-                      disabled={isPending}
-                    >
-                      Asset #{asset.assetId}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-            {!recentImageAssetsQuery.isLoading &&
-            recentImageAssetsQuery.assets.length === 0 ? (
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
-                No recent image assets were found. Register an image asset in
-                Media before saving illustration changes.
-              </div>
-            ) : null}
-          </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <SubmitButton isPending={isPending} pendingLabel="Saving page...">
-              Save page
-            </SubmitButton>
-          </DialogFooter>
-        </form>
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
+                <p className="text-sm font-medium text-foreground">
+                  Localized page workspaces
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Story page localizations are available only for parent content
+                  locales that already exist on the content detail route.
+                </p>
+              </div>
+
+              <LanguageTabs
+                items={languageItems}
+                value={activeLanguageCode}
+                onValueChange={setActiveLanguageCode}
+                emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
+                emptyTitle="No parent locales available"
+                renderContent={(item) => {
+                  const contentLocalization =
+                    content.localizations.find(
+                      (localization) => localization.languageCode === item.code,
+                    ) ?? null;
+
+                  if (!contentLocalization) {
+                    return (
+                      <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                        Story page payloads can open only after the parent
+                        content locale exists for this language.
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <StoryPageLocalizationForm
+                      key={`${storyPage.pageNumber}-${item.code}`}
+                      contentLocalization={contentLocalization}
+                      isPending={isPending}
+                      storyPage={storyPage}
+                      onSave={({ languageCode, bodyText, audioMediaId }) =>
+                        onUpsertLocalization({
+                          pageNumber: storyPage.pageNumber,
+                          languageCode,
+                          bodyText,
+                          audioMediaId,
+                        })
+                      }
+                    />
+                  );
+                }}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={onClose}>
+            Close editor
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -611,8 +628,9 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
     contentId: content.summary.id,
   });
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [editingStoryPage, setEditingStoryPage] =
-    useState<StoryPageReadViewModel | null>(null);
+  const [editingPageNumber, setEditingPageNumber] = useState<number | null>(
+    null,
+  );
   const [deletingStoryPage, setDeletingStoryPage] =
     useState<StoryPageReadViewModel | null>(null);
 
@@ -636,7 +654,7 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
       <ContentPageShell
         eyebrow="Story Editor"
         title={routeTitle}
-        description="The story page collection is now bound to the admin API. Page add, illustration update, and delete flows are live; localized body and audio editors land next."
+        description="The story page collection is bound to the admin API. Page metadata, localized body copy, and audio bindings now share the same editor flow."
         actions={
           <>
             <Button asChild type="button" variant="outline">
@@ -725,7 +743,8 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     Story publication still depends on every page having a
-                    complete localization in the target language.
+                    complete localization with body copy and audio in the target
+                    language.
                   </p>
                 </div>
               </CardContent>
@@ -733,16 +752,16 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
 
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Next Story Tasks</CardTitle>
+                <CardTitle>Story Editor Coverage</CardTitle>
                 <CardDescription>
-                  Collection and metadata mutations are live. Rich editors land
-                  in the next step.
+                  Page structure and localization editing are both live in this
+                  route now.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  `M04-T03` adds per-page localization forms for body text and
-                  audio bindings.
+                  Per-page language workspaces now inherit their allowed
+                  languages from the parent content localizations.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   `M04-T04` will lock the full story-page editor flow with
@@ -758,7 +777,9 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
           isLoading={storyPagesQuery.isLoading}
           problem={storyPagesQuery.problem}
           onRetry={() => void storyPagesQuery.refetch()}
-          onEditStoryPage={setEditingStoryPage}
+          onEditStoryPage={(storyPage) =>
+            setEditingPageNumber(storyPage.pageNumber)
+          }
           onDeleteStoryPage={setDeletingStoryPage}
           emptyAction={
             <Button
@@ -775,10 +796,10 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
 
         <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
           <CardHeader>
-            <CardTitle>Page Mutation Surface</CardTitle>
+            <CardTitle>Editor Surface</CardTitle>
             <CardDescription>
-              This task keeps story-page editing intentionally narrow: page
-              number creation, illustration reference updates, and page removal.
+              Story page editing now covers page metadata plus per-language body
+              and audio payloads.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 lg:grid-cols-3">
@@ -799,17 +820,17 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Adjust or clear page-level illustration asset links directly
-                from the table actions.
+                inside the page editor.
               </p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                 <Layers3 className="size-4 text-primary" />
-                Invalidation
+                Locale payloads
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Add, update, and delete flows invalidate story-page, content
-                detail, and content list queries together.
+                Each parent content locale gets its own story page workspace
+                with body copy and audio binding validation.
               </p>
             </div>
           </CardContent>
@@ -829,15 +850,26 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
       />
 
       <EditStoryPageDialog
-        key={editingStoryPage?.pageNumber ?? "story-page-edit-closed"}
-        storyPage={editingStoryPage}
-        isPending={storyPageActions.updateStoryPage.isPending}
-        onClose={() => setEditingStoryPage(null)}
-        onUpdate={(input) =>
+        key={editingPageNumber ?? "story-page-edit-closed"}
+        content={content}
+        pageNumber={editingPageNumber}
+        isPending={storyPageActions.isPending}
+        onClose={() => setEditingPageNumber(null)}
+        onUpdateStoryPage={(input) =>
           storyPageActions.updateStoryPage.mutateAsync({
             pageNumber: input.pageNumber,
             input: {
               illustrationMediaId: input.illustrationMediaId,
+            },
+          })
+        }
+        onUpsertLocalization={(input) =>
+          storyPageActions.upsertStoryPageLocalization.mutateAsync({
+            pageNumber: input.pageNumber,
+            languageCode: input.languageCode,
+            input: {
+              bodyText: input.bodyText,
+              audioMediaId: input.audioMediaId,
             },
           })
         }

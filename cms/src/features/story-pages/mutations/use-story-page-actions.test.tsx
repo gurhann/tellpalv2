@@ -14,6 +14,7 @@ const storyPageAdminApiMock = vi.hoisted(() => ({
   addStoryPage: vi.fn(),
   updateStoryPage: vi.fn(),
   removeStoryPage: vi.fn(),
+  upsertStoryPageLocalization: vi.fn(),
 }));
 
 vi.mock("@/features/contents/api/story-page-admin", async () => {
@@ -28,6 +29,8 @@ vi.mock("@/features/contents/api/story-page-admin", async () => {
       addStoryPage: storyPageAdminApiMock.addStoryPage,
       updateStoryPage: storyPageAdminApiMock.updateStoryPage,
       removeStoryPage: storyPageAdminApiMock.removeStoryPage,
+      upsertStoryPageLocalization:
+        storyPageAdminApiMock.upsertStoryPageLocalization,
     },
   };
 });
@@ -44,6 +47,7 @@ beforeEach(() => {
   storyPageAdminApiMock.addStoryPage.mockReset();
   storyPageAdminApiMock.updateStoryPage.mockReset();
   storyPageAdminApiMock.removeStoryPage.mockReset();
+  storyPageAdminApiMock.upsertStoryPageLocalization.mockReset();
 });
 
 describe("useStoryPageActions", () => {
@@ -166,6 +170,56 @@ describe("useStoryPageActions", () => {
     });
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: queryKeys.contents.storyPage(1, 2),
+    });
+  });
+
+  it("upserts a story page localization and invalidates localized story queries", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+
+    storyPageAdminApiMock.upsertStoryPageLocalization.mockResolvedValue({
+      contentId: 1,
+      pageNumber: 1,
+      languageCode: "en",
+      bodyText: "Fireflies drift over the gate.",
+      audioMediaId: 3,
+    });
+
+    const { result } = renderHook(() => useStoryPageActions({ contentId: 1 }), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await act(async () => {
+      await result.current.upsertStoryPageLocalization.mutateAsync({
+        pageNumber: 1,
+        languageCode: "en",
+        input: {
+          bodyText: "Fireflies drift over the gate.",
+          audioMediaId: 3,
+        },
+      });
+    });
+
+    expect(
+      storyPageAdminApiMock.upsertStoryPageLocalization,
+    ).toHaveBeenCalledWith(1, 1, "en", {
+      bodyText: "Fireflies drift over the gate.",
+      audioMediaId: 3,
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contents.storyPages(1),
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contents.storyPage(1, 1),
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contents.storyPageLocalization(1, 1, "en"),
     });
   });
 });
