@@ -8,6 +8,7 @@ import type {
 } from "@/features/contents/api/content-admin";
 import type {
   AdminStoryPageLocalizationResponse,
+  AdminStoryPageReadResponse,
   AdminStoryPageResponse,
 } from "@/features/contents/api/story-page-admin";
 import { mapLanguage } from "@/lib/languages";
@@ -95,6 +96,12 @@ export type StoryPageLocalizationViewModel = {
   audioAssetId: number | null;
   hasBodyText: boolean;
   hasAudioAsset: boolean;
+};
+
+export type StoryPageReadViewModel = StoryPageViewModel & {
+  localizations: StoryPageLocalizationViewModel[];
+  primaryLocalization: StoryPageLocalizationViewModel | null;
+  languageCodes: string[];
 };
 
 export function createContentReadViewModel(
@@ -208,6 +215,35 @@ export function mapAdminStoryPageList(
   storyPages: AdminStoryPageResponse[],
 ): StoryPageViewModel[] {
   return storyPages.map(mapAdminStoryPage);
+}
+
+export function createStoryPageReadViewModel(
+  storyPage: StoryPageViewModel,
+  localizations: StoryPageLocalizationViewModel[] = [],
+): StoryPageReadViewModel {
+  return {
+    ...storyPage,
+    localizations,
+    primaryLocalization: localizations[0] ?? null,
+    languageCodes: localizations.map(
+      (localization) => localization.languageCode,
+    ),
+  };
+}
+
+export function mapAdminStoryPageRead(
+  storyPage: AdminStoryPageReadResponse,
+): StoryPageReadViewModel {
+  return createStoryPageReadViewModel(
+    mapAdminStoryPage(storyPage),
+    storyPage.localizations.map(mapAdminStoryPageLocalization),
+  );
+}
+
+export function mapAdminStoryPageReadList(
+  storyPages: AdminStoryPageReadResponse[],
+): StoryPageReadViewModel[] {
+  return storyPages.map(mapAdminStoryPageRead);
 }
 
 export function mapAdminStoryPageLocalization(

@@ -63,6 +63,9 @@ Current content localization validation rules to remember:
 - Non-story localizations require an `audioMediaId`.
 - Local development can satisfy `audioMediaId` with `LOCAL_STUB`
   `ORIGINAL_AUDIO` assets in `media_assets`.
+- Story-page illustration editing also needs at least one `LOCAL_STUB`
+  `ORIGINAL_IMAGE` asset. Audio-only sample assets are not sufficient for that
+  workflow.
 
 Recommended local CMS seed shape:
 

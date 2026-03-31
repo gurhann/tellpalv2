@@ -33,8 +33,21 @@ export const adminStoryPageLocalizationResponseSchema = z.object({
   audioMediaId: z.number().int().positive().nullable(),
 });
 
+export const adminStoryPageReadResponseSchema = adminStoryPageResponseSchema
+  .extend({
+    localizations: z.array(adminStoryPageLocalizationResponseSchema),
+  })
+  .strict();
+
+export const adminStoryPageReadListResponseSchema = z.array(
+  adminStoryPageReadResponseSchema,
+);
+
 export type AdminStoryPageResponse = z.infer<
   typeof adminStoryPageResponseSchema
+>;
+export type AdminStoryPageReadResponse = z.infer<
+  typeof adminStoryPageReadResponseSchema
 >;
 export type AdminStoryPageLocalizationResponse = z.infer<
   typeof adminStoryPageLocalizationResponseSchema
@@ -45,6 +58,19 @@ function getBasePath(contentId: number) {
 }
 
 export const storyPageAdminApi = {
+  listStoryPages(contentId: number) {
+    return apiClient.get<AdminStoryPageReadResponse[]>(getBasePath(contentId), {
+      responseSchema: adminStoryPageReadListResponseSchema,
+    });
+  },
+  getStoryPage(contentId: number, pageNumber: number) {
+    return apiClient.get<AdminStoryPageReadResponse>(
+      `${getBasePath(contentId)}/${pageNumber}`,
+      {
+        responseSchema: adminStoryPageReadResponseSchema,
+      },
+    );
+  },
   addStoryPage(contentId: number, input: AddStoryPageInput) {
     return apiClient.post<AdminStoryPageResponse>(getBasePath(contentId), {
       body: input,

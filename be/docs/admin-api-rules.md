@@ -179,6 +179,9 @@ stack.
   - one active `STORY` item with one or more story pages
   - one active non-story item such as `MEDITATION` or `AUDIO_STORY`
   - one inactive content item to verify admin-only visibility
+- If story-page illustration editing is in scope, register at least one `IMAGE`
+  asset as local sample data. Audio-only sample assets are not enough for story
+  page mutation tests.
 - Story seed data must place narrative text and per-page audio in `story_page_localizations`,
   not in the content localization body fields.
 - Non-story content seed data should use a valid audio asset because `AUDIO_STORY`,
