@@ -3,9 +3,12 @@ package com.tellpal.v2.content.web.admin;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tellpal.v2.content.api.AdminStoryPageQueryApi;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageNotFoundException;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.RemoveStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateStoryPageCommand;
@@ -36,10 +41,48 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @SecurityRequirement(name = "adminBearerAuth")
 public class StoryPageAdminController {
 
+    private final AdminStoryPageQueryApi adminStoryPageQueryApi;
     private final StoryPageManagementService storyPageManagementService;
 
-    public StoryPageAdminController(StoryPageManagementService storyPageManagementService) {
+    public StoryPageAdminController(
+            AdminStoryPageQueryApi adminStoryPageQueryApi,
+            StoryPageManagementService storyPageManagementService) {
+        this.adminStoryPageQueryApi = adminStoryPageQueryApi;
         this.storyPageManagementService = storyPageManagementService;
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "List story pages",
+            description = "Returns the story-page collection and localized page payloads for one story content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Story-page list returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Story pages are unavailable for the current content state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminStoryPageReadResponse> listStoryPages(@PathVariable Long contentId) {
+        return adminStoryPageQueryApi.listStoryPages(contentId).stream()
+                .map(AdminStoryPageReadResponse::from)
+                .toList();
+    }
+
+    @GetMapping("/{pageNumber}")
+    @Operation(
+            summary = "Get one story page",
+            description = "Returns one story page and its localized payloads for story-page editor detail screens.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Story page returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or story page was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Story pages are unavailable for the current content state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminStoryPageReadResponse getStoryPage(@PathVariable Long contentId, @PathVariable int pageNumber) {
+        return adminStoryPageQueryApi.findStoryPage(contentId, pageNumber)
+                .map(AdminStoryPageReadResponse::from)
+                .orElseThrow(() -> new StoryPageNotFoundException(contentId, pageNumber));
     }
 
     @PostMapping

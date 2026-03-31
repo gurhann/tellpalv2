@@ -83,6 +83,8 @@ stack.
 - `PATCH /api/admin/contents/{contentId}/localizations/{languageCode}/processing-status`
 - `POST /api/admin/contents/{contentId}/localizations/{languageCode}/publish`
 - `POST /api/admin/contents/{contentId}/localizations/{languageCode}/archive`
+- `GET /api/admin/contents/{contentId}/story-pages`
+- `GET /api/admin/contents/{contentId}/story-pages/{pageNumber}`
 - `POST /api/admin/contents/{contentId}/story-pages`
 - `PUT /api/admin/contents/{contentId}/story-pages/{pageNumber}`
 - `DELETE /api/admin/contents/{contentId}/story-pages/{pageNumber}`
@@ -137,9 +139,13 @@ stack.
 - Story page localization `audioMediaId` must reference an asset with media type `AUDIO`.
 - Story pages can only be managed for `STORY` content. Trying to add, update, or remove story
   pages for other content types returns a content state conflict.
+- Story-page read endpoints also require `STORY` content. Listing or fetching story pages for
+  non-story content returns a content state conflict.
 - Story page numbers must be positive and unique within one content aggregate.
 - Story page localization upsert requires the parent content localization for the same language to
   already exist.
+- Story-page read endpoints return localized page payloads; the page collection is no longer
+  limited to `pageCount` only.
 
 ### Publication and Processing Preconditions
 
@@ -190,14 +196,16 @@ stack.
   including `visibleToMobile`, without extra localization-read endpoints.
 - Story-page editing UI must not allow localization entry before the parent content localization
   exists for the same language.
+- Story-page list and detail screens should call the dedicated story-page read endpoints instead of
+  relying on content detail to inline page collections.
 - Publish buttons for story content should be gated by story-page completeness in the current
   language, otherwise the backend returns `content_state_conflict`.
 - Archive UI should preserve and display the last publish timestamp after archival.
 
 ### Open Gaps and Unverified Items
 
-- There is no admin `GET` endpoint for story-page lists or story-page details. The current content
-  read response exposes only `pageCount`, not the page collection.
+- `GET /api/admin/contents/{contentId}` still exposes only `pageCount`; page collections require
+  the dedicated story-page read endpoints.
 
 ## Contributors and Free Access
 

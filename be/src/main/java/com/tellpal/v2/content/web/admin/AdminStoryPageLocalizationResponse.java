@@ -1,5 +1,6 @@
 package com.tellpal.v2.content.web.admin;
 
+import com.tellpal.v2.content.api.AdminStoryPageLocalizationView;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageLocalizationRecord;
 
 public record AdminStoryPageLocalizationResponse(
@@ -16,5 +17,14 @@ public record AdminStoryPageLocalizationResponse(
                 record.languageCode().value(),
                 record.bodyText(),
                 record.audioMediaId());
+    }
+
+    static AdminStoryPageLocalizationResponse from(AdminStoryPageLocalizationView view) {
+        return new AdminStoryPageLocalizationResponse(
+                view.contentId(),
+                view.pageNumber(),
+                view.languageCode().value(),
+                view.bodyText(),
+                view.audioMediaId());
     }
 }

@@ -22,6 +22,9 @@ import java.util.Optional;
 import com.tellpal.v2.content.api.AdminContentLocalizationView;
 import com.tellpal.v2.content.api.AdminContentQueryApi;
 import com.tellpal.v2.content.api.AdminContentView;
+import com.tellpal.v2.content.api.AdminStoryPageLocalizationView;
+import com.tellpal.v2.content.api.AdminStoryPageQueryApi;
+import com.tellpal.v2.content.api.AdminStoryPageView;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -61,6 +64,9 @@ class ContentAdminControllerTest {
 
     @MockitoBean
     private StoryPageManagementService storyPageManagementService;
+
+    @MockitoBean
+    private AdminStoryPageQueryApi adminStoryPageQueryApi;
 
     @MockitoBean
     private ContentPublicationService contentPublicationService;
@@ -249,6 +255,62 @@ class ContentAdminControllerTest {
     }
 
     @Test
+    void listStoryPagesReturnsPageMetadataAndLocalizedPayloads() throws Exception {
+        when(adminStoryPageQueryApi.listStoryPages(51L)).thenReturn(List.of(new AdminStoryPageView(
+                51L,
+                1,
+                88L,
+                1,
+                List.of(new AdminStoryPageLocalizationView(
+                        51L,
+                        1,
+                        LanguageCode.TR,
+                        "Bir varmis bir yokmus.",
+                        99L)))));
+
+        mockMvc.perform(get("/api/admin/contents/51/story-pages"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contentId").value(51))
+                .andExpect(jsonPath("$[0].pageNumber").value(1))
+                .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(99));
+    }
+
+    @Test
+    void getStoryPageReturnsMetadataAndLocalizedPayloads() throws Exception {
+        when(adminStoryPageQueryApi.findStoryPage(51L, 2)).thenReturn(Optional.of(new AdminStoryPageView(
+                51L,
+                2,
+                77L,
+                1,
+                List.of(new AdminStoryPageLocalizationView(
+                        51L,
+                        2,
+                        LanguageCode.EN,
+                        "Look at the moon.",
+                        45L)))));
+
+        mockMvc.perform(get("/api/admin/contents/51/story-pages/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(51))
+                .andExpect(jsonPath("$.pageNumber").value(2))
+                .andExpect(jsonPath("$.illustrationMediaId").value(77))
+                .andExpect(jsonPath("$.localizations[0].languageCode").value("en"))
+                .andExpect(jsonPath("$.localizations[0].bodyText").value("Look at the moon."));
+    }
+
+    @Test
+    void missingStoryPageReturnsNotFoundProblemDetails() throws Exception {
+        when(adminStoryPageQueryApi.findStoryPage(51L, 4)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/admin/contents/51/story-pages/4"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Story page not found"))
+                .andExpect(jsonPath("$.errorCode").value("story_page_not_found"));
+    }
+
+    @Test
     void missingContentBecomesNotFoundProblemDetails() throws Exception {
         when(contentManagementService.updateContent(any())).thenThrow(new ContentNotFoundException(51L));
 
@@ -280,6 +342,17 @@ class ContentAdminControllerTest {
                                   "pageNumber": 1
                                 }
                                 """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Content state conflict"))
+                .andExpect(jsonPath("$.errorCode").value("content_state_conflict"));
+    }
+
+    @Test
+    void storyPageReadStateConflictBecomesConflictProblemDetails() throws Exception {
+        when(adminStoryPageQueryApi.listStoryPages(91L))
+                .thenThrow(new IllegalStateException("Story pages can only be managed for STORY content"));
+
+        mockMvc.perform(get("/api/admin/contents/91/story-pages"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Content state conflict"))
                 .andExpect(jsonPath("$.errorCode").value("content_state_conflict"));

@@ -69,6 +69,12 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         mockMvc.perform(get("/api/admin/contents/1"))
                 .andExpect(status().isUnauthorized());
 
+        mockMvc.perform(get("/api/admin/contents/1/story-pages"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/admin/contents/1/story-pages/1"))
+                .andExpect(status().isUnauthorized());
+
         mockMvc.perform(delete("/api/admin/contents/1"))
                 .andExpect(status().isUnauthorized());
     }
@@ -267,6 +273,81 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void listAndGetStoryPagesReturnLocalizedPagePayloadsForStoryContent() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long illustrationMediaId = registerImageAsset("/content/story/moonlight/page-1.jpg");
+        Long audioMediaId = registerAudioAsset("/content/story/moonlight/page-1.mp3");
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "STORY",
+                                  "externalKey": "moonlight-story",
+                                  "ageRange": 5,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Ay Isigi",
+                                  "description": "Gece masali",
+                                  "status": "DRAFT",
+                                  "processingStatus": "PENDING"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/story-pages", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "pageNumber": 2,
+                                  "illustrationMediaId": %d
+                                }
+                                """.formatted(illustrationMediaId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/story-pages/2/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "bodyText": "Bir varmis bir yokmus.",
+                                  "audioMediaId": %d
+                                }
+                                """.formatted(audioMediaId)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contentId").value(contentId))
+                .andExpect(jsonPath("$[0].pageNumber").value(2))
+                .andExpect(jsonPath("$[0].illustrationMediaId").value(illustrationMediaId))
+                .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(audioMediaId));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages/2", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(contentId))
+                .andExpect(jsonPath("$.pageNumber").value(2))
+                .andExpect(jsonPath("$.localizations[0].bodyText").value("Bir varmis bir yokmus."));
+    }
+
+    @Test
     void deleteContentDeactivatesAggregateAndPreservesAdminReadAccess() throws Exception {
         String accessToken = authenticateAdmin();
 
@@ -318,6 +399,66 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$.errorCode").value("content_not_found"));
     }
 
+    @Test
+    void storyPageReadEndpointsReturnNotFoundAndConflictWhenParentStateIsInvalid() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(get("/api/admin/contents/999/story-pages")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_not_found"));
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "MEDITATION",
+                                  "externalKey": "quiet-breathing",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long nonStoryContentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages", nonStoryContentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("content_state_conflict"));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages/1", nonStoryContentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("content_state_conflict"));
+    }
+
+    @Test
+    void getMissingStoryPageReturnsNotFoundProblemDetails() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "STORY",
+                                  "externalKey": "missing-story-page",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages/9", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("story_page_not_found"));
+    }
+
     private Long registerImageAsset(String objectPath) {
         return assetRegistryApi.register(new RegisterMediaAssetCommand(
                 AssetStorageProvider.LOCAL_STUB,
@@ -325,6 +466,16 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 AssetKind.ORIGINAL_IMAGE,
                 "image/jpeg",
                 1024L,
+                SAMPLE_CHECKSUM)).assetId();
+    }
+
+    private Long registerAudioAsset(String objectPath) {
+        return assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.LOCAL_STUB,
+                objectPath,
+                AssetKind.ORIGINAL_AUDIO,
+                "audio/mpeg",
+                2048L,
                 SAMPLE_CHECKSUM)).assetId();
     }
 }

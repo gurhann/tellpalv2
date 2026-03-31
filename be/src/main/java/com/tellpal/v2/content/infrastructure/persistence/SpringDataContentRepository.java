@@ -27,6 +27,15 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long> {
             """)
     Optional<Content> findByIdForAdminRead(Long id);
 
+    @Query("""
+            select distinct content
+            from Content content
+            left join fetch content.storyPages storyPage
+            left join fetch storyPage.localizations
+            where content.id = :id
+            """)
+    Optional<Content> findByIdForStoryPageAdminRead(Long id);
+
     Optional<Content> findByExternalKey(String externalKey);
 
     boolean existsByExternalKey(String externalKey);

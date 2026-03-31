@@ -20,6 +20,12 @@ public interface ContentRepository {
     Optional<Content> findByIdForAdminRead(Long id);
 
     /**
+     * Loads one aggregate with its story pages and localized page payloads for admin story-page
+     * read flows.
+     */
+    Optional<Content> findByIdForStoryPageAdminRead(Long id);
+
+    /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */
     Optional<Content> findByExternalKey(String externalKey);

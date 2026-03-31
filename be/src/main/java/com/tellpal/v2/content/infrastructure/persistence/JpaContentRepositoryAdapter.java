@@ -29,6 +29,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
+    public Optional<Content> findByIdForStoryPageAdminRead(Long id) {
+        return repository.findByIdForStoryPageAdminRead(id);
+    }
+
+    @Override
     public Optional<Content> findByExternalKey(String externalKey) {
         return repository.findByExternalKey(externalKey);
     }
