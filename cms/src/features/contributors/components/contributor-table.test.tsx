@@ -54,4 +54,19 @@ describe("ContributorTable", () => {
     );
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  it("routes rename actions through the supplied callback", () => {
+    const onRenameContributor = vi.fn();
+
+    render(
+      <ContributorTable
+        contributors={contributorViewModels}
+        onRenameContributor={onRenameContributor}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole("button", { name: /rename/i })[0]!);
+
+    expect(onRenameContributor).toHaveBeenCalledWith(contributorViewModels[0]);
+  });
 });

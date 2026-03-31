@@ -1,6 +1,7 @@
-import { BadgeCheck, Signature } from "lucide-react";
+import { BadgeCheck, PencilLine, Signature } from "lucide-react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
+import { Button } from "@/components/ui/button";
 import type { ContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import type { ApiProblemDetail } from "@/types/api";
 
@@ -9,55 +10,94 @@ type ContributorTableProps = {
   isLoading?: boolean;
   problem?: ApiProblemDetail | null;
   onRetry?: () => void;
+  onRenameContributor?: (contributor: ContributorViewModel) => void;
+  isMutationPending?: boolean;
 };
 
-const contributorColumns: DataTableColumn<ContributorViewModel>[] = [
-  {
-    id: "contributor",
-    header: "Contributor",
-    cell: (contributor) => (
-      <div className="space-y-1">
-        <p className="font-medium text-foreground">{contributor.displayName}</p>
-        <p className="text-xs text-muted-foreground">
-          Contributor #{contributor.id}
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "initials",
-    header: "Initials",
-    cell: (contributor) => (
-      <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/25 px-3 py-1.5 text-sm font-medium text-foreground">
-        <Signature className="size-4 text-primary" />
-        {contributor.initials}
-      </div>
-    ),
-  },
-  {
-    id: "readiness",
-    header: "Assignment Readiness",
-    cell: () => (
-      <div className="space-y-1">
-        <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-          <BadgeCheck className="size-4 text-primary" />
-          Ready for content credits
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Rename and per-content assignment flows land in the next contributor
-          tasks.
-        </p>
-      </div>
-    ),
-  },
-];
+function createContributorColumns({
+  onRenameContributor,
+  isMutationPending,
+}: Pick<ContributorTableProps, "onRenameContributor" | "isMutationPending">) {
+  return [
+    {
+      id: "contributor",
+      header: "Contributor",
+      cell: (contributor) => (
+        <div className="space-y-1">
+          <p className="font-medium text-foreground">
+            {contributor.displayName}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Contributor #{contributor.id}
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "initials",
+      header: "Initials",
+      cell: (contributor) => (
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/25 px-3 py-1.5 text-sm font-medium text-foreground">
+          <Signature className="size-4 text-primary" />
+          {contributor.initials}
+        </div>
+      ),
+    },
+    {
+      id: "readiness",
+      header: "Assignment Readiness",
+      cell: () => (
+        <div className="space-y-1">
+          <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+            <BadgeCheck className="size-4 text-primary" />
+            Ready for content credits
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Create and rename are live. Per-content assignment lands in the next
+            contributor task.
+          </p>
+        </div>
+      ),
+    },
+    ...(onRenameContributor
+      ? [
+          {
+            id: "actions",
+            header: "Actions",
+            align: "right" as const,
+            cellClassName: "w-[1%]",
+            cell: (contributor: ContributorViewModel) => (
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isMutationPending}
+                  onClick={() => onRenameContributor(contributor)}
+                >
+                  <PencilLine className="size-4" />
+                  Rename
+                </Button>
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ] satisfies DataTableColumn<ContributorViewModel>[];
+}
 
 export function ContributorTable({
   contributors,
   isLoading = false,
   problem = null,
   onRetry,
+  onRenameContributor,
+  isMutationPending = false,
 }: ContributorTableProps) {
+  const contributorColumns = createContributorColumns({
+    onRenameContributor,
+    isMutationPending,
+  });
+
   return (
     <DataTable
       caption="Contributor table"
@@ -93,7 +133,7 @@ export function ContributorTable({
           </p>
         </div>
       }
-      tableClassName="[&_td:first-child]:w-[38%]"
+      tableClassName="[&_td:first-child]:w-[34%]"
     />
   );
 }

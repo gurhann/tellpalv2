@@ -8,9 +8,16 @@ import { ContributorsRoute } from "@/app/routes/contributors";
 const contributorHookMocks = vi.hoisted(() => ({
   useContributors: vi.fn(),
 }));
+const contributorActionMocks = vi.hoisted(() => ({
+  useContributorActions: vi.fn(),
+}));
 
 vi.mock("@/features/contributors/queries/use-contributors", () => ({
   useContributors: contributorHookMocks.useContributors,
+}));
+
+vi.mock("@/features/contributors/mutations/use-contributor-actions", () => ({
+  useContributorActions: contributorActionMocks.useContributorActions,
 }));
 
 function makeContributorState(overrides: Record<string, unknown> = {}) {
@@ -40,6 +47,19 @@ describe("ContributorsRoute", () => {
     contributorHookMocks.useContributors.mockReturnValue(
       makeContributorState(),
     );
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      createContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
+      renameContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
+      isPending: false,
+    });
 
     renderContributorRoute();
 
@@ -49,16 +69,30 @@ describe("ContributorsRoute", () => {
     expect(screen.getByRole("button", { name: /^refresh$/i })).toBeEnabled();
     expect(
       screen.getByRole("button", { name: /create contributor/i }),
-    ).toBeDisabled();
+    ).toBeEnabled();
     expect(screen.getByLabelText(/search contributors/i)).toBeDisabled();
     expect(screen.getByText("Annie Case")).toBeInTheDocument();
     expect(screen.getByText(/^Latest 12$/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /rename/i })).toHaveLength(3);
   });
 
   it("renders empty contributor state inline when no records exist", () => {
     contributorHookMocks.useContributors.mockReturnValue(
       makeContributorState({ contributors: [] }),
     );
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      createContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
+      renameContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
+      isPending: false,
+    });
 
     renderContributorRoute();
 
