@@ -340,3 +340,278 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   await page.getByRole("tab", { name: /english/i }).click();
   await expect(illustrationField).toHaveValue("51");
 });
+
+test("story pages can be added, localized, and deleted in one editor flow", async ({
+  page,
+}) => {
+  const session = makeSession();
+  const contentDetail: ContentReadResponse = {
+    contentId: 1,
+    type: "STORY",
+    externalKey: "story.evening-garden",
+    active: true,
+    ageRange: 5,
+    pageCount: 1,
+    localizations: [
+      {
+        contentId: 1,
+        languageCode: "en",
+        title: "Evening Garden",
+        description: "A calm walk through a moonlit garden.",
+        bodyText: null,
+        coverMediaId: null,
+        audioMediaId: null,
+        durationMinutes: 8,
+        status: "PUBLISHED",
+        processingStatus: "COMPLETED",
+        publishedAt: "2026-03-17T09:00:00Z",
+        visibleToMobile: true,
+      },
+      {
+        contentId: 1,
+        languageCode: "tr",
+        title: "Aksam Bahcesi",
+        description: "Aksam icin sakin bir uyku hikayesi.",
+        bodyText: null,
+        coverMediaId: null,
+        audioMediaId: null,
+        durationMinutes: 8,
+        status: "DRAFT",
+        processingStatus: "PROCESSING",
+        publishedAt: null,
+        visibleToMobile: false,
+      },
+    ],
+  };
+  const storyPages: StoryPageReadResponse[] = [
+    {
+      contentId: 1,
+      pageNumber: 1,
+      localizationCount: 2,
+      localizations: [
+        {
+          contentId: 1,
+          pageNumber: 1,
+          languageCode: "en",
+          bodyText: "Look at the moon over the garden gate.",
+          audioMediaId: 81,
+          illustrationMediaId: 41,
+        },
+        {
+          contentId: 1,
+          pageNumber: 1,
+          languageCode: "tr",
+          bodyText: "Bahce kapisinin ustundeki aya bak.",
+          audioMediaId: 82,
+          illustrationMediaId: 42,
+        },
+      ],
+    },
+  ];
+  const assets = [
+    makeAsset(41, "IMAGE", "/content/story/evening-garden/en/page-1.jpg"),
+    makeAsset(42, "IMAGE", "/content/story/evening-garden/tr/page-1.jpg"),
+    makeAsset(52, "IMAGE", "/content/story/evening-garden/tr/page-2.jpg"),
+    makeAsset(81, "AUDIO", "/content/story/evening-garden/en/page-1.mp3"),
+    makeAsset(82, "AUDIO", "/content/story/evening-garden/tr/page-1.mp3"),
+    makeAsset(84, "AUDIO", "/content/story/evening-garden/tr/page-2.mp3"),
+  ];
+
+  await page.addInitScript(() => {
+    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
+  });
+
+  await page.route("**/api/admin/auth/refresh", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(session),
+    });
+  });
+
+  await page.route("**/api/admin/contents/1", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        ...contentDetail,
+        pageCount: storyPages.length,
+      }),
+    });
+  });
+
+  await page.route("**/api/admin/contents/1/story-pages", async (route) => {
+    const request = route.request();
+
+    if (request.method() === "GET") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(storyPages),
+      });
+      return;
+    }
+
+    if (request.method() === "POST") {
+      const body = request.postDataJSON() as { pageNumber: number };
+      storyPages.push({
+        contentId: 1,
+        pageNumber: body.pageNumber,
+        localizationCount: 0,
+        localizations: [],
+      });
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          contentId: 1,
+          pageNumber: body.pageNumber,
+          localizationCount: 0,
+        }),
+      });
+      return;
+    }
+
+    await route.fallback();
+  });
+
+  await page.route("**/api/admin/contents/1/story-pages/2", async (route) => {
+    const request = route.request();
+
+    if (request.method() === "GET") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(
+          storyPages.find((entry) => entry.pageNumber === 2),
+        ),
+      });
+      return;
+    }
+
+    if (request.method() === "DELETE") {
+      const nextIndex = storyPages.findIndex((entry) => entry.pageNumber === 2);
+
+      if (nextIndex >= 0) {
+        storyPages.splice(nextIndex, 1);
+      }
+
+      await route.fulfill({
+        status: 204,
+        body: "",
+      });
+      return;
+    }
+
+    await route.fallback();
+  });
+
+  await page.route(
+    "**/api/admin/contents/1/story-pages/2/localizations/*",
+    async (route) => {
+      const request = route.request();
+
+      if (request.method() !== "PUT") {
+        await route.fallback();
+        return;
+      }
+
+      const payload = request.postDataJSON() as {
+        bodyText?: string | null;
+        audioMediaId?: number | null;
+        illustrationMediaId: number;
+      };
+      const languageCode = request.url().split("/").pop() ?? "tr";
+      const storyPage = storyPages.find((entry) => entry.pageNumber === 2)!;
+      const localization = {
+        contentId: 1,
+        pageNumber: 2,
+        languageCode,
+        bodyText: payload.bodyText ?? null,
+        audioMediaId: payload.audioMediaId ?? null,
+        illustrationMediaId: payload.illustrationMediaId,
+      };
+
+      storyPage.localizations.push(localization);
+      storyPage.localizationCount = storyPage.localizations.length;
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(localization),
+      });
+    },
+  );
+
+  await page.route("**/api/admin/media?**", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(assets),
+    });
+  });
+
+  await page.route("**/api/admin/media/*", async (route) => {
+    const assetId = Number(route.request().url().split("/").pop());
+    const asset = assets.find((entry) => entry.assetId === assetId);
+
+    await route.fulfill({
+      status: asset ? 200 : 404,
+      contentType: asset ? "application/json" : "application/problem+json",
+      body: JSON.stringify(
+        asset ?? {
+          type: "about:blank",
+          title: "Asset not found",
+          status: 404,
+          detail: `Asset ${assetId} was not found.`,
+          errorCode: "asset_not_found",
+          path: `/api/admin/media/${assetId}`,
+        },
+      ),
+    });
+  });
+
+  await page.goto("/contents/1/story-pages");
+
+  await expect(
+    page.getByRole("heading", { name: /story pages for evening garden/i }),
+  ).toBeVisible();
+  const storyPageTable = page.getByRole("table", { name: /story page table/i });
+
+  await page.getByRole("button", { name: /^add story page$/i }).click();
+  await page.getByLabel(/page number/i).fill("2");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /^add story page$/i })
+    .click();
+
+  await expect(
+    storyPageTable.getByText("Page 2", { exact: true }),
+  ).toBeVisible();
+
+  await storyPageTable
+    .getByRole("button", { name: /^edit$/i })
+    .nth(1)
+    .click();
+  await page.getByRole("tab", { name: /turkish/i }).click();
+  await page
+    .getByLabel(/body text/i)
+    .fill("Tilki gece bahcesindeki taslara yavasca yaklasir.");
+  await page.getByRole("button", { name: /asset #52/i }).click();
+  await page.getByRole("button", { name: /asset #84/i }).click();
+  await page.getByRole("button", { name: /create page localization/i }).click();
+
+  await expect(page.getByText(/illustration linked/i)).toBeVisible();
+  await page.getByRole("button", { name: /close editor/i }).click();
+
+  await storyPageTable
+    .getByRole("button", { name: /^delete$/i })
+    .nth(1)
+    .click();
+  await page.getByRole("button", { name: /delete page/i }).click();
+
+  await expect(storyPageTable.getByText("Page 2", { exact: true })).toHaveCount(
+    0,
+  );
+});
