@@ -237,21 +237,20 @@ class ContentAdminControllerTest {
 
     @Test
     void addStoryPageReturnsCreatedResponse() throws Exception {
-        when(storyPageManagementService.addStoryPage(any())).thenReturn(new StoryPageRecord(51L, 1, 88L, 0));
+        when(storyPageManagementService.addStoryPage(any())).thenReturn(new StoryPageRecord(51L, 1, 0));
 
         mockMvc.perform(post("/api/admin/contents/51/story-pages")
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "pageNumber": 1,
-                                  "illustrationMediaId": 88
+                                  "pageNumber": 1
                                 }
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/admin/contents/51/story-pages/1"))
                 .andExpect(jsonPath("$.contentId").value(51))
                 .andExpect(jsonPath("$.pageNumber").value(1))
-                .andExpect(jsonPath("$.illustrationMediaId").value(88));
+                .andExpect(jsonPath("$.localizationCount").value(0));
     }
 
     @Test
@@ -259,14 +258,14 @@ class ContentAdminControllerTest {
         when(adminStoryPageQueryApi.listStoryPages(51L)).thenReturn(List.of(new AdminStoryPageView(
                 51L,
                 1,
-                88L,
                 1,
                 List.of(new AdminStoryPageLocalizationView(
                         51L,
                         1,
                         LanguageCode.TR,
                         "Bir varmis bir yokmus.",
-                        99L)))));
+                        99L,
+                        88L)))));
 
         mockMvc.perform(get("/api/admin/contents/51/story-pages"))
                 .andExpect(status().isOk())
@@ -274,7 +273,8 @@ class ContentAdminControllerTest {
                 .andExpect(jsonPath("$[0].contentId").value(51))
                 .andExpect(jsonPath("$[0].pageNumber").value(1))
                 .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
-                .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(99));
+                .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(99))
+                .andExpect(jsonPath("$[0].localizations[0].illustrationMediaId").value(88));
     }
 
     @Test
@@ -282,22 +282,22 @@ class ContentAdminControllerTest {
         when(adminStoryPageQueryApi.findStoryPage(51L, 2)).thenReturn(Optional.of(new AdminStoryPageView(
                 51L,
                 2,
-                77L,
                 1,
                 List.of(new AdminStoryPageLocalizationView(
                         51L,
                         2,
                         LanguageCode.EN,
                         "Look at the moon.",
-                        45L)))));
+                        45L,
+                        77L)))));
 
         mockMvc.perform(get("/api/admin/contents/51/story-pages/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(51))
                 .andExpect(jsonPath("$.pageNumber").value(2))
-                .andExpect(jsonPath("$.illustrationMediaId").value(77))
                 .andExpect(jsonPath("$.localizations[0].languageCode").value("en"))
-                .andExpect(jsonPath("$.localizations[0].bodyText").value("Look at the moon."));
+                .andExpect(jsonPath("$.localizations[0].bodyText").value("Look at the moon."))
+                .andExpect(jsonPath("$.localizations[0].illustrationMediaId").value(77));
     }
 
     @Test

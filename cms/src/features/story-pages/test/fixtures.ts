@@ -8,7 +8,6 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
   {
     contentId: 1,
     pageNumber: 1,
-    illustrationMediaId: 41,
     localizationCount: 2,
     localizations: [
       {
@@ -17,6 +16,7 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
         languageCode: "en",
         bodyText: "Look at the moon over the garden gate.",
         audioMediaId: 81,
+        illustrationMediaId: 41,
       },
       {
         contentId: 1,
@@ -24,13 +24,13 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
         languageCode: "tr",
         bodyText: "Bahce kapisinin ustundeki aya bak.",
         audioMediaId: 82,
+        illustrationMediaId: 42,
       },
     ],
   },
   {
     contentId: 1,
     pageNumber: 2,
-    illustrationMediaId: null,
     localizationCount: 1,
     localizations: [
       {
@@ -39,6 +39,7 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
         languageCode: "en",
         bodyText: "The fox curls into a soft bed of leaves.",
         audioMediaId: 83,
+        illustrationMediaId: 43,
       },
     ],
   },

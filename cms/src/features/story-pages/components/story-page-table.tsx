@@ -1,4 +1,4 @@
-import { ImageIcon, Pencil, Trash2 } from "lucide-react";
+import { Languages, Pencil, Sparkles, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
@@ -60,36 +60,40 @@ function createColumns({
       ),
     },
     {
-      id: "illustration",
-      header: "Illustration",
+      id: "localizations",
+      header: "Localizations",
       cell: (storyPage) => (
         <div className="space-y-1">
           <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-            <ImageIcon className="size-4 text-primary" />
-            {storyPage.illustrationAssetId
-              ? `Asset #${storyPage.illustrationAssetId}`
-              : "Unassigned"}
+            <Languages className="size-4 text-primary" />
+            {getLocalizationSummary(storyPage).title}
           </p>
           <p className="text-xs text-muted-foreground">
-            {storyPage.hasIllustration
-              ? "Image reference is attached to this page."
-              : "No illustration asset is linked yet."}
+            {getLocalizationSummary(storyPage).detail}
           </p>
         </div>
       ),
     },
     {
-      id: "localizations",
-      header: "Localizations",
+      id: "illustrations",
+      header: "Illustration Coverage",
       cell: (storyPage) => {
-        const summary = getLocalizationSummary(storyPage);
+        const missingCodes = storyPage.localizations
+          .filter((localization) => !localization.hasIllustration)
+          .map((localization) => localization.languageCode.toUpperCase());
 
         return (
           <div className="space-y-1">
-            <p className="text-sm font-medium text-foreground">
-              {summary.title}
+            <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+              <Sparkles className="size-4 text-primary" />
+              {storyPage.illustratedLocalizationCount} /{" "}
+              {storyPage.localizationCount} locales
             </p>
-            <p className="text-xs text-muted-foreground">{summary.detail}</p>
+            <p className="text-xs text-muted-foreground">
+              {missingCodes.length === 0
+                ? "All localized page workspaces have their own illustration."
+                : `Missing illustrations for ${missingCodes.join(", ")}.`}
+            </p>
           </div>
         );
       },
@@ -143,6 +147,9 @@ export function StoryPageTable({
   const withLocalizations = storyPages.filter(
     (storyPage) => storyPage.localizationCount > 0,
   ).length;
+  const fullyIllustrated = storyPages.filter(
+    (storyPage) => storyPage.hasCompleteIllustrationCoverage,
+  ).length;
 
   if (problem && storyPages.length === 0 && !isLoading) {
     return (
@@ -179,14 +186,13 @@ export function StoryPageTable({
             {storyPages.length} page{storyPages.length === 1 ? "" : "s"}
           </p>
           <p className="text-xs text-muted-foreground">
-            {withLocalizations} localized /{" "}
-            {storyPages.length - withLocalizations} empty
+            {withLocalizations} localized / {fullyIllustrated} fully illustrated
           </p>
         </div>
       }
       toolbar={
         <FilterBarSummary
-          description="Page number, illustration attachment, and localization coverage are now bound to the admin story-page read endpoints."
+          description="Page number, localization coverage, and locale-specific illustration coverage are bound to the admin story-page read endpoints."
           title="Story page collection"
         />
       }

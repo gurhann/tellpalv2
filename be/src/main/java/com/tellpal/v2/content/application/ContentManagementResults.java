@@ -43,14 +43,11 @@ public final class ContentManagementResults {
     /**
      * Snapshot of one story page after a management operation.
      */
-    public record StoryPageRecord(Long contentId, int pageNumber, Long illustrationMediaId, int localizationCount) {
+    public record StoryPageRecord(Long contentId, int pageNumber, int localizationCount) {
 
         public StoryPageRecord {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
-            illustrationMediaId = normalizePositiveId(
-                    illustrationMediaId,
-                    "Illustration media ID must be positive");
             if (localizationCount < 0) {
                 throw new IllegalArgumentException("Localization count must not be negative");
             }
@@ -65,13 +62,17 @@ public final class ContentManagementResults {
             int pageNumber,
             LanguageCode languageCode,
             String bodyText,
-            Long audioMediaId) {
+            Long audioMediaId,
+            Long illustrationMediaId) {
 
         public StoryPageLocalizationRecord {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
             languageCode = requireLanguageCode(languageCode);
             audioMediaId = normalizePositiveId(audioMediaId, "Audio media ID must be positive");
+            illustrationMediaId = normalizePositiveId(
+                    illustrationMediaId,
+                    "Illustration media ID must be positive");
         }
     }
 

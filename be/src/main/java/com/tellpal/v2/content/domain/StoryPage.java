@@ -31,27 +31,19 @@ public class StoryPage extends BaseJpaEntity {
     @Column(name = "page_number", nullable = false)
     private int pageNumber;
 
-    @Column(name = "illustration_media_id")
-    private Long illustrationMediaId;
-
     @OneToMany(mappedBy = "storyPage", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StoryPageLocalization> localizations = new LinkedHashSet<>();
 
     protected StoryPage() {
     }
 
-    StoryPage(Content content, int pageNumber, Long illustrationMediaId) {
+    StoryPage(Content content, int pageNumber) {
         this.content = requireContent(content);
         this.pageNumber = requirePositive(pageNumber, "Story page number must be positive");
-        this.illustrationMediaId = normalizePositiveId(illustrationMediaId, "Illustration media ID must be positive");
     }
 
     public int getPageNumber() {
         return pageNumber;
-    }
-
-    public Long getIllustrationMediaId() {
-        return illustrationMediaId;
     }
 
     public Set<StoryPageLocalization> getLocalizations() {
@@ -65,24 +57,35 @@ public class StoryPage extends BaseJpaEntity {
                 .findFirst();
     }
 
-    public void updateIllustrationMediaId(Long illustrationMediaId) {
-        this.illustrationMediaId = normalizePositiveId(
-                illustrationMediaId,
-                "Illustration media ID must be positive");
-    }
-
     /**
-     * Creates or updates localized body and audio content for this page.
+     * Creates or updates localized body plus audio and illustration content for this page.
      */
-    public StoryPageLocalization upsertLocalization(LanguageCode languageCode, String bodyText, Long audioMediaId) {
+    public StoryPageLocalization upsertLocalization(
+            LanguageCode languageCode,
+            String bodyText,
+            Long audioMediaId,
+            Long illustrationMediaId) {
         StoryPageLocalization localization = findLocalization(languageCode)
-                .orElseGet(() -> createLocalization(languageCode));
-        localization.update(bodyText, audioMediaId);
+                .orElseGet(() -> createLocalization(
+                        languageCode,
+                        bodyText,
+                        audioMediaId,
+                        illustrationMediaId));
+        localization.update(bodyText, audioMediaId, illustrationMediaId);
         return localization;
     }
 
-    private StoryPageLocalization createLocalization(LanguageCode languageCode) {
-        StoryPageLocalization localization = new StoryPageLocalization(this, languageCode);
+    private StoryPageLocalization createLocalization(
+            LanguageCode languageCode,
+            String bodyText,
+            Long audioMediaId,
+            Long illustrationMediaId) {
+        StoryPageLocalization localization = new StoryPageLocalization(
+                this,
+                languageCode,
+                bodyText,
+                audioMediaId,
+                illustrationMediaId);
         localizations.add(localization);
         return localization;
     }
@@ -108,13 +111,4 @@ public class StoryPage extends BaseJpaEntity {
         return value;
     }
 
-    private static Long normalizePositiveId(Long value, String message) {
-        if (value == null) {
-            return null;
-        }
-        if (value <= 0) {
-            throw new IllegalArgumentException(message);
-        }
-        return value;
-    }
 }

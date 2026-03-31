@@ -88,13 +88,14 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
                 ProcessingStatus.PENDING,
                 null));
 
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1, illustrationMediaId));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
         storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
                 content.contentId(),
                 1,
                 LanguageCode.TR,
                 "Bir varmis bir yokmus.",
-                null));
+                null,
+                illustrationMediaId));
 
         assertThatThrownBy(() -> contentPublicationService.publishLocalization(
                 new PublishContentLocalizationCommand(
@@ -109,7 +110,8 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
                 1,
                 LanguageCode.TR,
                 "Bir varmis bir yokmus.",
-                pageAudioMediaId));
+                pageAudioMediaId,
+                illustrationMediaId));
 
         ContentLocalizationRecord published = contentPublicationService.publishLocalization(
                 new PublishContentLocalizationCommand(

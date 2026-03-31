@@ -106,10 +106,11 @@ stack.
 - Story page create:
   - `pageNumber`
 - Story page update:
-  - no body field is mandatory, but `illustrationMediaId` must be positive when present
+  - no request fields are currently required
 - Story page localization upsert:
   - no body field is mandatory at request-validation level
   - `audioMediaId` must be positive when present
+  - `illustrationMediaId` is required and must be positive
 
 ### Forbidden Combinations
 
@@ -135,8 +136,10 @@ stack.
   `status=PUBLISHED` and `processingStatus=COMPLETED`.
 - `coverMediaId` must reference an asset with media type `IMAGE`.
 - Content-level `audioMediaId` must reference an asset with media type `AUDIO`.
-- Story page `illustrationMediaId` must reference an asset with media type `IMAGE`.
+- Story page illustration ownership is localization-scoped. There is no page-level illustration
+  fallback at runtime.
 - Story page localization `audioMediaId` must reference an asset with media type `AUDIO`.
+- Story page localization `illustrationMediaId` must reference an asset with media type `IMAGE`.
 - Story pages can only be managed for `STORY` content. Trying to add, update, or remove story
   pages for other content types returns a content state conflict.
 - Story-page read endpoints also require `STORY` content. Listing or fetching story pages for
@@ -146,6 +149,8 @@ stack.
   already exist.
 - Story-page read endpoints return localized page payloads; the page collection is no longer
   limited to `pageCount` only.
+- Story-page read endpoints expose `illustrationMediaId` inside each localization payload, not on
+  the page root.
 
 ### Publication and Processing Preconditions
 
@@ -154,6 +159,7 @@ stack.
 - Story publication requires every story page to have a localization for the target language.
 - Story publication requires every localized story page to include `bodyText`.
 - Story publication requires every localized story page to include `audioMediaId`.
+- Story publication requires every localized story page to include `illustrationMediaId`.
 - Archive preserves the previous `publishedAt` timestamp instead of clearing it.
 - Processing status updates only replace the workflow flag on the localization. They do not bypass
   publication readiness rules.
@@ -184,6 +190,8 @@ stack.
   page mutation tests.
 - Story seed data must place narrative text and per-page audio in `story_page_localizations`,
   not in the content localization body fields.
+- Story seed data must also place page illustrations in `story_page_localizations`. Existing page
+  rows no longer own a shared illustration field.
 - Non-story content seed data should use a valid audio asset because `AUDIO_STORY`,
   `MEDITATION`, and `LULLABY` localizations require `audioMediaId`.
 - `LOCAL_STUB` assets are valid for local sample content and processing tests.
@@ -201,6 +209,11 @@ stack.
   exists for the same language.
 - Story-page list and detail screens should call the dedicated story-page read endpoints instead of
   relying on content detail to inline page collections.
+- Story-page create UI should collect only `pageNumber`; locale-specific illustration selection
+  belongs inside the localization editor.
+- Story-page localization forms must require an `IMAGE` illustration asset before save.
+- Story-page tables should summarize locale-level illustration coverage instead of showing a single
+  page-level illustration asset.
 - Publish buttons for story content should be gated by story-page completeness in the current
   language, otherwise the backend returns `content_state_conflict`.
 - Archive UI should preserve and display the last publish timestamp after archival.

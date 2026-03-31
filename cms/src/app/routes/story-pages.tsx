@@ -1,4 +1,4 @@
-import { ArrowLeft, ImageIcon, Layers3, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Images, Layers3, Plus, Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -28,18 +28,19 @@ import {
   LanguageTabs,
   type LanguageTabItem,
 } from "@/components/language/language-tabs";
+import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import type {
   ContentReadViewModel,
   StoryPageReadViewModel,
 } from "@/features/contents/model/content-view-model";
-import { ContentPageShell } from "@/features/contents/components/content-page-shell";
+import type {
+  AdminStoryPageLocalizationResponse,
+  AdminStoryPageResponse,
+} from "@/features/contents/api/story-page-admin";
 import { StoryPageLocalizationForm } from "@/features/story-pages/components/story-page-localization-form";
-import { StoryPageForm } from "@/features/story-pages/components/story-page-form";
 import { StoryPageTable } from "@/features/story-pages/components/story-page-table";
 import { StoryContentGuard } from "@/features/story-pages/guards/story-content-guard";
-import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
 import { useStoryPageActions } from "@/features/story-pages/mutations/use-story-page-actions";
-import { useRecentImageAssets } from "@/features/story-pages/queries/use-recent-image-assets";
 import {
   useStoryPage,
   useStoryPages,
@@ -47,14 +48,9 @@ import {
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
-import type {
-  AdminStoryPageLocalizationResponse,
-  AdminStoryPageResponse,
-} from "@/features/contents/api/story-page-admin";
 
 type StoryPageFieldErrors = {
   pageNumber?: string;
-  illustrationAssetId?: string;
 };
 
 function getFallbackProblem(error: unknown, detail: string): ApiProblemDetail {
@@ -94,38 +90,11 @@ function parseRequiredPositiveInteger(value: string, label: string) {
   };
 }
 
-function parseOptionalPositiveInteger(value: string, label: string) {
-  const trimmed = value.trim();
-
-  if (trimmed.length === 0) {
-    return {
-      error: null,
-      value: null,
-    };
-  }
-
-  const parsed = Number(trimmed);
-  if (!Number.isInteger(parsed) || parsed <= 0) {
-    return {
-      error: `${label} must be a positive integer.`,
-      value: null,
-    };
-  }
-
-  return {
-    error: null,
-    value: parsed,
-  };
-}
-
 type CreateStoryPageDialogProps = {
   open: boolean;
   isPending: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreate: (input: {
-    pageNumber: number;
-    illustrationMediaId: number | null;
-  }) => Promise<AdminStoryPageResponse>;
+  onCreate: (input: { pageNumber: number }) => Promise<AdminStoryPageResponse>;
 };
 
 function CreateStoryPageDialog({
@@ -135,14 +104,11 @@ function CreateStoryPageDialog({
   onCreate,
 }: CreateStoryPageDialogProps) {
   const [pageNumber, setPageNumber] = useState("");
-  const [illustrationAssetId, setIllustrationAssetId] = useState("");
   const [fieldErrors, setFieldErrors] = useState<StoryPageFieldErrors>({});
   const [problem, setProblem] = useState<ApiProblemDetail | null>(null);
-  const recentImageAssetsQuery = useRecentImageAssets({ enabled: open });
 
   function resetState() {
     setPageNumber("");
-    setIllustrationAssetId("");
     setFieldErrors({});
     setProblem(null);
   }
@@ -164,28 +130,10 @@ function CreateStoryPageDialog({
       pageNumber,
       "Page number",
     );
-    const parsedIllustrationAssetId = parseOptionalPositiveInteger(
-      illustrationAssetId,
-      "Illustration asset id",
-    );
 
-    const nextFieldErrors: StoryPageFieldErrors = {
-      pageNumber: parsedPageNumber.error ?? undefined,
-      illustrationAssetId: parsedIllustrationAssetId.error ?? undefined,
-    };
-
-    if (nextFieldErrors.pageNumber || nextFieldErrors.illustrationAssetId) {
-      setFieldErrors(nextFieldErrors);
-      return;
-    }
-
-    const illustrationAssetError = await validateIllustrationAssetId(
-      parsedIllustrationAssetId.value,
-    );
-
-    if (illustrationAssetError) {
+    if (parsedPageNumber.error) {
       setFieldErrors({
-        illustrationAssetId: illustrationAssetError,
+        pageNumber: parsedPageNumber.error,
       });
       return;
     }
@@ -194,7 +142,6 @@ function CreateStoryPageDialog({
       await toastMutation(
         onCreate({
           pageNumber: parsedPageNumber.value as number,
-          illustrationMediaId: parsedIllustrationAssetId.value,
         }),
         {
           loading: "Creating story page...",
@@ -206,20 +153,9 @@ function CreateStoryPageDialog({
     } catch (error) {
       if (error instanceof ApiClientError) {
         const serverFieldErrors = getProblemFieldErrors(error.problem);
-        if (
-          serverFieldErrors.pageNumber ||
-          serverFieldErrors.illustrationMediaId
-        ) {
+        if (serverFieldErrors.pageNumber) {
           setFieldErrors({
             pageNumber: serverFieldErrors.pageNumber,
-            illustrationAssetId: serverFieldErrors.illustrationMediaId,
-          });
-          return;
-        }
-
-        if (error.problem.errorCode === "asset_media_type_mismatch") {
-          setFieldErrors({
-            illustrationAssetId: error.problem.detail,
           });
           return;
         }
@@ -240,8 +176,9 @@ function CreateStoryPageDialog({
         <DialogHeader>
           <DialogTitle>Add story page</DialogTitle>
           <DialogDescription>
-            Create a new page number under this STORY record. Illustration media
-            is optional at this stage.
+            Create a new page number under this STORY record. Localized
+            illustrations are linked inside each language workspace after the
+            page exists.
           </DialogDescription>
         </DialogHeader>
 
@@ -268,61 +205,6 @@ function CreateStoryPageDialog({
             <FieldError error={fieldErrors.pageNumber} />
           </div>
 
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="story-page-create-illustration"
-            >
-              Illustration asset id
-            </label>
-            <Input
-              id="story-page-create-illustration"
-              inputMode="numeric"
-              min={1}
-              placeholder="Optional"
-              type="number"
-              value={illustrationAssetId}
-              onChange={(event) => setIllustrationAssetId(event.target.value)}
-              disabled={isPending}
-            />
-            <FieldError error={fieldErrors.illustrationAssetId} />
-            <p className="text-sm text-muted-foreground">
-              Leave blank when the page structure is ready but the illustration
-              asset has not been registered yet. When present, the asset must be
-              an `IMAGE`.
-            </p>
-            {recentImageAssetsQuery.assets.length > 0 ? (
-              <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Recent Image Assets
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {recentImageAssetsQuery.assets.map((asset) => (
-                    <Button
-                      key={asset.assetId}
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setIllustrationAssetId(String(asset.assetId))
-                      }
-                      disabled={isPending}
-                    >
-                      Asset #{asset.assetId}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-            {!recentImageAssetsQuery.isLoading &&
-            recentImageAssetsQuery.assets.length === 0 ? (
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
-                No recent image assets were found. Register an image asset in
-                Media before linking story illustrations.
-              </div>
-            ) : null}
-          </div>
-
           <DialogFooter>
             <Button
               type="button"
@@ -347,15 +229,12 @@ type EditStoryPageDialogProps = {
   pageNumber: number | null;
   isPending: boolean;
   onClose: () => void;
-  onUpdateStoryPage: (input: {
-    pageNumber: number;
-    illustrationMediaId: number | null;
-  }) => Promise<AdminStoryPageResponse>;
   onUpsertLocalization: (input: {
     pageNumber: number;
     languageCode: string;
     bodyText: string | null;
     audioMediaId: number | null;
+    illustrationMediaId: number;
   }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
@@ -370,27 +249,23 @@ function describeLocalizationState(
     };
   }
 
-  if (localization.hasBodyText && localization.hasAudioAsset) {
+  const missingParts = [
+    localization.hasBodyText ? null : "body copy",
+    localization.hasAudioAsset ? null : "audio",
+    localization.hasIllustration ? null : "illustration",
+  ].filter(Boolean) as string[];
+
+  if (missingParts.length === 0) {
     return {
       meta: "Ready",
-      description: "Body copy and audio binding are both present.",
+      description: "Body copy, audio, and illustration are all present.",
       tone: "success" as const,
-    };
-  }
-
-  if (!localization.hasBodyText && !localization.hasAudioAsset) {
-    return {
-      meta: "Incomplete",
-      description: "This language is missing both body copy and audio.",
-      tone: "warning" as const,
     };
   }
 
   return {
     meta: "Incomplete",
-    description: localization.hasBodyText
-      ? "Audio binding is still missing for this language."
-      : "Narrative body copy is still missing for this language.",
+    description: `Missing ${missingParts.join(", ")} for this language.`,
     tone: "warning" as const,
   };
 }
@@ -422,7 +297,6 @@ function EditStoryPageDialog({
   pageNumber,
   isPending,
   onClose,
-  onUpdateStoryPage,
   onUpsertLocalization,
 }: EditStoryPageDialogProps) {
   const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
@@ -445,7 +319,7 @@ function EditStoryPageDialog({
         <DialogHeader>
           <DialogTitle>Edit story page</DialogTitle>
           <DialogDescription>
-            Update page metadata plus localized body/audio payloads for page{" "}
+            Manage localized body, audio, and illustration payloads for page{" "}
             {pageNumber}.
           </DialogDescription>
         </DialogHeader>
@@ -463,11 +337,37 @@ function EditStoryPageDialog({
 
         {storyPage ? (
           <div className="grid gap-6">
-            <StoryPageForm
-              storyPage={storyPage}
-              isPending={isPending}
-              onSave={onUpdateStoryPage}
-            />
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                <p className="text-sm font-medium text-foreground">
+                  Page {storyPage.pageNumber}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Page numbers remain stable after creation.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                <p className="text-sm font-medium text-foreground">
+                  {storyPage.localizationCount} localization
+                  {storyPage.localizationCount === 1 ? "" : "s"}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Language workspaces inherit their allowed locales from the
+                  parent content detail route.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                <p className="text-sm font-medium text-foreground">
+                  {storyPage.illustratedLocalizationCount} localized
+                  illustration
+                  {storyPage.illustratedLocalizationCount === 1 ? "" : "s"}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Each language now carries its own illustration asset
+                  reference.
+                </p>
+              </div>
+            </div>
 
             <div className="space-y-4">
               <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
@@ -507,12 +407,18 @@ function EditStoryPageDialog({
                       contentLocalization={contentLocalization}
                       isPending={isPending}
                       storyPage={storyPage}
-                      onSave={({ languageCode, bodyText, audioMediaId }) =>
+                      onSave={({
+                        languageCode,
+                        bodyText,
+                        audioMediaId,
+                        illustrationMediaId,
+                      }) =>
                         onUpsertLocalization({
                           pageNumber: storyPage.pageNumber,
                           languageCode,
                           bodyText,
                           audioMediaId,
+                          illustrationMediaId,
                         })
                       }
                     />
@@ -644,9 +550,13 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
   const localizedStoryPageCount = storyPages.filter(
     (storyPage) => storyPage.localizationCount > 0,
   ).length;
-  const illustrationCount = storyPages.filter(
-    (storyPage) => storyPage.hasIllustration,
+  const fullyIllustratedStoryPageCount = storyPages.filter(
+    (storyPage) => storyPage.hasCompleteIllustrationCoverage,
   ).length;
+  const illustratedLocalizationCount = storyPages.reduce(
+    (count, storyPage) => count + storyPage.illustratedLocalizationCount,
+    0,
+  );
   const isMutating = storyPageActions.isPending;
 
   return (
@@ -654,7 +564,7 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
       <ContentPageShell
         eyebrow="Story Editor"
         title={routeTitle}
-        description="The story page collection is bound to the admin API. Page metadata, localized body copy, and audio bindings now share the same editor flow."
+        description="The story page collection is bound to the admin API. Localized body copy, audio bindings, and language-specific illustrations now share the same editor flow."
         actions={
           <>
             <Button asChild type="button" variant="outline">
@@ -707,12 +617,13 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
                 Illustration Coverage
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {illustrationCount} illustration
-                {illustrationCount === 1 ? "" : "s"} attached
+                {illustratedLocalizationCount} localized illustration
+                {illustratedLocalizationCount === 1 ? "" : "s"} attached
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Update page-level illustration references from the table
-                actions.
+                {fullyIllustratedStoryPageCount} page
+                {fullyIllustratedStoryPageCount === 1 ? "" : "s"} already have
+                full locale-level illustration coverage.
               </p>
             </div>
           </div>
@@ -734,7 +645,8 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
                     Dedicated story-page GET endpoints now return page metadata
-                    and localized page payload summaries.
+                    and localized page payload summaries, including
+                    locale-specific illustration assets.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
@@ -742,9 +654,8 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
                     Publication dependency
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Story publication still depends on every page having a
-                    complete localization with body copy and audio in the target
-                    language.
+                    Story publication still depends on every page having body
+                    copy, audio, and illustration in the target language.
                   </p>
                 </div>
               </CardContent>
@@ -761,7 +672,8 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Per-page language workspaces now inherit their allowed
-                  languages from the parent content localizations.
+                  languages from the parent content localizations and carry
+                  their own illustration asset.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   `M04-T04` will lock the full story-page editor flow with
@@ -798,8 +710,8 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
           <CardHeader>
             <CardTitle>Editor Surface</CardTitle>
             <CardDescription>
-              Story page editing now covers page metadata plus per-language body
-              and audio payloads.
+              Story page editing now covers per-language body, audio, and
+              illustration payloads.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 lg:grid-cols-3">
@@ -809,18 +721,18 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
                 Add pages
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Reserve the next page number in the story structure with an
-                optional illustration asset reference.
+                Reserve the next page number in the story structure before
+                opening localized workspaces.
               </p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <ImageIcon className="size-4 text-primary" />
-                Update illustration
+                <Images className="size-4 text-primary" />
+                Localize illustrations
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Adjust or clear page-level illustration asset links directly
-                inside the page editor.
+                Each locale now owns its own illustration asset so text baked
+                into images can vary by language.
               </p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
@@ -830,7 +742,7 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
               </div>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Each parent content locale gets its own story page workspace
-                with body copy and audio binding validation.
+                with body copy, audio binding, and illustration validation.
               </p>
             </div>
           </CardContent>
@@ -844,7 +756,6 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
         onCreate={(input) =>
           storyPageActions.addStoryPage.mutateAsync({
             pageNumber: input.pageNumber,
-            illustrationMediaId: input.illustrationMediaId,
           })
         }
       />
@@ -855,14 +766,6 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
         pageNumber={editingPageNumber}
         isPending={storyPageActions.isPending}
         onClose={() => setEditingPageNumber(null)}
-        onUpdateStoryPage={(input) =>
-          storyPageActions.updateStoryPage.mutateAsync({
-            pageNumber: input.pageNumber,
-            input: {
-              illustrationMediaId: input.illustrationMediaId,
-            },
-          })
-        }
         onUpsertLocalization={(input) =>
           storyPageActions.upsertStoryPageLocalization.mutateAsync({
             pageNumber: input.pageNumber,
@@ -870,6 +773,7 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
             input: {
               bodyText: input.bodyText,
               audioMediaId: input.audioMediaId,
+              illustrationMediaId: input.illustrationMediaId,
             },
           })
         }

@@ -81,9 +81,7 @@ export type ContentReadViewModel = {
 export type StoryPageViewModel = {
   contentId: number;
   pageNumber: number;
-  illustrationAssetId: number | null;
   localizationCount: number;
-  hasIllustration: boolean;
   hasLocalizations: boolean;
 };
 
@@ -94,14 +92,19 @@ export type StoryPageLocalizationViewModel = {
   languageLabel: string;
   bodyText: string | null;
   audioAssetId: number | null;
+  illustrationAssetId: number;
   hasBodyText: boolean;
   hasAudioAsset: boolean;
+  hasIllustration: boolean;
 };
 
 export type StoryPageReadViewModel = StoryPageViewModel & {
   localizations: StoryPageLocalizationViewModel[];
   primaryLocalization: StoryPageLocalizationViewModel | null;
   languageCodes: string[];
+  illustratedLocalizationCount: number;
+  missingIllustrationCount: number;
+  hasCompleteIllustrationCoverage: boolean;
 };
 
 export function createContentReadViewModel(
@@ -204,9 +207,7 @@ export function mapAdminStoryPage(
   return {
     contentId: storyPage.contentId,
     pageNumber: storyPage.pageNumber,
-    illustrationAssetId: storyPage.illustrationMediaId,
     localizationCount: storyPage.localizationCount,
-    hasIllustration: storyPage.illustrationMediaId !== null,
     hasLocalizations: storyPage.localizationCount > 0,
   };
 }
@@ -221,6 +222,10 @@ export function createStoryPageReadViewModel(
   storyPage: StoryPageViewModel,
   localizations: StoryPageLocalizationViewModel[] = [],
 ): StoryPageReadViewModel {
+  const illustratedLocalizationCount = localizations.filter(
+    (localization) => localization.hasIllustration,
+  ).length;
+
   return {
     ...storyPage,
     localizations,
@@ -228,6 +233,12 @@ export function createStoryPageReadViewModel(
     languageCodes: localizations.map(
       (localization) => localization.languageCode,
     ),
+    illustratedLocalizationCount,
+    missingIllustrationCount:
+      storyPage.localizationCount - illustratedLocalizationCount,
+    hasCompleteIllustrationCoverage:
+      storyPage.localizationCount > 0 &&
+      illustratedLocalizationCount === storyPage.localizationCount,
   };
 }
 
@@ -258,7 +269,9 @@ export function mapAdminStoryPageLocalization(
     languageLabel: language.label,
     bodyText: localization.bodyText,
     audioAssetId: localization.audioMediaId,
+    illustrationAssetId: localization.illustrationMediaId,
     hasBodyText: Boolean(localization.bodyText?.trim()),
     hasAudioAsset: localization.audioMediaId !== null,
+    hasIllustration: localization.illustrationMediaId > 0,
   };
 }

@@ -16,7 +16,6 @@ final class StoryPageAdminQueryMapper {
         return new AdminStoryPageView(
                 contentId,
                 storyPage.getPageNumber(),
-                storyPage.getIllustrationMediaId(),
                 storyPage.getLocalizations().size(),
                 storyPage.getLocalizations().stream()
                         .sorted(Comparator.comparing(localization -> localization.getLanguageCode().value()))
@@ -33,6 +32,7 @@ final class StoryPageAdminQueryMapper {
                 pageNumber,
                 localization.getLanguageCode(),
                 localization.getBodyText(),
-                localization.getAudioMediaId());
+                localization.getAudioMediaId(),
+                localization.getIllustrationMediaId());
     }
 }

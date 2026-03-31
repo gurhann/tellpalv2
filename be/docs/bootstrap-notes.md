@@ -61,6 +61,8 @@ Current content localization validation rules to remember:
   `content_localizations`.
 - `AUDIO_STORY` and `MEDITATION` localizations require `bodyText`.
 - Non-story localizations require an `audioMediaId`.
+- Story-page illustrations also belong in `story_page_localizations`.
+- Story-page localization save requires `illustrationMediaId`; there is no page-level fallback.
 - Local development can satisfy `audioMediaId` with `LOCAL_STUB`
   `ORIGINAL_AUDIO` assets in `media_assets`.
 - Story-page illustration editing also needs at least one `LOCAL_STUB`
@@ -70,6 +72,8 @@ Current content localization validation rules to remember:
 Recommended local CMS seed shape:
 
 - one active `STORY` with at least two localizations and multiple story pages
+- localized story pages should include locale-scoped image assets for every
+  language you want to publish
 - one active non-story content item with draft or processing localizations
 - one inactive content item to validate admin read and filtering behavior
 

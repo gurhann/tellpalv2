@@ -52,6 +52,11 @@ public final class ContentPublicationPolicy {
                         "Story page %d must include audio media for %s before publication"
                                 .formatted(storyPage.getPageNumber(), languageCode.value()));
             }
+            if (localization.getIllustrationMediaId() == null) {
+                throw new IllegalStateException(
+                        "Story page %d must include illustration media for %s before publication"
+                                .formatted(storyPage.getPageNumber(), languageCode.value()));
+            }
         }
     }
 

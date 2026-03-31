@@ -3,16 +3,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   storyPageAdminApi,
   type AddStoryPageInput,
-  type AdminStoryPageResponse,
   type AdminStoryPageLocalizationResponse,
-  type UpdateStoryPageInput,
+  type AdminStoryPageResponse,
 } from "@/features/contents/api/story-page-admin";
 import { queryKeys } from "@/lib/query-keys";
 
 type UseStoryPageActionsOptions = {
   contentId: number;
   onAddSuccess?: (storyPage: AdminStoryPageResponse) => void;
-  onUpdateSuccess?: (storyPage: AdminStoryPageResponse) => void;
   onDeleteSuccess?: (pageNumber: number) => void;
   onLocalizationSuccess?: (
     localization: AdminStoryPageLocalizationResponse,
@@ -22,7 +20,6 @@ type UseStoryPageActionsOptions = {
 export function useStoryPageActions({
   contentId,
   onAddSuccess,
-  onUpdateSuccess,
   onDeleteSuccess,
   onLocalizationSuccess,
 }: UseStoryPageActionsOptions) {
@@ -58,20 +55,6 @@ export function useStoryPageActions({
     },
   });
 
-  const updateStoryPage = useMutation({
-    mutationFn: async ({
-      pageNumber,
-      input,
-    }: {
-      pageNumber: number;
-      input: UpdateStoryPageInput;
-    }) => storyPageAdminApi.updateStoryPage(contentId, pageNumber, input),
-    onSuccess: async (storyPage) => {
-      await invalidateStoryPageQueries(storyPage.pageNumber);
-      onUpdateSuccess?.(storyPage);
-    },
-  });
-
   const removeStoryPage = useMutation({
     mutationFn: async (pageNumber: number) => {
       await storyPageAdminApi.removeStoryPage(contentId, pageNumber);
@@ -94,6 +77,7 @@ export function useStoryPageActions({
       input: {
         bodyText?: string | null;
         audioMediaId?: number | null;
+        illustrationMediaId: number;
       };
     }) =>
       storyPageAdminApi.upsertStoryPageLocalization(
@@ -119,12 +103,10 @@ export function useStoryPageActions({
 
   return {
     addStoryPage,
-    updateStoryPage,
     removeStoryPage,
     upsertStoryPageLocalization,
     isPending:
       addStoryPage.isPending ||
-      updateStoryPage.isPending ||
       removeStoryPage.isPending ||
       upsertStoryPageLocalization.isPending,
   };

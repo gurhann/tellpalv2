@@ -8,7 +8,8 @@ public record AdminStoryPageLocalizationResponse(
         int pageNumber,
         String languageCode,
         String bodyText,
-        Long audioMediaId) {
+        Long audioMediaId,
+        Long illustrationMediaId) {
 
     static AdminStoryPageLocalizationResponse from(StoryPageLocalizationRecord record) {
         return new AdminStoryPageLocalizationResponse(
@@ -16,7 +17,8 @@ public record AdminStoryPageLocalizationResponse(
                 record.pageNumber(),
                 record.languageCode().value(),
                 record.bodyText(),
-                record.audioMediaId());
+                record.audioMediaId(),
+                record.illustrationMediaId());
     }
 
     static AdminStoryPageLocalizationResponse from(AdminStoryPageLocalizationView view) {
@@ -25,6 +27,7 @@ public record AdminStoryPageLocalizationResponse(
                 view.pageNumber(),
                 view.languageCode().value(),
                 view.bodyText(),
-                view.audioMediaId());
+                view.audioMediaId(),
+                view.illustrationMediaId());
     }
 }

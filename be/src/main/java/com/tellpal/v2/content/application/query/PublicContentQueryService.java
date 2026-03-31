@@ -121,14 +121,20 @@ public class PublicContentQueryService implements PublicContentQueryApi {
                 .flatMap(content -> visibleLocalization(content, requiredLanguageCode)
                         .map(localization -> content.getStoryPages().stream()
                                 .sorted(java.util.Comparator.comparingInt(StoryPage::getPageNumber))
-                                .map(storyPage -> PublicContentQueryMapper.toStoryPage(
+                                .map(storyPage -> {
+                                    com.tellpal.v2.content.domain.StoryPageLocalization storyPageLocalization =
+                                            storyPage.findLocalization(requiredLanguageCode).orElse(null);
+                                    return PublicContentQueryMapper.toStoryPage(
                                         content.getId(),
                                         localization.getLanguageCode(),
                                         storyPage,
-                                        loadAsset(storyPage.getIllustrationMediaId()),
-                                        loadAsset(storyPage.findLocalization(requiredLanguageCode)
-                                                .map(com.tellpal.v2.content.domain.StoryPageLocalization::getAudioMediaId)
-                                                .orElse(null))))
+                                        loadAsset(storyPageLocalization == null
+                                                ? null
+                                                : storyPageLocalization.getIllustrationMediaId()),
+                                        loadAsset(storyPageLocalization == null
+                                                ? null
+                                                : storyPageLocalization.getAudioMediaId()));
+                                })
                                 .toList()));
     }
 

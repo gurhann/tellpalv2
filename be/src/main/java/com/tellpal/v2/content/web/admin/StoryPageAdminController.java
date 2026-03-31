@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.List;
@@ -108,7 +109,7 @@ public class StoryPageAdminController {
     }
 
     @PutMapping("/{pageNumber}")
-    @Operation(summary = "Update a story page", description = "Updates illustration metadata for one story page.")
+    @Operation(summary = "Update a story page", description = "Refreshes one story page snapshot after page-level edits.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Story page updated"),
             @ApiResponse(responseCode = "400", description = "Story page update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -159,28 +160,27 @@ public class StoryPageAdminController {
 
 record AddStoryPageRequest(
         @Positive(message = "pageNumber must be positive")
-        int pageNumber,
-        @Positive(message = "illustrationMediaId must be positive")
-        Long illustrationMediaId) {
+        int pageNumber) {
 
     AddStoryPageCommand toCommand(Long contentId) {
-        return new AddStoryPageCommand(contentId, pageNumber, illustrationMediaId);
+        return new AddStoryPageCommand(contentId, pageNumber);
     }
 }
 
-record UpdateStoryPageRequest(
-        @Positive(message = "illustrationMediaId must be positive")
-        Long illustrationMediaId) {
+record UpdateStoryPageRequest() {
 
     UpdateStoryPageCommand toCommand(Long contentId, int pageNumber) {
-        return new UpdateStoryPageCommand(contentId, pageNumber, illustrationMediaId);
+        return new UpdateStoryPageCommand(contentId, pageNumber);
     }
 }
 
 record UpsertStoryPageLocalizationRequest(
         String bodyText,
         @Positive(message = "audioMediaId must be positive")
-        Long audioMediaId) {
+        Long audioMediaId,
+        @NotNull(message = "illustrationMediaId is required")
+        @Positive(message = "illustrationMediaId must be positive")
+        Long illustrationMediaId) {
 
     UpsertStoryPageLocalizationCommand toCommand(Long contentId, int pageNumber, String languageCode) {
         return new UpsertStoryPageLocalizationCommand(
@@ -188,6 +188,7 @@ record UpsertStoryPageLocalizationRequest(
                 pageNumber,
                 LanguageCode.from(languageCode),
                 bodyText,
-                audioMediaId);
+                audioMediaId,
+                illustrationMediaId);
     }
 }

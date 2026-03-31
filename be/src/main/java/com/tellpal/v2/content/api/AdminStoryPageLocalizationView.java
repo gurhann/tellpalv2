@@ -10,7 +10,8 @@ public record AdminStoryPageLocalizationView(
         int pageNumber,
         LanguageCode languageCode,
         String bodyText,
-        Long audioMediaId) {
+        Long audioMediaId,
+        Long illustrationMediaId) {
 
     public AdminStoryPageLocalizationView {
         if (contentId == null || contentId <= 0) {
@@ -21,6 +22,9 @@ public record AdminStoryPageLocalizationView(
         }
         if (languageCode == null) {
             throw new IllegalArgumentException("Language code must not be null");
+        }
+        if (illustrationMediaId == null || illustrationMediaId <= 0) {
+            throw new IllegalArgumentException("Illustration media ID must be positive");
         }
     }
 }

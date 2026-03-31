@@ -164,12 +164,12 @@ public class Content extends BaseJpaEntity {
     /**
      * Adds a story page and updates aggregate-owned page count.
      */
-    public StoryPage addStoryPage(int pageNumber, Long illustrationMediaId) {
+    public StoryPage addStoryPage(int pageNumber) {
         ensureStoryType();
         if (storyPages.stream().anyMatch(page -> page.getPageNumber() == pageNumber)) {
             throw new IllegalArgumentException("Story page number must be unique within a content item");
         }
-        StoryPage storyPage = new StoryPage(this, pageNumber, illustrationMediaId);
+        StoryPage storyPage = new StoryPage(this, pageNumber);
         storyPages.add(storyPage);
         syncPageCount();
         return storyPage;

@@ -127,24 +127,22 @@ public final class ContentManagementCommands {
     /**
      * Command for adding a story page.
      */
-    public record AddStoryPageCommand(Long contentId, int pageNumber, Long illustrationMediaId) {
+    public record AddStoryPageCommand(Long contentId, int pageNumber) {
 
         public AddStoryPageCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
-            illustrationMediaId = normalizePositiveId(illustrationMediaId, "Illustration media ID must be positive");
         }
     }
 
     /**
      * Command for updating one story page.
      */
-    public record UpdateStoryPageCommand(Long contentId, int pageNumber, Long illustrationMediaId) {
+    public record UpdateStoryPageCommand(Long contentId, int pageNumber) {
 
         public UpdateStoryPageCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
-            illustrationMediaId = normalizePositiveId(illustrationMediaId, "Illustration media ID must be positive");
         }
     }
 
@@ -167,13 +165,17 @@ public final class ContentManagementCommands {
             int pageNumber,
             LanguageCode languageCode,
             String bodyText,
-            Long audioMediaId) {
+            Long audioMediaId,
+            Long illustrationMediaId) {
 
         public UpsertStoryPageLocalizationCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
             languageCode = requireLanguageCode(languageCode);
             audioMediaId = normalizePositiveId(audioMediaId, "Audio media ID must be positive");
+            illustrationMediaId = requirePositiveId(
+                    illustrationMediaId,
+                    "Illustration media ID must be positive");
         }
     }
 

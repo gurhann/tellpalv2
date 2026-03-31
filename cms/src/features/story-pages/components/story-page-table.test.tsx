@@ -6,7 +6,7 @@ import { storyPageViewModels } from "@/features/story-pages/test/fixtures";
 import { StoryPageTable } from "./story-page-table";
 
 describe("StoryPageTable", () => {
-  it("renders page number, illustration, and localization summary columns", () => {
+  it("renders page number, localization, and illustration coverage columns", () => {
     render(<StoryPageTable storyPages={storyPageViewModels} />);
 
     expect(screen.getByRole("columnheader", { name: /page/i })).toBeVisible();
@@ -17,8 +17,13 @@ describe("StoryPageTable", () => {
       screen.getByRole("columnheader", { name: /localizations/i }),
     ).toBeVisible();
     expect(screen.getByText("Page 1")).toBeVisible();
-    expect(screen.getByText("Asset #41")).toBeVisible();
     expect(screen.getByText("2 locales")).toBeVisible();
+    expect(screen.getByText("2 / 2 locales")).toBeVisible();
+    expect(
+      screen.getAllByText(
+        /all localized page workspaces have their own illustration/i,
+      ),
+    ).toHaveLength(2);
   });
 
   it("routes row actions through the supplied callbacks", () => {

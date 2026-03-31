@@ -36,7 +36,6 @@ final class ContentManagementMapper {
         return new StoryPageRecord(
                 contentId,
                 storyPage.getPageNumber(),
-                storyPage.getIllustrationMediaId(),
                 storyPage.getLocalizations().size());
     }
 
@@ -49,7 +48,8 @@ final class ContentManagementMapper {
                 pageNumber,
                 localization.getLanguageCode(),
                 localization.getBodyText(),
-                localization.getAudioMediaId());
+                localization.getAudioMediaId(),
+                localization.getIllustrationMediaId());
     }
 
     static ContributorRecord toContributorRecord(Contributor contributor) {

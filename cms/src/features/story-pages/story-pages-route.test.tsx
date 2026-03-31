@@ -94,7 +94,6 @@ describe("StoryPagesRoute", () => {
     });
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
-      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
@@ -125,7 +124,10 @@ describe("StoryPagesRoute", () => {
     ).toBeEnabled();
     expect(screen.getByText(/2 story pages live/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
-    expect(screen.getByText(/asset #41/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/3 localized illustrations attached/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/2 \/ 2 locales/i)).toBeInTheDocument();
     expect(screen.getAllByText(/story page collection/i)).not.toHaveLength(0);
   });
 
@@ -141,7 +143,6 @@ describe("StoryPagesRoute", () => {
     });
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
-      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
@@ -182,7 +183,6 @@ describe("StoryPagesRoute", () => {
     });
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
-      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
@@ -207,9 +207,12 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("heading", { name: /edit story page/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/localized page workspaces/i)).toBeInTheDocument();
+    expect(screen.getByText("Localized page workspaces")).toBeInTheDocument();
     expect(screen.getAllByText(/english/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/turkish/i).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByLabelText(/illustration asset id/i).length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getAllByRole("button", { name: /save page localization/i }).length,
     ).toBeGreaterThan(0);

@@ -6,22 +6,17 @@ const pageNumberSchema = z.number().int().positive();
 
 export type AddStoryPageInput = {
   pageNumber: number;
-  illustrationMediaId?: number | null;
-};
-
-export type UpdateStoryPageInput = {
-  illustrationMediaId?: number | null;
 };
 
 export type UpsertStoryPageLocalizationInput = {
   bodyText?: string | null;
   audioMediaId?: number | null;
+  illustrationMediaId: number;
 };
 
 export const adminStoryPageResponseSchema = z.object({
   contentId: z.number().int().positive(),
   pageNumber: pageNumberSchema,
-  illustrationMediaId: z.number().int().positive().nullable(),
   localizationCount: z.number().int().nonnegative(),
 });
 
@@ -31,6 +26,7 @@ export const adminStoryPageLocalizationResponseSchema = z.object({
   languageCode: z.string().min(1),
   bodyText: z.string().nullable(),
   audioMediaId: z.number().int().positive().nullable(),
+  illustrationMediaId: z.number().int().positive(),
 });
 
 export const adminStoryPageReadResponseSchema = adminStoryPageResponseSchema
@@ -76,19 +72,6 @@ export const storyPageAdminApi = {
       body: input,
       responseSchema: adminStoryPageResponseSchema,
     });
-  },
-  updateStoryPage(
-    contentId: number,
-    pageNumber: number,
-    input: UpdateStoryPageInput,
-  ) {
-    return apiClient.put<AdminStoryPageResponse>(
-      `${getBasePath(contentId)}/${pageNumber}`,
-      {
-        body: input,
-        responseSchema: adminStoryPageResponseSchema,
-      },
-    );
   },
   removeStoryPage(contentId: number, pageNumber: number) {
     return apiClient.delete<void>(`${getBasePath(contentId)}/${pageNumber}`);

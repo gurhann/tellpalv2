@@ -7,7 +7,6 @@ import com.tellpal.v2.content.api.AdminStoryPageView;
 public record AdminStoryPageReadResponse(
         Long contentId,
         int pageNumber,
-        Long illustrationMediaId,
         int localizationCount,
         List<AdminStoryPageLocalizationResponse> localizations) {
 
@@ -15,7 +14,6 @@ public record AdminStoryPageReadResponse(
         return new AdminStoryPageReadResponse(
                 view.contentId(),
                 view.pageNumber(),
-                view.illustrationMediaId(),
                 view.localizationCount(),
                 view.localizations().stream()
                         .map(AdminStoryPageLocalizationResponse::from)

@@ -21,6 +21,13 @@ final class ContentAssetReferenceValidator {
         requireAssetType(assetId, fieldName, AssetMediaType.IMAGE);
     }
 
+    void requireRequiredImageAsset(Long assetId, String fieldName) {
+        if (assetId == null) {
+            throw new IllegalArgumentException(fieldName + " must not be null");
+        }
+        requireAssetType(assetId, fieldName, AssetMediaType.IMAGE);
+    }
+
     void requireAudioAsset(Long assetId, String fieldName) {
         requireAssetType(assetId, fieldName, AssetMediaType.AUDIO);
     }

@@ -65,9 +65,10 @@ class ContentPublicationAdminIntegrationTest extends AdminApiIntegrationTestSupp
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "bodyText": "Bir varmis bir yokmus."
+                                  "bodyText": "Bir varmis bir yokmus.",
+                                  "illustrationMediaId": %d
                                 }
-                                """))
+                                """.formatted(illustrationMediaId)))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr/publish", contentId)
@@ -88,11 +89,13 @@ class ContentPublicationAdminIntegrationTest extends AdminApiIntegrationTestSupp
                         .content("""
                                 {
                                   "bodyText": "Bir varmis bir yokmus.",
-                                  "audioMediaId": %d
+                                  "audioMediaId": %d,
+                                  "illustrationMediaId": %d
                                 }
-                                """.formatted(audioMediaId)))
+                                """.formatted(audioMediaId, illustrationMediaId)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.audioMediaId").value(audioMediaId));
+                .andExpect(jsonPath("$.audioMediaId").value(audioMediaId))
+                .andExpect(jsonPath("$.illustrationMediaId").value(illustrationMediaId));
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr/publish", contentId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -164,10 +167,9 @@ class ContentPublicationAdminIntegrationTest extends AdminApiIntegrationTestSupp
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "pageNumber": 1,
-                                  "illustrationMediaId": %d
+                                  "pageNumber": 1
                                 }
-                                """.formatted(illustrationMediaId)))
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.pageNumber").value(1));
     }

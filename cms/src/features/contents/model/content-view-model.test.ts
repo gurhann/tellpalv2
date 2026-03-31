@@ -14,6 +14,7 @@ import {
   mapAdminContentLocalization,
   mapAdminContentSummaryToRead,
   mapAdminStoryPage,
+  mapAdminStoryPageRead,
   mapAdminStoryPageLocalization,
 } from "@/features/contents/model/content-view-model";
 
@@ -257,7 +258,6 @@ describe("content view model mappers", () => {
     const pageDto: AdminStoryPageResponse = {
       contentId: 14,
       pageNumber: 3,
-      illustrationMediaId: 55,
       localizationCount: 2,
     };
 
@@ -267,14 +267,13 @@ describe("content view model mappers", () => {
       languageCode: "en",
       bodyText: "Drift into the quiet forest.",
       audioMediaId: 89,
+      illustrationMediaId: 55,
     };
 
     expect(mapAdminStoryPage(pageDto)).toEqual({
       contentId: 14,
       pageNumber: 3,
-      illustrationAssetId: 55,
       localizationCount: 2,
-      hasIllustration: true,
       hasLocalizations: true,
     });
 
@@ -285,8 +284,85 @@ describe("content view model mappers", () => {
       languageLabel: "English",
       bodyText: "Drift into the quiet forest.",
       audioAssetId: 89,
+      illustrationAssetId: 55,
       hasBodyText: true,
       hasAudioAsset: true,
+      hasIllustration: true,
+    });
+  });
+
+  it("derives story page illustration coverage from localized payloads", () => {
+    expect(
+      mapAdminStoryPageRead({
+        contentId: 14,
+        pageNumber: 3,
+        localizationCount: 2,
+        localizations: [
+          {
+            contentId: 14,
+            pageNumber: 3,
+            languageCode: "en",
+            bodyText: "Drift into the quiet forest.",
+            audioMediaId: 89,
+            illustrationMediaId: 55,
+          },
+          {
+            contentId: 14,
+            pageNumber: 3,
+            languageCode: "tr",
+            bodyText: "Sessiz ormana dogru suzul.",
+            audioMediaId: 90,
+            illustrationMediaId: 56,
+          },
+        ],
+      }),
+    ).toEqual({
+      contentId: 14,
+      pageNumber: 3,
+      localizationCount: 2,
+      hasLocalizations: true,
+      localizations: [
+        {
+          contentId: 14,
+          pageNumber: 3,
+          languageCode: "en",
+          languageLabel: "English",
+          bodyText: "Drift into the quiet forest.",
+          audioAssetId: 89,
+          illustrationAssetId: 55,
+          hasBodyText: true,
+          hasAudioAsset: true,
+          hasIllustration: true,
+        },
+        {
+          contentId: 14,
+          pageNumber: 3,
+          languageCode: "tr",
+          languageLabel: "Turkish",
+          bodyText: "Sessiz ormana dogru suzul.",
+          audioAssetId: 90,
+          illustrationAssetId: 56,
+          hasBodyText: true,
+          hasAudioAsset: true,
+          hasIllustration: true,
+        },
+      ],
+      primaryLocalization: {
+        contentId: 14,
+        pageNumber: 3,
+        languageCode: "en",
+        languageLabel: "English",
+        bodyText: "Drift into the quiet forest.",
+        audioAssetId: 89,
+        illustrationAssetId: 55,
+        hasBodyText: true,
+        hasAudioAsset: true,
+        hasIllustration: true,
+      },
+      languageCodes: ["en", "tr"],
+      illustratedLocalizationCount: 2,
+      missingIllustrationCount: 0,
+      hasCompleteIllustrationCoverage: true,
     });
   });
 });

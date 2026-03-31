@@ -78,11 +78,9 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
     void storyPageOperationsKeepPageCountInSync() {
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "moonlight-story", 5, true));
-        Long firstIllustrationId = registerImageAsset("/content/story/moonlight/page-1.jpg");
-        Long secondIllustrationId = registerImageAsset("/content/story/moonlight/page-2.jpg");
 
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1, firstIllustrationId));
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 2, secondIllustrationId));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 2));
         storyPageManagementService.removeStoryPage(new RemoveStoryPageCommand(content.contentId(), 1));
 
         Integer pageCount = jdbcTemplate.queryForObject(

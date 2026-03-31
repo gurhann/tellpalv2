@@ -15,8 +15,12 @@ import type {
   ContentLocalizationViewModel,
   StoryPageReadViewModel,
 } from "@/features/contents/model/content-view-model";
-import { validateAudioAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
+import {
+  validateAudioAssetId,
+  validateIllustrationAssetId,
+} from "@/features/story-pages/lib/illustration-asset-validation";
 import { useRecentAudioAssets } from "@/features/story-pages/queries/use-recent-audio-assets";
+import { useRecentImageAssets } from "@/features/story-pages/queries/use-recent-image-assets";
 import {
   getStoryPageLocalizationFormDefaults,
   mapStoryPageLocalizationToFormValues,
@@ -33,6 +37,7 @@ type StoryPageLocalizationFormProps = {
     languageCode: string;
     bodyText: string | null;
     audioMediaId: number | null;
+    illustrationMediaId: number;
   }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
@@ -67,11 +72,14 @@ export function StoryPageLocalizationForm({
       : getStoryPageLocalizationFormDefaults(contentLocalization.languageCode),
   });
   const recentAudioAssetsQuery = useRecentAudioAssets();
+  const recentImageAssetsQuery = useRecentImageAssets();
   const bodyText = form.watch("bodyText");
   const audioMediaId = form.watch("audioMediaId");
+  const illustrationMediaId = form.watch("illustrationMediaId");
   const hasBodyText = Boolean(bodyText?.trim());
   const hasAudioAsset = audioMediaId !== null;
-  const isReadyForPublish = hasBodyText && hasAudioAsset;
+  const hasIllustration = typeof illustrationMediaId === "number";
+  const isReadyForPublish = hasBodyText && hasAudioAsset && hasIllustration;
 
   useEffect(() => {
     form.reset(
@@ -85,6 +93,26 @@ export function StoryPageLocalizationForm({
 
   async function handleSubmit(values: StoryPageLocalizationFormValues) {
     form.clearErrors();
+
+    if (values.illustrationMediaId === null) {
+      form.setError("illustrationMediaId", {
+        type: "server",
+        message: "Illustration asset id is required.",
+      });
+      return;
+    }
+
+    const illustrationMediaId = values.illustrationMediaId;
+    const illustrationAssetError =
+      await validateIllustrationAssetId(illustrationMediaId);
+
+    if (illustrationAssetError) {
+      form.setError("illustrationMediaId", {
+        type: "server",
+        message: illustrationAssetError,
+      });
+      return;
+    }
 
     const audioAssetError = await validateAudioAssetId(values.audioMediaId);
 
@@ -102,6 +130,7 @@ export function StoryPageLocalizationForm({
           languageCode: values.languageCode,
           bodyText: values.bodyText,
           audioMediaId: values.audioMediaId,
+          illustrationMediaId,
         }),
         {
           loading:
@@ -119,11 +148,17 @@ export function StoryPageLocalizationForm({
         languageCode: savedLocalization.languageCode,
         bodyText: savedLocalization.bodyText,
         audioMediaId: savedLocalization.audioMediaId,
+        illustrationMediaId: savedLocalization.illustrationMediaId,
       });
     } catch (error) {
       if (error instanceof ApiClientError) {
         if (error.problem.errorCode === "asset_media_type_mismatch") {
-          form.setError("audioMediaId", {
+          const targetField = error.problem.detail.includes(
+            "illustrationMediaId",
+          )
+            ? "illustrationMediaId"
+            : "audioMediaId";
+          form.setError(targetField, {
             type: "server",
             message: error.problem.detail,
           });
@@ -170,9 +205,18 @@ export function StoryPageLocalizationForm({
             {hasAudioAsset ? "Audio linked" : "Audio missing"}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
+            Audio must reference an `AUDIO` asset before this locale is
+            publication-ready.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+          <p className="text-sm font-medium text-foreground">
+            {hasIllustration ? "Illustration linked" : "Illustration missing"}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
             {isReadyForPublish
               ? "This page locale is ready for publication checks."
-              : "Story publication still needs both body copy and an audio asset."}
+              : "Story publication still needs body copy, audio, and a localized illustration."}
           </p>
         </div>
       </div>
@@ -195,6 +239,68 @@ export function StoryPageLocalizationForm({
           incomplete for publication.
         </p>
         <FieldError error={form.formState.errors.bodyText} />
+      </div>
+
+      <div className="space-y-2">
+        <label
+          className="text-sm font-medium text-foreground"
+          htmlFor={`story-page-illustration-${contentLocalization.languageCode}`}
+        >
+          Illustration asset id
+        </label>
+        <Input
+          id={`story-page-illustration-${contentLocalization.languageCode}`}
+          inputMode="numeric"
+          placeholder="Required"
+          type="number"
+          {...form.register("illustrationMediaId", {
+            setValueAs: (value) => {
+              if (value === "" || value === undefined || value === null) {
+                return null;
+              }
+
+              return Number(value);
+            },
+          })}
+          disabled={isPending}
+        />
+        <FieldError error={form.formState.errors.illustrationMediaId} />
+        <p className="text-sm text-muted-foreground">
+          Story page illustrations are language-scoped and must reference
+          `IMAGE` assets.
+        </p>
+        {recentImageAssetsQuery.assets.length > 0 ? (
+          <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Recent Image Assets
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {recentImageAssetsQuery.assets.map((asset) => (
+                <Button
+                  key={asset.assetId}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    form.setValue("illustrationMediaId", asset.assetId, {
+                      shouldDirty: true,
+                    })
+                  }
+                  disabled={isPending}
+                >
+                  Asset #{asset.assetId}
+                </Button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {!recentImageAssetsQuery.isLoading &&
+        recentImageAssetsQuery.assets.length === 0 ? (
+          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
+            No recent image assets were found. Register an image asset in Media
+            before saving this locale.
+          </div>
+        ) : null}
       </div>
 
       <div className="space-y-2">

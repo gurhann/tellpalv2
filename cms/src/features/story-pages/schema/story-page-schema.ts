@@ -1,10 +1,7 @@
 import { normalizeLanguageCode } from "@/lib/languages";
 import { z } from "zod";
 
-import type {
-  StoryPageLocalizationViewModel,
-  StoryPageReadViewModel,
-} from "@/features/contents/model/content-view-model";
+import type { StoryPageLocalizationViewModel } from "@/features/contents/model/content-view-model";
 
 function trimToNull(value: unknown) {
   if (typeof value !== "string") {
@@ -37,28 +34,12 @@ function parseNullableInteger(value: unknown) {
   return value;
 }
 
-export type StoryPageFormValues = {
-  illustrationMediaId: number | null;
-};
-
 export type StoryPageLocalizationFormValues = {
   languageCode: string;
   bodyText: string | null;
   audioMediaId: number | null;
+  illustrationMediaId: number | null;
 };
-
-export const storyPageSchema = z.object({
-  illustrationMediaId: z.preprocess(
-    parseNullableInteger,
-    z
-      .number({
-        error: "Illustration asset id must be a valid number.",
-      })
-      .int("Illustration asset id must be a whole number.")
-      .positive("Illustration asset id must be positive.")
-      .nullable(),
-  ),
-});
 
 export const storyPageLocalizationSchema = z.object({
   languageCode: z
@@ -77,15 +58,16 @@ export const storyPageLocalizationSchema = z.object({
       .positive("Audio asset id must be positive.")
       .nullable(),
   ),
+  illustrationMediaId: z.preprocess(
+    parseNullableInteger,
+    z
+      .number({
+        error: "Illustration asset id must be a valid number.",
+      })
+      .int("Illustration asset id must be a whole number.")
+      .positive("Illustration asset id must be positive."),
+  ),
 });
-
-export function mapStoryPageToFormValues(
-  storyPage: StoryPageReadViewModel,
-): StoryPageFormValues {
-  return {
-    illustrationMediaId: storyPage.illustrationAssetId,
-  };
-}
 
 export function getStoryPageLocalizationFormDefaults(
   languageCode: string,
@@ -94,6 +76,7 @@ export function getStoryPageLocalizationFormDefaults(
     languageCode: normalizeLanguageCode(languageCode),
     bodyText: null,
     audioMediaId: null,
+    illustrationMediaId: null,
   };
 }
 
@@ -104,5 +87,6 @@ export function mapStoryPageLocalizationToFormValues(
     languageCode: normalizeLanguageCode(localization.languageCode),
     bodyText: localization.bodyText,
     audioMediaId: localization.audioAssetId,
+    illustrationMediaId: localization.illustrationAssetId,
   };
 }

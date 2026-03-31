@@ -199,6 +199,94 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(extractContentIds(contentsPayload)).doesNotContain(hidden.contentId());
     }
 
+    @Test
+    void storyPagesResolveIllustrationPerRequestedLanguage() throws Exception {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "bilingual-story", 5, true));
+        Long trCoverMediaId = registerImageAsset("/content/story/bilingual-story/tr/original/cover.jpg");
+        Long enCoverMediaId = registerImageAsset("/content/story/bilingual-story/en/original/cover.jpg");
+        Long trIllustrationMediaId = registerImageAsset("/content/story/bilingual-story/tr/original/page-1.jpg");
+        Long enIllustrationMediaId = registerImageAsset("/content/story/bilingual-story/en/original/page-1.jpg");
+        Long trAudioMediaId = registerAudioAsset("/content/story/bilingual-story/tr/original/page-1.mp3");
+        Long enAudioMediaId = registerAudioAsset("/content/story/bilingual-story/en/original/page-1.mp3");
+
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(),
+                LanguageCode.TR,
+                "Iki dilli hikaye",
+                "Turkce aciklama",
+                null,
+                trCoverMediaId,
+                null,
+                null,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                PUBLISHED_AT));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(),
+                LanguageCode.EN,
+                "Bilingual story",
+                "English description",
+                null,
+                enCoverMediaId,
+                null,
+                null,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                PUBLISHED_AT));
+
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
+        storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
+                content.contentId(),
+                1,
+                LanguageCode.TR,
+                "Turkce sayfa metni.",
+                trAudioMediaId,
+                trIllustrationMediaId));
+        storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
+                content.contentId(),
+                1,
+                LanguageCode.EN,
+                "English page text.",
+                enAudioMediaId,
+                enIllustrationMediaId));
+
+        completeProcessing(new ScheduleAssetProcessingCommand(
+                content.contentId(),
+                LanguageCode.TR,
+                AssetProcessingContentType.STORY,
+                content.externalKey(),
+                trCoverMediaId,
+                null,
+                1));
+        completeProcessing(new ScheduleAssetProcessingCommand(
+                content.contentId(),
+                LanguageCode.EN,
+                AssetProcessingContentType.STORY,
+                content.externalKey(),
+                enCoverMediaId,
+                null,
+                1));
+
+        mockMvc.perform(get("/api/contents/{contentId}/pages", content.contentId())
+                        .queryParam("lang", "tr"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].bodyText").value("Turkce sayfa metni."))
+                .andExpect(jsonPath("$[0].illustration.objectPath")
+                        .value("/content/story/bilingual-story/tr/original/page-1.jpg"))
+                .andExpect(jsonPath("$[0].audio.objectPath")
+                        .value("/content/story/bilingual-story/tr/original/page-1.mp3"));
+
+        mockMvc.perform(get("/api/contents/{contentId}/pages", content.contentId())
+                        .queryParam("lang", "en"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].bodyText").value("English page text."))
+                .andExpect(jsonPath("$[0].illustration.objectPath")
+                        .value("/content/story/bilingual-story/en/original/page-1.jpg"))
+                .andExpect(jsonPath("$[0].audio.objectPath")
+                        .value("/content/story/bilingual-story/en/original/page-1.mp3"));
+    }
+
     private Long createPublishedCategory(String slug, LanguageCode languageCode) {
         Long imageMediaId = registerImageAsset("/categories/%s/%s/image.jpg".formatted(slug, languageCode.value()));
         CategoryReference category = categoryManagementService.createCategory(
@@ -234,13 +322,14 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                 LocalizationStatus.PUBLISHED,
                 ProcessingStatus.PENDING,
                 PUBLISHED_AT));
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1, illustrationMediaId));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
         storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
                 content.contentId(),
                 1,
                 languageCode,
                 "Bir varmis bir yokmus.",
-                null));
+                null,
+                illustrationMediaId));
 
         completeProcessing(new ScheduleAssetProcessingCommand(
                 content.contentId(),

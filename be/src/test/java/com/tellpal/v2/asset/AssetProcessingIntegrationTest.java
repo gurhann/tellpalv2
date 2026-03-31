@@ -77,8 +77,6 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "moonlight-story", 5, true));
         Long coverSourceAssetId = registerImageAsset("/content/story/moonlight-story/tr/original/cover.jpg");
-        Long pageIllustrationAssetId = registerImageAsset("/content/story/moonlight-story/tr/original/page-1.jpg");
-
         contentManagementService.createLocalization(new CreateContentLocalizationCommand(
                 content.contentId(),
                 LanguageCode.TR,
@@ -93,8 +91,7 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 Instant.parse("2026-01-01T00:00:00Z")));
         storyPageManagementService.addStoryPage(new AddStoryPageCommand(
                 content.contentId(),
-                1,
-                pageIllustrationAssetId));
+                1));
 
         AssetProcessingRecord started = scheduleAndStart(new ScheduleAssetProcessingCommand(
                 content.contentId(),

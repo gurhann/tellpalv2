@@ -40,8 +40,7 @@ public class StoryPageManagementService {
     @Transactional
     public StoryPageRecord addStoryPage(AddStoryPageCommand command) {
         Content content = loadContent(command.contentId());
-        assetReferenceValidator.requireImageAsset(command.illustrationMediaId(), "illustrationMediaId");
-        StoryPage storyPage = content.addStoryPage(command.pageNumber(), command.illustrationMediaId());
+        StoryPage storyPage = content.addStoryPage(command.pageNumber());
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
                 contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
@@ -54,8 +53,6 @@ public class StoryPageManagementService {
     public StoryPageRecord updateStoryPage(UpdateStoryPageCommand command) {
         Content content = loadContent(command.contentId());
         StoryPage storyPage = loadStoryPage(content, command.pageNumber());
-        assetReferenceValidator.requireImageAsset(command.illustrationMediaId(), "illustrationMediaId");
-        storyPage.updateIllustrationMediaId(command.illustrationMediaId());
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
                 contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
@@ -81,10 +78,12 @@ public class StoryPageManagementService {
         loadContentLocalization(content, command.languageCode());
         StoryPage storyPage = loadStoryPage(content, command.pageNumber());
         assetReferenceValidator.requireAudioAsset(command.audioMediaId(), "audioMediaId");
+        assetReferenceValidator.requireRequiredImageAsset(command.illustrationMediaId(), "illustrationMediaId");
         StoryPageLocalization localization = storyPage.upsertLocalization(
                 command.languageCode(),
                 command.bodyText(),
-                command.audioMediaId());
+                command.audioMediaId(),
+                command.illustrationMediaId());
         StoryPage persistedContent = contentRepository.save(content)
                 .findStoryPage(command.pageNumber())
                 .orElse(storyPage);

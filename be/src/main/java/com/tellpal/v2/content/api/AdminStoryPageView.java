@@ -8,7 +8,6 @@ import java.util.List;
 public record AdminStoryPageView(
         Long contentId,
         int pageNumber,
-        Long illustrationMediaId,
         int localizationCount,
         List<AdminStoryPageLocalizationView> localizations) {
 

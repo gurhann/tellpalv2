@@ -13,7 +13,7 @@ import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 /**
  * Localized story-page content owned by a single story page.
  *
- * <p>Each localization carries body text and per-page audio for one language.
+ * <p>Each localization carries body text, audio, and illustration assets for one language.
  */
 @Entity
 @Table(name = "story_page_localizations")
@@ -32,12 +32,21 @@ public class StoryPageLocalization extends BaseJpaEntity {
     @Column(name = "audio_media_id")
     private Long audioMediaId;
 
+    @Column(name = "illustration_media_id", nullable = false)
+    private Long illustrationMediaId;
+
     protected StoryPageLocalization() {
     }
 
-    StoryPageLocalization(StoryPage storyPage, LanguageCode languageCode) {
+    StoryPageLocalization(
+            StoryPage storyPage,
+            LanguageCode languageCode,
+            String bodyText,
+            Long audioMediaId,
+            Long illustrationMediaId) {
         this.storyPage = requireStoryPage(storyPage);
         this.languageCode = requireLanguageCode(languageCode);
+        update(bodyText, audioMediaId, illustrationMediaId);
     }
 
     public LanguageCode getLanguageCode() {
@@ -52,12 +61,19 @@ public class StoryPageLocalization extends BaseJpaEntity {
         return audioMediaId;
     }
 
+    public Long getIllustrationMediaId() {
+        return illustrationMediaId;
+    }
+
     /**
-     * Replaces localized body text and audio metadata for this page.
+     * Replaces localized body text plus audio and illustration metadata for this page.
      */
-    public void update(String bodyText, Long audioMediaId) {
+    public void update(String bodyText, Long audioMediaId, Long illustrationMediaId) {
         this.bodyText = normalizeOptionalText(bodyText);
         this.audioMediaId = normalizePositiveId(audioMediaId);
+        this.illustrationMediaId = requirePositiveId(
+                illustrationMediaId,
+                "Illustration media ID must be positive");
     }
 
     private static StoryPage requireStoryPage(StoryPage storyPage) {
@@ -88,6 +104,13 @@ public class StoryPageLocalization extends BaseJpaEntity {
         }
         if (value <= 0) {
             throw new IllegalArgumentException("Audio media ID must be positive");
+        }
+        return value;
+    }
+
+    private static Long requirePositiveId(Long value, String message) {
+        if (value == null || value <= 0) {
+            throw new IllegalArgumentException(message);
         }
         return value;
     }
