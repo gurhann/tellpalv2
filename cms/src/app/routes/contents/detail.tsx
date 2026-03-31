@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpenText, Layers3, LoaderCircle } from "lucide-react";
+import { ArrowRight, Layers3, LoaderCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -16,6 +16,7 @@ import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
+import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
 
@@ -167,19 +168,10 @@ export function ContentDetailRoute() {
       title={routeTitle}
       description={routeDescription}
       actions={
-        canOpenStoryPages ? (
-          <Button asChild variant="outline">
-            <Link to={`/contents/${parsedContentId}/story-pages`}>
-              <BookOpenText className="size-4" />
-              Open story pages
-            </Link>
-          </Button>
-        ) : (
-          <Button disabled type="button" variant="outline">
-            <BookOpenText className="size-4" />
-            Story pages unavailable
-          </Button>
-        )
+        <StoryPageEntryLink
+          canOpen={canOpenStoryPages}
+          contentId={parsedContentId}
+        />
       }
       toolbar={renderToolbar()}
       aside={
