@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { CategoriesIndexRoute } from "@/app/routes/categories-index";
-import { CategoryDetailRoute } from "@/app/routes/category-detail";
+import { CategoryDetailRoute } from "@/app/routes/categories/detail";
+import { CategoriesIndexRoute } from "@/app/routes/categories";
 import { ContentDetailRoute } from "@/app/routes/contents/detail";
 import { ContentsIndexRoute } from "@/app/routes/contents";
 import { ContributorsRoute } from "@/app/routes/contributors";

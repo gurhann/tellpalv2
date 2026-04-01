@@ -239,6 +239,53 @@ describe("CMS router auth flow", () => {
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
   });
 
+  it("renders the category studio shell for /categories", async () => {
+    renderRouter({
+      initialEntries: ["/categories"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /^categories$/i,
+        level: 1,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/category registry awaits bg02/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /create category/i }),
+    ).toBeDisabled();
+  });
+
+  it("renders the category detail shell for /categories/:categoryId", async () => {
+    renderRouter({
+      initialEntries: ["/categories/9"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: /category #9/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /open curation/i }),
+    ).toBeDisabled();
+    expect(
+      screen.getByText(/localization workspaces reserved/i),
+    ).toBeInTheDocument();
+  });
+
   it("logs out from the top bar and returns the user to /login", async () => {
     const logoutImpl = vi.fn().mockResolvedValue(undefined);
 
