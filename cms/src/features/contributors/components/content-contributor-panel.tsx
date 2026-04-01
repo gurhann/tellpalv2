@@ -12,7 +12,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
+import { contributorAdminBacklogDependencies } from "@/features/contributors/api/contributor-admin";
 import { AssignContributorDialog } from "@/features/contributors/components/assign-contributor-dialog";
+import { MissingActionsNote } from "@/features/contributors/components/missing-actions-note";
 import { useContentContributorAssignments } from "@/features/contributors/queries/use-content-contributor-assignments";
 
 type ContentContributorPanelProps = {
@@ -131,10 +133,17 @@ export function ContentContributorPanel({
             </div>
           )}
 
+          <MissingActionsNote
+            actionLabel="Unassign contributor"
+            dependencyCode={
+              contributorAdminBacklogDependencies.unassignContributor
+            }
+            description="The admin API still has no content-contributor unassign endpoint. This panel keeps successful current-session assignments visible, but it intentionally renders no remove button."
+          />
+
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
             <Layers3 className="size-3.5" />
-            Assignment create path is live; delete and unassign still wait for
-            backend support
+            Assignment create path is live; BG03 is still required for removal
           </div>
         </CardContent>
       </Card>

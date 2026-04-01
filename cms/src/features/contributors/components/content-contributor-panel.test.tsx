@@ -50,12 +50,17 @@ describe("ContentContributorPanel", () => {
       }),
     });
 
-    expect(screen.getByText(/current-session assignments?/i)).toBeVisible();
+    expect(
+      screen.getAllByText(/current-session assignments?/i)[0],
+    ).toBeVisible();
     expect(screen.getAllByText("Annie Case")).toHaveLength(2);
     expect(screen.getByText("M. Rivers")).toBeVisible();
     expect(screen.getByText("Author")).toBeVisible();
     expect(screen.getByText("Turkish")).toBeVisible();
     expect(screen.getByText("All languages")).toBeVisible();
+    expect(
+      screen.getByText(/unassign contributor unavailable until bg03/i),
+    ).toBeVisible();
   });
 
   it("keeps assignment enabled when the content has no localizations", () => {

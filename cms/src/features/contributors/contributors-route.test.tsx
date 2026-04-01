@@ -74,6 +74,9 @@ describe("ContributorsRoute", () => {
     expect(screen.getByText("Annie Case")).toBeInTheDocument();
     expect(screen.getByText(/^Latest 12$/i)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /rename/i })).toHaveLength(3);
+    expect(
+      screen.getByText(/delete contributor unavailable until bg03/i),
+    ).toBeInTheDocument();
   });
 
   it("renders empty contributor state inline when no records exist", () => {

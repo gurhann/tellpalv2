@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { ContributorFormDialog } from "@/features/contributors/components/contributor-form-dialog";
 import { ContributorTable } from "@/features/contributors/components/contributor-table";
+import { MissingActionsNote } from "@/features/contributors/components/missing-actions-note";
+import { contributorAdminBacklogDependencies } from "@/features/contributors/api/contributor-admin";
 import type { ContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import { useContributors } from "@/features/contributors/queries/use-contributors";
 
@@ -35,7 +37,7 @@ export function ContributorsRoute() {
       <ContentPageShell
         eyebrow="Contributor Registry"
         title="Contributors"
-        description="The contributor registry now loads the latest backend records. Create and rename flows are live, while content assignment lands next."
+        description="The contributor registry now loads the latest backend records. Create and rename flows are live, while delete stays explicitly blocked until backend support lands."
         actions={
           <>
             <Button
@@ -109,8 +111,15 @@ export function ContributorsRoute() {
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Content-level assignment enters through the content detail
-                  route in `M05-T03`.
+                  route and delete is intentionally absent until BG03 lands.
                 </div>
+                <MissingActionsNote
+                  actionLabel="Delete contributor"
+                  dependencyCode={
+                    contributorAdminBacklogDependencies.deleteContributor
+                  }
+                  description="The admin API still has no contributor delete endpoint. Registry rows intentionally expose create and rename only."
+                />
               </CardContent>
             </Card>
 
@@ -123,12 +132,12 @@ export function ContributorsRoute() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M05-T03` adds per-content assignment with role, language,
-                  credit name, and sort order.
+                  Per-content assignment with optional language scope is now
+                  live from the content detail route.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M05-T04` adds gap-aware placeholders for delete and unassign
-                  until backend endpoints arrive.
+                  Delete and unassign stay blocked behind BG03, so the CMS only
+                  renders explicit backlog notes instead of fake action buttons.
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
                   <UsersRound className="size-3.5" />
