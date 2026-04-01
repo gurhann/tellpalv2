@@ -1,11 +1,17 @@
 package com.tellpal.v2.category.api;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Module-facing lookup API for category identity and stable metadata.
  */
 public interface CategoryLookupApi {
+
+    /**
+     * Returns all categories visible to CMS operators, including inactive entries.
+     */
+    List<CategoryReference> listAll();
 
     /**
      * Finds a category by ID.

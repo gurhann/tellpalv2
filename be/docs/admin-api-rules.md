@@ -352,6 +352,7 @@ stack.
 ### Covered Admin Endpoints
 
 - `POST /api/admin/categories`
+- `GET /api/admin/categories`
 - `GET /api/admin/categories/{categoryId}`
 - `PUT /api/admin/categories/{categoryId}`
 - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}`
@@ -447,7 +448,6 @@ stack.
 
 ### Open Gaps and Unverified Items
 
-- There is no admin category list endpoint.
 - There is no admin category delete endpoint.
 - There is no admin read endpoint that returns category localizations or curated content collections.
 

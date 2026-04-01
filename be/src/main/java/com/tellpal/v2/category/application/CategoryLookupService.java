@@ -1,5 +1,6 @@
 package com.tellpal.v2.category.application;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +21,16 @@ public class CategoryLookupService implements CategoryLookupApi {
 
     public CategoryLookupService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+    }
+
+    /**
+     * Returns all categories for admin list screens, including inactive entries.
+     */
+    @Override
+    public List<CategoryReference> listAll() {
+        return categoryRepository.findAllForAdminRead().stream()
+                .map(CategoryApiMapper::toReference)
+                .toList();
     }
 
     /**

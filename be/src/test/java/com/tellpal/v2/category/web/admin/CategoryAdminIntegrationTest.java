@@ -1,5 +1,7 @@
 package com.tellpal.v2.category.web.admin;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -50,6 +52,47 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                     media_assets
                 restart identity cascade
                 """);
+    }
+
+    @Test
+    void categoryListReturnsActiveAndInactiveRecordsForAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "CONTENT",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "sleep-routines",
+                                  "type": "PARENT_GUIDANCE",
+                                  "premium": true,
+                                  "active": false
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].slug").value("featured-sleep"))
+                .andExpect(jsonPath("$[0].active").value(true))
+                .andExpect(jsonPath("$[1].slug").value("sleep-routines"))
+                .andExpect(jsonPath("$[1].active").value(false))
+                .andExpect(jsonPath("$[1].premium").value(true));
     }
 
     @Test

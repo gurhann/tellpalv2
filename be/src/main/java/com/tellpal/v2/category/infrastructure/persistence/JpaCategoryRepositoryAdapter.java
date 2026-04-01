@@ -38,6 +38,11 @@ public class JpaCategoryRepositoryAdapter implements CategoryRepository {
     }
 
     @Override
+    public List<Category> findAllForAdminRead() {
+        return repository.findAllByOrderByIdAsc();
+    }
+
+    @Override
     public Category save(Category category) {
         return repository.save(category);
     }

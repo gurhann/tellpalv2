@@ -1,5 +1,6 @@
 package com.tellpal.v2.category.web.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
@@ -50,6 +51,19 @@ public class CategoryAdminController {
             CategoryManagementService categoryManagementService) {
         this.categoryLookupApi = categoryLookupApi;
         this.categoryManagementService = categoryManagementService;
+    }
+
+    @GetMapping
+    @Operation(summary = "List categories", description = "Returns category metadata for CMS list screens, including inactive entries.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category list returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminCategoryResponse> listCategories() {
+        return categoryLookupApi.listAll().stream()
+                .map(AdminCategoryResponse::from)
+                .toList();
     }
 
     @PostMapping

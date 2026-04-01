@@ -29,6 +29,11 @@ public interface CategoryRepository {
     List<Category> findAllActive();
 
     /**
+     * Returns all categories visible to admin read surfaces, including inactive entries.
+     */
+    List<Category> findAllForAdminRead();
+
+    /**
      * Persists category metadata, localization changes and curated content links.
      */
     Category save(Category category);

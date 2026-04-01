@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -78,6 +79,22 @@ class CategoryAdminControllerTest {
                 .andExpect(jsonPath("$.categoryId").value(42))
                 .andExpect(jsonPath("$.type").value("CONTENT"))
                 .andExpect(jsonPath("$.slug").value("featured-sleep"));
+    }
+
+    @Test
+    void listCategoriesReturnsLookupResponses() throws Exception {
+        when(categoryLookupApi.listAll()).thenReturn(List.of(
+                new CategoryReference(42L, CategoryApiType.CONTENT, "featured-sleep", false, true),
+                new CategoryReference(43L, CategoryApiType.PARENT_GUIDANCE, "sleep-routines", true, false)));
+
+        mockMvc.perform(get("/api/admin/categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].categoryId").value(42))
+                .andExpect(jsonPath("$[0].slug").value("featured-sleep"))
+                .andExpect(jsonPath("$[0].active").value(true))
+                .andExpect(jsonPath("$[1].categoryId").value(43))
+                .andExpect(jsonPath("$[1].type").value("PARENT_GUIDANCE"))
+                .andExpect(jsonPath("$[1].active").value(false));
     }
 
     @Test

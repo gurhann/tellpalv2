@@ -14,4 +14,6 @@ interface SpringDataCategoryRepository extends JpaRepository<Category, Long> {
     boolean existsBySlug(String slug);
 
     List<Category> findAllByActiveTrue();
+
+    List<Category> findAllByOrderByIdAsc();
 }
