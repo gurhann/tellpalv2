@@ -57,6 +57,30 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void protectedCategoryEndpointsRequireAuthentication() throws Exception {
+        mockMvc.perform(post("/api/admin/categories")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "CONTENT",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/admin/categories"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/admin/categories/1"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/api/admin/categories/1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void categoryListReturnsActiveAndInactiveRecordsForAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
 
@@ -158,6 +182,21 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].categoryId").value(categoryId))
                 .andExpect(jsonPath("$[0].active").value(false));
+    }
+
+    @Test
+    void missingReadAndDeleteEndpointsReturnNotFoundForUnknownCategory() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(get("/api/admin/categories/999")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"));
+
+        mockMvc.perform(delete("/api/admin/categories/999")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"));
     }
 
     @Test

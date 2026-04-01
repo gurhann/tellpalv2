@@ -1,6 +1,7 @@
 package com.tellpal.v2.category.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +27,7 @@ import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
+import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryContentRecord;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryLocalizationRecord;
 import com.tellpal.v2.category.application.CategoryCurationService;
@@ -115,9 +117,33 @@ class CategoryAdminControllerTest {
     }
 
     @Test
+    void missingCategoryReturnsNotFoundProblemDetails() throws Exception {
+        when(categoryLookupApi.findById(42L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/admin/categories/42"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Category not found"))
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty());
+    }
+
+    @Test
     void deleteCategoryReturnsNoContent() throws Exception {
         mockMvc.perform(delete("/api/admin/categories/42"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteMissingCategoryReturnsNotFoundProblemDetails() throws Exception {
+        doThrow(new CategoryNotFoundException(42L))
+                .when(categoryManagementService)
+                .deleteCategory(any());
+
+        mockMvc.perform(delete("/api/admin/categories/42"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Category not found"))
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty());
     }
 
     @Test
