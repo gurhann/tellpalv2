@@ -10,8 +10,10 @@ export const categoryTypeOptions: Array<{
   value: CategoryType;
   label: string;
 }> = [
-  { value: "CONTENT", label: "Content" },
-  { value: "PARENT_GUIDANCE", label: "Parent Guidance" },
+  { value: "STORY", label: "Story" },
+  { value: "AUDIO_STORY", label: "Audio Story" },
+  { value: "MEDITATION", label: "Meditation" },
+  { value: "LULLABY", label: "Lullaby" },
 ];
 
 export const categoryFormSchema = z.object({
@@ -25,7 +27,7 @@ export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 
 export function getCreateCategoryFormDefaults(): CategoryFormValues {
   return {
-    type: "CONTENT",
+    type: "STORY",
     slug: "",
     premium: false,
     active: true,

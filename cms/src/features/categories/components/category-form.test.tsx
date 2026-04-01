@@ -55,6 +55,30 @@ beforeEach(() => {
 });
 
 describe("CategoryForm", () => {
+  it("shows content-aligned category type options", async () => {
+    render(
+      <CategoryForm
+        initialValues={{
+          type: "STORY",
+          slug: "",
+          premium: false,
+          active: true,
+        }}
+        mode="create"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("combobox", { name: /category type/i }));
+
+    expect(await screen.findByRole("option", { name: "Story" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Audio Story" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Meditation" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Lullaby" })).toBeVisible();
+    expect(
+      screen.queryByRole("option", { name: /parent guidance/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it("validates the slug before submit", async () => {
     const mutationState = makeSaveMutationState();
     saveCategoryHookMock.useSaveCategory.mockReturnValue(mutationState);
@@ -62,7 +86,7 @@ describe("CategoryForm", () => {
     render(
       <CategoryForm
         initialValues={{
-          type: "CONTENT",
+          type: "STORY",
           slug: "",
           premium: false,
           active: true,
@@ -94,7 +118,7 @@ describe("CategoryForm", () => {
     render(
       <CategoryForm
         initialValues={{
-          type: "CONTENT",
+          type: "STORY",
           slug: "",
           premium: false,
           active: true,
@@ -115,7 +139,7 @@ describe("CategoryForm", () => {
     const mutationState = makeSaveMutationState({
       mutateAsync: vi.fn().mockResolvedValue({
         categoryId: 7,
-        type: "CONTENT",
+        type: "STORY",
         slug: "featured-sleep-updated",
         premium: true,
         active: false,
@@ -127,7 +151,7 @@ describe("CategoryForm", () => {
       <CategoryForm
         categoryId={7}
         initialValues={{
-          type: "CONTENT",
+          type: "STORY",
           slug: "featured-sleep",
           premium: false,
           active: true,
@@ -143,7 +167,7 @@ describe("CategoryForm", () => {
 
     await waitFor(() => {
       expect(mutationState.mutateAsync).toHaveBeenCalledWith({
-        type: "CONTENT",
+        type: "STORY",
         slug: "featured-sleep-updated",
         premium: false,
         active: true,

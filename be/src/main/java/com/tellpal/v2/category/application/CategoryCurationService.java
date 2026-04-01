@@ -43,7 +43,10 @@ public class CategoryCurationService {
     public CategoryContentRecord addContent(AddCategoryContentCommand command) {
         Category category = loadCategory(command.categoryId());
         requirePublishedLocalization(category, command.languageCode());
-        contentReferenceValidator.requireCuratableContent(command.contentId(), command.languageCode());
+        contentReferenceValidator.requireCuratableContent(
+                category.getType(),
+                command.contentId(),
+                command.languageCode());
         CategoryContent categoryContent = category.addContent(
                 command.languageCode(),
                 command.contentId(),
@@ -62,7 +65,10 @@ public class CategoryCurationService {
         Category category = loadCategory(command.categoryId());
         requirePublishedLocalization(category, command.languageCode());
         loadCuratedContent(category, command.languageCode(), command.contentId());
-        contentReferenceValidator.requireCuratableContent(command.contentId(), command.languageCode());
+        contentReferenceValidator.requireCuratableContent(
+                category.getType(),
+                command.contentId(),
+                command.languageCode());
         CategoryContent categoryContent = category.updateContentOrder(
                 command.languageCode(),
                 command.contentId(),

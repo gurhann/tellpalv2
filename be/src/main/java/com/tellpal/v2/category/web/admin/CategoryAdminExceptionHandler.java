@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.AssetMediaTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.AssetReferenceNotFoundException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentNotFoundException;
+import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationAlreadyExistsException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotFoundException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
@@ -152,6 +153,18 @@ public class CategoryAdminExceptionHandler {
                 "Content localization not published",
                 exception.getMessage(),
                 "content_localization_not_published",
+                request);
+    }
+
+    @ExceptionHandler(CategoryContentTypeMismatchException.class)
+    ProblemDetail handleCategoryContentTypeMismatch(
+            CategoryContentTypeMismatchException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Category content type mismatch",
+                exception.getMessage(),
+                "category_content_type_mismatch",
                 request);
     }
 

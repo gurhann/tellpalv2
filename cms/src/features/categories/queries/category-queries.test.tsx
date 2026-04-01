@@ -82,7 +82,7 @@ describe("category queries", () => {
 
     expect(result.current.categories).toHaveLength(3);
     expect(result.current.categories[0]?.slug).toBe("featured-sleep");
-    expect(result.current.categories[1]?.typeLabel).toBe("Parent Guidance");
+    expect(result.current.categories[1]?.typeLabel).toBe("Meditation");
     expect(result.current.problem).toBeNull();
   });
 
@@ -134,7 +134,7 @@ describe("category queries", () => {
     });
 
     expect(result.current.category?.slug).toBe("featured-sleep");
-    expect(result.current.category?.typeLabel).toBe("Content");
+    expect(result.current.category?.typeLabel).toBe("Story");
     expect(result.current.isNotFound).toBe(false);
   });
 

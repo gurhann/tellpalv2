@@ -170,7 +170,7 @@ Gereksinimler geliştirme fazlarına göre gruplandırılmıştır.
 
 #### Kabul Kriterleri
 
-1. Backend_Sistemi iki kategori tipini desteklemeli: CONTENT ve PARENT_GUIDANCE
+1. Backend_Sistemi kategori tiplerini icerik tipleri ile ayni eksende desteklemeli: STORY, AUDIO_STORY, MEDITATION ve LULLABY
 2. Backend_Sistemi her kategoriyi benzersiz bir slug tanımlayıcısı ile ilişkilendirmeli
 3. Bir kategori oluşturulduğunda, Backend_Sistemi desteklenen her dil için ayrı yerelleştirmelere izin vermeli
 4. Backend_Sistemi her kategori yerelleştirmesi için dile özgü ad, açıklama ve görsel saklamalı

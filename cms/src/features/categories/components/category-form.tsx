@@ -40,19 +40,33 @@ type CategoryFormProps = {
 };
 
 function getCategoryTypeGuidance(type: CategoryFormValues["type"]) {
-  if (type === "PARENT_GUIDANCE") {
-    return {
-      title: "Parent guidance workflow",
+  const guidanceByType: Record<
+    CategoryFormValues["type"],
+    { title: string; description: string }
+  > = {
+    STORY: {
+      title: "Story category workflow",
       description:
-        "Use this type for non-content editorial guidance collections. Localization tabs will carry guidance text and image selection rather than content curation entries.",
-    };
-  }
-
-  return {
-    title: "Content category workflow",
-    description:
-      "Content categories organize published editorial records by language. Localization and curation controls will build on the metadata edited here.",
+        "Story categories curate only STORY records. Localization workspaces publish the category itself, and curation will later accept only story content in matching languages.",
+    },
+    AUDIO_STORY: {
+      title: "Audio story category workflow",
+      description:
+        "Audio story categories are reserved for AUDIO_STORY records. Use this when editorial grouping and future curation should stay limited to narrated long-form audio content.",
+    },
+    MEDITATION: {
+      title: "Meditation category workflow",
+      description:
+        "Meditation categories curate only MEDITATION records. Keep the type aligned here so future curation and discovery screens cannot mix in other content families.",
+    },
+    LULLABY: {
+      title: "Lullaby category workflow",
+      description:
+        "Lullaby categories curate only LULLABY records. Localization and curation will stay scoped to lullaby-ready editorial collections across supported languages.",
+    },
   };
+
+  return guidanceByType[type];
 }
 
 function isProblemMappedToField(problem: ApiProblemDetail) {
@@ -192,9 +206,9 @@ export function CategoryForm({
                 )?.label ?? selectedType}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Category type stays editable in the backend, but this task keeps
-                the metadata update form focused on slug, premium, and active
-                state.
+                Category type determines which content family this category is
+                allowed to curate. The update form stays focused on slug,
+                premium, and active state in this task.
               </p>
             </div>
           </div>

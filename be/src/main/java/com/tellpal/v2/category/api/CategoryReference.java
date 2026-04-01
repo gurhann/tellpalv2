@@ -1,11 +1,13 @@
 package com.tellpal.v2.category.api;
 
+import com.tellpal.v2.content.api.ContentApiType;
+
 /**
  * Stable reference to a category aggregate exposed outside the module.
  */
 public record CategoryReference(
         Long categoryId,
-        CategoryApiType type,
+        ContentApiType type,
         String slug,
         boolean premium,
         boolean active) {

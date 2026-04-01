@@ -23,16 +23,18 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
+import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryContentRecord;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryLocalizationRecord;
 import com.tellpal.v2.category.application.CategoryCurationService;
 import com.tellpal.v2.category.application.CategoryManagementService;
+import com.tellpal.v2.category.domain.CategoryType;
 import com.tellpal.v2.category.domain.LocalizationStatus;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiExceptionHandler;
 import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
@@ -62,7 +64,7 @@ class CategoryAdminControllerTest {
     void createCategoryReturnsCreatedResponse() throws Exception {
         when(categoryManagementService.createCategory(any())).thenReturn(new CategoryReference(
                 42L,
-                CategoryApiType.CONTENT,
+                ContentApiType.STORY,
                 "featured-sleep",
                 false,
                 true));
@@ -72,7 +74,7 @@ class CategoryAdminControllerTest {
                         .content("""
                                 {
                                   "slug": "featured-sleep",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -80,15 +82,15 @@ class CategoryAdminControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/admin/categories/42"))
                 .andExpect(jsonPath("$.categoryId").value(42))
-                .andExpect(jsonPath("$.type").value("CONTENT"))
+                .andExpect(jsonPath("$.type").value("STORY"))
                 .andExpect(jsonPath("$.slug").value("featured-sleep"));
     }
 
     @Test
     void listCategoriesReturnsLookupResponses() throws Exception {
         when(categoryLookupApi.listAll()).thenReturn(List.of(
-                new CategoryReference(42L, CategoryApiType.CONTENT, "featured-sleep", false, true),
-                new CategoryReference(43L, CategoryApiType.PARENT_GUIDANCE, "sleep-routines", true, false)));
+                new CategoryReference(42L, ContentApiType.STORY, "featured-sleep", false, true),
+                new CategoryReference(43L, ContentApiType.MEDITATION, "sleep-routines", true, false)));
 
         mockMvc.perform(get("/api/admin/categories"))
                 .andExpect(status().isOk())
@@ -96,7 +98,7 @@ class CategoryAdminControllerTest {
                 .andExpect(jsonPath("$[0].slug").value("featured-sleep"))
                 .andExpect(jsonPath("$[0].active").value(true))
                 .andExpect(jsonPath("$[1].categoryId").value(43))
-                .andExpect(jsonPath("$[1].type").value("PARENT_GUIDANCE"))
+                .andExpect(jsonPath("$[1].type").value("MEDITATION"))
                 .andExpect(jsonPath("$[1].active").value(false));
     }
 
@@ -104,7 +106,7 @@ class CategoryAdminControllerTest {
     void getCategoryReturnsLookupResponse() throws Exception {
         when(categoryLookupApi.findById(42L)).thenReturn(Optional.of(new CategoryReference(
                 42L,
-                CategoryApiType.PARENT_GUIDANCE,
+                ContentApiType.LULLABY,
                 "sleep-routines",
                 true,
                 true)));
@@ -112,7 +114,7 @@ class CategoryAdminControllerTest {
         mockMvc.perform(get("/api/admin/categories/42"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoryId").value(42))
-                .andExpect(jsonPath("$.type").value("PARENT_GUIDANCE"))
+                .andExpect(jsonPath("$.type").value("LULLABY"))
                 .andExpect(jsonPath("$.premium").value(true));
     }
 
@@ -237,6 +239,28 @@ class CategoryAdminControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Category localization not published"))
                 .andExpect(jsonPath("$.errorCode").value("category_localization_not_published"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty());
+    }
+
+    @Test
+    void contentTypeMismatchBecomesConflictProblemDetails() throws Exception {
+        when(categoryCurationService.addContent(any()))
+                .thenThrow(new CategoryContentTypeMismatchException(
+                        77L,
+                        CategoryType.MEDITATION,
+                        ContentApiType.STORY));
+
+        mockMvc.perform(post("/api/admin/categories/42/localizations/tr/contents")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentId": 77,
+                                  "displayOrder": 0
+                                }
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title").value("Category content type mismatch"))
+                .andExpect(jsonPath("$.errorCode").value("category_content_type_mismatch"))
                 .andExpect(jsonPath("$.requestId").isNotEmpty());
     }
 }

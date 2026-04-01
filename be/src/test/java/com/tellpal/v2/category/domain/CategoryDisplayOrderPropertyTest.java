@@ -35,7 +35,7 @@ class CategoryDisplayOrderPropertyTest {
     }
 
     private static Category publishedCategory() {
-        Category category = Category.create("sleep-routines", CategoryType.CONTENT, false, true);
+        Category category = Category.create("sleep-routines", CategoryType.STORY, false, true);
         category.upsertLocalization(
                 LanguageCode.TR,
                 "Uyku Rutinleri",

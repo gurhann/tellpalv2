@@ -2,7 +2,6 @@ package com.tellpal.v2.category.application.query;
 
 import com.tellpal.v2.asset.api.AssetRecord;
 import com.tellpal.v2.asset.api.ResolvedAssetReference;
-import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.PublicCategoryView;
 import com.tellpal.v2.category.domain.Category;
 import com.tellpal.v2.category.domain.CategoryLocalization;
@@ -16,7 +15,7 @@ final class PublicCategoryQueryMapper {
         Long categoryId = requireCategoryId(category);
         return new PublicCategoryView(
                 categoryId,
-                CategoryApiType.valueOf(category.getType().name()),
+                category.getType().toContentApiType(),
                 category.getSlug(),
                 localization.getLanguageCode(),
                 localization.getName(),

@@ -38,7 +38,7 @@ describe("category read components", () => {
   it("renders summary metadata for the live detail shell", () => {
     render(<CategorySummaryCard category={featuredSleepCategoryViewModel} />);
 
-    expect(screen.getByText(/content \/ standard \/ active/i)).toBeVisible();
+    expect(screen.getByText(/story \/ standard \/ active/i)).toBeVisible();
     expect(screen.getByText("featured-sleep")).toBeVisible();
     expect(screen.getByText("Category #7")).toBeVisible();
     expect(screen.getByText(/base category detail live/i)).toBeVisible();

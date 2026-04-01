@@ -54,7 +54,7 @@ export function CategoryDetailRoute() {
     category?.slug ??
     (hasValidCategoryId ? `Category #${parsedCategoryId}` : "Category Detail");
   const routeDescription = category
-    ? `Base metadata for ${category.slug} is now editable. Localization creation and update are live, but localization tabs remain session-backed until a dedicated admin read endpoint exists.`
+    ? `Base metadata for ${category.slug} is now editable. This category type is content-aligned, so future curation will stay limited to matching ${category.typeLabel} records. Localization tabs remain session-backed until a dedicated admin read endpoint exists.`
     : hasValidCategoryId
       ? "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow."
       : "This route expects a valid numeric category id from the category registry.";
@@ -293,7 +293,10 @@ export function CategoryDetailRoute() {
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Add content by id, adjust display order, and remove curated
                 links from the selected category language workspace after
-                localization editing settles.
+                localization editing settles. The backend now enforces
+                type-matched curation, so only{" "}
+                {category?.typeLabel ?? "matching"} records will be accepted
+                here.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -402,7 +405,8 @@ export function CategoryDetailRoute() {
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   `M07` expands this route into the full category curation
-                  workspace with add, reorder, and remove flows.
+                  workspace with add, reorder, and remove flows while keeping
+                  curated content constrained to the selected category type.
                 </div>
               </CardContent>
             </Card>

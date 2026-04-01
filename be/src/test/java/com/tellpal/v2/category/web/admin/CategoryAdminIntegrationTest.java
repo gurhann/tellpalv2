@@ -63,7 +63,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "featured-sleep",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -90,7 +90,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "featured-sleep",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -103,7 +103,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "sleep-routines",
-                                  "type": "PARENT_GUIDANCE",
+                                  "type": "MEDITATION",
                                   "premium": true,
                                   "active": false
                                 }
@@ -131,7 +131,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "featured-sleep",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -210,7 +210,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "featured-sleep",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -226,7 +226,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "featured-sleep-updated",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": true,
                                   "active": true
                                 }
@@ -285,7 +285,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .content("""
                                 {
                                   "slug": "draft-category",
-                                  "type": "CONTENT",
+                                  "type": "STORY",
                                   "premium": false,
                                   "active": true
                                 }
@@ -317,6 +317,52 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """.formatted(curatedContentId)))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("category_localization_not_published"));
+    }
+
+    @Test
+    void curationRejectsContentTypeMismatch() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long curatedContentId = createPublishedStoryContent("featured-night-tr", LanguageCode.TR);
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "meditation-only",
+                                  "type": "MEDITATION",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "name": "Meditasyon",
+                                  "status": "PUBLISHED",
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr/contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentId": %d,
+                                  "displayOrder": 0
+                                }
+                                """.formatted(curatedContentId)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("category_content_type_mismatch"));
     }
 
     private Long createPublishedStoryContent(String externalKey, LanguageCode languageCode) {

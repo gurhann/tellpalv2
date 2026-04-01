@@ -57,7 +57,7 @@ describe("useSaveCategory", () => {
     });
     const createdCategory: AdminCategoryResponse = {
       categoryId: 99,
-      type: "CONTENT",
+      type: "MEDITATION",
       slug: "featured-breathing",
       premium: false,
       active: true,
@@ -83,7 +83,7 @@ describe("useSaveCategory", () => {
 
     await act(async () => {
       await result.current.mutateAsync({
-        type: "CONTENT",
+        type: "MEDITATION",
         slug: "featured-breathing",
         premium: false,
         active: true,
@@ -91,7 +91,7 @@ describe("useSaveCategory", () => {
     });
 
     expect(categoryAdminApiMock.createCategory).toHaveBeenCalledWith({
-      type: "CONTENT",
+      type: "MEDITATION",
       slug: "featured-breathing",
       premium: false,
       active: true,
@@ -101,7 +101,7 @@ describe("useSaveCategory", () => {
     ).toMatchObject({
       id: 99,
       slug: "featured-breathing",
-      type: "CONTENT",
+      type: "MEDITATION",
     });
     expect(
       queryClient.getQueryData<Array<{ id: number }>>(
@@ -127,7 +127,7 @@ describe("useSaveCategory", () => {
     });
     const updatedCategory: AdminCategoryResponse = {
       categoryId: 7,
-      type: "CONTENT",
+      type: "STORY",
       slug: "featured-sleep-updated",
       premium: true,
       active: false,
@@ -156,7 +156,7 @@ describe("useSaveCategory", () => {
 
     await act(async () => {
       await result.current.mutateAsync({
-        type: "CONTENT",
+        type: "STORY",
         slug: "featured-sleep-updated",
         premium: true,
         active: false,
@@ -164,7 +164,7 @@ describe("useSaveCategory", () => {
     });
 
     expect(categoryAdminApiMock.updateCategory).toHaveBeenCalledWith(7, {
-      type: "CONTENT",
+      type: "STORY",
       slug: "featured-sleep-updated",
       premium: true,
       active: false,

@@ -161,9 +161,9 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
     @Test
     void categoryEndpointsReturnPublishedCategoriesAndPreserveCuratedOrder() throws Exception {
         ContentSeed second = createReadyStory("forest-story", LanguageCode.TR, "Orman");
-        ContentSeed first = createReadyMeditation("breathing", LanguageCode.TR, "Nefes");
+        ContentSeed first = createReadyStory("moonlight-story", LanguageCode.TR, "Ay Isigi");
         ContentSeed hidden = createIncompleteStory("draft-story", LanguageCode.TR, "Taslak");
-        Long categoryId = createPublishedCategory("featured-sleep", LanguageCode.TR);
+        Long categoryId = createPublishedCategory("featured-sleep", CategoryType.STORY, LanguageCode.TR);
 
         categoryCurationService.addContent(new AddCategoryContentCommand(
                 categoryId,
@@ -185,7 +185,21 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                         .queryParam("lang", "tr"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].slug").value("featured-sleep"))
+                .andExpect(jsonPath("$[0].type").value("STORY"));
+
+        mockMvc.perform(get("/api/categories")
+                        .queryParam("lang", "tr")
+                        .queryParam("type", "STORY"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].slug").value("featured-sleep"));
+
+        mockMvc.perform(get("/api/categories")
+                        .queryParam("lang", "tr")
+                        .queryParam("type", "MEDITATION"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
 
         MvcResult contentsResult = mockMvc.perform(get("/api/categories/{slug}/contents", "featured-sleep")
                         .queryParam("lang", "tr"))
@@ -287,10 +301,10 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                         .value("/content/story/bilingual-story/en/original/page-1.mp3"));
     }
 
-    private Long createPublishedCategory(String slug, LanguageCode languageCode) {
+    private Long createPublishedCategory(String slug, CategoryType type, LanguageCode languageCode) {
         Long imageMediaId = registerImageAsset("/categories/%s/%s/image.jpg".formatted(slug, languageCode.value()));
         CategoryReference category = categoryManagementService.createCategory(
-                new CreateCategoryCommand(slug, CategoryType.CONTENT, false, true));
+                new CreateCategoryCommand(slug, type, false, true));
         categoryManagementService.createLocalization(new CreateCategoryLocalizationCommand(
                 category.categoryId(),
                 languageCode,

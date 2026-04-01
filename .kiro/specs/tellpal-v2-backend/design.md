@@ -1207,7 +1207,7 @@ interface ContentContributor {
 interface Category {
   id: number
   slug: string  // Unique, kalıcı anahtar
-  type: CategoryType  // CONTENT | PARENT_GUIDANCE
+  type: CategoryType  // STORY | AUDIO_STORY | MEDITATION | LULLABY
   isPremium: boolean
   isActive: boolean
   createdAt: Date

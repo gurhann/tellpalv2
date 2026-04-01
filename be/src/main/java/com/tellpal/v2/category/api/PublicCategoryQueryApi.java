@@ -3,6 +3,7 @@ package com.tellpal.v2.category.api;
 import java.util.List;
 import java.util.Optional;
 
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.api.PublicContentSummary;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -14,7 +15,7 @@ public interface PublicCategoryQueryApi {
     /**
      * Lists visible categories for a language and optional category type filter.
      */
-    List<PublicCategoryView> listCategories(LanguageCode languageCode, CategoryApiType type);
+    List<PublicCategoryView> listCategories(LanguageCode languageCode, ContentApiType type);
 
     /**
      * Finds one visible localized category by slug.

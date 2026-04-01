@@ -1,6 +1,5 @@
 package com.tellpal.v2.category.application;
 
-import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.CategoryReference;
 import com.tellpal.v2.category.domain.Category;
 
@@ -16,7 +15,7 @@ final class CategoryApiMapper {
         }
         return new CategoryReference(
                 categoryId,
-                CategoryApiType.valueOf(category.getType().name()),
+                category.getType().toContentApiType(),
                 category.getSlug(),
                 category.isPremium(),
                 category.isActive());

@@ -29,6 +29,7 @@ Read order:
 - `ADR-0004`: `shared` is a small stable kernel, not a dumping ground.
 - `ADR-0005`: REST endpoints use OpenAPI-based documentation with operation-level summaries, auth, and core error responses.
 - `ADR-0006`: story-page illustrations are localization-scoped and resolved from `story_page_localizations`, not page roots.
+- `ADR-0007`: category type aligns with curated content type and no longer supports legacy `CONTENT` or `PARENT_GUIDANCE` values.
 
 ## Coding and Documentation Defaults
 
@@ -59,6 +60,7 @@ Read order:
 - When preparing local CMS sample data, create records through admin APIs or controlled SQL and follow the content localization validation rules documented in `be/docs/bootstrap-notes.md`.
 - Local CMS verification is easier with a mixed sample set: one story with story pages and localizations, one active non-story item, and one inactive item.
 - Story-page illustrations are now locale-scoped. Local seed data and CMS assumptions must attach illustration assets to `story_page_localizations`, not `story_pages`.
+- Category type is now content-aligned. Category seed and curation test data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`, and curated content must match the selected category type.
 
 ## Review Red Flags
 

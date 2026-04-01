@@ -12,46 +12,46 @@ import {
 export const featuredSleepCategoryResponse: AdminCategoryResponse = {
   categoryId: 7,
   slug: "featured-sleep",
-  type: "CONTENT",
+  type: "STORY",
   premium: false,
   active: true,
 };
 
-export const parentGuidanceCategoryResponse: AdminCategoryResponse = {
+export const bedtimeMeditationCategoryResponse: AdminCategoryResponse = {
   categoryId: 8,
-  slug: "bedtime-guidance",
-  type: "PARENT_GUIDANCE",
+  slug: "bedtime-meditations",
+  type: "MEDITATION",
   premium: true,
   active: true,
 };
 
-export const archivedCategoryResponse: AdminCategoryResponse = {
+export const archivedLullabyCategoryResponse: AdminCategoryResponse = {
   categoryId: 9,
   slug: "quiet-nights",
-  type: "CONTENT",
+  type: "LULLABY",
   premium: false,
   active: false,
 };
 
 export const categoryResponses: AdminCategoryResponse[] = [
   featuredSleepCategoryResponse,
-  parentGuidanceCategoryResponse,
-  archivedCategoryResponse,
+  bedtimeMeditationCategoryResponse,
+  archivedLullabyCategoryResponse,
 ];
 
 export const featuredSleepCategoryViewModel = mapAdminCategory(
   featuredSleepCategoryResponse,
 );
-export const parentGuidanceCategoryViewModel = mapAdminCategory(
-  parentGuidanceCategoryResponse,
+export const bedtimeMeditationCategoryViewModel = mapAdminCategory(
+  bedtimeMeditationCategoryResponse,
 );
 export const archivedCategoryViewModel = mapAdminCategory(
-  archivedCategoryResponse,
+  archivedLullabyCategoryResponse,
 );
 
 export const categoryViewModels: CategorySummaryViewModel[] = [
   featuredSleepCategoryViewModel,
-  parentGuidanceCategoryViewModel,
+  bedtimeMeditationCategoryViewModel,
   archivedCategoryViewModel,
 ];
 

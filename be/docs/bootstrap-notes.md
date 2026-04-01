@@ -77,6 +77,30 @@ Recommended local CMS seed shape:
 - one active non-story content item with draft or processing localizations
 - one inactive content item to validate admin read and filtering behavior
 
+Category migration preflight for legacy databases:
+
+```sql
+select
+    c.id,
+    c.slug,
+    c.type,
+    count(distinct ct.type) as distinct_curated_content_types,
+    count(cc.id) as curated_link_count
+from categories c
+left join category_contents cc
+    on cc.category_id = c.id
+left join contents ct
+    on ct.id = cc.content_id
+group by c.id, c.slug, c.type
+having c.type = 'PARENT_GUIDANCE'
+    or (c.type = 'CONTENT' and count(cc.id) = 0)
+    or (c.type = 'CONTENT' and count(distinct ct.type) > 1)
+order by c.id;
+```
+
+`V17__align_category_types_with_content_types.sql` fails intentionally when this query returns any
+rows.
+
 ## Manual Bootstrap Expectations
 
 - Non-local environments must provide `TELLPAL_ADMIN_JWT_SECRET`.

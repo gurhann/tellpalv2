@@ -47,7 +47,7 @@ export function CategoriesIndexRoute() {
       <ContentPageShell
         eyebrow="Category Studio"
         title="Categories"
-        description="The category registry now reads directly from the admin API. Category creation is live, while search/filter activation and full localization reads still land in later tasks."
+        description="The category registry now reads directly from the admin API. Category types are aligned to content families, so each category can later curate only matching Story, Audio Story, Meditation, or Lullaby records."
         actions={
           <>
             <Button
@@ -82,7 +82,7 @@ export function CategoriesIndexRoute() {
                 />
               </div>
               <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
-                All category types
+                Story / Audio Story / Meditation / Lullaby
               </div>
               <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
                 Premium and standard
@@ -109,7 +109,8 @@ export function CategoriesIndexRoute() {
                 <CardTitle>Workspace Notes</CardTitle>
                 <CardDescription>
                   The registry shell is backed by `GET /api/admin/categories`
-                  and category creation is now live.
+                  and category creation is now live with content-aligned
+                  category types.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -120,7 +121,8 @@ export function CategoriesIndexRoute() {
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Create submits invalidate the registry cache and route into
-                  the new category detail workspace.
+                  the new category detail workspace, where each category type
+                  stays matched to one content family.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Row navigation opens the live base metadata view for each
@@ -203,7 +205,8 @@ export function CategoriesIndexRoute() {
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 The detail shell already reserves separate metadata,
                 localization, and curation areas while base category reads stay
-                live today.
+                live today. Future curation will reject any content whose type
+                does not match the category type.
               </p>
             </div>
           </CardContent>

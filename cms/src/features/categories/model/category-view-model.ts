@@ -8,8 +8,10 @@ import type { AdminCategoryContentResponse } from "@/features/categories/api/cat
 import { mapLanguage } from "@/lib/languages";
 
 const categoryTypeLabels: Record<CategoryType, string> = {
-  CONTENT: "Content",
-  PARENT_GUIDANCE: "Parent Guidance",
+  STORY: "Story",
+  AUDIO_STORY: "Audio Story",
+  MEDITATION: "Meditation",
+  LULLABY: "Lullaby",
 };
 
 const localizationStatusLabels: Record<CategoryLocalizationStatus, string> = {

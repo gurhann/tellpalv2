@@ -4,7 +4,12 @@ import { apiClient } from "@/lib/http/client";
 
 const basePath = "/api/admin/categories";
 
-const categoryTypeValues = ["CONTENT", "PARENT_GUIDANCE"] as const;
+const categoryTypeValues = [
+  "STORY",
+  "AUDIO_STORY",
+  "MEDITATION",
+  "LULLABY",
+] as const;
 const categoryLocalizationStatusValues = [
   "DRAFT",
   "PUBLISHED",

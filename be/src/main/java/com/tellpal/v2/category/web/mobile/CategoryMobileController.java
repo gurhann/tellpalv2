@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.PublicCategoryQueryApi;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ public class CategoryMobileController {
     })
     public List<MobileCategoryResponse> listCategories(
             @RequestParam("lang") String languageCode,
-            @RequestParam(name = "type", required = false) CategoryApiType type) {
+            @RequestParam(name = "type", required = false) ContentApiType type) {
         return publicCategoryQueryApi.listCategories(LanguageCode.from(languageCode), type).stream()
                 .map(MobileCategoryResponse::from)
                 .toList();

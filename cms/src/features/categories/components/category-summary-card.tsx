@@ -42,7 +42,8 @@ export function CategorySummaryCard({ category }: CategorySummaryCardProps) {
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
           Localization and curation payloads are not included in the current
-          admin read response yet.
+          admin read response yet. Curated content will later be restricted to
+          {` ${category.typeLabel}`} records only.
         </p>
       </div>
     </div>

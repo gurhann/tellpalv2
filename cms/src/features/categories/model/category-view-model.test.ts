@@ -14,7 +14,7 @@ describe("category view model mappers", () => {
     const dto: AdminCategoryResponse = {
       categoryId: 7,
       slug: "sleep",
-      type: "CONTENT",
+      type: "STORY",
       premium: false,
       active: true,
     };
@@ -22,8 +22,8 @@ describe("category view model mappers", () => {
     expect(mapAdminCategory(dto)).toEqual({
       id: 7,
       slug: "sleep",
-      type: "CONTENT",
-      typeLabel: "Content",
+      type: "STORY",
+      typeLabel: "Story",
       premium: false,
       active: true,
     });

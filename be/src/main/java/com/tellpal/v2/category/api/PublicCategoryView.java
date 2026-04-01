@@ -1,6 +1,7 @@
 package com.tellpal.v2.category.api;
 
 import com.tellpal.v2.asset.api.ResolvedAssetReference;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -8,7 +9,7 @@ import com.tellpal.v2.shared.domain.LanguageCode;
  */
 public record PublicCategoryView(
         Long categoryId,
-        CategoryApiType type,
+        ContentApiType type,
         String slug,
         LanguageCode languageCode,
         String name,

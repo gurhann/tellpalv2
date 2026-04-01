@@ -344,10 +344,13 @@ stack.
 - `be/src/main/java/com/tellpal/v2/category/application/CategoryCurationService.java`
 - `be/src/main/java/com/tellpal/v2/category/application/CategoryAssetReferenceValidator.java`
 - `be/src/main/java/com/tellpal/v2/category/application/CategoryContentReferenceValidator.java`
+- `be/src/main/java/com/tellpal/v2/category/application/query/PublicCategoryQueryService.java`
 - `be/src/main/java/com/tellpal/v2/category/domain/Category.java`
 - `be/src/main/java/com/tellpal/v2/category/domain/CategoryLocalization.java`
 - `be/src/main/java/com/tellpal/v2/category/domain/CategoryContent.java`
 - `be/src/test/java/com/tellpal/v2/category/web/admin/CategoryAdminIntegrationTest.java`
+- `be/src/test/java/com/tellpal/v2/category/migration/CategoryTypeMigrationIntegrationTest.java`
+- `be/src/test/java/com/tellpal/v2/content/web/mobile/PublicDeliveryIntegrationTest.java`
 
 ### Covered Admin Endpoints
 
@@ -389,6 +392,8 @@ stack.
 ### Type and State Rules
 
 - Category slug is trimmed and must not be blank.
+- Category `type` is content-aligned. The allowed values are `STORY`, `AUDIO_STORY`, `MEDITATION`,
+  and `LULLABY`.
 - Category delete is a soft-delete/state transition that sets `active=false` and preserves
   localizations plus curated content history for admin reads.
 - Category localization `name` is trimmed and must not be blank.
@@ -396,10 +401,13 @@ stack.
 - `imageMediaId` must reference an asset with media type `IMAGE`.
 - `imageMediaId` must be positive when present.
 - Category curation is scoped by language. Each language keeps its own ordered curated set.
+- Category curation requires `content.type == category.type`.
 - Duplicate curated links and duplicate display orders currently surface as `400 invalid_request`,
   not as a module-specific conflict code.
 - Category detail read currently returns only base metadata. It does not include localizations or
   curated contents.
+- Public/mobile category filters also use the same content-aligned type values through
+  `GET /api/categories?type=...`.
 
 ### Publication and Curation Preconditions
 
@@ -407,6 +415,8 @@ stack.
 - Category curation requires the category localization to be `PUBLISHED`.
 - Category curation requires the referenced content to exist.
 - Category curation requires the referenced content to be active.
+- Category curation rejects type-mismatched content with
+  `errorCode=category_content_type_mismatch`.
 - Category curation requires the referenced content localization for the same language to be
   published.
 - Category curation does not currently require the content localization processing status to be
@@ -422,6 +432,7 @@ stack.
 - `category_localization_not_found`
 - `category_localization_not_published`
 - `category_content_not_found`
+- `category_content_type_mismatch`
 - `asset_not_found`
 - `asset_media_type_mismatch`
 - `content_not_found`
@@ -434,10 +445,14 @@ stack.
 ### Local Sample Seed Notes
 
 - Seed at least one category with a published localization before testing curation.
+- Category seed data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`.
 - Seed at least one active content item with a published localization in the same language before
   adding it to category curation.
 - If local category tests use story content, a published content localization is enough for curation.
   Story processing completion is not currently required.
+- Before applying `V17__align_category_types_with_content_types.sql` to a legacy database, run the
+  preflight SQL from `be/docs/bootstrap-notes.md`. Any `PARENT_GUIDANCE`, empty `CONTENT`, or
+  mixed-type `CONTENT` categories block the migration.
 
 ### Frontend Form and Query Implications
 
@@ -445,6 +460,8 @@ stack.
   `status=PUBLISHED`.
 - Curation UI should disable add and reorder actions until the selected category localization is
   published.
+- Curation UI should pre-filter or validate content ids so only the category-matching content type
+  can be submitted.
 - Curation UIs should avoid duplicate display orders before submit.
 - Category detail screens cannot rely on a single backend read to hydrate localizations and curated
   content.

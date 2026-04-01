@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetRecord;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
-import com.tellpal.v2.category.api.CategoryApiType;
 import com.tellpal.v2.category.api.PublicCategoryQueryApi;
 import com.tellpal.v2.category.api.PublicCategoryView;
 import com.tellpal.v2.category.domain.Category;
 import com.tellpal.v2.category.domain.CategoryContent;
 import com.tellpal.v2.category.domain.CategoryLocalization;
 import com.tellpal.v2.category.domain.CategoryRepository;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.api.PublicContentQueryApi;
 import com.tellpal.v2.content.api.PublicContentSummary;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -46,10 +46,10 @@ public class PublicCategoryQueryService implements PublicCategoryQueryApi {
      * Lists visible localized categories for one language and optional type filter.
      */
     @Override
-    public List<PublicCategoryView> listCategories(LanguageCode languageCode, CategoryApiType type) {
+    public List<PublicCategoryView> listCategories(LanguageCode languageCode, ContentApiType type) {
         LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
         return categoryRepository.findAllActive().stream()
-                .filter(category -> type == null || CategoryApiType.valueOf(category.getType().name()) == type)
+                .filter(category -> type == null || category.getType().toContentApiType() == type)
                 .sorted(java.util.Comparator.comparing(Category::getSlug))
                 .flatMap(category -> publishedLocalization(category, requiredLanguageCode)
                         .stream()

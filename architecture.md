@@ -192,6 +192,8 @@ Kurallar:
 - Kategori görünürlüğü dil bazlıdır.
 - Kürasyon kayıtları da dil bazlıdır.
 - Listeleme sırası dil ve kategori bağlamında sahiplenilir.
+- Category type is content-aligned: `STORY`, `AUDIO_STORY`, `MEDITATION`, `LULLABY`.
+- Bir kategori yalnizca kendi type degeri ile ayni content type kayitlarini curate edebilir.
 
 ### 8.3 `asset` modülü
 

@@ -17,6 +17,7 @@ import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
+import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.ContentLocalizationNotPublishedException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.DuplicateCategorySlugException;
 import com.tellpal.v2.category.application.CategoryCurationService;
@@ -79,13 +80,13 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
     void createCategoryRejectsDuplicateSlug() {
         categoryManagementService.createCategory(new CreateCategoryCommand(
                 "bedtime-stories",
-                CategoryType.CONTENT,
+                CategoryType.STORY,
                 false,
                 true));
 
         assertThatThrownBy(() -> categoryManagementService.createCategory(new CreateCategoryCommand(
                 "bedtime-stories",
-                CategoryType.CONTENT,
+                CategoryType.STORY,
                 true,
                 true)))
                 .isInstanceOf(DuplicateCategorySlugException.class);
@@ -95,7 +96,7 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
     void createLocalizationPersistsPublishedStatusAndImageReference() {
         Long categoryId = categoryManagementService.createCategory(new CreateCategoryCommand(
                 "sleep-routines",
-                CategoryType.PARENT_GUIDANCE,
+                CategoryType.MEDITATION,
                 true,
                 true)).categoryId();
         Long imageMediaId = registerImageAsset("/categories/sleep-routines/cover.jpg");
@@ -128,7 +129,7 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
 
     @Test
     void addContentRejectsUnpublishedContentLocalization() {
-        Long categoryId = createPublishedCategory("mindfulness");
+        Long categoryId = createPublishedCategory("mindfulness", CategoryType.STORY);
         Long contentId = createContentWithLocalization("mindfulness-audio", LanguageCode.TR, false);
 
         assertThatThrownBy(() -> categoryCurationService.addContent(new AddCategoryContentCommand(
@@ -141,7 +142,7 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
 
     @Test
     void curationScopesDisplayOrderByLanguageAndRejectsDuplicatesWithinSameLanguage() {
-        Long categoryId = createPublishedCategory("featured-sleep");
+        Long categoryId = createPublishedCategory("featured-sleep", CategoryType.STORY);
         Long turkishContentId = createContentWithLocalization("sleep-star-tr", LanguageCode.TR, true);
         Long secondTurkishContentId = createContentWithLocalization("sleep-star-tr-2", LanguageCode.TR, true);
         Long englishContentId = createContentWithLocalization("sleep-star-en", LanguageCode.EN, true);
@@ -181,10 +182,25 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(rows.get(1).get("display_order")).isEqualTo(0);
     }
 
-    private Long createPublishedCategory(String slug) {
+    @Test
+    void curationRejectsContentTypeMismatch() {
+        Long categoryId = createPublishedCategory("quiet-breathing", CategoryType.MEDITATION);
+        Long contentId = createContentWithLocalization("story-only", LanguageCode.TR, true);
+
+        assertThatThrownBy(() -> categoryCurationService.addContent(new AddCategoryContentCommand(
+                categoryId,
+                LanguageCode.TR,
+                contentId,
+                0)))
+                .isInstanceOf(CategoryContentTypeMismatchException.class)
+                .hasMessageContaining("MEDITATION")
+                .hasMessageContaining("STORY");
+    }
+
+    private Long createPublishedCategory(String slug, CategoryType type) {
         Long categoryId = categoryManagementService.createCategory(new CreateCategoryCommand(
                 slug,
-                CategoryType.CONTENT,
+                type,
                 false,
                 true)).categoryId();
         categoryManagementService.createLocalization(new CreateCategoryLocalizationCommand(

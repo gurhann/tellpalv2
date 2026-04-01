@@ -1,6 +1,8 @@
 package com.tellpal.v2.category.application;
 
 import com.tellpal.v2.asset.api.AssetMediaType;
+import com.tellpal.v2.category.domain.CategoryType;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -91,6 +93,17 @@ public final class CategoryApplicationExceptions {
 
         public ContentLocalizationNotPublishedException(Long contentId, LanguageCode languageCode) {
             super("Content localization is not published for content " + contentId + " and language " + languageCode);
+        }
+    }
+
+    public static final class CategoryContentTypeMismatchException extends RuntimeException {
+
+        public CategoryContentTypeMismatchException(
+                Long contentId,
+                CategoryType categoryType,
+                ContentApiType contentType) {
+            super("Category type " + categoryType + " cannot curate content "
+                    + contentId + " with type " + contentType);
         }
     }
 }
