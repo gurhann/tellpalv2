@@ -5,6 +5,8 @@ import type {
 } from "@/features/contributors/api/contributor-admin";
 import { mapLanguage } from "@/lib/languages";
 
+export const GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL = "All languages";
+
 const contributorRoleLabels: Record<ContributorRole, string> = {
   AUTHOR: "Author",
   ILLUSTRATOR: "Illustrator",
@@ -42,12 +44,28 @@ export type ContentContributorViewModel = {
   initials: string;
   role: ContributorRole;
   roleLabel: string;
-  languageCode: string;
+  languageCode: string | null;
   languageLabel: string;
   creditName: string | null;
   effectiveCreditName: string;
   sortOrder: number;
 };
+
+function mapContributorLanguageScope(languageCode: string | null) {
+  if (languageCode === null) {
+    return {
+      code: null,
+      label: GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL,
+    };
+  }
+
+  const language = mapLanguage(languageCode);
+
+  return {
+    code: language.code,
+    label: language.label,
+  };
+}
 
 export function mapAdminContributor(
   contributor: AdminContributorResponse,
@@ -68,7 +86,7 @@ export function mapAdminContributorList(
 export function mapAdminContentContributor(
   contributor: AdminContentContributorResponse,
 ): ContentContributorViewModel {
-  const language = mapLanguage(contributor.languageCode);
+  const language = mapContributorLanguageScope(contributor.languageCode);
 
   return {
     contentId: contributor.contentId,

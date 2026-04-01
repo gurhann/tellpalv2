@@ -65,7 +65,7 @@ public class ContributorManagementService {
     }
 
     /**
-     * Assigns a contributor to content for one role and language combination.
+     * Assigns a contributor to content for one role and optional language scope.
      */
     @Transactional
     public ContentContributorRecord assignContentContributor(AssignContentContributorCommand command) {

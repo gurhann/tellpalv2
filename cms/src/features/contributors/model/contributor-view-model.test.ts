@@ -46,4 +46,30 @@ describe("contributor view model mappers", () => {
       sortOrder: 1,
     });
   });
+
+  it("maps null languageCode as a global contributor scope", () => {
+    const dto: AdminContentContributorResponse = {
+      contentId: 14,
+      contributorId: 23,
+      contributorDisplayName: "Sena Yildiz",
+      role: "ILLUSTRATOR",
+      languageCode: null,
+      creditName: null,
+      sortOrder: 0,
+    };
+
+    expect(mapAdminContentContributor(dto)).toEqual({
+      contentId: 14,
+      contributorId: 23,
+      displayName: "Sena Yildiz",
+      initials: "SY",
+      role: "ILLUSTRATOR",
+      roleLabel: "Illustrator",
+      languageCode: null,
+      languageLabel: "All languages",
+      creditName: null,
+      effectiveCreditName: "Sena Yildiz",
+      sortOrder: 0,
+    });
+  });
 });

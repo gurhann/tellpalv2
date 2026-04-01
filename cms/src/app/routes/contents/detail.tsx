@@ -17,7 +17,7 @@ import { ContentLocalizationTabs } from "@/features/contents/components/localiza
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { ContentSummaryCard } from "@/features/contents/components/content-summary-card";
 import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
-import { ContentContributorEntryCard } from "@/features/contributors/components/content-contributor-entry-card";
+import { ContentContributorPanel } from "@/features/contributors/components/content-contributor-panel";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
 
@@ -251,8 +251,6 @@ export function ContentDetailRoute() {
               </div>
             </CardContent>
           </Card>
-
-          <ContentContributorEntryCard content={content} />
         </>
       }
     >
@@ -269,6 +267,15 @@ export function ContentDetailRoute() {
             initialValues={mapContentReadToFormValues(content)}
             mode="update"
           />
+        </FormSection>
+      ) : null}
+
+      {content ? (
+        <FormSection
+          description="Assign shared contributor registry entries to this content item with role, language, display credit, and ordering metadata. Existing backend assignments are not readable yet, so the panel tracks current-session assignments."
+          title="Contributor assignments"
+        >
+          <ContentContributorPanel content={content} />
         </FormSection>
       ) : null}
 

@@ -24,7 +24,7 @@ export type RenameContributorInput = {
 export type AssignContentContributorInput = {
   contributorId: number;
   role: ContributorRole;
-  languageCode: string;
+  languageCode?: string | null;
   creditName?: string | null;
   sortOrder: number;
 };
@@ -43,7 +43,7 @@ export const adminContentContributorResponseSchema = z.object({
   contributorId: z.number().int().positive(),
   contributorDisplayName: z.string().min(1),
   role: contributorRoleSchema,
-  languageCode: z.string().min(1),
+  languageCode: z.string().min(1).nullable(),
   creditName: z.string().nullable(),
   sortOrder: z.number().int().nonnegative(),
 });

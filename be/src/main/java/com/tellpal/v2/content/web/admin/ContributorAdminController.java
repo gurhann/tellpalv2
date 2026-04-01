@@ -99,7 +99,9 @@ public class ContributorAdminController {
     }
 
     @PostMapping("/contents/{contentId}/contributors")
-    @Operation(summary = "Assign a contributor to content", description = "Adds one contributor credit to a localized content item.")
+    @Operation(
+            summary = "Assign a contributor to content",
+            description = "Adds one contributor credit to content, optionally scoped to one language.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Contributor assigned to content"),
             @ApiResponse(responseCode = "400", description = "Assignment request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -141,18 +143,25 @@ record AssignContentContributorRequest(
         Long contributorId,
         @NotNull(message = "role is required")
         ContributorRole role,
-        @NotBlank(message = "languageCode is required")
         String languageCode,
         String creditName,
         @Min(value = 0, message = "sortOrder must not be negative")
         int sortOrder) {
 
     AssignContentContributorCommand toCommand(Long contentId) {
+        LanguageCode resolvedLanguageCode = null;
+        if (languageCode != null) {
+            String normalizedLanguageCode = languageCode.trim();
+            if (normalizedLanguageCode.isEmpty()) {
+                throw new IllegalArgumentException("languageCode must not be blank when provided");
+            }
+            resolvedLanguageCode = LanguageCode.from(normalizedLanguageCode);
+        }
         return new AssignContentContributorCommand(
                 contentId,
                 contributorId,
                 role,
-                LanguageCode.from(languageCode),
+                resolvedLanguageCode,
                 creditName,
                 sortOrder);
     }

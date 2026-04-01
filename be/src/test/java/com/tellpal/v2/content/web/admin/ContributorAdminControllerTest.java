@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -116,6 +117,35 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.contributorId").value(11))
                 .andExpect(jsonPath("$.role").value("AUTHOR"))
                 .andExpect(jsonPath("$.languageCode").value("tr"));
+    }
+
+    @Test
+    void assignContributorAllowsGlobalScopeWhenLanguageCodeIsNull() throws Exception {
+        when(contributorManagementService.assignContentContributor(any())).thenReturn(new ContentContributorRecord(
+                51L,
+                11L,
+                "Elif Yilmaz",
+                ContributorRole.ILLUSTRATOR,
+                null,
+                null,
+                0));
+
+        mockMvc.perform(post("/api/admin/contents/51/contributors")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contributorId": 11,
+                                  "role": "ILLUSTRATOR",
+                                  "languageCode": null,
+                                  "creditName": null,
+                                  "sortOrder": 0
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.contentId").value(51))
+                .andExpect(jsonPath("$.contributorId").value(11))
+                .andExpect(jsonPath("$.role").value("ILLUSTRATOR"))
+                .andExpect(jsonPath("$.languageCode").value(Matchers.nullValue()));
     }
 
     @Test

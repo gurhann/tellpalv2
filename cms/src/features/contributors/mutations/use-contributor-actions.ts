@@ -2,10 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   contributorAdminApi,
+  type AdminContentContributorResponse,
   type AdminContributorResponse,
 } from "@/features/contributors/api/contributor-admin";
 import {
+  mapAdminContentContributor,
   mapAdminContributor,
+  type ContentContributorViewModel,
   type ContributorViewModel,
 } from "@/features/contributors/model/contributor-view-model";
 import type { ContributorFormValues } from "@/features/contributors/schema/contributor-schema";
@@ -14,6 +17,7 @@ import { queryKeys } from "@/lib/query-keys";
 type UseContributorActionsOptions = {
   onCreateSuccess?: (contributor: AdminContributorResponse) => void;
   onRenameSuccess?: (contributor: AdminContributorResponse) => void;
+  onAssignSuccess?: (assignment: AdminContentContributorResponse) => void;
 };
 
 function updateContributorListCache(
@@ -41,9 +45,36 @@ function updateContributorListCache(
   );
 }
 
+function updateContentAssignmentsCache(
+  assignments: ContentContributorViewModel[] | undefined,
+  savedAssignment: AdminContentContributorResponse,
+) {
+  const nextAssignment = mapAdminContentContributor(savedAssignment);
+
+  if (!assignments) {
+    return [nextAssignment];
+  }
+
+  const existingIndex = assignments.findIndex(
+    (assignment) =>
+      assignment.contributorId === savedAssignment.contributorId &&
+      assignment.role === savedAssignment.role &&
+      assignment.languageCode === nextAssignment.languageCode,
+  );
+
+  if (existingIndex === -1) {
+    return [...assignments, nextAssignment];
+  }
+
+  return assignments.map((assignment, index) =>
+    index === existingIndex ? nextAssignment : assignment,
+  );
+}
+
 export function useContributorActions({
   onCreateSuccess,
   onRenameSuccess,
+  onAssignSuccess,
 }: UseContributorActionsOptions = {}) {
   const queryClient = useQueryClient();
 
@@ -108,9 +139,39 @@ export function useContributorActions({
     },
   });
 
+  const assignContributor = useMutation({
+    mutationFn: async ({
+      contentId,
+      values,
+    }: {
+      contentId: number;
+      values: {
+        contributorId: number;
+        role: Parameters<
+          typeof contributorAdminApi.assignContributor
+        >[1]["role"];
+        languageCode?: string | null;
+        creditName: string | null;
+        sortOrder: number;
+      };
+    }) => contributorAdminApi.assignContributor(contentId, values),
+    onSuccess: async (assignment) => {
+      queryClient.setQueryData<ContentContributorViewModel[]>(
+        queryKeys.contributors.assignments(assignment.contentId),
+        (assignments) => updateContentAssignmentsCache(assignments, assignment),
+      );
+
+      onAssignSuccess?.(assignment);
+    },
+  });
+
   return {
     createContributor,
     renameContributor,
-    isPending: createContributor.isPending || renameContributor.isPending,
+    assignContributor,
+    isPending:
+      createContributor.isPending ||
+      renameContributor.isPending ||
+      assignContributor.isPending,
   };
 }

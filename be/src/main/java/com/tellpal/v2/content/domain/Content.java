@@ -188,9 +188,10 @@ public class Content extends BaseJpaEntity {
     }
 
     /**
-     * Assigns a contributor when the role/language/link combination is not already present.
+     * Assigns a contributor when the role and scope combination is not already present.
      *
-     * <p>Sort order is unique per role and language inside the aggregate.
+     * <p>A {@code null} language code represents a global credit that applies to all localizations.
+     * Sort order is unique per role and language scope inside the aggregate.
      */
     public ContentContributor assignContributor(
             Contributor contributor,

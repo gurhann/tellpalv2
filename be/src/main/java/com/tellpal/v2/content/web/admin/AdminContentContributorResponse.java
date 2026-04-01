@@ -17,7 +17,7 @@ public record AdminContentContributorResponse(
                 record.contributorId(),
                 record.contributorDisplayName(),
                 record.role().name(),
-                record.languageCode().value(),
+                record.languageCode() == null ? null : record.languageCode().value(),
                 record.creditName(),
                 record.sortOrder());
     }

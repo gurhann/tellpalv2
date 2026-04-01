@@ -254,7 +254,6 @@ stack.
 - Contributor assignment:
   - `contributorId`
   - `role`
-  - `languageCode`
   - `sortOrder` defaults to required integer semantics and must be non-negative
 - Free-access grant:
   - `accessKey`
@@ -263,9 +262,10 @@ stack.
 
 ### Forbidden Combinations
 
-- Duplicate contributor assignment for the same `contributorId + role + languageCode` is forbidden.
-- Duplicate contributor `sortOrder` for the same `role + languageCode` inside one content item is
+- Duplicate contributor assignment for the same `contributorId + role + languageCode` scope is
   forbidden.
+- Duplicate contributor `sortOrder` for the same `role + languageCode` scope inside one content
+  item is forbidden.
 - Duplicate free-access grant for the same `accessKey + contentId + languageCode` is forbidden.
 
 ### Type and State Rules
@@ -273,6 +273,10 @@ stack.
 - Contributor list `limit` must be positive and is capped at `100`.
 - Contributor display names are trimmed and must not be blank on create or rename.
 - Contributor assignment requires both the content and contributor to already exist.
+- Contributor `languageCode` is optional. `null` or an omitted field creates a global
+  localization-independent credit.
+- A provided contributor `languageCode` must not be blank and must resolve to a supported
+  `LanguageCode`.
 - Contributor `creditName` is optional and trimmed to `null` when blank.
 - Duplicate contributor assignments and duplicate contributor sort orders currently surface as
   `400 invalid_request`, not as a module-specific conflict code.
@@ -287,6 +291,8 @@ stack.
 ### Publication and Curation Preconditions
 
 - Contributor assignment has no content-type restriction in the backend.
+- Contributor assignment does not require an existing content localization, even when a localized
+  `languageCode` is provided.
 - Free-access grant does not require the target localization to be published. Existence is enough.
 - Free-access revoke requires an exact stored match for `accessKey + contentId + languageCode`.
 
@@ -312,8 +318,11 @@ stack.
 ### Frontend Form and Query Implications
 
 - Contributor picker flows must tolerate a recent-only list with no backend search endpoint.
-- UI must prevent duplicate contributor role/language combinations and duplicate sort orders before
-  submit when enough local state is available.
+- UI must support both global and localized contributor credits:
+  - `languageCode = null` means `All languages`
+  - localized picks should remain limited to languages already present in the content detail model
+- UI must prevent duplicate contributor role/language-scope combinations and duplicate sort orders
+  before submit when enough local state is available.
 - CMS should not promise contributor deletion or content-assignment removal yet.
 - Free-access screens should treat blank key input as the `default` set on admin list requests.
 - Free-access screens must not assume that requesting an unknown non-default key will return the
