@@ -31,7 +31,9 @@ function makeSession(overrides: Partial<SessionPayload> = {}): SessionPayload {
   };
 }
 
-test("category create and edit use content-aligned types", async ({ page }) => {
+test("category create, edit, and localize use content-aligned types", async ({
+  page,
+}) => {
   const session = makeSession();
   const categories: CategoryReadResponse[] = [
     {
@@ -50,13 +52,51 @@ test("category create and edit use content-aligned types", async ({ page }) => {
     },
   ];
   let createdCategory: CategoryReadResponse | null = null;
+  let createdLocalization: {
+    categoryId: number;
+    languageCode: string;
+    name: string;
+    description: string | null;
+    imageMediaId: number | null;
+    status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+    publishedAt: string | null;
+    published: boolean;
+  } | null = null;
+  const imageAssets = [
+    {
+      assetId: 4,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/images/calm-lullabies-cover.jpg",
+      mediaType: "IMAGE",
+      kind: "ORIGINAL_IMAGE",
+      mimeType: "image/jpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-04-01T12:00:00Z",
+      updatedAt: "2026-04-01T12:00:00Z",
+    },
+    {
+      assetId: 5,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/images/calm-lullabies-detail.jpg",
+      mediaType: "IMAGE",
+      kind: "ORIGINAL_IMAGE",
+      mimeType: "image/jpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-04-01T12:00:00Z",
+      updatedAt: "2026-04-01T12:00:00Z",
+    },
+  ];
 
-  await page.route("**/api/admin/auth/login", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(session),
-    });
+  await page.addInitScript(() => {
+    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
   });
 
   await page.route("**/api/admin/auth/refresh", async (route) => {
@@ -160,24 +200,89 @@ test("category create and edit use content-aligned types", async ({ page }) => {
     await route.fallback();
   });
 
-  await page.goto("/login");
+  await page.route(
+    "**/api/admin/categories/99/localizations/tr",
+    async (route) => {
+      const request = route.request();
 
-  await page.getByLabel(/username/i).fill("admin");
-  await page.getByLabel(/password/i).fill("test1234");
-  await page.getByRole("button", { name: /^sign in$/i }).click();
+      if (request.method() === "POST" || request.method() === "PUT") {
+        const body = request.postDataJSON() as {
+          name: string;
+          description?: string | null;
+          imageMediaId?: number | null;
+          status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+          publishedAt?: string | null;
+        };
 
-  await expect(
-    page.getByRole("heading", { name: /content studio/i }),
-  ).toBeVisible();
+        createdLocalization = {
+          categoryId: 99,
+          languageCode: "tr",
+          name: body.name,
+          description: body.description ?? null,
+          imageMediaId: body.imageMediaId ?? null,
+          status: body.status,
+          publishedAt: body.publishedAt ?? null,
+          published: body.status === "PUBLISHED",
+        };
 
-  await Promise.all([
-    page.waitForResponse(
-      (response) =>
-        response.url().includes("/api/admin/categories") &&
-        response.request().method() === "GET",
-    ),
-    page.getByRole("link", { name: /^categories/i }).click(),
-  ]);
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(createdLocalization),
+        });
+        return;
+      }
+
+      await route.fallback();
+    },
+  );
+
+  await page.route("**/api/admin/media**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(imageAssets),
+    });
+  });
+
+  await page.route("**/api/admin/media/*", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    const assetId = Number(route.request().url().split("/").pop());
+    const asset = imageAssets.find((entry) => entry.assetId === assetId);
+
+    if (!asset) {
+      await route.fulfill({
+        status: 404,
+        contentType: "application/problem+json",
+        body: JSON.stringify({
+          type: "about:blank",
+          title: "Asset not found",
+          status: 404,
+          detail: `Asset #${assetId} was not found.`,
+          errorCode: "asset_not_found",
+          path: `/api/admin/media/${assetId}`,
+        }),
+      });
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(asset),
+    });
+  });
+
+  await page.goto("/categories");
 
   await expect(
     page.getByRole("heading", { name: /^categories$/i, level: 1 }),
@@ -217,4 +322,31 @@ test("category create and edit use content-aligned types", async ({ page }) => {
   await page.getByRole("button", { name: /save metadata/i }).click();
 
   await expect(page.getByLabel(/slug/i)).toHaveValue("calm-lullabies-v2");
+
+  await page
+    .getByRole("button", { name: /create first localization/i })
+    .click();
+
+  await expect(
+    page.getByRole("heading", { name: /create category localization/i }),
+  ).toBeVisible();
+  await page.locator('input[name="name"]').fill("Calm Lullabies");
+  await page
+    .locator('textarea[name="description"]')
+    .fill("Soft editorial picks for bedtime.");
+  await page.locator('input[name="imageMediaId"]').fill("4");
+  await page.getByRole("button", { name: /create localization/i }).click();
+
+  await expect(page.getByRole("tab", { name: /turkish/i })).toBeVisible();
+  await expect(page.locator('input[name="name"]')).toHaveValue(
+    "Calm Lullabies",
+  );
+
+  await page.getByLabel(/^name$/i).fill("Calm Lullabies Updated");
+  await page.getByRole("button", { name: /save localization/i }).click();
+
+  await expect(page.locator('input[name="name"]')).toHaveValue(
+    "Calm Lullabies Updated",
+  );
+  await expect(createdLocalization?.name).toBe("Calm Lullabies Updated");
 });
