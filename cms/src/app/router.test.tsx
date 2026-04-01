@@ -5,6 +5,7 @@ import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cmsRoutes } from "@/app/router";
+import { archivedCategoryViewModel } from "@/features/categories/test/fixtures";
 import { storyContentViewModel } from "@/features/contents/test/fixtures";
 import {
   AuthContext,
@@ -18,12 +19,25 @@ const contentHookMocks = vi.hoisted(() => ({
   useContentDetail: vi.fn(),
 }));
 
+const categoryHookMocks = vi.hoisted(() => ({
+  useCategoryList: vi.fn(),
+  useCategoryDetail: vi.fn(),
+}));
+
 vi.mock("@/features/contents/queries/use-content-list", () => ({
   useContentList: contentHookMocks.useContentList,
 }));
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
   useContentDetail: contentHookMocks.useContentDetail,
+}));
+
+vi.mock("@/features/categories/queries/use-category-list", () => ({
+  useCategoryList: categoryHookMocks.useCategoryList,
+}));
+
+vi.mock("@/features/categories/queries/use-category-detail", () => ({
+  useCategoryDetail: categoryHookMocks.useCategoryDetail,
 }));
 
 function makeSession(
@@ -54,6 +68,26 @@ function makeContentListState() {
 function makeContentDetailState() {
   return {
     content: storyContentViewModel,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn(),
+  };
+}
+
+function makeCategoryListState() {
+  return {
+    categories: [archivedCategoryViewModel],
+    isLoading: false,
+    isFetching: false,
+    problem: null,
+    refetch: vi.fn(),
+  };
+}
+
+function makeCategoryDetailState() {
+  return {
+    category: archivedCategoryViewModel,
     isLoading: false,
     problem: null,
     isNotFound: false,
@@ -154,8 +188,14 @@ function renderRouter(options: {
 beforeEach(() => {
   contentHookMocks.useContentList.mockReset();
   contentHookMocks.useContentDetail.mockReset();
+  categoryHookMocks.useCategoryList.mockReset();
+  categoryHookMocks.useCategoryDetail.mockReset();
   contentHookMocks.useContentList.mockReturnValue(makeContentListState());
   contentHookMocks.useContentDetail.mockReturnValue(makeContentDetailState());
+  categoryHookMocks.useCategoryList.mockReturnValue(makeCategoryListState());
+  categoryHookMocks.useCategoryDetail.mockReturnValue(
+    makeCategoryDetailState(),
+  );
 });
 
 describe("CMS router auth flow", () => {
@@ -256,9 +296,7 @@ describe("CMS router auth flow", () => {
         level: 1,
       }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/category registry awaits bg02/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText("quiet-nights")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /create category/i }),
     ).toBeDisabled();
@@ -278,11 +316,12 @@ describe("CMS router auth flow", () => {
     expect(
       await screen.findByRole("heading", { name: /category #9/i }),
     ).toBeInTheDocument();
+    expect(screen.getAllByText("quiet-nights").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", { name: /open curation/i }),
     ).toBeDisabled();
     expect(
-      screen.getByText(/localization workspaces reserved/i),
+      screen.getByText(/localization workspaces pending/i),
     ).toBeInTheDocument();
   });
 

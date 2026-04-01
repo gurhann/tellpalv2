@@ -61,13 +61,14 @@ export type AdminCategoryResponse = z.infer<typeof adminCategoryResponseSchema>;
 export type AdminCategoryLocalizationResponse = z.infer<
   typeof adminCategoryLocalizationResponseSchema
 >;
-
-export const categoryAdminBacklogDependencies = {
-  listCategories: "BG02",
-  deleteCategory: "BG02",
-} as const;
+const adminCategoryListResponseSchema = z.array(adminCategoryResponseSchema);
 
 export const categoryAdminApi = {
+  listCategories() {
+    return apiClient.get<AdminCategoryResponse[]>(basePath, {
+      responseSchema: adminCategoryListResponseSchema,
+    });
+  },
   createCategory(input: CreateCategoryInput) {
     return apiClient.post<AdminCategoryResponse>(basePath, {
       body: input,

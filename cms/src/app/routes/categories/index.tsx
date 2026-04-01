@@ -1,12 +1,6 @@
-import {
-  CirclePlus,
-  Layers3,
-  RefreshCw,
-  Search,
-  ShieldAlert,
-} from "lucide-react";
+import { CirclePlus, RefreshCw, Search, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-import { EmptyState } from "@/components/feedback/empty-state";
 import {
   FilterBar,
   FilterBarActions,
@@ -22,19 +16,38 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { categoryAdminBacklogDependencies } from "@/features/categories/api/category-admin";
+import { CategoryListTable } from "@/features/categories/components/category-list-table";
+import { useCategoryList } from "@/features/categories/queries/use-category-list";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 
 export function CategoriesIndexRoute() {
+  const navigate = useNavigate();
+  const categoryListQuery = useCategoryList();
+  const categoryCount = categoryListQuery.categories.length;
+  const activeCount = categoryListQuery.categories.filter(
+    (category) => category.active,
+  ).length;
+  const premiumCount = categoryListQuery.categories.filter(
+    (category) => category.premium,
+  ).length;
+
   return (
     <ContentPageShell
       eyebrow="Category Studio"
       title="Categories"
-      description="The category studio shell is ready, but the registry still waits on the missing admin list endpoint. Filters and create entry points stay visible so the full workspace shape can settle before live query wiring lands."
+      description="The category registry now reads directly from the admin API. Search and filter controls stay visual-only, while create and localization write flows land in the next category task."
       actions={
         <>
-          <Button disabled type="button" variant="outline">
-            <RefreshCw className="size-4" />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => void categoryListQuery.refetch()}
+          >
+            <RefreshCw
+              className={`size-4 ${
+                categoryListQuery.isFetching ? "animate-spin" : ""
+              }`}
+            />
             Refresh
           </Button>
           <Button disabled type="button">
@@ -69,8 +82,10 @@ export function CategoriesIndexRoute() {
 
           <FilterBarActions>
             <FilterBarSummary
-              description="The list shell is intentionally static until BG02 adds GET /api/admin/categories. The rest of the studio layout is now fixed."
-              title="Registry wiring blocked by BG02"
+              description="Live data is bound. Query params and create/edit mutations are still deferred, but the shared category registry now reflects the backend environment."
+              title={`${categoryCount} categor${
+                categoryCount === 1 ? "y" : "ies"
+              } loaded`}
             />
           </FilterBarActions>
         </FilterBar>
@@ -79,22 +94,25 @@ export function CategoriesIndexRoute() {
         <>
           <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
             <CardHeader>
-              <CardTitle>Backend Gap</CardTitle>
+              <CardTitle>Workspace Notes</CardTitle>
               <CardDescription>
-                Category studio depends on the missing list and delete admin
-                endpoints.
+                The registry shell is backed by `GET /api/admin/categories`.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-                `GET /api/admin/categories` is still tracked under{" "}
-                {categoryAdminBacklogDependencies.listCategories}. Until it
-                lands, this route renders no fake registry rows.
+              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                {categoryListQuery.isLoading
+                  ? "The category registry is hydrating from the backend."
+                  : `${activeCount} active categories and ${premiumCount} premium categories are available in the current environment.`}
               </div>
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-                Delete stays blocked behind{" "}
-                {categoryAdminBacklogDependencies.deleteCategory}, so the list
-                shell exposes no destructive placeholder action.
+              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                Row navigation opens the live base metadata view for each
+                category record without inventing localization data the backend
+                does not return yet.
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                Delete exists on the backend now, but destructive UI stays
+                deferred until the write flows land in the next category task.
               </div>
             </CardContent>
           </Card>
@@ -103,50 +121,42 @@ export function CategoriesIndexRoute() {
             <CardHeader>
               <CardTitle>Planned Workspace</CardTitle>
               <CardDescription>
-                The route shape is fixed so list, detail, and curation can
-                expand without a later layout rewrite.
+                The live read shell is in place so the next category tasks can
+                focus on write flows and curation without a layout rewrite.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                `M06-T02` will bind live category list and base detail queries.
+                `M06-T03` opens category create, metadata edit, and localization
+                forms.
               </div>
               <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                `M06-T03` opens create, metadata edit, and localization forms.
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                `M07` layers language-scoped curation into the detail route.
+                `M07` layers language-scoped curation into the detail route once
+                localization-aware category editing has settled.
               </div>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                <Layers3 className="size-3.5" />
-                Shell, toolbar, and detail path are now reserved
+                <Sparkles className="size-3.5" />
+                Shared toolbar, summary, and detail navigation are live
               </div>
             </CardContent>
           </Card>
         </>
       }
     >
-      <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-        <CardContent className="px-6 py-6">
-          <EmptyState
-            action={
-              <Button disabled type="button" variant="outline">
-                Open first category
-              </Button>
-            }
-            description="The CMS does not yet have a category list response to render here. Once BG02 lands, this area will show slug, type, premium state, active state, and entry points into each category detail workspace."
-            icon={ShieldAlert}
-            title="Category registry awaits BG02"
-          />
-        </CardContent>
-      </Card>
+      <CategoryListTable
+        categories={categoryListQuery.categories}
+        isLoading={categoryListQuery.isLoading}
+        onCategorySelect={(category) => navigate(`/categories/${category.id}`)}
+        onRetry={() => void categoryListQuery.refetch()}
+        problem={categoryListQuery.problem}
+      />
 
       <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
         <CardHeader>
           <CardTitle>Studio Layout Ready</CardTitle>
           <CardDescription>
-            The list route already reserves the major editing surfaces needed
-            for the remaining category tasks.
+            The live read route already reserves the major editing surfaces
+            needed for the remaining category tasks.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3">
@@ -156,7 +166,7 @@ export function CategoriesIndexRoute() {
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Search, type, premium, and active filter controls are visible and
-              deliberately inactive until query wiring lands.
+              deliberately inactive until create/edit behavior settles.
             </p>
           </div>
           <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
@@ -164,7 +174,7 @@ export function CategoriesIndexRoute() {
               Detail navigation
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Each future list row will navigate into `/categories/:categoryId`
+              Each live list row navigates into `/categories/:categoryId`
               without changing the surrounding app shell.
             </p>
           </div>
@@ -174,7 +184,7 @@ export function CategoriesIndexRoute() {
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               The detail shell already reserves separate metadata, localization,
-              and curation areas for later tasks.
+              and curation areas while base category reads stay live today.
             </p>
           </div>
         </CardContent>
