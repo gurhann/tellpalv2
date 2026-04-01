@@ -354,6 +354,7 @@ stack.
 - `POST /api/admin/categories`
 - `GET /api/admin/categories`
 - `GET /api/admin/categories/{categoryId}`
+- `DELETE /api/admin/categories/{categoryId}`
 - `PUT /api/admin/categories/{categoryId}`
 - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}`
 - `PUT /api/admin/categories/{categoryId}/localizations/{languageCode}`
@@ -388,6 +389,8 @@ stack.
 ### Type and State Rules
 
 - Category slug is trimmed and must not be blank.
+- Category delete is a soft-delete/state transition that sets `active=false` and preserves
+  localizations plus curated content history for admin reads.
 - Category localization `name` is trimmed and must not be blank.
 - Category localization `description` is trimmed and blank values become `null`.
 - `imageMediaId` must reference an asset with media type `IMAGE`.
@@ -448,7 +451,6 @@ stack.
 
 ### Open Gaps and Unverified Items
 
-- There is no admin category delete endpoint.
 - There is no admin read endpoint that returns category localizations or curated content collections.
 
 ## Assets and Media Processing

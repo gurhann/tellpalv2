@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryLocalizationCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.DeleteCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryLocalizationCommand;
 import com.tellpal.v2.category.application.CategoryManagementService;
@@ -97,6 +99,19 @@ public class CategoryAdminController {
         return categoryLookupApi.findById(categoryId)
                 .map(AdminCategoryResponse::from)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+    }
+
+    @DeleteMapping("/{categoryId}")
+    @Operation(summary = "Delete a category", description = "Deactivates one category aggregate and preserves editorial history for admin reads.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Category deleted"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryManagementService.deleteCategory(new DeleteCategoryCommand(categoryId));
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{categoryId}")

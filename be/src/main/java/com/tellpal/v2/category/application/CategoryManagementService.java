@@ -10,6 +10,7 @@ import com.tellpal.v2.category.application.CategoryApplicationExceptions.Categor
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.DuplicateCategorySlugException;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryLocalizationCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.DeleteCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryLocalizationCommand;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryLocalizationRecord;
@@ -57,6 +58,16 @@ public class CategoryManagementService {
         ensureSlugAvailable(command.categoryId(), command.slug());
         category.updateDetails(command.slug(), command.type(), command.premium(), command.active());
         return CategoryApiMapper.toReference(categoryRepository.save(category));
+    }
+
+    /**
+     * Deactivates a category aggregate while preserving localization and curation history.
+     */
+    @Transactional
+    public void deleteCategory(DeleteCategoryCommand command) {
+        Category category = loadCategory(command.categoryId());
+        category.deactivate();
+        categoryRepository.save(category);
     }
 
     /**

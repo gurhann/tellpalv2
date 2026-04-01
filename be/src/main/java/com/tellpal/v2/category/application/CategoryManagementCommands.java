@@ -38,6 +38,16 @@ public final class CategoryManagementCommands {
     }
 
     /**
+     * Command for deactivating one category aggregate.
+     */
+    public record DeleteCategoryCommand(Long categoryId) {
+
+        public DeleteCategoryCommand {
+            categoryId = requirePositiveId(categoryId, "Category ID must be positive");
+        }
+    }
+
+    /**
      * Command for creating a category localization.
      */
     public record CreateCategoryLocalizationCommand(

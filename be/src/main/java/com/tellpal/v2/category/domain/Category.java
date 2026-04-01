@@ -113,6 +113,13 @@ public class Category extends BaseJpaEntity {
     }
 
     /**
+     * Deactivates the aggregate without removing localization or curation history.
+     */
+    public void deactivate() {
+        this.active = false;
+    }
+
+    /**
      * Creates or updates one localized category view.
      */
     public CategoryLocalization upsertLocalization(

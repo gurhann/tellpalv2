@@ -1,6 +1,8 @@
 package com.tellpal.v2.category.web.admin;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -93,6 +95,69 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$[1].slug").value("sleep-routines"))
                 .andExpect(jsonPath("$[1].active").value(false))
                 .andExpect(jsonPath("$[1].premium").value(true));
+    }
+
+    @Test
+    void deleteCategoryDeactivatesAggregateAndPreservesAdminReadAccess() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "CONTENT",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "name": "One Cikan Uyku",
+                                  "description": "Editor secimleri",
+                                  "status": "PUBLISHED",
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(delete("/api/admin/categories/{categoryId}", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNoContent());
+
+        Boolean active = jdbcTemplate.queryForObject(
+                "select is_active from categories where id = ?",
+                Boolean.class,
+                categoryId);
+        assertThat(active).isFalse();
+
+        Integer localizationCount = jdbcTemplate.queryForObject(
+                "select count(*) from category_localizations where category_id = ?",
+                Integer.class,
+                categoryId);
+        assertThat(localizationCount).isEqualTo(1);
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categoryId").value(categoryId))
+                .andExpect(jsonPath("$.active").value(false));
+
+        mockMvc.perform(get("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].categoryId").value(categoryId))
+                .andExpect(jsonPath("$[0].active").value(false));
     }
 
     @Test

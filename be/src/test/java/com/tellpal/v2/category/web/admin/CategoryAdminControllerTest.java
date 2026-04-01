@@ -2,6 +2,7 @@ package com.tellpal.v2.category.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -111,6 +112,12 @@ class CategoryAdminControllerTest {
                 .andExpect(jsonPath("$.categoryId").value(42))
                 .andExpect(jsonPath("$.type").value("PARENT_GUIDANCE"))
                 .andExpect(jsonPath("$.premium").value(true));
+    }
+
+    @Test
+    void deleteCategoryReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/api/admin/categories/42"))
+                .andExpect(status().isNoContent());
     }
 
     @Test
