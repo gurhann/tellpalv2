@@ -1,4 +1,4 @@
-import { ArrowRight, CirclePlus, Layers3, LoaderCircle } from "lucide-react";
+import { CirclePlus, Layers3, LoaderCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { CategoryCurationPanel } from "@/features/categories/components/category-curation-panel";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
 import { CategorySummaryCard } from "@/features/categories/components/category-summary-card";
@@ -274,42 +275,13 @@ export function CategoryDetailRoute() {
           )}
         </FormSection>
 
-        <Card
-          className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5"
-          id="curation"
-        >
-          <CardHeader>
-            <CardTitle>Curation workspace preview</CardTitle>
-            <CardDescription>
-              Language-scoped category curation will live directly under this
-              detail route.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Planned curation actions
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Add content by id, adjust display order, and remove curated
-                links from the selected category language workspace after
-                localization editing settles. The backend now enforces
-                type-matched curation, so only{" "}
-                {category?.typeLabel ?? "matching"} records will be accepted
-                here.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-                /categories/{parsedCategoryId}
-              </span>
-              <ArrowRight className="size-4" />
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-                /categories/{parsedCategoryId}#curation
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+        <CategoryCurationPanel
+          category={category}
+          localizations={localizations}
+          selectedLanguageCode={selectedLanguageCode}
+          onCreateLocalization={() => setIsCreateLocalizationOpen(true)}
+          onLanguageChange={setSelectedLanguageCode}
+        />
       </>
     );
   }
@@ -337,9 +309,15 @@ export function CategoryDetailRoute() {
             >
               Create localization
             </Button>
-            <Button disabled type="button" variant="outline">
-              Open curation
-            </Button>
+            {selectedLocalization ? (
+              <Button asChild type="button" variant="outline">
+                <a href="#curation">Open curation</a>
+              </Button>
+            ) : (
+              <Button disabled type="button" variant="outline">
+                Open curation
+              </Button>
+            )}
           </>
         }
         toolbar={renderToolbar()}
@@ -360,9 +338,10 @@ export function CategoryDetailRoute() {
                   live, but today it returns only base metadata.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  Localization create and update are live, but localization tabs
-                  are session-backed until a dedicated admin read endpoint
-                  exists.
+                  Localization create and update are live, and curation now
+                  mirrors those language workspaces. Both surfaces remain
+                  session-backed until a dedicated admin localization read
+                  endpoint exists.
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
                   <Layers3 className="size-3.5" />
@@ -404,9 +383,10 @@ export function CategoryDetailRoute() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  `M07` expands this route into the full category curation
-                  workspace with add, reorder, and remove flows while keeping
-                  curated content constrained to the selected category type.
+                  `M07-T01` reserves separate curation lanes per language.
+                  `M07-T02` and `M07-T03` will bind add, reorder, list, and
+                  remove flows while keeping curated content constrained to the
+                  selected category type.
                 </div>
               </CardContent>
             </Card>

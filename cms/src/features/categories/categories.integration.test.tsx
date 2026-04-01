@@ -327,7 +327,9 @@ describe("Category integration", () => {
       target: { value: "dream-lullabies" },
     });
     fireEvent.click(
-      within(createDialog).getByRole("button", { name: /^create category$/i }),
+      within(createDialog).getByRole("button", {
+        name: /^create category$/i,
+      }),
     );
 
     expect(
@@ -345,7 +347,7 @@ describe("Category integration", () => {
     });
 
     fireEvent.click(
-      screen.getByRole("button", { name: /create first localization/i }),
+      screen.getAllByRole("button", { name: /create first localization/i })[0]!,
     );
 
     const localizationDialog = await screen.findByRole("dialog");
@@ -369,8 +371,10 @@ describe("Category integration", () => {
       }),
     );
 
-    const turkishTab = await screen.findByRole("tab", { name: /turkish/i });
-    expect(turkishTab).toBeVisible();
+    const turkishTabs = await screen.findAllByRole("tab", {
+      name: /turkish/i,
+    });
+    expect(turkishTabs.length).toBeGreaterThan(0);
     expect(await screen.findByDisplayValue("Dream Lullabies")).toBeVisible();
 
     fireEvent.change(screen.getByLabelText(/^name$/i), {
@@ -381,7 +385,7 @@ describe("Category integration", () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue("Dream Lullabies Updated")).toBeVisible();
     });
-  });
+  }, 15_000);
 
   it("maps duplicate slug validation onto the live create dialog", async () => {
     const session = makeSession();

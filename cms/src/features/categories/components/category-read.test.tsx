@@ -1,10 +1,12 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import {
+  categoryLocalizationViewModels,
   archivedCategoryViewModel,
   featuredSleepCategoryViewModel,
 } from "@/features/categories/test/fixtures";
 
+import { CategoryCurationPanel } from "./category-curation-panel";
 import { CategoryListTable } from "./category-list-table";
 import { CategorySummaryCard } from "./category-summary-card";
 
@@ -42,5 +44,22 @@ describe("category read components", () => {
     expect(screen.getByText("featured-sleep")).toBeVisible();
     expect(screen.getByText("Category #7")).toBeVisible();
     expect(screen.getByText(/base category detail live/i)).toBeVisible();
+  });
+
+  it("renders a category curation shell tied to the selected localization", () => {
+    render(
+      <CategoryCurationPanel
+        category={featuredSleepCategoryViewModel}
+        localizations={categoryLocalizationViewModels}
+        selectedLanguageCode="en"
+        onCreateLocalization={vi.fn()}
+        onLanguageChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText(/category curation workspace/i)).toBeVisible();
+    expect(
+      screen.getByText(/each localization owns its own curation lane/i),
+    ).toBeVisible();
   });
 });

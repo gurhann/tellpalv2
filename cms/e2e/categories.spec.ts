@@ -315,7 +315,7 @@ test("category create, edit, and localize use content-aligned types", async ({
   ).toBeVisible();
   await expect(page.getByText(/lullaby \/ standard \/ active/i)).toBeVisible();
   await expect(
-    page.getByText(/only lullaby records will be accepted here/i),
+    page.getByText(/category type determines which content family/i),
   ).toBeVisible();
 
   await page.getByLabel(/slug/i).fill("calm-lullabies-v2");
@@ -325,6 +325,7 @@ test("category create, edit, and localize use content-aligned types", async ({
 
   await page
     .getByRole("button", { name: /create first localization/i })
+    .first()
     .click();
 
   await expect(
@@ -337,7 +338,16 @@ test("category create, edit, and localize use content-aligned types", async ({
   await page.locator('input[name="imageMediaId"]').fill("4");
   await page.getByRole("button", { name: /create localization/i }).click();
 
-  await expect(page.getByRole("tab", { name: /turkish/i })).toBeVisible();
+  await expect(
+    page
+      .getByRole("tablist", { name: /category localization tabs/i })
+      .getByRole("tab", { name: /turkish/i }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("tablist", { name: /category curation language tabs/i })
+      .getByRole("tab", { name: /turkish/i }),
+  ).toBeVisible();
   await expect(page.locator('input[name="name"]')).toHaveValue(
     "Calm Lullabies",
   );
