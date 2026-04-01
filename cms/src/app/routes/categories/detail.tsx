@@ -1,14 +1,11 @@
-import {
-  ArrowRight,
-  Languages,
-  Layers3,
-  LoaderCircle,
-  SquareKanban,
-} from "lucide-react";
+import { ArrowRight, CirclePlus, Layers3, LoaderCircle } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
+import { FormSection } from "@/components/forms/form-section";
+import { LanguageTabs } from "@/components/language/language-tabs";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,9 +14,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CategoryForm } from "@/features/categories/components/category-form";
+import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
 import { CategorySummaryCard } from "@/features/categories/components/category-summary-card";
 import { useCategoryDetail } from "@/features/categories/queries/use-category-detail";
+import { useCategoryLocalizations } from "@/features/categories/queries/use-category-localizations";
+import {
+  getCreateCategoryLocalizationDefaults,
+  mapCategoryLocalizationToFormValues,
+} from "@/features/categories/schema/category-localization-schema";
+import { mapCategoryReadToFormValues } from "@/features/categories/schema/category-schema";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
+import { supportedCmsLanguageOptions } from "@/lib/languages";
 
 export function CategoryDetailRoute() {
   const { categoryId = "" } = useParams();
@@ -29,15 +42,52 @@ export function CategoryDetailRoute() {
   const categoryQuery = useCategoryDetail(
     hasValidCategoryId ? parsedCategoryId : null,
   );
+  const localizationQuery = useCategoryLocalizations(
+    hasValidCategoryId ? parsedCategoryId : null,
+  );
   const category = categoryQuery.category;
-  const routeTitle = hasValidCategoryId
-    ? `Category #${parsedCategoryId}`
-    : "Category Detail";
+  const localizations = localizationQuery.localizations;
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
+  const [isCreateLocalizationOpen, setIsCreateLocalizationOpen] =
+    useState(false);
+  const routeTitle =
+    category?.slug ??
+    (hasValidCategoryId ? `Category #${parsedCategoryId}` : "Category Detail");
   const routeDescription = category
-    ? `Base metadata for ${category.slug} is now loaded from the admin API. Localization and curation surfaces stay explicit placeholders until broader category reads arrive.`
+    ? `Base metadata for ${category.slug} is now editable. Localization creation and update are live, but localization tabs remain session-backed until a dedicated admin read endpoint exists.`
     : hasValidCategoryId
       ? "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow."
       : "This route expects a valid numeric category id from the category registry.";
+
+  const selectedLocalization =
+    localizations.find(
+      (localization) => localization.languageCode === selectedLanguageCode,
+    ) ??
+    localizations[0] ??
+    null;
+
+  const availableLanguageOptions = useMemo(
+    () =>
+      supportedCmsLanguageOptions.filter(
+        (option) =>
+          !localizations.some(
+            (localization) => localization.languageCode === option.code,
+          ),
+      ),
+    [localizations],
+  );
+
+  const tabItems = localizations.map((localization) => ({
+    code: localization.languageCode,
+    label: localization.languageLabel,
+    tone: localization.isPublished
+      ? ("success" as const)
+      : ("default" as const),
+    meta: localization.statusLabel,
+    description: localization.hasImage
+      ? "Image ready for this language workspace."
+      : "No image selected yet for this language workspace.",
+  }));
 
   function renderToolbar() {
     if (category) {
@@ -161,74 +211,68 @@ export function CategoryDetailRoute() {
 
     return (
       <>
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Base metadata</CardTitle>
-            <CardDescription>
-              Current admin reads expose only category-level metadata. Write
-              actions and localization workspaces land next.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Slug</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {category.slug}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Type</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {category.typeLabel}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Access</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {category.premium ? "Premium" : "Standard"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">Lifecycle</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {category.active ? "Active" : "Inactive"}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <FormSection
+          description="Update the base category metadata. Category creation is live from the registry, and this form now saves slug, premium, and active state through the admin API."
+          title="Metadata"
+        >
+          <CategoryForm
+            categoryId={category.id}
+            initialValues={mapCategoryReadToFormValues(category)}
+            mode="update"
+          />
+        </FormSection>
 
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Localization workspaces pending</CardTitle>
-            <CardDescription>
-              Category detail reads still omit localization payloads, so this
-              task keeps the workspace honest instead of synthesizing locale
-              tabs.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-dashed border-border/80 bg-muted/20 px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Languages className="size-4 text-primary" />
-                Localization data not hydrated yet
-              </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                The current admin detail response does not include localized
-                `name`, `description`, image selection, or publication status.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-dashed border-border/80 bg-muted/20 px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <SquareKanban className="size-4 text-primary" />
-                Curation waits on locale context
-              </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Category curation will activate after localization editing is
-                live and the chosen language exists.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <FormSection
+          actions={
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateLocalizationOpen(true)}
+              disabled={availableLanguageOptions.length === 0}
+            >
+              <CirclePlus className="size-4" />
+              Create localization
+            </Button>
+          }
+          description="Category localization creation and update are live, but this workspace can only show localizations created or updated in the current session because the backend has no admin localization read endpoint yet."
+          title="Localization"
+        >
+          {selectedLocalization ? (
+            <>
+              <LanguageTabs
+                items={tabItems}
+                listLabel="Category localization tabs"
+                value={selectedLocalization.languageCode}
+                onValueChange={setSelectedLanguageCode}
+              />
+
+              <CategoryLocalizationForm
+                key={`${category.id}-${selectedLocalization.languageCode}-${selectedLocalization.name}-${selectedLocalization.status}`}
+                availableLanguages={supportedCmsLanguageOptions}
+                categoryId={category.id}
+                initialValues={mapCategoryLocalizationToFormValues(
+                  selectedLocalization,
+                )}
+                localization={selectedLocalization}
+                mode="update"
+              />
+            </>
+          ) : (
+            <EmptyState
+              action={
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsCreateLocalizationOpen(true)}
+                >
+                  Create first localization
+                </Button>
+              }
+              description="Create the first category localization to open a language workspace. Existing backend localizations are not readable yet, so only current-session changes appear here."
+              title="No session localizations yet"
+            />
+          )}
+        </FormSection>
 
         <Card
           className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5"
@@ -248,7 +292,8 @@ export function CategoryDetailRoute() {
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Add content by id, adjust display order, and remove curated
-                links from the selected category language workspace.
+                links from the selected category language workspace after
+                localization editing settles.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -267,75 +312,136 @@ export function CategoryDetailRoute() {
   }
 
   return (
-    <ContentPageShell
-      eyebrow="Category Studio"
-      title={routeTitle}
-      description={routeDescription}
-      actions={
-        <>
-          <Button asChild type="button" variant="outline">
-            <Link to="/categories">Return to category registry</Link>
-          </Button>
-          <Button disabled type="button" variant="outline">
-            Open curation
-          </Button>
-          <Button disabled type="button">
-            Save metadata
-          </Button>
-        </>
-      }
-      toolbar={renderToolbar()}
-      aside={
-        <>
-          <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-            <CardHeader>
-              <CardTitle>Read Surface Constraints</CardTitle>
-              <CardDescription>
-                Current backend category reads are intentionally narrower than
-                the target studio workspace.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                `GET /api/admin/categories/
-                {hasValidCategoryId ? parsedCategoryId : "{categoryId}"}` is
-                live, but today it returns only base metadata.
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                Localization payloads and curated content collections are still
-                separate gaps, so this route keeps those areas explicit instead
-                of inventing fake data.
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                <Layers3 className="size-3.5" />
-                Live read shell ready for write and curation expansion
-              </div>
-            </CardContent>
-          </Card>
+    <>
+      <ContentPageShell
+        eyebrow="Category Studio"
+        title={routeTitle}
+        description={routeDescription}
+        actions={
+          <>
+            <Button asChild type="button" variant="outline">
+              <Link to="/categories">Return to category registry</Link>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateLocalizationOpen(true)}
+              disabled={
+                !category ||
+                availableLanguageOptions.length === 0 ||
+                categoryQuery.isLoading
+              }
+            >
+              Create localization
+            </Button>
+            <Button disabled type="button" variant="outline">
+              Open curation
+            </Button>
+          </>
+        }
+        toolbar={renderToolbar()}
+        aside={
+          <>
+            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
+              <CardHeader>
+                <CardTitle>Read Surface Constraints</CardTitle>
+                <CardDescription>
+                  Current backend category reads are intentionally narrower than
+                  the target studio workspace.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                  `GET /api/admin/categories/
+                  {hasValidCategoryId ? parsedCategoryId : "{categoryId}"}` is
+                  live, but today it returns only base metadata.
+                </div>
+                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                  Localization create and update are live, but localization tabs
+                  are session-backed until a dedicated admin read endpoint
+                  exists.
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
+                  <Layers3 className="size-3.5" />
+                  Live read shell ready for curation expansion
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-            <CardHeader>
-              <CardTitle>Next Category Tasks</CardTitle>
-              <CardDescription>
-                After live read binding, category work moves into write flows
-                and curation.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                `M06-T03` adds category create, metadata edit, and localization
-                mutation flows on top of this live read surface.
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                `M07` expands this route into the full language-scoped curation
-                workspace.
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      }
-    >
-      {renderDetailContent()}
-    </ContentPageShell>
+            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
+              <CardHeader>
+                <CardTitle>Localization Snapshot</CardTitle>
+                <CardDescription>
+                  Session-backed localization tabs keep current edits visible
+                  even though the backend still lacks localization reads.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                  {localizations.length === 0
+                    ? "No category localizations have been created or updated in this session yet."
+                    : `${localizations.length} localization workspace${
+                        localizations.length === 1 ? "" : "s"
+                      } currently visible in this session.`}
+                </div>
+                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                  Published localizations are the prerequisite for
+                  language-scoped category curation in the next module.
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
+              <CardHeader>
+                <CardTitle>Next Category Tasks</CardTitle>
+                <CardDescription>
+                  After metadata and localization writes, category work expands
+                  into language-scoped curation.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
+                  `M07` expands this route into the full category curation
+                  workspace with add, reorder, and remove flows.
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        }
+      >
+        {renderDetailContent()}
+      </ContentPageShell>
+
+      <Dialog
+        open={isCreateLocalizationOpen}
+        onOpenChange={setIsCreateLocalizationOpen}
+      >
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create category localization</DialogTitle>
+            <DialogDescription>
+              Create a language workspace for this category. Tabs in this task
+              show localizations created or updated in the current CMS session.
+            </DialogDescription>
+          </DialogHeader>
+
+          <CategoryLocalizationForm
+            availableLanguages={availableLanguageOptions}
+            categoryId={parsedCategoryId}
+            initialValues={getCreateCategoryLocalizationDefaults(
+              availableLanguageOptions[0]?.code,
+            )}
+            mode="create"
+            onCancel={() => setIsCreateLocalizationOpen(false)}
+            onSuccess={(savedLocalization) => {
+              setSelectedLanguageCode(
+                savedLocalization.languageCode.toLowerCase(),
+              );
+              setIsCreateLocalizationOpen(false);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

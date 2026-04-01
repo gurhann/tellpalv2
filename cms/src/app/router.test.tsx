@@ -299,7 +299,7 @@ describe("CMS router auth flow", () => {
     expect(screen.getByText("quiet-nights")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /create category/i }),
-    ).toBeDisabled();
+    ).toBeEnabled();
   });
 
   it("renders the category detail shell for /categories/:categoryId", async () => {
@@ -314,14 +314,14 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /category #9/i }),
+      await screen.findByRole("heading", { name: /quiet-nights/i }),
     ).toBeInTheDocument();
     expect(screen.getAllByText("quiet-nights").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", { name: /open curation/i }),
     ).toBeDisabled();
     expect(
-      screen.getByText(/localization workspaces pending/i),
+      screen.getByText(/no session localizations yet/i),
     ).toBeInTheDocument();
   });
 
