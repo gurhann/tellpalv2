@@ -23,8 +23,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.tellpal.v2.category.api.AdminCategoryContentView;
+import com.tellpal.v2.category.api.AdminCategoryCurationQueryApi;
 import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
+import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotFoundException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
@@ -53,6 +56,9 @@ class CategoryAdminControllerTest {
 
     @MockitoBean
     private CategoryManagementService categoryManagementService;
+
+    @MockitoBean
+    private AdminCategoryCurationQueryApi categoryCurationQueryApi;
 
     @MockitoBean
     private CategoryCurationService categoryCurationService;
@@ -203,6 +209,22 @@ class CategoryAdminControllerTest {
     }
 
     @Test
+    void listCuratedContentReturnsOrderedResponses() throws Exception {
+        when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.TR)).thenReturn(List.of(
+                new AdminCategoryContentView(42L, LanguageCode.TR, 77L, 0),
+                new AdminCategoryContentView(42L, LanguageCode.TR, 91L, 3)));
+
+        mockMvc.perform(get("/api/admin/categories/42/localizations/tr/contents"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].categoryId").value(42))
+                .andExpect(jsonPath("$[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[0].contentId").value(77))
+                .andExpect(jsonPath("$[0].displayOrder").value(0))
+                .andExpect(jsonPath("$[1].contentId").value(91))
+                .andExpect(jsonPath("$[1].displayOrder").value(3));
+    }
+
+    @Test
     void updateCuratedContentOrderReturnsUpdatedResponse() throws Exception {
         when(categoryCurationService.updateContentOrder(any())).thenReturn(new CategoryContentRecord(
                 42L,
@@ -239,6 +261,18 @@ class CategoryAdminControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Category localization not published"))
                 .andExpect(jsonPath("$.errorCode").value("category_localization_not_published"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty());
+    }
+
+    @Test
+    void missingCategoryLocalizationInCurationReadReturnsNotFoundProblemDetails() throws Exception {
+        when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.TR))
+                .thenThrow(new CategoryLocalizationNotFoundException(42L, LanguageCode.TR));
+
+        mockMvc.perform(get("/api/admin/categories/42/localizations/tr/contents"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Category localization not found"))
+                .andExpect(jsonPath("$.errorCode").value("category_localization_not_found"))
                 .andExpect(jsonPath("$.requestId").isNotEmpty());
     }
 

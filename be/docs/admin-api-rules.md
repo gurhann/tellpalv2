@@ -361,6 +361,7 @@ stack.
 - `PUT /api/admin/categories/{categoryId}`
 - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}`
 - `PUT /api/admin/categories/{categoryId}/localizations/{languageCode}`
+- `GET /api/admin/categories/{categoryId}/localizations/{languageCode}/contents`
 - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}/contents`
 - `PUT /api/admin/categories/{categoryId}/localizations/{languageCode}/contents/{contentId}`
 - `DELETE /api/admin/categories/{categoryId}/localizations/{languageCode}/contents/{contentId}`
@@ -401,17 +402,21 @@ stack.
 - `imageMediaId` must reference an asset with media type `IMAGE`.
 - `imageMediaId` must be positive when present.
 - Category curation is scoped by language. Each language keeps its own ordered curated set.
+- Category curation read returns the stored localized curated set ordered by `displayOrder`.
 - Category curation requires `content.type == category.type`.
 - Duplicate curated links and duplicate display orders currently surface as `400 invalid_request`,
   not as a module-specific conflict code.
-- Category detail read currently returns only base metadata. It does not include localizations or
-  curated contents.
+- Category detail read currently returns only base metadata. A separate curation read endpoint is
+  available per `category + language`, but category localizations still do not have an admin read
+  endpoint.
 - Public/mobile category filters also use the same content-aligned type values through
   `GET /api/categories?type=...`.
 
 ### Publication and Curation Preconditions
 
 - Category curation requires the category localization to exist.
+- Category curation read requires the category localization to exist, but it does not require that
+  localization to be `PUBLISHED`.
 - Category curation requires the category localization to be `PUBLISHED`.
 - Category curation requires the referenced content to exist.
 - Category curation requires the referenced content to be active.
@@ -460,15 +465,17 @@ stack.
   `status=PUBLISHED`.
 - Curation UI should disable add and reorder actions until the selected category localization is
   published.
+- Curation UIs can hydrate stored curated rows from
+  `GET /api/admin/categories/{categoryId}/localizations/{languageCode}/contents`.
 - Curation UI should pre-filter or validate content ids so only the category-matching content type
   can be submitted.
 - Curation UIs should avoid duplicate display orders before submit.
-- Category detail screens cannot rely on a single backend read to hydrate localizations and curated
-  content.
+- Category detail screens still cannot rely on a single backend read to hydrate both localizations
+  and curated content.
 
 ### Open Gaps and Unverified Items
 
-- There is no admin read endpoint that returns category localizations or curated content collections.
+- There is still no admin read endpoint that returns category localizations.
 
 ## Assets and Media Processing
 

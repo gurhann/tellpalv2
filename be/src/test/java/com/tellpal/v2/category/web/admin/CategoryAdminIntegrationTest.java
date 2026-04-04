@@ -76,6 +76,9 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         mockMvc.perform(get("/api/admin/categories/1"))
                 .andExpect(status().isUnauthorized());
 
+        mockMvc.perform(get("/api/admin/categories/1/localizations/tr/contents"))
+                .andExpect(status().isUnauthorized());
+
         mockMvc.perform(delete("/api/admin/categories/1"))
                 .andExpect(status().isUnauthorized());
     }
@@ -203,6 +206,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     void categoryCrudLocalizationAndOrderingWorkWithAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
         Long curatedContentId = createPublishedStoryContent("featured-night-tr", LanguageCode.TR);
+        Long secondCuratedContentId = createPublishedStoryContent("moonlight-tr", LanguageCode.TR);
 
         MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
                         .header("Authorization", "Bearer " + accessToken)
@@ -260,6 +264,18 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.contentId").value(curatedContentId));
 
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr/contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentId": %d,
+                                  "displayOrder": 5
+                                }
+                                """.formatted(secondCuratedContentId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.contentId").value(secondCuratedContentId));
+
         mockMvc.perform(put("/api/admin/categories/{categoryId}/localizations/tr/contents/{contentId}",
                         categoryId,
                         curatedContentId)
@@ -272,6 +288,15 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.displayOrder").value(3));
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations/tr/contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].contentId").value(curatedContentId))
+                .andExpect(jsonPath("$[0].displayOrder").value(3))
+                .andExpect(jsonPath("$[1].contentId").value(secondCuratedContentId))
+                .andExpect(jsonPath("$[1].displayOrder").value(5));
     }
 
     @Test
@@ -363,6 +388,32 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """.formatted(curatedContentId)))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("category_content_type_mismatch"));
+    }
+
+    @Test
+    void curationReadRejectsMissingCategoryLocalization() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations/tr/contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("category_localization_not_found"));
     }
 
     private Long createPublishedStoryContent(String externalKey, LanguageCode languageCode) {
