@@ -168,9 +168,7 @@ describe("Contributor integration", () => {
 
     await screen.findByRole("heading", { name: /^contributors$/i, level: 1 });
 
-    expect(
-      screen.getByText(/delete contributor unavailable until bg03/i),
-    ).toBeVisible();
+    expect(screen.getByText(/delete contributor unavailable/i)).toBeVisible();
 
     fireEvent.click(
       screen.getByRole("button", { name: /^create contributor$/i }),
@@ -208,7 +206,7 @@ describe("Contributor integration", () => {
     expect(await screen.findByText("Annie Case Updated")).toBeVisible();
   });
 
-  it("assigns a global contributor from content detail and keeps the BG03 note visible", async () => {
+  it("assigns a global contributor from content detail and keeps the unavailable-action note visible", async () => {
     const session = makeSession();
     const content = cloneJson(storyContentReadResponse);
     const contributors = cloneJson(contributorResponses);
@@ -276,9 +274,7 @@ describe("Contributor integration", () => {
 
     await screen.findByRole("heading", { name: /evening garden/i });
 
-    expect(
-      screen.getByText(/unassign contributor unavailable until bg03/i),
-    ).toBeVisible();
+    expect(screen.getByText(/unassign contributor unavailable/i)).toBeVisible();
 
     fireEvent.click(
       screen.getByRole("button", { name: /^assign contributor$/i }),

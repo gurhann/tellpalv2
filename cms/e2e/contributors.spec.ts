@@ -51,7 +51,7 @@ function makeSession(overrides: Partial<SessionPayload> = {}): SessionPayload {
   };
 }
 
-test("contributor registry and assignment flows expose BG03 notes", async ({
+test("contributor registry and assignment flows expose unavailable-action notes", async ({
   page,
 }) => {
   const session = makeSession();
@@ -270,9 +270,7 @@ test("contributor registry and assignment flows expose BG03 notes", async ({
   await expect(
     page.getByRole("heading", { name: /^contributors$/i, level: 1 }),
   ).toBeVisible();
-  await expect(
-    page.getByText(/delete contributor unavailable until bg03/i),
-  ).toBeVisible();
+  await expect(page.getByText(/delete contributor unavailable/i)).toBeVisible();
 
   const createContributorButton = page
     .locator("main")
@@ -314,7 +312,7 @@ test("contributor registry and assignment flows expose BG03 notes", async ({
     page.getByRole("heading", { name: /evening garden/i }),
   ).toBeVisible();
   await expect(
-    page.getByText(/unassign contributor unavailable until bg03/i),
+    page.getByText(/unassign contributor unavailable/i),
   ).toBeVisible();
 
   const assignContributorButton = page

@@ -1,4 +1,4 @@
-import { CirclePlus, RefreshCw, Search, Sparkles } from "lucide-react";
+import { CirclePlus, RefreshCw, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -94,7 +94,7 @@ export function CategoriesIndexRoute() {
 
             <FilterBarActions>
               <FilterBarSummary
-                description="Live data is bound. Create is now active, while query params and client-side filtering are still deferred."
+                description="The registry reflects live backend data and opens each category into its own detail studio."
                 title={`${categoryCount} categor${
                   categoryCount === 1 ? "y" : "ies"
                 } loaded`}
@@ -106,11 +106,10 @@ export function CategoriesIndexRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Workspace Notes</CardTitle>
+                <CardTitle>Registry Summary</CardTitle>
                 <CardDescription>
-                  The registry shell is backed by `GET /api/admin/categories`
-                  and category creation is now live with content-aligned
-                  category types.
+                  Category types stay aligned to content families so each record
+                  can later curate only matching content.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -134,11 +133,10 @@ export function CategoriesIndexRoute() {
 
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Planned Workspace</CardTitle>
+                <CardTitle>Studio Coverage</CardTitle>
                 <CardDescription>
-                  The live read shell is in place so the next category tasks can
-                  focus on localization depth and curation without a layout
-                  rewrite.
+                  Categories support registry browsing, metadata editing,
+                  localization management, and type-safe curation workflows.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -148,12 +146,8 @@ export function CategoriesIndexRoute() {
                   and reopen.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M07` layers language-scoped curation into the detail route
-                  once localization-aware category editing has settled.
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                  <Sparkles className="size-3.5" />
-                  Shared toolbar, summary, navigation, and create flow are live
+                  Curated content remains constrained to the selected category
+                  type and language workspace.
                 </div>
               </CardContent>
             </Card>
@@ -169,48 +163,6 @@ export function CategoriesIndexRoute() {
           onRetry={() => void categoryListQuery.refetch()}
           problem={categoryListQuery.problem}
         />
-
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Studio Layout Ready</CardTitle>
-            <CardDescription>
-              The live route already reserves the editing surfaces needed for
-              the remaining category tasks.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Registry filters
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Search, type, premium, and active filter controls are visible
-                and deliberately inactive until query-param behavior is
-                introduced.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Detail navigation
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Each live list row navigates into `/categories/:categoryId`
-                without changing the surrounding app shell.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Curation expansion
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                The detail shell already reserves separate metadata,
-                localization, and curation areas while base category reads stay
-                live today. Future curation will reject any content whose type
-                does not match the category type.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </ContentPageShell>
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>

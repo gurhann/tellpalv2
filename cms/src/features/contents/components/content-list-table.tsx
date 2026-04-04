@@ -19,7 +19,7 @@ function getLocalizationSummary(content: ContentReadViewModel) {
   if (content.localizationCount === 0) {
     return {
       title: "No localizations yet",
-      detail: "Add the first language in the next content task.",
+      detail: "Open the record to add the first language workspace.",
     };
   }
 
@@ -133,7 +133,7 @@ export function ContentListTable({
     <DataTable
       caption="Content registry table"
       columns={columns}
-      emptyDescription="No content records exist yet. Create the first content item in the next task."
+      emptyDescription="No content records exist yet. Create the first content item to start the editorial catalog."
       emptyTitle="No content records"
       getRowId={(content) => content.summary.id.toString()}
       isLoading={isLoading}
@@ -155,7 +155,7 @@ export function ContentListTable({
       }
       toolbar={
         <FilterBarSummary
-          description="Live backend read data is now bound to the shared content registry table."
+          description="Live backend content data is shown in this shared registry table."
           title="Content registry"
         />
       }

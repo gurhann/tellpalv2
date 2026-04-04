@@ -1,4 +1,4 @@
-import { CirclePlus, RefreshCw, Search, Sparkles } from "lucide-react";
+import { CirclePlus, RefreshCw, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +45,7 @@ export function ContentsIndexRoute() {
       <ContentPageShell
         eyebrow="Editorial Core"
         title="Content Studio"
-        description="The content registry now reads directly from the admin API. Search and filter controls stay visual-only, while create and metadata edit flows are now live."
+        description="Browse content by format, lifecycle state, localization coverage, and story-page count. Create opens a new record and sends you directly into its detail workspace."
         actions={
           <>
             <Button
@@ -89,7 +89,7 @@ export function ContentsIndexRoute() {
 
             <FilterBarActions>
               <FilterBarSummary
-                description="Live data is bound. Query params and client-side filtering are still deferred, but content creation now runs through the admin API."
+                description="The registry reflects live backend data and supports direct navigation into each content workspace."
                 title={`${contentCount} content record${
                   contentCount === 1 ? "" : "s"
                 } loaded`}
@@ -101,10 +101,10 @@ export function ContentsIndexRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Workspace Notes</CardTitle>
+                <CardTitle>Registry Summary</CardTitle>
                 <CardDescription>
-                  The registry shell is backed by `GET /api/admin/contents` and
-                  can now create new content records.
+                  Use this screen to scan the editorial catalog before opening
+                  localization, contributor, and story-page workflows.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -123,27 +123,6 @@ export function ContentsIndexRoute() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Editorial Intent</CardTitle>
-                <CardDescription>
-                  This list is optimized for scanning type, lifecycle state, and
-                  localization coverage before entering detail workspaces.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                  Search and filter controls stay intentionally inactive in this
-                  task so the write path can settle before query-param behavior
-                  is introduced.
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                  <Sparkles className="size-3.5" />
-                  Shared toolbar, summary, navigation, and create flow are live
-                </div>
-              </CardContent>
-            </Card>
           </>
         }
       >
@@ -156,46 +135,6 @@ export function ContentsIndexRoute() {
           onRetry={() => void contentListQuery.refetch()}
           problem={contentListQuery.problem}
         />
-
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Next Up</CardTitle>
-            <CardDescription>
-              Create and metadata editing are now live. The next content tasks
-              can focus on localization mutation, publication controls, and
-              processing diagnostics.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Localization actions
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                `M03-T04` will wire publish, archive, and validation behavior on
-                each language workspace.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Processing visibility
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                `M03-T05` will surface richer asset and processing diagnostics
-                in the detail shell.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Filter activation
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Search and filter controls will become functional after the
-                write path settles.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </ContentPageShell>
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>

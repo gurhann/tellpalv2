@@ -652,8 +652,7 @@ function StoryPagesWorkspace({
               <CardHeader>
                 <CardTitle>Story Route Access</CardTitle>
                 <CardDescription>
-                  This child route stays reserved for `STORY` content types
-                  only.
+                  This child route is available only for `STORY` content types.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -694,8 +693,8 @@ function StoryPagesWorkspace({
                   their own illustration asset.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  `M04-T04` will lock the full story-page editor flow with
-                  integration and Playwright coverage.
+                  Story publication depends on every page locale carrying body
+                  copy, audio, and an illustration for the selected language.
                 </div>
               </CardContent>
             </Card>

@@ -23,15 +23,15 @@ export function ContentContributorEntryCard({
       <CardHeader>
         <CardTitle>Contributor Credits</CardTitle>
         <CardDescription>
-          The shared contributor registry is now live. Per-content assignment
-          lands next.
+          Open the shared contributor registry and reuse its records when
+          assigning credits on content detail pages.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
           {content
-            ? `Contributor assignment for ${content.summary.externalKey} opens in M05-T03. This content route will host role, language, credit-name, and ordering controls.`
-            : "Open the shared contributor registry first, then return here once content-aware assignment lands."}
+            ? `Contributor records from the shared registry can be assigned to ${content.summary.externalKey} with role, language scope, credit name, and ordering metadata.`
+            : "Open the shared contributor registry to manage the reusable contributor list."}
         </div>
         <Button asChild type="button" variant="outline">
           <Link to="/contributors">

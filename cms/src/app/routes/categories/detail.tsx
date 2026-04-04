@@ -1,4 +1,4 @@
-import { CirclePlus, Layers3, LoaderCircle } from "lucide-react";
+import { CirclePlus, LoaderCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -385,26 +385,21 @@ export function CategoryDetailRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Read Surface Constraints</CardTitle>
+                <CardTitle>Category Summary</CardTitle>
                 <CardDescription>
-                  Current backend category reads are intentionally narrower than
-                  the target studio workspace.
+                  This detail view combines category metadata, persisted
+                  localization tabs, and language-scoped curation.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  `GET /api/admin/categories/
-                  {hasValidCategoryId ? parsedCategoryId : "{categoryId}"}` is
-                  live, but today it returns only base metadata.
+                  Base category metadata loads first so the studio can keep the
+                  shell stable through loading, retry, and not-found states.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
                   Localization create, update, and list reads are live, and
                   curation now mirrors those persisted language workspaces.
                   Curated rows hydrate per selected language.
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                  <Layers3 className="size-3.5" />
-                  Live read shell ready for curation expansion
                 </div>
               </CardContent>
             </Card>
@@ -429,24 +424,6 @@ export function CategoryDetailRoute() {
                   Published localizations are the prerequisite for add and
                   reorder actions. Stored curated rows still remain visible even
                   when the selected locale is not published.
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Next Category Tasks</CardTitle>
-                <CardDescription>
-                  After metadata and localization writes, category work expands
-                  into language-scoped curation.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  `M07-T01` and `M07-T02` reserved separate curation lanes per
-                  language and bound add plus reorder flows. `M07-T03` hydrates
-                  stored curated rows and unlocks remove actions while keeping
-                  curated content constrained to the selected category type.
                 </div>
               </CardContent>
             </Card>

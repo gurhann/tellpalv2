@@ -44,7 +44,7 @@ function getDialogCopy(mode: "create" | "rename") {
     return {
       title: "Create contributor",
       description:
-        "Register a new contributor in the shared editorial registry. Assignment to specific content records lands in the next contributor task.",
+        "Register a new contributor in the shared editorial registry. The same record becomes available anywhere content credits are assigned.",
       submitLabel: "Create contributor",
       pendingLabel: "Creating contributor...",
       loading: "Creating contributor...",

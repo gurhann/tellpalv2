@@ -53,8 +53,8 @@ function createContributorColumns({
             Ready for content credits
           </p>
           <p className="text-xs text-muted-foreground">
-            Create and rename are live. Per-content assignment lands in the next
-            contributor task.
+            Create and rename are live, and the same registry is reused in
+            content credit dialogs.
           </p>
         </div>
       ),
@@ -102,7 +102,7 @@ export function ContributorTable({
     <DataTable
       caption="Contributor table"
       columns={contributorColumns}
-      emptyDescription="Create the first contributor in the next task or connect a backend environment that already has contributor records."
+      emptyDescription="Create the first contributor or connect a backend environment that already has contributor records."
       emptyTitle="No contributors yet"
       getRowId={(contributor) => contributor.id.toString()}
       isLoading={isLoading}
@@ -128,8 +128,8 @@ export function ContributorTable({
             Shared contributor registry
           </p>
           <p className="text-sm text-muted-foreground">
-            Scan display names before create, rename, and assignment workflows
-            are enabled.
+            Scan display names before opening create, rename, and assignment
+            workflows.
           </p>
         </div>
       }

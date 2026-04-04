@@ -91,7 +91,7 @@ export function CategoryListTable({
     <DataTable
       caption="Category registry table"
       columns={columns}
-      emptyDescription="No categories exist yet. Category creation opens in the next task."
+      emptyDescription="No categories exist yet. Create the first category to start grouping content."
       emptyTitle="No category records"
       getRowId={(category) => category.id.toString()}
       isLoading={isLoading}

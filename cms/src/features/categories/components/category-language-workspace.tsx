@@ -41,7 +41,7 @@ export function CategoryLanguageWorkspace({
           {localization.languageLabel} curation workspace
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          This workspace is reserved for curated content rows scoped to{" "}
+          This workspace contains curated content rows scoped to{" "}
           {localization.languageLabel}. The category localization{" "}
           <span className="font-medium text-foreground">
             {localization.name}
@@ -85,8 +85,7 @@ export function CategoryLanguageWorkspace({
             Workspace scope
           </div>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Add, reorder, and remove flows in `M07-T02` and `M07-T03` will act
-            only on{" "}
+            Add, reorder, and remove actions affect only{" "}
             <span className="font-medium text-foreground">
               {localization.languageLabel}
             </span>{" "}

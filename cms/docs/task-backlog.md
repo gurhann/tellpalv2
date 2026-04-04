@@ -158,7 +158,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 
 ## M01 App Shell
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -178,7 +178,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 
 ### Atomic Tasks
 
-#### M01-T01 `TODO` Bootstrap the CMS workspace
+#### M01-T01 `DONE` Bootstrap the CMS workspace
 
 - Objective:
   - Vite tabanli React + TypeScript uygulamasini `cms/` altinda kurmak.
@@ -199,7 +199,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
   - `cd cms && npm install`
   - `cd cms && npm run build`
 
-#### M01-T02 `TODO` Install Tailwind and shadcn foundation
+#### M01-T02 `DONE` Install Tailwind and shadcn foundation
 
 - Objective:
   - Tailwind, `shadcn/ui` altyapisi, utility helper'lari ve theme token tabanini kurmak.
@@ -219,7 +219,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M01-T03 `TODO` Create the app shell and route skeleton
+#### M01-T03 `DONE` Create the app shell and route skeleton
 
 - Objective:
   - Sol navigation, top bar, breadcrumb slot'u ve protected route yapisini kurmak.
@@ -238,7 +238,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M01-T04 `TODO` Add app providers and environment wiring
+#### M01-T04 `DONE` Add app providers and environment wiring
 
 - Objective:
   - Query client, toast provider, env parser ve error boundary wiring'ini eklemek.
@@ -257,7 +257,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M01-T05 `TODO` Add base toolchain scripts
+#### M01-T05 `DONE` Add base toolchain scripts
 
 - Objective:
   - Lint, test, format-check ve e2e komut iskeletini eklemek.
@@ -279,7 +279,7 @@ Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecist
 
 ## M11 Shared UI and Data
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -298,7 +298,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 
 ### Atomic Tasks
 
-#### M11-T01 `TODO` Build the shared API client core
+#### M11-T01 `DONE` Build the shared API client core
 
 - Objective:
   - Refresh-aware request wrapper, typed response parser ve `ProblemDetail` mapper'ini kurmak.
@@ -316,7 +316,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 - Verification steps:
   - `cd cms && npm run test -- src/lib/http`
 
-#### M11-T02 `TODO` Add shared admin API modules
+#### M11-T02 `DONE` Add shared admin API modules
 
 - Objective:
   - Route bazli kullanilacak typed client dosyalarini yaratmak.
@@ -339,7 +339,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M11-T03 `TODO` Create reusable form and feedback primitives
+#### M11-T03 `DONE` Create reusable form and feedback primitives
 
 - Objective:
   - RHF + Zod tabanli form wrapper'lari, mutation toast desenleri ve loading button kalibini kurmak.
@@ -359,7 +359,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 - Verification steps:
   - `cd cms && npm run test -- src/components/forms`
 
-#### M11-T04 `TODO` Create table, filter, and language switching patterns
+#### M11-T04 `DONE` Create table, filter, and language switching patterns
 
 - Objective:
   - Feature'larin kullanacagi ortak admin table, filter bar ve language tab bilesenlerini kurmak.
@@ -376,7 +376,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 - Verification steps:
   - `cd cms && npm run test -- src/components/data`
 
-#### M11-T05 `TODO` Create shared DTO mappers and query helpers
+#### M11-T05 `DONE` Create shared DTO mappers and query helpers
 
 - Objective:
   - Backend DTO'larini feature view model'lerine ceviren mapper'lari ve query key helper'larini eklemek.
@@ -397,7 +397,7 @@ Tum feature modullerinin tekrar kullanacagi admin client, auth-aware request wra
 
 ## M02 Auth
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -416,7 +416,7 @@ Admin login, refresh, logout ve expired-session yonetimi calisir; korunmus route
 
 ### Atomic Tasks
 
-#### M02-T01 `TODO` Implement auth storage and session bootstrap
+#### M02-T01 `DONE` Implement auth storage and session bootstrap
 
 - Objective:
   - Access token memory store, refresh token persistence ve bootstrap refresh akislarini kurmak.
@@ -434,7 +434,7 @@ Admin login, refresh, logout ve expired-session yonetimi calisir; korunmus route
 - Verification steps:
   - `cd cms && npm run test -- src/features/auth`
 
-#### M02-T02 `TODO` Build the login screen
+#### M02-T02 `DONE` Build the login screen
 
 - Objective:
   - `shadcn/ui` tabanli login formu, validation ve hata gosterimini uygulamak.
@@ -453,7 +453,7 @@ Admin login, refresh, logout ve expired-session yonetimi calisir; korunmus route
 - Verification steps:
   - `cd cms && npm run test -- src/features/auth/components`
 
-#### M02-T03 `TODO` Wire protected navigation and logout UX
+#### M02-T03 `DONE` Wire protected navigation and logout UX
 
 - Objective:
   - Protected route guard, session loading durumu ve logout aksiyonunu layout'a baglamak.
@@ -469,7 +469,7 @@ Admin login, refresh, logout ve expired-session yonetimi calisir; korunmus route
 - Verification steps:
   - `cd cms && npm run test -- src/app/router`
 
-#### M02-T04 `TODO` Add auth integration and e2e smoke
+#### M02-T04 `DONE` Add auth integration and e2e smoke
 
 - Objective:
   - Auth feature'i icin integration ve Playwright smoke kapsamini eklemek.
@@ -487,7 +487,7 @@ Admin login, refresh, logout ve expired-session yonetimi calisir; korunmus route
 
 ## M03 Content Studio
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -506,7 +506,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 
 ### Atomic Tasks
 
-#### M03-T01 `TODO` Define content feature routes and page layout
+#### M03-T01 `DONE` Define content feature routes and page layout
 
 - Objective:
   - Content list ve detail route'lari icin sayfa kabuklarini kurmak.
@@ -523,7 +523,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M03-T02 `TODO` Build content list and detail queries
+#### M03-T02 `DONE` Build content list and detail queries
 
 - Objective:
   - Content liste ve detay sorgularini query hooks ile baglamak.
@@ -543,7 +543,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 - Verification steps:
   - `cd cms && npm run test -- src/features/contents/queries`
 
-#### M03-T03 `TODO` Build content create and update forms
+#### M03-T03 `DONE` Build content create and update forms
 
 - Objective:
   - Content create/update form'larini RHF + Zod + `shadcn/ui` ile kurmak.
@@ -561,7 +561,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 - Verification steps:
   - `cd cms && npm run test -- src/features/contents/components/content-form`
 
-#### M03-T04 `TODO` Build localization editing and publication controls
+#### M03-T04 `DONE` Build localization editing and publication controls
 
 - Objective:
   - Localization tabs, create/update formu ve publish/archive aksiyonlarini eklemek.
@@ -580,7 +580,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 - Verification steps:
   - `cd cms && npm run test -- src/features/contents/components/localization-tabs`
 
-#### M03-T05 `TODO` Add content feature integration and e2e coverage
+#### M03-T05 `DONE` Add content feature integration and e2e coverage
 
 - Objective:
   - Content create/edit/publish akislarini testlerle kilitlemek.
@@ -598,7 +598,7 @@ Editor'ler content kayitlarini listeleyebilir, olusturabilir, duzenleyebilir, lo
 
 ## M04 Story Page Editor
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -617,7 +617,7 @@ Story tipindeki content kayitlari icin sayfa ekleme, guncelleme, silme ve locali
 
 ### Atomic Tasks
 
-#### M04-T01 `TODO` Add story page route and conditional access
+#### M04-T01 `DONE` Add story page route and conditional access
 
 - Objective:
   - Story page editor route'unu content detail'e baglamak ve non-STORY kayitlarda kapatmak.
@@ -634,7 +634,7 @@ Story tipindeki content kayitlari icin sayfa ekleme, guncelleme, silme ve locali
 - Verification steps:
   - `cd cms && npm run test -- src/features/story-pages`
 
-#### M04-T02 `TODO` Build story page list and mutation hooks
+#### M04-T02 `DONE` Build story page list and mutation hooks
 
 - Objective:
   - Story page liste, add, update ve delete query/mutation katmanini kurmak.
@@ -652,7 +652,7 @@ Story tipindeki content kayitlari icin sayfa ekleme, guncelleme, silme ve locali
 - Verification steps:
   - `cd cms && npm run test -- src/features/story-pages/queries`
 
-#### M04-T03 `TODO` Build page and localization editors
+#### M04-T03 `DONE` Build page and localization editors
 
 - Objective:
   - Sayfa metadata ve localized body/audio alanlarini tek editor akisi altinda toplamak.
@@ -669,7 +669,7 @@ Story tipindeki content kayitlari icin sayfa ekleme, guncelleme, silme ve locali
 - Verification steps:
   - `cd cms && npm run test -- src/features/story-pages/components`
 
-#### M04-T04 `TODO` Add story page integration and e2e coverage
+#### M04-T04 `DONE` Add story page integration and e2e coverage
 
 - Objective:
   - Story page editor akislarini testlerle kilitlemek.
@@ -687,7 +687,7 @@ Story tipindeki content kayitlari icin sayfa ekleme, guncelleme, silme ve locali
 
 ## M05 Contributors
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -706,7 +706,7 @@ Contributor listesi, olusturma, yeniden adlandirma ve content'e atama akislarina
 
 ### Atomic Tasks
 
-#### M05-T01 `TODO` Build contributor list and detail-less management page
+#### M05-T01 `DONE` Build contributor list and detail-less management page
 
 - Objective:
   - Liste agirlikli contributor yonetim sayfasini kurmak.
@@ -723,7 +723,7 @@ Contributor listesi, olusturma, yeniden adlandirma ve content'e atama akislarina
 - Verification steps:
   - `cd cms && npm run test -- src/features/contributors`
 
-#### M05-T02 `TODO` Build contributor create and rename workflows
+#### M05-T02 `DONE` Build contributor create and rename workflows
 
 - Objective:
   - Create ve rename dialog/form akislarini eklemek.
@@ -740,7 +740,7 @@ Contributor listesi, olusturma, yeniden adlandirma ve content'e atama akislarina
 - Verification steps:
   - `cd cms && npm run test -- src/features/contributors/components`
 
-#### M05-T03 `TODO` Build content contributor assignment UX
+#### M05-T03 `DONE` Build content contributor assignment UX
 
 - Objective:
   - Content detail icinden contributor secme, rol verme ve siralama akislarini kurmak.
@@ -757,7 +757,7 @@ Contributor listesi, olusturma, yeniden adlandirma ve content'e atama akislarina
 - Verification steps:
   - `cd cms && npm run test -- src/features/contributors/components/content-contributor-panel`
 
-#### M05-T04 `TODO` Add contributor tests and gap-aware placeholders
+#### M05-T04 `DONE` Add contributor tests and gap-aware placeholders
 
 - Objective:
   - Test kapsamini eklemek ve delete/unassign aksiyonlari icin acik gap placeholder'lari gostermek.
@@ -777,7 +777,7 @@ Contributor listesi, olusturma, yeniden adlandirma ve content'e atama akislarina
 
 ## M06 Category Studio
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -796,7 +796,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 
 ### Atomic Tasks
 
-#### M06-T01 `TODO` Add category list and detail route shells
+#### M06-T01 `DONE` Add category list and detail route shells
 
 - Objective:
   - Category list ve detail sayfa kabuklarini kurmak.
@@ -813,7 +813,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M06-T02 `TODO` Build category list and detail queries
+#### M06-T02 `DONE` Build category list and detail queries
 
 - Objective:
   - Category listesi ve tekil detay sorgusunu query hook'lariyla baglamak.
@@ -831,7 +831,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 - Verification steps:
   - `cd cms && npm run test -- src/features/categories/queries`
 
-#### M06-T03 `TODO` Build category create, update, and localization forms
+#### M06-T03 `DONE` Build category create, update, and localization forms
 
 - Objective:
   - Category base formu ve localization formunu eklemek.
@@ -849,7 +849,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 - Verification steps:
   - `cd cms && npm run test -- src/features/categories/components`
 
-#### M06-T04 `TODO` Add category integration and e2e coverage
+#### M06-T04 `DONE` Add category integration and e2e coverage
 
 - Objective:
   - Category CRUD ve localization akislarini testlerle korumak.
@@ -865,7 +865,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
   - `cd cms && npm run test -- src/features/categories`
   - `cd cms && npm run test:e2e -- categories`
 
-#### M06-T05 `TODO` Hydrate category localizations from backend
+#### M06-T05 `DONE` Hydrate category localizations from backend
 
 - Objective:
   - Category detail ekranindaki localization tablarini backend read endpoint'i ile kalici hale getirmek.
@@ -887,7 +887,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 
 ## M07 Category Curation
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -905,7 +905,7 @@ Localized category curation listesi icin content ekleme, sira degistirme ve kald
 
 ### Atomic Tasks
 
-#### M07-T01 `TODO` Add curation workspace to category detail
+#### M07-T01 `DONE` Add curation workspace to category detail
 
 - Objective:
   - Category detail ekranina dil bazli curation bolumu eklemek.
@@ -922,7 +922,7 @@ Localized category curation listesi icin content ekleme, sira degistirme ve kald
 - Verification steps:
   - `cd cms && npm run build`
 
-#### M07-T02 `TODO` Build curation add and reorder workflows
+#### M07-T02 `DONE` Build curation add and reorder workflows
 
 - Objective:
   - Content ekleme ve displayOrder guncelleme akislarini kurmak.
@@ -939,7 +939,7 @@ Localized category curation listesi icin content ekleme, sira degistirme ve kald
 - Verification steps:
   - `cd cms && npm run test -- src/features/categories/components/add-curated-content-dialog`
 
-#### M07-T03 `TODO` Build curation list and remove action
+#### M07-T03 `DONE` Build curation list and remove action
 
 - Objective:
   - Curated content listesini gormek ve kaldirma aksiyonunu eklemek.
@@ -954,7 +954,7 @@ Localized category curation listesi icin content ekleme, sira degistirme ve kald
 - Verification steps:
   - `cd cms && npm run test -- src/features/categories/queries/use-category-curation`
 
-#### M07-T04 `TODO` Add curation integration and e2e coverage
+#### M07-T04 `DONE` Add curation integration and e2e coverage
 
 - Objective:
   - Add, reorder ve remove akislarini testlerle korumak.
@@ -972,7 +972,7 @@ Localized category curation listesi icin content ekleme, sira degistirme ve kald
 
 ## M08 Asset Library
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `unassigned`
 
 ### Hedef Sonuc
@@ -991,7 +991,7 @@ Recent media asset listesi, detay gorunumu, metadata update ve signed URL refres
 
 ### Atomic Tasks
 
-#### M08-T01 `TODO` Build asset library page and list query
+#### M08-T01 `DONE` Build asset library page and list query
 
 - Objective:
   - Asset listesi icin route ve recent query altyapisini kurmak.
@@ -1009,7 +1009,7 @@ Recent media asset listesi, detay gorunumu, metadata update ve signed URL refres
 - Verification steps:
   - `cd cms && npm run test -- src/features/assets`
 
-#### M08-T02 `TODO` Build asset detail sheet and metadata form
+#### M08-T02 `DONE` Build asset detail sheet and metadata form
 
 - Objective:
   - Asset secildiginde acilan detail sheet'i ve metadata duzenleme formunu eklemek.
@@ -1026,7 +1026,7 @@ Recent media asset listesi, detay gorunumu, metadata update ve signed URL refres
 - Verification steps:
   - `cd cms && npm run test -- src/features/assets/components/asset-detail-sheet`
 
-#### M08-T03 `TODO` Build signed URL refresh and shared asset picker
+#### M08-T03 `DONE` Build signed URL refresh and shared asset picker
 
 - Objective:
   - Signed URL refresh aksiyonu ve feature'larin kullanacagi ortak asset picker bilesenlerini eklemek.
@@ -1042,7 +1042,7 @@ Recent media asset listesi, detay gorunumu, metadata update ve signed URL refres
 - Verification steps:
   - `cd cms && npm run test -- src/features/assets/components/asset-picker-dialog`
 
-#### M08-T04 `TODO` Add asset integration and e2e coverage
+#### M08-T04 `DONE` Add asset integration and e2e coverage
 
 - Objective:
   - Asset list/detail/update/refresh akislarini testlerle korumak.
@@ -1237,7 +1237,7 @@ Media processing job listesi, localization bazli durum sorgusu, yeni process sch
 
 ## BG01 Backend Gap: Content Admin List, Get, Delete
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `backend`
 
 ### Hedef Sonuc
@@ -1254,7 +1254,7 @@ CMS content studio'nun ihtiyac duydugu list, detail read ve delete endpoint'leri
 
 ### Atomic Tasks
 
-#### BG01-T01 `TODO` Add content admin read endpoints
+#### BG01-T01 `DONE` Add content admin read endpoints
 
 - Objective:
   - `GET /api/admin/contents` ve `GET /api/admin/contents/{contentId}` endpoint'lerini eklemek.
@@ -1269,7 +1269,7 @@ CMS content studio'nun ihtiyac duydugu list, detail read ve delete endpoint'leri
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*ContentAdmin* test`
 
-#### BG01-T02 `TODO` Add content delete workflow
+#### BG01-T02 `DONE` Add content delete workflow
 
 - Objective:
   - `DELETE /api/admin/contents/{contentId}` endpoint'ini eklemek.
@@ -1284,7 +1284,7 @@ CMS content studio'nun ihtiyac duydugu list, detail read ve delete endpoint'leri
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*ContentAdmin*IntegrationTest test`
 
-#### BG01-T03 `TODO` Add backend tests for content read/delete
+#### BG01-T03 `DONE` Add backend tests for content read/delete
 
 - Objective:
   - Yeni endpoint'ler icin controller ve integration test kapsamini eklemek.
@@ -1299,7 +1299,7 @@ CMS content studio'nun ihtiyac duydugu list, detail read ve delete endpoint'leri
 
 ## BG02 Backend Gap: Category Admin List, Delete, and Localization Read
 
-- Status: `TODO`
+- Status: `DONE`
 - Owner: `backend`
 
 ### Hedef Sonuc
@@ -1316,7 +1316,7 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
 
 ### Atomic Tasks
 
-#### BG02-T01 `TODO` Add category list endpoint
+#### BG02-T01 `DONE` Add category list endpoint
 
 - Objective:
   - `GET /api/admin/categories` endpoint'ini eklemek.
@@ -1331,7 +1331,7 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*CategoryAdmin* test`
 
-#### BG02-T02 `TODO` Add category delete endpoint
+#### BG02-T02 `DONE` Add category delete endpoint
 
 - Objective:
   - `DELETE /api/admin/categories/{categoryId}` endpoint'ini eklemek.
@@ -1346,7 +1346,7 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*CategoryAdmin*IntegrationTest test`
 
-#### BG02-T03 `TODO` Add backend tests for category list/delete
+#### BG02-T03 `DONE` Add backend tests for category list/delete
 
 - Objective:
   - Yeni category endpoint'leri icin test kapsamini tamamlamak.
@@ -1359,7 +1359,7 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*CategoryAdmin* test`
 
-#### BG02-T04 `TODO` Add category localization list endpoint
+#### BG02-T04 `DONE` Add category localization list endpoint
 
 - Objective:
   - `GET /api/admin/categories/{categoryId}/localizations` endpoint'ini eklemek.

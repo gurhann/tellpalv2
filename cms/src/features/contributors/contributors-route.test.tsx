@@ -75,7 +75,7 @@ describe("ContributorsRoute", () => {
     expect(screen.getByText(/^Latest 12$/i)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /rename/i })).toHaveLength(3);
     expect(
-      screen.getByText(/delete contributor unavailable until bg03/i),
+      screen.getByText(/delete contributor unavailable/i),
     ).toBeInTheDocument();
   });
 

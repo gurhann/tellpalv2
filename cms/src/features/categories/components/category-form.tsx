@@ -207,8 +207,8 @@ export function CategoryForm({
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Category type determines which content family this category is
-                allowed to curate. The update form stays focused on slug,
-                premium, and active state in this task.
+                allowed to curate. This form updates slug, premium, and active
+                state while keeping type fixed after creation.
               </p>
             </div>
           </div>

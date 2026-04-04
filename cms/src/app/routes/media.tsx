@@ -1,4 +1,4 @@
-import { RefreshCw, Search, Sparkles } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -103,7 +103,7 @@ export function MediaRoute() {
 
             <FilterBarActions>
               <FilterBarSummary
-                description="Live data is bound. Detail inspection, cached URL refresh, and shared picker primitives are live while search stays staged."
+                description="The registry reflects recent backend assets and opens each selected row in the detail sheet."
                 title={`${assetCount} recent asset${
                   assetCount === 1 ? "" : "s"
                 } loaded`}
@@ -115,12 +115,10 @@ export function MediaRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Workspace Notes</CardTitle>
+                <CardTitle>Library Summary</CardTitle>
                 <CardDescription>
-                  The library shell is backed by `GET
-                  /api/admin/media?limit=...` and is optimized for scanning
-                  provider, kind, and MIME coverage before deeper asset
-                  operations land.
+                  Scan provider, media type, and cached URL coverage before
+                  opening the asset detail sheet.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -141,32 +139,6 @@ export function MediaRoute() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Next Asset Work</CardTitle>
-                <CardDescription>
-                  The detail read, cached URL refresh, and reusable picker are
-                  live, so the remaining asset tasks can move deeper into
-                  workflow-specific media operations.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M08-T02` is now live through the row-driven detail sheet and
-                  metadata editor.
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M08-T03` is live through cached URL refresh and reusable
-                  asset picker fields wired into content, category, and
-                  story-page workflows.
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                  <Sparkles className="size-3.5" />
-                  Recent list, detail sheet, refresh, and shared picker are live
-                </div>
-              </CardContent>
-            </Card>
           </>
         }
       >
@@ -180,46 +152,6 @@ export function MediaRoute() {
           onRetry={() => void recentAssetsQuery.refetch()}
           problem={recentAssetsQuery.problem}
         />
-
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Upcoming Asset Surfaces</CardTitle>
-            <CardDescription>
-              The live registry now anchors the shells that the next asset tasks
-              will activate.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Detail sheet
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Row-driven detail inspection and metadata editing are now active
-                on the recent asset registry.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Signed URL refresh
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Cached download URL refresh now runs inside the live detail
-                sheet without leaving the registry.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-              <p className="text-sm font-medium text-foreground">
-                Shared picker entry
-              </p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Content, category, and story-page forms now open this module
-                through a reusable picker instead of inventing asset lookups
-                locally.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </ContentPageShell>
 
       <AssetDetailSheet

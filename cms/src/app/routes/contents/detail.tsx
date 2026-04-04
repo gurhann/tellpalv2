@@ -1,4 +1,4 @@
-import { ArrowRight, Layers3, LoaderCircle } from "lucide-react";
+import { Layers3, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -243,11 +243,10 @@ export function ContentDetailRoute() {
 
           <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
             <CardHeader>
-              <CardTitle>Next Detail Tasks</CardTitle>
+              <CardTitle>Workspace Guidance</CardTitle>
               <CardDescription>
-                Metadata and localization editing are live. The next task
-                expands deeper processing diagnostics around assets and
-                follow-up.
+                This workspace combines metadata editing, localization control,
+                contributor credits, and story-page access in one route.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -260,8 +259,8 @@ export function ContentDetailRoute() {
                 including backend conflict surfaces.
               </div>
               <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                `M03-T05` expands processing visibility around assets and
-                operational follow-up.
+                Story records can open their page editor directly from this
+                screen, preserving the currently selected language.
               </div>
             </CardContent>
           </Card>
@@ -292,26 +291,6 @@ export function ContentDetailRoute() {
           <ContentContributorPanel content={content} />
         </FormSection>
       ) : null}
-
-      <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-        <CardHeader>
-          <CardTitle>Route Integration Preview</CardTitle>
-          <CardDescription>
-            The detail shell stays connected to the story pages child route
-            while this task focuses on localization editing and publication
-            control.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-            /contents/{hasValidContentId ? parsedContentId : "?"}
-          </span>
-          <ArrowRight className="size-4" />
-          <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-            /contents/{hasValidContentId ? parsedContentId : "?"}/story-pages
-          </span>
-        </CardContent>
-      </Card>
     </ContentPageShell>
   );
 }

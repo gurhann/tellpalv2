@@ -35,12 +35,11 @@ export function RoutePlaceholder({
         <CardContent>
           <div className="rounded-3xl border border-dashed border-border/80 bg-muted/30 p-5">
             <p className="text-sm font-medium text-foreground">
-              This page is intentionally light.
+              This page is intentionally minimal.
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              The goal of this task is route shape, layout, and navigation
-              structure. Feature data, forms, and backend integration come in
-              the next tasks.
+              The route shell is in place and can be expanded with module
+              specific data, forms, and backend actions as the workspace grows.
             </p>
           </div>
         </CardContent>
@@ -49,11 +48,10 @@ export function RoutePlaceholder({
       <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
         <CardHeader>
           <h2 className="font-heading text-xl font-medium">
-            Planned responsibilities
+            Available responsibilities
           </h2>
           <CardDescription>
-            The final feature implementation will extend this route with these
-            capabilities.
+            This route is intended to host the following capabilities.
           </CardDescription>
         </CardHeader>
         <CardContent>

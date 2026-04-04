@@ -2,13 +2,11 @@ import { AlertTriangle } from "lucide-react";
 
 type MissingActionsNoteProps = {
   actionLabel: string;
-  dependencyCode: string;
   description: string;
 };
 
 export function MissingActionsNote({
   actionLabel,
-  dependencyCode,
   description,
 }: MissingActionsNoteProps) {
   return (
@@ -19,7 +17,7 @@ export function MissingActionsNote({
         </div>
         <div className="space-y-1">
           <p className="font-medium text-amber-950">
-            {actionLabel} unavailable until {dependencyCode}
+            {actionLabel} unavailable
           </p>
           <p className="leading-6 text-amber-900/80">{description}</p>
         </div>

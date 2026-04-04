@@ -1,4 +1,4 @@
-import { CirclePlus, RefreshCw, Search, UsersRound } from "lucide-react";
+import { CirclePlus, RefreshCw, Search } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -20,7 +20,6 @@ import { ContentPageShell } from "@/features/contents/components/content-page-sh
 import { ContributorFormDialog } from "@/features/contributors/components/contributor-form-dialog";
 import { ContributorTable } from "@/features/contributors/components/contributor-table";
 import { MissingActionsNote } from "@/features/contributors/components/missing-actions-note";
-import { contributorAdminBacklogDependencies } from "@/features/contributors/api/contributor-admin";
 import type { ContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import { useContributors } from "@/features/contributors/queries/use-contributors";
 
@@ -103,7 +102,7 @@ export function ContributorsRoute() {
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   {contributorQuery.isLoading
                     ? "The contributor registry is hydrating from the backend."
-                    : `The latest ${contributorQuery.limit} contributor slots are reserved for quick editorial scanning.`}
+                    : `The latest ${contributorQuery.limit} contributor records are shown here for quick editorial access.`}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Create opens a clean registry dialog; rename updates an
@@ -111,38 +110,13 @@ export function ContributorsRoute() {
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Content-level assignment enters through the content detail
-                  route and delete is intentionally absent until BG03 lands.
+                  route and delete remains unavailable until the backend exposes
+                  a delete endpoint.
                 </div>
                 <MissingActionsNote
                   actionLabel="Delete contributor"
-                  dependencyCode={
-                    contributorAdminBacklogDependencies.deleteContributor
-                  }
                   description="The admin API still has no contributor delete endpoint. Registry rows intentionally expose create and rename only."
                 />
-              </CardContent>
-            </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Planned Workflow</CardTitle>
-                <CardDescription>
-                  The contributor module grows in two steps after this task.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  Per-content assignment with optional language scope is now
-                  live from the content detail route.
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  Delete and unassign stay blocked behind BG03, so the CMS only
-                  renders explicit backlog notes instead of fake action buttons.
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                  <UsersRound className="size-3.5" />
-                  Shared registry create + rename are live
-                </div>
               </CardContent>
             </Card>
           </>

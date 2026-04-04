@@ -135,7 +135,7 @@ export function AssetDetailSheet({
                   </h2>
                   <p className="text-sm leading-6 text-muted-foreground">
                     Update MIME type, byte size, and checksum while keeping
-                    provider and object path read-only in this task.
+                    provider and object path read-only.
                   </p>
                 </div>
 
