@@ -7,19 +7,31 @@ import type {
 
 type CategoryLanguageWorkspaceProps = {
   category: CategorySummaryViewModel;
+  curationItemCount: number;
   localization: CategoryLocalizationViewModel;
 };
 
 export function CategoryLanguageWorkspace({
   category,
+  curationItemCount,
   localization,
 }: CategoryLanguageWorkspaceProps) {
   const readinessTitle = localization.isPublished
     ? "Published locale ready for curation"
     : "Localization still blocked from curation";
   const readinessDescription = localization.isPublished
-    ? "This localization is published, so add, reorder, and remove flows can attach to this language workspace next."
-    : "Publish this localization before language-scoped curation is enabled in the next task.";
+    ? "This localization is published, so add and reorder flows can already attach to this language workspace."
+    : "Publish this localization before language-scoped curation actions unlock.";
+  const sessionTitle =
+    curationItemCount > 0
+      ? `${curationItemCount} current-session curated row${
+          curationItemCount === 1 ? "" : "s"
+        }`
+      : "No current-session curated rows yet";
+  const sessionDescription =
+    curationItemCount > 0
+      ? "Rows added in this CMS session can already be reordered below."
+      : "Use the add dialog to create the first current-session curated row for this language.";
 
   return (
     <div
@@ -40,7 +52,7 @@ export function CategoryLanguageWorkspace({
         </p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-4">
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <ShieldCheck className="size-4 text-primary" />
@@ -84,16 +96,29 @@ export function CategoryLanguageWorkspace({
             <span className="font-medium text-foreground">#{category.id}</span>.
           </p>
         </div>
+
+        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <CheckCircle2 className="size-4 text-primary" />
+            Session cache
+          </div>
+          <p className="mt-2 text-sm font-medium text-foreground">
+            {sessionTitle}
+          </p>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            {sessionDescription}
+          </p>
+        </div>
       </div>
 
       <div className="rounded-3xl border border-dashed border-border/80 bg-muted/20 px-6 py-8 text-center">
         <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-          Curated content list lands next
+          Session-backed curation is live
         </h3>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-          This language workspace is now reserved inside category detail. The
-          next tasks bind add, reorder, and list queries without changing the
-          surrounding layout again.
+          Add and reorder flows now operate inside this language workspace.
+          Hydrated backend list reads and remove actions still land next, once
+          category curation gets a dedicated admin read surface.
         </p>
       </div>
     </div>

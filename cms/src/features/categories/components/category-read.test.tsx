@@ -1,6 +1,9 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 
 import {
+  categoryCurationItemViewModels,
   categoryLocalizationViewModels,
   archivedCategoryViewModel,
   featuredSleepCategoryViewModel,
@@ -9,6 +12,20 @@ import {
 import { CategoryCurationPanel } from "./category-curation-panel";
 import { CategoryListTable } from "./category-list-table";
 import { CategorySummaryCard } from "./category-summary-card";
+
+function renderWithQueryClient(ui: ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+}
 
 describe("category read components", () => {
   it("renders category list columns and row navigation callbacks", () => {
@@ -47,10 +64,12 @@ describe("category read components", () => {
   });
 
   it("renders a category curation shell tied to the selected localization", () => {
-    render(
+    renderWithQueryClient(
       <CategoryCurationPanel
         category={featuredSleepCategoryViewModel}
+        curationItems={categoryCurationItemViewModels}
         localizations={categoryLocalizationViewModels}
+        selectedLocalization={categoryLocalizationViewModels[0]}
         selectedLanguageCode="en"
         onCreateLocalization={vi.fn()}
         onLanguageChange={vi.fn()}
@@ -61,5 +80,6 @@ describe("category read components", () => {
     expect(
       screen.getByText(/each localization owns its own curation lane/i),
     ).toBeVisible();
+    expect(screen.getByText(/session-backed curation is live/i)).toBeVisible();
   });
 });

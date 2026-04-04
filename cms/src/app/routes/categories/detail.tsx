@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CirclePlus, Layers3, LoaderCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -25,6 +26,7 @@ import { CategoryCurationPanel } from "@/features/categories/components/category
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
 import { CategorySummaryCard } from "@/features/categories/components/category-summary-card";
+import type { CategoryCurationItemViewModel } from "@/features/categories/model/category-view-model";
 import { useCategoryDetail } from "@/features/categories/queries/use-category-detail";
 import { useCategoryLocalizations } from "@/features/categories/queries/use-category-localizations";
 import {
@@ -34,6 +36,7 @@ import {
 import { mapCategoryReadToFormValues } from "@/features/categories/schema/category-schema";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { supportedCmsLanguageOptions } from "@/lib/languages";
+import { queryKeys } from "@/lib/query-keys";
 
 export function CategoryDetailRoute() {
   const { categoryId = "" } = useParams();
@@ -46,6 +49,7 @@ export function CategoryDetailRoute() {
   const localizationQuery = useCategoryLocalizations(
     hasValidCategoryId ? parsedCategoryId : null,
   );
+  const queryClient = useQueryClient();
   const category = categoryQuery.category;
   const localizations = localizationQuery.localizations;
   const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
@@ -66,6 +70,23 @@ export function CategoryDetailRoute() {
     ) ??
     localizations[0] ??
     null;
+  const curationKey = queryKeys.categories.curation(
+    hasValidCategoryId ? parsedCategoryId : 0,
+    selectedLocalization?.languageCode ?? selectedLanguageCode,
+  );
+  const curationQuery = useQuery({
+    queryKey: curationKey,
+    enabled: hasValidCategoryId,
+    initialData: () =>
+      (queryClient.getQueryData(curationKey) ??
+        []) as CategoryCurationItemViewModel[],
+    queryFn: async () =>
+      (queryClient.getQueryData(curationKey) ??
+        []) as CategoryCurationItemViewModel[],
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+  const curationItems = (curationQuery.data ??
+    []) as CategoryCurationItemViewModel[];
 
   const availableLanguageOptions = useMemo(
     () =>
@@ -277,7 +298,9 @@ export function CategoryDetailRoute() {
 
         <CategoryCurationPanel
           category={category}
+          curationItems={curationItems}
           localizations={localizations}
+          selectedLocalization={selectedLocalization}
           selectedLanguageCode={selectedLanguageCode}
           onCreateLocalization={() => setIsCreateLocalizationOpen(true)}
           onLanguageChange={setSelectedLanguageCode}

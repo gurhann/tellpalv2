@@ -2,9 +2,12 @@ import type {
   AdminCategoryLocalizationResponse,
   AdminCategoryResponse,
 } from "@/features/categories/api/category-admin";
+import type { AdminCategoryContentResponse } from "@/features/categories/api/category-curation-admin";
 import {
   mapAdminCategory,
+  mapAdminCategoryCurationItem,
   mapAdminCategoryLocalization,
+  type CategoryCurationItemViewModel,
   type CategoryLocalizationViewModel,
   type CategorySummaryViewModel,
 } from "@/features/categories/model/category-view-model";
@@ -93,4 +96,30 @@ export const featuredSleepTurkishLocalizationViewModel: CategoryLocalizationView
 export const categoryLocalizationViewModels: CategoryLocalizationViewModel[] = [
   featuredSleepEnglishLocalizationViewModel,
   featuredSleepTurkishLocalizationViewModel,
+];
+
+export const featuredSleepEnglishCurationResponse: AdminCategoryContentResponse =
+  {
+    categoryId: 7,
+    languageCode: "en",
+    contentId: 1,
+    displayOrder: 0,
+  };
+
+export const featuredSleepEnglishSecondCurationResponse: AdminCategoryContentResponse =
+  {
+    categoryId: 7,
+    languageCode: "en",
+    contentId: 10,
+    displayOrder: 2,
+  };
+
+export const categoryCurationResponses: AdminCategoryContentResponse[] = [
+  featuredSleepEnglishCurationResponse,
+  featuredSleepEnglishSecondCurationResponse,
+];
+
+export const categoryCurationItemViewModels: CategoryCurationItemViewModel[] = [
+  mapAdminCategoryCurationItem(featuredSleepEnglishCurationResponse),
+  mapAdminCategoryCurationItem(featuredSleepEnglishSecondCurationResponse),
 ];

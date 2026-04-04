@@ -1,4 +1,5 @@
 import { ArrowRight, CirclePlus, ListFilter } from "lucide-react";
+import { useState } from "react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { LanguageTabs } from "@/components/language/language-tabs";
@@ -10,15 +11,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AddCuratedContentDialog } from "@/features/categories/components/add-curated-content-dialog";
+import { CurationOrderEditor } from "@/features/categories/components/curation-order-editor";
 import { CategoryLanguageWorkspace } from "@/features/categories/components/category-language-workspace";
 import type {
+  CategoryCurationItemViewModel,
   CategoryLocalizationViewModel,
   CategorySummaryViewModel,
 } from "@/features/categories/model/category-view-model";
 
 type CategoryCurationPanelProps = {
   category: CategorySummaryViewModel;
+  curationItems: CategoryCurationItemViewModel[];
   localizations: CategoryLocalizationViewModel[];
+  selectedLocalization: CategoryLocalizationViewModel | null;
   selectedLanguageCode: string;
   onLanguageChange: (languageCode: string) => void;
   onCreateLocalization: () => void;
@@ -26,17 +32,17 @@ type CategoryCurationPanelProps = {
 
 export function CategoryCurationPanel({
   category,
+  curationItems,
   localizations,
+  selectedLocalization,
   selectedLanguageCode,
   onLanguageChange,
   onCreateLocalization,
 }: CategoryCurationPanelProps) {
-  const selectedLocalization =
-    localizations.find(
-      (localization) => localization.languageCode === selectedLanguageCode,
-    ) ??
-    localizations[0] ??
-    null;
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const canAddCuratedContent = Boolean(selectedLocalization?.isPublished);
+  const canAdjustOrder =
+    Boolean(selectedLocalization?.isPublished) && curationItems.length > 0;
 
   const tabItems = localizations.map((localization) => ({
     code: localization.languageCode,
@@ -60,29 +66,37 @@ export function CategoryCurationPanel({
           <div>
             <CardTitle>Category curation workspace</CardTitle>
             <CardDescription>
-              Each localization owns its own curation lane. The shell below is
-              now language-scoped so add, reorder, and remove flows can land in
-              place during the next tasks.
+              Each localization owns its own curation lane. Add and reorder
+              flows now operate on the selected language, while hydrated list
+              reads and remove actions still land next.
             </CardDescription>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <Button
-              disabled={!selectedLocalization}
+              disabled={!canAddCuratedContent}
+              onClick={() => setIsAddDialogOpen(true)}
               type="button"
               variant="outline"
             >
               <CirclePlus className="size-4" />
               Add curated content
             </Button>
-            <Button
-              disabled={!selectedLocalization}
-              type="button"
-              variant="outline"
-            >
-              <ListFilter className="size-4" />
-              Adjust order
-            </Button>
+            {canAdjustOrder && selectedLocalization ? (
+              <Button asChild type="button" variant="outline">
+                <a
+                  href={`#curation-order-editor-${selectedLocalization.languageCode}`}
+                >
+                  <ListFilter className="size-4" />
+                  Adjust order
+                </a>
+              </Button>
+            ) : (
+              <Button disabled type="button" variant="outline">
+                <ListFilter className="size-4" />
+                Adjust order
+              </Button>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -119,6 +133,11 @@ export function CategoryCurationPanel({
                 return (
                   <CategoryLanguageWorkspace
                     category={category}
+                    curationItemCount={
+                      item.code === selectedLocalization?.languageCode
+                        ? curationItems.length
+                        : 0
+                    }
                     localization={localization}
                   />
                 );
@@ -137,9 +156,27 @@ export function CategoryCurationPanel({
                 {selectedLocalization?.languageCode ?? selectedLanguageCode}
               </span>
             </div>
+
+            {selectedLocalization ? (
+              <CurationOrderEditor
+                category={category}
+                items={curationItems}
+                localization={selectedLocalization}
+              />
+            ) : null}
           </>
         )}
       </CardContent>
+
+      {isAddDialogOpen && selectedLocalization ? (
+        <AddCuratedContentDialog
+          category={category}
+          existingItems={curationItems}
+          localization={selectedLocalization}
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+        />
+      ) : null}
     </Card>
   );
 }
