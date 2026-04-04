@@ -8,6 +8,7 @@ type AssetTableProps = {
   isLoading?: boolean;
   problem?: ApiProblemDetail | null;
   onRetry?: () => void;
+  onAssetSelect?: (asset: AssetViewModel) => void;
 };
 
 const columns: DataTableColumn<AssetViewModel>[] = [
@@ -81,6 +82,7 @@ export function AssetTable({
   isLoading = false,
   problem = null,
   onRetry,
+  onAssetSelect,
 }: AssetTableProps) {
   const cachedUrlCount = assets.filter(
     (asset) => asset.hasCachedDownloadUrl,
@@ -114,6 +116,7 @@ export function AssetTable({
       loadingDescription="The CMS is requesting recent media asset metadata from the admin API."
       loadingTitle="Loading asset registry"
       onRetry={onRetry}
+      onRowClick={onAssetSelect}
       problem={assets.length > 0 ? problem : null}
       rows={assets}
       summary={

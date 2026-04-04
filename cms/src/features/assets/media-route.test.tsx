@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -7,10 +8,15 @@ import { MediaRoute } from "@/app/routes/media";
 
 const assetHookMocks = vi.hoisted(() => ({
   useRecentAssets: vi.fn(),
+  useAssetDetail: vi.fn(),
 }));
 
 vi.mock("@/features/assets/queries/use-recent-assets", () => ({
   useRecentAssets: assetHookMocks.useRecentAssets,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetHookMocks.useAssetDetail,
 }));
 
 function makeAssetListState() {
@@ -24,14 +30,44 @@ function makeAssetListState() {
   };
 }
 
+function makeAssetDetailState() {
+  return {
+    asset: assetViewModels[0],
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+  };
+}
+
 beforeEach(() => {
   assetHookMocks.useRecentAssets.mockReset();
+  assetHookMocks.useAssetDetail.mockReset();
   assetHookMocks.useRecentAssets.mockReturnValue(makeAssetListState());
+  assetHookMocks.useAssetDetail.mockReturnValue(makeAssetDetailState());
 });
+
+function renderWithQueryClient() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+      mutations: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MediaRoute />
+    </QueryClientProvider>,
+  );
+}
 
 describe("MediaRoute", () => {
   it("renders the live asset library shell", () => {
-    render(<MediaRoute />);
+    renderWithQueryClient();
 
     expect(
       screen.getByRole("heading", { name: /asset library/i, level: 1 }),
@@ -40,7 +76,7 @@ describe("MediaRoute", () => {
       screen.getByText("/content/images/evening-garden-page-1.jpg"),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: /asset detail sheet/i }),
+      screen.getByRole("button", { name: /select a row to inspect detail/i }),
     ).toBeDisabled();
     expect(
       screen.getByRole("button", { name: /shared asset picker/i }),
@@ -51,10 +87,21 @@ describe("MediaRoute", () => {
     const state = makeAssetListState();
     assetHookMocks.useRecentAssets.mockReturnValue(state);
 
-    render(<MediaRoute />);
+    renderWithQueryClient();
 
     fireEvent.click(screen.getByRole("button", { name: /refresh/i }));
 
     expect(state.refetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("opens the detail sheet when an asset row is selected", () => {
+    renderWithQueryClient();
+
+    fireEvent.click(
+      screen.getByText("/content/images/evening-garden-page-1.jpg"),
+    );
+
+    expect(screen.getAllByText(/asset #4/i).length).toBeGreaterThan(0);
+    expect(assetHookMocks.useAssetDetail).toHaveBeenLastCalledWith(4);
   });
 });
