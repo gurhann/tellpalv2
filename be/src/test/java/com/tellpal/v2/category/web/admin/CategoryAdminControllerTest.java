@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tellpal.v2.category.api.AdminCategoryContentView;
 import com.tellpal.v2.category.api.AdminCategoryCurationQueryApi;
+import com.tellpal.v2.category.api.AdminCategoryLocalizationView;
 import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotFoundException;
@@ -125,10 +126,54 @@ class CategoryAdminControllerTest {
     }
 
     @Test
+    void listCategoryLocalizationsReturnsLookupResponses() throws Exception {
+        when(categoryLookupApi.listLocalizations(42L)).thenReturn(List.of(
+                new AdminCategoryLocalizationView(
+                        42L,
+                        LanguageCode.EN,
+                        "Featured Sleep",
+                        "Curated sleep stories",
+                        15L,
+                        "PUBLISHED",
+                        Instant.parse("2026-03-17T09:00:00Z"),
+                        true),
+                new AdminCategoryLocalizationView(
+                        42L,
+                        LanguageCode.TR,
+                        "One Cikan Uyku",
+                        null,
+                        null,
+                        "DRAFT",
+                        null,
+                        false)));
+
+        mockMvc.perform(get("/api/admin/categories/42/localizations"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].categoryId").value(42))
+                .andExpect(jsonPath("$[0].languageCode").value("en"))
+                .andExpect(jsonPath("$[0].name").value("Featured Sleep"))
+                .andExpect(jsonPath("$[0].published").value(true))
+                .andExpect(jsonPath("$[1].languageCode").value("tr"))
+                .andExpect(jsonPath("$[1].status").value("DRAFT"));
+    }
+
+    @Test
     void missingCategoryReturnsNotFoundProblemDetails() throws Exception {
         when(categoryLookupApi.findById(42L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/admin/categories/42"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Category not found"))
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty());
+    }
+
+    @Test
+    void missingCategoryLocalizationsReturnNotFoundProblemDetails() throws Exception {
+        when(categoryLookupApi.listLocalizations(42L))
+                .thenThrow(new CategoryNotFoundException(42L));
+
+        mockMvc.perform(get("/api/admin/categories/42/localizations"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.title").value("Category not found"))
                 .andExpect(jsonPath("$.errorCode").value("category_not_found"))

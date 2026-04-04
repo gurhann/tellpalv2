@@ -1,4 +1,3 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CirclePlus, Layers3, LoaderCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -26,7 +25,7 @@ import { CategoryCurationPanel } from "@/features/categories/components/category
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
 import { CategorySummaryCard } from "@/features/categories/components/category-summary-card";
-import type { CategoryCurationItemViewModel } from "@/features/categories/model/category-view-model";
+import { useCategoryCuration } from "@/features/categories/queries/use-category-curation";
 import { useCategoryDetail } from "@/features/categories/queries/use-category-detail";
 import { useCategoryLocalizations } from "@/features/categories/queries/use-category-localizations";
 import {
@@ -36,7 +35,6 @@ import {
 import { mapCategoryReadToFormValues } from "@/features/categories/schema/category-schema";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { supportedCmsLanguageOptions } from "@/lib/languages";
-import { queryKeys } from "@/lib/query-keys";
 
 export function CategoryDetailRoute() {
   const { categoryId = "" } = useParams();
@@ -49,7 +47,6 @@ export function CategoryDetailRoute() {
   const localizationQuery = useCategoryLocalizations(
     hasValidCategoryId ? parsedCategoryId : null,
   );
-  const queryClient = useQueryClient();
   const category = categoryQuery.category;
   const localizations = localizationQuery.localizations;
   const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
@@ -59,34 +56,26 @@ export function CategoryDetailRoute() {
     category?.slug ??
     (hasValidCategoryId ? `Category #${parsedCategoryId}` : "Category Detail");
   const routeDescription = category
-    ? `Base metadata for ${category.slug} is now editable. This category type is content-aligned, so future curation will stay limited to matching ${category.typeLabel} records. Localization tabs remain session-backed until a dedicated admin read endpoint exists.`
+    ? `Base metadata for ${category.slug} is now editable. This category type is content-aligned, so curation stays limited to matching ${category.typeLabel} records. Localization tabs and curated rows now both hydrate from the admin API.`
     : hasValidCategoryId
       ? "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow."
       : "This route expects a valid numeric category id from the category registry.";
 
-  const selectedLocalization =
+  const resolvedLanguageCode =
     localizations.find(
       (localization) => localization.languageCode === selectedLanguageCode,
-    ) ??
-    localizations[0] ??
-    null;
-  const curationKey = queryKeys.categories.curation(
-    hasValidCategoryId ? parsedCategoryId : 0,
-    selectedLocalization?.languageCode ?? selectedLanguageCode,
+    )?.languageCode ??
+    localizations[0]?.languageCode ??
+    selectedLanguageCode;
+  const selectedLocalization =
+    localizations.find(
+      (localization) => localization.languageCode === resolvedLanguageCode,
+    ) ?? null;
+  const curationQuery = useCategoryCuration(
+    hasValidCategoryId ? parsedCategoryId : null,
+    selectedLocalization?.languageCode ?? null,
   );
-  const curationQuery = useQuery({
-    queryKey: curationKey,
-    enabled: hasValidCategoryId,
-    initialData: () =>
-      (queryClient.getQueryData(curationKey) ??
-        []) as CategoryCurationItemViewModel[],
-    queryFn: async () =>
-      (queryClient.getQueryData(curationKey) ??
-        []) as CategoryCurationItemViewModel[],
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-  const curationItems = (curationQuery.data ??
-    []) as CategoryCurationItemViewModel[];
+  const curationItems = curationQuery.items;
 
   const availableLanguageOptions = useMemo(
     () =>
@@ -256,15 +245,47 @@ export function CategoryDetailRoute() {
               Create localization
             </Button>
           }
-          description="Category localization creation and update are live, but this workspace can only show localizations created or updated in the current session because the backend has no admin localization read endpoint yet."
+          description="Category localization creation, update, and read are live. This workspace now hydrates persisted localization tabs from the admin API."
           title="Localization"
         >
-          {selectedLocalization ? (
+          {localizationQuery.isLoading && localizations.length === 0 ? (
+            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
+              <CardContent className="flex min-h-52 flex-col items-center justify-center gap-4 px-6 py-12 text-center">
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-background text-primary shadow-sm ring-1 ring-border/70">
+                  <LoaderCircle className="size-6 animate-spin" />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
+                    Loading localizations
+                  </h2>
+                  <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                    The CMS is requesting persisted category localization tabs
+                    for this category.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : selectedLocalization ? (
             <>
+              {localizationQuery.problem ? (
+                <ProblemAlert
+                  actions={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void localizationQuery.refetch()}
+                    >
+                      Retry
+                    </Button>
+                  }
+                  problem={localizationQuery.problem}
+                />
+              ) : null}
+
               <LanguageTabs
                 items={tabItems}
                 listLabel="Category localization tabs"
-                value={selectedLocalization.languageCode}
+                value={resolvedLanguageCode}
                 onValueChange={setSelectedLanguageCode}
               />
 
@@ -279,6 +300,19 @@ export function CategoryDetailRoute() {
                 mode="update"
               />
             </>
+          ) : localizationQuery.problem ? (
+            <ProblemAlert
+              actions={
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => void localizationQuery.refetch()}
+                >
+                  Retry
+                </Button>
+              }
+              problem={localizationQuery.problem}
+            />
           ) : (
             <EmptyState
               action={
@@ -290,8 +324,8 @@ export function CategoryDetailRoute() {
                   Create first localization
                 </Button>
               }
-              description="Create the first category localization to open a language workspace. Existing backend localizations are not readable yet, so only current-session changes appear here."
-              title="No session localizations yet"
+              description="Create the first category localization to open a persistent language workspace for this category."
+              title="No localizations yet"
             />
           )}
         </FormSection>
@@ -299,11 +333,14 @@ export function CategoryDetailRoute() {
         <CategoryCurationPanel
           category={category}
           curationItems={curationItems}
+          curationIsLoading={curationQuery.isLoading}
+          curationProblem={curationQuery.problem}
           localizations={localizations}
           selectedLocalization={selectedLocalization}
-          selectedLanguageCode={selectedLanguageCode}
+          selectedLanguageCode={resolvedLanguageCode}
           onCreateLocalization={() => setIsCreateLocalizationOpen(true)}
           onLanguageChange={setSelectedLanguageCode}
+          onRetryCuration={() => void curationQuery.refetch()}
         />
       </>
     );
@@ -361,10 +398,9 @@ export function CategoryDetailRoute() {
                   live, but today it returns only base metadata.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  Localization create and update are live, and curation now
-                  mirrors those language workspaces. Both surfaces remain
-                  session-backed until a dedicated admin localization read
-                  endpoint exists.
+                  Localization create, update, and list reads are live, and
+                  curation now mirrors those persisted language workspaces.
+                  Curated rows hydrate per selected language.
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
                   <Layers3 className="size-3.5" />
@@ -377,21 +413,22 @@ export function CategoryDetailRoute() {
               <CardHeader>
                 <CardTitle>Localization Snapshot</CardTitle>
                 <CardDescription>
-                  Session-backed localization tabs keep current edits visible
-                  even though the backend still lacks localization reads.
+                  Persisted localization tabs now hydrate from the admin API and
+                  remain visible after refresh.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   {localizations.length === 0
-                    ? "No category localizations have been created or updated in this session yet."
+                    ? "No category localizations are stored for this category yet."
                     : `${localizations.length} localization workspace${
                         localizations.length === 1 ? "" : "s"
-                      } currently visible in this session.`}
+                      } currently hydrated from the backend.`}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Published localizations are the prerequisite for
-                  language-scoped category curation in the next module.
+                  Published localizations are the prerequisite for add and
+                  reorder actions. Stored curated rows still remain visible even
+                  when the selected locale is not published.
                 </div>
               </CardContent>
             </Card>
@@ -406,10 +443,10 @@ export function CategoryDetailRoute() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  `M07-T01` reserves separate curation lanes per language.
-                  `M07-T02` and `M07-T03` will bind add, reorder, list, and
-                  remove flows while keeping curated content constrained to the
-                  selected category type.
+                  `M07-T01` and `M07-T02` reserved separate curation lanes per
+                  language and bound add plus reorder flows. `M07-T03` hydrates
+                  stored curated rows and unlocks remove actions while keeping
+                  curated content constrained to the selected category type.
                 </div>
               </CardContent>
             </Card>
@@ -427,8 +464,8 @@ export function CategoryDetailRoute() {
           <DialogHeader>
             <DialogTitle>Create category localization</DialogTitle>
             <DialogDescription>
-              Create a language workspace for this category. Tabs in this task
-              show localizations created or updated in the current CMS session.
+              Create a language workspace for this category. Saved localizations
+              persist in backend reads and remain visible after refresh.
             </DialogDescription>
           </DialogHeader>
 

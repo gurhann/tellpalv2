@@ -22,6 +22,7 @@ const contentHookMocks = vi.hoisted(() => ({
 const categoryHookMocks = vi.hoisted(() => ({
   useCategoryList: vi.fn(),
   useCategoryDetail: vi.fn(),
+  useCategoryLocalizations: vi.fn(),
 }));
 
 vi.mock("@/features/contents/queries/use-content-list", () => ({
@@ -38,6 +39,10 @@ vi.mock("@/features/categories/queries/use-category-list", () => ({
 
 vi.mock("@/features/categories/queries/use-category-detail", () => ({
   useCategoryDetail: categoryHookMocks.useCategoryDetail,
+}));
+
+vi.mock("@/features/categories/queries/use-category-localizations", () => ({
+  useCategoryLocalizations: categoryHookMocks.useCategoryLocalizations,
 }));
 
 function makeSession(
@@ -88,6 +93,16 @@ function makeCategoryListState() {
 function makeCategoryDetailState() {
   return {
     category: archivedCategoryViewModel,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn(),
+  };
+}
+
+function makeCategoryLocalizationState() {
+  return {
+    localizations: [],
     isLoading: false,
     problem: null,
     isNotFound: false,
@@ -190,11 +205,15 @@ beforeEach(() => {
   contentHookMocks.useContentDetail.mockReset();
   categoryHookMocks.useCategoryList.mockReset();
   categoryHookMocks.useCategoryDetail.mockReset();
+  categoryHookMocks.useCategoryLocalizations.mockReset();
   contentHookMocks.useContentList.mockReturnValue(makeContentListState());
   contentHookMocks.useContentDetail.mockReturnValue(makeContentDetailState());
   categoryHookMocks.useCategoryList.mockReturnValue(makeCategoryListState());
   categoryHookMocks.useCategoryDetail.mockReturnValue(
     makeCategoryDetailState(),
+  );
+  categoryHookMocks.useCategoryLocalizations.mockReturnValue(
+    makeCategoryLocalizationState(),
   );
 });
 
@@ -320,9 +339,7 @@ describe("CMS router auth flow", () => {
     expect(
       screen.getByRole("button", { name: /open curation/i }),
     ).toBeDisabled();
-    expect(
-      screen.getByText(/no session localizations yet/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/no localizations yet/i)).toBeInTheDocument();
   });
 
   it("logs out from the top bar and returns the user to /login", async () => {

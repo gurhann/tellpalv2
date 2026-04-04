@@ -145,7 +145,7 @@ afterEach(async () => {
 });
 
 describe("Category integration", () => {
-  it("creates a category, updates metadata, and creates then updates a session-backed localization", async () => {
+  it("creates a category, updates metadata, and keeps persisted localizations visible after refresh", async () => {
     const session = makeSession();
     const listRecords = cloneJson(categoryResponses);
     const imageAssets: AdminAssetResponse[] = [
@@ -221,6 +221,13 @@ describe("Category integration", () => {
           return jsonResponse(createdCategory);
         }
 
+        if (
+          url.pathname === "/api/admin/categories/99/localizations" &&
+          method === "GET"
+        ) {
+          return jsonResponse(savedLocalization ? [savedLocalization] : []);
+        }
+
         if (url.pathname === "/api/admin/categories/99" && method === "PUT") {
           const body = (await readRequestJson(init)) as {
             slug: string;
@@ -284,6 +291,14 @@ describe("Category integration", () => {
           return jsonResponse(savedLocalization);
         }
 
+        if (
+          url.pathname ===
+            "/api/admin/categories/99/localizations/tr/contents" &&
+          method === "GET"
+        ) {
+          return jsonResponse([]);
+        }
+
         if (url.pathname === "/api/admin/media" && method === "GET") {
           return jsonResponse(imageAssets);
         }
@@ -310,7 +325,7 @@ describe("Category integration", () => {
 
     window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
 
-    await renderFreshApp({
+    const initialApp = await renderFreshApp({
       initialPath: "/categories",
       fetchImplementation: fetchMock as typeof fetch,
     });
@@ -385,6 +400,24 @@ describe("Category integration", () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue("Dream Lullabies Updated")).toBeVisible();
     });
+
+    await act(async () => {
+      initialApp.unmount();
+    });
+    const refreshedApp = await renderFreshApp({
+      initialPath: "/categories/99",
+      fetchImplementation: fetchMock as typeof fetch,
+    });
+
+    const localizationTabList = await refreshedApp.findByRole("tablist", {
+      name: /category localization tabs/i,
+    });
+    expect(
+      within(localizationTabList).getByRole("tab", { name: /turkish/i }),
+    ).toBeInTheDocument();
+    expect(
+      refreshedApp.getByDisplayValue("Dream Lullabies Updated"),
+    ).toBeVisible();
   }, 15_000);
 
   it("maps duplicate slug validation onto the live create dialog", async () => {

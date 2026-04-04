@@ -101,6 +101,20 @@ public class CategoryAdminController {
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 
+    @GetMapping("/{categoryId}/localizations")
+    @Operation(summary = "List category localizations", description = "Returns localized category snapshots for one category identifier.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Category localizations returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminCategoryLocalizationResponse> listLocalizations(@PathVariable Long categoryId) {
+        return categoryLookupApi.listLocalizations(categoryId).stream()
+                .map(AdminCategoryLocalizationResponse::from)
+                .toList();
+    }
+
     @DeleteMapping("/{categoryId}")
     @Operation(summary = "Delete a category", description = "Deactivates one category aggregate and preserves editorial history for admin reads.")
     @ApiResponses({

@@ -141,7 +141,7 @@ export function AddCuratedContentDialog({
     if (existingContentIds.has(values.contentId)) {
       form.setError("contentId", {
         type: "manual",
-        message: "This content is already in the current session curation set.",
+        message: "This content is already in the current curation lane.",
       });
       return;
     }
@@ -151,8 +151,7 @@ export function AddCuratedContentDialog({
     ) {
       form.setError("displayOrder", {
         type: "manual",
-        message:
-          "Display order is already used in the current session curation set.",
+        message: "Display order is already used in the current curation lane.",
       });
       return;
     }
@@ -199,9 +198,8 @@ export function AddCuratedContentDialog({
           <DialogTitle>Add curated content</DialogTitle>
           <DialogDescription>
             Add one published {category.typeLabel.toLowerCase()} record to the{" "}
-            {localization.languageLabel} category lane. Existing backend
-            curation rows are not hydrated yet, so this dialog only knows about
-            rows created in the current CMS session.
+            {localization.languageLabel} category lane. This dialog validates
+            against the currently hydrated curation rows for this language.
           </DialogDescription>
         </DialogHeader>
 

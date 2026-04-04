@@ -76,6 +76,9 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         mockMvc.perform(get("/api/admin/categories/1"))
                 .andExpect(status().isUnauthorized());
 
+        mockMvc.perform(get("/api/admin/categories/1/localizations"))
+                .andExpect(status().isUnauthorized());
+
         mockMvc.perform(get("/api/admin/categories/1/localizations/tr/contents"))
                 .andExpect(status().isUnauthorized());
 
@@ -188,10 +191,84 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void categoryLocalizationListReturnsPersistedSnapshotsForAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "name": "One Cikan Uyku",
+                                  "description": "Editor secimleri",
+                                  "status": "PUBLISHED",
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].categoryId").value(categoryId))
+                .andExpect(jsonPath("$[0].languageCode").value("tr"))
+                .andExpect(jsonPath("$[0].name").value("One Cikan Uyku"))
+                .andExpect(jsonPath("$[0].published").value(true));
+    }
+
+    @Test
+    void categoryLocalizationListReturnsEmptyArrayWhenCategoryHasNoLocalizations() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
     void missingReadAndDeleteEndpointsReturnNotFoundForUnknownCategory() throws Exception {
         String accessToken = authenticateAdmin();
 
         mockMvc.perform(get("/api/admin/categories/999")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("category_not_found"));
+
+        mockMvc.perform(get("/api/admin/categories/999/localizations")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("category_not_found"));

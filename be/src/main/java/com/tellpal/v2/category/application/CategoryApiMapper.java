@@ -1,7 +1,9 @@
 package com.tellpal.v2.category.application;
 
 import com.tellpal.v2.category.api.CategoryReference;
+import com.tellpal.v2.category.api.AdminCategoryLocalizationView;
 import com.tellpal.v2.category.domain.Category;
+import com.tellpal.v2.category.domain.CategoryLocalization;
 
 final class CategoryApiMapper {
 
@@ -19,5 +21,20 @@ final class CategoryApiMapper {
                 category.getSlug(),
                 category.isPremium(),
                 category.isActive());
+    }
+
+    static AdminCategoryLocalizationView toLocalizationView(Long categoryId, CategoryLocalization localization) {
+        if (categoryId == null || categoryId <= 0) {
+            throw new IllegalStateException("Category must be persisted before mapping localizations");
+        }
+        return new AdminCategoryLocalizationView(
+                categoryId,
+                localization.getLanguageCode(),
+                localization.getName(),
+                localization.getDescription(),
+                localization.getImageMediaId(),
+                localization.getStatus().name(),
+                localization.getPublishedAt(),
+                localization.isPublished());
     }
 }

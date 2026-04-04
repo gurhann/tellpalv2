@@ -105,6 +105,7 @@ Asagidaki endpoint'ler backend tarafinda fiilen mevcuttur:
 - Categories:
   - `POST /api/admin/categories`
   - `GET /api/admin/categories/{categoryId}`
+  - `GET /api/admin/categories/{categoryId}/localizations`
   - `PUT /api/admin/categories/{categoryId}`
   - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}`
   - `PUT /api/admin/categories/{categoryId}/localizations/{languageCode}`
@@ -132,7 +133,7 @@ Asagidaki endpoint'ler backend tarafinda fiilen mevcuttur:
 Bu gap'ler frontend modullerinin ilgili tasklarini bloke eder ve mock ile gecistirilmez.
 
 - `BG01`: Content list/get/delete admin endpoint'leri eksik
-- `BG02`: Category list/delete admin endpoint'leri eksik
+- `BG02`: Category list/delete ve localization-read admin endpoint'leri eksik
 - `BG03`: Contributor delete ve content-contributor unassign endpoint'leri eksik
 
 ## Dependency Order
@@ -791,7 +792,7 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 
 ### Task Dependency Order
 
-- `M06-T01 -> M06-T02 -> M06-T03 -> M06-T04`
+- `M06-T01 -> M06-T02 -> M06-T03 -> M06-T04 -> M06-T05`
 
 ### Atomic Tasks
 
@@ -860,6 +861,26 @@ Kategori listeleme, detay, create/update ve localization yonetimi icin editor mo
 - Acceptance criteria:
   - Happy path ve validation/error senaryolari test edilir.
   - Playwright smoke create -> edit -> localization update akislarini kapsar.
+- Verification steps:
+  - `cd cms && npm run test -- src/features/categories`
+  - `cd cms && npm run test:e2e -- categories`
+
+#### M06-T05 `TODO` Hydrate category localizations from backend
+
+- Objective:
+  - Category detail ekranindaki localization tablarini backend read endpoint'i ile kalici hale getirmek.
+- Files to create or modify:
+  - `cms/src/features/categories/api/category-admin.ts`
+  - `cms/src/features/categories/queries/use-category-localizations.ts`
+  - `cms/src/features/categories/mutations/use-category-localization-actions.ts`
+  - `cms/src/app/routes/categories/detail.tsx`
+- Dependencies:
+  - `M06-T04`
+  - `BG02-T04`
+- Acceptance criteria:
+  - Localization create/update sonrasi sekmeler backend source-of-truth ile gorunur.
+  - Sayfa refresh sonrasi kaydedilen localization sekmeleri kaybolmaz.
+  - Localization read hatasi empty state ile karismaz.
 - Verification steps:
   - `cd cms && npm run test -- src/features/categories`
   - `cd cms && npm run test:e2e -- categories`
@@ -1276,7 +1297,7 @@ CMS content studio'nun ihtiyac duydugu list, detail read ve delete endpoint'leri
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*ContentAdmin* test`
 
-## BG02 Backend Gap: Category Admin List and Delete
+## BG02 Backend Gap: Category Admin List, Delete, and Localization Read
 
 - Status: `TODO`
 - Owner: `backend`
@@ -1291,7 +1312,7 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
 
 ### Task Dependency Order
 
-- `BG02-T01 -> BG02-T02 -> BG02-T03`
+- `BG02-T01 -> BG02-T02 -> BG02-T03 -> BG02-T04`
 
 ### Atomic Tasks
 
@@ -1335,6 +1356,25 @@ Category studio icin gereken listeleme ve silme endpoint'leri admin HTTP yuzeyin
   - `BG02-T02`
 - Acceptance criteria:
   - Auth, happy path, validation ve conflict/not-found davranislari test edilir.
+- Verification steps:
+  - `cd be && ./mvnw -q -Dtest=*CategoryAdmin* test`
+
+#### BG02-T04 `TODO` Add category localization list endpoint
+
+- Objective:
+  - `GET /api/admin/categories/{categoryId}/localizations` endpoint'ini eklemek.
+- Files to create or modify:
+  - `be/src/main/java/com/tellpal/v2/category/web/admin/CategoryAdminController.java`
+  - `be/src/main/java/com/tellpal/v2/category/api/**`
+  - `be/src/main/java/com/tellpal/v2/category/application/**`
+  - `be/src/test/java/com/tellpal/v2/category/web/admin/**`
+  - `be/docs/admin-api-rules.md`
+- Dependencies:
+  - `BG02-T03`
+- Acceptance criteria:
+  - Localization response'i create/update wire shape'i ile ayni alanlari dondurur.
+  - Localization olmayan category icin `200 []` dondurulur.
+  - Unknown category icin `404 category_not_found` dondurulur.
 - Verification steps:
   - `cd be && ./mvnw -q -Dtest=*CategoryAdmin* test`
 

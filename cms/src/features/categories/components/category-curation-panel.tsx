@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AddCuratedContentDialog } from "@/features/categories/components/add-curated-content-dialog";
+import { CurationTable } from "@/features/categories/components/curation-table";
 import { CurationOrderEditor } from "@/features/categories/components/curation-order-editor";
 import { CategoryLanguageWorkspace } from "@/features/categories/components/category-language-workspace";
 import type {
@@ -19,25 +20,32 @@ import type {
   CategoryLocalizationViewModel,
   CategorySummaryViewModel,
 } from "@/features/categories/model/category-view-model";
+import type { ApiProblemDetail } from "@/types/api";
 
 type CategoryCurationPanelProps = {
   category: CategorySummaryViewModel;
   curationItems: CategoryCurationItemViewModel[];
+  curationIsLoading: boolean;
+  curationProblem: ApiProblemDetail | null;
   localizations: CategoryLocalizationViewModel[];
   selectedLocalization: CategoryLocalizationViewModel | null;
   selectedLanguageCode: string;
   onLanguageChange: (languageCode: string) => void;
   onCreateLocalization: () => void;
+  onRetryCuration: () => void;
 };
 
 export function CategoryCurationPanel({
   category,
   curationItems,
+  curationIsLoading,
+  curationProblem,
   localizations,
   selectedLocalization,
   selectedLanguageCode,
   onLanguageChange,
   onCreateLocalization,
+  onRetryCuration,
 }: CategoryCurationPanelProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const canAddCuratedContent = Boolean(selectedLocalization?.isPublished);
@@ -66,9 +74,8 @@ export function CategoryCurationPanel({
           <div>
             <CardTitle>Category curation workspace</CardTitle>
             <CardDescription>
-              Each localization owns its own curation lane. Add and reorder
-              flows now operate on the selected language, while hydrated list
-              reads and remove actions still land next.
+              Each localization owns its own curation lane. Add, list, reorder,
+              and remove flows now operate on the selected language.
             </CardDescription>
           </div>
 
@@ -158,11 +165,21 @@ export function CategoryCurationPanel({
             </div>
 
             {selectedLocalization ? (
-              <CurationOrderEditor
-                category={category}
-                items={curationItems}
-                localization={selectedLocalization}
-              />
+              <div className="space-y-5">
+                <CurationTable
+                  category={category}
+                  items={curationItems}
+                  isLoading={curationIsLoading}
+                  localization={selectedLocalization}
+                  problem={curationProblem}
+                  onRetry={onRetryCuration}
+                />
+                <CurationOrderEditor
+                  category={category}
+                  items={curationItems}
+                  localization={selectedLocalization}
+                />
+              </div>
             ) : null}
           </>
         )}

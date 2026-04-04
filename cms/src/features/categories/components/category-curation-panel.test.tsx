@@ -32,11 +32,14 @@ describe("CategoryCurationPanel", () => {
       <CategoryCurationPanel
         category={featuredSleepCategoryViewModel}
         curationItems={categoryCurationItemViewModels}
+        curationIsLoading={false}
+        curationProblem={null}
         localizations={categoryLocalizationViewModels}
         selectedLocalization={categoryLocalizationViewModels[0]}
         selectedLanguageCode="en"
         onCreateLocalization={vi.fn()}
         onLanguageChange={onLanguageChange}
+        onRetryCuration={vi.fn()}
       />,
     );
 
@@ -60,11 +63,14 @@ describe("CategoryCurationPanel", () => {
       <CategoryCurationPanel
         category={featuredSleepCategoryViewModel}
         curationItems={[]}
+        curationIsLoading={false}
+        curationProblem={null}
         localizations={[]}
         selectedLocalization={null}
         selectedLanguageCode="en"
         onCreateLocalization={onCreateLocalization}
         onLanguageChange={vi.fn()}
+        onRetryCuration={vi.fn()}
       />,
     );
 
@@ -90,11 +96,14 @@ describe("CategoryCurationPanel", () => {
       <CategoryCurationPanel
         category={featuredSleepCategoryViewModel}
         curationItems={[]}
+        curationIsLoading={false}
+        curationProblem={null}
         localizations={categoryLocalizationViewModels}
         selectedLocalization={categoryLocalizationViewModels[1]}
         selectedLanguageCode="tr"
         onCreateLocalization={vi.fn()}
         onLanguageChange={vi.fn()}
+        onRetryCuration={vi.fn()}
       />,
     );
 

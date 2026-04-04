@@ -5,7 +5,7 @@ import type {
   CategoryType,
 } from "@/features/categories/api/category-admin";
 import type { AdminCategoryContentResponse } from "@/features/categories/api/category-curation-admin";
-import { mapLanguage } from "@/lib/languages";
+import { mapLanguage, supportedCmsLanguageOptions } from "@/lib/languages";
 
 const categoryTypeLabels: Record<CategoryType, string> = {
   STORY: "Story",
@@ -19,6 +19,10 @@ const localizationStatusLabels: Record<CategoryLocalizationStatus, string> = {
   PUBLISHED: "Published",
   ARCHIVED: "Archived",
 };
+
+const languageOrder = new Map(
+  supportedCmsLanguageOptions.map((option, index) => [option.code, index]),
+);
 
 export type CategorySummaryViewModel = {
   id: number;
@@ -88,6 +92,31 @@ export function mapAdminCategoryLocalization(
     isPublished: localization.published,
     hasImage: localization.imageMediaId !== null,
   };
+}
+
+export function sortCategoryLocalizationViewModels(
+  localizations: CategoryLocalizationViewModel[],
+): CategoryLocalizationViewModel[] {
+  return [...localizations].sort((left, right) => {
+    const leftOrder =
+      languageOrder.get(left.languageCode) ?? Number.MAX_SAFE_INTEGER;
+    const rightOrder =
+      languageOrder.get(right.languageCode) ?? Number.MAX_SAFE_INTEGER;
+
+    if (leftOrder !== rightOrder) {
+      return leftOrder - rightOrder;
+    }
+
+    return left.languageCode.localeCompare(right.languageCode);
+  });
+}
+
+export function mapAdminCategoryLocalizationList(
+  localizations: AdminCategoryLocalizationResponse[],
+): CategoryLocalizationViewModel[] {
+  return sortCategoryLocalizationViewModels(
+    localizations.map(mapAdminCategoryLocalization),
+  );
 }
 
 export function mapAdminCategoryCurationItem(

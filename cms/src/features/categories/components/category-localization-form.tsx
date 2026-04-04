@@ -373,12 +373,12 @@ export function CategoryLocalizationForm({
 
       <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
         <p className="text-sm font-medium text-foreground">
-          Session-backed localization workspace
+          Live localization workspace
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          The backend has create and update localization endpoints, but no admin
-          read endpoint for category localizations yet. Tabs in this task show
-          localizations created or updated in the current CMS session.
+          The backend now exposes category localization reads. Tabs in this
+          workspace hydrate persisted localizations and keep them visible after
+          refresh.
         </p>
       </div>
 

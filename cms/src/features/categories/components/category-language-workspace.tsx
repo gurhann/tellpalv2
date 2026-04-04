@@ -24,14 +24,12 @@ export function CategoryLanguageWorkspace({
     : "Publish this localization before language-scoped curation actions unlock.";
   const sessionTitle =
     curationItemCount > 0
-      ? `${curationItemCount} current-session curated row${
-          curationItemCount === 1 ? "" : "s"
-        }`
-      : "No current-session curated rows yet";
+      ? `${curationItemCount} curated row${curationItemCount === 1 ? "" : "s"}`
+      : "No curated rows yet";
   const sessionDescription =
     curationItemCount > 0
-      ? "Rows added in this CMS session can already be reordered below."
-      : "Use the add dialog to create the first current-session curated row for this language.";
+      ? "Stored curated rows for this language are now visible and can be reordered below."
+      : "Use the add dialog to create the first curated row for this language.";
 
   return (
     <div
@@ -100,7 +98,7 @@ export function CategoryLanguageWorkspace({
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <CheckCircle2 className="size-4 text-primary" />
-            Session cache
+            Curation list
           </div>
           <p className="mt-2 text-sm font-medium text-foreground">
             {sessionTitle}
@@ -113,12 +111,11 @@ export function CategoryLanguageWorkspace({
 
       <div className="rounded-3xl border border-dashed border-border/80 bg-muted/20 px-6 py-8 text-center">
         <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-          Session-backed curation is live
+          Hydrated curation is live
         </h3>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-          Add and reorder flows now operate inside this language workspace.
-          Hydrated backend list reads and remove actions still land next, once
-          category curation gets a dedicated admin read surface.
+          Add, list, reorder, and remove flows now operate inside this language
+          workspace through the admin curation endpoints.
         </p>
       </div>
     </div>

@@ -13,6 +13,7 @@ import { useCategoryCurationActions } from "./use-category-curation-actions";
 const categoryCurationAdminApiMock = vi.hoisted(() => ({
   addCuratedContent: vi.fn(),
   updateCuratedContentOrder: vi.fn(),
+  removeCuratedContent: vi.fn(),
 }));
 
 vi.mock("@/features/categories/api/category-curation-admin", async () => {
@@ -27,6 +28,7 @@ vi.mock("@/features/categories/api/category-curation-admin", async () => {
       addCuratedContent: categoryCurationAdminApiMock.addCuratedContent,
       updateCuratedContentOrder:
         categoryCurationAdminApiMock.updateCuratedContentOrder,
+      removeCuratedContent: categoryCurationAdminApiMock.removeCuratedContent,
     },
   };
 });
@@ -42,10 +44,11 @@ function createWrapper(queryClient: QueryClient) {
 beforeEach(() => {
   categoryCurationAdminApiMock.addCuratedContent.mockReset();
   categoryCurationAdminApiMock.updateCuratedContentOrder.mockReset();
+  categoryCurationAdminApiMock.removeCuratedContent.mockReset();
 });
 
 describe("useCategoryCurationActions", () => {
-  it("adds a curated item and stores it in the session-backed cache", async () => {
+  it("adds a curated item and updates the curation cache", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -171,5 +174,58 @@ describe("useCategoryCurationActions", () => {
         displayOrder: 1,
       }),
     ]);
+  });
+
+  it("removes a curated item and invalidates the hydrated lane", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+
+    queryClient.setQueryData(
+      queryKeys.categories.curation(7, "en"),
+      categoryCurationItemViewModels,
+    );
+    categoryCurationAdminApiMock.removeCuratedContent.mockResolvedValue(
+      undefined,
+    );
+
+    const { result } = renderHook(
+      () =>
+        useCategoryCurationActions({
+          categoryId: 7,
+          languageCode: "en",
+        }),
+      {
+        wrapper: createWrapper(queryClient),
+      },
+    );
+
+    await act(async () => {
+      await result.current.removeCuratedContent.mutateAsync({
+        contentId: 10,
+      });
+    });
+
+    expect(
+      categoryCurationAdminApiMock.removeCuratedContent,
+    ).toHaveBeenCalledWith(7, "en", 10);
+    expect(
+      queryClient.getQueryData<
+        Array<{ contentId: number; displayOrder: number }>
+      >(queryKeys.categories.curation(7, "en")),
+    ).toEqual([
+      expect.objectContaining({
+        contentId: 1,
+        displayOrder: 0,
+      }),
+    ]);
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.categories.curation(7, "en"),
+    });
   });
 });

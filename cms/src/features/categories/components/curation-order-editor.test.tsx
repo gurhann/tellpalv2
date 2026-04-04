@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 
 describe("CurationOrderEditor", () => {
-  it("updates display order for a current-session curation row", async () => {
+  it("updates display order for a hydrated curation row", async () => {
     const updateCuratedContentOrder = makeMutationState({
       mutateAsync: vi.fn().mockResolvedValue({
         categoryId: 7,

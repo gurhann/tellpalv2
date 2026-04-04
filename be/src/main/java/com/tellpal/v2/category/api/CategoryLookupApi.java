@@ -14,6 +14,11 @@ public interface CategoryLookupApi {
     List<CategoryReference> listAll();
 
     /**
+     * Returns all localizations for one category in admin read flows.
+     */
+    List<AdminCategoryLocalizationView> listLocalizations(Long categoryId);
+
+    /**
      * Finds a category by ID.
      */
     Optional<CategoryReference> findById(Long categoryId);

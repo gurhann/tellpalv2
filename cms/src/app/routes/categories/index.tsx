@@ -143,9 +143,9 @@ export function CategoriesIndexRoute() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  Category localization create and update live on the detail
-                  route in this task, but localization tabs remain
-                  session-backed because no admin read endpoint exists yet.
+                  Category localization create, update, and read are live on the
+                  detail route, so localization tabs now persist across refresh
+                  and reopen.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
                   `M07` layers language-scoped curation into the detail route

@@ -61,7 +61,7 @@ function CurationOrderRow({
       )
     ) {
       setFieldError(
-        "Display order is already used in the current session curation set.",
+        "Display order is already used in the current curation lane.",
       );
       return;
     }
@@ -91,8 +91,7 @@ function CurationOrderRow({
             Content #{item.contentId}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Current session row in the {localization.languageLabel} curation
-            lane.
+            Stored row in the {localization.languageLabel} curation lane.
           </p>
         </div>
 
@@ -162,9 +161,9 @@ export function CurationOrderEditor({
           Display order editor
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Reorder only the current-session curated rows for{" "}
-          {localization.languageLabel}. Existing backend curation rows stay
-          hidden until the dedicated admin read endpoint lands in the next task.
+          Reorder the hydrated curated rows for {localization.languageLabel}.
+          Changes save through the admin API and then refresh this curation
+          lane.
         </p>
       </div>
 
@@ -175,8 +174,8 @@ export function CurationOrderEditor({
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/80 bg-background px-4 py-6 text-sm text-muted-foreground">
-          No curated rows have been added in this session yet. Use `Add curated
-          content` first, then adjust display order here.
+          No curated rows exist for this language yet. Use `Add curated content`
+          first, then adjust display order here.
         </div>
       ) : (
         <div className="grid gap-3">

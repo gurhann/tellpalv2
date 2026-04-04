@@ -68,11 +68,14 @@ describe("category read components", () => {
       <CategoryCurationPanel
         category={featuredSleepCategoryViewModel}
         curationItems={categoryCurationItemViewModels}
+        curationIsLoading={false}
+        curationProblem={null}
         localizations={categoryLocalizationViewModels}
         selectedLocalization={categoryLocalizationViewModels[0]}
         selectedLanguageCode="en"
         onCreateLocalization={vi.fn()}
         onLanguageChange={vi.fn()}
+        onRetryCuration={vi.fn()}
       />,
     );
 
@@ -80,6 +83,6 @@ describe("category read components", () => {
     expect(
       screen.getByText(/each localization owns its own curation lane/i),
     ).toBeVisible();
-    expect(screen.getByText(/session-backed curation is live/i)).toBeVisible();
+    expect(screen.getByText(/hydrated curation is live/i)).toBeVisible();
   });
 });

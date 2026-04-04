@@ -22,11 +22,23 @@ export const adminCategoryContentResponseSchema = z.object({
   displayOrder: z.number().int().nonnegative(),
 });
 
+export const adminCategoryContentListResponseSchema = z.array(
+  adminCategoryContentResponseSchema,
+);
+
 export type AdminCategoryContentResponse = z.infer<
   typeof adminCategoryContentResponseSchema
 >;
 
 export const categoryCurationAdminApi = {
+  listCuratedContent(categoryId: number, languageCode: string) {
+    return apiClient.get<AdminCategoryContentResponse[]>(
+      getBasePath(categoryId, languageCode),
+      {
+        responseSchema: adminCategoryContentListResponseSchema,
+      },
+    );
+  },
   addCuratedContent(
     categoryId: number,
     languageCode: string,

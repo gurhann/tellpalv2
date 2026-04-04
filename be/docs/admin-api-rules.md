@@ -357,6 +357,7 @@ stack.
 - `POST /api/admin/categories`
 - `GET /api/admin/categories`
 - `GET /api/admin/categories/{categoryId}`
+- `GET /api/admin/categories/{categoryId}/localizations`
 - `DELETE /api/admin/categories/{categoryId}`
 - `PUT /api/admin/categories/{categoryId}`
 - `POST /api/admin/categories/{categoryId}/localizations/{languageCode}`
@@ -407,8 +408,8 @@ stack.
 - Duplicate curated links and duplicate display orders currently surface as `400 invalid_request`,
   not as a module-specific conflict code.
 - Category detail read currently returns only base metadata. A separate curation read endpoint is
-  available per `category + language`, but category localizations still do not have an admin read
-  endpoint.
+  available per `category + language`, and category localizations have their own dedicated admin
+  read endpoint.
 - Public/mobile category filters also use the same content-aligned type values through
   `GET /api/categories?type=...`.
 
@@ -467,15 +468,13 @@ stack.
   published.
 - Curation UIs can hydrate stored curated rows from
   `GET /api/admin/categories/{categoryId}/localizations/{languageCode}/contents`.
+- Category detail screens should hydrate localization tabs from
+  `GET /api/admin/categories/{categoryId}/localizations` instead of session-only cache state.
 - Curation UI should pre-filter or validate content ids so only the category-matching content type
   can be submitted.
 - Curation UIs should avoid duplicate display orders before submit.
 - Category detail screens still cannot rely on a single backend read to hydrate both localizations
   and curated content.
-
-### Open Gaps and Unverified Items
-
-- There is still no admin read endpoint that returns category localizations.
 
 ## Assets and Media Processing
 

@@ -99,7 +99,7 @@ describe("AddCuratedContentDialog", () => {
     });
   });
 
-  it("blocks duplicate content ids already present in the current session cache", async () => {
+  it("blocks duplicate content ids already present in the current curation lane", async () => {
     const addCuratedContent = makeMutationState();
     curationActionMocks.useCategoryCurationActions.mockReturnValue({
       addCuratedContent,
@@ -126,7 +126,7 @@ describe("AddCuratedContentDialog", () => {
     );
 
     expect(
-      await screen.findByText(/already in the current session curation set/i),
+      await screen.findByText(/already in the current curation lane/i),
     ).toBeVisible();
     expect(addCuratedContent.mutateAsync).not.toHaveBeenCalled();
   });

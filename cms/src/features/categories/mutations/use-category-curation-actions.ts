@@ -101,5 +101,28 @@ export function useCategoryCurationActions({
         });
       },
     }),
+    removeCuratedContent: useMutation({
+      mutationFn: ({ contentId }: { contentId: number }) =>
+        categoryCurationAdminApi.removeCuratedContent(
+          categoryId,
+          languageCode,
+          contentId,
+        ),
+      onSuccess: async (_response, { contentId }) => {
+        queryClient.setQueryData<CategoryCurationItemViewModel[]>(
+          curationKey,
+          (records) =>
+            sortCurationItems(
+              (records ?? []).filter(
+                (record) => record.contentId !== contentId,
+              ),
+            ),
+        );
+
+        await queryClient.invalidateQueries({
+          queryKey: curationKey,
+        });
+      },
+    }),
   };
 }

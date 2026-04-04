@@ -3,38 +3,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryAdminApi } from "@/features/categories/api/category-admin";
 import {
   mapAdminCategoryLocalization,
+  sortCategoryLocalizationViewModels,
   type CategoryLocalizationViewModel,
 } from "@/features/categories/model/category-view-model";
 import type { CategoryLocalizationFormValues } from "@/features/categories/schema/category-localization-schema";
 import { toPublishedAtPayload } from "@/features/categories/schema/category-localization-schema";
-import { supportedCmsLanguageOptions } from "@/lib/languages";
 import { queryKeys } from "@/lib/query-keys";
 
 type SaveCategoryLocalizationVariables = {
   mode: "create" | "update";
   values: CategoryLocalizationFormValues;
 };
-
-const languageOrder = new Map(
-  supportedCmsLanguageOptions.map((option, index) => [option.code, index]),
-);
-
-function sortLocalizations(
-  localizations: CategoryLocalizationViewModel[],
-): CategoryLocalizationViewModel[] {
-  return [...localizations].sort((left, right) => {
-    const leftOrder =
-      languageOrder.get(left.languageCode) ?? Number.MAX_SAFE_INTEGER;
-    const rightOrder =
-      languageOrder.get(right.languageCode) ?? Number.MAX_SAFE_INTEGER;
-
-    if (leftOrder !== rightOrder) {
-      return leftOrder - rightOrder;
-    }
-
-    return left.languageCode.localeCompare(right.languageCode);
-  });
-}
 
 function upsertLocalizationList(
   currentLocalizations: CategoryLocalizationViewModel[] | undefined,
@@ -51,7 +30,7 @@ function upsertLocalizationList(
           index === existingIndex ? localization : record,
         );
 
-  return sortLocalizations(nextLocalizations);
+  return sortCategoryLocalizationViewModels(nextLocalizations);
 }
 
 function toLocalizationPayload(values: CategoryLocalizationFormValues) {

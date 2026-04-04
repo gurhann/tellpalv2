@@ -201,6 +201,22 @@ test("category create, edit, and localize use content-aligned types", async ({
   });
 
   await page.route(
+    "**/api/admin/categories/99/localizations",
+    async (route) => {
+      if (route.request().method() !== "GET") {
+        await route.fallback();
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(createdLocalization ? [createdLocalization] : []),
+      });
+    },
+  );
+
+  await page.route(
     "**/api/admin/categories/99/localizations/tr",
     async (route) => {
       const request = route.request();
@@ -234,6 +250,22 @@ test("category create, edit, and localize use content-aligned types", async ({
       }
 
       await route.fallback();
+    },
+  );
+
+  await page.route(
+    "**/api/admin/categories/99/localizations/tr/contents",
+    async (route) => {
+      if (route.request().method() !== "GET") {
+        await route.fallback();
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([]),
+      });
     },
   );
 
@@ -359,4 +391,15 @@ test("category create, edit, and localize use content-aligned types", async ({
     "Calm Lullabies Updated",
   );
   await expect(createdLocalization?.name).toBe("Calm Lullabies Updated");
+
+  await page.reload();
+
+  await expect(
+    page
+      .getByRole("tablist", { name: /category localization tabs/i })
+      .getByRole("tab", { name: /turkish/i }),
+  ).toBeVisible();
+  await expect(page.locator('input[name="name"]')).toHaveValue(
+    "Calm Lullabies Updated",
+  );
 });

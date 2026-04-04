@@ -46,7 +46,7 @@ beforeEach(() => {
 });
 
 describe("useCategoryLocalizationActions", () => {
-  it("creates a localization and updates the session-backed localization cache", async () => {
+  it("creates a localization and updates the persisted localization cache", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -109,7 +109,7 @@ describe("useCategoryLocalizationActions", () => {
     });
   });
 
-  it("updates an existing localization in the session-backed cache", async () => {
+  it("updates an existing localization in the persisted localization cache", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {

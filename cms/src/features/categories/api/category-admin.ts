@@ -67,6 +67,9 @@ export type AdminCategoryLocalizationResponse = z.infer<
   typeof adminCategoryLocalizationResponseSchema
 >;
 const adminCategoryListResponseSchema = z.array(adminCategoryResponseSchema);
+const adminCategoryLocalizationListResponseSchema = z.array(
+  adminCategoryLocalizationResponseSchema,
+);
 
 export const categoryAdminApi = {
   listCategories() {
@@ -84,6 +87,14 @@ export const categoryAdminApi = {
     return apiClient.get<AdminCategoryResponse>(`${basePath}/${categoryId}`, {
       responseSchema: adminCategoryResponseSchema,
     });
+  },
+  listLocalizations(categoryId: number) {
+    return apiClient.get<AdminCategoryLocalizationResponse[]>(
+      `${basePath}/${categoryId}/localizations`,
+      {
+        responseSchema: adminCategoryLocalizationListResponseSchema,
+      },
+    );
   },
   updateCategory(categoryId: number, input: UpdateCategoryInput) {
     return apiClient.put<AdminCategoryResponse>(`${basePath}/${categoryId}`, {
