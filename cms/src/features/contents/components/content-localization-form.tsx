@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
 import type { AdminContentLocalizationResponse } from "@/features/contents/api/content-admin";
 import {
   mapAdminContentLocalization,
@@ -292,60 +293,47 @@ export function ContentLocalizationForm({
               <FieldError error={form.formState.errors.bodyText} />
             </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-foreground"
-                htmlFor="audioMediaId"
-              >
-                Audio asset id
-                <span className="ml-1 text-destructive">*</span>
-              </label>
-              <Input
-                id="audioMediaId"
-                inputMode="numeric"
-                placeholder="1"
-                type="number"
-                {...form.register("audioMediaId", {
-                  setValueAs: (value) => {
-                    if (value === "" || value === null || value === undefined) {
-                      return null;
-                    }
-
-                    return Number(value);
-                  },
-                })}
-                disabled={saveLocalization.isPending}
-              />
-              <FieldError error={form.formState.errors.audioMediaId} />
-            </div>
+            <Controller
+              control={form.control}
+              name="audioMediaId"
+              render={({ field }) => (
+                <AssetPickerField
+                  description="Non-story localizations can reference only `AUDIO` assets here."
+                  disabled={saveLocalization.isPending}
+                  error={form.formState.errors.audioMediaId}
+                  id="audioMediaId"
+                  label="Audio asset id *"
+                  mediaType="AUDIO"
+                  pickerDescription="Select a recent audio asset for this content localization. Manual asset ids remain supported."
+                  pickerTitle="Pick localization audio asset"
+                  placeholder="Required"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
           </>
         )}
 
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-foreground"
-            htmlFor="coverMediaId"
-          >
-            Cover asset id
-          </label>
-          <Input
-            id="coverMediaId"
-            inputMode="numeric"
-            placeholder="Optional"
-            type="number"
-            {...form.register("coverMediaId", {
-              setValueAs: (value) => {
-                if (value === "" || value === null || value === undefined) {
-                  return null;
-                }
-
-                return Number(value);
-              },
-            })}
-            disabled={saveLocalization.isPending}
-          />
-          <FieldError error={form.formState.errors.coverMediaId} />
-        </div>
+        <Controller
+          control={form.control}
+          name="coverMediaId"
+          render={({ field }) => (
+            <AssetPickerField
+              description="Cover imagery can reference only `IMAGE` assets."
+              disabled={saveLocalization.isPending}
+              error={form.formState.errors.coverMediaId}
+              id="coverMediaId"
+              label="Cover asset id"
+              mediaType="IMAGE"
+              pickerDescription="Select a recent image asset for the localized cover. Manual asset ids remain supported."
+              pickerTitle="Pick localization cover asset"
+              placeholder="Optional"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
 
         <div className="space-y-2">
           <label

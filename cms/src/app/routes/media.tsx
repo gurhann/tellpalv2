@@ -73,7 +73,7 @@ export function MediaRoute() {
               Select a row to inspect detail
             </Button>
             <Button type="button" variant="outline" disabled>
-              Shared asset picker
+              Shared picker lives in forms
             </Button>
           </>
         }
@@ -103,7 +103,7 @@ export function MediaRoute() {
 
             <FilterBarActions>
               <FilterBarSummary
-                description="Live data is bound. Search and shared picker workflows remain staged, while the detail sheet is now row-driven and live."
+                description="Live data is bound. Detail inspection, cached URL refresh, and shared picker primitives are live while search stays staged."
                 title={`${assetCount} recent asset${
                   assetCount === 1 ? "" : "s"
                 } loaded`}
@@ -135,8 +135,9 @@ export function MediaRoute() {
                     : `${cachedUrlCount} recent assets already carry a cached download URL snapshot.`}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Selecting a row now opens the live asset detail sheet. Shared
-                  picker primitives still arrive in the next asset task.
+                  Selecting a row now opens the live asset detail sheet.
+                  Content, category, and story-page forms now reuse this module
+                  through the shared asset picker field.
                 </div>
               </CardContent>
             </Card>
@@ -145,9 +146,9 @@ export function MediaRoute() {
               <CardHeader>
                 <CardTitle>Next Asset Work</CardTitle>
                 <CardDescription>
-                  The detail read and metadata form are live, so the remaining
-                  asset tasks can focus on download URL refresh and reusable
-                  picker UX.
+                  The detail read, cached URL refresh, and reusable picker are
+                  live, so the remaining asset tasks can move deeper into
+                  workflow-specific media operations.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -156,13 +157,13 @@ export function MediaRoute() {
                   metadata editor.
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
-                  `M08-T03` layers signed URL refresh and a reusable asset
-                  picker dialog on top of this registry.
+                  `M08-T03` is live through cached URL refresh and reusable
+                  asset picker fields wired into content, category, and
+                  story-page workflows.
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
                   <Sparkles className="size-3.5" />
-                  Recent list and detail sheet are live; picker surfaces are
-                  staged
+                  Recent list, detail sheet, refresh, and shared picker are live
                 </div>
               </CardContent>
             </Card>
@@ -203,8 +204,8 @@ export function MediaRoute() {
                 Signed URL refresh
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Cached download URL refresh controls will land next inside the
-                live detail sheet.
+                Cached download URL refresh now runs inside the live detail
+                sheet without leaving the registry.
               </p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
@@ -212,8 +213,9 @@ export function MediaRoute() {
                 Shared picker entry
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Content, category, and story-page forms will open this module as
-                a reusable picker instead of inventing asset lookups locally.
+                Content, category, and story-page forms now open this module
+                through a reusable picker instead of inventing asset lookups
+                locally.
               </p>
             </div>
           </CardContent>

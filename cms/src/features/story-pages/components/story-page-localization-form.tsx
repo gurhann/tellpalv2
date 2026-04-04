@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import { Controller } from "react-hook-form";
+
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import {
@@ -7,9 +9,8 @@ import {
   toastMutation,
   useZodForm,
 } from "@/components/forms/form-utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
 import type { AdminStoryPageLocalizationResponse } from "@/features/contents/api/story-page-admin";
 import type {
   ContentLocalizationViewModel,
@@ -19,8 +20,6 @@ import {
   validateAudioAssetId,
   validateIllustrationAssetId,
 } from "@/features/story-pages/lib/illustration-asset-validation";
-import { useRecentAudioAssets } from "@/features/story-pages/queries/use-recent-audio-assets";
-import { useRecentImageAssets } from "@/features/story-pages/queries/use-recent-image-assets";
 import {
   getStoryPageLocalizationFormDefaults,
   mapStoryPageLocalizationToFormValues,
@@ -71,8 +70,6 @@ export function StoryPageLocalizationForm({
       ? mapStoryPageLocalizationToFormValues(existingLocalization)
       : getStoryPageLocalizationFormDefaults(contentLocalization.languageCode),
   });
-  const recentAudioAssetsQuery = useRecentAudioAssets();
-  const recentImageAssetsQuery = useRecentImageAssets();
   const bodyText = form.watch("bodyText");
   const audioMediaId = form.watch("audioMediaId");
   const illustrationMediaId = form.watch("illustrationMediaId");
@@ -241,128 +238,45 @@ export function StoryPageLocalizationForm({
         <FieldError error={form.formState.errors.bodyText} />
       </div>
 
-      <div className="space-y-2">
-        <label
-          className="text-sm font-medium text-foreground"
-          htmlFor={`story-page-illustration-${contentLocalization.languageCode}`}
-        >
-          Illustration asset id
-        </label>
-        <Input
-          id={`story-page-illustration-${contentLocalization.languageCode}`}
-          inputMode="numeric"
-          placeholder="Required"
-          type="number"
-          {...form.register("illustrationMediaId", {
-            setValueAs: (value) => {
-              if (value === "" || value === undefined || value === null) {
-                return null;
-              }
+      <Controller
+        control={form.control}
+        name="illustrationMediaId"
+        render={({ field }) => (
+          <AssetPickerField
+            description="Story page illustrations are language-scoped and must reference `IMAGE` assets."
+            disabled={isPending}
+            error={form.formState.errors.illustrationMediaId}
+            id={`story-page-illustration-${contentLocalization.languageCode}`}
+            label="Illustration asset id"
+            mediaType="IMAGE"
+            pickerDescription="Select a recent image asset for this localized story page illustration. Manual asset ids remain supported."
+            pickerTitle="Pick story page illustration"
+            placeholder="Required"
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
 
-              return Number(value);
-            },
-          })}
-          disabled={isPending}
-        />
-        <FieldError error={form.formState.errors.illustrationMediaId} />
-        <p className="text-sm text-muted-foreground">
-          Story page illustrations are language-scoped and must reference
-          `IMAGE` assets.
-        </p>
-        {recentImageAssetsQuery.assets.length > 0 ? (
-          <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Recent Image Assets
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {recentImageAssetsQuery.assets.map((asset) => (
-                <Button
-                  key={asset.assetId}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    form.setValue("illustrationMediaId", asset.assetId, {
-                      shouldDirty: true,
-                    })
-                  }
-                  disabled={isPending}
-                >
-                  Asset #{asset.assetId}
-                </Button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-        {!recentImageAssetsQuery.isLoading &&
-        recentImageAssetsQuery.assets.length === 0 ? (
-          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
-            No recent image assets were found. Register an image asset in Media
-            before saving this locale.
-          </div>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <label
-          className="text-sm font-medium text-foreground"
-          htmlFor={`story-page-audio-${contentLocalization.languageCode}`}
-        >
-          Audio asset id
-        </label>
-        <Input
-          id={`story-page-audio-${contentLocalization.languageCode}`}
-          inputMode="numeric"
-          placeholder="Optional"
-          type="number"
-          {...form.register("audioMediaId", {
-            setValueAs: (value) => {
-              if (value === "" || value === undefined || value === null) {
-                return null;
-              }
-
-              return Number(value);
-            },
-          })}
-          disabled={isPending}
-        />
-        <FieldError error={form.formState.errors.audioMediaId} />
-        <p className="text-sm text-muted-foreground">
-          Story page audio links can reference only `AUDIO` assets.
-        </p>
-        {recentAudioAssetsQuery.assets.length > 0 ? (
-          <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Recent Audio Assets
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {recentAudioAssetsQuery.assets.map((asset) => (
-                <Button
-                  key={asset.assetId}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    form.setValue("audioMediaId", asset.assetId, {
-                      shouldDirty: true,
-                    })
-                  }
-                  disabled={isPending}
-                >
-                  Asset #{asset.assetId}
-                </Button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-        {!recentAudioAssetsQuery.isLoading &&
-        recentAudioAssetsQuery.assets.length === 0 ? (
-          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
-            No recent audio assets were found. Register an audio asset in Media
-            before saving this language payload.
-          </div>
-        ) : null}
-      </div>
+      <Controller
+        control={form.control}
+        name="audioMediaId"
+        render={({ field }) => (
+          <AssetPickerField
+            description="Story page audio links can reference only `AUDIO` assets."
+            disabled={isPending}
+            error={form.formState.errors.audioMediaId}
+            id={`story-page-audio-${contentLocalization.languageCode}`}
+            label="Audio asset id"
+            mediaType="AUDIO"
+            pickerDescription="Select a recent audio asset for this localized story page. Manual asset ids remain supported."
+            pickerTitle="Pick story page audio asset"
+            placeholder="Optional"
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
 
       <FieldError error={form.formState.errors.root?.serverError} />
 

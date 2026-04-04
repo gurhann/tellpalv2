@@ -7,21 +7,6 @@ import { firstStoryPageViewModel } from "@/features/story-pages/test/fixtures";
 
 import { StoryPageLocalizationForm } from "./story-page-localization-form";
 
-const recentAudioAssetHookMocks = vi.hoisted(() => ({
-  useRecentAudioAssets: vi.fn(),
-}));
-const recentImageAssetHookMocks = vi.hoisted(() => ({
-  useRecentImageAssets: vi.fn(),
-}));
-
-vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
-  useRecentAudioAssets: recentAudioAssetHookMocks.useRecentAudioAssets,
-}));
-
-vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
-  useRecentImageAssets: recentImageAssetHookMocks.useRecentImageAssets,
-}));
-
 vi.mock("@/features/assets/api/asset-admin", () => ({
   assetAdminApi: {
     getAsset: vi.fn(),
@@ -39,14 +24,6 @@ describe("StoryPageLocalizationForm", () => {
       illustrationMediaId: 41,
     });
 
-    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
-      assets: [],
-      isLoading: false,
-    });
-    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
-      assets: [],
-      isLoading: false,
-    });
     vi.mocked(assetAdminApi.getAsset).mockImplementation(async (assetId) => ({
       assetId,
       provider: "LOCAL_STUB",
@@ -101,30 +78,6 @@ describe("StoryPageLocalizationForm", () => {
       illustrationMediaId: 4,
     });
 
-    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
-      assets: [
-        {
-          assetId: 3,
-          provider: "LOCAL_STUB",
-          objectPath: "/content/audio/midnight-river-en.mp3",
-          mediaType: "AUDIO",
-          kind: "ORIGINAL_AUDIO",
-        },
-      ],
-      isLoading: false,
-    });
-    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
-      assets: [
-        {
-          assetId: 4,
-          provider: "LOCAL_STUB",
-          objectPath: "/content/images/evening-garden-page-1.jpg",
-          mediaType: "IMAGE",
-          kind: "ILLUSTRATION",
-        },
-      ],
-      isLoading: false,
-    });
     vi.mocked(assetAdminApi.getAsset).mockImplementation(async (assetId) => {
       if (assetId === 3) {
         return {
@@ -169,8 +122,12 @@ describe("StoryPageLocalizationForm", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /asset #4/i }));
-    fireEvent.click(screen.getByRole("button", { name: /asset #3/i }));
+    fireEvent.change(screen.getByLabelText(/illustration asset id/i), {
+      target: { value: "4" },
+    });
+    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
+      target: { value: "3" },
+    });
     fireEvent.click(
       screen.getByRole("button", { name: /save page localization/i }),
     );

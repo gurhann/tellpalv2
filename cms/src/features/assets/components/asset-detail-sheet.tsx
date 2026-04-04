@@ -10,6 +10,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { AssetMetadataForm } from "@/features/assets/components/asset-metadata-form";
+import { RefreshDownloadUrlButton } from "@/features/assets/components/refresh-download-url-button";
 import { useAssetDetail } from "@/features/assets/queries/use-asset-detail";
 
 type AssetDetailSheetProps = {
@@ -57,8 +58,8 @@ export function AssetDetailSheet({
             {asset ? `Asset #${asset.id}` : "Asset detail"}
           </SheetTitle>
           <SheetDescription>
-            Inspect the selected asset and update its stored metadata. Signed
-            URL refresh remains staged for the next asset task.
+            Inspect the selected asset, update its stored metadata, and refresh
+            the cached download URL snapshot from this sheet.
           </SheetDescription>
         </SheetHeader>
 
@@ -134,12 +135,30 @@ export function AssetDetailSheet({
                   </h2>
                   <p className="text-sm leading-6 text-muted-foreground">
                     Update MIME type, byte size, and checksum while keeping
-                    provider, path, and download cache controls read-only in
-                    this task.
+                    provider and object path read-only in this task.
                   </p>
                 </div>
 
                 <AssetMetadataForm asset={asset} />
+              </div>
+
+              <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
+                <div className="mb-4 space-y-1">
+                  <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
+                    Cached download URL
+                  </h2>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    Refresh the stored signed URL snapshot without leaving the
+                    asset detail workspace.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="text-sm text-muted-foreground">
+                    Last cached: {formatTimestamp(asset.downloadUrlCachedAt)}
+                  </div>
+                  <RefreshDownloadUrlButton asset={asset} />
+                </div>
               </div>
             </>
           ) : (

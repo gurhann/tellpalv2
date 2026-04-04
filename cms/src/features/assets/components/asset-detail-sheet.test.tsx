@@ -17,6 +17,12 @@ vi.mock("@/features/assets/components/asset-metadata-form", () => ({
   AssetMetadataForm: () => <div>Asset metadata form stub</div>,
 }));
 
+vi.mock("@/features/assets/components/refresh-download-url-button", () => ({
+  RefreshDownloadUrlButton: () => (
+    <button type="button">Refresh cached URL</button>
+  ),
+}));
+
 function makeDetailState(overrides: Record<string, unknown> = {}) {
   return {
     asset: phoneThumbnailAssetViewModel,

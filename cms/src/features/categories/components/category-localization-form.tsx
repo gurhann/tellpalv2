@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { AdminCategoryLocalizationResponse } from "@/features/categories/api/category-admin";
+import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
 import type { CategoryLocalizationViewModel } from "@/features/categories/model/category-view-model";
 import { useCategoryLocalizationActions } from "@/features/categories/mutations/use-category-localization-actions";
 import {
@@ -29,7 +30,6 @@ import {
   type CategoryLocalizationFormValues,
 } from "@/features/categories/schema/category-localization-schema";
 import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
-import { useRecentImageAssets } from "@/features/story-pages/queries/use-recent-image-assets";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
@@ -86,7 +86,6 @@ export function CategoryLocalizationForm({
     defaultValues: initialValues,
   });
   const { saveLocalization } = useCategoryLocalizationActions(categoryId);
-  const recentImageAssetsQuery = useRecentImageAssets();
   const status = form.watch("status");
   const selectedLanguageCode = form.watch("languageCode");
   const selectedLanguageLabel = getLanguageLabel(
@@ -254,34 +253,25 @@ export function CategoryLocalizationForm({
           <FieldError error={form.formState.errors.description} />
         </div>
 
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-foreground"
-            htmlFor="imageMediaId"
-          >
-            Image asset id
-          </label>
-          <Input
-            id="imageMediaId"
-            inputMode="numeric"
-            placeholder="Optional"
-            type="number"
-            {...form.register("imageMediaId", {
-              setValueAs: (value) => {
-                if (value === "" || value === null || value === undefined) {
-                  return null;
-                }
-
-                return Number(value);
-              },
-            })}
-            disabled={saveLocalization.isPending}
-          />
-          <FieldError error={form.formState.errors.imageMediaId} />
-          <p className="text-sm text-muted-foreground">
-            Category images can reference only `IMAGE` assets.
-          </p>
-        </div>
+        <Controller
+          control={form.control}
+          name="imageMediaId"
+          render={({ field }) => (
+            <AssetPickerField
+              description="Category images can reference only `IMAGE` assets."
+              disabled={saveLocalization.isPending}
+              error={form.formState.errors.imageMediaId}
+              id="imageMediaId"
+              label="Image asset id"
+              mediaType="IMAGE"
+              pickerDescription="Select a recent image asset for this category localization. Manual asset ids remain supported."
+              pickerTitle="Pick category image asset"
+              placeholder="Optional"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Status</label>
@@ -336,40 +326,6 @@ export function CategoryLocalizationForm({
           </div>
         ) : null}
       </div>
-
-      {recentImageAssetsQuery.assets.length > 0 ? (
-        <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/25 px-3 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Recent Image Assets
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {recentImageAssetsQuery.assets.map((asset) => (
-              <Button
-                key={asset.assetId}
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  form.setValue("imageMediaId", asset.assetId, {
-                    shouldDirty: true,
-                  })
-                }
-                disabled={saveLocalization.isPending}
-              >
-                Asset #{asset.assetId}
-              </Button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {!recentImageAssetsQuery.isLoading &&
-      recentImageAssetsQuery.assets.length === 0 ? (
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-3 py-3 text-sm text-muted-foreground">
-          No recent image assets were found. Register an image asset in Media
-          before saving this localization.
-        </div>
-      ) : null}
 
       <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
         <p className="text-sm font-medium text-foreground">

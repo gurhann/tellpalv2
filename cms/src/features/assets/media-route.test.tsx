@@ -79,7 +79,7 @@ describe("MediaRoute", () => {
       screen.getByRole("button", { name: /select a row to inspect detail/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /shared asset picker/i }),
+      screen.getByRole("button", { name: /shared picker lives in forms/i }),
     ).toBeDisabled();
   });
 

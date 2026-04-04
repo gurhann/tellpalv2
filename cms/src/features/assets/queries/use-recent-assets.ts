@@ -26,9 +26,16 @@ function getApiProblem(error: unknown, fallbackDetail: string) {
   } satisfies ApiProblemDetail;
 }
 
-export function useRecentAssets(limit = 24) {
+export function useRecentAssets(
+  options: number | { limit?: number; enabled?: boolean } = 24,
+) {
+  const normalizedOptions =
+    typeof options === "number" ? { limit: options, enabled: true } : options;
+  const { limit = 24, enabled = true } = normalizedOptions;
+
   const query = useQuery({
     queryKey: queryKeys.assets.recent({ limit }),
+    enabled,
     queryFn: async () => {
       const response = await assetAdminApi.listRecentAssets(limit);
       return mapAdminAssetList(response);
