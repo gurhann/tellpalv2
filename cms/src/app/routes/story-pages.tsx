@@ -1,7 +1,7 @@
 import { ArrowLeft, Images, Layers3, Plus, Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
@@ -227,6 +227,7 @@ function CreateStoryPageDialog({
 type EditStoryPageDialogProps = {
   content: ContentReadViewModel;
   pageNumber: number | null;
+  preferredLanguageCode?: string | null;
   isPending: boolean;
   onClose: () => void;
   onUpsertLocalization: (input: {
@@ -295,13 +296,21 @@ function buildLocalizationTabItems(
 function EditStoryPageDialog({
   content,
   pageNumber,
+  preferredLanguageCode = null,
   isPending,
   onClose,
   onUpsertLocalization,
 }: EditStoryPageDialogProps) {
   const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
+  const resolvedPreferredLanguageCode = content.localizations.some(
+    (localization) => localization.languageCode === preferredLanguageCode,
+  )
+    ? preferredLanguageCode
+    : null;
   const [activeLanguageCode, setActiveLanguageCode] = useState(
-    content.localizations[0]?.languageCode ?? "",
+    resolvedPreferredLanguageCode ??
+      content.localizations[0]?.languageCode ??
+      "",
   );
 
   if (pageNumber === null) {
@@ -312,6 +321,11 @@ function EditStoryPageDialog({
   const languageItems = storyPage
     ? buildLocalizationTabItems(content, storyPage)
     : [];
+  const resolvedActiveLanguageCode =
+    languageItems.find((item) => item.code === activeLanguageCode)?.code ??
+    resolvedPreferredLanguageCode ??
+    languageItems[0]?.code ??
+    "";
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
@@ -382,7 +396,7 @@ function EditStoryPageDialog({
 
               <LanguageTabs
                 items={languageItems}
-                value={activeLanguageCode}
+                value={resolvedActiveLanguageCode}
                 onValueChange={setActiveLanguageCode}
                 emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
                 emptyTitle="No parent locales available"
@@ -526,9 +540,13 @@ function DeleteStoryPageDialog({
 
 type StoryPagesWorkspaceProps = {
   content: ContentReadViewModel;
+  preferredLanguageCode?: string | null;
 };
 
-function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
+function StoryPagesWorkspace({
+  content,
+  preferredLanguageCode = null,
+}: StoryPagesWorkspaceProps) {
   const storyPagesQuery = useStoryPages(content.summary.id);
   const storyPageActions = useStoryPageActions({
     contentId: content.summary.id,
@@ -764,6 +782,7 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
         key={editingPageNumber ?? "story-page-edit-closed"}
         content={content}
         pageNumber={editingPageNumber}
+        preferredLanguageCode={preferredLanguageCode}
         isPending={storyPageActions.isPending}
         onClose={() => setEditingPageNumber(null)}
         onUpsertLocalization={(input) =>
@@ -794,13 +813,20 @@ function StoryPagesWorkspace({ content }: StoryPagesWorkspaceProps) {
 
 export function StoryPagesRoute() {
   const { contentId = "" } = useParams();
+  const [searchParams] = useSearchParams();
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
+  const preferredLanguageCode = searchParams.get("language");
 
   return (
     <StoryContentGuard contentId={hasValidContentId ? parsedContentId : null}>
-      {(content) => <StoryPagesWorkspace content={content} />}
+      {(content) => (
+        <StoryPagesWorkspace
+          content={content}
+          preferredLanguageCode={preferredLanguageCode}
+        />
+      )}
     </StoryContentGuard>
   );
 }

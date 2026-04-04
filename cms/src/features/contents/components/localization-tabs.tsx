@@ -1,5 +1,5 @@
 import { CirclePlus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { FormSection } from "@/components/forms/form-section";
@@ -30,6 +30,7 @@ import type { LanguageBadgeTone } from "@/components/language/language-badge";
 
 type ContentLocalizationTabsProps = {
   content: ContentReadViewModel;
+  onActiveLanguageChange?: (languageCode: string) => void;
 };
 
 function getLocalizationTone(
@@ -122,6 +123,7 @@ function LocalizationWorkspacePane({
 
 export function ContentLocalizationTabs({
   content,
+  onActiveLanguageChange,
 }: ContentLocalizationTabsProps) {
   const [activeLanguage, setActiveLanguage] = useState(
     content.localizations[0]?.languageCode ?? "",
@@ -154,6 +156,17 @@ export function ContentLocalizationTabs({
     localizationTabs.find((item) => item.code === activeLanguage)?.code ??
     localizationTabs[0]?.code ??
     "";
+
+  useEffect(() => {
+    if (resolvedActiveLanguage) {
+      onActiveLanguageChange?.(resolvedActiveLanguage);
+    }
+  }, [onActiveLanguageChange, resolvedActiveLanguage]);
+
+  function handleActiveLanguageChange(languageCode: string) {
+    setActiveLanguage(languageCode);
+    onActiveLanguageChange?.(languageCode);
+  }
 
   if (content.localizations.length === 0) {
     return (
@@ -226,7 +239,7 @@ export function ContentLocalizationTabs({
         <LanguageTabs
           items={localizationTabs}
           listLabel="Content localization tabs"
-          onValueChange={setActiveLanguage}
+          onValueChange={handleActiveLanguageChange}
           renderContent={(item) => {
             const localization = content.localizations.find(
               (entry) => entry.languageCode === item.code,

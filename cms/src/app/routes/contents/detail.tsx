@@ -1,4 +1,5 @@
 import { ArrowRight, Layers3, LoaderCircle } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -29,7 +30,14 @@ export function ContentDetailRoute() {
   const contentQuery = useContentDetail(
     hasValidContentId ? parsedContentId : null,
   );
+  const [activeStoryLanguageCode, setActiveStoryLanguageCode] = useState<
+    string | null
+  >(null);
   const content = contentQuery.content;
+  const storyPageLanguageCode =
+    activeStoryLanguageCode ??
+    content?.primaryLocalization?.languageCode ??
+    null;
   const canOpenStoryPages = content?.summary.supportsStoryPages ?? false;
   const routeTitle =
     content?.primaryLocalization?.title ??
@@ -160,7 +168,12 @@ export function ContentDetailRoute() {
       );
     }
 
-    return <ContentLocalizationTabs content={content} />;
+    return (
+      <ContentLocalizationTabs
+        content={content}
+        onActiveLanguageChange={setActiveStoryLanguageCode}
+      />
+    );
   }
 
   return (
@@ -172,6 +185,7 @@ export function ContentDetailRoute() {
         <StoryPageEntryLink
           canOpen={canOpenStoryPages}
           contentId={parsedContentId}
+          preferredLanguageCode={storyPageLanguageCode}
         />
       }
       toolbar={renderToolbar()}

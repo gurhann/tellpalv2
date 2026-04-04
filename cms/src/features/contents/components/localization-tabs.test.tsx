@@ -40,6 +40,19 @@ beforeEach(() => {
 });
 
 describe("ContentLocalizationTabs", () => {
+  it("reports the initial active localization language to parent shells", () => {
+    const handleActiveLanguageChange = vi.fn();
+
+    render(
+      <ContentLocalizationTabs
+        content={storyContentViewModel}
+        onActiveLanguageChange={handleActiveLanguageChange}
+      />,
+    );
+
+    expect(handleActiveLanguageChange).toHaveBeenCalledWith("en");
+  });
+
   it("renders live language tabs, editor forms, and publication controls", () => {
     render(<ContentLocalizationTabs content={storyContentViewModel} />);
 

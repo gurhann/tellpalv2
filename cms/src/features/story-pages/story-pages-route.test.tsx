@@ -217,4 +217,38 @@ describe("StoryPagesRoute", () => {
       screen.getAllByRole("button", { name: /save page localization/i }).length,
     ).toBeGreaterThan(0);
   });
+
+  it("opens the page editor focused on the locale requested by the content detail route", () => {
+    contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
+    storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockReturnValue({
+      storyPage: storyPageViewModels[0],
+      isLoading: false,
+      problem: null,
+    });
+    storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+      addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+
+    renderStoryRoute("/contents/1/story-pages?language=tr");
+
+    fireEvent.click(screen.getAllByRole("button", { name: /edit/i })[0]!);
+
+    expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
 });
