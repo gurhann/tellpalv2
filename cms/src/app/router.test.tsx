@@ -285,7 +285,7 @@ describe("CMS router auth flow", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /open story pages/i }),
-    ).toHaveAttribute("href", "/contents/42/story-pages");
+    ).toHaveAttribute("href", "/contents/42/story-pages?language=en");
     expect(
       screen.getByRole("tablist", { name: /content localization tabs/i }),
     ).toBeInTheDocument();

@@ -14,11 +14,16 @@ import type {
   AdminCategoryResponse,
   UpsertCategoryLocalizationInput,
 } from "@/features/categories/api/category-admin";
+import type { AdminCategoryContentResponse } from "@/features/categories/api/category-curation-admin";
 import {
   categoryResponses,
+  featuredSleepEnglishLocalizationResponse,
   featuredSleepCategoryResponse,
+  featuredSleepTurkishLocalizationResponse,
 } from "@/features/categories/test/fixtures";
 import type { AdminAssetResponse } from "@/features/assets/api/asset-admin";
+import type { AdminContentReadResponse } from "@/features/contents/api/content-admin";
+import { storyContentReadResponse } from "@/features/contents/test/fixtures";
 import type { AdminSessionPayload } from "@/types/api";
 
 function cloneJson<T>(value: T): T {
@@ -476,4 +481,280 @@ describe("Category integration", () => {
       await within(dialog).findByText("Slug is already in use."),
     ).toBeVisible();
   });
+
+  it("hydrates curation rows, supports add reorder remove, and keeps localization tabs after refresh", async () => {
+    const session = makeSession();
+    const storyFollowupContent: AdminContentReadResponse = {
+      ...storyContentReadResponse,
+      contentId: 11,
+      externalKey: "story.starry-forest",
+      localizations: [
+        {
+          ...storyContentReadResponse.localizations[0]!,
+          contentId: 11,
+          languageCode: "en",
+          title: "Starry Forest",
+          description: "A calm walk beneath the stars.",
+        },
+      ],
+    };
+    const contentRegistry = [storyContentReadResponse, storyFollowupContent];
+    const localizations = [
+      featuredSleepEnglishLocalizationResponse,
+      featuredSleepTurkishLocalizationResponse,
+    ];
+    let curationRows: AdminCategoryContentResponse[] = [
+      {
+        categoryId: 7,
+        languageCode: "en",
+        contentId: 1,
+        displayOrder: 0,
+      },
+    ];
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockImplementation(async (input, init) => {
+        const url = new URL(typeof input === "string" ? input : input.url);
+        const method = init?.method ?? "GET";
+
+        if (url.pathname === "/api/admin/auth/refresh" && method === "POST") {
+          return jsonResponse(session);
+        }
+
+        if (url.pathname === "/api/admin/categories/7" && method === "GET") {
+          return jsonResponse(featuredSleepCategoryResponse);
+        }
+
+        if (
+          url.pathname === "/api/admin/categories/7/localizations" &&
+          method === "GET"
+        ) {
+          return jsonResponse(localizations);
+        }
+
+        if (
+          url.pathname ===
+            "/api/admin/categories/7/localizations/en/contents" &&
+          method === "GET"
+        ) {
+          return jsonResponse(curationRows);
+        }
+
+        if (
+          url.pathname ===
+            "/api/admin/categories/7/localizations/en/contents" &&
+          method === "POST"
+        ) {
+          const body = (await readRequestJson(init)) as {
+            contentId: number;
+            displayOrder: number;
+          };
+
+          const nextRow = {
+            categoryId: 7,
+            languageCode: "en",
+            contentId: body.contentId,
+            displayOrder: body.displayOrder,
+          } satisfies AdminCategoryContentResponse;
+
+          curationRows = [...curationRows, nextRow].sort(
+            (left, right) => left.displayOrder - right.displayOrder,
+          );
+
+          return jsonResponse(nextRow, 201);
+        }
+
+        if (
+          url.pathname ===
+            "/api/admin/categories/7/localizations/en/contents/11" &&
+          method === "PUT"
+        ) {
+          const body = (await readRequestJson(init)) as {
+            displayOrder: number;
+          };
+
+          const nextRow = {
+            categoryId: 7,
+            languageCode: "en",
+            contentId: 11,
+            displayOrder: body.displayOrder,
+          } satisfies AdminCategoryContentResponse;
+
+          curationRows = curationRows
+            .map((row) => (row.contentId === 11 ? nextRow : row))
+            .sort((left, right) => left.displayOrder - right.displayOrder);
+
+          return jsonResponse(nextRow);
+        }
+
+        if (
+          url.pathname ===
+            "/api/admin/categories/7/localizations/en/contents/1" &&
+          method === "DELETE"
+        ) {
+          curationRows = curationRows.filter((row) => row.contentId !== 1);
+          return new Response(null, { status: 204 });
+        }
+
+        if (url.pathname === "/api/admin/contents" && method === "GET") {
+          return jsonResponse(contentRegistry);
+        }
+
+        throw new Error(`Unexpected request to ${method} ${url.pathname}`);
+      });
+
+    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
+
+    const initialApp = await renderFreshApp({
+      initialPath: "/categories/7",
+      fetchImplementation: fetchMock as typeof fetch,
+    });
+
+    const localizationTabList = await screen.findByRole("tablist", {
+      name: /category localization tabs/i,
+    });
+    expect(
+      within(localizationTabList).getByRole("tab", { name: /english/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /add curated content/i }),
+    ).toBeEnabled();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("heading", {
+          name: /loading curated content/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
+    const curationTable = screen.getByRole("table", {
+      name: /english curated content table/i,
+    });
+    expect(within(curationTable).getByText(/^Content #1$/i)).toBeVisible();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /add curated content/i }),
+    );
+
+    const addDialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      await within(addDialog).findByRole("button", {
+        name: /#11 story\.starry-forest/i,
+      }),
+    );
+    fireEvent.click(
+      within(addDialog).getByRole("button", { name: /add curated content/i }),
+    );
+
+    await waitFor(() => {
+      expect(within(curationTable).getByText(/^Content #11$/i)).toBeVisible();
+    });
+
+    const orderInput = document.querySelector(
+      "#curation-order-11",
+    ) as HTMLInputElement | null;
+    expect(orderInput).not.toBeNull();
+    fireEvent.change(orderInput!, {
+      target: { value: "2" },
+    });
+    fireEvent.click(screen.getAllByRole("button", { name: /save order/i })[1]!);
+
+    await waitFor(() => {
+      expect(orderInput).toHaveValue(2);
+    });
+
+    await act(async () => {
+      initialApp.unmount();
+    });
+
+    const refreshedApp = await renderFreshApp({
+      initialPath: "/categories/7",
+      fetchImplementation: fetchMock as typeof fetch,
+    });
+
+    const refreshedLocalizationTabList = await refreshedApp.findByRole(
+      "tablist",
+      {
+        name: /category localization tabs/i,
+      },
+    );
+    expect(
+      within(refreshedLocalizationTabList).getByRole("tab", {
+        name: /english/i,
+      }),
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        refreshedApp.queryByRole("heading", {
+          name: /loading curated content/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
+    const refreshedCurationTable = refreshedApp.getByRole("table", {
+      name: /english curated content table/i,
+    });
+    expect(
+      within(refreshedCurationTable).getByText(/^Content #1$/i),
+    ).toBeVisible();
+    expect(
+      within(refreshedCurationTable).getByText(/^Content #11$/i),
+    ).toBeVisible();
+    const refreshedOrderInput = document.querySelector(
+      "#curation-order-11",
+    ) as HTMLInputElement | null;
+    expect(refreshedOrderInput).not.toBeNull();
+    expect(refreshedOrderInput).toHaveValue(2);
+
+    fireEvent.click(
+      refreshedApp.getAllByRole("button", { name: /^remove$/i })[0]!,
+    );
+    expect(
+      await refreshedApp.findByRole("heading", {
+        name: /remove curated content/i,
+      }),
+    ).toBeVisible();
+    fireEvent.click(
+      refreshedApp.getByRole("button", { name: /^remove content$/i }),
+    );
+
+    await waitFor(() => {
+      expect(
+        within(refreshedCurationTable).queryByText(/^Content #1$/i),
+      ).not.toBeInTheDocument();
+    });
+
+    await act(async () => {
+      refreshedApp.unmount();
+    });
+
+    const afterRemovalApp = await renderFreshApp({
+      initialPath: "/categories/7",
+      fetchImplementation: fetchMock as typeof fetch,
+    });
+
+    const afterRemovalLocalizationTabList = await afterRemovalApp.findByRole(
+      "tablist",
+      {
+        name: /category localization tabs/i,
+      },
+    );
+    expect(
+      within(afterRemovalLocalizationTabList).getByRole("tab", {
+        name: /english/i,
+      }),
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        afterRemovalApp.queryByRole("heading", {
+          name: /loading curated content/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
+    const afterRemovalTable = afterRemovalApp.getByRole("table", {
+      name: /english curated content table/i,
+    });
+    expect(
+      within(afterRemovalTable).queryByText(/^Content #1$/i),
+    ).not.toBeInTheDocument();
+    expect(within(afterRemovalTable).getByText(/^Content #11$/i)).toBeVisible();
+  }, 15_000);
 });

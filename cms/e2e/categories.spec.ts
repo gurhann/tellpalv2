@@ -18,6 +18,47 @@ type CategoryReadResponse = {
   active: boolean;
 };
 
+type CategoryLocalizationResponse = {
+  categoryId: number;
+  languageCode: string;
+  name: string;
+  description: string | null;
+  imageMediaId: number | null;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishedAt: string | null;
+  published: boolean;
+};
+
+type CategoryCurationResponse = {
+  categoryId: number;
+  languageCode: string;
+  contentId: number;
+  displayOrder: number;
+};
+
+type ContentReadResponse = {
+  contentId: number;
+  type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  externalKey: string;
+  active: boolean;
+  ageRange: number;
+  pageCount: number | null;
+  localizations: Array<{
+    contentId: number;
+    languageCode: string;
+    title: string;
+    description: string | null;
+    bodyText: string | null;
+    coverMediaId: number | null;
+    audioMediaId: number | null;
+    durationMinutes: number | null;
+    status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+    processingStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+    publishedAt: string | null;
+    visibleToMobile: boolean;
+  }>;
+};
+
 function makeSession(overrides: Partial<SessionPayload> = {}): SessionPayload {
   return {
     adminUserId: 1,
@@ -97,6 +138,19 @@ test("category create, edit, and localize use content-aligned types", async ({
 
   await page.addInitScript(() => {
     window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
+  });
+
+  await page.route("**/api/admin/auth/login", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(session),
+    });
   });
 
   await page.route("**/api/admin/auth/refresh", async (route) => {
@@ -402,4 +456,442 @@ test("category create, edit, and localize use content-aligned types", async ({
   await expect(page.locator('input[name="name"]')).toHaveValue(
     "Calm Lullabies Updated",
   );
+});
+
+test("category curation add reorder remove survives refresh with hydrated localizations", async ({
+  page,
+}) => {
+  const session = makeSession();
+  const category: CategoryReadResponse = {
+    categoryId: 7,
+    type: "STORY",
+    slug: "featured-sleep",
+    premium: false,
+    active: true,
+  };
+  const localizations: CategoryLocalizationResponse[] = [
+    {
+      categoryId: 7,
+      languageCode: "en",
+      name: "Featured Sleep",
+      description: "Curated sleep stories for bedtime.",
+      imageMediaId: 4,
+      status: "PUBLISHED",
+      publishedAt: "2026-03-29T11:00:00Z",
+      published: true,
+    },
+    {
+      categoryId: 7,
+      languageCode: "tr",
+      name: "One Cikan Uyku",
+      description: "Uyku zamani icin secilmis hikayeler.",
+      imageMediaId: null,
+      status: "DRAFT",
+      publishedAt: null,
+      published: false,
+    },
+  ];
+  let curationRows: CategoryCurationResponse[] = [
+    {
+      categoryId: 7,
+      languageCode: "en",
+      contentId: 1,
+      displayOrder: 0,
+    },
+  ];
+  const contentRegistry: ContentReadResponse[] = [
+    {
+      contentId: 1,
+      type: "STORY",
+      externalKey: "story.evening-garden",
+      active: true,
+      ageRange: 5,
+      pageCount: 2,
+      localizations: [
+        {
+          contentId: 1,
+          languageCode: "en",
+          title: "Evening Garden",
+          description: "A calm walk through a moonlit garden.",
+          bodyText: null,
+          coverMediaId: null,
+          audioMediaId: null,
+          durationMinutes: 8,
+          status: "PUBLISHED",
+          processingStatus: "COMPLETED",
+          publishedAt: "2026-03-17T09:00:00Z",
+          visibleToMobile: true,
+        },
+      ],
+    },
+    {
+      contentId: 11,
+      type: "STORY",
+      externalKey: "story.starry-forest",
+      active: true,
+      ageRange: 6,
+      pageCount: 3,
+      localizations: [
+        {
+          contentId: 11,
+          languageCode: "en",
+          title: "Starry Forest",
+          description: "A calm walk beneath the stars.",
+          bodyText: null,
+          coverMediaId: null,
+          audioMediaId: null,
+          durationMinutes: 7,
+          status: "PUBLISHED",
+          processingStatus: "COMPLETED",
+          publishedAt: "2026-03-19T09:00:00Z",
+          visibleToMobile: true,
+        },
+      ],
+    },
+  ];
+  const imageAssets = [
+    {
+      assetId: 4,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/images/featured-sleep-cover.jpg",
+      mediaType: "IMAGE",
+      kind: "ORIGINAL_IMAGE",
+      mimeType: "image/jpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-04-01T12:00:00Z",
+      updatedAt: "2026-04-01T12:00:00Z",
+    },
+    {
+      assetId: 5,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/images/featured-sleep-banner.jpg",
+      mediaType: "IMAGE",
+      kind: "ORIGINAL_IMAGE",
+      mimeType: "image/jpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-04-01T12:00:00Z",
+      updatedAt: "2026-04-01T12:00:00Z",
+    },
+  ];
+
+  await page.route("**/api/admin/auth/login", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(session),
+    });
+  });
+
+  await page.route("**/api/admin/auth/refresh", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(session),
+    });
+  });
+
+  await page.route("**/api/admin/categories", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([category]),
+    });
+  });
+
+  await page.route("**/api/admin/categories/7", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(category),
+    });
+  });
+
+  await page.route("**/api/admin/categories/7/localizations", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(localizations),
+    });
+  });
+
+  await page.route(
+    "**/api/admin/categories/7/localizations/en/contents",
+    async (route) => {
+      const request = route.request();
+
+      if (request.method() === "GET") {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(curationRows),
+        });
+        return;
+      }
+
+      if (request.method() === "POST") {
+        const body = request.postDataJSON() as {
+          contentId: number;
+          displayOrder: number;
+        };
+        const nextRow: CategoryCurationResponse = {
+          categoryId: 7,
+          languageCode: "en",
+          contentId: body.contentId,
+          displayOrder: body.displayOrder,
+        };
+
+        curationRows = [...curationRows, nextRow].sort(
+          (left, right) => left.displayOrder - right.displayOrder,
+        );
+
+        await route.fulfill({
+          status: 201,
+          contentType: "application/json",
+          body: JSON.stringify(nextRow),
+        });
+        return;
+      }
+
+      await route.fallback();
+    },
+  );
+
+  await page.route(
+    "**/api/admin/categories/7/localizations/en/contents/11",
+    async (route) => {
+      if (route.request().method() !== "PUT") {
+        await route.fallback();
+        return;
+      }
+
+      const body = route.request().postDataJSON() as { displayOrder: number };
+      const nextRow: CategoryCurationResponse = {
+        categoryId: 7,
+        languageCode: "en",
+        contentId: 11,
+        displayOrder: body.displayOrder,
+      };
+
+      curationRows = curationRows
+        .map((row) => (row.contentId === 11 ? nextRow : row))
+        .sort((left, right) => left.displayOrder - right.displayOrder);
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(nextRow),
+      });
+    },
+  );
+
+  await page.route(
+    "**/api/admin/categories/7/localizations/en/contents/1",
+    async (route) => {
+      if (route.request().method() !== "DELETE") {
+        await route.fallback();
+        return;
+      }
+
+      curationRows = curationRows.filter((row) => row.contentId !== 1);
+      await route.fulfill({
+        status: 204,
+        body: "",
+      });
+    },
+  );
+
+  await page.route("**/api/admin/contents", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(contentRegistry),
+    });
+  });
+
+  await page.route("**/api/admin/media**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(imageAssets),
+    });
+  });
+
+  await page.route("**/api/admin/media/*", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    const assetId = Number(route.request().url().split("/").pop());
+    const asset = imageAssets.find((entry) => entry.assetId === assetId);
+
+    if (!asset) {
+      await route.fulfill({
+        status: 404,
+        contentType: "application/problem+json",
+        body: JSON.stringify({
+          type: "about:blank",
+          title: "Asset not found",
+          status: 404,
+          detail: `Asset #${assetId} was not found.`,
+          errorCode: "asset_not_found",
+          path: `/api/admin/media/${assetId}`,
+        }),
+      });
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(asset),
+    });
+  });
+
+  await page.goto("/categories/7");
+  await expect(
+    page.getByRole("heading", { name: /sign in to tellpal cms/i }),
+  ).toBeVisible();
+  await page.getByLabel(/username/i).fill("admin");
+  await page.getByLabel(/password/i).fill("test1234");
+  await Promise.all([
+    page.waitForResponse("**/api/admin/auth/login"),
+    page.getByRole("button", { name: /^sign in$/i }).click(),
+  ]);
+  await expect(
+    page.getByRole("heading", { name: /^contents$/i, level: 2 }),
+  ).toBeVisible();
+  await page.evaluate(() => {
+    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
+  });
+  await page
+    .getByRole("link", { name: /categories category metadata and curation/i })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: /^categories$/i, level: 1 }),
+  ).toBeVisible();
+  await page.getByText("featured-sleep").click();
+
+  const curationTable = page.getByRole("table", {
+    name: /english curated content table/i,
+  });
+
+  await expect(
+    page
+      .getByRole("tablist", { name: /category localization tabs/i })
+      .getByRole("tab", { name: /english/i }),
+  ).toBeVisible();
+  await expect(curationTable.getByText(/^Content #1$/)).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /add curated content/i }),
+  ).toBeEnabled();
+  await expect(curationTable.getByText(/^Content #1$/)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /loading curated content/i }),
+  ).toHaveCount(0);
+
+  await page.evaluate(() => {
+    const button = [...document.querySelectorAll("button")].find((element) =>
+      element.textContent?.includes("Add curated content"),
+    );
+
+    if (!button) {
+      throw new Error("Add curated content button was not found.");
+    }
+
+    button.click();
+  });
+  await expect(
+    page.getByRole("heading", { name: /add curated content/i }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /#11 story\.starry-forest/i }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /add curated content/i })
+    .click();
+
+  await expect(curationTable.getByText(/^Content #11$/)).toBeVisible();
+
+  await page.locator("#curation-order-11").fill("2");
+  await page
+    .getByRole("button", { name: /save order/i })
+    .nth(1)
+    .click();
+  await expect(page.locator("#curation-order-11")).toHaveValue("2");
+
+  await page.reload();
+
+  await expect(
+    page
+      .getByRole("tablist", { name: /category localization tabs/i })
+      .getByRole("tab", { name: /english/i }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /loading curated content/i }),
+  ).toHaveCount(0);
+  await expect(curationTable.getByText(/^Content #1$/)).toBeVisible();
+  await expect(curationTable.getByText(/^Content #11$/)).toBeVisible();
+  await expect(page.locator("#curation-order-11")).toHaveValue("2");
+
+  await curationTable
+    .getByRole("button", { name: /^remove$/i })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("heading", { name: /remove curated content/i }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /^remove content$/i }).click();
+
+  await expect(curationTable.getByText(/^Content #1$/)).toHaveCount(0);
+
+  await page.reload();
+
+  await expect(
+    page
+      .getByRole("tablist", { name: /category localization tabs/i })
+      .getByRole("tab", { name: /english/i }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /loading curated content/i }),
+  ).toHaveCount(0);
+  await expect(curationTable.getByText(/^Content #1$/)).toHaveCount(0);
+  await expect(curationTable.getByText(/^Content #11$/)).toBeVisible();
 });
