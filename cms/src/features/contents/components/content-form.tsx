@@ -28,6 +28,7 @@ import {
   mapContentResponseToFormValues,
   type ContentFormValues,
 } from "@/features/contents/schema/content-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
@@ -42,19 +43,23 @@ type ContentFormProps = {
   pendingLabel?: string;
 };
 
-function getContentTypeGuidance(type: ContentType) {
+function getContentTypeGuidance(type: ContentType, locale: "en" | "tr") {
   if (type === "STORY") {
     return {
-      title: "Story workflow",
+      title: locale === "tr" ? "Hikaye akışı" : "Story workflow",
       description:
-        "Story records use the story pages child route for narrative text and per-page audio. Content-level localization body and single-audio fields stay hidden in later tasks.",
+        locale === "tr"
+          ? "Hikaye kayıtları anlatı metni ve sayfa bazlı ses için story pages alt rotasını kullanır. İçerik seviyesindeki body ve tekil audio alanları sonraki işlerde görünür kalır."
+          : "Story records use the story pages child route for narrative text and per-page audio. Content-level localization body and single-audio fields stay hidden in later tasks.",
     };
   }
 
   return {
-    title: "Non-story workflow",
+    title: locale === "tr" ? "Hikaye dışı akış" : "Non-story workflow",
     description:
-      "Non-story records do not use story pages. Localization forms will later enforce content-level body text and audio requirements based on the selected type.",
+      locale === "tr"
+        ? "Hikaye dışı kayıtlar story pages kullanmaz. Yerelleştirme formları daha sonra seçilen türe göre içerik seviyesindeki body text ve audio gereksinimlerini zorunlu kılar."
+        : "Non-story records do not use story pages. Localization forms will later enforce content-level body text and audio requirements based on the selected type.",
   };
 }
 
@@ -71,11 +76,63 @@ export function ContentForm({
   initialValues,
   onSuccess,
   onCancel,
-  submitLabel = mode === "create" ? "Create content" : "Save metadata",
-  pendingLabel = mode === "create"
-    ? "Creating content..."
-    : "Saving metadata...",
+  submitLabel,
+  pendingLabel,
 }: ContentFormProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          submitLabel: mode === "create" ? "İçerik oluştur" : "Metadata kaydet",
+          pendingLabel:
+            mode === "create"
+              ? "İçerik oluşturuluyor..."
+              : "Metadata kaydediliyor...",
+          createLoading: "İçerik kaydı oluşturuluyor...",
+          updateLoading: "İçerik metadata'sı kaydediliyor...",
+          createSuccess: "İçerik kaydı oluşturuldu.",
+          updateSuccess: "İçerik metadata'sı kaydedildi.",
+          externalKeyDuplicate: "External key zaten kullanılıyor.",
+          genericSaveError:
+            "İçerik değişiklikleri kaydedilemedi. Tekrar deneyin.",
+          contentType: "İçerik türü",
+          selectContentType: "İçerik türü seçin",
+          contentTypeFixed:
+            "İçerik türü oluşturulduktan sonra sabittir. Bu metadata formu yalnızca external key, age range ve aktiflik durumunu günceller.",
+          externalKey: "External key",
+          ageRange: "Yaş aralığı",
+          optional: "Opsiyonel",
+          availability: "Erişim durumu",
+          active: "Aktif",
+          inactive: "Pasif",
+          inactiveHelp:
+            "Pasif içerikler admin okuma ekranlarında görünmeye devam eder, ancak aktif editoryal akışlar için uygun değildir.",
+          cancel: "İptal",
+        }
+      : {
+          submitLabel: mode === "create" ? "Create content" : "Save metadata",
+          pendingLabel:
+            mode === "create" ? "Creating content..." : "Saving metadata...",
+          createLoading: "Creating content record...",
+          updateLoading: "Saving content metadata...",
+          createSuccess: "Content record created.",
+          updateSuccess: "Content metadata saved.",
+          externalKeyDuplicate: "External key is already in use.",
+          genericSaveError: "Content changes could not be saved. Try again.",
+          contentType: "Content type",
+          selectContentType: "Select content type",
+          contentTypeFixed:
+            "Content type is fixed after creation. This metadata form updates external key, age range, and active state only.",
+          externalKey: "External key",
+          ageRange: "Age range",
+          optional: "Optional",
+          availability: "Availability",
+          active: "Active",
+          inactive: "Inactive",
+          inactiveHelp:
+            "Inactive content still appears in admin read screens, but it is not eligible for active editorial flows.",
+          cancel: "Cancel",
+        };
   const form = useZodForm<ContentFormValues>({
     schema: contentFormSchema,
     defaultValues: initialValues,
@@ -93,7 +150,7 @@ export function ContentForm({
         },
   );
   const selectedType = form.watch("type");
-  const guidance = getContentTypeGuidance(selectedType);
+  const guidance = getContentTypeGuidance(selectedType, locale);
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -109,14 +166,8 @@ export function ContentForm({
       const savedContent = await toastMutation(
         saveMutation.mutateAsync(values),
         {
-          loading:
-            mode === "create"
-              ? "Creating content record..."
-              : "Saving content metadata...",
-          success:
-            mode === "create"
-              ? "Content record created."
-              : "Content metadata saved.",
+          loading: mode === "create" ? copy.createLoading : copy.updateLoading,
+          success: mode === "create" ? copy.createSuccess : copy.updateSuccess,
         },
       );
 
@@ -126,7 +177,7 @@ export function ContentForm({
         if (error.problem.errorCode === "duplicate_external_key") {
           form.setError("externalKey", {
             type: "server",
-            message: "External key is already in use.",
+            message: copy.externalKeyDuplicate,
           });
           return;
         }
@@ -137,7 +188,7 @@ export function ContentForm({
 
       form.setError("root.serverError", {
         type: "server",
-        message: "Content changes could not be saved. Try again.",
+        message: copy.genericSaveError,
       });
     }
   }
@@ -155,7 +206,7 @@ export function ContentForm({
         {mode === "create" ? (
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
-              Content type
+              {copy.contentType}
             </label>
             <Controller
               control={form.control}
@@ -168,10 +219,10 @@ export function ContentForm({
                 >
                   <SelectTrigger
                     aria-invalid={Boolean(form.formState.errors.type)}
-                    aria-label="Content type"
+                    aria-label={copy.contentType}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Select content type" />
+                    <SelectValue placeholder={copy.selectContentType} />
                   </SelectTrigger>
                   <SelectContent>
                     {contentTypeOptions.map((option) => (
@@ -187,7 +238,9 @@ export function ContentForm({
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-foreground">Content type</p>
+            <p className="text-sm font-medium text-foreground">
+              {copy.contentType}
+            </p>
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
               <p className="text-sm font-medium text-foreground">
                 {contentTypeOptions.find(
@@ -195,8 +248,7 @@ export function ContentForm({
                 )?.label ?? selectedType}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Content type is fixed after creation. This metadata form updates
-                external key, age range, and active state only.
+                {copy.contentTypeFixed}
               </p>
             </div>
           </div>
@@ -207,7 +259,7 @@ export function ContentForm({
             className="text-sm font-medium text-foreground"
             htmlFor="externalKey"
           >
-            External key
+            {copy.externalKey}
           </label>
           <Input
             id="externalKey"
@@ -223,13 +275,13 @@ export function ContentForm({
             className="text-sm font-medium text-foreground"
             htmlFor="ageRange"
           >
-            Age range
+            {copy.ageRange}
           </label>
           <Input
             id="ageRange"
             inputMode="numeric"
             min={0}
-            placeholder="Optional"
+            placeholder={copy.optional}
             type="number"
             {...form.register("ageRange", {
               setValueAs: (value) => {
@@ -247,7 +299,7 @@ export function ContentForm({
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
-            Availability
+            {copy.availability}
           </label>
           <Controller
             control={form.control}
@@ -258,20 +310,20 @@ export function ContentForm({
                 value={field.value ? "true" : "false"}
                 onValueChange={(value) => field.onChange(value === "true")}
               >
-                <SelectTrigger aria-label="Availability" className="w-full">
+                <SelectTrigger
+                  aria-label={copy.availability}
+                  className="w-full"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="true">Active</SelectItem>
-                  <SelectItem value="false">Inactive</SelectItem>
+                  <SelectItem value="true">{copy.active}</SelectItem>
+                  <SelectItem value="false">{copy.inactive}</SelectItem>
                 </SelectContent>
               </Select>
             )}
           />
-          <p className="text-sm text-muted-foreground">
-            Inactive content still appears in admin read screens, but it is not
-            eligible for active editorial flows.
-          </p>
+          <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
       </div>
 
@@ -290,14 +342,14 @@ export function ContentForm({
             onClick={onCancel}
             disabled={saveMutation.isPending}
           >
-            Cancel
+            {copy.cancel}
           </Button>
         ) : null}
         <SubmitButton
           isPending={saveMutation.isPending}
-          pendingLabel={pendingLabel}
+          pendingLabel={pendingLabel ?? copy.pendingLabel}
         >
-          {submitLabel}
+          {submitLabel ?? copy.submitLabel}
         </SubmitButton>
       </div>
     </form>

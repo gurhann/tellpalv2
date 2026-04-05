@@ -5,6 +5,7 @@ import {
   getProblemFieldErrors,
   getProblemMessage,
 } from "@/lib/http/problem-details";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 import type { ApiProblemDetail } from "@/types/api";
 
@@ -23,6 +24,7 @@ export function ProblemAlert({
   actions,
   className,
 }: ProblemAlertProps) {
+  const { t } = useI18n();
   const resolvedTitle = problem?.title || title;
   const resolvedDescription = problem
     ? getProblemMessage(problem)
@@ -66,7 +68,7 @@ export function ProblemAlert({
 
         {problem?.requestId ? (
           <p className="text-xs uppercase tracking-[0.18em] text-destructive/70">
-            Request ID {problem.requestId}
+            {t("app.requestId")} {problem.requestId}
           </p>
         ) : null}
       </div>

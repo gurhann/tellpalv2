@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/card";
 import { AuthLoadingScreen } from "@/features/auth/components/auth-loading-screen";
 import { useAuth } from "@/features/auth/providers/use-auth";
+import { useI18n } from "@/i18n/locale-provider";
 
 export function NotFoundRoute() {
   const auth = useAuth();
+  const { t } = useI18n();
 
   if (!auth.isBootstrapped && !auth.session) {
     return <AuthLoadingScreen />;
@@ -26,16 +28,14 @@ export function NotFoundRoute() {
         <Card className="w-full border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
           <CardHeader>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              TellPal CMS
+              {t("layout.brand")}
             </p>
-            <CardTitle className="text-3xl">Route not found</CardTitle>
-            <CardDescription>
-              The requested CMS route does not exist in the current skeleton.
-            </CardDescription>
+            <CardTitle className="text-3xl">{t("notFound.title")}</CardTitle>
+            <CardDescription>{t("notFound.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild>
-              <Link to={target}>Go back</Link>
+              <Link to={target}>{t("app.goBack")}</Link>
             </Button>
           </CardContent>
         </Card>

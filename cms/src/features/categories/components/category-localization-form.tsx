@@ -19,8 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import type { AdminCategoryLocalizationResponse } from "@/features/categories/api/category-admin";
 import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
+import type { AdminCategoryLocalizationResponse } from "@/features/categories/api/category-admin";
 import type { CategoryLocalizationViewModel } from "@/features/categories/model/category-view-model";
 import { useCategoryLocalizationActions } from "@/features/categories/mutations/use-category-localization-actions";
 import {
@@ -29,6 +29,7 @@ import {
   mapCategoryLocalizationResponseToFormValues,
   type CategoryLocalizationFormValues,
 } from "@/features/categories/schema/category-localization-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
@@ -81,6 +82,77 @@ export function CategoryLocalizationForm({
   onSuccess,
   onCancel,
 }: CategoryLocalizationFormProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          createLoading: "Kategori yerelleştirmesi oluşturuluyor...",
+          updateLoading: "Kategori yerelleştirmesi kaydediliyor...",
+          createSuccess: "Kategori yerelleştirmesi oluşturuldu.",
+          updateSuccess: "Kategori yerelleştirmesi kaydedildi.",
+          languageExists: "Bu kategori için bu dil zaten var.",
+          genericSaveError:
+            "Kategori yerelleştirmesi kaydedilemedi. Tekrar deneyin.",
+          language: "Dil",
+          selectLanguage: "Dil seçin",
+          localeCode: "Dil kodu",
+          name: "Ad",
+          localizedName: "Yerelleştirilmiş kategori adı",
+          description: "Açıklama",
+          localizedDescription: "Yerelleştirilmiş kategori açıklaması",
+          imageDescription:
+            "Kategori görselini doğrudan bu yerelleştirme çalışma alanında yükleyin veya seçin.",
+          imageLabel: "Görsel asset'i",
+          imagePickerDescription:
+            "Bu kategori yerelleştirmesi için son görsel asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
+          imagePickerTitle: "Kategori görsel asset'ini seç",
+          status: "Durum",
+          selectStatus: "Durum seçin",
+          publishedAt: "Yayınlanma zamanı",
+          publishedHelp:
+            "Yayınlama için zaman damgası gerekir. Bir yerelleştirme dil bazlı kategori kürasyonu için editoryal olarak hazır olduğunda bunu kullanın.",
+          workspaceTitle: "Canlı yerelleştirme çalışma alanı",
+          workspaceDescription:
+            "Backend artık kategori yerelleştirme okumalarını sunuyor. Bu çalışma alanındaki sekmeler kalıcı yerelleştirmeleri hydrate eder ve yenilemeden sonra görünür kalır.",
+          cancel: "İptal",
+          createLocalization: "Yerelleştirme oluştur",
+          saveLocalization: "Yerelleştirmeyi kaydet",
+          optional: "Opsiyonel",
+        }
+      : {
+          createLoading: "Creating category localization...",
+          updateLoading: "Saving category localization...",
+          createSuccess: "Category localization created.",
+          updateSuccess: "Category localization saved.",
+          languageExists: "Language already exists for this category.",
+          genericSaveError:
+            "Category localization could not be saved. Try again.",
+          language: "Language",
+          selectLanguage: "Select language",
+          localeCode: "Locale code",
+          name: "Name",
+          localizedName: "Localized category name",
+          description: "Description",
+          localizedDescription: "Localized category description",
+          imageDescription:
+            "Upload or browse the category image directly in this localization workspace.",
+          imageLabel: "Image asset",
+          imagePickerDescription:
+            "Select a recent image asset for this category localization. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+          imagePickerTitle: "Pick category image asset",
+          status: "Status",
+          selectStatus: "Select status",
+          publishedAt: "Published at",
+          publishedHelp:
+            "Publishing requires a timestamp. Use this when a localization is editorially ready for language-scoped category curation.",
+          workspaceTitle: "Live localization workspace",
+          workspaceDescription:
+            "The backend now exposes category localization reads. Tabs in this workspace hydrate persisted localizations and keep them visible after refresh.",
+          cancel: "Cancel",
+          createLocalization: "Create localization",
+          saveLocalization: "Save localization",
+          optional: "Optional",
+        };
   const form = useZodForm<CategoryLocalizationFormValues>({
     schema: useMemo(() => categoryLocalizationFormSchema, []),
     defaultValues: initialValues,
@@ -123,14 +195,8 @@ export function CategoryLocalizationForm({
           values,
         }),
         {
-          loading:
-            mode === "create"
-              ? "Creating category localization..."
-              : "Saving category localization...",
-          success:
-            mode === "create"
-              ? "Category localization created."
-              : "Category localization saved.",
+          loading: mode === "create" ? copy.createLoading : copy.updateLoading,
+          success: mode === "create" ? copy.createSuccess : copy.updateSuccess,
         },
       );
 
@@ -143,7 +209,7 @@ export function CategoryLocalizationForm({
         if (error.problem.errorCode === "category_localization_exists") {
           form.setError("languageCode", {
             type: "server",
-            message: "Language already exists for this category.",
+            message: copy.languageExists,
           });
           return;
         }
@@ -162,7 +228,7 @@ export function CategoryLocalizationForm({
 
       form.setError("root.serverError", {
         type: "server",
-        message: "Category localization could not be saved. Try again.",
+        message: copy.genericSaveError,
       });
     }
   }
@@ -180,7 +246,7 @@ export function CategoryLocalizationForm({
         {mode === "create" ? (
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
-              Language
+              {copy.language}
             </label>
             <Controller
               control={form.control}
@@ -193,10 +259,10 @@ export function CategoryLocalizationForm({
                 >
                   <SelectTrigger
                     aria-invalid={Boolean(form.formState.errors.languageCode)}
-                    aria-label="Language"
+                    aria-label={copy.language}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Select language" />
+                    <SelectValue placeholder={copy.selectLanguage} />
                   </SelectTrigger>
                   <SelectContent>
                     {availableLanguages.map((option) => (
@@ -212,13 +278,15 @@ export function CategoryLocalizationForm({
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-foreground">Language</p>
+            <p className="text-sm font-medium text-foreground">
+              {copy.language}
+            </p>
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
               <p className="text-sm font-medium text-foreground">
                 {selectedLanguageLabel}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Locale code: {selectedLanguageCode.toUpperCase()}
+                {copy.localeCode}: {selectedLanguageCode.toUpperCase()}
               </p>
             </div>
           </div>
@@ -226,11 +294,11 @@ export function CategoryLocalizationForm({
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground" htmlFor="name">
-            Name
+            {copy.name}
           </label>
           <Input
             id="name"
-            placeholder="Localized category name"
+            placeholder={copy.localizedName}
             {...form.register("name")}
             disabled={saveLocalization.isPending}
           />
@@ -242,11 +310,11 @@ export function CategoryLocalizationForm({
             className="text-sm font-medium text-foreground"
             htmlFor="description"
           >
-            Description
+            {copy.description}
           </label>
           <Textarea
             id="description"
-            placeholder="Localized category description"
+            placeholder={copy.localizedDescription}
             {...form.register("description")}
             disabled={saveLocalization.isPending}
           />
@@ -258,15 +326,15 @@ export function CategoryLocalizationForm({
           name="imageMediaId"
           render={({ field }) => (
             <AssetPickerField
-              description="Upload or browse the category image directly in this localization workspace."
+              description={copy.imageDescription}
               disabled={saveLocalization.isPending}
               error={form.formState.errors.imageMediaId}
               id="imageMediaId"
-              label="Image asset"
+              label={copy.imageLabel}
               mediaType="IMAGE"
-              pickerDescription="Select a recent image asset for this category localization. Uploading from this field stays available, and manual asset ids remain under Advanced."
-              pickerTitle="Pick category image asset"
-              placeholder="Optional"
+              pickerDescription={copy.imagePickerDescription}
+              pickerTitle={copy.imagePickerTitle}
+              placeholder={copy.optional}
               value={field.value}
               onChange={field.onChange}
             />
@@ -274,7 +342,9 @@ export function CategoryLocalizationForm({
         />
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Status</label>
+          <label className="text-sm font-medium text-foreground">
+            {copy.status}
+          </label>
           <Controller
             control={form.control}
             name="status"
@@ -286,10 +356,10 @@ export function CategoryLocalizationForm({
               >
                 <SelectTrigger
                   aria-invalid={Boolean(form.formState.errors.status)}
-                  aria-label="Status"
+                  aria-label={copy.status}
                   className="w-full"
                 >
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder={copy.selectStatus} />
                 </SelectTrigger>
                 <SelectContent>
                   {categoryLocalizationStatusOptions.map((option) => (
@@ -310,7 +380,7 @@ export function CategoryLocalizationForm({
               className="text-sm font-medium text-foreground"
               htmlFor="publishedAt"
             >
-              Published at
+              {copy.publishedAt}
             </label>
             <Input
               id="publishedAt"
@@ -319,8 +389,7 @@ export function CategoryLocalizationForm({
               disabled={saveLocalization.isPending}
             />
             <p className="text-sm text-muted-foreground">
-              Publishing requires a timestamp. Use this when a localization is
-              editorially ready for language-scoped category curation.
+              {copy.publishedHelp}
             </p>
             <FieldError error={form.formState.errors.publishedAt} />
           </div>
@@ -329,12 +398,10 @@ export function CategoryLocalizationForm({
 
       <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
         <p className="text-sm font-medium text-foreground">
-          Live localization workspace
+          {copy.workspaceTitle}
         </p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          The backend now exposes category localization reads. Tabs in this
-          workspace hydrate persisted localizations and keep them visible after
-          refresh.
+          {copy.workspaceDescription}
         </p>
       </div>
 
@@ -346,18 +413,16 @@ export function CategoryLocalizationForm({
             onClick={onCancel}
             disabled={saveLocalization.isPending}
           >
-            Cancel
+            {copy.cancel}
           </Button>
         ) : null}
         <SubmitButton
           isPending={saveLocalization.isPending}
           pendingLabel={
-            mode === "create"
-              ? "Creating localization..."
-              : "Saving localization..."
+            mode === "create" ? copy.createLoading : copy.updateLoading
           }
         >
-          {mode === "create" ? "Create localization" : "Save localization"}
+          {mode === "create" ? copy.createLocalization : copy.saveLocalization}
         </SubmitButton>
       </div>
     </form>

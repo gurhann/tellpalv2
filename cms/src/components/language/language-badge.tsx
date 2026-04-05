@@ -1,4 +1,5 @@
 import { resolveLanguageLabel } from "@/lib/languages";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 export type LanguageBadgeTone =
@@ -44,7 +45,8 @@ export function LanguageBadge({
   meta,
   className,
 }: LanguageBadgeProps) {
-  const resolvedLabel = label ?? resolveLanguageLabel(code);
+  const { locale } = useI18n();
+  const resolvedLabel = label ?? resolveLanguageLabel(code, locale);
 
   return (
     <span

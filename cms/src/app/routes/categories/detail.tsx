@@ -34,9 +34,11 @@ import {
 } from "@/features/categories/schema/category-localization-schema";
 import { mapCategoryReadToFormValues } from "@/features/categories/schema/category-schema";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import { supportedCmsLanguageOptions } from "@/lib/languages";
+import { useI18n } from "@/i18n/locale-provider";
+import { getSupportedCmsLanguageOptions } from "@/lib/languages";
 
 export function CategoryDetailRoute() {
+  const { locale, t } = useI18n();
   const { categoryId = "" } = useParams();
   const parsedCategoryId = Number(categoryId);
   const hasValidCategoryId =
@@ -52,14 +54,163 @@ export function CategoryDetailRoute() {
   const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
   const [isCreateLocalizationOpen, setIsCreateLocalizationOpen] =
     useState(false);
+  const supportedLanguageOptions = getSupportedCmsLanguageOptions(locale);
+  const copy =
+    locale === "tr"
+      ? {
+          detailFallbackTitle: "Kategori Detayı",
+          routeLoading:
+            "CMS temel kategori metadata'sını admin API üzerinden yüklüyor. Yerelleştirme ve kürasyon yüzeyleri, mevcut okuma payload'ı dar kalsa bile ekranda kalır.",
+          routeMissing:
+            "Bu rota kategori kaydından geçerli bir sayısal kategori kimliği bekler.",
+          routeLoaded: (slug: string, typeLabel: string) =>
+            `${slug} için temel metadata artık düzenlenebilir. Bu kategori türü içerik türüyle hizalıdır; kürasyon yalnızca eşleşen ${typeLabel} kayıtlarıyla sınırlı kalır. Yerelleştirme sekmeleri ve kürasyon satırları artık admin API üzerinden hydrate olur.`,
+          detailStatus: "Detay Durumu",
+          route: "Rota",
+          inlineStates:
+            "Satır içi yükleme, hata ve bulunamadı durumları bu kabuk içinde kalır.",
+          invalidRoute: "Geçersiz rota",
+          categoryNotFound: "Kategori bulunamadı",
+          metadataUnavailable: "Metadata kullanılamıyor",
+          metadataLoading: "Metadata yükleniyor",
+          invalidDescription:
+            "Geçerli bir kategori detay çalışma alanı yüklemek için kayıttan bir kategori açın.",
+          notFoundDescription:
+            "Admin API bu rota için bir kategori kaydı döndürmedi.",
+          retryDescription:
+            "Temel kategori metadata'sını geri getirmek için detay sorgusunu yeniden deneyin.",
+          detailQueryDescription:
+            "Detay kabuğu mevcut temel kategori metadata'sını istiyor.",
+          returnToRegistry: "Kategori kaydına dön",
+          loadingTitle: "Kategori detayı yükleniyor",
+          loadingDescription:
+            "CMS bu kategori kaydı için güncel temel metadata'yı istiyor.",
+          categoryNotFoundDescription:
+            "İstenen kategori kaydı mevcut backend ortamında bulunmuyor.",
+          detailUnavailable: "Kategori detayı kullanılamıyor",
+          detailUnavailableDescription:
+            "Bu kategori rotası için henüz detay payload'ı yok.",
+          metadataTitle: "Metadata",
+          metadataDescription:
+            "Temel kategori metadata'sını güncelleyin. Kategori oluşturulduktan sonra tür sabit kalır; slug, premium ve aktiflik durumu burada değiştirilebilir.",
+          localizationTitle: "Yerelleştirme",
+          localizationDescription:
+            "Kategori yerelleştirme oluşturma, güncelleme ve okuma artık canlı. Bu çalışma alanı artık kalıcı yerelleştirme sekmelerini admin API'den hydrate ediyor.",
+          createLocalization: "Yerelleştirme oluştur",
+          loadingLocalizations: "Yerelleştirmeler yükleniyor",
+          loadingLocalizationsDescription:
+            "CMS bu kategori için kalıcı yerelleştirme sekmelerini istiyor.",
+          noLocalizationsTitle: "Henüz yerelleştirme yok",
+          noLocalizationsDescription:
+            "Bu kategori için kalıcı bir dil çalışma alanı açmak üzere ilk yerelleştirmeyi oluşturun.",
+          createFirstLocalization: "İlk yerelleştirmeyi oluştur",
+          localizationTabs: "Kategori yerelleştirme sekmeleri",
+          openCuration: "Kürasyonu aç",
+          categoryStudio: "Kategori Stüdyosu",
+          categorySummary: "Kategori Özeti",
+          summaryDescription:
+            "Bu detay görünümü kategori metadata'sını, kalıcı yerelleştirme sekmelerini ve dil bazlı kürasyonu bir araya getirir.",
+          summaryCardOne:
+            "Stüdyo, yükleme, yeniden deneme ve bulunamadı durumlarında kabuğu kararlı tutabilmek için önce temel kategori metadata'sını yükler.",
+          summaryCardTwo:
+            "Yerelleştirme oluşturma, güncelleme ve liste okuma canlıdır; kürasyon da artık bu kalıcı dil çalışma alanlarını yansıtır. Kürasyon satırları seçili dil bazında hydrate olur.",
+          snapshotTitle: "Yerelleştirme Özeti",
+          snapshotDescription:
+            "Kalıcı yerelleştirme sekmeleri artık admin API üzerinden hydrate olur ve yenilemeden sonra görünür kalır.",
+          snapshotNone:
+            "Bu kategori için henüz saklanan kategori yerelleştirmesi yok.",
+          snapshotSome: (count: number) =>
+            `${count} yerelleştirme çalışma alanı şu anda backend üzerinden hydrate ediliyor.`,
+          snapshotRules:
+            "Yayınlanmış yerelleştirmeler ekleme ve sıralama aksiyonları için ön koşuldur. Seçili dil yayınlanmamış olsa bile saklanan kürasyon satırları görünür kalır.",
+          createDialogTitle: "Kategori yerelleştirmesi oluştur",
+          createDialogDescription:
+            "Bu kategori için bir dil çalışma alanı oluşturun. Kaydedilen yerelleştirmeler backend okumasında kalır ve yenilemeden sonra görünür kalır.",
+        }
+      : {
+          detailFallbackTitle: "Category Detail",
+          routeLoading:
+            "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow.",
+          routeMissing:
+            "This route expects a valid numeric category id from the category registry.",
+          routeLoaded: (slug: string, typeLabel: string) =>
+            `Base metadata for ${slug} is now editable. This category type is content-aligned, so curation stays limited to matching ${typeLabel} records. Localization tabs and curated rows now both hydrate from the admin API.`,
+          detailStatus: "Detail Status",
+          route: "Route",
+          inlineStates:
+            "Inline loading, error, and not-found states stay inside this shell.",
+          invalidRoute: "Invalid route",
+          categoryNotFound: "Category not found",
+          metadataUnavailable: "Metadata unavailable",
+          metadataLoading: "Loading metadata",
+          invalidDescription:
+            "Open a category record from the registry to load a valid detail workspace.",
+          notFoundDescription:
+            "The admin API did not return a category record for this route.",
+          retryDescription:
+            "Retry the detail query to restore the base category metadata.",
+          detailQueryDescription:
+            "The detail shell is requesting the current base category metadata.",
+          returnToRegistry: "Return to category registry",
+          loadingTitle: "Loading category detail",
+          loadingDescription:
+            "The CMS is requesting the current base metadata for this category record.",
+          categoryNotFoundDescription:
+            "The requested category record does not exist in the current backend environment.",
+          detailUnavailable: "Category detail unavailable",
+          detailUnavailableDescription:
+            "No detail payload is available for this category route yet.",
+          metadataTitle: "Metadata",
+          metadataDescription:
+            "Update the base category metadata. Category creation is live from the registry, and this form now saves slug, premium, and active state through the admin API.",
+          localizationTitle: "Localization",
+          localizationDescription:
+            "Category localization creation, update, and read are live. This workspace now hydrates persisted localization tabs from the admin API.",
+          createLocalization: "Create localization",
+          loadingLocalizations: "Loading localizations",
+          loadingLocalizationsDescription:
+            "The CMS is requesting persisted category localization tabs for this category.",
+          noLocalizationsTitle: "No localizations yet",
+          noLocalizationsDescription:
+            "Create the first category localization to open a persistent language workspace for this category.",
+          createFirstLocalization: "Create first localization",
+          localizationTabs: "Category localization tabs",
+          openCuration: "Open curation",
+          categoryStudio: "Category Studio",
+          categorySummary: "Category Summary",
+          summaryDescription:
+            "This detail view combines category metadata, persisted localization tabs, and language-scoped curation.",
+          summaryCardOne:
+            "Base category metadata loads first so the studio can keep the shell stable through loading, retry, and not-found states.",
+          summaryCardTwo:
+            "Localization create, update, and list reads are live, and curation now mirrors those persisted language workspaces. Curated rows hydrate per selected language.",
+          snapshotTitle: "Localization Snapshot",
+          snapshotDescription:
+            "Persisted localization tabs now hydrate from the admin API and remain visible after refresh.",
+          snapshotNone:
+            "No category localizations are stored for this category yet.",
+          snapshotSome: (count: number) =>
+            `${count} localization workspace${
+              count === 1 ? "" : "s"
+            } currently hydrated from the backend.`,
+          snapshotRules:
+            "Published localizations are the prerequisite for add and reorder actions. Stored curated rows still remain visible even when the selected locale is not published.",
+          createDialogTitle: "Create category localization",
+          createDialogDescription:
+            "Create a language workspace for this category. Saved localizations persist in backend reads and remain visible after refresh.",
+        };
   const routeTitle =
     category?.slug ??
-    (hasValidCategoryId ? `Category #${parsedCategoryId}` : "Category Detail");
+    (hasValidCategoryId
+      ? locale === "tr"
+        ? `Kategori #${parsedCategoryId}`
+        : `Category #${parsedCategoryId}`
+      : copy.detailFallbackTitle);
   const routeDescription = category
-    ? `Base metadata for ${category.slug} is now editable. This category type is content-aligned, so curation stays limited to matching ${category.typeLabel} records. Localization tabs and curated rows now both hydrate from the admin API.`
+    ? copy.routeLoaded(category.slug, category.typeLabel)
     : hasValidCategoryId
-      ? "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow."
-      : "This route expects a valid numeric category id from the category registry.";
+      ? copy.routeLoading
+      : copy.routeMissing;
 
   const resolvedLanguageCode =
     localizations.find(
@@ -79,13 +230,13 @@ export function CategoryDetailRoute() {
 
   const availableLanguageOptions = useMemo(
     () =>
-      supportedCmsLanguageOptions.filter(
+      supportedLanguageOptions.filter(
         (option) =>
           !localizations.some(
             (localization) => localization.languageCode === option.code,
           ),
       ),
-    [localizations],
+    [localizations, supportedLanguageOptions],
   );
 
   const tabItems = localizations.map((localization) => ({
@@ -96,8 +247,12 @@ export function CategoryDetailRoute() {
       : ("default" as const),
     meta: localization.statusLabel,
     description: localization.hasImage
-      ? "Image ready for this language workspace."
-      : "No image selected yet for this language workspace.",
+      ? locale === "tr"
+        ? "Bu dil çalışma alanı için görsel hazır."
+        : "Image ready for this language workspace."
+      : locale === "tr"
+        ? "Bu dil çalışma alanı için henüz görsel seçilmedi."
+        : "No image selected yet for this language workspace.",
   }));
 
   function renderToolbar() {
@@ -106,38 +261,38 @@ export function CategoryDetailRoute() {
     }
 
     const title = !hasValidCategoryId
-      ? "Invalid route"
+      ? copy.invalidRoute
       : categoryQuery.isNotFound
-        ? "Category not found"
+        ? copy.categoryNotFound
         : categoryQuery.problem
-          ? "Metadata unavailable"
-          : "Loading metadata";
+          ? copy.metadataUnavailable
+          : copy.metadataLoading;
     const description = !hasValidCategoryId
-      ? "Open a category record from the registry to load a valid detail workspace."
+      ? copy.invalidDescription
       : categoryQuery.isNotFound
-        ? "The admin API did not return a category record for this route."
+        ? copy.notFoundDescription
         : categoryQuery.problem
-          ? "Retry the detail query to restore the base category metadata."
-          : "The detail shell is requesting the current base category metadata.";
+          ? copy.retryDescription
+          : copy.detailQueryDescription;
 
     return (
       <div className="grid gap-3 md:grid-cols-3">
         <div className="rounded-2xl border border-border/70 bg-background px-4 py-3 md:col-span-2">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Detail Status
+            {copy.detailStatus}
           </p>
           <p className="mt-2 text-sm font-medium text-foreground">{title}</p>
           <p className="mt-1 text-sm text-muted-foreground">{description}</p>
         </div>
         <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Route
+            {copy.route}
           </p>
           <p className="mt-2 text-sm font-medium text-foreground">
             /categories/{categoryId || "?"}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Inline loading, error, and not-found states stay inside this shell.
+            {copy.inlineStates}
           </p>
         </div>
       </div>
@@ -150,11 +305,11 @@ export function CategoryDetailRoute() {
         <EmptyState
           action={
             <Button asChild type="button" variant="outline">
-              <Link to="/categories">Return to category registry</Link>
+              <Link to="/categories">{copy.returnToRegistry}</Link>
             </Button>
           }
-          description="Open a category record from the registry to reach a valid category detail workspace."
-          title="Invalid category route"
+          description={copy.invalidDescription}
+          title={copy.invalidRoute}
         />
       );
     }
@@ -168,11 +323,10 @@ export function CategoryDetailRoute() {
             </div>
             <div className="space-y-2">
               <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                Loading category detail
+                {copy.loadingTitle}
               </h2>
               <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                The CMS is requesting the current base metadata for this
-                category record.
+                {copy.loadingDescription}
               </p>
             </div>
           </CardContent>
@@ -185,11 +339,11 @@ export function CategoryDetailRoute() {
         <EmptyState
           action={
             <Button asChild type="button" variant="outline">
-              <Link to="/categories">Return to category registry</Link>
+              <Link to="/categories">{copy.returnToRegistry}</Link>
             </Button>
           }
-          description="The requested category record does not exist in the current backend environment."
-          title="Category not found"
+          description={copy.categoryNotFoundDescription}
+          title={copy.categoryNotFound}
         />
       );
     }
@@ -203,7 +357,7 @@ export function CategoryDetailRoute() {
               variant="outline"
               onClick={() => void categoryQuery.refetch()}
             >
-              Retry
+              {t("app.retry")}
             </Button>
           }
           problem={categoryQuery.problem}
@@ -214,8 +368,8 @@ export function CategoryDetailRoute() {
     if (!category) {
       return (
         <EmptyState
-          description="No detail payload is available for this category route yet."
-          title="Category detail unavailable"
+          description={copy.detailUnavailableDescription}
+          title={copy.detailUnavailable}
         />
       );
     }
@@ -223,8 +377,8 @@ export function CategoryDetailRoute() {
     return (
       <>
         <FormSection
-          description="Update the base category metadata. Category creation is live from the registry, and this form now saves slug, premium, and active state through the admin API."
-          title="Metadata"
+          description={copy.metadataDescription}
+          title={copy.metadataTitle}
         >
           <CategoryForm
             categoryId={category.id}
@@ -242,11 +396,11 @@ export function CategoryDetailRoute() {
               disabled={availableLanguageOptions.length === 0}
             >
               <CirclePlus className="size-4" />
-              Create localization
+              {copy.createLocalization}
             </Button>
           }
-          description="Category localization creation, update, and read are live. This workspace now hydrates persisted localization tabs from the admin API."
-          title="Localization"
+          description={copy.localizationDescription}
+          title={copy.localizationTitle}
         >
           {localizationQuery.isLoading && localizations.length === 0 ? (
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
@@ -256,11 +410,10 @@ export function CategoryDetailRoute() {
                 </div>
                 <div className="space-y-2">
                   <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                    Loading localizations
+                    {copy.loadingLocalizations}
                   </h2>
                   <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                    The CMS is requesting persisted category localization tabs
-                    for this category.
+                    {copy.loadingLocalizationsDescription}
                   </p>
                 </div>
               </CardContent>
@@ -275,7 +428,7 @@ export function CategoryDetailRoute() {
                       variant="outline"
                       onClick={() => void localizationQuery.refetch()}
                     >
-                      Retry
+                      {t("app.retry")}
                     </Button>
                   }
                   problem={localizationQuery.problem}
@@ -284,14 +437,14 @@ export function CategoryDetailRoute() {
 
               <LanguageTabs
                 items={tabItems}
-                listLabel="Category localization tabs"
+                listLabel={copy.localizationTabs}
                 value={resolvedLanguageCode}
                 onValueChange={setSelectedLanguageCode}
               />
 
               <CategoryLocalizationForm
                 key={`${category.id}-${selectedLocalization.languageCode}-${selectedLocalization.name}-${selectedLocalization.status}`}
-                availableLanguages={supportedCmsLanguageOptions}
+                availableLanguages={supportedLanguageOptions}
                 categoryId={category.id}
                 initialValues={mapCategoryLocalizationToFormValues(
                   selectedLocalization,
@@ -308,7 +461,7 @@ export function CategoryDetailRoute() {
                   variant="outline"
                   onClick={() => void localizationQuery.refetch()}
                 >
-                  Retry
+                  {t("app.retry")}
                 </Button>
               }
               problem={localizationQuery.problem}
@@ -321,11 +474,11 @@ export function CategoryDetailRoute() {
                   variant="outline"
                   onClick={() => setIsCreateLocalizationOpen(true)}
                 >
-                  Create first localization
+                  {copy.createFirstLocalization}
                 </Button>
               }
-              description="Create the first category localization to open a persistent language workspace for this category."
-              title="No localizations yet"
+              description={copy.noLocalizationsDescription}
+              title={copy.noLocalizationsTitle}
             />
           )}
         </FormSection>
@@ -349,13 +502,13 @@ export function CategoryDetailRoute() {
   return (
     <>
       <ContentPageShell
-        eyebrow="Category Studio"
+        eyebrow={copy.categoryStudio}
         title={routeTitle}
         description={routeDescription}
         actions={
           <>
             <Button asChild type="button" variant="outline">
-              <Link to="/categories">Return to category registry</Link>
+              <Link to="/categories">{copy.returnToRegistry}</Link>
             </Button>
             <Button
               type="button"
@@ -367,15 +520,15 @@ export function CategoryDetailRoute() {
                 categoryQuery.isLoading
               }
             >
-              Create localization
+              {copy.createLocalization}
             </Button>
             {selectedLocalization ? (
               <Button asChild type="button" variant="outline">
-                <a href="#curation">Open curation</a>
+                <a href="#curation">{copy.openCuration}</a>
               </Button>
             ) : (
               <Button disabled type="button" variant="outline">
-                Open curation
+                {copy.openCuration}
               </Button>
             )}
           </>
@@ -385,45 +538,32 @@ export function CategoryDetailRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Category Summary</CardTitle>
-                <CardDescription>
-                  This detail view combines category metadata, persisted
-                  localization tabs, and language-scoped curation.
-                </CardDescription>
+                <CardTitle>{copy.categorySummary}</CardTitle>
+                <CardDescription>{copy.summaryDescription}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  Base category metadata loads first so the studio can keep the
-                  shell stable through loading, retry, and not-found states.
+                  {copy.summaryCardOne}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  Localization create, update, and list reads are live, and
-                  curation now mirrors those persisted language workspaces.
-                  Curated rows hydrate per selected language.
+                  {copy.summaryCardTwo}
                 </div>
               </CardContent>
             </Card>
 
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Localization Snapshot</CardTitle>
-                <CardDescription>
-                  Persisted localization tabs now hydrate from the admin API and
-                  remain visible after refresh.
-                </CardDescription>
+                <CardTitle>{copy.snapshotTitle}</CardTitle>
+                <CardDescription>{copy.snapshotDescription}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   {localizations.length === 0
-                    ? "No category localizations are stored for this category yet."
-                    : `${localizations.length} localization workspace${
-                        localizations.length === 1 ? "" : "s"
-                      } currently hydrated from the backend.`}
+                    ? copy.snapshotNone
+                    : copy.snapshotSome(localizations.length)}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Published localizations are the prerequisite for add and
-                  reorder actions. Stored curated rows still remain visible even
-                  when the selected locale is not published.
+                  {copy.snapshotRules}
                 </div>
               </CardContent>
             </Card>
@@ -439,10 +579,9 @@ export function CategoryDetailRoute() {
       >
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Create category localization</DialogTitle>
+            <DialogTitle>{copy.createDialogTitle}</DialogTitle>
             <DialogDescription>
-              Create a language workspace for this category. Saved localizations
-              persist in backend reads and remain visible after refresh.
+              {copy.createDialogDescription}
             </DialogDescription>
           </DialogHeader>
 

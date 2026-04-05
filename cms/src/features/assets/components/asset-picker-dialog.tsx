@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import type { AssetMediaType } from "@/features/assets/api/asset-admin";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import { useRecentAssets } from "@/features/assets/queries/use-recent-assets";
+import { useI18n } from "@/i18n/locale-provider";
 
 type AssetPickerDialogProps = {
   open: boolean;
@@ -26,25 +27,33 @@ type AssetPickerDialogProps = {
   limit?: number;
 };
 
-function getEmptyCopy(mediaType: AssetMediaType) {
+function getEmptyCopy(mediaType: AssetMediaType, locale: "en" | "tr") {
   switch (mediaType) {
     case "IMAGE":
       return {
-        title: "No recent image assets",
+        title:
+          locale === "tr" ? "Son görsel asset yok" : "No recent image assets",
         description:
-          "Upload a new image from this workspace or open Media Utility for advanced inspection.",
+          locale === "tr"
+            ? "Bu çalışma alanından yeni bir görsel yükleyin veya gelişmiş inceleme için Medya Aracı'nı açın."
+            : "Upload a new image from this workspace or open Media Utility for advanced inspection.",
       };
     case "AUDIO":
       return {
-        title: "No recent audio assets",
+        title: locale === "tr" ? "Son ses asset yok" : "No recent audio assets",
         description:
-          "Upload a new audio file from this workspace or open Media Utility for advanced inspection.",
+          locale === "tr"
+            ? "Bu çalışma alanından yeni bir ses dosyası yükleyin veya gelişmiş inceleme için Medya Aracı'nı açın."
+            : "Upload a new audio file from this workspace or open Media Utility for advanced inspection.",
       };
     case "ARCHIVE":
       return {
-        title: "No recent archive assets",
+        title:
+          locale === "tr" ? "Son arşiv asset yok" : "No recent archive assets",
         description:
-          "Archive assets are managed from Media Utility when advanced inspection is needed.",
+          locale === "tr"
+            ? "Gelişmiş inceleme gerektiğinde arşiv asset'leri Medya Aracı üzerinden yönetilir."
+            : "Archive assets are managed from Media Utility when advanced inspection is needed.",
       };
   }
 }
@@ -59,6 +68,7 @@ export function AssetPickerDialog({
   description,
   limit = 24,
 }: AssetPickerDialogProps) {
+  const { locale } = useI18n();
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const recentAssetsQuery = useRecentAssets({ limit, enabled: open });
@@ -82,7 +92,7 @@ export function AssetPickerDialog({
       );
     });
   }, [deferredSearch, mediaType, recentAssetsQuery.assets]);
-  const emptyCopy = getEmptyCopy(mediaType);
+  const emptyCopy = getEmptyCopy(mediaType, locale);
 
   function handleSelect(asset: AssetViewModel) {
     onSelectAsset(asset);
@@ -99,8 +109,12 @@ export function AssetPickerDialog({
 
         <div className="grid gap-4">
           <Input
-            aria-label="Search assets"
-            placeholder="Filter by asset id, object path, provider, or kind"
+            aria-label={locale === "tr" ? "Asset ara" : "Search assets"}
+            placeholder={
+              locale === "tr"
+                ? "Asset id, object path, provider veya türe göre filtrele"
+                : "Filter by asset id, object path, provider, or kind"
+            }
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -110,20 +124,32 @@ export function AssetPickerDialog({
           ) : recentAssetsQuery.isLoading ? (
             <EmptyState
               className="min-h-56"
-              description="The picker is requesting recent assets from the admin API."
-              title="Loading recent assets"
+              description={
+                locale === "tr"
+                  ? "Picker, son asset kayıtlarını yönetici API'sinden istiyor."
+                  : "The picker is requesting recent assets from the admin API."
+              }
+              title={
+                locale === "tr"
+                  ? "Son asset'ler yükleniyor"
+                  : "Loading recent assets"
+              }
             />
           ) : filteredAssets.length === 0 ? (
             <EmptyState
               className="min-h-56"
               description={
                 deferredSearch.trim().length > 0
-                  ? "No recent assets match the current search."
+                  ? locale === "tr"
+                    ? "Mevcut aramayla eşleşen son asset yok."
+                    : "No recent assets match the current search."
                   : emptyCopy.description
               }
               title={
                 deferredSearch.trim().length > 0
-                  ? "No matching assets"
+                  ? locale === "tr"
+                    ? "Eşleşen asset yok"
+                    : "No matching assets"
                   : emptyCopy.title
               }
             />
@@ -148,7 +174,9 @@ export function AssetPickerDialog({
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                           <span className="rounded-full border border-border/70 bg-muted/35 px-2.5 py-1">
-                            Asset #{asset.id}
+                            {locale === "tr"
+                              ? `Asset #${asset.id}`
+                              : `Asset #${asset.id}`}
                           </span>
                           <span className="rounded-full border border-border/70 bg-muted/35 px-2.5 py-1">
                             {asset.kindLabel}
@@ -157,7 +185,10 @@ export function AssetPickerDialog({
                             {asset.providerLabel}
                           </span>
                           <span className="rounded-full border border-border/70 bg-muted/35 px-2.5 py-1">
-                            {asset.mimeType ?? "MIME pending"}
+                            {asset.mimeType ??
+                              (locale === "tr"
+                                ? "MIME bekleniyor"
+                                : "MIME pending")}
                           </span>
                         </div>
                       </div>
@@ -167,7 +198,13 @@ export function AssetPickerDialog({
                         variant={isSelected ? "default" : "outline"}
                         onClick={() => handleSelect(asset)}
                       >
-                        {isSelected ? "Selected" : "Use asset"}
+                        {isSelected
+                          ? locale === "tr"
+                            ? "Seçildi"
+                            : "Selected"
+                          : locale === "tr"
+                            ? "Asset'i kullan"
+                            : "Use asset"}
                       </Button>
                     </div>
                   </div>

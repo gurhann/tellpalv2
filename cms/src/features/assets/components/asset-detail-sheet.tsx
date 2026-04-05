@@ -13,6 +13,7 @@ import { AssetMetadataForm } from "@/features/assets/components/asset-metadata-f
 import { AssetPreviewCard } from "@/features/assets/components/asset-preview-card";
 import { RefreshDownloadUrlButton } from "@/features/assets/components/refresh-download-url-button";
 import { useAssetDetail } from "@/features/assets/queries/use-asset-detail";
+import { useI18n } from "@/i18n/locale-provider";
 
 type AssetDetailSheetProps = {
   assetId: number | null;
@@ -20,33 +21,33 @@ type AssetDetailSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-function formatTimestamp(value: string | null) {
-  if (!value) {
-    return "Not available";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return date.toLocaleString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export function AssetDetailSheet({
   assetId,
   open,
   onOpenChange,
 }: AssetDetailSheetProps) {
+  const { t, formatDateTime } = useI18n();
   const assetDetailQuery = useAssetDetail(open ? assetId : null);
   const asset = assetDetailQuery.asset;
+  const formatTimestamp = (value: string | null) => {
+    if (!value) {
+      return t("assets.notAvailable");
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return formatDateTime(date, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -56,11 +57,12 @@ export function AssetDetailSheet({
       >
         <SheetHeader className="border-b border-border/60">
           <SheetTitle>
-            {asset ? `Asset #${asset.id}` : "Asset detail"}
+            {asset
+              ? t("assets.table.assetId", { assetId: asset.id })
+              : t("assets.assetDetailFallback")}
           </SheetTitle>
           <SheetDescription>
-            Inspect the selected asset, update its stored metadata, and refresh
-            the cached download URL snapshot from this sheet.
+            {t("assets.cachedUrlDescription")}
           </SheetDescription>
         </SheetHeader>
 
@@ -68,8 +70,8 @@ export function AssetDetailSheet({
           {assetDetailQuery.isLoading ? (
             <EmptyState
               className="min-h-56"
-              description="The CMS is requesting the selected asset record from the admin API."
-              title="Loading asset detail"
+              description={t("assets.loadingDetailDescription")}
+              title={t("assets.loadingDetail")}
             />
           ) : assetDetailQuery.problem ? (
             <ProblemAlert problem={assetDetailQuery.problem} />
@@ -78,7 +80,7 @@ export function AssetDetailSheet({
               <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 sm:grid-cols-2">
                 <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    Asset identity
+                    {t("assets.assetIdentity")}
                   </p>
                   <p className="mt-3 break-all text-sm font-medium text-foreground">
                     {asset.objectPath}
@@ -90,41 +92,49 @@ export function AssetDetailSheet({
 
                 <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    Provider
+                    {t("assets.provider")}
                   </p>
                   <p className="mt-3 text-sm font-medium text-foreground">
                     {asset.providerLabel}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Created {formatTimestamp(asset.createdAt)}
+                    {t("assets.created", {
+                      value: formatTimestamp(asset.createdAt),
+                    })}
                   </p>
                 </div>
 
                 <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    Cached download URL
+                    {t("assets.cachedDownloadUrl")}
                   </p>
                   <p className="mt-3 flex items-center gap-2 text-sm font-medium text-foreground">
                     <Link2 className="size-4 text-muted-foreground" />
-                    {asset.hasCachedDownloadUrl ? "Available" : "Not cached"}
+                    {asset.hasCachedDownloadUrl
+                      ? t("assets.available")
+                      : t("assets.notCached")}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Expires {formatTimestamp(asset.downloadUrlExpiresAt)}
+                    {t("assets.expires", {
+                      value: formatTimestamp(asset.downloadUrlExpiresAt),
+                    })}
                   </p>
                 </div>
 
                 <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    Metadata snapshot
+                    {t("assets.metadataSnapshot")}
                   </p>
                   <p className="mt-3 flex items-center gap-2 text-sm font-medium text-foreground">
                     <PackageOpen className="size-4 text-muted-foreground" />
                     {asset.hasMetadata
-                      ? "Metadata present"
-                      : "Metadata pending"}
+                      ? t("assets.metadataPresent")
+                      : t("assets.metadataPending")}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Updated {formatTimestamp(asset.updatedAt)}
+                    {t("assets.updated", {
+                      value: formatTimestamp(asset.updatedAt),
+                    })}
                   </p>
                 </div>
               </div>
@@ -134,11 +144,10 @@ export function AssetDetailSheet({
               <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
                 <div className="mb-4 space-y-1">
                   <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                    Metadata
+                    {t("assets.metadataTitle")}
                   </h2>
                   <p className="text-sm leading-6 text-muted-foreground">
-                    Update MIME type, byte size, and checksum while keeping
-                    provider and object path read-only.
+                    {t("assets.metadataDescription")}
                   </p>
                 </div>
 
@@ -148,17 +157,18 @@ export function AssetDetailSheet({
               <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
                 <div className="mb-4 space-y-1">
                   <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                    Cached download URL
+                    {t("assets.cachedUrlTitle")}
                   </h2>
                   <p className="text-sm leading-6 text-muted-foreground">
-                    Refresh the stored signed URL snapshot without leaving the
-                    asset detail workspace.
+                    {t("assets.cachedUrlDescription")}
                   </p>
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-sm text-muted-foreground">
-                    Last cached: {formatTimestamp(asset.downloadUrlCachedAt)}
+                    {t("assets.lastCached", {
+                      value: formatTimestamp(asset.downloadUrlCachedAt),
+                    })}
                   </div>
                   <RefreshDownloadUrlButton asset={asset} />
                 </div>
@@ -167,8 +177,8 @@ export function AssetDetailSheet({
           ) : (
             <EmptyState
               className="min-h-56"
-              description="Select an asset from the recent registry to inspect its metadata."
-              title="No asset selected"
+              description={t("assets.noAssetSelectedDescription")}
+              title={t("assets.noAssetSelected")}
             />
           )}
         </div>

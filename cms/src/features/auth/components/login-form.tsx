@@ -23,6 +23,7 @@ import {
   type LoginSchemaValues,
 } from "@/features/auth/schema/login-schema";
 import { useAuth } from "@/features/auth/providers/use-auth";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
@@ -31,22 +32,23 @@ type LoginFormProps = {
   targetPath: string;
 };
 
-function mapLoginProblem(problem: ApiProblemDetail) {
+function mapLoginProblem(
+  problem: ApiProblemDetail,
+  t: ReturnType<typeof useI18n>["t"],
+) {
   if (problem.status === 401) {
     return {
       ...problem,
-      title: "Incorrect credentials",
-      detail:
-        "Username or password is incorrect. Check the credentials and try again.",
+      title: t("auth.error.incorrectCredentials"),
+      detail: t("auth.error.incorrectCredentialsDetail"),
     };
   }
 
   if (problem.status === 403) {
     return {
       ...problem,
-      title: "Account disabled",
-      detail:
-        "This admin account is disabled. Contact an operator to restore access.",
+      title: t("auth.error.accountDisabled"),
+      detail: t("auth.error.accountDisabledDetail"),
     };
   }
 
@@ -56,6 +58,7 @@ function mapLoginProblem(problem: ApiProblemDetail) {
 export function LoginForm({ targetPath }: LoginFormProps) {
   const navigate = useNavigate();
   const auth = useAuth();
+  const { t } = useI18n();
   const form = useZodForm<LoginSchemaValues>({
     schema: loginSchema,
     defaultValues: {
@@ -70,7 +73,7 @@ export function LoginForm({ targetPath }: LoginFormProps) {
 
   const formProblem =
     loginMutation.error instanceof ApiClientError
-      ? mapLoginProblem(loginMutation.error.problem)
+      ? mapLoginProblem(loginMutation.error.problem, t)
       : null;
 
   async function handleSubmit(values: LoginSchemaValues) {
@@ -91,7 +94,7 @@ export function LoginForm({ targetPath }: LoginFormProps) {
 
       form.setError("root.serverError", {
         type: "server",
-        message: "Sign-in could not be completed. Try again.",
+        message: t("auth.error.signInFailed"),
       });
     }
   }
@@ -104,14 +107,13 @@ export function LoginForm({ targetPath }: LoginFormProps) {
         </div>
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            Admin Access
+            {t("auth.login.adminAccess")}
           </p>
           <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-            Sign in to TellPal CMS
+            {t("auth.login.formTitle")}
           </h1>
           <CardDescription className="text-sm leading-6 sm:text-base">
-            Use your admin username and password. A valid refresh token will be
-            stored locally to restore the session on the next app boot.
+            {t("auth.login.formDescription")}
           </CardDescription>
         </div>
       </CardHeader>
@@ -130,7 +132,7 @@ export function LoginForm({ targetPath }: LoginFormProps) {
               className="text-sm font-medium text-foreground"
               htmlFor="username"
             >
-              Username
+              {t("auth.login.username")}
             </label>
             <Input
               autoComplete="username"
@@ -146,12 +148,12 @@ export function LoginForm({ targetPath }: LoginFormProps) {
               className="text-sm font-medium text-foreground"
               htmlFor="password"
             >
-              Password
+              {t("auth.login.password")}
             </label>
             <Input
               autoComplete="current-password"
               id="password"
-              placeholder="Enter your password"
+              placeholder={t("auth.login.passwordPlaceholder")}
               type="password"
               {...form.register("password")}
             />
@@ -159,16 +161,19 @@ export function LoginForm({ targetPath }: LoginFormProps) {
           </div>
 
           <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Session behavior</p>
+            <p className="font-medium text-foreground">
+              {t("auth.login.sessionBehavior")}
+            </p>
             <ul className="mt-3 space-y-2">
               <li className="flex items-start gap-2">
                 <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
-                Access token stays in memory and refresh token stays in local
-                storage.
+                {t("auth.login.sessionBehavior.storage")}
               </li>
               <li className="flex items-start gap-2">
                 <ArrowRight className="mt-0.5 size-4 shrink-0 text-primary" />
-                After sign-in you will land on <code>{targetPath}</code>.
+                {t("auth.login.sessionBehavior.target", {
+                  targetPath,
+                })}
               </li>
             </ul>
           </div>
@@ -177,9 +182,9 @@ export function LoginForm({ targetPath }: LoginFormProps) {
             <SubmitButton
               className="w-full sm:w-auto"
               isPending={loginMutation.isPending}
-              pendingLabel="Signing in..."
+              pendingLabel={t("auth.login.pending")}
             >
-              Sign in
+              {t("auth.login.submit")}
             </SubmitButton>
 
             <Button
@@ -193,7 +198,7 @@ export function LoginForm({ targetPath }: LoginFormProps) {
                 rel="noreferrer"
                 target="_blank"
               >
-                Review admin API
+                {t("auth.login.reviewAdminApi")}
               </a>
             </Button>
           </div>

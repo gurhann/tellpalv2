@@ -8,6 +8,7 @@ import {
   AuthContext,
   type AuthContextValue,
 } from "@/features/auth/providers/auth-context";
+import { LocaleProvider, getStoredLocaleKey } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import type { AdminSessionPayload, ApiProblemDetail } from "@/types/api";
 
@@ -112,11 +113,13 @@ function renderLoginRoute(options?: {
   );
 
   const renderResult = render(
-    <AuthContext.Provider value={authValue}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </AuthContext.Provider>,
+    <LocaleProvider>
+      <AuthContext.Provider value={authValue}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </AuthContext.Provider>
+    </LocaleProvider>,
   );
 
   return {
@@ -253,5 +256,18 @@ describe("LoginForm", () => {
         screen.getByRole("heading", { name: /contributors page/i }),
       ).toBeInTheDocument();
     });
+  });
+
+  it("renders the login route in Turkish when the stored locale is tr", async () => {
+    window.localStorage.setItem(getStoredLocaleKey(), "tr");
+
+    renderLoginRoute();
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "TellPal CMS’e giriş yapın",
+      }),
+    ).toBeInTheDocument();
+    expect(window.localStorage.getItem(getStoredLocaleKey())).toBe("tr");
   });
 });

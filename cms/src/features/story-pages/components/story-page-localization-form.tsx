@@ -26,6 +26,7 @@ import {
   storyPageLocalizationSchema,
   type StoryPageLocalizationFormValues,
 } from "@/features/story-pages/schema/story-page-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 
 type StoryPageLocalizationFormProps = {
@@ -40,16 +41,20 @@ type StoryPageLocalizationFormProps = {
   }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
-function getRootErrorMessage(error: unknown) {
+function getRootErrorMessage(
+  error: unknown,
+  genericMessage: string,
+  missingParentMessage: string,
+) {
   if (error instanceof ApiClientError) {
     if (error.problem.errorCode === "content_localization_not_found") {
-      return "Create the parent content localization for this language before editing story pages.";
+      return missingParentMessage;
     }
 
     return error.problem.detail;
   }
 
-  return "The story page localization could not be saved.";
+  return genericMessage;
 }
 
 export function StoryPageLocalizationForm({
@@ -58,6 +63,97 @@ export function StoryPageLocalizationForm({
   isPending = false,
   onSave,
 }: StoryPageLocalizationFormProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          missingParentLocalization:
+            "Hikaye sayfalarını düzenlemeden önce bu dil için parent içerik yerelleştirmesini oluşturun.",
+          genericSaveError: "Hikaye sayfası yerelleştirmesi kaydedilemedi.",
+          illustrationRequired: "İllüstrasyon asset id zorunludur.",
+          createLoading: "Sayfa yerelleştirmesi oluşturuluyor...",
+          updateLoading: "Sayfa yerelleştirmesi kaydediliyor...",
+          createSuccess: "Sayfa yerelleştirmesi oluşturuldu.",
+          updateSuccess: "Sayfa yerelleştirmesi kaydedildi.",
+          parentLocale: "Üst dil",
+          bodyReady: "Gövde hazır",
+          bodyMissing: "Gövde eksik",
+          bodyMissingHelp:
+            "Boş anlatı metni eksik kalır ve bu dilde hikaye yayınını engeller.",
+          audioLinked: "Ses bağlı",
+          audioMissing: "Ses eksik",
+          audioMissingHelp:
+            "Bu dil yayın için hazır olmadan önce ses alanı bir `AUDIO` asset'ine bağlanmalıdır.",
+          illustrationLinked: "İllüstrasyon bağlı",
+          illustrationMissing: "İllüstrasyon eksik",
+          publishReady: "Bu sayfa dili yayın kontrolleri için hazır.",
+          publishBlocked:
+            "Hikaye yayını için hâlâ gövde metni, ses ve yerelleştirilmiş illüstrasyon gerekiyor.",
+          bodyText: "Gövde metni",
+          localizedNarrative: "Yerelleştirilmiş sayfa anlatısı",
+          bodyHelp:
+            "Boş gövde metni boş durum olarak kaydedilir ve bu dili yayın için eksik bırakır.",
+          illustrationDescription:
+            "Yerelleştirilmiş illüstrasyonu buradan yükleyin veya bu hikaye sayfası için mevcut `IMAGE` asset'lerini seçin.",
+          illustrationLabel: "İllüstrasyon asset'i",
+          illustrationPickerDescription:
+            "Bu yerelleştirilmiş hikaye sayfası illüstrasyonu için son görsel asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
+          illustrationPickerTitle: "Hikaye sayfası illüstrasyonu seç",
+          audioDescription:
+            "Sayfa editöründen çıkmadan bu sayfa için yerelleştirilmiş anlatımı yükleyin veya seçin.",
+          audioLabel: "Ses asset'i",
+          audioPickerDescription:
+            "Bu yerelleştirilmiş hikaye sayfası için son ses asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
+          audioPickerTitle: "Hikaye sayfası ses asset'ini seç",
+          optional: "Opsiyonel",
+          required: "Zorunlu",
+          createLocalization: "Sayfa yerelleştirmesi oluştur",
+          saveLocalization: "Sayfa yerelleştirmesini kaydet",
+        }
+      : {
+          missingParentLocalization:
+            "Create the parent content localization for this language before editing story pages.",
+          genericSaveError: "The story page localization could not be saved.",
+          illustrationRequired: "Illustration asset id is required.",
+          createLoading: "Creating page localization...",
+          updateLoading: "Saving page localization...",
+          createSuccess: "Page localization created.",
+          updateSuccess: "Page localization saved.",
+          parentLocale: "Parent locale",
+          bodyReady: "Body ready",
+          bodyMissing: "Body missing",
+          bodyMissingHelp:
+            "Empty narrative copy stays incomplete and blocks story publication for this language.",
+          audioLinked: "Audio linked",
+          audioMissing: "Audio missing",
+          audioMissingHelp:
+            "Audio must reference an `AUDIO` asset before this locale is publication-ready.",
+          illustrationLinked: "Illustration linked",
+          illustrationMissing: "Illustration missing",
+          publishReady: "This page locale is ready for publication checks.",
+          publishBlocked:
+            "Story publication still needs body copy, audio, and a localized illustration.",
+          bodyText: "Body text",
+          localizedNarrative: "Localized page narrative",
+          bodyHelp:
+            "Blank body text is saved as empty state and keeps this language incomplete for publication.",
+          illustrationDescription:
+            "Upload the localized illustration here or browse existing `IMAGE` assets for this story page.",
+          illustrationLabel: "Illustration asset",
+          illustrationPickerDescription:
+            "Select a recent image asset for this localized story page illustration. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+          illustrationPickerTitle: "Pick story page illustration",
+          audioDescription:
+            "Upload or select localized narration for this page without leaving the story page editor.",
+          audioLabel: "Audio asset",
+          audioPickerDescription:
+            "Select a recent audio asset for this localized story page. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+          audioPickerTitle: "Pick story page audio asset",
+          optional: "Optional",
+          required: "Required",
+          createLocalization: "Create page localization",
+          saveLocalization: "Save page localization",
+        };
   const existingLocalization =
     storyPage.localizations.find(
       (localization) =>
@@ -94,7 +190,7 @@ export function StoryPageLocalizationForm({
     if (values.illustrationMediaId === null) {
       form.setError("illustrationMediaId", {
         type: "server",
-        message: "Illustration asset id is required.",
+        message: copy.illustrationRequired,
       });
       return;
     }
@@ -130,14 +226,8 @@ export function StoryPageLocalizationForm({
           illustrationMediaId,
         }),
         {
-          loading:
-            mode === "create"
-              ? "Creating page localization..."
-              : "Saving page localization...",
-          success:
-            mode === "create"
-              ? "Page localization created."
-              : "Page localization saved.",
+          loading: mode === "create" ? copy.createLoading : copy.updateLoading,
+          success: mode === "create" ? copy.createSuccess : copy.updateSuccess,
         },
       );
 
@@ -168,7 +258,11 @@ export function StoryPageLocalizationForm({
 
       form.setError("root.serverError", {
         type: "server",
-        message: getRootErrorMessage(error),
+        message: getRootErrorMessage(
+          error,
+          copy.genericSaveError,
+          copy.missingParentLocalization,
+        ),
       });
     }
   }
@@ -185,35 +279,33 @@ export function StoryPageLocalizationForm({
             {contentLocalization.languageLabel}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Parent locale: {contentLocalization.title}
+            {copy.parentLocale}: {contentLocalization.title}
           </p>
         </div>
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
           <p className="text-sm font-medium text-foreground">
-            {hasBodyText ? "Body ready" : "Body missing"}
+            {hasBodyText ? copy.bodyReady : copy.bodyMissing}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Empty narrative copy stays incomplete and blocks story publication
-            for this language.
+            {copy.bodyMissingHelp}
           </p>
         </div>
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
           <p className="text-sm font-medium text-foreground">
-            {hasAudioAsset ? "Audio linked" : "Audio missing"}
+            {hasAudioAsset ? copy.audioLinked : copy.audioMissing}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Audio must reference an `AUDIO` asset before this locale is
-            publication-ready.
+            {copy.audioMissingHelp}
           </p>
         </div>
         <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
           <p className="text-sm font-medium text-foreground">
-            {hasIllustration ? "Illustration linked" : "Illustration missing"}
+            {hasIllustration
+              ? copy.illustrationLinked
+              : copy.illustrationMissing}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isReadyForPublish
-              ? "This page locale is ready for publication checks."
-              : "Story publication still needs body copy, audio, and a localized illustration."}
+            {isReadyForPublish ? copy.publishReady : copy.publishBlocked}
           </p>
         </div>
       </div>
@@ -223,18 +315,15 @@ export function StoryPageLocalizationForm({
           className="text-sm font-medium text-foreground"
           htmlFor={`story-page-body-${contentLocalization.languageCode}`}
         >
-          Body text
+          {copy.bodyText}
         </label>
         <Textarea
           id={`story-page-body-${contentLocalization.languageCode}`}
-          placeholder="Localized page narrative"
+          placeholder={copy.localizedNarrative}
           {...form.register("bodyText")}
           disabled={isPending}
         />
-        <p className="text-sm text-muted-foreground">
-          Blank body text is saved as empty state and keeps this language
-          incomplete for publication.
-        </p>
+        <p className="text-sm text-muted-foreground">{copy.bodyHelp}</p>
         <FieldError error={form.formState.errors.bodyText} />
       </div>
 
@@ -243,15 +332,15 @@ export function StoryPageLocalizationForm({
         name="illustrationMediaId"
         render={({ field }) => (
           <AssetPickerField
-            description="Upload the localized illustration here or browse existing `IMAGE` assets for this story page."
+            description={copy.illustrationDescription}
             disabled={isPending}
             error={form.formState.errors.illustrationMediaId}
             id={`story-page-illustration-${contentLocalization.languageCode}`}
-            label="Illustration asset"
+            label={copy.illustrationLabel}
             mediaType="IMAGE"
-            pickerDescription="Select a recent image asset for this localized story page illustration. Uploading from this field stays available, and manual asset ids remain under Advanced."
-            pickerTitle="Pick story page illustration"
-            placeholder="Required"
+            pickerDescription={copy.illustrationPickerDescription}
+            pickerTitle={copy.illustrationPickerTitle}
+            placeholder={copy.required}
             value={field.value}
             onChange={field.onChange}
           />
@@ -263,15 +352,15 @@ export function StoryPageLocalizationForm({
         name="audioMediaId"
         render={({ field }) => (
           <AssetPickerField
-            description="Upload or select localized narration for this page without leaving the story page editor."
+            description={copy.audioDescription}
             disabled={isPending}
             error={form.formState.errors.audioMediaId}
             id={`story-page-audio-${contentLocalization.languageCode}`}
-            label="Audio asset"
+            label={copy.audioLabel}
             mediaType="AUDIO"
-            pickerDescription="Select a recent audio asset for this localized story page. Uploading from this field stays available, and manual asset ids remain under Advanced."
-            pickerTitle="Pick story page audio asset"
-            placeholder="Optional"
+            pickerDescription={copy.audioPickerDescription}
+            pickerTitle={copy.audioPickerTitle}
+            placeholder={copy.optional}
             value={field.value}
             onChange={field.onChange}
           />
@@ -284,14 +373,10 @@ export function StoryPageLocalizationForm({
         <SubmitButton
           isPending={isPending}
           pendingLabel={
-            mode === "create"
-              ? "Creating localization..."
-              : "Saving localization..."
+            mode === "create" ? copy.createLoading : copy.updateLoading
           }
         >
-          {mode === "create"
-            ? "Create page localization"
-            : "Save page localization"}
+          {mode === "create" ? copy.createLocalization : copy.saveLocalization}
         </SubmitButton>
       </div>
     </form>

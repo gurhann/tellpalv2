@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 import type { ApiProblemDetail } from "@/types/api";
 
@@ -68,10 +69,10 @@ export function DataTable<TItem>({
   summary,
   caption,
   isLoading = false,
-  loadingTitle = "Loading records",
-  loadingDescription = "The workspace is requesting the latest data for this table.",
-  emptyTitle = "No records found",
-  emptyDescription = "Adjust the current filters or create the first record for this workspace.",
+  loadingTitle,
+  loadingDescription,
+  emptyTitle,
+  emptyDescription,
   emptyAction,
   problem,
   onRetry,
@@ -80,7 +81,14 @@ export function DataTable<TItem>({
   className,
   tableClassName,
 }: DataTableProps<TItem>) {
+  const { t } = useI18n();
   const isInteractive = typeof onRowClick === "function";
+  const resolvedLoadingTitle = loadingTitle ?? t("data.loadingTitle");
+  const resolvedLoadingDescription =
+    loadingDescription ?? t("data.loadingDescription");
+  const resolvedEmptyTitle = emptyTitle ?? t("data.emptyTitle");
+  const resolvedEmptyDescription =
+    emptyDescription ?? t("data.emptyDescription");
 
   function handleRowKeyDown(
     event: KeyboardEvent<HTMLTableRowElement>,
@@ -116,7 +124,7 @@ export function DataTable<TItem>({
             actions={
               onRetry ? (
                 <Button type="button" variant="outline" onClick={onRetry}>
-                  Retry
+                  {t("app.retry")}
                 </Button>
               ) : null
             }
@@ -132,10 +140,10 @@ export function DataTable<TItem>({
             </div>
             <div className="space-y-2">
               <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                {loadingTitle}
+                {resolvedLoadingTitle}
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                {loadingDescription}
+                {resolvedLoadingDescription}
               </p>
             </div>
           </div>
@@ -143,9 +151,9 @@ export function DataTable<TItem>({
           <EmptyState
             action={emptyAction}
             className="min-h-56"
-            description={emptyDescription}
+            description={resolvedEmptyDescription}
             icon={problem ? AlertTriangle : Table2}
-            title={emptyTitle}
+            title={resolvedEmptyTitle}
           />
         ) : (
           <Table className={tableClassName}>

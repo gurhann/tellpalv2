@@ -22,6 +22,7 @@ import {
 import { useUploadAsset } from "@/features/assets/mutations/use-upload-asset";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import type { UploadableAssetKind } from "@/features/assets/api/asset-admin";
+import { useI18n } from "@/i18n/locale-provider";
 
 type AssetUploadDialogProps = {
   open: boolean;
@@ -31,21 +32,6 @@ type AssetUploadDialogProps = {
   title?: string;
   description?: string;
 };
-
-const assetKindOptions = [
-  {
-    value: "ORIGINAL_IMAGE" as const,
-    label: "Original image",
-    accept: "image/*",
-    helper: "Upload source illustrations, covers, or raw artwork.",
-  },
-  {
-    value: "ORIGINAL_AUDIO" as const,
-    label: "Original audio",
-    accept: "audio/*",
-    helper: "Upload source narration or original long-form audio.",
-  },
-];
 
 function inferMimeType(file: File) {
   if (file.type) {
@@ -98,6 +84,69 @@ export function AssetUploadDialog({
   title = "Upload asset",
   description = "Upload original image or audio files directly into Firebase Storage. The backend signs the upload request, and finalize registers the new asset in the media library.",
 }: AssetUploadDialogProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          defaultTitle: "Asset yükle",
+          defaultDescription:
+            "Orijinal görsel veya ses dosyalarını doğrudan Firebase Storage'a yükleyin. Backend yükleme isteğini imzalar ve finalize adımı yeni asset'i medya kütüphanesine kaydeder.",
+          kind: "Asset türü",
+          file: "Dosya",
+          chooseFile: "Yüklemeye başlamadan önce bir dosya seçin.",
+          unsupportedMime:
+            "Tarayıcı seçilen dosya için desteklenen bir MIME türü çıkaramadı.",
+          imageRequired:
+            "Orijinal görsel yüklemeleri bir görsel dosyası gerektirir.",
+          audioRequired: "Orijinal ses yüklemeleri bir ses dosyası gerektirir.",
+          progress: "Yükleme ilerlemesi",
+          invalidTitle: "Yükleme isteği geçersiz",
+          cancel: "İptal",
+          uploading: "Yükleniyor",
+          upload: "Asset yükle",
+          unknownMime: "Bilinmeyen MIME türü",
+        }
+      : {
+          defaultTitle: "Upload asset",
+          defaultDescription:
+            "Upload original image or audio files directly into Firebase Storage. The backend signs the upload request, and finalize registers the new asset in the media library.",
+          kind: "Asset kind",
+          file: "File",
+          chooseFile: "Choose a file before starting the upload.",
+          unsupportedMime:
+            "The browser could not infer a supported MIME type from the selected file.",
+          imageRequired: "Original image uploads require an image file.",
+          audioRequired: "Original audio uploads require an audio file.",
+          progress: "Upload progress",
+          invalidTitle: "Upload request is invalid",
+          cancel: "Cancel",
+          uploading: "Uploading",
+          upload: "Upload asset",
+          unknownMime: "Unknown MIME type",
+        };
+  const assetKindOptions = useMemo(
+    () => [
+      {
+        value: "ORIGINAL_IMAGE" as const,
+        label: locale === "tr" ? "Orijinal görsel" : "Original image",
+        accept: "image/*",
+        helper:
+          locale === "tr"
+            ? "Kaynak illüstrasyonları, kapakları veya ham görsel çalışmaları yükleyin."
+            : "Upload source illustrations, covers, or raw artwork.",
+      },
+      {
+        value: "ORIGINAL_AUDIO" as const,
+        label: locale === "tr" ? "Orijinal ses" : "Original audio",
+        accept: "audio/*",
+        helper:
+          locale === "tr"
+            ? "Kaynak anlatımı veya özgün uzun form ses dosyasını yükleyin."
+            : "Upload source narration or original long-form audio.",
+      },
+    ],
+    [locale],
+  );
   const [selectedKind, setSelectedKind] = useState<
     "ORIGINAL_IMAGE" | "ORIGINAL_AUDIO"
   >(fixedKind ?? "ORIGINAL_IMAGE");
@@ -116,7 +165,7 @@ export function AssetUploadDialog({
   const resetUploadMutation = uploadMutation.reset;
   const selectedKindOption = useMemo(
     () => assetKindOptions.find((option) => option.value === selectedKind)!,
-    [selectedKind],
+    [assetKindOptions, selectedKind],
   );
   const kindIsLocked = fixedKind !== undefined;
 
@@ -137,15 +186,13 @@ export function AssetUploadDialog({
 
   async function handleSubmit() {
     if (!selectedFile) {
-      setValidationMessage("Choose a file before starting the upload.");
+      setValidationMessage(copy.chooseFile);
       return;
     }
 
     const mimeType = inferMimeType(selectedFile);
     if (!mimeType) {
-      setValidationMessage(
-        "The browser could not infer a supported MIME type from the selected file.",
-      );
+      setValidationMessage(copy.unsupportedMime);
       return;
     }
 
@@ -153,7 +200,7 @@ export function AssetUploadDialog({
       selectedKind === "ORIGINAL_IMAGE" &&
       !mimeType.toLowerCase().startsWith("image/")
     ) {
-      setValidationMessage("Original image uploads require an image file.");
+      setValidationMessage(copy.imageRequired);
       return;
     }
 
@@ -161,7 +208,7 @@ export function AssetUploadDialog({
       selectedKind === "ORIGINAL_AUDIO" &&
       !mimeType.toLowerCase().startsWith("audio/")
     ) {
-      setValidationMessage("Original audio uploads require an audio file.");
+      setValidationMessage(copy.audioRequired);
       return;
     }
 
@@ -182,8 +229,15 @@ export function AssetUploadDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogTitle>
+            {title === "Upload asset" ? copy.defaultTitle : title}
+          </DialogTitle>
+          <DialogDescription>
+            {description ===
+            "Upload original image or audio files directly into Firebase Storage. The backend signs the upload request, and finalize registers the new asset in the media library."
+              ? copy.defaultDescription
+              : description}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -200,7 +254,7 @@ export function AssetUploadDialog({
                 className="text-sm font-medium text-foreground"
                 htmlFor="asset-upload-kind"
               >
-                Asset kind
+                {copy.kind}
               </label>
               <Select
                 value={selectedKind}
@@ -230,7 +284,7 @@ export function AssetUploadDialog({
               className="text-sm font-medium text-foreground"
               htmlFor="asset-upload-file"
             >
-              File
+              {copy.file}
             </label>
             <Input
               id="asset-upload-file"
@@ -248,7 +302,7 @@ export function AssetUploadDialog({
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
               <p className="font-medium text-foreground">{selectedFile.name}</p>
               <p className="mt-1">
-                {inferMimeType(selectedFile) ?? "Unknown MIME type"} /{" "}
+                {inferMimeType(selectedFile) ?? copy.unknownMime} /{" "}
                 {formatByteSize(selectedFile.size)}
               </p>
             </div>
@@ -257,7 +311,7 @@ export function AssetUploadDialog({
           {uploadMutation.isPending ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Upload progress</span>
+                <span>{copy.progress}</span>
                 <span>{progress}%</span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -272,7 +326,7 @@ export function AssetUploadDialog({
           {validationMessage ? (
             <ProblemAlert
               description={validationMessage}
-              title="Upload request is invalid"
+              title={copy.invalidTitle}
             />
           ) : null}
 
@@ -288,7 +342,7 @@ export function AssetUploadDialog({
             onClick={() => handleOpenChange(false)}
             disabled={uploadMutation.isPending}
           >
-            Cancel
+            {copy.cancel}
           </Button>
           <Button
             type="button"
@@ -298,12 +352,12 @@ export function AssetUploadDialog({
             {uploadMutation.isPending ? (
               <>
                 <LoaderCircle className="size-4 animate-spin" />
-                Uploading
+                {copy.uploading}
               </>
             ) : (
               <>
                 <UploadCloud className="size-4" />
-                Upload asset
+                {copy.upload}
               </>
             )}
           </Button>

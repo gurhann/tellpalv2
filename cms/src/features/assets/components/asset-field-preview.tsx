@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import { useAssetPreview } from "@/features/assets/queries/use-asset-preview";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 type AssetFieldPreviewProps = {
@@ -20,6 +21,7 @@ export function AssetFieldPreview({
   asset,
   className,
 }: AssetFieldPreviewProps) {
+  const { t } = useI18n();
   const preview = useAssetPreview(asset, true);
   const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null);
   const hasMediaLoadError =
@@ -63,32 +65,32 @@ export function AssetFieldPreview({
             <AlertTriangle className="size-3.5" />
           )}
           {asset.previewKind === "image"
-            ? "Image preview"
+            ? t("assets.previewKind.image")
             : asset.previewKind === "audio"
-              ? "Audio preview"
-              : "Preview unavailable"}
+              ? t("assets.previewKind.audio")
+              : t("assets.previewKind.unavailable")}
         </span>
       </div>
 
       {!asset.isPreviewable ? (
         <p className="mt-3 text-sm text-muted-foreground">
-          Preview is unavailable for archive assets in context fields.
+          {t("assets.previewUnavailableArchiveDescription")}
         </p>
       ) : preview.previewStatus === "loading" ? (
         <div className="mt-4 flex items-center gap-2 rounded-2xl border border-dashed border-border/70 bg-background/90 px-4 py-5 text-sm text-muted-foreground">
           <LoaderCircle className="size-4 animate-spin" />
-          Preparing a fresh signed preview URL...
+          {t("assets.previewLoadingDescription")}
         </div>
       ) : preview.previewStatus === "error" || hasMediaLoadError ? (
         <div className="mt-4 rounded-2xl border border-destructive/40 bg-destructive/5 p-4">
           <p className="text-sm font-medium text-destructive">
-            Preview could not be loaded
+            {t("assets.previewLoadFailedTitle")}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
             {hasMediaLoadError
-              ? "The browser could not render the current signed URL."
+              ? t("assets.previewLoadBrowserDescription")
               : (preview.previewErrorMessage ??
-                "The preview request failed before the browser could load the asset.")}
+                t("assets.previewLoadFailedDescription"))}
           </p>
           <Button
             type="button"
@@ -97,14 +99,14 @@ export function AssetFieldPreview({
             onClick={() => void handleRetryPreview()}
             disabled={preview.isRefreshing}
           >
-            Retry preview
+            {t("assets.retryPreview")}
           </Button>
         </div>
       ) : asset.previewKind === "image" && preview.previewUrl ? (
         <div className="mt-4 overflow-hidden rounded-2xl border border-border/70 bg-background/90 p-3">
           <div className="flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/15 p-3">
             <img
-              alt={`Preview of asset #${asset.id}`}
+              alt={t("assets.imageAlt", { assetId: asset.id })}
               className="max-h-56 w-full rounded-lg object-contain"
               loading="lazy"
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
@@ -115,7 +117,7 @@ export function AssetFieldPreview({
       ) : asset.previewKind === "audio" && preview.previewUrl ? (
         <div className="mt-4 rounded-2xl border border-border/70 bg-background/90 p-3">
           <audio
-            aria-label={`Audio preview for asset #${asset.id}`}
+            aria-label={t("assets.audioAria", { assetId: asset.id })}
             className="w-full"
             controls
             onError={() => setFailedPreviewUrl(preview.previewUrl)}
@@ -129,7 +131,7 @@ export function AssetFieldPreview({
         </div>
       ) : (
         <p className="mt-3 text-sm text-muted-foreground">
-          No preview URL is ready yet for this asset.
+          {t("assets.previewUnavailableDescription")}
         </p>
       )}
     </div>

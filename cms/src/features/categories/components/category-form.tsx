@@ -25,6 +25,7 @@ import {
   mapCategoryResponseToFormValues,
   type CategoryFormValues,
 } from "@/features/categories/schema/category-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
@@ -39,30 +40,49 @@ type CategoryFormProps = {
   pendingLabel?: string;
 };
 
-function getCategoryTypeGuidance(type: CategoryFormValues["type"]) {
+function getCategoryTypeGuidance(
+  type: CategoryFormValues["type"],
+  locale: "en" | "tr",
+) {
   const guidanceByType: Record<
     CategoryFormValues["type"],
     { title: string; description: string }
   > = {
     STORY: {
-      title: "Story category workflow",
+      title:
+        locale === "tr" ? "Hikaye kategori akışı" : "Story category workflow",
       description:
-        "Story categories curate only STORY records. Localization workspaces publish the category itself, and curation will later accept only story content in matching languages.",
+        locale === "tr"
+          ? "Hikaye kategorileri yalnızca STORY kayıtlarını küratör eder. Yerelleştirme çalışma alanları kategorinin kendisini yayınlar; kürasyon daha sonra yalnızca eşleşen dillerde hikaye içeriklerini kabul eder."
+          : "Story categories curate only STORY records. Localization workspaces publish the category itself, and curation will later accept only story content in matching languages.",
     },
     AUDIO_STORY: {
-      title: "Audio story category workflow",
+      title:
+        locale === "tr"
+          ? "Sesli hikaye kategori akışı"
+          : "Audio story category workflow",
       description:
-        "Audio story categories are reserved for AUDIO_STORY records. Use this when editorial grouping and future curation should stay limited to narrated long-form audio content.",
+        locale === "tr"
+          ? "Sesli hikaye kategorileri AUDIO_STORY kayıtlarına ayrılmıştır. Editoryal gruplama ve gelecekteki kürasyon anlatımlı uzun form ses içerikleriyle sınırlı kalacaksa bunu kullanın."
+          : "Audio story categories are reserved for AUDIO_STORY records. Use this when editorial grouping and future curation should stay limited to narrated long-form audio content.",
     },
     MEDITATION: {
-      title: "Meditation category workflow",
+      title:
+        locale === "tr"
+          ? "Meditasyon kategori akışı"
+          : "Meditation category workflow",
       description:
-        "Meditation categories curate only MEDITATION records. Keep the type aligned here so future curation and discovery screens cannot mix in other content families.",
+        locale === "tr"
+          ? "Meditasyon kategorileri yalnızca MEDITATION kayıtlarını küratör eder. Gelecekteki kürasyon ve keşif ekranları diğer içerik ailelerini karıştırmasın diye türü burada hizalı tutun."
+          : "Meditation categories curate only MEDITATION records. Keep the type aligned here so future curation and discovery screens cannot mix in other content families.",
     },
     LULLABY: {
-      title: "Lullaby category workflow",
+      title:
+        locale === "tr" ? "Ninni kategori akışı" : "Lullaby category workflow",
       description:
-        "Lullaby categories curate only LULLABY records. Localization and curation will stay scoped to lullaby-ready editorial collections across supported languages.",
+        locale === "tr"
+          ? "Ninni kategorileri yalnızca LULLABY kayıtlarını küratör eder. Yerelleştirme ve kürasyon desteklenen dillerde ninniye hazır editoryal koleksiyonlarla sınırlı kalır."
+          : "Lullaby categories curate only LULLABY records. Localization and curation will stay scoped to lullaby-ready editorial collections across supported languages.",
     },
   };
 
@@ -82,11 +102,70 @@ export function CategoryForm({
   initialValues,
   onSuccess,
   onCancel,
-  submitLabel = mode === "create" ? "Create category" : "Save metadata",
-  pendingLabel = mode === "create"
-    ? "Creating category..."
-    : "Saving metadata...",
+  submitLabel,
+  pendingLabel,
 }: CategoryFormProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          submitLabel:
+            mode === "create" ? "Kategori oluştur" : "Metadata kaydet",
+          pendingLabel:
+            mode === "create"
+              ? "Kategori oluşturuluyor..."
+              : "Metadata kaydediliyor...",
+          createLoading: "Kategori kaydı oluşturuluyor...",
+          updateLoading: "Kategori metadata'sı kaydediliyor...",
+          createSuccess: "Kategori kaydı oluşturuldu.",
+          updateSuccess: "Kategori metadata'sı kaydedildi.",
+          slugDuplicate: "Slug zaten kullanılıyor.",
+          genericSaveError:
+            "Kategori değişiklikleri kaydedilemedi. Tekrar deneyin.",
+          categoryType: "Kategori türü",
+          selectCategoryType: "Kategori türü seçin",
+          typeFixed:
+            "Kategori türü bu kategorinin hangi içerik ailesini küratör edebileceğini belirler. Bu form slug, premium ve aktiflik durumunu günceller; tür oluşturulduktan sonra sabit kalır.",
+          slug: "Slug",
+          access: "Erişim",
+          standard: "Standart",
+          premium: "Premium",
+          premiumHelp:
+            "Premium kategoriler admin listeleri ve detay ekranlarında yine de düzenlenebilir.",
+          availability: "Erişim durumu",
+          active: "Aktif",
+          inactive: "Pasif",
+          inactiveHelp:
+            "Pasif kategoriler editoryal temizlik için admin okuma ekranlarında görünmeye devam eder.",
+          cancel: "İptal",
+        }
+      : {
+          submitLabel: mode === "create" ? "Create category" : "Save metadata",
+          pendingLabel:
+            mode === "create" ? "Creating category..." : "Saving metadata...",
+          createLoading: "Creating category record...",
+          updateLoading: "Saving category metadata...",
+          createSuccess: "Category record created.",
+          updateSuccess: "Category metadata saved.",
+          slugDuplicate: "Slug is already in use.",
+          genericSaveError: "Category changes could not be saved. Try again.",
+          categoryType: "Category type",
+          selectCategoryType: "Select category type",
+          typeFixed:
+            "Category type determines which content family this category is allowed to curate. This form updates slug, premium, and active state while keeping type fixed after creation.",
+          slug: "Slug",
+          access: "Access",
+          standard: "Standard",
+          premium: "Premium",
+          premiumHelp:
+            "Premium categories can still be edited in admin lists and detail views.",
+          availability: "Availability",
+          active: "Active",
+          inactive: "Inactive",
+          inactiveHelp:
+            "Inactive categories still appear in admin read screens for editorial cleanup.",
+          cancel: "Cancel",
+        };
   const form = useZodForm<CategoryFormValues>({
     schema: categoryFormSchema,
     defaultValues: initialValues,
@@ -104,7 +183,7 @@ export function CategoryForm({
         },
   );
   const selectedType = form.watch("type");
-  const guidance = getCategoryTypeGuidance(selectedType);
+  const guidance = getCategoryTypeGuidance(selectedType, locale);
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -120,14 +199,8 @@ export function CategoryForm({
       const savedCategory = await toastMutation(
         saveMutation.mutateAsync(values),
         {
-          loading:
-            mode === "create"
-              ? "Creating category record..."
-              : "Saving category metadata...",
-          success:
-            mode === "create"
-              ? "Category record created."
-              : "Category metadata saved.",
+          loading: mode === "create" ? copy.createLoading : copy.updateLoading,
+          success: mode === "create" ? copy.createSuccess : copy.updateSuccess,
         },
       );
 
@@ -137,7 +210,7 @@ export function CategoryForm({
         if (error.problem.errorCode === "duplicate_category_slug") {
           form.setError("slug", {
             type: "server",
-            message: "Slug is already in use.",
+            message: copy.slugDuplicate,
           });
           return;
         }
@@ -148,7 +221,7 @@ export function CategoryForm({
 
       form.setError("root.serverError", {
         type: "server",
-        message: "Category changes could not be saved. Try again.",
+        message: copy.genericSaveError,
       });
     }
   }
@@ -166,7 +239,7 @@ export function CategoryForm({
         {mode === "create" ? (
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
-              Category type
+              {copy.categoryType}
             </label>
             <Controller
               control={form.control}
@@ -179,10 +252,10 @@ export function CategoryForm({
                 >
                   <SelectTrigger
                     aria-invalid={Boolean(form.formState.errors.type)}
-                    aria-label="Category type"
+                    aria-label={copy.categoryType}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Select category type" />
+                    <SelectValue placeholder={copy.selectCategoryType} />
                   </SelectTrigger>
                   <SelectContent>
                     {categoryTypeOptions.map((option) => (
@@ -198,7 +271,9 @@ export function CategoryForm({
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-foreground">Category type</p>
+            <p className="text-sm font-medium text-foreground">
+              {copy.categoryType}
+            </p>
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
               <p className="text-sm font-medium text-foreground">
                 {categoryTypeOptions.find(
@@ -206,9 +281,7 @@ export function CategoryForm({
                 )?.label ?? selectedType}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Category type determines which content family this category is
-                allowed to curate. This form updates slug, premium, and active
-                state while keeping type fixed after creation.
+                {copy.typeFixed}
               </p>
             </div>
           </div>
@@ -216,7 +289,7 @@ export function CategoryForm({
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground" htmlFor="slug">
-            Slug
+            {copy.slug}
           </label>
           <Input
             id="slug"
@@ -228,7 +301,9 @@ export function CategoryForm({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Access</label>
+          <label className="text-sm font-medium text-foreground">
+            {copy.access}
+          </label>
           <Controller
             control={form.control}
             name="premium"
@@ -238,25 +313,22 @@ export function CategoryForm({
                 value={field.value ? "true" : "false"}
                 onValueChange={(value) => field.onChange(value === "true")}
               >
-                <SelectTrigger aria-label="Access" className="w-full">
+                <SelectTrigger aria-label={copy.access} className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="false">Standard</SelectItem>
-                  <SelectItem value="true">Premium</SelectItem>
+                  <SelectItem value="false">{copy.standard}</SelectItem>
+                  <SelectItem value="true">{copy.premium}</SelectItem>
                 </SelectContent>
               </Select>
             )}
           />
-          <p className="text-sm text-muted-foreground">
-            Premium categories can still be edited in admin lists and detail
-            views.
-          </p>
+          <p className="text-sm text-muted-foreground">{copy.premiumHelp}</p>
         </div>
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
-            Availability
+            {copy.availability}
           </label>
           <Controller
             control={form.control}
@@ -267,20 +339,20 @@ export function CategoryForm({
                 value={field.value ? "true" : "false"}
                 onValueChange={(value) => field.onChange(value === "true")}
               >
-                <SelectTrigger aria-label="Availability" className="w-full">
+                <SelectTrigger
+                  aria-label={copy.availability}
+                  className="w-full"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="true">Active</SelectItem>
-                  <SelectItem value="false">Inactive</SelectItem>
+                  <SelectItem value="true">{copy.active}</SelectItem>
+                  <SelectItem value="false">{copy.inactive}</SelectItem>
                 </SelectContent>
               </Select>
             )}
           />
-          <p className="text-sm text-muted-foreground">
-            Inactive categories still appear in admin read screens for editorial
-            cleanup.
-          </p>
+          <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
       </div>
 
@@ -299,14 +371,14 @@ export function CategoryForm({
             onClick={onCancel}
             disabled={saveMutation.isPending}
           >
-            Cancel
+            {copy.cancel}
           </Button>
         ) : null}
         <SubmitButton
           isPending={saveMutation.isPending}
-          pendingLabel={pendingLabel}
+          pendingLabel={pendingLabel ?? copy.pendingLabel}
         >
-          {submitLabel}
+          {submitLabel ?? copy.submitLabel}
         </SubmitButton>
       </div>
     </form>

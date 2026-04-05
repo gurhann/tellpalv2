@@ -9,75 +9,82 @@ import {
   Workflow,
 } from "lucide-react";
 
+import type { TranslationKey } from "@/i18n/messages";
+
 export type CmsNavigationItem = {
-  label: string;
-  description: string;
+  labelKey: TranslationKey;
+  descriptionKey: TranslationKey;
   path: string;
   icon: LucideIcon;
 };
 
+type RouteMeta = {
+  titleKey: TranslationKey;
+  eyebrowKey: TranslationKey;
+  descriptionKey: TranslationKey;
+};
+
 export const cmsNavigationItems: CmsNavigationItem[] = [
   {
-    label: "Contents",
-    description: "Editorial records and localization flows.",
+    labelKey: "nav.contents.label",
+    descriptionKey: "nav.contents.description",
     path: "/contents",
     icon: BookOpenText,
   },
   {
-    label: "Categories",
-    description: "Category metadata and curation workspaces.",
+    labelKey: "nav.categories.label",
+    descriptionKey: "nav.categories.description",
     path: "/categories",
     icon: FolderKanban,
   },
   {
-    label: "Contributors",
-    description: "Credits, names, roles, and assignments.",
+    labelKey: "nav.contributors.label",
+    descriptionKey: "nav.contributors.description",
     path: "/contributors",
     icon: Users,
   },
   {
-    label: "Free Access",
-    description: "Access keys and grant visibility.",
+    labelKey: "nav.freeAccess.label",
+    descriptionKey: "nav.freeAccess.description",
     path: "/free-access",
     icon: Sparkles,
   },
   {
-    label: "Media",
-    description: "Advanced asset registry, previews, and debug.",
+    labelKey: "nav.media.label",
+    descriptionKey: "nav.media.description",
     path: "/media",
     icon: Image,
   },
   {
-    label: "Media Processing",
-    description: "Packaging state and retry operations.",
+    labelKey: "nav.mediaProcessing.label",
+    descriptionKey: "nav.mediaProcessing.description",
     path: "/media-processing",
     icon: Workflow,
   },
 ];
 
-export function getRouteMeta(pathname: string) {
+export function getRouteMeta(pathname: string): RouteMeta {
   if (pathname.startsWith("/contents/") && pathname.endsWith("/story-pages")) {
     return {
-      title: "Story Pages",
-      eyebrow: "Contents",
-      description: "Manage story page structure and localized page payloads.",
+      titleKey: "route.storyPages.title",
+      eyebrowKey: "nav.contents.label",
+      descriptionKey: "route.storyPages.description",
     };
   }
 
   if (pathname.startsWith("/contents/")) {
     return {
-      title: "Content Detail",
-      eyebrow: "Contents",
-      description:
-        "Edit core metadata, localizations, and publication actions.",
+      titleKey: "route.contentsDetail.title",
+      eyebrowKey: "nav.contents.label",
+      descriptionKey: "route.contentsDetail.description",
     };
   }
 
   if (pathname.startsWith("/categories/")) {
     return {
-      title: "Category Detail",
-      eyebrow: "Categories",
-      description: "Manage category metadata, localizations, and curation.",
+      titleKey: "route.categoryDetail.title",
+      eyebrowKey: "nav.categories.label",
+      descriptionKey: "route.categoryDetail.description",
     };
   }
 
@@ -87,16 +94,16 @@ export function getRouteMeta(pathname: string) {
 
   if (directMatch) {
     return {
-      title: directMatch.label,
-      eyebrow: "TellPal CMS",
-      description: directMatch.description,
+      titleKey: directMatch.labelKey,
+      eyebrowKey: "layout.brand",
+      descriptionKey: directMatch.descriptionKey,
     };
   }
 
   return {
-    title: "Workspace",
-    eyebrow: "TellPal CMS",
-    description: "Admin route skeleton for the CMS workspace.",
+    titleKey: "route.workspace.title",
+    eyebrowKey: "layout.brand",
+    descriptionKey: "route.workspace.description",
   };
 }
 

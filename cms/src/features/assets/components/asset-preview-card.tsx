@@ -10,33 +10,15 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
 import { useAssetPreview } from "@/features/assets/queries/use-asset-preview";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
+import { useI18n } from "@/i18n/locale-provider";
 
 type AssetPreviewCardProps = {
   asset: AssetViewModel;
   open: boolean;
 };
 
-function formatTimestamp(value: string | null) {
-  if (!value) {
-    return "Not available";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return date.toLocaleString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
+  const { t, formatDateTime } = useI18n();
   const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null);
   const preview = useAssetPreview(asset, open);
   const hasMediaLoadError =
@@ -51,11 +33,10 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
     <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
       <div className="mb-4 space-y-1">
         <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-          Preview
+          {t("assets.previewTitle")}
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          Inspect image assets inline or play audio assets directly from the
-          signed Firebase download URL snapshot.
+          {t("assets.previewDescription")}
         </p>
       </div>
 
@@ -69,28 +50,50 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
             <AlertTriangle className="size-4" />
           )}
           {asset.previewKind === "image"
-            ? "Image preview"
+            ? t("assets.previewKind.image")
             : asset.previewKind === "audio"
-              ? "Audio preview"
-              : "Preview unavailable"}
+              ? t("assets.previewKind.audio")
+              : t("assets.previewKind.unavailable")}
         </span>
         <span>
-          Last refreshed: {formatTimestamp(asset.downloadUrlCachedAt)}
+          {t("assets.previewLastRefreshed", {
+            value: asset.downloadUrlCachedAt
+              ? formatDateTime(asset.downloadUrlCachedAt, {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : t("assets.notAvailable"),
+          })}
         </span>
-        <span>Expires: {formatTimestamp(asset.downloadUrlExpiresAt)}</span>
+        <span>
+          {t("assets.previewExpires", {
+            value: asset.downloadUrlExpiresAt
+              ? formatDateTime(asset.downloadUrlExpiresAt, {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : t("assets.notAvailable"),
+          })}
+        </span>
       </div>
 
       {!asset.isPreviewable ? (
         <EmptyState
           className="min-h-56 rounded-2xl border border-dashed border-border/70 bg-muted/20"
-          description="Archive assets stay inspectable through metadata and cached download URL controls, but they do not render inline previews."
-          title="Preview unavailable for archive assets"
+          description={t("assets.previewUnavailableArchiveDescription")}
+          title={t("assets.previewUnavailableArchiveTitle")}
         />
       ) : preview.previewStatus === "loading" ? (
         <EmptyState
           className="min-h-56 rounded-2xl border border-dashed border-border/70 bg-muted/20"
-          description="The CMS is preparing a fresh signed URL before rendering the asset preview."
-          title="Loading preview"
+          description={t("assets.previewLoadingDescription")}
+          title={t("assets.previewLoadingTitle")}
         />
       ) : preview.previewStatus === "error" || hasMediaLoadError ? (
         <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-4">
@@ -98,13 +101,13 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
             <AlertTriangle className="mt-0.5 size-4 text-destructive" />
             <div className="min-w-0 flex-1 space-y-2">
               <div className="font-medium text-destructive">
-                Preview could not be loaded
+                {t("assets.previewLoadFailedTitle")}
               </div>
               <p className="text-sm leading-6 text-muted-foreground">
                 {hasMediaLoadError
-                  ? "The browser could not render the signed asset URL. Refresh the preview to request one more signed URL snapshot."
+                  ? t("assets.previewLoadBrowserDescription")
                   : (preview.previewErrorMessage ??
-                    "The preview request failed before the browser could load the asset.")}
+                    t("assets.previewLoadFailedDescription"))}
               </p>
               <Button
                 type="button"
@@ -115,7 +118,7 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
                 <RefreshCw
                   className={`size-4 ${preview.isRefreshing ? "animate-spin" : ""}`}
                 />
-                Retry preview
+                {t("assets.retryPreview")}
               </Button>
             </div>
           </div>
@@ -124,7 +127,7 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
         <div className="overflow-hidden rounded-2xl border border-border/70 bg-muted/20 p-4">
           <div className="flex min-h-72 items-center justify-center rounded-2xl border border-dashed border-border/70 bg-background/90 p-4">
             <img
-              alt={`Preview of asset #${asset.id}`}
+              alt={t("assets.imageAlt", { assetId: asset.id })}
               className="max-h-[26rem] w-full rounded-xl object-contain"
               loading="lazy"
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
@@ -136,7 +139,7 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
         <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
           <div className="rounded-2xl border border-dashed border-border/70 bg-background/90 p-5">
             <audio
-              aria-label={`Audio preview for asset #${asset.id}`}
+              aria-label={t("assets.audioAria", { assetId: asset.id })}
               className="w-full"
               controls
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
@@ -152,8 +155,8 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
       ) : (
         <EmptyState
           className="min-h-56 rounded-2xl border border-dashed border-border/70 bg-muted/20"
-          description="No preview URL is currently ready for this asset."
-          title="Preview unavailable"
+          description={t("assets.previewUnavailableDescription")}
+          title={t("assets.previewKind.unavailable")}
         />
       )}
     </div>

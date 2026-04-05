@@ -6,6 +6,7 @@ import {
   type LanguageBadgeTone,
 } from "@/components/language/language-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 export type LanguageTabItem = {
@@ -35,15 +36,26 @@ export function LanguageTabs({
   value,
   onValueChange,
   renderContent,
-  listLabel = "Language tabs",
-  emptyTitle = "No languages available",
-  emptyDescription = "Add or enable at least one language before opening a localized workspace.",
+  listLabel,
+  emptyTitle,
+  emptyDescription,
   className,
   listClassName,
   contentClassName,
 }: LanguageTabsProps) {
+  const { t } = useI18n();
+  const resolvedListLabel = listLabel ?? t("language.tabs.label");
+  const resolvedEmptyTitle = emptyTitle ?? t("language.emptyTitle");
+  const resolvedEmptyDescription =
+    emptyDescription ?? t("language.emptyDescription");
+
   if (items.length === 0) {
-    return <EmptyState description={emptyDescription} title={emptyTitle} />;
+    return (
+      <EmptyState
+        description={resolvedEmptyDescription}
+        title={resolvedEmptyTitle}
+      />
+    );
   }
 
   const resolvedValue =
@@ -57,7 +69,7 @@ export function LanguageTabs({
     >
       <div className="overflow-x-auto pb-2">
         <TabsList
-          aria-label={listLabel}
+          aria-label={resolvedListLabel}
           className={cn(
             "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-2xl bg-muted/30 p-2",
             listClassName,

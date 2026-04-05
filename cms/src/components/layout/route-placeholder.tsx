@@ -4,6 +4,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { useI18n } from "@/i18n/locale-provider";
 
 type RoutePlaceholderProps = {
   eyebrow: string;
@@ -18,6 +19,8 @@ export function RoutePlaceholder({
   description,
   highlights,
 }: RoutePlaceholderProps) {
+  const { t } = useI18n();
+
   return (
     <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
       <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
@@ -35,11 +38,10 @@ export function RoutePlaceholder({
         <CardContent>
           <div className="rounded-3xl border border-dashed border-border/80 bg-muted/30 p-5">
             <p className="text-sm font-medium text-foreground">
-              This page is intentionally minimal.
+              {t("placeholder.minimalTitle")}
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              The route shell is in place and can be expanded with module
-              specific data, forms, and backend actions as the workspace grows.
+              {t("placeholder.minimalDescription")}
             </p>
           </div>
         </CardContent>
@@ -48,10 +50,10 @@ export function RoutePlaceholder({
       <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
         <CardHeader>
           <h2 className="font-heading text-xl font-medium">
-            Available responsibilities
+            {t("placeholder.responsibilitiesTitle")}
           </h2>
           <CardDescription>
-            This route is intended to host the following capabilities.
+            {t("placeholder.responsibilitiesDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent>

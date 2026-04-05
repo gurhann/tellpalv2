@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import { cmsNavigationItems } from "@/app/navigation";
+import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 type SideNavProps = {
@@ -8,15 +9,19 @@ type SideNavProps = {
 };
 
 export function SideNav({ onNavigate }: SideNavProps) {
+  const { t } = useI18n();
+
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border/70 px-5 py-6">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-          TellPal CMS
+          {t("layout.brand")}
         </p>
-        <h1 className="mt-2 text-lg font-semibold">Editorial Workspace</h1>
+        <h1 className="mt-2 text-lg font-semibold">
+          {t("layout.workspaceTitle")}
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Route skeleton for the CMS shell, navigation, and protected layout.
+          {t("layout.workspaceDescription")}
         </p>
       </div>
 
@@ -51,7 +56,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                     <Icon className="size-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-medium">{item.label}</div>
+                    <div className="font-medium">{t(item.labelKey)}</div>
                     <div
                       className={cn(
                         "mt-1 text-xs leading-5",
@@ -60,7 +65,7 @@ export function SideNav({ onNavigate }: SideNavProps) {
                           : "text-muted-foreground",
                       )}
                     >
-                      {item.description}
+                      {t(item.descriptionKey)}
                     </div>
                   </div>
                 </>

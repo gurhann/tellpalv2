@@ -34,6 +34,7 @@ import {
   processingStatusOptions,
   type ContentLocalizationFormValues,
 } from "@/features/contents/schema/content-localization-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
@@ -75,24 +76,6 @@ function getLanguageLabel(
   );
 }
 
-function getGenericActionProblem(error: unknown): ApiProblemDetail {
-  if (error instanceof Error && error.message.trim().length > 0) {
-    return {
-      type: "about:blank",
-      title: "Request failed",
-      status: 500,
-      detail: error.message,
-    };
-  }
-
-  return {
-    type: "about:blank",
-    title: "Request failed",
-    status: 500,
-    detail: "Localization changes could not be saved. Try again.",
-  };
-}
-
 export function ContentLocalizationForm({
   content,
   mode,
@@ -102,6 +85,99 @@ export function ContentLocalizationForm({
   onSuccess,
   onCancel,
 }: ContentLocalizationFormProps) {
+  const { locale } = useI18n();
+  const copy =
+    locale === "tr"
+      ? {
+          genericSaveError:
+            "Yerelleştirme değişiklikleri kaydedilemedi. Tekrar deneyin.",
+          createLoading: "Yerelleştirme oluşturuluyor...",
+          updateLoading: "Yerelleştirme kaydediliyor...",
+          createSuccess: "Yerelleştirme oluşturuldu.",
+          updateSuccess: "Yerelleştirme kaydedildi.",
+          languageExists: "Bu içerik için bu dil zaten var.",
+          language: "Dil",
+          selectLanguage: "Dil seçin",
+          localeCode: "Dil kodu",
+          title: "Başlık",
+          localizedTitle: "Yerelleştirilmiş başlık",
+          description: "Açıklama",
+          localizedDescription: "Bu dil için kısa editoryal özet",
+          storyGuidance:
+            "Hikaye yerelleştirmeleri anlatı metnini ve sayfa bazlı sesi story pages alt rotasında tutar. Bu form yalnızca içerik seviyesinde yaşayan dil metadata'sını, durumu ve asset bağlantılarını düzenler.",
+          bodyText: "Gövde metni",
+          localizedBody: "Yerelleştirilmiş gövde metni",
+          audioDescription:
+            "Bu yerelleştirme için yeni bir ses dosyası yükleyin veya mevcut `AUDIO` asset'leri buradan seçin.",
+          audioLabel: "Ses asset'i *",
+          audioPickerDescription:
+            "Bu içerik yerelleştirmesi için son ses asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
+          audioPickerTitle: "Yerelleştirme ses asset'i seç",
+          coverDescription:
+            "Kapak görselini buradan yükleyin veya editörden çıkmadan mevcut `IMAGE` asset'lerini seçin.",
+          coverLabel: "Kapak asset'i",
+          coverPickerDescription:
+            "Yerelleştirilmiş kapak için son görsel asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
+          coverPickerTitle: "Yerelleştirme kapak asset'i seç",
+          durationMinutes: "Süre (dakika)",
+          status: "Durum",
+          selectStatus: "Durum seçin",
+          processingStatus: "İşleme durumu",
+          selectProcessingStatus: "İşleme durumu seçin",
+          publishedAt: "Yayınlanma zamanı",
+          publishedHelp:
+            "Yayınlama için zaman damgası gerekir. Mevcut bir dil kaydını geriye dönük doldururken veya manuel yayın penceresi hazırlarken bunu kullanın.",
+          cancel: "İptal",
+          createLocalization: "Yerelleştirme oluştur",
+          saveLocalization: "Yerelleştirmeyi kaydet",
+          optional: "Opsiyonel",
+          required: "Zorunlu",
+        }
+      : {
+          genericSaveError:
+            "Localization changes could not be saved. Try again.",
+          createLoading: "Creating localization...",
+          updateLoading: "Saving localization...",
+          createSuccess: "Localization created.",
+          updateSuccess: "Localization saved.",
+          languageExists: "Language already exists for this content.",
+          language: "Language",
+          selectLanguage: "Select language",
+          localeCode: "Locale code",
+          title: "Title",
+          localizedTitle: "Localized title",
+          description: "Description",
+          localizedDescription: "Short editorial summary for this locale",
+          storyGuidance:
+            "Story localizations keep narrative copy and per-page audio on the story pages child route. This form only edits locale metadata, status, and asset bindings that live at content level.",
+          bodyText: "Body text",
+          localizedBody: "Localized body copy",
+          audioDescription:
+            "Upload a new audio file here or browse existing `AUDIO` assets for this localization.",
+          audioLabel: "Audio asset *",
+          audioPickerDescription:
+            "Select a recent audio asset for this content localization. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+          audioPickerTitle: "Pick localization audio asset",
+          coverDescription:
+            "Upload a cover image here or browse existing `IMAGE` assets without leaving this editor.",
+          coverLabel: "Cover asset",
+          coverPickerDescription:
+            "Select a recent image asset for the localized cover. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+          coverPickerTitle: "Pick localization cover asset",
+          durationMinutes: "Duration minutes",
+          status: "Status",
+          selectStatus: "Select status",
+          processingStatus: "Processing status",
+          selectProcessingStatus: "Select processing status",
+          publishedAt: "Published at",
+          publishedHelp:
+            "Publishing requires a timestamp. Use this when backfilling an existing locale or preparing a manual publish window.",
+          cancel: "Cancel",
+          createLocalization: "Create localization",
+          saveLocalization: "Save localization",
+          optional: "Optional",
+          required: "Required",
+        };
   const form = useZodForm<ContentLocalizationFormValues>({
     schema: useMemo(
       () => createContentLocalizationSchema(content.summary.type),
@@ -141,12 +217,8 @@ export function ContentLocalizationForm({
           values,
         }),
         {
-          loading:
-            mode === "create"
-              ? "Creating localization..."
-              : "Saving localization...",
-          success:
-            mode === "create" ? "Localization created." : "Localization saved.",
+          loading: mode === "create" ? copy.createLoading : copy.updateLoading,
+          success: mode === "create" ? copy.createSuccess : copy.updateSuccess,
         },
       );
 
@@ -161,7 +233,7 @@ export function ContentLocalizationForm({
         if (error.problem.errorCode === "content_localization_exists") {
           form.setError("languageCode", {
             type: "server",
-            message: "Language already exists for this content.",
+            message: copy.languageExists,
           });
           return;
         }
@@ -172,7 +244,10 @@ export function ContentLocalizationForm({
 
       form.setError("root.serverError", {
         type: "server",
-        message: getGenericActionProblem(error).detail,
+        message:
+          error instanceof Error && error.message.trim().length > 0
+            ? error.message
+            : copy.genericSaveError,
       });
     }
   }
@@ -190,7 +265,7 @@ export function ContentLocalizationForm({
         {mode === "create" ? (
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
-              Language
+              {copy.language}
             </label>
             <Controller
               control={form.control}
@@ -203,10 +278,10 @@ export function ContentLocalizationForm({
                 >
                   <SelectTrigger
                     aria-invalid={Boolean(form.formState.errors.languageCode)}
-                    aria-label="Language"
+                    aria-label={copy.language}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Select language" />
+                    <SelectValue placeholder={copy.selectLanguage} />
                   </SelectTrigger>
                   <SelectContent>
                     {availableLanguages.map((option) => (
@@ -222,13 +297,15 @@ export function ContentLocalizationForm({
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-foreground">Language</p>
+            <p className="text-sm font-medium text-foreground">
+              {copy.language}
+            </p>
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
               <p className="text-sm font-medium text-foreground">
                 {selectedLanguageLabel}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Locale code: {selectedLanguageCode.toUpperCase()}
+                {copy.localeCode}: {selectedLanguageCode.toUpperCase()}
               </p>
             </div>
           </div>
@@ -239,11 +316,11 @@ export function ContentLocalizationForm({
             className="text-sm font-medium text-foreground"
             htmlFor="title"
           >
-            Title
+            {copy.title}
           </label>
           <Input
             id="title"
-            placeholder="Localized title"
+            placeholder={copy.localizedTitle}
             {...form.register("title")}
             disabled={saveLocalization.isPending}
           />
@@ -255,11 +332,11 @@ export function ContentLocalizationForm({
             className="text-sm font-medium text-foreground"
             htmlFor="description"
           >
-            Description
+            {copy.description}
           </label>
           <Textarea
             id="description"
-            placeholder="Short editorial summary for this locale"
+            placeholder={copy.localizedDescription}
             {...form.register("description")}
             disabled={saveLocalization.isPending}
           />
@@ -268,9 +345,7 @@ export function ContentLocalizationForm({
 
         {showStoryGuidance ? (
           <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900 md:col-span-2">
-            Story localizations keep narrative copy and per-page audio on the
-            story pages child route. This form only edits locale metadata,
-            status, and asset bindings that live at content level.
+            {copy.storyGuidance}
           </div>
         ) : (
           <>
@@ -279,14 +354,14 @@ export function ContentLocalizationForm({
                 className="text-sm font-medium text-foreground"
                 htmlFor="bodyText"
               >
-                Body text
+                {copy.bodyText}
                 {requiresBodyText ? (
                   <span className="ml-1 text-destructive">*</span>
                 ) : null}
               </label>
               <Textarea
                 id="bodyText"
-                placeholder="Localized body copy"
+                placeholder={copy.localizedBody}
                 {...form.register("bodyText")}
                 disabled={saveLocalization.isPending}
               />
@@ -298,15 +373,15 @@ export function ContentLocalizationForm({
               name="audioMediaId"
               render={({ field }) => (
                 <AssetPickerField
-                  description="Upload a new audio file here or browse existing `AUDIO` assets for this localization."
+                  description={copy.audioDescription}
                   disabled={saveLocalization.isPending}
                   error={form.formState.errors.audioMediaId}
                   id="audioMediaId"
-                  label="Audio asset *"
+                  label={copy.audioLabel}
                   mediaType="AUDIO"
-                  pickerDescription="Select a recent audio asset for this content localization. Uploading from this field stays available, and manual asset ids remain under Advanced."
-                  pickerTitle="Pick localization audio asset"
-                  placeholder="Required"
+                  pickerDescription={copy.audioPickerDescription}
+                  pickerTitle={copy.audioPickerTitle}
+                  placeholder={copy.required}
                   value={field.value}
                   onChange={field.onChange}
                 />
@@ -320,15 +395,15 @@ export function ContentLocalizationForm({
           name="coverMediaId"
           render={({ field }) => (
             <AssetPickerField
-              description="Upload a cover image here or browse existing `IMAGE` assets without leaving this editor."
+              description={copy.coverDescription}
               disabled={saveLocalization.isPending}
               error={form.formState.errors.coverMediaId}
               id="coverMediaId"
-              label="Cover asset"
+              label={copy.coverLabel}
               mediaType="IMAGE"
-              pickerDescription="Select a recent image asset for the localized cover. Uploading from this field stays available, and manual asset ids remain under Advanced."
-              pickerTitle="Pick localization cover asset"
-              placeholder="Optional"
+              pickerDescription={copy.coverPickerDescription}
+              pickerTitle={copy.coverPickerTitle}
+              placeholder={copy.optional}
               value={field.value}
               onChange={field.onChange}
             />
@@ -340,12 +415,12 @@ export function ContentLocalizationForm({
             className="text-sm font-medium text-foreground"
             htmlFor="durationMinutes"
           >
-            Duration minutes
+            {copy.durationMinutes}
           </label>
           <Input
             id="durationMinutes"
             inputMode="numeric"
-            placeholder="Optional"
+            placeholder={copy.optional}
             type="number"
             {...form.register("durationMinutes", {
               setValueAs: (value) => {
@@ -362,7 +437,9 @@ export function ContentLocalizationForm({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Status</label>
+          <label className="text-sm font-medium text-foreground">
+            {copy.status}
+          </label>
           <Controller
             control={form.control}
             name="status"
@@ -374,10 +451,10 @@ export function ContentLocalizationForm({
               >
                 <SelectTrigger
                   aria-invalid={Boolean(form.formState.errors.status)}
-                  aria-label="Status"
+                  aria-label={copy.status}
                   className="w-full"
                 >
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder={copy.selectStatus} />
                 </SelectTrigger>
                 <SelectContent>
                   {localizationStatusOptions.map((option) => (
@@ -394,7 +471,7 @@ export function ContentLocalizationForm({
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
-            Processing status
+            {copy.processingStatus}
           </label>
           <Controller
             control={form.control}
@@ -407,10 +484,10 @@ export function ContentLocalizationForm({
               >
                 <SelectTrigger
                   aria-invalid={Boolean(form.formState.errors.processingStatus)}
-                  aria-label="Processing status"
+                  aria-label={copy.processingStatus}
                   className="w-full"
                 >
-                  <SelectValue placeholder="Select processing status" />
+                  <SelectValue placeholder={copy.selectProcessingStatus} />
                 </SelectTrigger>
                 <SelectContent>
                   {processingStatusOptions.map((option) => (
@@ -431,7 +508,7 @@ export function ContentLocalizationForm({
               className="text-sm font-medium text-foreground"
               htmlFor="publishedAt"
             >
-              Published at
+              {copy.publishedAt}
             </label>
             <Input
               id="publishedAt"
@@ -440,8 +517,7 @@ export function ContentLocalizationForm({
               disabled={saveLocalization.isPending}
             />
             <p className="text-sm text-muted-foreground">
-              Publishing requires a timestamp. Use this when backfilling an
-              existing locale or preparing a manual publish window.
+              {copy.publishedHelp}
             </p>
             <FieldError error={form.formState.errors.publishedAt} />
           </div>
@@ -456,18 +532,16 @@ export function ContentLocalizationForm({
             onClick={onCancel}
             disabled={saveLocalization.isPending}
           >
-            Cancel
+            {copy.cancel}
           </Button>
         ) : null}
         <SubmitButton
           isPending={saveLocalization.isPending}
           pendingLabel={
-            mode === "create"
-              ? "Creating localization..."
-              : "Saving localization..."
+            mode === "create" ? copy.createLoading : copy.updateLoading
           }
         >
-          {mode === "create" ? "Create localization" : "Save localization"}
+          {mode === "create" ? copy.createLocalization : copy.saveLocalization}
         </SubmitButton>
       </div>
     </form>
