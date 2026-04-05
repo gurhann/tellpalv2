@@ -9,6 +9,16 @@ import java.util.Optional;
 public interface AssetRegistryApi {
 
     /**
+     * Creates a signed upload request for a direct browser upload into Firebase Storage.
+     */
+    AssetUploadRequest initiateUpload(InitiateMediaAssetUploadCommand command);
+
+    /**
+     * Finalizes a direct browser upload after the object is visible in storage.
+     */
+    AssetRecord completeUpload(CompleteMediaAssetUploadCommand command);
+
+    /**
      * Registers a new media asset for a storage location that is not already known to the system.
      */
     AssetRecord register(RegisterMediaAssetCommand command);

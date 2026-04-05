@@ -53,6 +53,15 @@ tellpal:
     description: ${TELLPAL_API_DOCS_DESCRIPTION:Internal OpenAPI documentation for admin, mobile, and webhook endpoints.}
     version: ${TELLPAL_API_DOCS_VERSION:v1}
   asset:
+    storage:
+      firebase:
+        fake-client-enabled: ${TELLPAL_ASSET_STORAGE_FIREBASE_FAKE_CLIENT_ENABLED:false}
+        project-id: ${TELLPAL_ASSET_STORAGE_FIREBASE_PROJECT_ID:}
+        bucket-name: ${TELLPAL_ASSET_STORAGE_FIREBASE_BUCKET_NAME:}
+        credentials-path: ${TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_PATH:}
+        path-prefix: ${TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX:prod}
+        signed-upload-ttl: ${TELLPAL_ASSET_STORAGE_FIREBASE_SIGNED_UPLOAD_TTL:PT15M}
+        signed-download-ttl: ${TELLPAL_ASSET_STORAGE_FIREBASE_SIGNED_DOWNLOAD_TTL:PT15M}
     processing:
       poller:
         enabled: ${TELLPAL_ASSET_PROCESSING_POLLER_ENABLED:true}

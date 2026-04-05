@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AssetUploadDialog } from "@/features/assets/components/asset-upload-dialog";
 import { AssetDetailSheet } from "@/features/assets/components/asset-detail-sheet";
 import { AssetTable } from "@/features/assets/components/asset-table";
 import { useRecentAssets } from "@/features/assets/queries/use-recent-assets";
@@ -26,6 +27,7 @@ const RECENT_ASSET_LIMIT = 24;
 export function MediaRoute() {
   const [selectedAssetId, setSelectedAssetId] = useState<number | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const recentAssetsQuery = useRecentAssets(RECENT_ASSET_LIMIT);
   const assetCount = recentAssetsQuery.assets.length;
   const imageCount = recentAssetsQuery.assets.filter(
@@ -69,8 +71,8 @@ export function MediaRoute() {
               />
               Refresh
             </Button>
-            <Button type="button" disabled>
-              Select a row to inspect detail
+            <Button type="button" onClick={() => setIsUploadOpen(true)}>
+              Upload asset
             </Button>
             <Button type="button" variant="outline" disabled>
               Shared picker lives in forms
@@ -135,7 +137,8 @@ export function MediaRoute() {
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   Selecting a row now opens the live asset detail sheet.
                   Content, category, and story-page forms now reuse this module
-                  through the shared asset picker field.
+                  through the shared asset picker field. New uploads register
+                  directly into Firebase Storage and return to this recent list.
                 </div>
               </CardContent>
             </Card>
@@ -158,6 +161,14 @@ export function MediaRoute() {
         assetId={selectedAssetId}
         open={isDetailOpen}
         onOpenChange={handleOpenChange}
+      />
+      <AssetUploadDialog
+        open={isUploadOpen}
+        onOpenChange={setIsUploadOpen}
+        onUploaded={(asset) => {
+          setSelectedAssetId(asset.id);
+          setIsDetailOpen(true);
+        }}
       />
     </>
   );

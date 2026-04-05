@@ -52,6 +52,40 @@ export const contentArchiveAssetResponse: AdminAssetResponse = {
   updatedAt: "2026-03-31T11:30:00Z",
 };
 
+export const uploadedFirebaseAudioAssetResponse: AdminAssetResponse = {
+  assetId: 11,
+  provider: "FIREBASE_STORAGE",
+  objectPath:
+    "/local/manual/audio/original/2026/04/asset-11-bedtime-breeze.mp3",
+  mediaType: "AUDIO",
+  kind: "ORIGINAL_AUDIO",
+  mimeType: "audio/mpeg",
+  byteSize: 8_192,
+  checksumSha256: null,
+  cachedDownloadUrl: null,
+  downloadUrlCachedAt: null,
+  downloadUrlExpiresAt: null,
+  createdAt: "2026-04-04T18:20:00Z",
+  updatedAt: "2026-04-04T18:20:00Z",
+};
+
+export const uploadedFirebaseImageAssetResponse: AdminAssetResponse = {
+  assetId: 12,
+  provider: "FIREBASE_STORAGE",
+  objectPath:
+    "/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg",
+  mediaType: "IMAGE",
+  kind: "ORIGINAL_IMAGE",
+  mimeType: "image/jpeg",
+  byteSize: 4_096,
+  checksumSha256: null,
+  cachedDownloadUrl: null,
+  downloadUrlCachedAt: null,
+  downloadUrlExpiresAt: null,
+  createdAt: "2026-04-04T18:25:00Z",
+  updatedAt: "2026-04-04T18:25:00Z",
+};
+
 export const assetResponses: AdminAssetResponse[] = [
   phoneThumbnailAssetResponse,
   originalAudioAssetResponse,
@@ -66,6 +100,9 @@ export const originalAudioAssetViewModel = mapAdminAsset(
 );
 export const contentArchiveAssetViewModel = mapAdminAsset(
   contentArchiveAssetResponse,
+);
+export const uploadedFirebaseAudioAssetViewModel = mapAdminAsset(
+  uploadedFirebaseAudioAssetResponse,
 );
 
 export const assetViewModels: AssetViewModel[] = [

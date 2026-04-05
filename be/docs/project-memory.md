@@ -30,6 +30,7 @@ Read order:
 - `ADR-0005`: REST endpoints use OpenAPI-based documentation with operation-level summaries, auth, and core error responses.
 - `ADR-0006`: story-page illustrations are localization-scoped and resolved from `story_page_localizations`, not page roots.
 - `ADR-0007`: category type aligns with curated content type and no longer supports legacy `CONTENT` or `PARENT_GUIDANCE` values.
+- `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and direct browser uploads.
 
 ## Coding and Documentation Defaults
 
@@ -61,6 +62,8 @@ Read order:
 - Local CMS verification is easier with a mixed sample set: one story with story pages and localizations, one active non-story item, and one inactive item.
 - Story-page illustrations are now locale-scoped. Local seed data and CMS assumptions must attach illustration assets to `story_page_localizations`, not `story_pages`.
 - Category type is now content-aligned. Category seed and curation test data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`, and curated content must match the selected category type.
+- Asset runtime now expects real Firebase Storage credentials in local development. Local and production share one bucket, and environment isolation happens through the configured path prefix (`local` or `prod`).
+- Asset upload and generated processing paths are prefix-aware. New manual uploads land under `/{prefix}/manual/...`, and generated variants/packages land under `/{prefix}/content/...`.
 
 ## Review Red Flags
 

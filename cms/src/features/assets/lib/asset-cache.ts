@@ -13,7 +13,7 @@ function updateAssetListCache(
   );
 
   if (existingIndex === -1) {
-    return currentRecords;
+    return [savedAsset, ...currentRecords].slice(0, currentRecords.length || 1);
   }
 
   return currentRecords.map((record) =>

@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.web.admin;
 
 import java.util.List;
+import java.time.Instant;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tellpal.v2.asset.api.AssetKind;
+import com.tellpal.v2.asset.api.AssetUploadRequest;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
+import com.tellpal.v2.asset.api.CompleteMediaAssetUploadCommand;
+import com.tellpal.v2.asset.api.InitiateMediaAssetUploadCommand;
 import com.tellpal.v2.asset.api.RefreshMediaAssetDownloadUrlCommand;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
 import com.tellpal.v2.asset.api.UpdateMediaAssetMetadataCommand;
@@ -44,6 +48,36 @@ public class AssetAdminController {
 
     public AssetAdminController(AssetRegistryApi assetRegistryApi) {
         this.assetRegistryApi = assetRegistryApi;
+    }
+
+    @PostMapping("/uploads")
+    @Operation(
+            summary = "Initiate a direct media upload",
+            description = "Creates a Firebase Storage signed upload request for an original image or audio asset.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Signed upload request created"),
+            @ApiResponse(responseCode = "400", description = "Upload initiation request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminAssetUploadResponse initiateUpload(@Valid @RequestBody InitiateAssetUploadRequest request) {
+        return AdminAssetUploadResponse.from(assetRegistryApi.initiateUpload(request.toCommand()));
+    }
+
+    @PostMapping("/uploads/complete")
+    @Operation(
+            summary = "Complete a direct media upload",
+            description = "Validates one uploaded Firebase Storage object and registers or reuses the media asset record.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Uploaded media asset finalized"),
+            @ApiResponse(responseCode = "400", description = "Upload completion request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Uploaded object was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Uploaded object metadata does not match the signed upload request", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminAssetResponse completeUpload(@Valid @RequestBody CompleteAssetUploadRequest request) {
+        return AdminAssetResponse.from(assetRegistryApi.completeUpload(request.toCommand()));
     }
 
     @PostMapping
@@ -140,6 +174,32 @@ record RegisterMediaAssetRequest(
     }
 }
 
+record InitiateAssetUploadRequest(
+        @NotNull(message = "kind is required")
+        AssetKind kind,
+        @NotBlank(message = "fileName is required")
+        String fileName,
+        @NotBlank(message = "mimeType is required")
+        String mimeType,
+        @NotNull(message = "byteSize is required")
+        @Min(value = 1, message = "byteSize must be positive")
+        Long byteSize) {
+
+    InitiateMediaAssetUploadCommand toCommand() {
+        return new InitiateMediaAssetUploadCommand(kind, fileName, mimeType, byteSize);
+    }
+}
+
+record CompleteAssetUploadRequest(
+        @NotBlank(message = "uploadToken is required")
+        String uploadToken,
+        String checksumSha256) {
+
+    CompleteMediaAssetUploadCommand toCommand() {
+        return new CompleteMediaAssetUploadCommand(uploadToken, checksumSha256);
+    }
+}
+
 record UpdateAssetMetadataRequest(
         String mimeType,
         @Min(value = 0, message = "byteSize must not be negative")
@@ -148,5 +208,26 @@ record UpdateAssetMetadataRequest(
 
     UpdateMediaAssetMetadataCommand toCommand(Long assetId) {
         return new UpdateMediaAssetMetadataCommand(assetId, mimeType, byteSize, checksumSha256);
+    }
+}
+
+record AdminAssetUploadResponse(
+        AssetStorageProvider provider,
+        String objectPath,
+        String uploadUrl,
+        String httpMethod,
+        java.util.Map<String, String> requiredHeaders,
+        Instant expiresAt,
+        String uploadToken) {
+
+    static AdminAssetUploadResponse from(AssetUploadRequest uploadRequest) {
+        return new AdminAssetUploadResponse(
+                uploadRequest.provider(),
+                uploadRequest.objectPath(),
+                uploadRequest.uploadUrl(),
+                uploadRequest.httpMethod(),
+                uploadRequest.requiredHeaders(),
+                uploadRequest.expiresAt(),
+                uploadRequest.uploadToken());
     }
 }

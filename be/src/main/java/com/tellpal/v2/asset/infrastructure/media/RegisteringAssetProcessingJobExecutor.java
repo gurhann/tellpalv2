@@ -90,7 +90,7 @@ class RegisteringAssetProcessingJobExecutor implements AssetProcessingJobExecuto
         return findSourceAsset(assetProcessingRecord.coverSourceAssetId())
                 .or(() -> findSourceAsset(assetProcessingRecord.audioSourceAssetId()))
                 .map(record -> record.storageLocation().provider())
-                .orElse(AssetStorageProvider.LOCAL_STUB);
+                .orElse(AssetStorageProvider.FIREBASE_STORAGE);
     }
 
     private Optional<AssetRecord> findSourceAsset(Long assetId) {

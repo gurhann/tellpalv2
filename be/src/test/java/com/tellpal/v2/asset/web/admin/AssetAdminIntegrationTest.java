@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.tellpal.v2.asset.infrastructure.storage.FakeFirebaseStorageAssetClient;
 import com.tellpal.v2.support.AdminApiIntegrationTestSupport;
 
 @SpringBootTest
@@ -23,6 +24,9 @@ class AssetAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     private static final String UPDATED_CHECKSUM =
             "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789";
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private FakeFirebaseStorageAssetClient fakeFirebaseStorageAssetClient;
+
     @BeforeEach
     void cleanDatabase() {
         jdbcTemplate.execute("""
@@ -33,6 +37,7 @@ class AssetAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                     media_assets
                 restart identity cascade
                 """);
+        fakeFirebaseStorageAssetClient.clearUploadedObjects();
     }
 
     @Test
@@ -110,5 +115,50 @@ class AssetAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("media_asset_exists"));
+    }
+
+    @Test
+    void initiateCompleteAndRefreshFirebaseUploadWorkWithAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult initiateResult = mockMvc.perform(post("/api/admin/media/uploads")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "kind": "ORIGINAL_AUDIO",
+                                  "fileName": "bedtime-breeze.mp3",
+                                  "mimeType": "audio/mpeg",
+                                  "byteSize": 8192
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("FIREBASE_STORAGE"))
+                .andReturn();
+
+        String objectPath = readPayload(initiateResult).get("objectPath").asText();
+        String uploadToken = readPayload(initiateResult).get("uploadToken").asText();
+        fakeFirebaseStorageAssetClient.storeUploadedObject(objectPath, "audio/mpeg", 8192L);
+
+        MvcResult completeResult = mockMvc.perform(post("/api/admin/media/uploads/complete")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "uploadToken": "%s",
+                                  "checksumSha256": "%s"
+                                }
+                                """.formatted(uploadToken, INITIAL_CHECKSUM)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("FIREBASE_STORAGE"))
+                .andExpect(jsonPath("$.objectPath").value(objectPath))
+                .andReturn();
+
+        Long assetId = readPayload(completeResult).get("assetId").asLong();
+
+        mockMvc.perform(post("/api/admin/media/{assetId}/download-url-cache/refresh", assetId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cachedDownloadUrl").value(org.hamcrest.Matchers.containsString("firebase-storage.test/download/")));
     }
 }

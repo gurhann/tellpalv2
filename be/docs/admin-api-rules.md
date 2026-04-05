@@ -490,10 +490,13 @@ stack.
 - `be/src/main/java/com/tellpal/v2/asset/domain/ProcessingContentType.java`
 - `be/src/test/java/com/tellpal/v2/asset/web/admin/AssetAdminIntegrationTest.java`
 - `be/src/test/java/com/tellpal/v2/asset/web/admin/AssetProcessingAdminIntegrationTest.java`
+- `be/docs/adr/ADR-0008-firebase-storage-direct-upload.md`
 
 ### Covered Admin Endpoints
 
 - `POST /api/admin/media`
+- `POST /api/admin/media/uploads`
+- `POST /api/admin/media/uploads/complete`
 - `GET /api/admin/media`
 - `GET /api/admin/media/{assetId}`
 - `PUT /api/admin/media/{assetId}/metadata`
@@ -509,6 +512,13 @@ stack.
   - `provider`
   - `objectPath`
   - `kind`
+- Upload initiation:
+  - `kind`
+  - `fileName`
+  - `mimeType`
+  - `byteSize` must be positive
+- Upload completion:
+  - `uploadToken`
 - Asset metadata update:
   - all fields optional, but validated when present
 - Processing schedule:
@@ -525,6 +535,8 @@ stack.
 - Duplicate asset registration for the same `provider + objectPath` is forbidden.
 - Asset `byteSize` must not be negative.
 - Asset checksum must be a lowercase SHA-256 hex string when present.
+- Direct upload initiation supports only `ORIGINAL_IMAGE` and `ORIGINAL_AUDIO`.
+- Direct upload `mimeType` must match the selected original upload kind.
 - Story processing requires `pageCount` and forbids omitting it.
 - Non-story processing forbids `pageCount`.
 - Non-story processing requires `audioSourceAssetId`.
@@ -535,9 +547,17 @@ stack.
 - Asset registration trims `objectPath` and metadata text fields.
 - Asset kind determines stored media type. CMS should use returned `mediaType` and `kind` instead
   of inferring media type from filenames.
+- Asset direct uploads always target `FIREBASE_STORAGE`, not `LOCAL_STUB`.
+- Asset direct upload object paths must stay inside the configured Firebase path prefix.
+- Manual direct uploads land under:
+  - `/{prefix}/manual/images/original/{yyyy}/{MM}/{uuid}-{sanitizedFileName}`
+  - `/{prefix}/manual/audio/original/{yyyy}/{MM}/{uuid}-{sanitizedFileName}`
+- Generated processing assets also use the same prefix model and land under `/{prefix}/content/...`.
 - Asset metadata update replaces mutable metadata values. Blank text normalizes to `null`.
 - Refreshing the cached download URL replaces the stored cache window. The backend requires the
   refreshed expiry to be after the cache timestamp.
+- Upload completion is idempotent for `FIREBASE_STORAGE + objectPath`. Repeating finalize against
+  the same uploaded object reuses the existing asset row and refreshes mutable metadata.
 - Processing recent list `limit` must be positive and is capped at `100`.
 - Scheduling processing for a localization with no existing processing record creates a `PENDING`
   record.
@@ -562,11 +582,16 @@ stack.
 - Story processing may carry a non-negative `pageCount`.
 - The admin processing API does not expose worker-only lifecycle transitions such as `start`,
   `complete`, `fail`, or lease recovery.
+- Upload completion requires the Firebase object to already exist and to match the initiated
+  `mimeType` and `byteSize`.
 
 ### Expected ProblemDetail Error Codes
 
 - `media_asset_exists`
 - `media_asset_not_found`
+- `asset_upload_token_invalid`
+- `asset_upload_object_not_found`
+- `asset_upload_metadata_mismatch`
 - `asset_processing_not_found`
 - `asset_processing_localization_not_found`
 - `asset_processing_conflict`
@@ -578,14 +603,19 @@ stack.
 
 - Register local sample assets through `POST /api/admin/media` or through the asset API used in
   integration tests.
-- Use `LOCAL_STUB` provider for local development unless the environment explicitly configures
-  another storage provider.
+- Local runtime no longer defaults to `LOCAL_STUB` for new CMS uploads. Configure Firebase Storage
+  credentials and use the local prefix inside the shared bucket.
+- `LOCAL_STUB` remains acceptable for legacy seed data and automated tests only.
 - Provide lowercase SHA-256 checksums in local sample data when checksum coverage matters.
 - Media-processing tests need both content/localization records and source assets.
 
 ### Frontend Form and Query Implications
 
 - Asset library UI should expect recent-only listings with no search or pagination contract.
+- Asset upload UI should use the signed upload handshake:
+  - initiate upload
+  - upload directly to Firebase Storage
+  - complete upload
 - Asset register and metadata forms should validate checksum shape and non-negative byte size before
   submit.
 - Asset pickers should use backend `mediaType` for filtering instead of only relying on `kind`

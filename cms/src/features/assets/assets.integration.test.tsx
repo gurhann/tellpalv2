@@ -5,15 +5,20 @@ import {
   render,
   screen,
   waitFor,
-  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   assetResponses,
-  originalAudioAssetResponse,
+  uploadedFirebaseImageAssetResponse,
 } from "@/features/assets/test/fixtures";
 import type { AdminSessionPayload } from "@/types/api";
+
+const uploadHelperMock = vi.hoisted(() => vi.fn());
+
+vi.mock("@/features/assets/lib/upload-file-to-signed-url", () => ({
+  uploadFileToSignedUrl: uploadHelperMock,
+}));
 
 function cloneJson<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
@@ -86,6 +91,12 @@ async function renderFreshApp(options: {
 
 beforeEach(() => {
   vi.restoreAllMocks();
+  uploadHelperMock.mockReset();
+  uploadHelperMock.mockImplementation(
+    async (options?: { onProgress?: (value: number) => void }) => {
+      options?.onProgress?.(100);
+    },
+  );
 });
 
 afterEach(async () => {
@@ -114,6 +125,7 @@ describe("Asset integration", () => {
   it("hydrates the live asset library, saves metadata, and refreshes cached download URLs", async () => {
     const session = makeSession();
     const assets = cloneJson(assetResponses);
+    const uploadedAsset = cloneJson(uploadedFirebaseImageAssetResponse);
     const fetchMock = vi
       .fn<typeof fetch>()
       .mockImplementation(async (input, init) => {
@@ -128,14 +140,37 @@ describe("Asset integration", () => {
           return jsonResponse(assets);
         }
 
-        if (url.pathname === "/api/admin/media/1" && method === "GET") {
+        if (url.pathname === "/api/admin/media/12" && method === "GET") {
           return jsonResponse(
-            assets.find((asset) => asset.assetId === 1) ?? null,
+            assets.find((asset) => asset.assetId === 12) ?? null,
           );
         }
 
+        if (url.pathname === "/api/admin/media/uploads" && method === "POST") {
+          return jsonResponse({
+            provider: "FIREBASE_STORAGE",
+            objectPath: uploadedAsset.objectPath,
+            uploadUrl:
+              "https://firebase-storage.test/upload/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg",
+            httpMethod: "PUT",
+            requiredHeaders: {
+              "Content-Type": "image/jpeg",
+            },
+            expiresAt: "2026-04-04T18:30:00Z",
+            uploadToken: "upload-token-12",
+          });
+        }
+
         if (
-          url.pathname === "/api/admin/media/1/metadata" &&
+          url.pathname === "/api/admin/media/uploads/complete" &&
+          method === "POST"
+        ) {
+          assets.unshift(uploadedAsset);
+          return jsonResponse(uploadedAsset);
+        }
+
+        if (
+          url.pathname === "/api/admin/media/12/metadata" &&
           method === "PUT"
         ) {
           const body = (await readRequestJson(init)) as {
@@ -143,10 +178,10 @@ describe("Asset integration", () => {
             byteSize?: number | null;
             checksumSha256?: string | null;
           };
-          const nextAsset = assets.find((asset) => asset.assetId === 1);
+          const nextAsset = assets.find((asset) => asset.assetId === 12);
 
           if (!nextAsset) {
-            throw new Error("Audio asset #1 was not found.");
+            throw new Error("Uploaded image asset #12 was not found.");
           }
 
           nextAsset.mimeType = body.mimeType ?? null;
@@ -158,16 +193,17 @@ describe("Asset integration", () => {
         }
 
         if (
-          url.pathname === "/api/admin/media/1/download-url-cache/refresh" &&
+          url.pathname === "/api/admin/media/12/download-url-cache/refresh" &&
           method === "POST"
         ) {
-          const nextAsset = assets.find((asset) => asset.assetId === 1);
+          const nextAsset = assets.find((asset) => asset.assetId === 12);
 
           if (!nextAsset) {
-            throw new Error("Audio asset #1 was not found.");
+            throw new Error("Uploaded image asset #12 was not found.");
           }
 
-          nextAsset.cachedDownloadUrl = "https://cdn.tellpal.test/assets/1";
+          nextAsset.cachedDownloadUrl =
+            "https://storage.googleapis.com/tellpal-prod/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg";
           nextAsset.downloadUrlCachedAt = "2026-04-04T18:15:00Z";
           nextAsset.downloadUrlExpiresAt = "2026-04-04T19:15:00Z";
           nextAsset.updatedAt = "2026-04-04T18:15:00Z";
@@ -190,31 +226,36 @@ describe("Asset integration", () => {
       level: 1,
     });
 
-    const recentAssetTable = screen.getByRole("table", {
-      name: /recent asset registry/i,
-    });
+    fireEvent.click(screen.getByRole("button", { name: /upload asset/i }));
 
-    fireEvent.click(
-      within(recentAssetTable).getByText(originalAudioAssetResponse.objectPath),
-    );
+    const fileInput = screen.getByLabelText(/file/i);
+    const uploadFile = new File(["image"], "bedtime-cover.jpg", {
+      type: "image/jpeg",
+    });
+    fireEvent.change(fileInput, { target: { files: [uploadFile] } });
+    fireEvent.click(screen.getByRole("button", { name: /^upload asset$/i }));
 
     expect(
-      await screen.findByRole("heading", { name: /asset #1/i }),
+      await screen.findByRole("heading", { name: /asset #12/i }),
     ).toBeVisible();
+    expect(uploadHelperMock).toHaveBeenCalledTimes(1);
+    expect(
+      await screen.findAllByText(uploadedFirebaseImageAssetResponse.objectPath),
+    ).toHaveLength(2);
 
     fireEvent.change(await screen.findByLabelText(/mime type/i), {
-      target: { value: "audio/mpeg" },
+      target: { value: "image/jpeg" },
     });
     fireEvent.change(screen.getByLabelText(/byte size/i), {
-      target: { value: "5243001" },
+      target: { value: "4096" },
     });
     fireEvent.change(screen.getByLabelText(/sha-256 checksum/i), {
-      target: { value: "audio-checksum-1-refresh" },
+      target: { value: "image-checksum-12-refresh" },
     });
     fireEvent.click(screen.getByRole("button", { name: /save metadata/i }));
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/mime type/i)).toHaveValue("audio/mpeg");
+      expect(screen.getByLabelText(/mime type/i)).toHaveValue("image/jpeg");
     });
 
     fireEvent.click(

@@ -104,6 +104,22 @@ test("asset library supports detail edit and cached URL refresh in the browser",
 }) => {
   const session = makeSession();
   const assets = makeAssets();
+  const uploadedAsset: AssetResponse = {
+    assetId: 11,
+    provider: "FIREBASE_STORAGE",
+    objectPath:
+      "/local/manual/audio/original/2026/04/asset-11-bedtime-breeze.mp3",
+    mediaType: "AUDIO",
+    kind: "ORIGINAL_AUDIO",
+    mimeType: "audio/mpeg",
+    byteSize: 8_192,
+    checksumSha256: null,
+    cachedDownloadUrl: null,
+    downloadUrlCachedAt: null,
+    downloadUrlExpiresAt: null,
+    createdAt: "2026-04-04T18:20:00Z",
+    updatedAt: "2026-04-04T18:20:00Z",
+  };
 
   await page.addInitScript(() => {
     window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
@@ -130,7 +146,53 @@ test("asset library supports detail edit and cached URL refresh in the browser",
     });
   });
 
-  await page.route("**/api/admin/media/1", async (route) => {
+  await page.route("**/api/admin/media/uploads", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        provider: "FIREBASE_STORAGE",
+        objectPath: uploadedAsset.objectPath,
+        uploadUrl:
+          "https://firebase-storage.test/upload/local/manual/audio/original/2026/04/asset-11-bedtime-breeze.mp3",
+        httpMethod: "PUT",
+        requiredHeaders: {
+          "Content-Type": "audio/mpeg",
+        },
+        expiresAt: "2026-04-04T18:30:00Z",
+        uploadToken: "upload-token-11",
+      }),
+    });
+  });
+
+  await page.route("https://firebase-storage.test/upload/**", async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: "",
+    });
+  });
+
+  await page.route("**/api/admin/media/uploads/complete", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.fallback();
+      return;
+    }
+
+    assets.unshift(uploadedAsset);
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(uploadedAsset),
+    });
+  });
+
+  await page.route("**/api/admin/media/11", async (route) => {
     if (route.request().method() !== "GET") {
       await route.fallback();
       return;
@@ -139,11 +201,11 @@ test("asset library supports detail edit and cached URL refresh in the browser",
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(assets.find((asset) => asset.assetId === 1)),
+      body: JSON.stringify(assets.find((asset) => asset.assetId === 11)),
     });
   });
 
-  await page.route("**/api/admin/media/1/metadata", async (route) => {
+  await page.route("**/api/admin/media/11/metadata", async (route) => {
     if (route.request().method() !== "PUT") {
       await route.fallback();
       return;
@@ -154,10 +216,10 @@ test("asset library supports detail edit and cached URL refresh in the browser",
       byteSize?: number | null;
       checksumSha256?: string | null;
     };
-    const nextAsset = assets.find((asset) => asset.assetId === 1);
+    const nextAsset = assets.find((asset) => asset.assetId === 11);
 
     if (!nextAsset) {
-      throw new Error("Asset #1 was not found.");
+      throw new Error("Asset #11 was not found.");
     }
 
     nextAsset.mimeType = body.mimeType ?? null;
@@ -173,20 +235,21 @@ test("asset library supports detail edit and cached URL refresh in the browser",
   });
 
   await page.route(
-    "**/api/admin/media/1/download-url-cache/refresh",
+    "**/api/admin/media/11/download-url-cache/refresh",
     async (route) => {
       if (route.request().method() !== "POST") {
         await route.fallback();
         return;
       }
 
-      const nextAsset = assets.find((asset) => asset.assetId === 1);
+      const nextAsset = assets.find((asset) => asset.assetId === 11);
 
       if (!nextAsset) {
-        throw new Error("Asset #1 was not found.");
+        throw new Error("Asset #11 was not found.");
       }
 
-      nextAsset.cachedDownloadUrl = "https://cdn.tellpal.test/assets/1";
+      nextAsset.cachedDownloadUrl =
+        "https://storage.googleapis.com/tellpal-prod/local/manual/audio/original/2026/04/asset-11-bedtime-breeze.mp3";
       nextAsset.downloadUrlCachedAt = "2026-04-04T18:15:00Z";
       nextAsset.downloadUrlExpiresAt = "2026-04-04T19:15:00Z";
       nextAsset.updatedAt = "2026-04-04T18:15:00Z";
@@ -205,17 +268,21 @@ test("asset library supports detail edit and cached URL refresh in the browser",
     page.getByRole("heading", { name: /^asset library$/i, level: 1 }),
   ).toBeVisible();
 
-  const recentAssetTable = page.getByRole("table", {
-    name: /recent asset registry/i,
+  await page.getByRole("button", { name: /upload asset/i }).click();
+  await page.getByLabel(/asset kind/i).click();
+  await page.getByRole("option", { name: /original audio/i }).click();
+  await page.getByLabel(/file/i).setInputFiles({
+    name: "bedtime-breeze.mp3",
+    mimeType: "audio/mpeg",
+    buffer: Buffer.from("audio"),
   });
+  await page.getByRole("button", { name: /^upload asset$/i }).click();
 
-  await recentAssetTable.getByText("/content/audio/rain-room-en.wav").click();
-
-  await expect(page.getByRole("heading", { name: /asset #1/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /asset #11/i })).toBeVisible();
 
   await page.getByLabel(/mime type/i).fill("audio/mpeg");
   await page.getByLabel(/byte size/i).fill("5243001");
-  await page.getByLabel(/sha-256 checksum/i).fill("audio-checksum-1-refresh");
+  await page.getByLabel(/sha-256 checksum/i).fill("audio-checksum-11-refresh");
   await page.getByRole("button", { name: /save metadata/i }).click();
 
   await expect(page.getByLabel(/mime type/i)).toHaveValue("audio/mpeg");
@@ -237,7 +304,10 @@ test("asset library supports detail edit and cached URL refresh in the browser",
   await expect(
     page.getByRole("heading", { name: /^asset library$/i, level: 1 }),
   ).toBeVisible();
-  await recentAssetTable.getByText("/content/audio/rain-room-en.wav").click();
+  await page
+    .getByRole("table", { name: /recent asset registry/i })
+    .getByText(uploadedAsset.objectPath)
+    .click();
   await expect(page.getByLabel(/mime type/i)).toHaveValue("audio/mpeg");
   await expect(page.getByText(/^available$/i)).toBeVisible();
 });

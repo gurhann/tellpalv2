@@ -15,6 +15,9 @@ import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.Ass
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
 import com.tellpal.v2.asset.application.MediaAssetAlreadyExistsException;
 import com.tellpal.v2.asset.application.MediaAssetNotFoundException;
+import com.tellpal.v2.asset.application.MediaAssetUploadMetadataMismatchException;
+import com.tellpal.v2.asset.application.MediaAssetUploadObjectNotFoundException;
+import com.tellpal.v2.asset.application.MediaAssetUploadTokenInvalidException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @RestControllerAdvice(basePackageClasses = {AssetAdminController.class, AssetProcessingAdminController.class})
@@ -43,6 +46,42 @@ public class AssetAdminExceptionHandler {
                 "Media asset not found",
                 exception.getMessage(),
                 "media_asset_not_found",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetUploadTokenInvalidException.class)
+    ProblemDetail handleUploadTokenInvalid(
+            MediaAssetUploadTokenInvalidException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Asset upload token is invalid",
+                exception.getMessage(),
+                "asset_upload_token_invalid",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetUploadObjectNotFoundException.class)
+    ProblemDetail handleUploadedObjectNotFound(
+            MediaAssetUploadObjectNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Uploaded asset object not found",
+                exception.getMessage(),
+                "asset_upload_object_not_found",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetUploadMetadataMismatchException.class)
+    ProblemDetail handleUploadedMetadataMismatch(
+            MediaAssetUploadMetadataMismatchException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Uploaded asset metadata does not match the upload request",
+                exception.getMessage(),
+                "asset_upload_metadata_mismatch",
                 request);
     }
 

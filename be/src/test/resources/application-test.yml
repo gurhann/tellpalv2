@@ -11,6 +11,15 @@ spring:
 
 tellpal:
   asset:
+    storage:
+      firebase:
+        fake-client-enabled: true
+        project-id: tellpal-test
+        bucket-name: tellpal-test-bucket
+        credentials-path: be/var/firebase-test-service-account.json
+        path-prefix: test
+        signed-upload-ttl: PT15M
+        signed-download-ttl: PT15M
     processing:
       poller:
         enabled: false

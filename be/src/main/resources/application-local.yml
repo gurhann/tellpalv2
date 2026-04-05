@@ -15,6 +15,15 @@ spring:
 tellpal:
   api-docs:
     enabled: true
+  asset:
+    storage:
+      firebase:
+        path-prefix: local
+        project-id: tellpal-ee0dd
+        bucket-name: tellpal-ee0dd.appspot.com
+        credentials-path: C:\dev\keys\tellpal-v2-firebase-storage-pk.json
+        signed-upload-ttl: PT15M
+        signed-download-ttl: PT1H
   security:
     admin:
       jwt-secret: change-me-change-me-change-me-32-bytes

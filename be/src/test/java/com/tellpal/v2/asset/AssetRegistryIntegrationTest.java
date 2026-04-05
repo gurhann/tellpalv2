@@ -19,6 +19,7 @@ import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
 import com.tellpal.v2.asset.api.RefreshMediaAssetDownloadUrlCommand;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
+import com.tellpal.v2.asset.infrastructure.storage.AssetProcessingPathBuilder;
 import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
 @SpringBootTest
@@ -159,5 +160,24 @@ class AssetRegistryIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(assetRegistryApi.listRecent(5))
                 .extracting(AssetRecord::assetId)
                 .containsExactly(third.assetId(), second.assetId(), first.assetId());
+    }
+
+    @Test
+    void processingPathsUseTheConfiguredStoragePrefix() {
+        AssetProcessingPathBuilder pathBuilder = new AssetProcessingPathBuilder(
+                new com.tellpal.v2.asset.infrastructure.storage.AssetStorageObjectPathBuilder(
+                        new com.tellpal.v2.asset.infrastructure.storage.AssetStorageFirebaseProperties(
+                                true,
+                                "tellpal-test",
+                                "tellpal-test-bucket",
+                                "ignored",
+                                "test",
+                                java.time.Duration.ofMinutes(15),
+                                java.time.Duration.ofMinutes(15))));
+
+        assertThat(pathBuilder.originalRoot("STORY", "moonlight-story", com.tellpal.v2.shared.domain.LanguageCode.TR))
+                .isEqualTo("/test/content/story/moonlight-story/tr/original/");
+        assertThat(pathBuilder.processedRoot("MEDITATION", "calm-mind", com.tellpal.v2.shared.domain.LanguageCode.EN))
+                .isEqualTo("/test/content/meditation/calm-mind/en/processed/");
     }
 }

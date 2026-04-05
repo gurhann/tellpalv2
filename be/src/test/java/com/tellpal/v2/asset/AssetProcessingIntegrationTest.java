@@ -121,7 +121,7 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                         order by kind
                         """,
                 String.class,
-                "/content/story/moonlight-story/tr/%");
+                "/test/content/story/moonlight-story/tr/%");
 
         assertThat(localizationRow.get("processing_status")).isEqualTo("COMPLETED");
         assertThat(generatedKinds).contains(
@@ -172,7 +172,7 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                         order by kind
                         """,
                 String.class,
-                "/content/meditation/calm-mind/tr/%");
+                "/test/content/meditation/calm-mind/tr/%");
 
         assertThat(generatedKinds).contains(
                 "THUMBNAIL_PHONE",

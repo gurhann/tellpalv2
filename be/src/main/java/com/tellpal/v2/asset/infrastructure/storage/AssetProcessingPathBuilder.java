@@ -11,6 +11,12 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 @Component
 public class AssetProcessingPathBuilder {
 
+    private final AssetStorageObjectPathBuilder assetStorageObjectPathBuilder;
+
+    public AssetProcessingPathBuilder(AssetStorageObjectPathBuilder assetStorageObjectPathBuilder) {
+        this.assetStorageObjectPathBuilder = assetStorageObjectPathBuilder;
+    }
+
     public String originalRoot(String contentType, String externalKey, LanguageCode languageCode) {
         return buildRoot(contentType, externalKey, languageCode, "original");
     }
@@ -58,11 +64,11 @@ public class AssetProcessingPathBuilder {
     }
 
     private String buildRoot(String contentType, String externalKey, LanguageCode languageCode, String folder) {
-        return "/content/%s/%s/%s/%s/".formatted(
+        return assetStorageObjectPathBuilder.prefixPath("content/%s/%s/%s/%s/".formatted(
                 normalizeContentType(contentType),
                 normalizeExternalKey(externalKey),
                 requireLanguageCode(languageCode).value(),
-                folder);
+                folder));
     }
 
     private static String normalizeContentType(String contentType) {

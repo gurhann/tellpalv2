@@ -18,14 +18,17 @@ const assetKindValues = [
   "CONTENT_ZIP_PART2",
 ] as const;
 const assetMediaTypeValues = ["IMAGE", "AUDIO", "ARCHIVE"] as const;
+const uploadableAssetKindValues = ["ORIGINAL_IMAGE", "ORIGINAL_AUDIO"] as const;
 
 export const assetProviderSchema = z.enum(assetProviderValues);
 export const assetKindSchema = z.enum(assetKindValues);
 export const assetMediaTypeSchema = z.enum(assetMediaTypeValues);
+export const uploadableAssetKindSchema = z.enum(uploadableAssetKindValues);
 
 export type AssetProvider = z.infer<typeof assetProviderSchema>;
 export type AssetKind = z.infer<typeof assetKindSchema>;
 export type AssetMediaType = z.infer<typeof assetMediaTypeSchema>;
+export type UploadableAssetKind = z.infer<typeof uploadableAssetKindSchema>;
 
 export type RegisterMediaAssetInput = {
   provider: AssetProvider;
@@ -39,6 +42,18 @@ export type RegisterMediaAssetInput = {
 export type UpdateAssetMetadataInput = {
   mimeType?: string | null;
   byteSize?: number | null;
+  checksumSha256?: string | null;
+};
+
+export type InitiateAssetUploadInput = {
+  kind: UploadableAssetKind;
+  fileName: string;
+  mimeType: string;
+  byteSize: number;
+};
+
+export type CompleteAssetUploadInput = {
+  uploadToken: string;
   checksumSha256?: string | null;
 };
 
@@ -59,10 +74,34 @@ export const adminAssetResponseSchema = z.object({
 });
 
 export const adminAssetListResponseSchema = z.array(adminAssetResponseSchema);
+export const adminAssetUploadResponseSchema = z.object({
+  provider: assetProviderSchema,
+  objectPath: z.string().min(1),
+  uploadUrl: z.string().url(),
+  httpMethod: z.string().min(1),
+  requiredHeaders: z.record(z.string(), z.string()),
+  expiresAt: z.string().min(1),
+  uploadToken: z.string().min(1),
+});
 
 export type AdminAssetResponse = z.infer<typeof adminAssetResponseSchema>;
+export type AdminAssetUploadResponse = z.infer<
+  typeof adminAssetUploadResponseSchema
+>;
 
 export const assetAdminApi = {
+  initiateAssetUpload(input: InitiateAssetUploadInput) {
+    return apiClient.post<AdminAssetUploadResponse>(`${basePath}/uploads`, {
+      body: input,
+      responseSchema: adminAssetUploadResponseSchema,
+    });
+  },
+  completeAssetUpload(input: CompleteAssetUploadInput) {
+    return apiClient.post<AdminAssetResponse>(`${basePath}/uploads/complete`, {
+      body: input,
+      responseSchema: adminAssetResponseSchema,
+    });
+  },
   registerAsset(input: RegisterMediaAssetInput) {
     return apiClient.post<AdminAssetResponse>(basePath, {
       body: input,

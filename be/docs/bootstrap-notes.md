@@ -48,6 +48,15 @@ normal controlled operator process.
 2. `cd be && ./mvnw flyway:migrate`
 3. `cd be && ./mvnw spring-boot:run`
 
+Local backend runtime now also requires Firebase Storage configuration:
+
+- `TELLPAL_ASSET_STORAGE_FIREBASE_PROJECT_ID`
+- `TELLPAL_ASSET_STORAGE_FIREBASE_BUCKET_NAME`
+- `TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_PATH`
+
+The local profile hard-codes `tellpal.asset.storage.firebase.path-prefix=local`, so local uploads and
+generated processing artifacts stay under `local/...` in the shared bucket.
+
 ## Local CMS Sample Data Notes
 
 The backend does not seed sample CMS content automatically. When local CMS
@@ -105,6 +114,8 @@ rows.
 
 - Non-local environments must provide `TELLPAL_ADMIN_JWT_SECRET`.
 - Firebase service account credentials must stay outside the repository.
+- Firebase Storage runtime uses the same project and bucket in local and production. Production must
+  set `TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX=prod`, while local keeps `local`.
 - RevenueCat authorization must be configured in the deployment environment.
 - The local admin secret must never be promoted into shared or production
   environments.

@@ -76,11 +76,9 @@ describe("MediaRoute", () => {
       screen.getByText("/content/images/evening-garden-page-1.jpg"),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: /select a row to inspect detail/i }),
-    ).toBeDisabled();
-    expect(
       screen.getByRole("button", { name: /shared picker lives in forms/i }),
     ).toBeDisabled();
+    expect(screen.getByRole("button", { name: /upload asset/i })).toBeEnabled();
   });
 
   it("refreshes the live recent asset query on demand", () => {
@@ -103,5 +101,15 @@ describe("MediaRoute", () => {
 
     expect(screen.getAllByText(/asset #4/i).length).toBeGreaterThan(0);
     expect(assetHookMocks.useAssetDetail).toHaveBeenLastCalledWith(4);
+  });
+
+  it("opens the upload dialog on demand", () => {
+    renderWithQueryClient();
+
+    fireEvent.click(screen.getByRole("button", { name: /upload asset/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /upload asset/i }),
+    ).toBeVisible();
   });
 });

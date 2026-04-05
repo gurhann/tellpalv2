@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import com.tellpal.v2.asset.api.AssetRecord;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageLocation;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
+import com.tellpal.v2.asset.api.AssetUploadRequest;
 import com.tellpal.v2.asset.application.MediaAssetAlreadyExistsException;
 import com.tellpal.v2.shared.web.admin.AdminApiExceptionHandler;
 import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
@@ -71,6 +73,52 @@ class AssetAdminControllerTest {
                 .andExpect(header().string("Location", "http://localhost/api/admin/media/11"))
                 .andExpect(jsonPath("$.assetId").value(11))
                 .andExpect(jsonPath("$.provider").value("LOCAL_STUB"))
+                .andExpect(jsonPath("$.kind").value("ORIGINAL_IMAGE"));
+    }
+
+    @Test
+    void initiateUploadReturnsSignedRequest() throws Exception {
+        when(assetRegistryApi.initiateUpload(any())).thenReturn(new AssetUploadRequest(
+                AssetStorageProvider.FIREBASE_STORAGE,
+                "/local/manual/audio/original/2026/04/upload.mp3",
+                "https://firebase-storage.test/upload/local/manual/audio/original/2026/04/upload.mp3",
+                "PUT",
+                Map.of("Content-Type", "audio/mpeg"),
+                Instant.parse("2026-04-04T18:15:00Z"),
+                "signed-upload-token"));
+
+        mockMvc.perform(post("/api/admin/media/uploads")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "kind": "ORIGINAL_AUDIO",
+                                  "fileName": "upload.mp3",
+                                  "mimeType": "audio/mpeg",
+                                  "byteSize": 1024
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("FIREBASE_STORAGE"))
+                .andExpect(jsonPath("$.httpMethod").value("PUT"))
+                .andExpect(jsonPath("$.requiredHeaders['Content-Type']").value("audio/mpeg"))
+                .andExpect(jsonPath("$.uploadToken").value("signed-upload-token"));
+    }
+
+    @Test
+    void completeUploadReturnsRegisteredAsset() throws Exception {
+        when(assetRegistryApi.completeUpload(any()))
+                .thenReturn(sampleAssetRecord(21L, "/local/manual/images/original/2026/04/upload.jpg", null));
+
+        mockMvc.perform(post("/api/admin/media/uploads/complete")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "uploadToken": "signed-upload-token",
+                                  "checksumSha256": "%s"
+                                }
+                                """.formatted(SAMPLE_CHECKSUM)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assetId").value(21))
                 .andExpect(jsonPath("$.kind").value("ORIGINAL_IMAGE"));
     }
 
