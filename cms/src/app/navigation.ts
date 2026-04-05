@@ -30,18 +30,6 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     icon: FolderKanban,
   },
   {
-    label: "Media",
-    description: "Asset registry and media metadata.",
-    path: "/media",
-    icon: Image,
-  },
-  {
-    label: "Media Processing",
-    description: "Packaging state and retry operations.",
-    path: "/media-processing",
-    icon: Workflow,
-  },
-  {
     label: "Contributors",
     description: "Credits, names, roles, and assignments.",
     path: "/contributors",
@@ -52,6 +40,18 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     description: "Access keys and grant visibility.",
     path: "/free-access",
     icon: Sparkles,
+  },
+  {
+    label: "Media",
+    description: "Advanced asset registry, previews, and debug.",
+    path: "/media",
+    icon: Image,
+  },
+  {
+    label: "Media Processing",
+    description: "Packaging state and retry operations.",
+    path: "/media-processing",
+    icon: Workflow,
   },
 ];
 

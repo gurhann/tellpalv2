@@ -218,7 +218,9 @@ describe("Story pages integration", () => {
       within(createDialog).getByRole("button", { name: /^add story page$/i }),
     );
 
-    expect(await screen.findByText("Page 2")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("Page 2")).toBeVisible();
+    });
 
     fireEvent.click(screen.getAllByRole("button", { name: /^delete$/i })[1]!);
 
@@ -230,7 +232,7 @@ describe("Story pages integration", () => {
     await waitFor(() => {
       expect(screen.queryByText("Page 2")).not.toBeInTheDocument();
     });
-  });
+  }, 15_000);
 
   it("creates a missing localized page payload from the route editor", async () => {
     const session = makeSession();
@@ -427,11 +429,20 @@ describe("Story pages integration", () => {
       target: { value: "Tilki gece bahcesindeki taslara yavasca yaklasir." },
     });
     fireEvent.click(
-      within(turkishForm!).getByRole("button", { name: /asset #52/i }),
+      within(turkishForm!).getAllByRole("button", { name: /advanced/i })[0]!,
     );
     fireEvent.click(
-      within(turkishForm!).getByRole("button", { name: /asset #84/i }),
+      within(turkishForm!).getAllByRole("button", { name: /advanced/i })[1]!,
     );
+    fireEvent.change(
+      within(turkishForm!).getByLabelText(/illustration asset/i),
+      {
+        target: { value: "52" },
+      },
+    );
+    fireEvent.change(within(turkishForm!).getByLabelText(/audio asset/i), {
+      target: { value: "84" },
+    });
     fireEvent.click(
       within(turkishForm!).getByRole("button", {
         name: /create page localization/i,

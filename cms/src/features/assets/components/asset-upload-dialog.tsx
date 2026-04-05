@@ -21,11 +21,15 @@ import {
 } from "@/components/ui/select";
 import { useUploadAsset } from "@/features/assets/mutations/use-upload-asset";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
+import type { UploadableAssetKind } from "@/features/assets/api/asset-admin";
 
 type AssetUploadDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUploaded?: (asset: AssetViewModel) => void;
+  fixedKind?: UploadableAssetKind;
+  title?: string;
+  description?: string;
 };
 
 const assetKindOptions = [
@@ -90,10 +94,13 @@ export function AssetUploadDialog({
   open,
   onOpenChange,
   onUploaded,
+  fixedKind,
+  title = "Upload asset",
+  description = "Upload original image or audio files directly into Firebase Storage. The backend signs the upload request, and finalize registers the new asset in the media library.",
 }: AssetUploadDialogProps) {
   const [selectedKind, setSelectedKind] = useState<
     "ORIGINAL_IMAGE" | "ORIGINAL_AUDIO"
-  >("ORIGINAL_IMAGE");
+  >(fixedKind ?? "ORIGINAL_IMAGE");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
   const [validationMessage, setValidationMessage] = useState<string | null>(
@@ -111,9 +118,10 @@ export function AssetUploadDialog({
     () => assetKindOptions.find((option) => option.value === selectedKind)!,
     [selectedKind],
   );
+  const kindIsLocked = fixedKind !== undefined;
 
   function resetDialogState() {
-    setSelectedKind("ORIGINAL_IMAGE");
+    setSelectedKind(fixedKind ?? "ORIGINAL_IMAGE");
     setSelectedFile(null);
     setProgress(0);
     setValidationMessage(null);
@@ -174,43 +182,48 @@ export function AssetUploadDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Upload asset</DialogTitle>
-          <DialogDescription>
-            Upload original image or audio files directly into Firebase Storage.
-            The backend signs the upload request, and finalize registers the new
-            asset in the media library.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="grid gap-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="asset-upload-kind"
-            >
-              Asset kind
-            </label>
-            <Select
-              value={selectedKind}
-              onValueChange={(value) =>
-                setSelectedKind(value as "ORIGINAL_IMAGE" | "ORIGINAL_AUDIO")
-              }
-            >
-              <SelectTrigger id="asset-upload-kind" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {assetKindOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-muted-foreground">
-              {selectedKindOption.helper}
-            </p>
-          </div>
+          {kindIsLocked ? (
+            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">
+                {selectedKindOption.label}
+              </p>
+              <p className="mt-1">{selectedKindOption.helper}</p>
+            </div>
+          ) : (
+            <div className="grid gap-2">
+              <label
+                className="text-sm font-medium text-foreground"
+                htmlFor="asset-upload-kind"
+              >
+                Asset kind
+              </label>
+              <Select
+                value={selectedKind}
+                onValueChange={(value) =>
+                  setSelectedKind(value as "ORIGINAL_IMAGE" | "ORIGINAL_AUDIO")
+                }
+              >
+                <SelectTrigger id="asset-upload-kind" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {assetKindOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground">
+                {selectedKindOption.helper}
+              </p>
+            </div>
+          )}
 
           <div className="grid gap-2">
             <label

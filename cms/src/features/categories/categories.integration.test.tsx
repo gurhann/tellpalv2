@@ -352,10 +352,10 @@ describe("Category integration", () => {
       }),
     );
 
-    expect(
-      await screen.findByRole("heading", { name: /dream-lullabies/i }),
-    ).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/categories/99");
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/categories/99");
+    });
+    expect(await screen.findByDisplayValue("dream-lullabies")).toBeVisible();
 
     fireEvent.change(screen.getByLabelText(/slug/i), {
       target: { value: "dream-lullabies-v2" },
@@ -381,9 +381,13 @@ describe("Category integration", () => {
       },
     );
     fireEvent.click(
-      await within(localizationDialog).findByRole("button", {
-        name: /asset #4/i,
-      }),
+      within(localizationDialog).getByRole("button", { name: /advanced/i }),
+    );
+    fireEvent.change(
+      within(localizationDialog).getByLabelText(/image asset/i),
+      {
+        target: { value: "4" },
+      },
     );
     fireEvent.click(
       within(localizationDialog).getByRole("button", {

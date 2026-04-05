@@ -18,6 +18,10 @@ const illustrationValidationMocks = vi.hoisted(() => ({
   validateIllustrationAssetId: vi.fn(),
 }));
 
+const assetDetailHookMock = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
+
 vi.mock(
   "@/features/categories/mutations/use-category-localization-actions",
   () => ({
@@ -33,6 +37,10 @@ vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
 vi.mock("@/features/story-pages/lib/illustration-asset-validation", () => ({
   validateIllustrationAssetId:
     illustrationValidationMocks.validateIllustrationAssetId,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMock.useAssetDetail,
 }));
 
 function makeProblem(
@@ -76,6 +84,7 @@ beforeEach(() => {
   localizationActionHookMock.useCategoryLocalizationActions.mockReset();
   recentImageAssetHookMocks.useRecentImageAssets.mockReset();
   illustrationValidationMocks.validateIllustrationAssetId.mockReset();
+  assetDetailHookMock.useAssetDetail.mockReset();
 
   localizationActionHookMock.useCategoryLocalizationActions.mockReturnValue({
     saveLocalization: makeLocalizationMutationState(),
@@ -87,6 +96,12 @@ beforeEach(() => {
   illustrationValidationMocks.validateIllustrationAssetId.mockResolvedValue(
     null,
   );
+  assetDetailHookMock.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+  });
 });
 
 describe("CategoryLocalizationForm", () => {

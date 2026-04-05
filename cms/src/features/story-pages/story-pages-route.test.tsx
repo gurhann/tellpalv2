@@ -25,6 +25,9 @@ const recentImageAssetHookMocks = vi.hoisted(() => ({
 const recentAudioAssetHookMocks = vi.hoisted(() => ({
   useRecentAudioAssets: vi.fn(),
 }));
+const assetDetailHookMocks = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
   useContentDetail: contentDetailHookMocks.useContentDetail,
@@ -45,6 +48,10 @@ vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
 
 vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
   useRecentAudioAssets: recentAudioAssetHookMocks.useRecentAudioAssets,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMocks.useAssetDetail,
 }));
 
 function makeDetailState(overrides: Record<string, unknown> = {}) {
@@ -110,6 +117,12 @@ describe("StoryPagesRoute", () => {
       isSuccess: true,
       problem: null,
     });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
 
     renderStoryRoute();
 
@@ -159,6 +172,12 @@ describe("StoryPagesRoute", () => {
       isSuccess: true,
       problem: null,
     });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
 
     renderStoryRoute("/contents/4/story-pages");
 
@@ -199,6 +218,12 @@ describe("StoryPagesRoute", () => {
       isSuccess: true,
       problem: null,
     });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
 
     renderStoryRoute();
 
@@ -210,9 +235,9 @@ describe("StoryPagesRoute", () => {
     expect(screen.getByText("Localized page workspaces")).toBeInTheDocument();
     expect(screen.getAllByText(/english/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/turkish/i).length).toBeGreaterThan(0);
-    expect(
-      screen.getAllByLabelText(/illustration asset id/i).length,
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText(/illustration asset/i).length).toBeGreaterThan(
+      0,
+    );
     expect(
       screen.getAllByRole("button", { name: /save page localization/i }).length,
     ).toBeGreaterThan(0);
@@ -243,6 +268,12 @@ describe("StoryPagesRoute", () => {
       isLoading: false,
       isSuccess: true,
       problem: null,
+    });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
     });
 
     renderStoryRoute("/contents/1/story-pages?language=tr");

@@ -258,13 +258,13 @@ export function CategoryLocalizationForm({
           name="imageMediaId"
           render={({ field }) => (
             <AssetPickerField
-              description="Category images can reference only `IMAGE` assets."
+              description="Upload or browse the category image directly in this localization workspace."
               disabled={saveLocalization.isPending}
               error={form.formState.errors.imageMediaId}
               id="imageMediaId"
-              label="Image asset id"
+              label="Image asset"
               mediaType="IMAGE"
-              pickerDescription="Select a recent image asset for this category localization. Manual asset ids remain supported."
+              pickerDescription="Select a recent image asset for this category localization. Uploading from this field stays available, and manual asset ids remain under Advanced."
               pickerTitle="Pick category image asset"
               placeholder="Optional"
               value={field.value}

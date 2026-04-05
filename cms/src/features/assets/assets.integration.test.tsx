@@ -122,7 +122,7 @@ afterEach(async () => {
 });
 
 describe("Asset integration", () => {
-  it("hydrates the live asset library, saves metadata, and refreshes cached download URLs", async () => {
+  it("hydrates the media utility, saves metadata, and refreshes cached download URLs", async () => {
     const session = makeSession();
     const assets = cloneJson(assetResponses);
     const uploadedAsset = cloneJson(uploadedFirebaseImageAssetResponse);
@@ -222,7 +222,7 @@ describe("Asset integration", () => {
     });
 
     await screen.findByRole("heading", {
-      name: /^asset library$/i,
+      name: /^media utility$/i,
       level: 1,
     });
 

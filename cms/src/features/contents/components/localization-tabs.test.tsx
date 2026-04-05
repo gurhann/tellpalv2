@@ -11,6 +11,9 @@ import { ContentLocalizationTabs } from "./localization-tabs";
 const contentLocalizationActionsMock = vi.hoisted(() => ({
   useContentLocalizationActions: vi.fn(),
 }));
+const assetDetailHookMock = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
 
 vi.mock(
   "@/features/contents/mutations/use-content-localization-actions",
@@ -19,6 +22,10 @@ vi.mock(
       contentLocalizationActionsMock.useContentLocalizationActions,
   }),
 );
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
 
 function makeMutationState(overrides: Record<string, unknown> = {}) {
   return {
@@ -32,10 +39,17 @@ function makeMutationState(overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   contentLocalizationActionsMock.useContentLocalizationActions.mockReset();
+  assetDetailHookMock.useAssetDetail.mockReset();
   contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue({
     saveLocalization: makeMutationState(),
     publishLocalization: makeMutationState(),
     archiveLocalization: makeMutationState(),
+  });
+  assetDetailHookMock.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
   });
 });
 

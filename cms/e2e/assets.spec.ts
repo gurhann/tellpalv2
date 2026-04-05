@@ -100,7 +100,7 @@ function makeAssets(): AssetResponse[] {
   ];
 }
 
-test("asset library supports detail edit and cached URL refresh in the browser", async ({
+test("media utility supports detail edit and cached URL refresh in the browser", async ({
   page,
 }) => {
   const session = makeSession();
@@ -280,7 +280,7 @@ test("asset library supports detail edit and cached URL refresh in the browser",
   await page.goto("/media");
 
   await expect(
-    page.getByRole("heading", { name: /^asset library$/i, level: 1 }),
+    page.getByRole("heading", { name: /^media utility$/i, level: 1 }),
   ).toBeVisible();
 
   await page
@@ -328,7 +328,7 @@ test("asset library supports detail edit and cached URL refresh in the browser",
   await page.reload();
 
   await expect(
-    page.getByRole("heading", { name: /^asset library$/i, level: 1 }),
+    page.getByRole("heading", { name: /^media utility$/i, level: 1 }),
   ).toBeVisible();
   await page
     .getByRole("table", { name: /recent asset registry/i })

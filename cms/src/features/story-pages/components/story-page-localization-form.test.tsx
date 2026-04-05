@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { assetAdminApi } from "@/features/assets/api/asset-admin";
 import { storyContentViewModel } from "@/features/contents/test/fixtures";
@@ -7,11 +7,29 @@ import { firstStoryPageViewModel } from "@/features/story-pages/test/fixtures";
 
 import { StoryPageLocalizationForm } from "./story-page-localization-form";
 
+const assetDetailHookMock = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
+
 vi.mock("@/features/assets/api/asset-admin", () => ({
   assetAdminApi: {
     getAsset: vi.fn(),
   },
 }));
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
+
+beforeEach(() => {
+  assetDetailHookMock.useAssetDetail.mockReset();
+  assetDetailHookMock.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+  });
+});
 
 describe("StoryPageLocalizationForm", () => {
   it("normalizes empty body text to null when saving a page locale", async () => {
@@ -51,7 +69,8 @@ describe("StoryPageLocalizationForm", () => {
     fireEvent.change(screen.getByLabelText(/body text/i), {
       target: { value: "" },
     });
-    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
+    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
+    fireEvent.change(screen.getByLabelText(/audio asset/i), {
       target: { value: "" },
     });
     fireEvent.click(
@@ -122,10 +141,12 @@ describe("StoryPageLocalizationForm", () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText(/illustration asset id/i), {
+    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[0]!);
+    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
+    fireEvent.change(screen.getByLabelText(/illustration asset/i), {
       target: { value: "4" },
     });
-    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
+    fireEvent.change(screen.getByLabelText(/audio asset/i), {
       target: { value: "3" },
     });
     fireEvent.click(

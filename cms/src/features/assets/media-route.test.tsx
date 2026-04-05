@@ -66,19 +66,19 @@ function renderWithQueryClient() {
 }
 
 describe("MediaRoute", () => {
-  it("renders the live asset library shell", () => {
+  it("renders the media utility shell", () => {
     renderWithQueryClient();
 
     expect(
-      screen.getByRole("heading", { name: /asset library/i, level: 1 }),
+      screen.getByRole("heading", { name: /media utility/i, level: 1 }),
     ).toBeVisible();
     expect(
       screen.getByText("/content/images/evening-garden-page-1.jpg"),
     ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: /shared picker lives in forms/i }),
-    ).toBeDisabled();
     expect(screen.getByRole("button", { name: /upload asset/i })).toBeEnabled();
+    expect(
+      screen.getByText(/normal editorial binding now happens inside content/i),
+    ).toBeVisible();
   });
 
   it("refreshes the live recent asset query on demand", () => {

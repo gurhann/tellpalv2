@@ -112,6 +112,10 @@ function makeAsset(
 
 test("story pages keep illustration assets per locale", async ({ page }) => {
   const session = makeSession();
+  const tinyImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO8B9pQAAAAASUVORK5CYII=";
+  const tinyAudioDataUrl =
+    "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
   const contentDetail: ContentReadResponse = {
     contentId: 1,
     type: "STORY",
@@ -311,6 +315,42 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     });
   });
 
+  await page.route(
+    "**/api/admin/media/*/download-url-cache/refresh",
+    async (route) => {
+      const segments = new URL(route.request().url()).pathname.split("/");
+      const assetId = Number(segments.at(-2));
+      const asset = assets.find((entry) => entry.assetId === assetId);
+
+      if (!asset) {
+        await route.fulfill({
+          status: 404,
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Asset not found",
+            status: 404,
+            detail: `Asset ${assetId} was not found.`,
+            errorCode: "asset_not_found",
+            path: `/api/admin/media/${assetId}/download-url-cache/refresh`,
+          }),
+        });
+        return;
+      }
+
+      asset.cachedDownloadUrl =
+        asset.mediaType === "IMAGE" ? tinyImageDataUrl : tinyAudioDataUrl;
+      asset.downloadUrlCachedAt = "2026-03-31T12:10:00Z";
+      asset.downloadUrlExpiresAt = "2026-03-31T14:10:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(asset),
+      });
+    },
+  );
+
   await page.goto("/contents/1/story-pages");
 
   await expect(
@@ -318,26 +358,60 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   ).toBeVisible();
 
   await page.getByRole("button", { name: /edit/i }).click();
+  const editorDialog = page.getByRole("dialog", { name: /edit story page/i });
+  await editorDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(0)
+    .click({ force: true });
+  let illustrationField = editorDialog.getByLabel(/illustration asset/i);
 
-  const illustrationField = page.getByLabel(/illustration asset id/i);
-
-  await expect(
-    page.getByRole("heading", { name: /edit story page/i }),
-  ).toBeVisible();
+  await expect(editorDialog).toBeVisible();
   await expect(illustrationField).toHaveValue("41");
 
   await illustrationField.fill("51");
-  await page.getByRole("button", { name: /save page localization/i }).click();
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .includes("/api/admin/contents/1/story-pages/1/localizations/en") &&
+        response.request().method() === "PUT",
+    ),
+    editorDialog.locator("form").evaluate((form) => {
+      (form as HTMLFormElement).requestSubmit();
+    }),
+  ]);
   await expect(illustrationField).toHaveValue("51");
 
   await page.getByRole("tab", { name: /turkish/i }).click();
+  await editorDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(0)
+    .click({ force: true });
+  illustrationField = editorDialog.getByLabel(/illustration asset/i);
   await expect(illustrationField).toHaveValue("42");
 
   await illustrationField.fill("52");
-  await page.getByRole("button", { name: /save page localization/i }).click();
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .includes("/api/admin/contents/1/story-pages/1/localizations/tr") &&
+        response.request().method() === "PUT",
+    ),
+    editorDialog.locator("form").evaluate((form) => {
+      (form as HTMLFormElement).requestSubmit();
+    }),
+  ]);
   await expect(illustrationField).toHaveValue("52");
 
   await page.getByRole("tab", { name: /english/i }).click();
+  await editorDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(0)
+    .click({ force: true });
+  illustrationField = editorDialog.getByLabel(/illustration asset/i);
   await expect(illustrationField).toHaveValue("51");
 });
 
@@ -345,6 +419,10 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   page,
 }) => {
   const session = makeSession();
+  const tinyImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO8B9pQAAAAASUVORK5CYII=";
+  const tinyAudioDataUrl =
+    "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
   const contentDetail: ContentReadResponse = {
     contentId: 1,
     type: "STORY",
@@ -572,6 +650,42 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
     });
   });
 
+  await page.route(
+    "**/api/admin/media/*/download-url-cache/refresh",
+    async (route) => {
+      const segments = new URL(route.request().url()).pathname.split("/");
+      const assetId = Number(segments.at(-2));
+      const asset = assets.find((entry) => entry.assetId === assetId);
+
+      if (!asset) {
+        await route.fulfill({
+          status: 404,
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Asset not found",
+            status: 404,
+            detail: `Asset ${assetId} was not found.`,
+            errorCode: "asset_not_found",
+            path: `/api/admin/media/${assetId}/download-url-cache/refresh`,
+          }),
+        });
+        return;
+      }
+
+      asset.cachedDownloadUrl =
+        asset.mediaType === "IMAGE" ? tinyImageDataUrl : tinyAudioDataUrl;
+      asset.downloadUrlCachedAt = "2026-03-31T12:10:00Z";
+      asset.downloadUrlExpiresAt = "2026-03-31T14:10:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(asset),
+      });
+    },
+  );
+
   await page.goto("/contents/1/story-pages");
 
   await expect(
@@ -594,15 +708,39 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
     .getByRole("button", { name: /^edit$/i })
     .nth(1)
     .click();
-  await page.getByRole("tab", { name: /turkish/i }).click();
-  await page
+  const createEditorDialog = page.getByRole("dialog", {
+    name: /edit story page/i,
+  });
+  await createEditorDialog.getByRole("tab", { name: /turkish/i }).click();
+  await createEditorDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(0)
+    .click({ force: true });
+  await createEditorDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(1)
+    .click({ force: true });
+  await createEditorDialog
     .getByLabel(/body text/i)
     .fill("Tilki gece bahcesindeki taslara yavasca yaklasir.");
-  await page.getByRole("button", { name: /asset #52/i }).click();
-  await page.getByRole("button", { name: /asset #84/i }).click();
-  await page.getByRole("button", { name: /create page localization/i }).click();
+  await createEditorDialog.getByLabel(/illustration asset/i).fill("52");
+  await createEditorDialog.getByLabel(/audio asset/i).fill("84");
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .includes("/api/admin/contents/1/story-pages/2/localizations/tr") &&
+        response.request().method() === "PUT",
+    ),
+    createEditorDialog.locator("form").evaluate((form) => {
+      (form as HTMLFormElement).requestSubmit();
+    }),
+  ]);
 
-  await expect(page.getByText(/illustration linked/i)).toBeVisible();
+  await expect(
+    createEditorDialog.getByLabel(/illustration asset/i),
+  ).toHaveValue("52");
   await page.getByRole("button", { name: /close editor/i }).click();
 
   await storyPageTable

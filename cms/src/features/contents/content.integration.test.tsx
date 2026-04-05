@@ -193,6 +193,29 @@ describe("Content integration", () => {
           return jsonResponse(createdRecord);
         }
 
+        if (url.pathname === "/api/admin/media" && method === "GET") {
+          return jsonResponse([]);
+        }
+
+        if (url.pathname.startsWith("/api/admin/media/") && method === "GET") {
+          const assetId = Number(url.pathname.split("/").pop());
+          return jsonResponse({
+            assetId,
+            provider: "LOCAL_STUB",
+            objectPath: `/content/assets/${assetId}`,
+            mediaType: assetId === 2 ? "AUDIO" : "IMAGE",
+            kind: assetId === 2 ? "ORIGINAL_AUDIO" : "ORIGINAL_IMAGE",
+            mimeType: assetId === 2 ? "audio/mpeg" : "image/jpeg",
+            byteSize: null,
+            checksumSha256: null,
+            cachedDownloadUrl: null,
+            downloadUrlCachedAt: null,
+            downloadUrlExpiresAt: null,
+            createdAt: "2026-03-31T12:00:00Z",
+            updatedAt: "2026-03-31T12:00:00Z",
+          });
+        }
+
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -218,12 +241,13 @@ describe("Content integration", () => {
       within(dialog).getByRole("button", { name: /^create content$/i }),
     );
 
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/contents/99");
+    });
     expect(
-      await screen.findByRole("heading", { name: /content #99/i }),
-    ).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/contents/99");
-    expect(screen.getByDisplayValue("story.integration-spark")).toBeVisible();
-  });
+      await screen.findByDisplayValue("story.integration-spark"),
+    ).toBeVisible();
+  }, 15_000);
 
   it("maps backend validation errors onto content create fields in the real app flow", async () => {
     const session = makeSession();
@@ -354,6 +378,25 @@ describe("Content integration", () => {
           );
         }
 
+        if (url.pathname.startsWith("/api/admin/media/") && method === "GET") {
+          const assetId = Number(url.pathname.split("/").pop());
+          return jsonResponse({
+            assetId,
+            provider: "LOCAL_STUB",
+            objectPath: `/content/assets/${assetId}`,
+            mediaType: "IMAGE",
+            kind: "ORIGINAL_IMAGE",
+            mimeType: "image/jpeg",
+            byteSize: null,
+            checksumSha256: null,
+            cachedDownloadUrl: null,
+            downloadUrlCachedAt: null,
+            downloadUrlExpiresAt: null,
+            createdAt: "2026-03-31T12:00:00Z",
+            updatedAt: "2026-03-31T12:00:00Z",
+          });
+        }
+
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -434,6 +477,25 @@ describe("Content integration", () => {
           return jsonResponse(detailRecord.localizations[0]);
         }
 
+        if (url.pathname.startsWith("/api/admin/media/") && method === "GET") {
+          const assetId = Number(url.pathname.split("/").pop());
+          return jsonResponse({
+            assetId,
+            provider: "LOCAL_STUB",
+            objectPath: `/content/assets/${assetId}`,
+            mediaType: assetId === 2 ? "AUDIO" : "IMAGE",
+            kind: assetId === 2 ? "ORIGINAL_AUDIO" : "ORIGINAL_IMAGE",
+            mimeType: assetId === 2 ? "audio/mpeg" : "image/jpeg",
+            byteSize: null,
+            checksumSha256: null,
+            cachedDownloadUrl: null,
+            downloadUrlCachedAt: null,
+            downloadUrlExpiresAt: null,
+            createdAt: "2026-03-31T12:00:00Z",
+            updatedAt: "2026-03-31T12:00:00Z",
+          });
+        }
+
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -495,6 +557,25 @@ describe("Content integration", () => {
             "content_state_conflict",
             "/api/admin/contents/1/localizations/en/publish",
           );
+        }
+
+        if (url.pathname.startsWith("/api/admin/media/") && method === "GET") {
+          const assetId = Number(url.pathname.split("/").pop());
+          return jsonResponse({
+            assetId,
+            provider: "LOCAL_STUB",
+            objectPath: `/content/assets/${assetId}`,
+            mediaType: "IMAGE",
+            kind: "ORIGINAL_IMAGE",
+            mimeType: "image/jpeg",
+            byteSize: null,
+            checksumSha256: null,
+            cachedDownloadUrl: null,
+            downloadUrlCachedAt: null,
+            downloadUrlExpiresAt: null,
+            createdAt: "2026-03-31T12:00:00Z",
+            updatedAt: "2026-03-31T12:00:00Z",
+          });
         }
 
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);

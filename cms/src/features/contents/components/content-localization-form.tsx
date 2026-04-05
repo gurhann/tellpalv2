@@ -298,13 +298,13 @@ export function ContentLocalizationForm({
               name="audioMediaId"
               render={({ field }) => (
                 <AssetPickerField
-                  description="Non-story localizations can reference only `AUDIO` assets here."
+                  description="Upload a new audio file here or browse existing `AUDIO` assets for this localization."
                   disabled={saveLocalization.isPending}
                   error={form.formState.errors.audioMediaId}
                   id="audioMediaId"
-                  label="Audio asset id *"
+                  label="Audio asset *"
                   mediaType="AUDIO"
-                  pickerDescription="Select a recent audio asset for this content localization. Manual asset ids remain supported."
+                  pickerDescription="Select a recent audio asset for this content localization. Uploading from this field stays available, and manual asset ids remain under Advanced."
                   pickerTitle="Pick localization audio asset"
                   placeholder="Required"
                   value={field.value}
@@ -320,13 +320,13 @@ export function ContentLocalizationForm({
           name="coverMediaId"
           render={({ field }) => (
             <AssetPickerField
-              description="Cover imagery can reference only `IMAGE` assets."
+              description="Upload a cover image here or browse existing `IMAGE` assets without leaving this editor."
               disabled={saveLocalization.isPending}
               error={form.formState.errors.coverMediaId}
               id="coverMediaId"
-              label="Cover asset id"
+              label="Cover asset"
               mediaType="IMAGE"
-              pickerDescription="Select a recent image asset for the localized cover. Manual asset ids remain supported."
+              pickerDescription="Select a recent image asset for the localized cover. Uploading from this field stays available, and manual asset ids remain under Advanced."
               pickerTitle="Pick localization cover asset"
               placeholder="Optional"
               value={field.value}

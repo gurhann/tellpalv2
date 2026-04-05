@@ -32,19 +32,19 @@ function getEmptyCopy(mediaType: AssetMediaType) {
       return {
         title: "No recent image assets",
         description:
-          "Register or refresh image assets in Media before using the picker here.",
+          "Upload a new image from this workspace or open Media Utility for advanced inspection.",
       };
     case "AUDIO":
       return {
         title: "No recent audio assets",
         description:
-          "Register or refresh audio assets in Media before using the picker here.",
+          "Upload a new audio file from this workspace or open Media Utility for advanced inspection.",
       };
     case "ARCHIVE":
       return {
         title: "No recent archive assets",
         description:
-          "Register or refresh archive assets in Media before using the picker here.",
+          "Archive assets are managed from Media Utility when advanced inspection is needed.",
       };
   }
 }

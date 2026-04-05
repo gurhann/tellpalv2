@@ -18,6 +18,10 @@ const contentLocalizationActionsMock = vi.hoisted(() => ({
   useContentLocalizationActions: vi.fn(),
 }));
 
+const assetDetailHookMock = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
+
 vi.mock(
   "@/features/contents/mutations/use-content-localization-actions",
   () => ({
@@ -25,6 +29,10 @@ vi.mock(
       contentLocalizationActionsMock.useContentLocalizationActions,
   }),
 );
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
 
 function makeProblem(
   overrides: Partial<ApiProblemDetail> = {},
@@ -63,10 +71,17 @@ function makeMutationState(overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   contentLocalizationActionsMock.useContentLocalizationActions.mockReset();
+  assetDetailHookMock.useAssetDetail.mockReset();
   contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue({
     saveLocalization: makeMutationState(),
     publishLocalization: makeMutationState(),
     archiveLocalization: makeMutationState(),
+  });
+  assetDetailHookMock.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
   });
 });
 
@@ -87,7 +102,7 @@ describe("ContentLocalizationForm", () => {
       screen.getByText(/story localizations keep narrative copy/i),
     ).toBeVisible();
     expect(screen.queryByLabelText(/body text/i)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/audio asset id/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/audio asset/i)).not.toBeInTheDocument();
   });
 
   it("shows non-story body and audio inputs for meditation locales", () => {
@@ -103,7 +118,8 @@ describe("ContentLocalizationForm", () => {
     );
 
     expect(screen.getByLabelText(/body text/i)).toBeVisible();
-    expect(screen.getByLabelText(/audio asset id/i)).toBeVisible();
+    expect(screen.getByText(/audio asset/i)).toBeVisible();
+    expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
   });
 
   it("requires publishedAt when the localization status is published", async () => {
@@ -233,7 +249,8 @@ describe("ContentLocalizationForm", () => {
     fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: "Regenraum Pause" },
     });
-    fireEvent.change(screen.getByLabelText(/cover asset id/i), {
+    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
+    fireEvent.change(screen.getByLabelText(/manual asset id/i), {
       target: { value: "8" },
     });
     fireEvent.change(screen.getByLabelText(/duration minutes/i), {

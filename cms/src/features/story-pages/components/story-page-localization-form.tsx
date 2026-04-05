@@ -243,13 +243,13 @@ export function StoryPageLocalizationForm({
         name="illustrationMediaId"
         render={({ field }) => (
           <AssetPickerField
-            description="Story page illustrations are language-scoped and must reference `IMAGE` assets."
+            description="Upload the localized illustration here or browse existing `IMAGE` assets for this story page."
             disabled={isPending}
             error={form.formState.errors.illustrationMediaId}
             id={`story-page-illustration-${contentLocalization.languageCode}`}
-            label="Illustration asset id"
+            label="Illustration asset"
             mediaType="IMAGE"
-            pickerDescription="Select a recent image asset for this localized story page illustration. Manual asset ids remain supported."
+            pickerDescription="Select a recent image asset for this localized story page illustration. Uploading from this field stays available, and manual asset ids remain under Advanced."
             pickerTitle="Pick story page illustration"
             placeholder="Required"
             value={field.value}
@@ -263,13 +263,13 @@ export function StoryPageLocalizationForm({
         name="audioMediaId"
         render={({ field }) => (
           <AssetPickerField
-            description="Story page audio links can reference only `AUDIO` assets."
+            description="Upload or select localized narration for this page without leaving the story page editor."
             disabled={isPending}
             error={form.formState.errors.audioMediaId}
             id={`story-page-audio-${contentLocalization.languageCode}`}
-            label="Audio asset id"
+            label="Audio asset"
             mediaType="AUDIO"
-            pickerDescription="Select a recent audio asset for this localized story page. Manual asset ids remain supported."
+            pickerDescription="Select a recent audio asset for this localized story page. Uploading from this field stays available, and manual asset ids remain under Advanced."
             pickerTitle="Pick story page audio asset"
             placeholder="Optional"
             value={field.value}

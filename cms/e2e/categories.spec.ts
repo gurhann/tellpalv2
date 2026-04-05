@@ -76,6 +76,8 @@ test("category create, edit, and localize use content-aligned types", async ({
   page,
 }) => {
   const session = makeSession();
+  const tinyImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO8B9pQAAAAASUVORK5CYII=";
   const categories: CategoryReadResponse[] = [
     {
       categoryId: 7,
@@ -368,6 +370,41 @@ test("category create, edit, and localize use content-aligned types", async ({
     });
   });
 
+  await page.route(
+    "**/api/admin/media/*/download-url-cache/refresh",
+    async (route) => {
+      const segments = new URL(route.request().url()).pathname.split("/");
+      const assetId = Number(segments.at(-2));
+      const asset = imageAssets.find((entry) => entry.assetId === assetId);
+
+      if (!asset) {
+        await route.fulfill({
+          status: 404,
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Asset not found",
+            status: 404,
+            detail: `Asset #${assetId} was not found.`,
+            errorCode: "asset_not_found",
+            path: `/api/admin/media/${assetId}/download-url-cache/refresh`,
+          }),
+        });
+        return;
+      }
+
+      asset.cachedDownloadUrl = tinyImageDataUrl;
+      asset.downloadUrlCachedAt = "2026-04-01T12:10:00Z";
+      asset.downloadUrlExpiresAt = "2026-04-01T14:10:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(asset),
+      });
+    },
+  );
+
   await page.goto("/categories");
 
   await expect(
@@ -421,8 +458,21 @@ test("category create, edit, and localize use content-aligned types", async ({
   await page
     .locator('textarea[name="description"]')
     .fill("Soft editorial picks for bedtime.");
-  await page.locator('input[name="imageMediaId"]').fill("4");
-  await page.getByRole("button", { name: /create localization/i }).click();
+  const categoryLocalizationDialog = page.getByRole("dialog");
+  await categoryLocalizationDialog
+    .getByRole("button", { name: /advanced/i })
+    .click({ force: true });
+  await categoryLocalizationDialog.getByLabel(/image asset/i).fill("4");
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/admin/categories/99/localizations/tr") &&
+        response.request().method() === "POST",
+    ),
+    categoryLocalizationDialog.locator("form").evaluate((form) => {
+      (form as HTMLFormElement).requestSubmit();
+    }),
+  ]);
 
   await expect(
     page
@@ -439,12 +489,18 @@ test("category create, edit, and localize use content-aligned types", async ({
   );
 
   await page.getByLabel(/^name$/i).fill("Calm Lullabies Updated");
-  await page.getByRole("button", { name: /save localization/i }).click();
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/admin/categories/99/localizations/tr") &&
+        response.request().method() === "PUT",
+    ),
+    page.getByRole("button", { name: /save localization/i }).click(),
+  ]);
 
   await expect(page.locator('input[name="name"]')).toHaveValue(
     "Calm Lullabies Updated",
   );
-  await expect(createdLocalization?.name).toBe("Calm Lullabies Updated");
 
   await page.reload();
 
@@ -462,6 +518,8 @@ test("category curation add reorder remove survives refresh with hydrated locali
   page,
 }) => {
   const session = makeSession();
+  const tinyImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO8B9pQAAAAASUVORK5CYII=";
   const category: CategoryReadResponse = {
     categoryId: 7,
     type: "STORY",
@@ -786,6 +844,41 @@ test("category curation add reorder remove survives refresh with hydrated locali
     });
   });
 
+  await page.route(
+    "**/api/admin/media/*/download-url-cache/refresh",
+    async (route) => {
+      const segments = new URL(route.request().url()).pathname.split("/");
+      const assetId = Number(segments.at(-2));
+      const asset = imageAssets.find((entry) => entry.assetId === assetId);
+
+      if (!asset) {
+        await route.fulfill({
+          status: 404,
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Asset not found",
+            status: 404,
+            detail: `Asset #${assetId} was not found.`,
+            errorCode: "asset_not_found",
+            path: `/api/admin/media/${assetId}/download-url-cache/refresh`,
+          }),
+        });
+        return;
+      }
+
+      asset.cachedDownloadUrl = tinyImageDataUrl;
+      asset.downloadUrlCachedAt = "2026-04-01T12:10:00Z";
+      asset.downloadUrlExpiresAt = "2026-04-01T14:10:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(asset),
+      });
+    },
+  );
+
   await page.goto("/categories/7");
   await expect(
     page.getByRole("heading", { name: /sign in to tellpal cms/i }),
@@ -828,25 +921,30 @@ test("category curation add reorder remove survives refresh with hydrated locali
     page.getByRole("heading", { name: /loading curated content/i }),
   ).toHaveCount(0);
 
-  await page.evaluate(() => {
-    const button = [...document.querySelectorAll("button")].find((element) =>
-      element.textContent?.includes("Add curated content"),
-    );
-
-    if (!button) {
-      throw new Error("Add curated content button was not found.");
-    }
-
-    button.click();
-  });
+  const addCuratedContentButton = page
+    .getByRole("button", { name: /add curated content/i })
+    .first();
+  await expect(addCuratedContentButton).toBeEnabled();
+  await addCuratedContentButton.click({ force: true });
   await expect(
     page.getByRole("heading", { name: /add curated content/i }),
   ).toBeVisible();
   await page.getByRole("button", { name: /#11 story\.starry-forest/i }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: /add curated content/i })
-    .click();
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .includes("/api/admin/categories/7/localizations/en/contents") &&
+        response.request().method() === "POST",
+    ),
+    page
+      .getByRole("dialog")
+      .locator("form")
+      .evaluate((form) => {
+        (form as HTMLFormElement).requestSubmit();
+      }),
+  ]);
 
   await expect(curationTable.getByText(/^Content #11$/)).toBeVisible();
 

@@ -55,8 +55,8 @@ export function MediaRoute() {
     <>
       <ContentPageShell
         eyebrow="Media"
-        title="Asset Library"
-        description="The asset registry now reads directly from the admin API. Recent media assets can be scanned here, and row selection now opens a live metadata detail sheet."
+        title="Media Utility"
+        description="Advanced registry, debug, preview, and manual upload surface for global assets. Normal editorial binding now happens inside content, category, and story-page editors."
         actions={
           <>
             <Button
@@ -71,11 +71,12 @@ export function MediaRoute() {
               />
               Refresh
             </Button>
-            <Button type="button" onClick={() => setIsUploadOpen(true)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsUploadOpen(true)}
+            >
               Upload asset
-            </Button>
-            <Button type="button" variant="outline" disabled>
-              Shared picker lives in forms
             </Button>
           </>
         }
@@ -96,7 +97,7 @@ export function MediaRoute() {
                 Images / Audio / Archives
               </div>
               <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
-                Firebase Storage and Local Stub
+                Utility view for registry, preview, and debug
               </div>
               <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
                 Showing {recentAssetsQuery.limit} recent assets
@@ -105,7 +106,7 @@ export function MediaRoute() {
 
             <FilterBarActions>
               <FilterBarSummary
-                description="The registry reflects recent backend assets and opens each selected row in the detail sheet."
+                description="Use this route for advanced inspection. Normal content/category/story workflows now upload and bind assets in place."
                 title={`${assetCount} recent asset${
                   assetCount === 1 ? "" : "s"
                 } loaded`}
@@ -117,16 +118,16 @@ export function MediaRoute() {
           <>
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardHeader>
-                <CardTitle>Library Summary</CardTitle>
+                <CardTitle>Utility Summary</CardTitle>
                 <CardDescription>
-                  Scan provider, media type, and cached URL coverage before
-                  opening the asset detail sheet.
+                  Inspect provider, media type, preview readiness, and cached
+                  URL coverage before opening the asset detail sheet.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
                   {recentAssetsQuery.isLoading
-                    ? "The recent asset registry is hydrating from the backend."
+                    ? "The recent asset utility view is hydrating from the backend."
                     : `${imageCount} images, ${audioCount} audio files, and ${archiveCount} archives are available in the current recent window.`}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
@@ -135,10 +136,9 @@ export function MediaRoute() {
                     : `${cachedUrlCount} recent assets already carry a cached download URL snapshot.`}
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Selecting a row now opens the live asset detail sheet.
-                  Content, category, and story-page forms now reuse this module
-                  through the shared asset picker field. New uploads register
-                  directly into Firebase Storage and return to this recent list.
+                  Asset binding belongs in content, category, and story-page
+                  editors. Keep this route for manual uploads, metadata
+                  inspection, playback/preview, and cache debugging.
                 </div>
               </CardContent>
             </Card>

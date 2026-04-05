@@ -50,6 +50,25 @@ test("create, edit, and publish flows work in the browser", async ({
   page,
 }) => {
   const session = makeSession();
+  const tinyAudioDataUrl =
+    "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
+  const mediaAssets = [
+    {
+      assetId: 11,
+      provider: "LOCAL_STUB",
+      objectPath: "/content/audio/dream-harbor-tr.mp3",
+      mediaType: "AUDIO",
+      kind: "ORIGINAL_AUDIO",
+      mimeType: "audio/mpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-03-31T12:00:00Z",
+      updatedAt: "2026-03-31T12:00:00Z",
+    },
+  ];
   const baseList: ContentReadResponse[] = [
     {
       contentId: 1,
@@ -302,6 +321,69 @@ test("create, edit, and publish flows work in the browser", async ({
     },
   );
 
+  await page.route("**/api/admin/media?**", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(mediaAssets),
+    });
+  });
+
+  await page.route("**/api/admin/media/*", async (route) => {
+    const assetId = Number(route.request().url().split("/").pop());
+    const asset = mediaAssets.find((entry) => entry.assetId === assetId);
+
+    await route.fulfill({
+      status: asset ? 200 : 404,
+      contentType: asset ? "application/json" : "application/problem+json",
+      body: JSON.stringify(
+        asset ?? {
+          type: "about:blank",
+          title: "Asset not found",
+          status: 404,
+          detail: `Asset ${assetId} was not found.`,
+          errorCode: "asset_not_found",
+          path: `/api/admin/media/${assetId}`,
+        },
+      ),
+    });
+  });
+
+  await page.route(
+    "**/api/admin/media/*/download-url-cache/refresh",
+    async (route) => {
+      const segments = new URL(route.request().url()).pathname.split("/");
+      const assetId = Number(segments.at(-2));
+      const asset = mediaAssets.find((entry) => entry.assetId === assetId);
+
+      if (!asset) {
+        await route.fulfill({
+          status: 404,
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Asset not found",
+            status: 404,
+            detail: `Asset ${assetId} was not found.`,
+            errorCode: "asset_not_found",
+            path: `/api/admin/media/${assetId}/download-url-cache/refresh`,
+          }),
+        });
+        return;
+      }
+
+      asset.cachedDownloadUrl = tinyAudioDataUrl;
+      asset.downloadUrlCachedAt = "2026-03-31T12:15:00Z";
+      asset.downloadUrlExpiresAt = "2026-03-31T14:15:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(asset),
+      });
+    },
+  );
+
   await page.goto("/contents");
 
   await expect(
@@ -331,12 +413,23 @@ test("create, edit, and publish flows work in the browser", async ({
   await page
     .getByRole("button", { name: /create first localization/i })
     .click();
-  await page.getByLabel(/^title$/i).fill("Dream Harbor");
-  await page.getByLabel(/audio asset id/i).fill("11");
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: /create localization/i })
-    .click();
+  const localizationDialog = page.getByRole("dialog");
+  await localizationDialog.getByLabel(/^title$/i).fill("Dream Harbor");
+  await localizationDialog
+    .getByRole("button", { name: /advanced/i })
+    .nth(0)
+    .click({ force: true });
+  await localizationDialog.getByLabel(/audio asset/i).fill("11");
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/admin/contents/99/localizations/tr") &&
+        response.request().method() === "POST",
+    ),
+    localizationDialog.locator("form").evaluate((form) => {
+      (form as HTMLFormElement).requestSubmit();
+    }),
+  ]);
 
   await expect(
     page.getByRole("heading", { name: /dream harbor/i }),
