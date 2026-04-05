@@ -9,6 +9,11 @@ import type {
   AssetProcessingContentType,
   AssetProcessingState,
 } from "@/features/assets/api/asset-processing-admin";
+import {
+  getAssetPreviewKind,
+  hasUsableCachedDownloadUrl,
+  type AssetPreviewKind,
+} from "@/features/assets/lib/asset-preview";
 import { mapLanguage } from "@/lib/languages";
 
 const assetProviderLabels: Record<AssetProvider, string> = {
@@ -68,8 +73,11 @@ export type AssetViewModel = {
   createdAt: string;
   updatedAt: string;
   hasCachedDownloadUrl: boolean;
+  hasUsableCachedDownloadUrl: boolean;
   hasMetadata: boolean;
   hasChecksum: boolean;
+  isPreviewable: boolean;
+  previewKind: AssetPreviewKind;
 };
 
 export type AssetProcessingJobViewModel = {
@@ -102,6 +110,8 @@ export type AssetProcessingJobViewModel = {
 };
 
 export function mapAdminAsset(asset: AdminAssetResponse): AssetViewModel {
+  const previewKind = getAssetPreviewKind(asset.mediaType);
+
   return {
     id: asset.assetId,
     provider: asset.provider,
@@ -120,8 +130,11 @@ export function mapAdminAsset(asset: AdminAssetResponse): AssetViewModel {
     createdAt: asset.createdAt,
     updatedAt: asset.updatedAt,
     hasCachedDownloadUrl: asset.cachedDownloadUrl !== null,
+    hasUsableCachedDownloadUrl: hasUsableCachedDownloadUrl(asset),
     hasMetadata: asset.mimeType !== null || asset.byteSize !== null,
     hasChecksum: asset.checksumSha256 !== null,
+    isPreviewable: previewKind !== "none",
+    previewKind,
   };
 }
 

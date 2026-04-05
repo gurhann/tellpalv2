@@ -17,6 +17,10 @@ vi.mock("@/features/assets/components/asset-metadata-form", () => ({
   AssetMetadataForm: () => <div>Asset metadata form stub</div>,
 }));
 
+vi.mock("@/features/assets/components/asset-preview-card", () => ({
+  AssetPreviewCard: () => <div>Asset preview card stub</div>,
+}));
+
 vi.mock("@/features/assets/components/refresh-download-url-button", () => ({
   RefreshDownloadUrlButton: () => (
     <button type="button">Refresh cached URL</button>
@@ -46,6 +50,7 @@ describe("AssetDetailSheet", () => {
     expect(
       screen.getByText("/content/images/evening-garden-page-1.jpg"),
     ).toBeVisible();
+    expect(screen.getByText(/asset preview card stub/i)).toBeVisible();
     expect(screen.getByText(/asset metadata form stub/i)).toBeVisible();
   });
 

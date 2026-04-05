@@ -18,7 +18,7 @@ describe("asset view model mappers", () => {
       checksumSha256: "abc123",
       cachedDownloadUrl: "https://example.com/download",
       downloadUrlCachedAt: "2026-03-29T12:00:00Z",
-      downloadUrlExpiresAt: "2026-03-29T13:00:00Z",
+      downloadUrlExpiresAt: "2026-06-29T13:00:00Z",
       createdAt: "2026-03-28T12:00:00Z",
       updatedAt: "2026-03-29T12:00:00Z",
     };
@@ -37,12 +37,15 @@ describe("asset view model mappers", () => {
       checksumSha256: "abc123",
       cachedDownloadUrl: "https://example.com/download",
       downloadUrlCachedAt: "2026-03-29T12:00:00Z",
-      downloadUrlExpiresAt: "2026-03-29T13:00:00Z",
+      downloadUrlExpiresAt: "2026-06-29T13:00:00Z",
       createdAt: "2026-03-28T12:00:00Z",
       updatedAt: "2026-03-29T12:00:00Z",
       hasCachedDownloadUrl: true,
+      hasUsableCachedDownloadUrl: true,
       hasMetadata: true,
       hasChecksum: true,
+      isPreviewable: true,
+      previewKind: "image",
     });
   });
 

@@ -204,9 +204,9 @@ describe("Asset integration", () => {
 
           nextAsset.cachedDownloadUrl =
             "https://storage.googleapis.com/tellpal-prod/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg";
-          nextAsset.downloadUrlCachedAt = "2026-04-04T18:15:00Z";
-          nextAsset.downloadUrlExpiresAt = "2026-04-04T19:15:00Z";
-          nextAsset.updatedAt = "2026-04-04T18:15:00Z";
+          nextAsset.downloadUrlCachedAt = "2026-04-05T18:15:00Z";
+          nextAsset.downloadUrlExpiresAt = "2026-04-05T19:15:00Z";
+          nextAsset.updatedAt = "2026-04-05T18:15:00Z";
 
           return jsonResponse(nextAsset);
         }
@@ -242,6 +242,22 @@ describe("Asset integration", () => {
     expect(
       await screen.findAllByText(uploadedFirebaseImageAssetResponse.objectPath),
     ).toHaveLength(2);
+    expect(
+      await screen.findByRole("img", { name: /preview of asset #12/i }),
+    ).toHaveAttribute(
+      "src",
+      "https://storage.googleapis.com/tellpal-prod/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg",
+    );
+    expect(
+      fetchMock.mock.calls.some(([input, init]) => {
+        const url = new URL(typeof input === "string" ? input : input.url);
+
+        return (
+          url.pathname === "/api/admin/media/12/download-url-cache/refresh" &&
+          init?.method === "POST"
+        );
+      }),
+    ).toBe(true);
 
     fireEvent.change(await screen.findByLabelText(/mime type/i), {
       target: { value: "image/jpeg" },
@@ -266,6 +282,6 @@ describe("Asset integration", () => {
       expect(screen.getByText(/^available$/i)).toBeVisible();
     });
 
-    expect(screen.getByText(/last cached: 04 apr 2026/i)).toBeVisible();
+    expect(screen.getByText(/last cached: 05 apr 2026/i)).toBeVisible();
   }, 15_000);
 });

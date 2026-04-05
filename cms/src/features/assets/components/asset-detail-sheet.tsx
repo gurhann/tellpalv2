@@ -10,6 +10,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { AssetMetadataForm } from "@/features/assets/components/asset-metadata-form";
+import { AssetPreviewCard } from "@/features/assets/components/asset-preview-card";
 import { RefreshDownloadUrlButton } from "@/features/assets/components/refresh-download-url-button";
 import { useAssetDetail } from "@/features/assets/queries/use-asset-detail";
 
@@ -127,6 +128,8 @@ export function AssetDetailSheet({
                   </p>
                 </div>
               </div>
+
+              <AssetPreviewCard asset={asset} open={open} />
 
               <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
                 <div className="mb-4 space-y-1">
