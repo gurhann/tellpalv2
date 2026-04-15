@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 
+import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import {
@@ -7,7 +8,6 @@ import {
   toastMutation,
   useZodForm,
 } from "@/components/forms/form-utils";
-import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,10 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type {
-  AdminContentResponse,
-  ContentType,
-} from "@/features/contents/api/content-admin";
+import type { AdminContentResponse } from "@/features/contents/api/content-admin";
 import { useSaveContent } from "@/features/contents/mutations/use-save-content";
 import {
   contentFormSchema,
@@ -43,26 +40,6 @@ type ContentFormProps = {
   pendingLabel?: string;
 };
 
-function getContentTypeGuidance(type: ContentType, locale: "en" | "tr") {
-  if (type === "STORY") {
-    return {
-      title: locale === "tr" ? "Hikaye akışı" : "Story workflow",
-      description:
-        locale === "tr"
-          ? "Hikaye kayıtları anlatı metni ve sayfa bazlı ses için story pages alt rotasını kullanır. İçerik seviyesindeki body ve tekil audio alanları sonraki işlerde görünür kalır."
-          : "Story records use the story pages child route for narrative text and per-page audio. Content-level localization body and single-audio fields stay hidden in later tasks.",
-    };
-  }
-
-  return {
-    title: locale === "tr" ? "Hikaye dışı akış" : "Non-story workflow",
-    description:
-      locale === "tr"
-        ? "Hikaye dışı kayıtlar story pages kullanmaz. Yerelleştirme formları daha sonra seçilen türe göre içerik seviyesindeki body text ve audio gereksinimlerini zorunlu kılar."
-        : "Non-story records do not use story pages. Localization forms will later enforce content-level body text and audio requirements based on the selected type.",
-  };
-}
-
 function isProblemMappedToField(problem: ApiProblemDetail) {
   return (
     problem.errorCode === "duplicate_external_key" ||
@@ -83,31 +60,31 @@ export function ContentForm({
   const copy =
     locale === "tr"
       ? {
-          submitLabel: mode === "create" ? "İçerik oluştur" : "Metadata kaydet",
+          submitLabel: mode === "create" ? "Icerik olustur" : "Metadata kaydet",
           pendingLabel:
             mode === "create"
-              ? "İçerik oluşturuluyor..."
+              ? "Icerik olusturuluyor..."
               : "Metadata kaydediliyor...",
-          createLoading: "İçerik kaydı oluşturuluyor...",
-          updateLoading: "İçerik metadata'sı kaydediliyor...",
-          createSuccess: "İçerik kaydı oluşturuldu.",
-          updateSuccess: "İçerik metadata'sı kaydedildi.",
-          externalKeyDuplicate: "External key zaten kullanılıyor.",
+          createLoading: "Icerik kaydi olusturuluyor...",
+          updateLoading: "Icerik metadata'si kaydediliyor...",
+          createSuccess: "Icerik kaydi olusturuldu.",
+          updateSuccess: "Icerik metadata'si kaydedildi.",
+          externalKeyDuplicate: "External key zaten kullaniliyor.",
           genericSaveError:
-            "İçerik değişiklikleri kaydedilemedi. Tekrar deneyin.",
-          contentType: "İçerik türü",
-          selectContentType: "İçerik türü seçin",
+            "Icerik degisiklikleri kaydedilemedi. Tekrar deneyin.",
+          contentType: "Icerik turu",
+          selectContentType: "Icerik turu secin",
           contentTypeFixed:
-            "İçerik türü oluşturulduktan sonra sabittir. Bu metadata formu yalnızca external key, age range ve aktiflik durumunu günceller.",
+            "Icerik turu olusturulduktan sonra sabittir. Bu form yalnizca external key, age range ve aktiflik durumunu gunceller.",
           externalKey: "External key",
-          ageRange: "Yaş aralığı",
+          ageRange: "Yas araligi",
           optional: "Opsiyonel",
-          availability: "Erişim durumu",
+          availability: "Erisim durumu",
           active: "Aktif",
           inactive: "Pasif",
           inactiveHelp:
-            "Pasif içerikler admin okuma ekranlarında görünmeye devam eder, ancak aktif editoryal akışlar için uygun değildir.",
-          cancel: "İptal",
+            "Pasif icerikler admin ekranlarinda gorunmeye devam eder.",
+          cancel: "Iptal",
         }
       : {
           submitLabel: mode === "create" ? "Create content" : "Save metadata",
@@ -122,15 +99,14 @@ export function ContentForm({
           contentType: "Content type",
           selectContentType: "Select content type",
           contentTypeFixed:
-            "Content type is fixed after creation. This metadata form updates external key, age range, and active state only.",
+            "Content type is fixed after creation. This form updates external key, age range, and active state only.",
           externalKey: "External key",
           ageRange: "Age range",
           optional: "Optional",
           availability: "Availability",
           active: "Active",
           inactive: "Inactive",
-          inactiveHelp:
-            "Inactive content still appears in admin read screens, but it is not eligible for active editorial flows.",
+          inactiveHelp: "Inactive content still appears in admin read screens.",
           cancel: "Cancel",
         };
   const form = useZodForm<ContentFormValues>({
@@ -150,7 +126,6 @@ export function ContentForm({
         },
   );
   const selectedType = form.watch("type");
-  const guidance = getContentTypeGuidance(selectedType, locale);
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -325,13 +300,6 @@ export function ContentForm({
           />
           <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
-      </div>
-
-      <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-        <p className="text-sm font-medium text-foreground">{guidance.title}</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {guidance.description}
-        </p>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

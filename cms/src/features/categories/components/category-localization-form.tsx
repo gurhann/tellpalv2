@@ -30,9 +30,9 @@ import {
   type CategoryLocalizationFormValues,
 } from "@/features/categories/schema/category-localization-schema";
 import { useI18n } from "@/i18n/locale-provider";
-import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
+import { validateIllustrationAssetId } from "@/features/story-pages/lib/illustration-asset-validation";
 import type { ApiProblemDetail } from "@/types/api";
 
 type LanguageOption = {
@@ -86,37 +86,34 @@ export function CategoryLocalizationForm({
   const copy =
     locale === "tr"
       ? {
-          createLoading: "Kategori yerelleştirmesi oluşturuluyor...",
-          updateLoading: "Kategori yerelleştirmesi kaydediliyor...",
-          createSuccess: "Kategori yerelleştirmesi oluşturuldu.",
-          updateSuccess: "Kategori yerelleştirmesi kaydedildi.",
-          languageExists: "Bu kategori için bu dil zaten var.",
+          createLoading: "Kategori yerellestirmesi olusturuluyor...",
+          updateLoading: "Kategori yerellestirmesi kaydediliyor...",
+          createSuccess: "Kategori yerellestirmesi olusturuldu.",
+          updateSuccess: "Kategori yerellestirmesi kaydedildi.",
+          languageExists: "Bu kategori icin bu dil zaten var.",
           genericSaveError:
-            "Kategori yerelleştirmesi kaydedilemedi. Tekrar deneyin.",
+            "Kategori yerellestirmesi kaydedilemedi. Tekrar deneyin.",
           language: "Dil",
-          selectLanguage: "Dil seçin",
+          selectLanguage: "Dil secin",
           localeCode: "Dil kodu",
           name: "Ad",
-          localizedName: "Yerelleştirilmiş kategori adı",
-          description: "Açıklama",
-          localizedDescription: "Yerelleştirilmiş kategori açıklaması",
+          localizedName: "Yerellestirilmis kategori adi",
+          description: "Aciklama",
+          localizedDescription: "Yerellestirilmis kategori aciklamasi",
           imageDescription:
-            "Kategori görselini doğrudan bu yerelleştirme çalışma alanında yükleyin veya seçin.",
-          imageLabel: "Görsel asset'i",
+            "Kategori gorselini bu yerellestirme ekraninda yukleyin veya secin.",
+          imageLabel: "Gorsel asset'i",
           imagePickerDescription:
-            "Bu kategori yerelleştirmesi için son görsel asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
-          imagePickerTitle: "Kategori görsel asset'ini seç",
+            "Bu kategori yerellestirmesi icin son gorsel asset'lerinden birini secin.",
+          imagePickerTitle: "Kategori gorsel asset'ini sec",
           status: "Durum",
-          selectStatus: "Durum seçin",
-          publishedAt: "Yayınlanma zamanı",
+          selectStatus: "Durum secin",
+          publishedAt: "Yayinlanma zamani",
           publishedHelp:
-            "Yayınlama için zaman damgası gerekir. Bir yerelleştirme dil bazlı kategori kürasyonu için editoryal olarak hazır olduğunda bunu kullanın.",
-          workspaceTitle: "Canlı yerelleştirme çalışma alanı",
-          workspaceDescription:
-            "Backend artık kategori yerelleştirme okumalarını sunuyor. Bu çalışma alanındaki sekmeler kalıcı yerelleştirmeleri hydrate eder ve yenilemeden sonra görünür kalır.",
-          cancel: "İptal",
-          createLocalization: "Yerelleştirme oluştur",
-          saveLocalization: "Yerelleştirmeyi kaydet",
+            "Yayinlama icin zaman damgasi gerekir. Bu alan sadece published durumda kullanilir.",
+          cancel: "Iptal",
+          createLocalization: "Yerellestirme olustur",
+          saveLocalization: "Yerellestirmeyi kaydet",
           optional: "Opsiyonel",
         }
       : {
@@ -135,19 +132,16 @@ export function CategoryLocalizationForm({
           description: "Description",
           localizedDescription: "Localized category description",
           imageDescription:
-            "Upload or browse the category image directly in this localization workspace.",
+            "Upload or browse the category image directly in this editor.",
           imageLabel: "Image asset",
           imagePickerDescription:
-            "Select a recent image asset for this category localization. Uploading from this field stays available, and manual asset ids remain under Advanced.",
+            "Select a recent image asset for this category localization.",
           imagePickerTitle: "Pick category image asset",
           status: "Status",
           selectStatus: "Select status",
           publishedAt: "Published at",
           publishedHelp:
-            "Publishing requires a timestamp. Use this when a localization is editorially ready for language-scoped category curation.",
-          workspaceTitle: "Live localization workspace",
-          workspaceDescription:
-            "The backend now exposes category localization reads. Tabs in this workspace hydrate persisted localizations and keep them visible after refresh.",
+            "Publishing requires a timestamp. Use this only for published localizations.",
           cancel: "Cancel",
           createLocalization: "Create localization",
           saveLocalization: "Save localization",
@@ -394,15 +388,6 @@ export function CategoryLocalizationForm({
             <FieldError error={form.formState.errors.publishedAt} />
           </div>
         ) : null}
-      </div>
-
-      <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-        <p className="text-sm font-medium text-foreground">
-          {copy.workspaceTitle}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {copy.workspaceDescription}
-        </p>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

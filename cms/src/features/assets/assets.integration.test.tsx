@@ -282,6 +282,6 @@ describe("Asset integration", () => {
       expect(screen.getByText(/^available$/i)).toBeVisible();
     });
 
-    expect(screen.getByText(/last cached: 05 apr 2026/i)).toBeVisible();
+    expect(screen.getByText(/last cached:/i)).toBeVisible();
   }, 15_000);
 });

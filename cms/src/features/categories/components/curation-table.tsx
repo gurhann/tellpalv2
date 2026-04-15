@@ -148,22 +148,6 @@ export function CurationTable({
         emptyTitle="No curated content yet"
         emptyDescription={`No ${localization.languageLabel} curated ${category.typeLabel.toLowerCase()} rows are stored for this category yet.`}
         caption={`${localization.languageLabel} curated content table`}
-        summary={
-          <div className="rounded-full border border-border/70 bg-muted/30 px-3 py-1 text-xs font-medium text-muted-foreground">
-            {items.length} curated row{items.length === 1 ? "" : "s"}
-          </div>
-        }
-        toolbar={
-          <div>
-            <p className="text-sm font-medium text-foreground">
-              Stored curated content
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              This table hydrates from the admin curation read endpoint for{" "}
-              {localization.languageLabel}.
-            </p>
-          </div>
-        }
       />
 
       <Dialog

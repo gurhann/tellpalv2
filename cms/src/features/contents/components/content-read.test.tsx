@@ -35,13 +35,11 @@ describe("content read components", () => {
   it("renders summary metadata for the live detail shell", () => {
     render(<ContentSummaryCard content={storyContentViewModel} />);
 
-    expect(screen.getByText(/story \/ active \/ age range 5/i)).toBeVisible();
-    expect(
-      screen.getByText("External key: story.evening-garden"),
-    ).toBeVisible();
-    expect(screen.getByText("2 language workspaces prepared")).toBeVisible();
-    expect(screen.getByText("1 published / 1 mobile visible")).toBeVisible();
-    expect(screen.getByText("1 localization ready")).toBeVisible();
-    expect(screen.getByText("2 story pages")).toBeVisible();
+    expect(screen.getByText("story.evening-garden")).toBeVisible();
+    expect(screen.getByText("Story")).toBeVisible();
+    expect(screen.getByText("Active")).toBeVisible();
+    expect(screen.getByText("Age 5")).toBeVisible();
+    expect(screen.getByText("2 locales")).toBeVisible();
+    expect(screen.getByText("2 pages")).toBeVisible();
   });
 });

@@ -195,7 +195,6 @@ export function ContentLocalizationForm({
       : null;
   const alertProblem =
     saveProblem && !isProblemMappedToField(saveProblem) ? saveProblem : null;
-  const showStoryGuidance = content.summary.supportsStoryPages;
   const requiresBodyText =
     content.summary.type === "AUDIO_STORY" ||
     content.summary.type === "MEDITATION";
@@ -343,11 +342,7 @@ export function ContentLocalizationForm({
           <FieldError error={form.formState.errors.description} />
         </div>
 
-        {showStoryGuidance ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900 md:col-span-2">
-            {copy.storyGuidance}
-          </div>
-        ) : (
+        {content.summary.supportsStoryPages ? null : (
           <>
             <div className="space-y-2 md:col-span-2">
               <label

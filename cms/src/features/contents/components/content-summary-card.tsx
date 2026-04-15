@@ -1,60 +1,53 @@
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
+import { useI18n } from "@/i18n/locale-provider";
 
 type ContentSummaryCardProps = {
   content: ContentReadViewModel;
 };
 
-function renderAgeRange(ageRange: number | null) {
-  return ageRange === null ? "No age range set" : `Age range ${ageRange}`;
-}
-
 export function ContentSummaryCard({ content }: ContentSummaryCardProps) {
+  const { locale } = useI18n();
+
   return (
-    <div className="grid gap-3 md:grid-cols-3">
-      <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Metadata
-        </p>
-        <p className="mt-2 text-sm font-medium text-foreground">
-          {content.summary.typeLabel} /{" "}
-          {content.summary.active ? "Active" : "Inactive"} /{" "}
-          {renderAgeRange(content.summary.ageRange)}
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          External key: {content.summary.externalKey}
-        </p>
-      </div>
-
-      <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Localization
-        </p>
-        <p className="mt-2 text-sm font-medium text-foreground">
-          {content.localizationCount} language workspace
-          {content.localizationCount === 1 ? "" : "s"} prepared
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {content.publishedLocalizationCount} published /{" "}
-          {content.visibleToMobileLocalizationCount} mobile visible
-        </p>
-      </div>
-
-      <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Processing
-        </p>
-        <p className="mt-2 text-sm font-medium text-foreground">
-          {content.processingCompleteLocalizationCount} localization
-          {content.processingCompleteLocalizationCount === 1 ? "" : "s"} ready
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {content.summary.supportsStoryPages
-            ? `${content.summary.pageCount ?? 0} story page${
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background px-4 py-3">
+      <span className="text-sm font-semibold text-foreground">
+        {content.summary.externalKey}
+      </span>
+      <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium text-foreground">
+        {content.summary.typeLabel}
+      </span>
+      <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+        {content.summary.active
+          ? locale === "tr"
+            ? "Aktif"
+            : "Active"
+          : locale === "tr"
+            ? "Pasif"
+            : "Inactive"}
+      </span>
+      {content.summary.ageRange !== null ? (
+        <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+          {locale === "tr"
+            ? `Yaş ${content.summary.ageRange}`
+            : `Age ${content.summary.ageRange}`}
+        </span>
+      ) : null}
+      <span className="text-sm text-muted-foreground">
+        {locale === "tr"
+          ? `${content.localizationCount} dil`
+          : `${content.localizationCount} locale${
+              content.localizationCount === 1 ? "" : "s"
+            }`}
+      </span>
+      {content.summary.supportsStoryPages ? (
+        <span className="text-sm text-muted-foreground">
+          {locale === "tr"
+            ? `${content.summary.pageCount ?? 0} sayfa`
+            : `${content.summary.pageCount ?? 0} page${
                 content.summary.pageCount === 1 ? "" : "s"
-              }`
-            : "No story pages for this content type"}
-        </p>
-      </div>
+              }`}
+        </span>
+      ) : null}
     </div>
   );
 }

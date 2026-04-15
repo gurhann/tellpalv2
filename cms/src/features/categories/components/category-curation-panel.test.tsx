@@ -47,9 +47,7 @@ describe("CategoryCurationPanel", () => {
       screen.getByRole("tablist", { name: /category curation language tabs/i }),
     ).toBeVisible();
     expect(screen.getByText(/english curation workspace/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/cross-type curation is rejected by the backend/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/story items only/i)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /add curated content/i }),
     ).toBeEnabled();

@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 
+import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import {
@@ -7,7 +8,6 @@ import {
   toastMutation,
   useZodForm,
 } from "@/components/forms/form-utils";
-import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,55 +40,6 @@ type CategoryFormProps = {
   pendingLabel?: string;
 };
 
-function getCategoryTypeGuidance(
-  type: CategoryFormValues["type"],
-  locale: "en" | "tr",
-) {
-  const guidanceByType: Record<
-    CategoryFormValues["type"],
-    { title: string; description: string }
-  > = {
-    STORY: {
-      title:
-        locale === "tr" ? "Hikaye kategori akışı" : "Story category workflow",
-      description:
-        locale === "tr"
-          ? "Hikaye kategorileri yalnızca STORY kayıtlarını küratör eder. Yerelleştirme çalışma alanları kategorinin kendisini yayınlar; kürasyon daha sonra yalnızca eşleşen dillerde hikaye içeriklerini kabul eder."
-          : "Story categories curate only STORY records. Localization workspaces publish the category itself, and curation will later accept only story content in matching languages.",
-    },
-    AUDIO_STORY: {
-      title:
-        locale === "tr"
-          ? "Sesli hikaye kategori akışı"
-          : "Audio story category workflow",
-      description:
-        locale === "tr"
-          ? "Sesli hikaye kategorileri AUDIO_STORY kayıtlarına ayrılmıştır. Editoryal gruplama ve gelecekteki kürasyon anlatımlı uzun form ses içerikleriyle sınırlı kalacaksa bunu kullanın."
-          : "Audio story categories are reserved for AUDIO_STORY records. Use this when editorial grouping and future curation should stay limited to narrated long-form audio content.",
-    },
-    MEDITATION: {
-      title:
-        locale === "tr"
-          ? "Meditasyon kategori akışı"
-          : "Meditation category workflow",
-      description:
-        locale === "tr"
-          ? "Meditasyon kategorileri yalnızca MEDITATION kayıtlarını küratör eder. Gelecekteki kürasyon ve keşif ekranları diğer içerik ailelerini karıştırmasın diye türü burada hizalı tutun."
-          : "Meditation categories curate only MEDITATION records. Keep the type aligned here so future curation and discovery screens cannot mix in other content families.",
-    },
-    LULLABY: {
-      title:
-        locale === "tr" ? "Ninni kategori akışı" : "Lullaby category workflow",
-      description:
-        locale === "tr"
-          ? "Ninni kategorileri yalnızca LULLABY kayıtlarını küratör eder. Yerelleştirme ve kürasyon desteklenen dillerde ninniye hazır editoryal koleksiyonlarla sınırlı kalır."
-          : "Lullaby categories curate only LULLABY records. Localization and curation will stay scoped to lullaby-ready editorial collections across supported languages.",
-    },
-  };
-
-  return guidanceByType[type];
-}
-
 function isProblemMappedToField(problem: ApiProblemDetail) {
   return (
     problem.errorCode === "duplicate_category_slug" ||
@@ -110,34 +61,34 @@ export function CategoryForm({
     locale === "tr"
       ? {
           submitLabel:
-            mode === "create" ? "Kategori oluştur" : "Metadata kaydet",
+            mode === "create" ? "Kategori olustur" : "Metadata kaydet",
           pendingLabel:
             mode === "create"
-              ? "Kategori oluşturuluyor..."
+              ? "Kategori olusturuluyor..."
               : "Metadata kaydediliyor...",
-          createLoading: "Kategori kaydı oluşturuluyor...",
-          updateLoading: "Kategori metadata'sı kaydediliyor...",
-          createSuccess: "Kategori kaydı oluşturuldu.",
-          updateSuccess: "Kategori metadata'sı kaydedildi.",
-          slugDuplicate: "Slug zaten kullanılıyor.",
+          createLoading: "Kategori kaydi olusturuluyor...",
+          updateLoading: "Kategori metadata'si kaydediliyor...",
+          createSuccess: "Kategori kaydi olusturuldu.",
+          updateSuccess: "Kategori metadata'si kaydedildi.",
+          slugDuplicate: "Slug zaten kullaniliyor.",
           genericSaveError:
-            "Kategori değişiklikleri kaydedilemedi. Tekrar deneyin.",
-          categoryType: "Kategori türü",
-          selectCategoryType: "Kategori türü seçin",
+            "Kategori degisiklikleri kaydedilemedi. Tekrar deneyin.",
+          categoryType: "Kategori turu",
+          selectCategoryType: "Kategori turu secin",
           typeFixed:
-            "Kategori türü bu kategorinin hangi içerik ailesini küratör edebileceğini belirler. Bu form slug, premium ve aktiflik durumunu günceller; tür oluşturulduktan sonra sabit kalır.",
+            "Kategori turu olusturulduktan sonra sabittir. Bu form slug, premium ve aktiflik durumunu gunceller.",
           slug: "Slug",
-          access: "Erişim",
+          access: "Erisim",
           standard: "Standart",
           premium: "Premium",
           premiumHelp:
-            "Premium kategoriler admin listeleri ve detay ekranlarında yine de düzenlenebilir.",
-          availability: "Erişim durumu",
+            "Premium kategoriler admin ekranlarinda duzenlenmeye devam eder.",
+          availability: "Erisim durumu",
           active: "Aktif",
           inactive: "Pasif",
           inactiveHelp:
-            "Pasif kategoriler editoryal temizlik için admin okuma ekranlarında görünmeye devam eder.",
-          cancel: "İptal",
+            "Pasif kategoriler admin ekranlarinda gorunmeye devam eder.",
+          cancel: "Iptal",
         }
       : {
           submitLabel: mode === "create" ? "Create category" : "Save metadata",
@@ -152,18 +103,18 @@ export function CategoryForm({
           categoryType: "Category type",
           selectCategoryType: "Select category type",
           typeFixed:
-            "Category type determines which content family this category is allowed to curate. This form updates slug, premium, and active state while keeping type fixed after creation.",
+            "Category type is fixed after creation. This form updates slug, premium, and active state only.",
           slug: "Slug",
           access: "Access",
           standard: "Standard",
           premium: "Premium",
           premiumHelp:
-            "Premium categories can still be edited in admin lists and detail views.",
+            "Premium categories can still be edited in admin screens.",
           availability: "Availability",
           active: "Active",
           inactive: "Inactive",
           inactiveHelp:
-            "Inactive categories still appear in admin read screens for editorial cleanup.",
+            "Inactive categories still appear in admin read screens.",
           cancel: "Cancel",
         };
   const form = useZodForm<CategoryFormValues>({
@@ -183,7 +134,6 @@ export function CategoryForm({
         },
   );
   const selectedType = form.watch("type");
-  const guidance = getCategoryTypeGuidance(selectedType, locale);
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -354,13 +304,6 @@ export function CategoryForm({
           />
           <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
-      </div>
-
-      <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-        <p className="text-sm font-medium text-foreground">{guidance.title}</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {guidance.description}
-        </p>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

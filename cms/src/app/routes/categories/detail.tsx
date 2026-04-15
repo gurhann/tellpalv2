@@ -7,13 +7,7 @@ import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FormSection } from "@/components/forms/form-section";
 import { LanguageTabs } from "@/components/language/language-tabs";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -63,8 +57,8 @@ export function CategoryDetailRoute() {
             "CMS temel kategori metadata'sını admin API üzerinden yüklüyor. Yerelleştirme ve kürasyon yüzeyleri, mevcut okuma payload'ı dar kalsa bile ekranda kalır.",
           routeMissing:
             "Bu rota kategori kaydından geçerli bir sayısal kategori kimliği bekler.",
-          routeLoaded: (slug: string, typeLabel: string) =>
-            `${slug} için temel metadata artık düzenlenebilir. Bu kategori türü içerik türüyle hizalıdır; kürasyon yalnızca eşleşen ${typeLabel} kayıtlarıyla sınırlı kalır. Yerelleştirme sekmeleri ve kürasyon satırları artık admin API üzerinden hydrate olur.`,
+          routeLoaded: (slug: string) =>
+            `${slug} için metadata, yerelleştirme ve kürasyon akışlarını yönetin.`,
           detailStatus: "Detay Durumu",
           route: "Rota",
           inlineStates:
@@ -130,11 +124,11 @@ export function CategoryDetailRoute() {
       : {
           detailFallbackTitle: "Category Detail",
           routeLoading:
-            "The CMS is loading base category metadata from the admin API. Localization and curation surfaces stay mounted while the current read payload remains intentionally narrow.",
+            "Loading metadata, localization, and curation workflows.",
           routeMissing:
             "This route expects a valid numeric category id from the category registry.",
-          routeLoaded: (slug: string, typeLabel: string) =>
-            `Base metadata for ${slug} is now editable. This category type is content-aligned, so curation stays limited to matching ${typeLabel} records. Localization tabs and curated rows now both hydrate from the admin API.`,
+          routeLoaded: (slug: string) =>
+            `Manage metadata, localization, and curation workflows for ${slug}.`,
           detailStatus: "Detail Status",
           route: "Route",
           inlineStates:
@@ -207,7 +201,7 @@ export function CategoryDetailRoute() {
         : `Category #${parsedCategoryId}`
       : copy.detailFallbackTitle);
   const routeDescription = category
-    ? copy.routeLoaded(category.slug, category.typeLabel)
+    ? copy.routeLoaded(category.slug)
     : hasValidCategoryId
       ? copy.routeLoading
       : copy.routeMissing;
@@ -276,25 +270,12 @@ export function CategoryDetailRoute() {
           : copy.detailQueryDescription;
 
     return (
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-2xl border border-border/70 bg-background px-4 py-3 md:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {copy.detailStatus}
-          </p>
-          <p className="mt-2 text-sm font-medium text-foreground">{title}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {copy.route}
-          </p>
-          <p className="mt-2 text-sm font-medium text-foreground">
-            /categories/{categoryId || "?"}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.inlineStates}
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background px-4 py-3">
+        <span className="text-sm font-semibold text-foreground">{title}</span>
+        <span className="text-sm text-muted-foreground">{description}</span>
+        <span className="text-sm text-muted-foreground">
+          {copy.route}: /categories/{categoryId || "?"}
+        </span>
       </div>
     );
   }
@@ -534,41 +515,6 @@ export function CategoryDetailRoute() {
           </>
         }
         toolbar={renderToolbar()}
-        aside={
-          <>
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>{copy.categorySummary}</CardTitle>
-                <CardDescription>{copy.summaryDescription}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  {copy.summaryCardOne}
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  {copy.summaryCardTwo}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>{copy.snapshotTitle}</CardTitle>
-                <CardDescription>{copy.snapshotDescription}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  {localizations.length === 0
-                    ? copy.snapshotNone
-                    : copy.snapshotSome(localizations.length)}
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  {copy.snapshotRules}
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        }
       >
         {renderDetailContent()}
       </ContentPageShell>

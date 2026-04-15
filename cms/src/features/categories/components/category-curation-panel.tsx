@@ -1,4 +1,4 @@
-import { ArrowRight, CirclePlus, ListFilter } from "lucide-react";
+import { CirclePlus, ListFilter } from "lucide-react";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -74,8 +74,7 @@ export function CategoryCurationPanel({
           <div>
             <CardTitle>Category curation workspace</CardTitle>
             <CardDescription>
-              Each localization owns its own curation lane. Add, list, reorder,
-              and remove flows now operate on the selected language.
+              Manage curated content for the selected localization.
             </CardDescription>
           </div>
 
@@ -153,19 +152,14 @@ export function CategoryCurationPanel({
               onValueChange={onLanguageChange}
             />
 
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-                /categories/{category.id}
-              </span>
-              <ArrowRight className="size-4" />
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 px-3 py-1.5">
-                /categories/{category.id}#curation-workspace-
-                {selectedLocalization?.languageCode ?? selectedLanguageCode}
-              </span>
-            </div>
-
             {selectedLocalization ? (
               <div className="space-y-5">
+                {!selectedLocalization.isPublished ? (
+                  <p className="text-sm text-muted-foreground">
+                    Publish this localization before adding or reordering
+                    curated content.
+                  </p>
+                ) : null}
                 <CurationTable
                   category={category}
                   items={curationItems}

@@ -1,5 +1,4 @@
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
-import { FilterBarSummary } from "@/components/data/filter-bar";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
 import { useI18n } from "@/i18n/locale-provider";
 import type { ApiProblemDetail } from "@/types/api";
@@ -54,10 +53,6 @@ export function ContentListTable({
   onContentSelect,
 }: ContentListTableProps) {
   const { locale } = useI18n();
-  const activeCount = contents.filter(
-    (content) => content.summary.active,
-  ).length;
-  const inactiveCount = contents.length - activeCount;
   const columns: DataTableColumn<ContentReadViewModel>[] = [
     {
       id: "content",
@@ -186,30 +181,6 @@ export function ContentListTable({
       onRowClick={onContentSelect}
       problem={contents.length > 0 ? problem : null}
       rows={contents}
-      summary={
-        <div className="space-y-1 text-right">
-          <p className="text-sm font-medium tracking-tight text-foreground">
-            {locale === "tr"
-              ? `${contents.length} kayıt`
-              : `${contents.length} record${contents.length === 1 ? "" : "s"}`}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {locale === "tr"
-              ? `${activeCount} aktif / ${inactiveCount} pasif`
-              : `${activeCount} active / ${inactiveCount} inactive`}
-          </p>
-        </div>
-      }
-      toolbar={
-        <FilterBarSummary
-          description={
-            locale === "tr"
-              ? "Canlı backend içerik verisi bu ortak kayıt tablosunda gösteriliyor."
-              : "Live backend content data is shown in this shared registry table."
-          }
-          title={locale === "tr" ? "İçerik kaydı" : "Content registry"}
-        />
-      }
     />
   );
 }

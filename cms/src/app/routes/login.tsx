@@ -1,13 +1,7 @@
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
-import { LockKeyhole, RefreshCcw, ShieldCheck } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import { cmsShieldIcon as ShieldIcon } from "@/app/navigation";
 import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
 import { LoginForm } from "@/features/auth/components/login-form";
@@ -43,37 +37,6 @@ export function LoginRoute() {
                 </CardDescription>
               </div>
             </CardHeader>
-            <CardContent className="grid gap-4 text-sm text-muted-foreground sm:grid-cols-2">
-              <div className="rounded-2xl border border-border/70 bg-muted/50 p-4">
-                <h2 className="mb-2 text-sm font-semibold text-foreground">
-                  {t("auth.login.sessionModelTitle")}
-                </h2>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {t("auth.login.sessionModel.accessToken")}
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <RefreshCcw className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {t("auth.login.sessionModel.refresh")}
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <LockKeyhole className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {t("auth.login.sessionModel.unauthorized")}
-                  </li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/50 p-4">
-                <h2 className="mb-2 text-sm font-semibold text-foreground">
-                  {t("auth.login.routeTargetTitle")}
-                </h2>
-                <p className="leading-6">
-                  {t("auth.login.routeTargetDescription", {
-                    targetPath,
-                  })}
-                </p>
-              </div>
-            </CardContent>
           </Card>
 
           <div className="space-y-4">

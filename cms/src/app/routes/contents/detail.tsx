@@ -1,4 +1,4 @@
-import { Layers3, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -6,13 +6,7 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FormSection } from "@/components/forms/form-section";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
@@ -61,10 +55,9 @@ export function ContentDetailRoute() {
           metadataLoading: "Metadata yükleniyor",
           routeMissing:
             "Bu rota içerik kaydından geçerli bir sayısal içerik kimliği bekler.",
-          routeLoading:
-            "CMS, içerik metadatasını ve yerelleştirme özetlerini admin API üzerinden yüklüyor. Detay sorgusu çözülür çözülmez metadata düzenleme ve dil çalışma alanları açılır.",
+          routeLoading: "Metadata, yerelleştirme ve katkı akışları yükleniyor.",
           routeLoaded: (externalKey: string) =>
-            `${externalKey} için metadata düzenleme ve yerelleştirme çalışma alanları canlı. Yayınlama ve arşivleme aksiyonları artık her dil sekmesi içinde çalışıyor.`,
+            `${externalKey} için metadata, yerelleştirme ve katkı akışlarını yönetin.`,
           notFoundDescription:
             "Admin API bu rota için bir içerik kaydı döndürmedi.",
           retryDescription:
@@ -136,9 +129,9 @@ export function ContentDetailRoute() {
           routeMissing:
             "This route expects a valid numeric content id from the content registry.",
           routeLoading:
-            "The CMS is loading content metadata and localization snapshots from the admin API. Metadata editing and locale workspaces become available as soon as the detail query resolves.",
+            "Loading metadata, localization, and contributor workflows.",
           routeLoaded: (externalKey: string) =>
-            `Metadata editing and localization workspaces are live for ${externalKey}. Publish and archive actions now run inside each language tab.`,
+            `Manage metadata, localization, and contributor workflows for ${externalKey}.`,
           notFoundDescription:
             "The admin API did not return a content record for this route.",
           retryDescription:
@@ -225,25 +218,12 @@ export function ContentDetailRoute() {
           : copy.detailQueryDescription;
 
     return (
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-2xl border border-border/70 bg-background px-4 py-3 md:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {copy.detailStatus}
-          </p>
-          <p className="mt-2 text-sm font-medium text-foreground">{title}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {copy.route}
-          </p>
-          <p className="mt-2 text-sm font-medium text-foreground">
-            /contents/{contentId || "?"}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.inlineStates}
-          </p>
-        </div>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background px-4 py-3">
+        <span className="text-sm font-semibold text-foreground">{title}</span>
+        <span className="text-sm text-muted-foreground">{description}</span>
+        <span className="text-sm text-muted-foreground">
+          {copy.route}: /contents/{contentId || "?"}
+        </span>
       </div>
     );
   }
@@ -344,78 +324,6 @@ export function ContentDetailRoute() {
         />
       }
       toolbar={renderToolbar()}
-      aside={
-        <>
-          <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-            <CardHeader>
-              <CardTitle>{copy.operationsSnapshot}</CardTitle>
-              <CardDescription>{copy.operationsDescription}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  {copy.visibility}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {content
-                    ? copy.visibilityDescription(
-                        content.visibleToMobileLocalizationCount,
-                        content.localizationCount,
-                      )
-                    : copy.visibilityPending}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  {copy.processing}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {content
-                    ? copy.processingDescription(
-                        content.processingCompleteLocalizationCount,
-                        content.localizationCount,
-                      )
-                    : copy.processingPending}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  {copy.storyStructure}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {content
-                    ? content.summary.supportsStoryPages
-                      ? copy.storyPagesCount(content.summary.pageCount ?? 0)
-                      : copy.storyPagesUnused
-                    : copy.storyPagesPending}
-                </p>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-                <Layers3 className="size-3.5" />
-                {copy.languageControls}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-            <CardHeader>
-              <CardTitle>{copy.workspaceGuidance}</CardTitle>
-              <CardDescription>{copy.workspaceDescription}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                {copy.metadataGuidance}
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                {copy.publishGuidance}
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                {copy.storyEditorGuidance}
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      }
     >
       {renderDetailContent()}
 

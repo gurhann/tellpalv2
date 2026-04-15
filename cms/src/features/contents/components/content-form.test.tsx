@@ -81,7 +81,7 @@ describe("ContentForm", () => {
     expect(mutationState.mutateAsync).not.toHaveBeenCalled();
   });
 
-  it("renders story and non-story workflow guidance from the selected type", () => {
+  it("keeps the fixed type helper in update mode", () => {
     const firstRender = render(
       <ContentForm
         initialValues={{
@@ -94,7 +94,7 @@ describe("ContentForm", () => {
       />,
     );
 
-    expect(screen.getByText("Story workflow")).toBeVisible();
+    expect(screen.queryByText(/story workflow/i)).not.toBeInTheDocument();
 
     firstRender.unmount();
 
@@ -110,7 +110,6 @@ describe("ContentForm", () => {
       />,
     );
 
-    expect(screen.getByText("Non-story workflow")).toBeVisible();
     expect(
       screen.getByText(/content type is fixed after creation/i),
     ).toBeVisible();

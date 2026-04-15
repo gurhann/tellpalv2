@@ -1,5 +1,4 @@
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
-import { FilterBarSummary } from "@/components/data/filter-bar";
 import type { CategorySummaryViewModel } from "@/features/categories/model/category-view-model";
 import { useI18n } from "@/i18n/locale-provider";
 import type { ApiProblemDetail } from "@/types/api";
@@ -20,8 +19,6 @@ export function CategoryListTable({
   onCategorySelect,
 }: CategoryListTableProps) {
   const { locale } = useI18n();
-  const activeCount = categories.filter((category) => category.active).length;
-  const premiumCount = categories.filter((category) => category.premium).length;
   const columns: DataTableColumn<CategorySummaryViewModel>[] = [
     {
       id: "slug",
@@ -140,30 +137,6 @@ export function CategoryListTable({
       onRowClick={onCategorySelect}
       problem={categories.length > 0 ? problem : null}
       rows={categories}
-      summary={
-        <div className="space-y-1 text-right">
-          <p className="text-sm font-medium tracking-tight text-foreground">
-            {locale === "tr"
-              ? `${categories.length} kategori`
-              : `${categories.length} categor${categories.length === 1 ? "y" : "ies"}`}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {locale === "tr"
-              ? `${activeCount} aktif / ${premiumCount} premium`
-              : `${activeCount} active / ${premiumCount} premium`}
-          </p>
-        </div>
-      }
-      toolbar={
-        <FilterBarSummary
-          description={
-            locale === "tr"
-              ? "Canlı backend okuma verisi artık bu ortak kategori tablosuna bağlı."
-              : "Live backend read data is now bound to the shared category registry table."
-          }
-          title={locale === "tr" ? "Kategori kaydı" : "Category registry"}
-        />
-      }
     />
   );
 }

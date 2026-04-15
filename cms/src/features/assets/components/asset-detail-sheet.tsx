@@ -1,5 +1,3 @@
-import { Link2, PackageOpen } from "lucide-react";
-
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import {
@@ -77,66 +75,35 @@ export function AssetDetailSheet({
             <ProblemAlert problem={assetDetailQuery.problem} />
           ) : asset ? (
             <>
-              <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    {t("assets.assetIdentity")}
-                  </p>
-                  <p className="mt-3 break-all text-sm font-medium text-foreground">
-                    {asset.objectPath}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {asset.kindLabel} / {asset.mediaTypeLabel}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    {t("assets.provider")}
-                  </p>
-                  <p className="mt-3 text-sm font-medium text-foreground">
+              <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
+                <div className="flex flex-wrap gap-2 text-sm">
+                  <span className="inline-flex rounded-full border border-border/70 bg-background px-3 py-1.5 font-medium text-foreground">
+                    {asset.kindLabel}
+                  </span>
+                  <span className="inline-flex rounded-full border border-border/70 bg-background px-3 py-1.5 font-medium text-foreground">
+                    {asset.mediaTypeLabel}
+                  </span>
+                  <span className="inline-flex rounded-full border border-border/70 bg-background px-3 py-1.5 text-muted-foreground">
                     {asset.providerLabel}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t("assets.created", {
-                      value: formatTimestamp(asset.createdAt),
-                    })}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    {t("assets.cachedDownloadUrl")}
-                  </p>
-                  <p className="mt-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Link2 className="size-4 text-muted-foreground" />
+                  </span>
+                  <span className="inline-flex rounded-full border border-border/70 bg-background px-3 py-1.5 text-muted-foreground">
                     {asset.hasCachedDownloadUrl
                       ? t("assets.available")
                       : t("assets.notCached")}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t("assets.expires", {
-                      value: formatTimestamp(asset.downloadUrlExpiresAt),
-                    })}
-                  </p>
+                  </span>
                 </div>
-
-                <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                    {t("assets.metadataSnapshot")}
-                  </p>
-                  <p className="mt-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                    <PackageOpen className="size-4 text-muted-foreground" />
-                    {asset.hasMetadata
-                      ? t("assets.metadataPresent")
-                      : t("assets.metadataPending")}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {t("assets.updated", {
-                      value: formatTimestamp(asset.updatedAt),
-                    })}
-                  </p>
-                </div>
+                <p className="mt-3 break-all text-sm font-medium text-foreground">
+                  {asset.objectPath}
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t("assets.created", {
+                    value: formatTimestamp(asset.createdAt),
+                  })}{" "}
+                  •{" "}
+                  {t("assets.updated", {
+                    value: formatTimestamp(asset.updatedAt),
+                  })}
+                </p>
               </div>
 
               <AssetPreviewCard asset={asset} open={open} />

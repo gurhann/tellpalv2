@@ -86,7 +86,7 @@ beforeEach(() => {
 });
 
 describe("ContentLocalizationForm", () => {
-  it("hides story-only body and audio inputs while showing story guidance", () => {
+  it("hides story-only body and audio inputs", () => {
     render(
       <ContentLocalizationForm
         content={storyContentViewModel}
@@ -98,9 +98,6 @@ describe("ContentLocalizationForm", () => {
       />,
     );
 
-    expect(
-      screen.getByText(/story localizations keep narrative copy/i),
-    ).toBeVisible();
     expect(screen.queryByLabelText(/body text/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/audio asset/i)).not.toBeInTheDocument();
   });

@@ -1,4 +1,4 @@
-import { ArrowLeft, Images, Layers3, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -8,13 +8,6 @@ import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { toastMutation } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -568,9 +561,6 @@ function StoryPagesWorkspace({
   const localizedStoryPageCount = storyPages.filter(
     (storyPage) => storyPage.localizationCount > 0,
   ).length;
-  const fullyIllustratedStoryPageCount = storyPages.filter(
-    (storyPage) => storyPage.hasCompleteIllustrationCoverage,
-  ).length;
   const illustratedLocalizationCount = storyPages.reduce(
     (count, storyPage) => count + storyPage.illustratedLocalizationCount,
     0,
@@ -582,7 +572,7 @@ function StoryPagesWorkspace({
       <ContentPageShell
         eyebrow="Story Editor"
         title={routeTitle}
-        description="The story page collection is bound to the admin API. Localized body copy, audio bindings, and language-specific illustrations now share the same editor flow."
+        description="Manage story page structure and localized page content."
         actions={
           <>
             <Button asChild type="button" variant="outline">
@@ -602,103 +592,24 @@ function StoryPagesWorkspace({
           </>
         }
         toolbar={
-          <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Parent Content
-              </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {content.summary.externalKey}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {content.summary.typeLabel} / {content.localizationCount}{" "}
-                localization
-                {content.localizationCount === 1 ? "" : "s"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Story Structure
-              </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {storyPageCount} story page{storyPageCount === 1 ? "" : "s"}{" "}
-                live
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {localizedStoryPageCount} page
-                {localizedStoryPageCount === 1 ? "" : "s"} already carry at
-                least one localized payload.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Illustration Coverage
-              </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {illustratedLocalizationCount} localized illustration
-                {illustratedLocalizationCount === 1 ? "" : "s"} attached
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {fullyIllustratedStoryPageCount} page
-                {fullyIllustratedStoryPageCount === 1 ? "" : "s"} already have
-                full locale-level illustration coverage.
-              </p>
-            </div>
+          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background px-4 py-3">
+            <span className="text-sm font-semibold text-foreground">
+              {content.summary.externalKey}
+            </span>
+            <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium text-foreground">
+              {storyPageCount} story page{storyPageCount === 1 ? "" : "s"}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {localizedStoryPageCount} localized
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {illustratedLocalizationCount} illustrations
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {content.localizationCount} locale
+              {content.localizationCount === 1 ? "" : "s"}
+            </span>
           </div>
-        }
-        aside={
-          <>
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Story Route Access</CardTitle>
-                <CardDescription>
-                  This child route is available only for `STORY` content types.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  <p className="text-sm font-medium text-foreground">
-                    Read contract
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Dedicated story-page GET endpoints now return page metadata
-                    and localized page payload summaries, including
-                    locale-specific illustration assets.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                  <p className="text-sm font-medium text-foreground">
-                    Publication dependency
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Story publication still depends on every page having body
-                    copy, audio, and illustration in the target language.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-              <CardHeader>
-                <CardTitle>Story Editor Coverage</CardTitle>
-                <CardDescription>
-                  Page structure and localization editing are both live in this
-                  route now.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Per-page language workspaces now inherit their allowed
-                  languages from the parent content localizations and carry
-                  their own illustration asset.
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3">
-                  Story publication depends on every page locale carrying body
-                  copy, audio, and an illustration for the selected language.
-                </div>
-              </CardContent>
-            </Card>
-          </>
         }
       >
         <StoryPageTable
@@ -722,48 +633,6 @@ function StoryPagesWorkspace({
           }
           isMutationPending={isMutating}
         />
-
-        <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
-          <CardHeader>
-            <CardTitle>Editor Surface</CardTitle>
-            <CardDescription>
-              Story page editing now covers per-language body, audio, and
-              illustration payloads.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 lg:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Plus className="size-4 text-primary" />
-                Add pages
-              </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Reserve the next page number in the story structure before
-                opening localized workspaces.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Images className="size-4 text-primary" />
-                Localize illustrations
-              </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Each locale now owns its own illustration asset so text baked
-                into images can vary by language.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Layers3 className="size-4 text-primary" />
-                Locale payloads
-              </div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Each parent content locale gets its own story page workspace
-                with body copy, audio binding, and illustration validation.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </ContentPageShell>
 
       <CreateStoryPageDialog

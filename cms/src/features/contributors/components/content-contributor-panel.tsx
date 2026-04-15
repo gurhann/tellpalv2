@@ -34,9 +34,7 @@ export function ContentContributorPanel({
           <div>
             <CardTitle>Contributor assignments</CardTitle>
             <CardDescription>
-              Add contributor credits in the context of this content record.
-              Existing backend assignments cannot be read yet, so the list below
-              reflects assignments created in the current session.
+              Add contributor credits for this content record.
             </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -53,38 +51,6 @@ export function ContentContributorPanel({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              <p className="text-sm font-medium text-foreground">
-                {assignments.length} current-session assignment
-                {assignments.length === 1 ? "" : "s"}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Credits created here appear immediately without leaving the
-                detail route.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              <p className="text-sm font-medium text-foreground">
-                {content.localizationCount} content locale
-                {content.localizationCount === 1 ? "" : "s"}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Credits can be global for all languages or target one existing
-                content locale.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              <p className="text-sm font-medium text-foreground">
-                Read gap active
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                A backend read endpoint for content contributor assignments does
-                not exist yet.
-              </p>
-            </div>
-          </div>
-
           {assignments.length === 0 ? (
             <EmptyState
               action={

@@ -77,7 +77,7 @@ describe("MediaRoute", () => {
     ).toBeVisible();
     expect(screen.getByRole("button", { name: /upload asset/i })).toBeEnabled();
     expect(
-      screen.getByText(/normal editorial binding now happens inside content/i),
+      screen.getByText(/upload assets, inspect them, and edit asset metadata/i),
     ).toBeVisible();
   });
 

@@ -57,10 +57,11 @@ describe("category read components", () => {
   it("renders summary metadata for the live detail shell", () => {
     render(<CategorySummaryCard category={featuredSleepCategoryViewModel} />);
 
-    expect(screen.getByText(/story \/ standard \/ active/i)).toBeVisible();
     expect(screen.getByText("featured-sleep")).toBeVisible();
+    expect(screen.getByText("Story")).toBeVisible();
+    expect(screen.getByText("Standard")).toBeVisible();
+    expect(screen.getByText("Active")).toBeVisible();
     expect(screen.getByText("Category #7")).toBeVisible();
-    expect(screen.getByText(/base category detail live/i)).toBeVisible();
   });
 
   it("renders a category curation shell tied to the selected localization", () => {
@@ -81,8 +82,8 @@ describe("category read components", () => {
 
     expect(screen.getByText(/category curation workspace/i)).toBeVisible();
     expect(
-      screen.getByText(/each localization owns its own curation lane/i),
+      screen.getByText(/manage curated content for the selected localization/i),
     ).toBeVisible();
-    expect(screen.getByText(/hydrated curation is live/i)).toBeVisible();
+    expect(screen.getByText(/story items only/i)).toBeVisible();
   });
 });

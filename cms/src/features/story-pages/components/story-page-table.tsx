@@ -2,7 +2,6 @@ import { Languages, Pencil, Sparkles, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
-import { FilterBarSummary } from "@/components/data/filter-bar";
 import { Button } from "@/components/ui/button";
 import type { StoryPageReadViewModel } from "@/features/contents/model/content-view-model";
 import type { ApiProblemDetail } from "@/types/api";
@@ -144,12 +143,6 @@ export function StoryPageTable({
     onDeleteStoryPage,
     isMutationPending,
   });
-  const withLocalizations = storyPages.filter(
-    (storyPage) => storyPage.localizationCount > 0,
-  ).length;
-  const fullyIllustrated = storyPages.filter(
-    (storyPage) => storyPage.hasCompleteIllustrationCoverage,
-  ).length;
 
   if (problem && storyPages.length === 0 && !isLoading) {
     return (
@@ -180,22 +173,6 @@ export function StoryPageTable({
       onRetry={onRetry}
       problem={storyPages.length > 0 ? problem : null}
       rows={storyPages}
-      summary={
-        <div className="space-y-1 text-right">
-          <p className="text-sm font-medium tracking-tight text-foreground">
-            {storyPages.length} page{storyPages.length === 1 ? "" : "s"}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {withLocalizations} localized / {fullyIllustrated} fully illustrated
-          </p>
-        </div>
-      }
-      toolbar={
-        <FilterBarSummary
-          description="Page number, localization coverage, and locale-specific illustration coverage are bound to the admin story-page read endpoints."
-          title="Story page collection"
-        />
-      }
     />
   );
 }

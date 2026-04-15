@@ -135,13 +135,11 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
-    expect(screen.getByText(/2 story pages live/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 story pages/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/3 localized illustrations attached/i),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/2 \/ 2 locales/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/story page collection/i)).not.toHaveLength(0);
+    expect(screen.getByText(/story\.evening-garden/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 illustrations/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/2 locales/i).length).toBeGreaterThan(0);
   });
 
   it("keeps non-story content out of the route shell", () => {

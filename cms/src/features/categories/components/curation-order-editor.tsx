@@ -160,10 +160,8 @@ export function CurationOrderEditor({
         <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground">
           Display order editor
         </h3>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Reorder the hydrated curated rows for {localization.languageLabel}.
-          Changes save through the admin API and then refresh this curation
-          lane.
+        <p className="mt-2 text-sm text-muted-foreground">
+          Reorder curated rows for {localization.languageLabel}.
         </p>
       </div>
 
@@ -174,8 +172,7 @@ export function CurationOrderEditor({
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/80 bg-background px-4 py-6 text-sm text-muted-foreground">
-          No curated rows exist for this language yet. Use `Add curated content`
-          first, then adjust display order here.
+          No curated rows yet. Add content first, then adjust order here.
         </div>
       ) : (
         <div className="grid gap-3">

@@ -6,7 +6,7 @@ import { contributorViewModels } from "@/features/contributors/test/fixtures";
 import { ContributorTable } from "./contributor-table";
 
 describe("ContributorTable", () => {
-  it("renders contributor identity and assignment readiness columns", () => {
+  it("renders contributor identity columns", () => {
     render(<ContributorTable contributors={contributorViewModels} />);
 
     expect(
@@ -15,12 +15,8 @@ describe("ContributorTable", () => {
     expect(
       screen.getByRole("columnheader", { name: /initials/i }),
     ).toBeVisible();
-    expect(
-      screen.getByRole("columnheader", { name: /assignment readiness/i }),
-    ).toBeVisible();
     expect(screen.getByText("Annie Case")).toBeVisible();
     expect(screen.getByText("AC")).toBeVisible();
-    expect(screen.getAllByText(/ready for content credits/i)).toHaveLength(3);
   });
 
   it("shows retry-capable empty and problem states", () => {

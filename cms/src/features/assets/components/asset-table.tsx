@@ -1,5 +1,4 @@
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
-import { FilterBarSummary } from "@/components/data/filter-bar";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import { useI18n } from "@/i18n/locale-provider";
 import type { ApiProblemDetail } from "@/types/api";
@@ -22,7 +21,7 @@ function createColumns(
       header: t("assets.table.asset"),
       cell: (asset) => (
         <div className="space-y-1">
-          <p className="font-medium text-foreground break-all">
+          <p className="break-all font-medium text-foreground">
             {asset.objectPath}
           </p>
           <p className="text-xs text-muted-foreground">
@@ -92,14 +91,8 @@ export function AssetTable({
   onRetry,
   onAssetSelect,
 }: AssetTableProps) {
-  const { locale, t, formatNumber, formatBytes } = useI18n();
+  const { t, formatBytes } = useI18n();
   const columns = createColumns(t, formatBytes);
-  const cachedUrlCount = assets.filter(
-    (asset) => asset.hasCachedDownloadUrl,
-  ).length;
-  const imageCount = assets.filter(
-    (asset) => asset.mediaType === "IMAGE",
-  ).length;
 
   if (problem && assets.length === 0 && !isLoading) {
     return (
@@ -129,31 +122,6 @@ export function AssetTable({
       onRowClick={onAssetSelect}
       problem={assets.length > 0 ? problem : null}
       rows={assets}
-      summary={
-        <div className="space-y-1 text-right">
-          <p className="text-sm font-medium tracking-tight text-foreground">
-            {formatNumber(assets.length)}{" "}
-            {locale === "tr"
-              ? assets.length === 1
-                ? "asset"
-                : "asset"
-              : assets.length === 1
-                ? "asset"
-                : "assets"}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {formatNumber(imageCount)} {locale === "tr" ? "görsel" : "images"} /{" "}
-            {formatNumber(cachedUrlCount)}{" "}
-            {locale === "tr" ? "önbelleklenmiş URL" : "cached URLs"}
-          </p>
-        </div>
-      }
-      toolbar={
-        <FilterBarSummary
-          description={t("assets.table.toolbarDescription")}
-          title={t("assets.table.toolbarTitle")}
-        />
-      }
     />
   );
 }
