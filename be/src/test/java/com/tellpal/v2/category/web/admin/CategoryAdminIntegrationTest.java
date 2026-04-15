@@ -82,6 +82,9 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         mockMvc.perform(get("/api/admin/categories/1/localizations/tr/contents"))
                 .andExpect(status().isUnauthorized());
 
+        mockMvc.perform(get("/api/admin/categories/1/localizations/tr/eligible-contents"))
+                .andExpect(status().isUnauthorized());
+
         mockMvc.perform(delete("/api/admin/categories/1"))
                 .andExpect(status().isUnauthorized());
     }
@@ -374,6 +377,11 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$[0].displayOrder").value(3))
                 .andExpect(jsonPath("$[1].contentId").value(secondCuratedContentId))
                 .andExpect(jsonPath("$[1].displayOrder").value(5));
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations/tr/eligible-contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
@@ -493,21 +501,126 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$.errorCode").value("category_localization_not_found"));
     }
 
+    @Test
+    void eligibleCurationCandidatesFilterByTypeLanguagePublicationAndExistingLinks() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long curatedContentId = createPublishedStoryContent("featured-night-tr", LanguageCode.TR);
+        Long secondCuratedContentId = createPublishedStoryContent("moonlight-tr", LanguageCode.TR);
+        createDraftStoryContent("draft-story-tr", LanguageCode.TR);
+        createPublishedMeditationContent("breathing-tr", LanguageCode.TR);
+        createPublishedInactiveStoryContent("inactive-story-tr", LanguageCode.TR);
+        createPublishedStoryContent("featured-night-en", LanguageCode.EN);
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "featured-sleep",
+                                  "type": "STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "name": "One Cikan Uyku",
+                                  "description": "Editor secimleri",
+                                  "status": "PUBLISHED",
+                                  "publishedAt": "2026-03-17T09:00:00Z"
+                                }
+                                """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/admin/categories/{categoryId}/localizations/tr/contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentId": %d,
+                                  "displayOrder": 0
+                                }
+                                """.formatted(curatedContentId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/admin/categories/{categoryId}/localizations/tr/eligible-contents", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .queryParam("q", "moon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].contentId").value(secondCuratedContentId))
+                .andExpect(jsonPath("$[0].externalKey").value("moonlight-tr"))
+                .andExpect(jsonPath("$[0].localizedTitle").value("Story moonlight-tr"));
+    }
+
     private Long createPublishedStoryContent(String externalKey, LanguageCode languageCode) {
+        return createContent(externalKey, languageCode, ContentType.STORY, true, LocalizationStatus.PUBLISHED);
+    }
+
+    private Long createDraftStoryContent(String externalKey, LanguageCode languageCode) {
+        return createContent(externalKey, languageCode, ContentType.STORY, true, LocalizationStatus.DRAFT);
+    }
+
+    private Long createPublishedMeditationContent(String externalKey, LanguageCode languageCode) {
+        return createContent(externalKey, languageCode, ContentType.MEDITATION, true, LocalizationStatus.PUBLISHED);
+    }
+
+    private Long createPublishedInactiveStoryContent(String externalKey, LanguageCode languageCode) {
+        return createContent(externalKey, languageCode, ContentType.STORY, false, LocalizationStatus.PUBLISHED);
+    }
+
+    private Long createContent(
+            String externalKey,
+            LanguageCode languageCode,
+            ContentType contentType,
+            boolean active,
+            LocalizationStatus localizationStatus) {
         ContentReference content = contentManagementService.createContent(
-                new CreateContentCommand(ContentType.STORY, externalKey, 4, true));
+                new CreateContentCommand(contentType, externalKey, 4, active));
         contentManagementService.createLocalization(new CreateContentLocalizationCommand(
                 content.contentId(),
                 languageCode,
                 "Story " + externalKey,
                 null,
+                contentType == ContentType.MEDITATION || contentType == ContentType.AUDIO_STORY
+                        ? "Body " + externalKey
+                        : null,
                 null,
+                contentType == ContentType.STORY ? null : createAudioAsset(),
                 null,
-                null,
-                null,
-                LocalizationStatus.PUBLISHED,
+                localizationStatus,
                 ProcessingStatus.PENDING,
-                Instant.parse("2026-03-17T09:00:00Z")));
+                localizationStatus == LocalizationStatus.PUBLISHED
+                        ? Instant.parse("2026-03-17T09:00:00Z")
+                        : null));
         return content.contentId();
+    }
+
+    private Long createAudioAsset() {
+        return jdbcTemplate.queryForObject("""
+                insert into media_assets (
+                    provider,
+                    object_path,
+                    media_type,
+                    kind,
+                    mime_type
+                )
+                values (?, ?, ?, ?, ?)
+                returning id
+                """,
+                Long.class,
+                "LOCAL_STUB",
+                "/audio/" + System.nanoTime() + ".mp3",
+                "AUDIO",
+                "ORIGINAL_AUDIO",
+                "audio/mpeg");
     }
 }

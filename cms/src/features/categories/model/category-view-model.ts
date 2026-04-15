@@ -1,10 +1,13 @@
 import type {
+  AdminEligibleCategoryContentResponse,
   AdminCategoryLocalizationResponse,
   AdminCategoryResponse,
   CategoryLocalizationStatus,
   CategoryType,
 } from "@/features/categories/api/category-admin";
-import type { AdminCategoryContentResponse } from "@/features/categories/api/category-curation-admin";
+import type {
+  AdminCategoryContentResponse,
+} from "@/features/categories/api/category-curation-admin";
 import { mapLanguage, supportedCmsLanguageOptions } from "@/lib/languages";
 
 const categoryTypeLabels: Record<CategoryType, string> = {
@@ -53,6 +56,15 @@ export type CategoryCurationItemViewModel = {
   languageLabel: string;
   contentId: number;
   displayOrder: number;
+};
+
+export type EligibleCategoryContentViewModel = {
+  contentId: number;
+  externalKey: string;
+  localizedTitle: string;
+  languageCode: string;
+  languageLabel: string;
+  publishedAt: string | null;
 };
 
 export function mapAdminCategory(
@@ -137,4 +149,25 @@ export function mapAdminCategoryCurationList(
   curationItems: AdminCategoryContentResponse[],
 ): CategoryCurationItemViewModel[] {
   return curationItems.map(mapAdminCategoryCurationItem);
+}
+
+export function mapAdminEligibleCategoryContent(
+  candidate: AdminEligibleCategoryContentResponse,
+): EligibleCategoryContentViewModel {
+  const language = mapLanguage(candidate.languageCode);
+
+  return {
+    contentId: candidate.contentId,
+    externalKey: candidate.externalKey,
+    localizedTitle: candidate.localizedTitle,
+    languageCode: language.code,
+    languageLabel: language.label,
+    publishedAt: candidate.publishedAt,
+  };
+}
+
+export function mapAdminEligibleCategoryContentList(
+  candidates: AdminEligibleCategoryContentResponse[],
+): EligibleCategoryContentViewModel[] {
+  return candidates.map(mapAdminEligibleCategoryContent);
 }

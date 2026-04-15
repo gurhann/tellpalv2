@@ -2,12 +2,17 @@ import type {
   AdminCategoryLocalizationResponse,
   AdminCategoryResponse,
 } from "@/features/categories/api/category-admin";
-import type { AdminCategoryContentResponse } from "@/features/categories/api/category-curation-admin";
+import type {
+  AdminCategoryContentResponse,
+  AdminEligibleCategoryContentResponse,
+} from "@/features/categories/api/category-curation-admin";
 import {
   mapAdminCategory,
   mapAdminCategoryCurationItem,
+  mapAdminEligibleCategoryContent,
   mapAdminCategoryLocalization,
   type CategoryCurationItemViewModel,
+  type EligibleCategoryContentViewModel,
   type CategoryLocalizationViewModel,
   type CategorySummaryViewModel,
 } from "@/features/categories/model/category-view-model";
@@ -123,3 +128,18 @@ export const categoryCurationItemViewModels: CategoryCurationItemViewModel[] = [
   mapAdminCategoryCurationItem(featuredSleepEnglishCurationResponse),
   mapAdminCategoryCurationItem(featuredSleepEnglishSecondCurationResponse),
 ];
+
+export const featuredSleepEligibleContentResponse: AdminEligibleCategoryContentResponse =
+  {
+    contentId: 11,
+    externalKey: "story.starry-forest",
+    localizedTitle: "Starry Forest",
+    languageCode: "en",
+    publishedAt: "2026-03-30T09:00:00Z",
+  };
+
+export const eligibleCategoryContentResponses: AdminEligibleCategoryContentResponse[] =
+  [featuredSleepEligibleContentResponse];
+
+export const eligibleCategoryContentViewModels: EligibleCategoryContentViewModel[] =
+  [mapAdminEligibleCategoryContent(featuredSleepEligibleContentResponse)];

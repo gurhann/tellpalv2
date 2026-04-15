@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
+import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
@@ -22,19 +23,23 @@ import type {
   CategoryCurationItemViewModel,
   CategoryLocalizationViewModel,
   CategorySummaryViewModel,
+  EligibleCategoryContentViewModel,
 } from "@/features/categories/model/category-view-model";
 import { useCategoryCurationActions } from "@/features/categories/mutations/use-category-curation-actions";
-import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
-import { useContentList } from "@/features/contents/queries/use-content-list";
+import { useEligibleCategoryContents } from "@/features/categories/queries/use-eligible-category-contents";
 import { z } from "zod";
 
 const addCuratedContentSchema = z.object({
-  contentId: z
+  selectedContentId: z
     .number({
-      error: "Content id is required.",
+      error: "Select a content record to add.",
     })
-    .int("Content id must be a whole number.")
-    .positive("Content id must be positive."),
+    .int("Select a valid content record.")
+    .positive("Select a valid content record.")
+    .nullable()
+    .refine((value) => value !== null, {
+      message: "Select a content record to add.",
+    }),
   displayOrder: z
     .number({
       error: "Display order is required.",
@@ -53,6 +58,13 @@ type AddCuratedContentDialogProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+type SelectedContentSummary = {
+  contentId: number;
+  externalKey: string;
+  localizedTitle: string;
+  languageLabel: string;
+};
+
 function getDefaultValues(
   existingItems: CategoryCurationItemViewModel[],
 ): AddCuratedContentFormValues {
@@ -62,31 +74,28 @@ function getDefaultValues(
       : Math.max(...existingItems.map((item) => item.displayOrder)) + 1;
 
   return {
-    contentId: 0,
+    selectedContentId: null,
     displayOrder: nextDisplayOrder,
   };
 }
 
-function getEligibleContents(
-  contents: ContentReadViewModel[],
-  category: CategorySummaryViewModel,
-  localization: CategoryLocalizationViewModel,
-) {
-  return contents
-    .filter((content) => {
-      if (!content.summary.active || content.summary.type !== category.type) {
-        return false;
-      }
+function toSelectedContentSummary(
+  content: EligibleCategoryContentViewModel,
+): SelectedContentSummary {
+  return {
+    contentId: content.contentId,
+    externalKey: content.externalKey,
+    localizedTitle: content.localizedTitle,
+    languageLabel: content.languageLabel,
+  };
+}
 
-      return content.localizations.some(
-        (contentLocalization) =>
-          contentLocalization.languageCode === localization.languageCode &&
-          contentLocalization.isPublished,
-      );
-    })
-    .sort((left, right) =>
-      left.summary.externalKey.localeCompare(right.summary.externalKey),
-    );
+function formatPublishedAt(publishedAt: string | null) {
+  if (!publishedAt) {
+    return "Published";
+  }
+
+  return `Published ${new Date(publishedAt).toLocaleString()}`;
 }
 
 export function AddCuratedContentDialog({
@@ -97,6 +106,10 @@ export function AddCuratedContentDialog({
   onOpenChange,
 }: AddCuratedContentDialogProps) {
   const [problemMessage, setProblemMessage] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [selectedContentSummary, setSelectedContentSummary] =
+    useState<SelectedContentSummary | null>(null);
+  const deferredSearch = useDeferredValue(search);
   const defaultValues = useMemo(
     () => getDefaultValues(existingItems),
     [existingItems],
@@ -105,28 +118,28 @@ export function AddCuratedContentDialog({
     schema: addCuratedContentSchema,
     defaultValues,
   });
-  const contentListQuery = useContentList();
   const { addCuratedContent } = useCategoryCurationActions({
     categoryId: category.id,
     languageCode: localization.languageCode,
   });
-  const eligibleContents = getEligibleContents(
-    contentListQuery.contents,
-    category,
-    localization,
-  );
+  const eligibleContentsQuery = useEligibleCategoryContents({
+    categoryId: category.id,
+    languageCode: localization.languageCode,
+    search: deferredSearch,
+    enabled: open,
+  });
   const existingContentIds = new Set(
     existingItems.map((item) => item.contentId),
   );
-  const suggestedContents = eligibleContents.filter(
-    (content) => !existingContentIds.has(content.summary.id),
-  );
+  const selectedContentId = form.watch("selectedContentId");
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
       form.reset(getDefaultValues(existingItems));
       form.clearErrors();
       setProblemMessage(null);
+      setSearch("");
+      setSelectedContentSummary(null);
       addCuratedContent.reset();
     }
 
@@ -138,8 +151,16 @@ export function AddCuratedContentDialog({
     setProblemMessage(null);
     addCuratedContent.reset();
 
-    if (existingContentIds.has(values.contentId)) {
-      form.setError("contentId", {
+    if (values.selectedContentId === null) {
+      form.setError("selectedContentId", {
+        type: "manual",
+        message: "Select a content record to add.",
+      });
+      return;
+    }
+
+    if (existingContentIds.has(values.selectedContentId)) {
+      form.setError("selectedContentId", {
         type: "manual",
         message: "This content is already in the current curation lane.",
       });
@@ -157,10 +178,16 @@ export function AddCuratedContentDialog({
     }
 
     try {
-      await toastMutation(addCuratedContent.mutateAsync(values), {
-        loading: "Adding curated content...",
-        success: "Curated content added.",
-      });
+      await toastMutation(
+        addCuratedContent.mutateAsync({
+          contentId: values.selectedContentId,
+          displayOrder: values.displayOrder,
+        }),
+        {
+          loading: "Adding curated content...",
+          success: "Curated content added.",
+        },
+      );
 
       handleOpenChange(false);
     } catch (error) {
@@ -173,7 +200,7 @@ export function AddCuratedContentDialog({
           case "content_inactive":
           case "content_localization_not_published":
           case "category_content_not_found":
-            form.setError("contentId", {
+            form.setError("selectedContentId", {
               type: "server",
               message: problem.detail,
             });
@@ -197,9 +224,9 @@ export function AddCuratedContentDialog({
         <DialogHeader>
           <DialogTitle>Add curated content</DialogTitle>
           <DialogDescription>
-            Add one published {category.typeLabel.toLowerCase()} record to the{" "}
-            {localization.languageLabel} category lane. This dialog validates
-            against the currently hydrated curation rows for this language.
+            Select one published {category.typeLabel.toLowerCase()} record for
+            the {localization.languageLabel} category lane. Only addable
+            content for this type and language is listed here.
           </DialogDescription>
         </DialogHeader>
 
@@ -215,29 +242,28 @@ export function AddCuratedContentDialog({
             />
           ) : null}
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="space-y-2">
+          <div className="grid gap-5 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+            <div className="space-y-3">
               <label
                 className="text-sm font-medium text-foreground"
-                htmlFor="category-curation-content-id"
+                htmlFor="category-curation-search"
               >
-                Content id
+                Search eligible content
               </label>
               <Input
-                id="category-curation-content-id"
-                inputMode="numeric"
-                min={1}
-                type="number"
-                {...form.register("contentId", {
-                  setValueAs: (value) => Number(value),
-                })}
+                id="category-curation-search"
+                aria-label="Search eligible content"
+                placeholder={`Search ${category.typeLabel.toLowerCase()} title, external key, or content id`}
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
                 disabled={addCuratedContent.isPending}
               />
               <p className="text-sm text-muted-foreground">
-                Provide a published {localization.languageLabel} content record
-                whose type matches {category.typeLabel}.
+                Results are limited to published {localization.languageLabel}{" "}
+                {category.typeLabel.toLowerCase()} records that are not already
+                in this lane.
               </p>
-              <FieldError error={form.formState.errors.contentId} />
+              <FieldError error={form.formState.errors.selectedContentId} />
             </div>
 
             <div className="space-y-2">
@@ -265,53 +291,86 @@ export function AddCuratedContentDialog({
             </div>
           </div>
 
+          {selectedContentSummary ? (
+            <div className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-4">
+              <p className="text-sm font-medium text-foreground">
+                Selected content
+              </p>
+              <p className="mt-2 text-sm font-medium text-foreground">
+                {selectedContentSummary.localizedTitle}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                #{selectedContentSummary.contentId} ·{" "}
+                {selectedContentSummary.externalKey} ·{" "}
+                {selectedContentSummary.languageLabel}
+              </p>
+            </div>
+          ) : null}
+
           <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
             <p className="text-sm font-medium text-foreground">
               Eligible published {category.typeLabel.toLowerCase()} records in{" "}
               {localization.languageLabel}
             </p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              The picker uses the shared content registry because category
-              curation has no dedicated search endpoint yet. You can still enter
-              a known content id manually.
-            </p>
 
-            {contentListQuery.problem ? (
+            {eligibleContentsQuery.problem ? (
               <div className="mt-4">
-                <ProblemAlert problem={contentListQuery.problem} />
+                <ProblemAlert problem={eligibleContentsQuery.problem} />
               </div>
-            ) : null}
+            ) : eligibleContentsQuery.isLoading ? (
+              <EmptyState
+                className="mt-4 min-h-44"
+                title="Loading eligible content"
+                description={`The CMS is requesting published ${localization.languageLabel} ${category.typeLabel.toLowerCase()} candidates from the admin API.`}
+              />
+            ) : eligibleContentsQuery.items.length > 0 ? (
+              <div className="mt-4 grid max-h-[22rem] gap-3 overflow-y-auto pr-1">
+                {eligibleContentsQuery.items.map((content) => {
+                  const isSelected = content.contentId === selectedContentId;
 
-            {contentListQuery.isLoading ? (
-              <p className="mt-4 text-sm text-muted-foreground">
-                Loading content registry...
-              </p>
-            ) : suggestedContents.length > 0 ? (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {suggestedContents.map((content) => (
-                  <Button
-                    key={content.summary.id}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      form.setValue("contentId", content.summary.id, {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      })
-                    }
-                    disabled={addCuratedContent.isPending}
-                  >
-                    #{content.summary.id} {content.summary.externalKey}
-                  </Button>
-                ))}
+                  return (
+                    <button
+                      key={content.contentId}
+                      type="button"
+                      className={`rounded-2xl border px-4 py-4 text-left shadow-sm transition-colors ${
+                        isSelected
+                          ? "border-primary/30 bg-primary/5"
+                          : "border-border/70 bg-card/90 hover:border-primary/20"
+                      }`}
+                      onClick={() => {
+                        form.setValue("selectedContentId", content.contentId, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setSelectedContentSummary(
+                          toSelectedContentSummary(content),
+                        );
+                      }}
+                      disabled={addCuratedContent.isPending}
+                    >
+                      <p className="text-sm font-medium text-foreground">
+                        {content.localizedTitle}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        #{content.contentId} · {content.externalKey}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {formatPublishedAt(content.publishedAt)}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-muted-foreground">
-                No recent published {category.typeLabel.toLowerCase()} records
-                were found for {localization.languageLabel}. Manual content id
-                entry remains available.
-              </p>
+              <EmptyState
+                className="mt-4 min-h-44"
+                title="No eligible content found"
+                description={
+                  deferredSearch.trim().length > 0
+                    ? `No published ${category.typeLabel.toLowerCase()} records matched the current search for ${localization.languageLabel}.`
+                    : `No published ${category.typeLabel.toLowerCase()} records are currently available for ${localization.languageLabel} in this curation lane.`
+                }
+              />
             )}
           </div>
 
@@ -326,6 +385,7 @@ export function AddCuratedContentDialog({
             </Button>
             <SubmitButton
               isPending={addCuratedContent.isPending}
+              disabled={selectedContentId === null}
               pendingLabel="Adding curated content..."
             >
               Add curated content

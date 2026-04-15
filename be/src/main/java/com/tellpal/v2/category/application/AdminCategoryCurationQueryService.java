@@ -2,16 +2,19 @@ package com.tellpal.v2.category.application;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.category.api.AdminCategoryContentView;
 import com.tellpal.v2.category.api.AdminCategoryCurationQueryApi;
+import com.tellpal.v2.category.api.AdminEligibleCategoryContentView;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotFoundException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
 import com.tellpal.v2.category.domain.Category;
 import com.tellpal.v2.category.domain.CategoryRepository;
+import com.tellpal.v2.content.api.EligibleContentQueryApi;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -25,9 +28,13 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 public class AdminCategoryCurationQueryService implements AdminCategoryCurationQueryApi {
 
     private final CategoryRepository categoryRepository;
+    private final EligibleContentQueryApi eligibleContentQueryApi;
 
-    public AdminCategoryCurationQueryService(CategoryRepository categoryRepository) {
+    public AdminCategoryCurationQueryService(
+            CategoryRepository categoryRepository,
+            EligibleContentQueryApi eligibleContentQueryApi) {
         this.categoryRepository = categoryRepository;
+        this.eligibleContentQueryApi = eligibleContentQueryApi;
     }
 
     /**
@@ -50,6 +57,41 @@ public class AdminCategoryCurationQueryService implements AdminCategoryCurationQ
                         categoryContent.getLanguageCode(),
                         categoryContent.getContentId(),
                         categoryContent.getDisplayOrder()))
+                .toList();
+    }
+
+    /**
+     * Returns content candidates that can be added to one existing category localization lane.
+     */
+    @Override
+    public List<AdminEligibleCategoryContentView> listEligibleCategoryContents(
+            Long categoryId,
+            LanguageCode languageCode,
+            String query,
+            int limit) {
+        LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
+        Category category = categoryRepository.findById(requireCategoryId(categoryId))
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        Long requiredCategoryId = requirePersistedCategoryId(category);
+        category.findLocalization(requiredLanguageCode)
+                .orElseThrow(() -> new CategoryLocalizationNotFoundException(requiredCategoryId, requiredLanguageCode));
+        Set<Long> curatedContentIds = category.getCuratedContents().stream()
+                .filter(categoryContent -> categoryContent.matchesLanguage(requiredLanguageCode))
+                .map(com.tellpal.v2.category.domain.CategoryContent::getContentId)
+                .collect(java.util.stream.Collectors.toUnmodifiableSet());
+        return eligibleContentQueryApi.listEligibleContent(
+                        category.getType().toContentApiType(),
+                        requiredLanguageCode,
+                        query,
+                        limit)
+                .stream()
+                .filter(candidate -> !curatedContentIds.contains(candidate.contentId()))
+                .map(candidate -> new AdminEligibleCategoryContentView(
+                        candidate.contentId(),
+                        candidate.externalKey(),
+                        candidate.localizedTitle(),
+                        candidate.languageCode(),
+                        candidate.publishedAt()))
                 .toList();
     }
 

@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   categoryCurationResponses,
+  eligibleCategoryContentResponses,
   categoryLocalizationResponses,
   categoryResponses,
   featuredSleepCategoryResponse,
@@ -14,6 +15,7 @@ import type { ApiProblemDetail } from "@/types/api";
 
 import { useCategoryDetail } from "./use-category-detail";
 import { useCategoryCuration } from "./use-category-curation";
+import { useEligibleCategoryContents } from "./use-eligible-category-contents";
 import { useCategoryList } from "./use-category-list";
 import { useCategoryLocalizations } from "./use-category-localizations";
 
@@ -25,6 +27,7 @@ const categoryAdminApiMock = vi.hoisted(() => ({
 
 const categoryCurationAdminApiMock = vi.hoisted(() => ({
   listCuratedContent: vi.fn(),
+  listEligibleContents: vi.fn(),
 }));
 
 vi.mock("@/features/categories/api/category-admin", () => ({
@@ -41,6 +44,7 @@ vi.mock("@/features/categories/api/category-curation-admin", async () => {
     categoryCurationAdminApi: {
       ...actual.categoryCurationAdminApi,
       listCuratedContent: categoryCurationAdminApiMock.listCuratedContent,
+      listEligibleContents: categoryCurationAdminApiMock.listEligibleContents,
     },
   };
 });
@@ -91,6 +95,7 @@ beforeEach(() => {
   categoryAdminApiMock.getCategory.mockReset();
   categoryAdminApiMock.listLocalizations.mockReset();
   categoryCurationAdminApiMock.listCuratedContent.mockReset();
+  categoryCurationAdminApiMock.listEligibleContents.mockReset();
 });
 
 describe("category queries", () => {
@@ -309,6 +314,64 @@ describe("category queries", () => {
     expect(result.current.problem).toMatchObject({
       title: "Request failed",
       detail: "Curation lane timeout",
+    });
+  });
+
+  it("loads and maps eligible curated content candidates", async () => {
+    categoryCurationAdminApiMock.listEligibleContents.mockResolvedValue(
+      eligibleCategoryContentResponses,
+    );
+
+    const { result } = renderHook(
+      () =>
+        useEligibleCategoryContents({
+          categoryId: 7,
+          languageCode: "en",
+          search: "star",
+          enabled: true,
+        }),
+      {
+        wrapper: createWrapper(),
+      },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.items).toHaveLength(1);
+    expect(result.current.items[0]).toMatchObject({
+      contentId: 11,
+      localizedTitle: "Starry Forest",
+    });
+    expect(result.current.problem).toBeNull();
+  });
+
+  it("surfaces eligible content query failures as a picker problem", async () => {
+    categoryCurationAdminApiMock.listEligibleContents.mockRejectedValue(
+      new Error("Eligible content timeout"),
+    );
+
+    const { result } = renderHook(
+      () =>
+        useEligibleCategoryContents({
+          categoryId: 7,
+          languageCode: "en",
+          search: "",
+          enabled: true,
+        }),
+      {
+        wrapper: createWrapper(),
+      },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.problem).toMatchObject({
+      title: "Request failed",
+      detail: "Eligible content timeout",
     });
   });
 });

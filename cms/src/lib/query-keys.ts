@@ -96,6 +96,29 @@ export const queryKeys = {
         normalizeLanguageCode(languageCode),
         "curation",
       ] as const,
+    eligibleContentsRoot: (categoryId: number, languageCode: string) =>
+      [
+        "categories",
+        "detail",
+        categoryId,
+        "localizations",
+        normalizeLanguageCode(languageCode),
+        "eligible-contents",
+      ] as const,
+    eligibleContents: (
+      categoryId: number,
+      languageCode: string,
+      params?: QueryKeyParams,
+    ) =>
+      [
+        "categories",
+        "detail",
+        categoryId,
+        "localizations",
+        normalizeLanguageCode(languageCode),
+        "eligible-contents",
+        compactQueryKeyParams(params),
+      ] as const,
   },
   assets: {
     all: ["assets"] as const,

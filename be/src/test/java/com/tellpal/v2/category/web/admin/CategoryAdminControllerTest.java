@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tellpal.v2.category.api.AdminCategoryContentView;
 import com.tellpal.v2.category.api.AdminCategoryCurationQueryApi;
+import com.tellpal.v2.category.api.AdminEligibleCategoryContentView;
 import com.tellpal.v2.category.api.AdminCategoryLocalizationView;
 import com.tellpal.v2.category.api.CategoryLookupApi;
 import com.tellpal.v2.category.api.CategoryReference;
@@ -267,6 +268,25 @@ class CategoryAdminControllerTest {
                 .andExpect(jsonPath("$[0].displayOrder").value(0))
                 .andExpect(jsonPath("$[1].contentId").value(91))
                 .andExpect(jsonPath("$[1].displayOrder").value(3));
+    }
+
+    @Test
+    void listEligibleCuratedContentReturnsCandidates() throws Exception {
+        when(categoryCurationQueryApi.listEligibleCategoryContents(42L, LanguageCode.TR, "uyku", 20)).thenReturn(List.of(
+                new AdminEligibleCategoryContentView(
+                        77L,
+                        "story.featured-night",
+                        "Uyku Vakti",
+                        LanguageCode.TR,
+                        Instant.parse("2026-03-17T09:00:00Z"))));
+
+        mockMvc.perform(get("/api/admin/categories/42/localizations/tr/eligible-contents")
+                        .queryParam("q", "uyku"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].contentId").value(77))
+                .andExpect(jsonPath("$[0].externalKey").value("story.featured-night"))
+                .andExpect(jsonPath("$[0].localizedTitle").value("Uyku Vakti"))
+                .andExpect(jsonPath("$[0].languageCode").value("tr"));
     }
 
     @Test

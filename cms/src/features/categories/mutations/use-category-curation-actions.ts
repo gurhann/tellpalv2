@@ -53,6 +53,10 @@ export function useCategoryCurationActions({
 }: UseCategoryCurationActionsOptions) {
   const queryClient = useQueryClient();
   const curationKey = queryKeys.categories.curation(categoryId, languageCode);
+  const eligibleContentsRootKey = queryKeys.categories.eligibleContentsRoot(
+    categoryId,
+    languageCode,
+  );
 
   return {
     addCuratedContent: useMutation({
@@ -72,6 +76,9 @@ export function useCategoryCurationActions({
 
         await queryClient.invalidateQueries({
           queryKey: curationKey,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: eligibleContentsRootKey,
         });
       },
     }),
@@ -99,6 +106,9 @@ export function useCategoryCurationActions({
         await queryClient.invalidateQueries({
           queryKey: curationKey,
         });
+        await queryClient.invalidateQueries({
+          queryKey: eligibleContentsRootKey,
+        });
       },
     }),
     removeCuratedContent: useMutation({
@@ -121,6 +131,9 @@ export function useCategoryCurationActions({
 
         await queryClient.invalidateQueries({
           queryKey: curationKey,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: eligibleContentsRootKey,
         });
       },
     }),

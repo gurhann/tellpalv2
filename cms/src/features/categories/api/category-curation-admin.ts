@@ -6,6 +6,10 @@ function getBasePath(categoryId: number, languageCode: string) {
   return `/api/admin/categories/${categoryId}/localizations/${languageCode}/contents`;
 }
 
+function getEligibleContentPath(categoryId: number, languageCode: string) {
+  return `/api/admin/categories/${categoryId}/localizations/${languageCode}/eligible-contents`;
+}
+
 export type AddCategoryContentInput = {
   contentId: number;
   displayOrder: number;
@@ -13,6 +17,11 @@ export type AddCategoryContentInput = {
 
 export type UpdateCategoryContentOrderInput = {
   displayOrder: number;
+};
+
+export type ListEligibleCategoryContentsInput = {
+  query?: string;
+  limit?: number;
 };
 
 export const adminCategoryContentResponseSchema = z.object({
@@ -25,10 +34,43 @@ export const adminCategoryContentResponseSchema = z.object({
 export const adminCategoryContentListResponseSchema = z.array(
   adminCategoryContentResponseSchema,
 );
+export const adminEligibleCategoryContentResponseSchema = z.object({
+  contentId: z.number().int().positive(),
+  externalKey: z.string().min(1),
+  localizedTitle: z.string().min(1),
+  languageCode: z.string().min(1),
+  publishedAt: z.string().nullable(),
+});
+export const adminEligibleCategoryContentListResponseSchema = z.array(
+  adminEligibleCategoryContentResponseSchema,
+);
 
 export type AdminCategoryContentResponse = z.infer<
   typeof adminCategoryContentResponseSchema
 >;
+export type AdminEligibleCategoryContentResponse = z.infer<
+  typeof adminEligibleCategoryContentResponseSchema
+>;
+
+function buildEligibleContentPath(
+  categoryId: number,
+  languageCode: string,
+  input?: ListEligibleCategoryContentsInput,
+) {
+  const params = new URLSearchParams();
+
+  if (input?.query?.trim()) {
+    params.set("q", input.query.trim());
+  }
+
+  if (typeof input?.limit === "number") {
+    params.set("limit", input.limit.toString());
+  }
+
+  const queryString = params.toString();
+  const path = getEligibleContentPath(categoryId, languageCode);
+  return queryString.length > 0 ? `${path}?${queryString}` : path;
+}
 
 export const categoryCurationAdminApi = {
   listCuratedContent(categoryId: number, languageCode: string) {
@@ -36,6 +78,18 @@ export const categoryCurationAdminApi = {
       getBasePath(categoryId, languageCode),
       {
         responseSchema: adminCategoryContentListResponseSchema,
+      },
+    );
+  },
+  listEligibleContents(
+    categoryId: number,
+    languageCode: string,
+    input?: ListEligibleCategoryContentsInput,
+  ) {
+    return apiClient.get<AdminEligibleCategoryContentResponse[]>(
+      buildEligibleContentPath(categoryId, languageCode, input),
+      {
+        responseSchema: adminEligibleCategoryContentListResponseSchema,
       },
     );
   },

@@ -1,25 +1,25 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { contentReadViewModels } from "@/features/contents/test/fixtures";
 import {
   categoryCurationItemViewModels,
+  eligibleCategoryContentViewModels,
   featuredSleepCategoryViewModel,
   featuredSleepEnglishLocalizationViewModel,
 } from "@/features/categories/test/fixtures";
 
 import { AddCuratedContentDialog } from "./add-curated-content-dialog";
 
-const contentQueryMocks = vi.hoisted(() => ({
-  useContentList: vi.fn(),
+const eligibleContentsQueryMocks = vi.hoisted(() => ({
+  useEligibleCategoryContents: vi.fn(),
 }));
 
 const curationActionMocks = vi.hoisted(() => ({
   useCategoryCurationActions: vi.fn(),
 }));
 
-vi.mock("@/features/contents/queries/use-content-list", () => ({
-  useContentList: contentQueryMocks.useContentList,
+vi.mock("@/features/categories/queries/use-eligible-category-contents", () => ({
+  useEligibleCategoryContents: eligibleContentsQueryMocks.useEligibleCategoryContents,
 }));
 
 vi.mock(
@@ -40,11 +40,11 @@ function makeMutationState(overrides: Record<string, unknown> = {}) {
 }
 
 beforeEach(() => {
-  contentQueryMocks.useContentList.mockReset();
+  eligibleContentsQueryMocks.useEligibleCategoryContents.mockReset();
   curationActionMocks.useCategoryCurationActions.mockReset();
 
-  contentQueryMocks.useContentList.mockReturnValue({
-    contents: contentReadViewModels,
+  eligibleContentsQueryMocks.useEligibleCategoryContents.mockReturnValue({
+    items: eligibleCategoryContentViewModels,
     isLoading: false,
     problem: null,
   });
@@ -54,12 +54,12 @@ beforeEach(() => {
 });
 
 describe("AddCuratedContentDialog", () => {
-  it("filters eligible content by category type and published localization, then submits selected values", async () => {
+  it("loads eligible content from the dedicated query and submits the selected content id", async () => {
     const addCuratedContent = makeMutationState({
       mutateAsync: vi.fn().mockResolvedValue({
         categoryId: 7,
         languageCode: "en",
-        contentId: 1,
+        contentId: 11,
         displayOrder: 0,
       }),
     });
@@ -78,22 +78,24 @@ describe("AddCuratedContentDialog", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: /#1 story\.evening-garden/i }),
-    ).toBeVisible();
-    expect(
-      screen.queryByRole("button", { name: /#2 meditation\.rain-room/i }),
-    ).not.toBeInTheDocument();
+      eligibleContentsQueryMocks.useEligibleCategoryContents,
+    ).toHaveBeenCalledWith({
+      categoryId: 7,
+      languageCode: "en",
+      search: "",
+      enabled: true,
+    });
+    expect(screen.queryByLabelText(/content id/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/starry forest/i)).toBeVisible();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /#1 story\.evening-garden/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /starry forest/i }));
     fireEvent.click(
       screen.getByRole("button", { name: /^add curated content$/i }),
     );
 
     await waitFor(() => {
       expect(addCuratedContent.mutateAsync).toHaveBeenCalledWith({
-        contentId: 1,
+        contentId: 11,
         displayOrder: 0,
       });
     });
@@ -103,6 +105,18 @@ describe("AddCuratedContentDialog", () => {
     const addCuratedContent = makeMutationState();
     curationActionMocks.useCategoryCurationActions.mockReturnValue({
       addCuratedContent,
+    });
+    eligibleContentsQueryMocks.useEligibleCategoryContents.mockReturnValue({
+      items: [
+        {
+          ...eligibleCategoryContentViewModels[0]!,
+          contentId: 1,
+          externalKey: "story.evening-garden",
+          localizedTitle: "Evening Garden",
+        },
+      ],
+      isLoading: false,
+      problem: null,
     });
 
     render(
@@ -115,9 +129,9 @@ describe("AddCuratedContentDialog", () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText(/content id/i), {
-      target: { value: "1" },
-    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /evening garden/i }),
+    );
     fireEvent.change(screen.getByLabelText(/display order/i), {
       target: { value: "3" },
     });
@@ -129,5 +143,25 @@ describe("AddCuratedContentDialog", () => {
       await screen.findByText(/already in the current curation lane/i),
     ).toBeVisible();
     expect(addCuratedContent.mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it("renders an empty state when no eligible content is available", () => {
+    eligibleContentsQueryMocks.useEligibleCategoryContents.mockReturnValue({
+      items: [],
+      isLoading: false,
+      problem: null,
+    });
+
+    render(
+      <AddCuratedContentDialog
+        category={featuredSleepCategoryViewModel}
+        existingItems={[]}
+        localization={featuredSleepEnglishLocalizationViewModel}
+        open
+        onOpenChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText(/no eligible content found/i)).toBeVisible();
   });
 });

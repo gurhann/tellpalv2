@@ -2,6 +2,7 @@ package com.tellpal.v2.category.web.admin;
 
 import java.util.List;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,9 +39,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @AdminApiController
-@RequestMapping("/api/admin/categories/{categoryId}/localizations/{languageCode}/contents")
+@RequestMapping("/api/admin/categories/{categoryId}/localizations/{languageCode}")
 @Tag(name = "Admin Category Curation", description = "Curated content assignment endpoints for category localizations.")
 @SecurityRequirement(name = "adminBearerAuth")
+@Validated
 public class CategoryCurationAdminController {
 
     private final AdminCategoryCurationQueryApi categoryCurationQueryApi;
@@ -51,7 +55,7 @@ public class CategoryCurationAdminController {
         this.categoryCurationService = categoryCurationService;
     }
 
-    @GetMapping
+    @GetMapping("/contents")
     @Operation(
             summary = "List curated content",
             description = "Returns the ordered curated content links stored for one category localization.")
@@ -69,7 +73,33 @@ public class CategoryCurationAdminController {
                 .toList();
     }
 
-    @PostMapping
+    @GetMapping("/eligible-contents")
+    @Operation(
+            summary = "List eligible curated content candidates",
+            description = "Returns addable content candidates for one category localization filtered by category type, language, and publication state.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Eligible curated content candidates returned"),
+            @ApiResponse(responseCode = "400", description = "Eligible content query is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Category or category localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminEligibleCategoryContentResponse> listEligibleCuratedContent(
+            @PathVariable Long categoryId,
+            @PathVariable String languageCode,
+            @RequestParam(name = "q", required = false) String query,
+            @RequestParam(name = "limit", defaultValue = "20") @Min(1) @Max(50) int limit) {
+        return categoryCurationQueryApi.listEligibleCategoryContents(
+                        categoryId,
+                        LanguageCode.from(languageCode),
+                        query,
+                        limit)
+                .stream()
+                .map(AdminEligibleCategoryContentResponse::from)
+                .toList();
+    }
+
+    @PostMapping("/contents")
     @Operation(summary = "Add curated content", description = "Adds one content item to a localized category curation list.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Curated content added"),
@@ -92,7 +122,7 @@ public class CategoryCurationAdminController {
                 .body(response);
     }
 
-    @PutMapping("/{contentId}")
+    @PutMapping("/contents/{contentId}")
     @Operation(summary = "Update curated content order", description = "Changes the display order for one curated content item.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Curated content order updated"),
@@ -110,7 +140,7 @@ public class CategoryCurationAdminController {
                 request.toCommand(categoryId, languageCode, contentId)));
     }
 
-    @DeleteMapping("/{contentId}")
+    @DeleteMapping("/contents/{contentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Remove curated content", description = "Removes one content item from a localized category curation list.")
     @ApiResponses({

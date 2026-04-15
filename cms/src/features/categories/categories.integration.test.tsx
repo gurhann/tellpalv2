@@ -22,8 +22,6 @@ import {
   featuredSleepTurkishLocalizationResponse,
 } from "@/features/categories/test/fixtures";
 import type { AdminAssetResponse } from "@/features/assets/api/asset-admin";
-import type { AdminContentReadResponse } from "@/features/contents/api/content-admin";
-import { storyContentReadResponse } from "@/features/contents/test/fixtures";
 import type { AdminSessionPayload } from "@/types/api";
 
 function cloneJson<T>(value: T): T {
@@ -488,21 +486,6 @@ describe("Category integration", () => {
 
   it("hydrates curation rows, supports add reorder remove, and keeps localization tabs after refresh", async () => {
     const session = makeSession();
-    const storyFollowupContent: AdminContentReadResponse = {
-      ...storyContentReadResponse,
-      contentId: 11,
-      externalKey: "story.starry-forest",
-      localizations: [
-        {
-          ...storyContentReadResponse.localizations[0]!,
-          contentId: 11,
-          languageCode: "en",
-          title: "Starry Forest",
-          description: "A calm walk beneath the stars.",
-        },
-      ],
-    };
-    const contentRegistry = [storyContentReadResponse, storyFollowupContent];
     const localizations = [
       featuredSleepEnglishLocalizationResponse,
       featuredSleepTurkishLocalizationResponse,
@@ -542,6 +525,22 @@ describe("Category integration", () => {
           method === "GET"
         ) {
           return jsonResponse(curationRows);
+        }
+
+        if (
+          url.pathname ===
+            "/api/admin/categories/7/localizations/en/eligible-contents" &&
+          method === "GET"
+        ) {
+          return jsonResponse([
+            {
+              contentId: 11,
+              externalKey: "story.starry-forest",
+              localizedTitle: "Starry Forest",
+              languageCode: "en",
+              publishedAt: "2026-03-30T09:00:00Z",
+            },
+          ]);
         }
 
         if (
@@ -600,10 +599,6 @@ describe("Category integration", () => {
           return new Response(null, { status: 204 });
         }
 
-        if (url.pathname === "/api/admin/contents" && method === "GET") {
-          return jsonResponse(contentRegistry);
-        }
-
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -642,7 +637,7 @@ describe("Category integration", () => {
     const addDialog = await screen.findByRole("dialog");
     fireEvent.click(
       await within(addDialog).findByRole("button", {
-        name: /#11 story\.starry-forest/i,
+        name: /starry forest/i,
       }),
     );
     fireEvent.click(

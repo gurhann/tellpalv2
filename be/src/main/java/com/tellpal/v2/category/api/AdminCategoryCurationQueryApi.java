@@ -13,4 +13,13 @@ public interface AdminCategoryCurationQueryApi {
      * Returns the curated content collection for one category localization.
      */
     List<AdminCategoryContentView> listCategoryContents(Long categoryId, LanguageCode languageCode);
+
+    /**
+     * Returns eligible content candidates for one category localization.
+     */
+    List<AdminEligibleCategoryContentView> listEligibleCategoryContents(
+            Long categoryId,
+            LanguageCode languageCode,
+            String query,
+            int limit);
 }
