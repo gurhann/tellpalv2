@@ -12,6 +12,12 @@ import { CategoriesIndexRoute } from "@/app/routes/categories";
 import { ContentDetailRoute } from "@/app/routes/contents/detail";
 import { ContentsIndexRoute } from "@/app/routes/contents";
 import { ContributorsRoute } from "@/app/routes/contributors";
+import { MockupCategoryDetailRoute } from "@/app/routes/mockups/category-detail";
+import { MockupCategoriesRoute } from "@/app/routes/mockups/categories";
+import { MockupContentDetailRoute } from "@/app/routes/mockups/content-detail";
+import { MockupContentsRoute } from "@/app/routes/mockups/contents";
+import { MockupLabsIndexRoute } from "@/app/routes/mockups";
+import { MockupStoryPagesRoute } from "@/app/routes/mockups/story-pages";
 import { FreeAccessRoute } from "@/app/routes/free-access";
 import { UiCategoriesLabRoute } from "@/app/routes/labs/ui-categories";
 import { UiContentsLabRoute } from "@/app/routes/labs/ui-contents";
@@ -107,6 +113,21 @@ export const cmsRoutes: RouteObject[] = [
           { path: "/labs/ui/contents", element: <UiContentsLabRoute /> },
           { path: "/labs/ui/categories", element: <UiCategoriesLabRoute /> },
           { path: "/labs/ui/story-pages", element: <UiStoryPagesLabRoute /> },
+          { path: "/labs/mockups", element: <MockupLabsIndexRoute /> },
+          { path: "/labs/mockups/contents", element: <MockupContentsRoute /> },
+          {
+            path: "/labs/mockups/contents/demo-content",
+            element: <MockupContentDetailRoute />,
+          },
+          {
+            path: "/labs/mockups/contents/demo-content/story-pages",
+            element: <MockupStoryPagesRoute />,
+          },
+          { path: "/labs/mockups/categories", element: <MockupCategoriesRoute /> },
+          {
+            path: "/labs/mockups/categories/demo-category",
+            element: <MockupCategoryDetailRoute />,
+          },
           { path: "/categories", element: <CategoriesIndexRoute /> },
           { path: "/categories/:categoryId", element: <CategoryDetailRoute /> },
           { path: "/media", element: <MediaRoute /> },

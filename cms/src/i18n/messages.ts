@@ -185,6 +185,9 @@ export const enMessages = {
   "route.uiLabs.title": "UI Labs",
   "route.uiLabs.description":
     "Hidden prototype routes for comparing CMS layout and UX variants.",
+  "route.mockupLabs.title": "Variant A Mockups",
+  "route.mockupLabs.description":
+    "Hidden fixture-backed routes that preview the winning Variant A shell.",
 } as const satisfies Record<string, MessageValue>;
 
 export const trMessages = {
@@ -370,6 +373,9 @@ export const trMessages = {
   "route.uiLabs.title": "UI Labs",
   "route.uiLabs.description":
     "CMS duzen ve deneyim varyantlarini karsilastiran gizli prototip rotalari.",
+  "route.mockupLabs.title": "Variant A Mockups",
+  "route.mockupLabs.description":
+    "Kazanan Variant A kabugunu gosteren gizli fixture tabanli rotalar.",
 } as const satisfies Record<keyof typeof enMessages, MessageValue>;
 
 export type TranslationKey = keyof typeof enMessages;

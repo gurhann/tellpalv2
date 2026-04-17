@@ -366,6 +366,33 @@ describe("CMS router auth flow", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("renders hidden authenticated Variant A mockup routes and supports deep links", async () => {
+    renderRouter({
+      initialEntries: ["/labs/mockups/contents/demo-content/story-pages?language=tr"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /story page editor mockup/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/preferred locale/i).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", { name: /add story page/i }),
+    ).toBeEnabled();
+    expect(
+      screen.queryByRole("link", { name: /variant a mockups/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it("logs out from the top bar and returns the user to /login", async () => {
     const logoutImpl = vi.fn().mockResolvedValue(undefined);
 

@@ -6,6 +6,8 @@ export function UiContentsLabRoute() {
       topic="Content Studio Prototypes"
       description="Three coded directions for the content registry and detail workspace. These variants focus on editorial flow, localization control, and story-page handoff."
       recommendation="Variant A wins for production because it keeps the shell calm, makes the primary task obvious, and leaves the right rail available for readiness and story-page context."
+      winnerHref="/labs/mockups/contents"
+      winnerLabel="Open Variant A mockup"
       variants={[
         {
           id: "A",

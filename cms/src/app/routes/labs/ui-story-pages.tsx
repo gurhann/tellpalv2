@@ -6,6 +6,8 @@ export function UiStoryPagesLabRoute() {
       topic="Story Page Editor Prototypes"
       description="Three coded directions for story structure editing and per-language page payload management."
       recommendation="Variant A keeps the editor fast on laptop heights, while the production implementation also borrows Variant C's readiness rail density for page-level completeness."
+      winnerHref="/labs/mockups/contents/demo-content/story-pages"
+      winnerLabel="Open Variant A mockup"
       variants={[
         {
           id: "A",

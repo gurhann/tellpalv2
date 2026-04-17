@@ -64,6 +64,14 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
 ];
 
 export function getRouteMeta(pathname: string): RouteMeta {
+  if (pathname.startsWith("/labs/mockups")) {
+    return {
+      titleKey: "route.mockupLabs.title",
+      eyebrowKey: "layout.brand",
+      descriptionKey: "route.mockupLabs.description",
+    };
+  }
+
   if (pathname.startsWith("/labs/ui/")) {
     return {
       titleKey: "route.uiLabs.title",

@@ -6,6 +6,8 @@ export function UiCategoriesLabRoute() {
       topic="Category Studio Prototypes"
       description="Alternative coded layouts for category metadata, localization tabs, and curation management."
       recommendation="Variant A still wins, but the final category rollout borrows Variant B's staged language guidance to make curation prerequisites easier to read."
+      winnerHref="/labs/mockups/categories"
+      winnerLabel="Open Variant A mockup"
       variants={[
         {
           id: "A",

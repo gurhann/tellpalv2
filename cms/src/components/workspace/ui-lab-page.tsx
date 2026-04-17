@@ -1,6 +1,8 @@
 import { CheckCircle2, Layers3, LayoutPanelLeft, Rows4 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ActionBar } from "@/components/workspace/action-bar";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { WorkspaceShell } from "@/components/workspace/workspace-shell";
@@ -26,6 +28,8 @@ type UiLabPageProps = {
   recommendation: string;
   variants: PrototypeVariant[];
   scoreRows: ScoreRow[];
+  winnerHref?: string;
+  winnerLabel?: string;
 };
 
 function getVariantIcon(id: string) {
@@ -50,6 +54,8 @@ export function UiLabPage({
   recommendation,
   variants,
   scoreRows,
+  winnerHref,
+  winnerLabel,
 }: UiLabPageProps) {
   const totalA = scoreTotal("variantA", scoreRows);
   const totalB = scoreTotal("variantB", scoreRows);
@@ -95,6 +101,13 @@ export function UiLabPage({
       <ActionBar
         title="Prototype scope"
         description="These routes use fixtures only. They compare information hierarchy and flow without touching live mutations."
+        meta={
+          winnerHref && winnerLabel ? (
+            <Button asChild type="button" variant="outline">
+              <Link to={winnerHref}>{winnerLabel}</Link>
+            </Button>
+          ) : null
+        }
       >
         <span className="inline-flex rounded-full border border-border/70 bg-background px-3 py-1.5 text-sm text-muted-foreground">
           Desktop-first

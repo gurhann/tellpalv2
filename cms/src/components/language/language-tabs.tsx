@@ -82,6 +82,7 @@ export function LanguageTabs({
               className="min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-border/70 data-active:bg-background data-active:shadow-sm"
               disabled={item.disabled}
               value={item.code}
+              onClick={() => onValueChange(item.code)}
             >
               <div className="flex min-h-full w-full flex-col items-start gap-2">
                 <LanguageBadge
