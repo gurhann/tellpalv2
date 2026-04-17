@@ -125,6 +125,7 @@ export const queryKeys = {
     recent: (params?: QueryKeyParams) =>
       ["assets", "recent", compactQueryKeyParams(params)] as const,
     detail: (assetId: number) => ["assets", "detail", assetId] as const,
+    processingRecentRoot: () => ["assets", "processing", "recent"] as const,
     processingRecent: (params?: QueryKeyParams) =>
       [
         "assets",
@@ -153,6 +154,7 @@ export const queryKeys = {
   },
   freeAccess: {
     all: ["free-access"] as const,
+    lists: () => ["free-access", "list"] as const,
     list: (params?: QueryKeyParams) =>
       ["free-access", "list", compactQueryKeyParams(params)] as const,
   },
