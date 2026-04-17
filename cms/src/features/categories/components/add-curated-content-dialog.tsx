@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -36,10 +37,7 @@ const addCuratedContentSchema = z.object({
     })
     .int("Select a valid content record.")
     .positive("Select a valid content record.")
-    .nullable()
-    .refine((value) => value !== null, {
-      message: "Select a content record to add.",
-    }),
+    .nullable(),
   displayOrder: z
     .number({
       error: "Display order is required.",
@@ -230,11 +228,12 @@ export function AddCuratedContentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          className="grid gap-5"
-          noValidate
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
+        <DialogBody>
+          <form
+            className="grid gap-5"
+            noValidate
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
           {problemMessage ? (
             <ProblemAlert
               description={problemMessage}
@@ -374,24 +373,25 @@ export function AddCuratedContentDialog({
             )}
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleOpenChange(false)}
-              disabled={addCuratedContent.isPending}
-            >
-              Cancel
-            </Button>
-            <SubmitButton
-              isPending={addCuratedContent.isPending}
-              disabled={selectedContentId === null}
-              pendingLabel="Adding curated content..."
-            >
-              Add curated content
-            </SubmitButton>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+                disabled={addCuratedContent.isPending}
+              >
+                Cancel
+              </Button>
+              <SubmitButton
+                isPending={addCuratedContent.isPending}
+                disabled={selectedContentId === null}
+                pendingLabel="Adding curated content..."
+              >
+                Add curated content
+              </SubmitButton>
+            </DialogFooter>
+          </form>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   );

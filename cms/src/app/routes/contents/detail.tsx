@@ -7,6 +7,7 @@ import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FormSection } from "@/components/forms/form-section";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
@@ -311,6 +312,64 @@ export function ContentDetailRoute() {
     );
   }
 
+  function renderAside() {
+    if (!content) {
+      return null;
+    }
+
+    return (
+      <>
+        <TaskRail
+          title={copy.operationsSnapshot}
+          description={copy.operationsDescription}
+          stats={[
+            {
+              label: copy.visibility,
+              value: copy.visibilityDescription(
+                content.visibleToMobileLocalizationCount,
+                content.localizationCount,
+              ),
+              tone:
+                content.visibleToMobileLocalizationCount > 0
+                  ? "success"
+                  : "warning",
+            },
+            {
+              label: copy.processing,
+              value: copy.processingDescription(
+                content.processingCompleteLocalizationCount,
+                content.localizationCount,
+              ),
+              tone:
+                content.processingCompleteLocalizationCount ===
+                content.localizationCount
+                  ? "success"
+                  : "warning",
+            },
+            {
+              label: copy.storyStructure,
+              value: content.summary.supportsStoryPages
+                ? copy.storyPagesCount(content.summary.pageCount ?? 0)
+                : copy.storyPagesUnused,
+            },
+          ]}
+        >
+          <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
+            <p className="font-medium text-foreground">
+              {copy.languageControls}
+            </p>
+            <p>{copy.workspaceDescription}</p>
+            <p>{copy.metadataGuidance}</p>
+            <p>{copy.publishGuidance}</p>
+            {content.summary.supportsStoryPages ? (
+              <p>{copy.storyEditorGuidance}</p>
+            ) : null}
+          </div>
+        </TaskRail>
+      </>
+    );
+  }
+
   return (
     <ContentPageShell
       eyebrow={copy.eyebrow}
@@ -324,6 +383,7 @@ export function ContentDetailRoute() {
         />
       }
       toolbar={renderToolbar()}
+      aside={renderAside()}
     >
       {renderDetailContent()}
 

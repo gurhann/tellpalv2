@@ -1,12 +1,6 @@
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { DetailDrawer } from "@/components/workspace/detail-drawer";
 import { AssetMetadataForm } from "@/features/assets/components/asset-metadata-form";
 import { AssetPreviewCard } from "@/features/assets/components/asset-preview-card";
 import { RefreshDownloadUrlButton } from "@/features/assets/components/refresh-download-url-button";
@@ -48,23 +42,18 @@ export function AssetDetailSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        className="w-full overflow-y-auto sm:max-w-2xl"
-        side="right"
-      >
-        <SheetHeader className="border-b border-border/60">
-          <SheetTitle>
-            {asset
-              ? t("assets.table.assetId", { assetId: asset.id })
-              : t("assets.assetDetailFallback")}
-          </SheetTitle>
-          <SheetDescription>
-            {t("assets.cachedUrlDescription")}
-          </SheetDescription>
-        </SheetHeader>
-
-        <div className="grid gap-5 p-4">
+    <DetailDrawer
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        asset
+          ? t("assets.table.assetId", { assetId: asset.id })
+          : t("assets.assetDetailFallback")
+      }
+      description={t("assets.cachedUrlDescription")}
+      className="w-full sm:max-w-2xl"
+    >
+      <div className="grid gap-5 pt-5">
           {assetDetailQuery.isLoading ? (
             <EmptyState
               className="min-h-56"
@@ -148,8 +137,7 @@ export function AssetDetailSheet({
               title={t("assets.noAssetSelected")}
             />
           )}
-        </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </DetailDrawer>
   );
 }

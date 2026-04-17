@@ -13,6 +13,9 @@ import { ContentDetailRoute } from "@/app/routes/contents/detail";
 import { ContentsIndexRoute } from "@/app/routes/contents";
 import { ContributorsRoute } from "@/app/routes/contributors";
 import { FreeAccessRoute } from "@/app/routes/free-access";
+import { UiCategoriesLabRoute } from "@/app/routes/labs/ui-categories";
+import { UiContentsLabRoute } from "@/app/routes/labs/ui-contents";
+import { UiStoryPagesLabRoute } from "@/app/routes/labs/ui-story-pages";
 import { LoginRoute } from "@/app/routes/login";
 import { MediaProcessingRoute } from "@/app/routes/media-processing";
 import { MediaRoute } from "@/app/routes/media";
@@ -101,6 +104,9 @@ export const cmsRoutes: RouteObject[] = [
             path: "/contents/:contentId/story-pages",
             element: <StoryPagesRoute />,
           },
+          { path: "/labs/ui/contents", element: <UiContentsLabRoute /> },
+          { path: "/labs/ui/categories", element: <UiCategoriesLabRoute /> },
+          { path: "/labs/ui/story-pages", element: <UiStoryPagesLabRoute /> },
           { path: "/categories", element: <CategoriesIndexRoute /> },
           { path: "/categories/:categoryId", element: <CategoryDetailRoute /> },
           { path: "/media", element: <MediaRoute /> },

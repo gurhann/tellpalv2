@@ -7,6 +7,7 @@ import { toastMutation } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -164,12 +165,14 @@ export function CurationTable({
             </DialogDescription>
           </DialogHeader>
 
-          {removeProblemMessage ? (
-            <ProblemAlert
-              description={removeProblemMessage}
-              title="Curated content could not be removed"
-            />
-          ) : null}
+          <DialogBody className="grid gap-4">
+            {removeProblemMessage ? (
+              <ProblemAlert
+                description={removeProblemMessage}
+                title="Curated content could not be removed"
+              />
+            ) : null}
+          </DialogBody>
 
           <DialogFooter>
             <Button

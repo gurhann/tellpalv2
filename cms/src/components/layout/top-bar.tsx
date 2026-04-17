@@ -8,6 +8,7 @@ import { SideNav } from "@/components/layout/side-nav";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -33,7 +34,7 @@ export function TopBar({ mobileNavOpen, onMobileNavOpenChange }: TopBarProps) {
 
   return (
     <>
-      <header className="border-b border-border/70 bg-background/90 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
           <Button
             className="lg:hidden"
@@ -83,7 +84,9 @@ export function TopBar({ mobileNavOpen, onMobileNavOpenChange }: TopBarProps) {
           <SheetHeader className="sr-only">
             <SheetTitle>{t("app.cmsNavigation")}</SheetTitle>
           </SheetHeader>
-          <SideNav onNavigate={() => onMobileNavOpenChange(false)} />
+          <SheetBody className="p-0">
+            <SideNav onNavigate={() => onMobileNavOpenChange(false)} />
+          </SheetBody>
         </SheetContent>
       </Sheet>
     </>

@@ -5,6 +5,7 @@ import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -107,7 +108,7 @@ export function AssetPickerDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4">
+        <DialogBody className="grid gap-4">
           <Input
             aria-label={locale === "tr" ? "Asset ara" : "Search assets"}
             placeholder={
@@ -212,7 +213,7 @@ export function AssetPickerDialog({
               })}
             </div>
           )}
-        </div>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   );

@@ -77,7 +77,9 @@ describe("MediaRoute", () => {
     ).toBeVisible();
     expect(screen.getByRole("button", { name: /upload asset/i })).toBeEnabled();
     expect(
-      screen.getByText(/upload assets, inspect them, and edit asset metadata/i),
+      screen.getByText(
+        /upload assets, filter them, and inspect metadata in a scroll-safe detail drawer/i,
+      ),
     ).toBeVisible();
   });
 

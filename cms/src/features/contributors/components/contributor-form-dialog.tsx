@@ -7,6 +7,7 @@ import { toastMutation, useZodForm } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -148,51 +149,53 @@ export function ContributorFormDialog(props: ContributorFormDialogProps) {
           <DialogDescription>{copy.description}</DialogDescription>
         </DialogHeader>
 
-        <form
-          className="grid gap-5"
-          noValidate
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          {problem ? <ProblemAlert problem={problem} /> : null}
-          <FieldError error={form.formState.errors.root?.serverError} />
+        <DialogBody>
+          <form
+            className="grid gap-5"
+            noValidate
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
+            {problem ? <ProblemAlert problem={problem} /> : null}
+            <FieldError error={form.formState.errors.root?.serverError} />
 
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="contributor-display-name"
-            >
-              Display name
-            </label>
-            <Input
-              id="contributor-display-name"
-              placeholder="Annie Case"
-              {...form.register("displayName")}
-              disabled={contributorActions.isPending}
-            />
-            <p className="text-sm text-muted-foreground">
-              Names are trimmed before submit and appear in the shared
-              contributor registry immediately after save.
-            </p>
-            <FieldError error={form.formState.errors.displayName} />
-          </div>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium text-foreground"
+                htmlFor="contributor-display-name"
+              >
+                Display name
+              </label>
+              <Input
+                id="contributor-display-name"
+                placeholder="Annie Case"
+                {...form.register("displayName")}
+                disabled={contributorActions.isPending}
+              />
+              <p className="text-sm text-muted-foreground">
+                Names are trimmed before submit and appear in the shared
+                contributor registry immediately after save.
+              </p>
+              <FieldError error={form.formState.errors.displayName} />
+            </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleOpenChange(false)}
-              disabled={contributorActions.isPending}
-            >
-              Cancel
-            </Button>
-            <SubmitButton
-              isPending={contributorActions.isPending}
-              pendingLabel={copy.pendingLabel}
-            >
-              {copy.submitLabel}
-            </SubmitButton>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+                disabled={contributorActions.isPending}
+              >
+                Cancel
+              </Button>
+              <SubmitButton
+                isPending={contributorActions.isPending}
+                pendingLabel={copy.pendingLabel}
+              >
+                {copy.submitLabel}
+              </SubmitButton>
+            </DialogFooter>
+          </form>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   );

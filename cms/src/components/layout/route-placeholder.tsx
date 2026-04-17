@@ -17,6 +17,7 @@ export function RoutePlaceholder({
   eyebrow,
   title,
   description,
+  highlights,
 }: RoutePlaceholderProps) {
   const { t } = useI18n();
 
@@ -42,6 +43,26 @@ export function RoutePlaceholder({
             {t("placeholder.minimalDescription")}
           </p>
         </div>
+        {highlights.length > 0 ? (
+          <div className="mt-5 rounded-3xl border border-border/70 bg-card/95 p-5 shadow-sm">
+            <p className="text-sm font-medium text-foreground">
+              {t("placeholder.responsibilitiesTitle")}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {t("placeholder.responsibilitiesDescription")}
+            </p>
+            <ul className="mt-4 grid gap-3" aria-label={t("placeholder.responsibilitiesTitle")}>
+              {highlights.map((highlight) => (
+                <li
+                  key={highlight}
+                  className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-3 text-sm text-muted-foreground"
+                >
+                  {highlight}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

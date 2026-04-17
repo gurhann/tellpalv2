@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { TaskRail } from "@/components/workspace/task-rail";
 import { CategoryCurationPanel } from "@/features/categories/components/category-curation-panel";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
@@ -480,12 +482,49 @@ export function CategoryDetailRoute() {
     );
   }
 
+  function renderAside() {
+    if (!category) {
+      return null;
+    }
+
+    return (
+      <TaskRail
+        title={copy.categorySummary}
+        description={copy.summaryDescription}
+        stats={[
+          {
+            label: copy.snapshotTitle,
+            value:
+              localizations.length === 0
+                ? copy.snapshotNone
+                : copy.snapshotSome(localizations.length),
+            tone: localizations.length > 0 ? "success" : "warning",
+          },
+          {
+            label: locale === "tr" ? "Seçili dil" : "Selected locale",
+            value:
+              selectedLocalization?.languageLabel ??
+              (locale === "tr" ? "Henüz yok" : "None yet"),
+          },
+        ]}
+      >
+        <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
+          <p>{copy.summaryCardOne}</p>
+          <p>{copy.summaryCardTwo}</p>
+          <p>{copy.snapshotDescription}</p>
+          <p>{copy.snapshotRules}</p>
+        </div>
+      </TaskRail>
+    );
+  }
+
   return (
     <>
       <ContentPageShell
         eyebrow={copy.categoryStudio}
         title={routeTitle}
         description={routeDescription}
+        aside={renderAside()}
         actions={
           <>
             <Button asChild type="button" variant="outline">
@@ -531,21 +570,23 @@ export function CategoryDetailRoute() {
             </DialogDescription>
           </DialogHeader>
 
-          <CategoryLocalizationForm
-            availableLanguages={availableLanguageOptions}
-            categoryId={parsedCategoryId}
-            initialValues={getCreateCategoryLocalizationDefaults(
-              availableLanguageOptions[0]?.code,
-            )}
-            mode="create"
-            onCancel={() => setIsCreateLocalizationOpen(false)}
-            onSuccess={(savedLocalization) => {
-              setSelectedLanguageCode(
-                savedLocalization.languageCode.toLowerCase(),
-              );
-              setIsCreateLocalizationOpen(false);
-            }}
-          />
+          <DialogBody>
+            <CategoryLocalizationForm
+              availableLanguages={availableLanguageOptions}
+              categoryId={parsedCategoryId}
+              initialValues={getCreateCategoryLocalizationDefaults(
+                availableLanguageOptions[0]?.code,
+              )}
+              mode="create"
+              onCancel={() => setIsCreateLocalizationOpen(false)}
+              onSuccess={(savedLocalization) => {
+                setSelectedLanguageCode(
+                  savedLocalization.languageCode.toLowerCase(),
+                );
+                setIsCreateLocalizationOpen(false);
+              }}
+            />
+          </DialogBody>
         </DialogContent>
       </Dialog>
     </>

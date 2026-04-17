@@ -342,6 +342,30 @@ describe("CMS router auth flow", () => {
     expect(screen.getByText(/no localizations yet/i)).toBeInTheDocument();
   });
 
+  it("renders hidden authenticated UI lab routes without adding them to navigation", async () => {
+    renderRouter({
+      initialEntries: ["/labs/ui/contents"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /content studio prototypes/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/three coded directions for the content registry/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /ui labs/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it("logs out from the top bar and returns the user to /login", async () => {
     const logoutImpl = vi.fn().mockResolvedValue(undefined);
 

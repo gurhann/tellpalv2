@@ -20,7 +20,7 @@ export function FilterBar({ children, className, ...props }: FilterBarProps) {
   return (
     <section
       className={cn(
-        "rounded-2xl border border-border/70 bg-muted/25 px-4 py-4 shadow-sm",
+        "rounded-[1.75rem] border border-border/70 bg-muted/20 px-4 py-4 shadow-sm shadow-slate-950/5",
         className,
       )}
       {...props}

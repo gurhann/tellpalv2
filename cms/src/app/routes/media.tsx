@@ -1,12 +1,17 @@
 import { RefreshCw, Search } from "lucide-react";
-import { useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
-import { FilterBar, FilterBarGroup } from "@/components/data/filter-bar";
+import {
+  FilterBar,
+  FilterBarActions,
+  FilterBarGroup,
+  FilterBarSummary,
+} from "@/components/data/filter-bar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AssetUploadDialog } from "@/features/assets/components/asset-upload-dialog";
 import { AssetDetailSheet } from "@/features/assets/components/asset-detail-sheet";
 import { AssetTable } from "@/features/assets/components/asset-table";
+import { AssetUploadDialog } from "@/features/assets/components/asset-upload-dialog";
 import { useRecentAssets } from "@/features/assets/queries/use-recent-assets";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { useI18n } from "@/i18n/locale-provider";
@@ -18,30 +23,58 @@ export function MediaRoute() {
   const [selectedAssetId, setSelectedAssetId] = useState<number | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selectedMediaType, setSelectedMediaType] =
+    useState<"ALL" | "IMAGE" | "AUDIO" | "ARCHIVE">("ALL");
   const recentAssetsQuery = useRecentAssets(RECENT_ASSET_LIMIT);
+  const deferredSearch = useDeferredValue(search);
   const copy =
     locale === "tr"
       ? {
           eyebrow: "Medya",
           title: "Medya Aracı",
           description:
-            "Asset yükleyin, listeleyin ve detay metadata'sını düzenleyin.",
+            "Asset yükleyin, filtreleyin ve detay metadata’sını scroll-safe drawer içinde inceleyin.",
           refresh: "Yenile",
           upload: "Asset yükle",
           searchLabel: "Asset kütüphanesinde ara",
           searchPlaceholder: "Object path, asset id veya checksum ile ara",
-          filterTypes: "Görsel / Ses / Arşiv",
+          filterTypes: "Tüm medya tipleri",
         }
       : {
           eyebrow: "Media",
           title: "Media Utility",
-          description: "Upload assets, inspect them, and edit asset metadata.",
+          description:
+            "Upload assets, filter them, and inspect metadata in a scroll-safe detail drawer.",
           refresh: "Refresh",
           upload: "Upload asset",
           searchLabel: "Search asset library",
           searchPlaceholder: "Search by object path, asset id, or checksum",
-          filterTypes: "Images / Audio / Archives",
+          filterTypes: "All media types",
         };
+
+  const filteredAssets = useMemo(() => {
+    const normalizedSearch = deferredSearch.trim().toLowerCase();
+
+    return recentAssetsQuery.assets.filter((asset) => {
+      if (
+        selectedMediaType !== "ALL" &&
+        asset.mediaType !== selectedMediaType
+      ) {
+        return false;
+      }
+
+      if (normalizedSearch.length === 0) {
+        return true;
+      }
+
+      return (
+        asset.objectPath.toLowerCase().includes(normalizedSearch) ||
+        asset.id.toString().includes(normalizedSearch) ||
+        (asset.checksumSha256 ?? "").toLowerCase().includes(normalizedSearch)
+      );
+    });
+  }, [deferredSearch, recentAssetsQuery.assets, selectedMediaType]);
 
   function handleOpenChange(nextOpen: boolean) {
     setIsDetailOpen(nextOpen);
@@ -88,20 +121,63 @@ export function MediaRoute() {
                 <Input
                   aria-label={copy.searchLabel}
                   className="pl-8"
-                  disabled
                   placeholder={copy.searchPlaceholder}
-                  value=""
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
                 />
               </div>
-              <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
-                {copy.filterTypes}
-              </div>
             </FilterBarGroup>
+            <FilterBarActions>
+              {[
+                {
+                  key: "ALL" as const,
+                  label: copy.filterTypes,
+                },
+                {
+                  key: "IMAGE" as const,
+                  label: locale === "tr" ? "Görsel" : "Images",
+                },
+                {
+                  key: "AUDIO" as const,
+                  label: locale === "tr" ? "Ses" : "Audio",
+                },
+                {
+                  key: "ARCHIVE" as const,
+                  label: locale === "tr" ? "Arşiv" : "Archives",
+                },
+              ].map((mediaOption) => (
+                <Button
+                  key={mediaOption.key}
+                  type="button"
+                  variant={
+                    selectedMediaType === mediaOption.key
+                      ? "secondary"
+                      : "outline"
+                  }
+                  size="sm"
+                  onClick={() => setSelectedMediaType(mediaOption.key)}
+                >
+                  {mediaOption.label}
+                </Button>
+              ))}
+            </FilterBarActions>
+            <FilterBarSummary
+              title={
+                locale === "tr"
+                  ? `${filteredAssets.length} / ${recentAssetsQuery.assets.length} asset`
+                  : `${filteredAssets.length} / ${recentAssetsQuery.assets.length} assets`
+              }
+              description={
+                locale === "tr"
+                  ? "Arama ve medya tipi filtreleri asset tablosunu anında günceller."
+                  : "Search and media-type filters update the asset table immediately."
+              }
+            />
           </FilterBar>
         }
       >
         <AssetTable
-          assets={recentAssetsQuery.assets}
+          assets={filteredAssets}
           isLoading={recentAssetsQuery.isLoading}
           onAssetSelect={(asset) => {
             setSelectedAssetId(asset.id);

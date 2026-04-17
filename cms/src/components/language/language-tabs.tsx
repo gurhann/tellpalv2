@@ -71,7 +71,7 @@ export function LanguageTabs({
         <TabsList
           aria-label={resolvedListLabel}
           className={cn(
-            "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-2xl bg-muted/30 p-2",
+            "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-[1.5rem] bg-muted/25 p-2",
             listClassName,
           )}
           variant="line"
@@ -79,7 +79,7 @@ export function LanguageTabs({
           {items.map((item) => (
             <TabsTrigger
               key={item.code}
-              className="min-h-[5.5rem] min-w-40 flex-none items-start justify-start whitespace-normal rounded-xl border border-transparent px-3 py-2 text-left after:hidden data-active:border-border/70 data-active:bg-background"
+              className="min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-border/70 data-active:bg-background data-active:shadow-sm"
               disabled={item.disabled}
               value={item.code}
             >

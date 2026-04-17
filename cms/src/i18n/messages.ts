@@ -182,6 +182,9 @@ export const enMessages = {
   "assets.table.toolbarTitle": "Asset registry",
   "assets.table.toolbarDescription":
     "Recent asset metadata is now bound to the shared library table.",
+  "route.uiLabs.title": "UI Labs",
+  "route.uiLabs.description":
+    "Hidden prototype routes for comparing CMS layout and UX variants.",
 } as const satisfies Record<string, MessageValue>;
 
 export const trMessages = {
@@ -364,6 +367,9 @@ export const trMessages = {
   "assets.table.toolbarTitle": "Asset kayıt listesi",
   "assets.table.toolbarDescription":
     "Son asset metadata’sı artık paylaşılan kütüphane tablosuna bağlı.",
+  "route.uiLabs.title": "UI Labs",
+  "route.uiLabs.description":
+    "CMS duzen ve deneyim varyantlarini karsilastiran gizli prototip rotalari.",
 } as const satisfies Record<keyof typeof enMessages, MessageValue>;
 
 export type TranslationKey = keyof typeof enMessages;

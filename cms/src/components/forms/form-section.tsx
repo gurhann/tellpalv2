@@ -37,8 +37,8 @@ export function FormSection({
           className,
         )}
       >
-        <CardHeader className="gap-4 border-b border-border/60 pb-4 sm:flex sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-2">
+        <CardHeader className="gap-4 border-b border-border/60 bg-muted/10 pb-4 sm:flex sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 space-y-2">
             <h2
               id={titleId}
               className="font-heading text-lg font-semibold tracking-tight"

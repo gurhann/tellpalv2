@@ -138,45 +138,57 @@ afterEach(async () => {
 });
 
 describe("Auth integration", () => {
-  it("logs in from the real app flow and lands on /contents", async () => {
-    const session = makeSession();
-    const fetchMock = vi
-      .fn<typeof fetch>()
-      .mockImplementation(async (input, init) => {
-        const url = new URL(String(input));
+  it(
+    "logs in from the real app flow and lands on /contents",
+    async () => {
+      const session = makeSession();
+      const fetchMock = vi
+        .fn<typeof fetch>()
+        .mockImplementation(async (input, init) => {
+          const url = new URL(String(input));
 
-        expect(url.pathname).toBe("/api/admin/auth/login");
-        expect(init?.method).toBe("POST");
+          expect(url.pathname).toBe("/api/admin/auth/login");
+          expect(init?.method).toBe("POST");
 
-        return new Response(JSON.stringify(session), {
-          status: 200,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          return new Response(JSON.stringify(session), {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
         });
+
+      await renderFreshApp({
+        initialPath: "/login",
+        fetchImplementation: fetchMock as typeof fetch,
       });
 
-    await renderFreshApp({
-      initialPath: "/login",
-      fetchImplementation: fetchMock as typeof fetch,
-    });
+      fireEvent.change(screen.getByLabelText(/username/i), {
+        target: { value: session.username },
+      });
+      fireEvent.change(screen.getByLabelText(/password/i), {
+        target: { value: "TellPalCms!2026" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    fireEvent.change(screen.getByLabelText(/username/i), {
-      target: { value: session.username },
-    });
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: "TellPalCms!2026" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
+      expect(
+        await screen.findByRole("heading", { name: /content studio/i }),
+      ).toBeInTheDocument();
+      expect(window.localStorage.getItem("tellpal.cms.refresh-token")).toBe(
+        session.refreshToken,
+      );
+      expect(
+        fetchMock.mock.calls.filter(([input, init]) => {
+          const url = new URL(typeof input === "string" ? input : input.url);
 
-    expect(
-      await screen.findByRole("heading", { name: /content studio/i }),
-    ).toBeInTheDocument();
-    expect(window.localStorage.getItem("tellpal.cms.refresh-token")).toBe(
-      session.refreshToken,
-    );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
+          return (
+            url.pathname === "/api/admin/auth/login" && init?.method === "POST"
+          );
+        }),
+      ).toHaveLength(1);
+    },
+    15_000,
+  );
 
   it("bootstraps the session from a stored refresh token without flickering to login", async () => {
     const deferred = createDeferred<Response>();

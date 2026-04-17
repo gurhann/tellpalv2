@@ -70,9 +70,9 @@ describe("ContributorsRoute", () => {
     expect(
       screen.getByRole("button", { name: /create contributor/i }),
     ).toBeEnabled();
-    expect(screen.getByLabelText(/search contributors/i)).toBeDisabled();
+    expect(screen.getByLabelText(/search contributors/i)).toBeEnabled();
     expect(screen.getByText("Annie Case")).toBeInTheDocument();
-    expect(screen.getByText(/^Latest 12$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Latest 12 records$/i)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /rename/i })).toHaveLength(3);
     expect(
       screen.getByText(/delete contributor unavailable/i),

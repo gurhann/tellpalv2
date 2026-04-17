@@ -66,9 +66,9 @@ describe("useAssetPreview", () => {
       mimeType: "audio/wav",
       cachedDownloadUrl:
         "https://storage.googleapis.com/tellpal/local/audio-1.wav",
-      downloadUrlCachedAt: "2026-04-05T12:00:00Z",
-      downloadUrlExpiresAt: "2026-04-05T13:00:00Z",
-      updatedAt: "2026-04-05T12:00:00Z",
+      downloadUrlCachedAt: "2026-05-05T12:00:00Z",
+      downloadUrlExpiresAt: "2026-05-05T13:00:00Z",
+      updatedAt: "2026-05-05T12:00:00Z",
     };
 
     queryClient.setQueryData(
@@ -91,16 +91,28 @@ describe("useAssetPreview", () => {
       expect(assetAdminApiMock.refreshDownloadUrlCache).toHaveBeenCalledWith(1);
     });
 
+    await waitFor(() => {
+      expect(
+        (
+          queryClient.getQueryData(
+            queryKeys.assets.detail(1),
+          ) as ReturnType<typeof mapAdminAsset> | undefined
+        )?.cachedDownloadUrl,
+      ).toBe("https://storage.googleapis.com/tellpal/local/audio-1.wav");
+    });
+
     const cachedAsset = queryClient.getQueryData(
       queryKeys.assets.detail(1),
     ) as ReturnType<typeof mapAdminAsset>;
 
     rerender({ asset: cachedAsset });
 
-    expect(result.current.previewStatus).toBe("available");
-    expect(result.current.previewUrl).toBe(
-      "https://storage.googleapis.com/tellpal/local/audio-1.wav",
-    );
+    await waitFor(() => {
+      expect(result.current.previewStatus).toBe("available");
+      expect(result.current.previewUrl).toBe(
+        "https://storage.googleapis.com/tellpal/local/audio-1.wav",
+      );
+    });
   });
 
   it("keeps archive assets in unavailable state without refreshing", async () => {

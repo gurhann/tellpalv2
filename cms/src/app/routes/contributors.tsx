@@ -1,7 +1,11 @@
 import { CirclePlus, RefreshCw, Search } from "lucide-react";
-import { useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
-import { FilterBar, FilterBarGroup } from "@/components/data/filter-bar";
+import {
+  FilterBar,
+  FilterBarGroup,
+  FilterBarSummary,
+} from "@/components/data/filter-bar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
@@ -17,22 +21,24 @@ const RECENT_CONTRIBUTOR_LIMIT = 12;
 export function ContributorsRoute() {
   const { locale } = useI18n();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedContributor, setSelectedContributor] =
     useState<ContributorViewModel | null>(null);
   const contributorQuery = useContributors(RECENT_CONTRIBUTOR_LIMIT);
+  const deferredSearch = useDeferredValue(search);
   const copy =
     locale === "tr"
       ? {
           eyebrow: "Katkı Sağlayan Kaydı",
           title: "Katkı Sağlayanlar",
           description:
-            "Katkı sağlayan kayıtlarını oluşturun ve yeniden adlandırın.",
+            "Katkı sağlayan kayıtlarını arayın, oluşturun ve hızlıca yeniden adlandırın.",
           refresh: "Yenile",
           create: "Katkı sağlayan oluştur",
           filtersAria: "Katkı sağlayan filtreleri",
           searchLabel: "Katkı sağlayan ara",
           searchPlaceholder: "Görünen ada göre ara",
-          latest: `Son ${RECENT_CONTRIBUTOR_LIMIT}`,
+          latest: `Son ${RECENT_CONTRIBUTOR_LIMIT} kayıt`,
           missingActionLabel: "Katkı sağlayanı sil",
           missingActionDescription:
             "Admin API tarafında hâlâ contributor delete endpoint'i yok. Bu yüzden kayıt satırlarında yalnızca oluşturma ve yeniden adlandırma gösterilir.",
@@ -40,17 +46,30 @@ export function ContributorsRoute() {
       : {
           eyebrow: "Contributor Registry",
           title: "Contributors",
-          description: "Create and rename shared contributor records.",
+          description:
+            "Search, create, and quickly rename shared contributor records.",
           refresh: "Refresh",
           create: "Create contributor",
           filtersAria: "Contributor filters",
           searchLabel: "Search contributors",
           searchPlaceholder: "Search by display name",
-          latest: `Latest ${RECENT_CONTRIBUTOR_LIMIT}`,
+          latest: `Latest ${RECENT_CONTRIBUTOR_LIMIT} records`,
           missingActionLabel: "Delete contributor",
           missingActionDescription:
             "The admin API still has no contributor delete endpoint. Registry rows intentionally expose create and rename only.",
         };
+
+  const filteredContributors = useMemo(() => {
+    const normalizedSearch = deferredSearch.trim().toLowerCase();
+
+    return contributorQuery.contributors.filter((contributor) => {
+      if (normalizedSearch.length === 0) {
+        return true;
+      }
+
+      return contributor.displayName.toLowerCase().includes(normalizedSearch);
+    });
+  }, [contributorQuery.contributors, deferredSearch]);
 
   return (
     <>
@@ -86,20 +105,25 @@ export function ContributorsRoute() {
                 <Input
                   aria-label={copy.searchLabel}
                   className="pl-8"
-                  disabled
                   placeholder={copy.searchPlaceholder}
-                  value=""
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
                 />
               </div>
-              <div className="inline-flex h-8 items-center rounded-lg border border-border/70 bg-background px-2.5 text-sm text-muted-foreground">
-                {copy.latest}
-              </div>
             </FilterBarGroup>
+            <FilterBarSummary
+              title={
+                locale === "tr"
+                  ? `${filteredContributors.length} / ${contributorQuery.contributors.length} kayıt`
+                  : `${filteredContributors.length} / ${contributorQuery.contributors.length} records`
+              }
+              description={copy.latest}
+            />
           </FilterBar>
         }
       >
         <ContributorTable
-          contributors={contributorQuery.contributors}
+          contributors={filteredContributors}
           isLoading={contributorQuery.isLoading}
           onRenameContributor={setSelectedContributor}
           onRetry={() => void contributorQuery.refetch()}

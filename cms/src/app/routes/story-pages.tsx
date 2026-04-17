@@ -10,6 +10,7 @@ import { toastMutation } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -21,6 +22,7 @@ import {
   LanguageTabs,
   type LanguageTabItem,
 } from "@/components/language/language-tabs";
+import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import type {
   ContentReadViewModel,
@@ -175,43 +177,48 @@ function CreateStoryPageDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          {problem ? <ProblemAlert problem={problem} /> : null}
+        <DialogBody>
+          <form className="grid gap-4" onSubmit={handleSubmit}>
+            {problem ? <ProblemAlert problem={problem} /> : null}
 
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="story-page-create-number"
-            >
-              Page number
-            </label>
-            <Input
-              id="story-page-create-number"
-              inputMode="numeric"
-              min={1}
-              placeholder="1"
-              type="number"
-              value={pageNumber}
-              onChange={(event) => setPageNumber(event.target.value)}
-              disabled={isPending}
-            />
-            <FieldError error={fieldErrors.pageNumber} />
-          </div>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium text-foreground"
+                htmlFor="story-page-create-number"
+              >
+                Page number
+              </label>
+              <Input
+                id="story-page-create-number"
+                inputMode="numeric"
+                min={1}
+                placeholder="1"
+                type="number"
+                value={pageNumber}
+                onChange={(event) => setPageNumber(event.target.value)}
+                disabled={isPending}
+              />
+              <FieldError error={fieldErrors.pageNumber} />
+            </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleOpenChange(false)}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <SubmitButton isPending={isPending} pendingLabel="Creating page...">
-              Add story page
-            </SubmitButton>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <SubmitButton
+                isPending={isPending}
+                pendingLabel="Creating page..."
+              >
+                Add story page
+              </SubmitButton>
+            </DialogFooter>
+          </form>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   );
@@ -322,7 +329,7 @@ function EditStoryPageDialog({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
+      <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Edit story page</DialogTitle>
           <DialogDescription>
@@ -331,110 +338,114 @@ function EditStoryPageDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {storyPageQuery.problem ? (
-          <ProblemAlert problem={storyPageQuery.problem} />
-        ) : null}
+        <DialogBody className="grid gap-6">
+          {storyPageQuery.problem ? (
+            <ProblemAlert problem={storyPageQuery.problem} />
+          ) : null}
 
-        {storyPageQuery.isLoading && !storyPage ? (
-          <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground">
-            Loading the latest story page metadata and localized page
-            payloads...
-          </div>
-        ) : null}
-
-        {storyPage ? (
-          <div className="grid gap-6">
-            <div className="grid gap-3 md:grid-cols-3">
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  Page {storyPage.pageNumber}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Page numbers remain stable after creation.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  {storyPage.localizationCount} localization
-                  {storyPage.localizationCount === 1 ? "" : "s"}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Language workspaces inherit their allowed locales from the
-                  parent content detail route.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-                <p className="text-sm font-medium text-foreground">
-                  {storyPage.illustratedLocalizationCount} localized
-                  illustration
-                  {storyPage.illustratedLocalizationCount === 1 ? "" : "s"}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Each language now carries its own illustration asset
-                  reference.
-                </p>
-              </div>
+          {storyPageQuery.isLoading && !storyPage ? (
+            <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground">
+              Loading the latest story page metadata and localized page
+              payloads...
             </div>
+          ) : null}
 
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
-                <p className="text-sm font-medium text-foreground">
-                  Localized page workspaces
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Story page localizations are available only for parent content
-                  locales that already exist on the content detail route.
-                </p>
+          {storyPage ? (
+            <div className="grid gap-6">
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                  <p className="text-sm font-medium text-foreground">
+                    Page {storyPage.pageNumber}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Page numbers remain stable after creation.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                  <p className="text-sm font-medium text-foreground">
+                    {storyPage.localizationCount} localization
+                    {storyPage.localizationCount === 1 ? "" : "s"}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Language workspaces inherit their allowed locales from the
+                    parent content detail route.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
+                  <p className="text-sm font-medium text-foreground">
+                    {storyPage.illustratedLocalizationCount} localized
+                    illustration
+                    {storyPage.illustratedLocalizationCount === 1 ? "" : "s"}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Each language now carries its own illustration asset
+                    reference.
+                  </p>
+                </div>
               </div>
 
-              <LanguageTabs
-                items={languageItems}
-                value={resolvedActiveLanguageCode}
-                onValueChange={setActiveLanguageCode}
-                emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
-                emptyTitle="No parent locales available"
-                renderContent={(item) => {
-                  const contentLocalization =
-                    content.localizations.find(
-                      (localization) => localization.languageCode === item.code,
-                    ) ?? null;
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
+                  <p className="text-sm font-medium text-foreground">
+                    Localized page workspaces
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Story page localizations are available only for parent
+                    content locales that already exist on the content detail
+                    route.
+                  </p>
+                </div>
 
-                  if (!contentLocalization) {
+                <LanguageTabs
+                  items={languageItems}
+                  value={resolvedActiveLanguageCode}
+                  onValueChange={setActiveLanguageCode}
+                  emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
+                  emptyTitle="No parent locales available"
+                  renderContent={(item) => {
+                    const contentLocalization =
+                      content.localizations.find(
+                        (localization) =>
+                          localization.languageCode === item.code,
+                      ) ?? null;
+
+                    if (!contentLocalization) {
+                      return (
+                        <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                          Story page payloads can open only after the parent
+                          content locale exists for this language.
+                        </div>
+                      );
+                    }
+
                     return (
-                      <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-                        Story page payloads can open only after the parent
-                        content locale exists for this language.
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <StoryPageLocalizationForm
-                      key={`${storyPage.pageNumber}-${item.code}`}
-                      contentLocalization={contentLocalization}
-                      isPending={isPending}
-                      storyPage={storyPage}
-                      onSave={({
-                        languageCode,
-                        bodyText,
-                        audioMediaId,
-                        illustrationMediaId,
-                      }) =>
-                        onUpsertLocalization({
-                          pageNumber: storyPage.pageNumber,
+                      <StoryPageLocalizationForm
+                        key={`${storyPage.pageNumber}-${item.code}`}
+                        contentLocalization={contentLocalization}
+                        isPending={isPending}
+                        storyPage={storyPage}
+                        onSave={({
                           languageCode,
                           bodyText,
                           audioMediaId,
                           illustrationMediaId,
-                        })
-                      }
-                    />
-                  );
-                }}
-              />
+                        }) =>
+                          onUpsertLocalization({
+                            pageNumber: storyPage.pageNumber,
+                            languageCode,
+                            bodyText,
+                            audioMediaId,
+                            illustrationMediaId,
+                          })
+                        }
+                      />
+                    );
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
+        </DialogBody>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
@@ -499,12 +510,14 @@ function DeleteStoryPageDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {problem ? <ProblemAlert problem={problem} /> : null}
+        <DialogBody className="grid gap-4">
+          {problem ? <ProblemAlert problem={problem} /> : null}
 
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-muted-foreground">
-          Localized page payloads owned by this page are removed together with
-          the page structure.
-        </div>
+          <div className="rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-muted-foreground">
+            Localized page payloads owned by this page are removed together
+            with the page structure.
+          </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button
@@ -566,6 +579,9 @@ function StoryPagesWorkspace({
     0,
   );
   const isMutating = storyPageActions.isPending;
+  const completeCoverageCount = storyPages.filter(
+    (storyPage) => storyPage.hasCompleteIllustrationCoverage,
+  ).length;
 
   return (
     <>
@@ -573,6 +589,45 @@ function StoryPagesWorkspace({
         eyebrow="Story Editor"
         title={routeTitle}
         description="Manage story page structure and localized page content."
+        aside={
+          <TaskRail
+            title="Story readiness"
+            description="Keep the structure stable while you complete localized page payloads."
+            stats={[
+              {
+                label: "Pages",
+                value: `${storyPageCount} total`,
+              },
+              {
+                label: "Localized pages",
+                value: `${localizedStoryPageCount} with at least one locale`,
+                tone:
+                  localizedStoryPageCount === storyPageCount
+                    ? "success"
+                    : "warning",
+              },
+              {
+                label: "Illustration coverage",
+                value: `${completeCoverageCount} fully complete`,
+                tone:
+                  completeCoverageCount === storyPageCount
+                    ? "success"
+                    : "warning",
+              },
+            ]}
+          >
+            <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
+              <p>
+                Use the editor to finish body text, audio, and localized
+                illustrations page by page.
+              </p>
+              <p>
+                The story detail route keeps the language context, so editors
+                can jump in without reselecting the active locale.
+              </p>
+            </div>
+          </TaskRail>
+        }
         actions={
           <>
             <Button asChild type="button" variant="outline">

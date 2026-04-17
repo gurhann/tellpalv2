@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -155,30 +156,31 @@ export function AssignContributorDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {contributorListQuery.isLoading ? (
-          <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
-            Loading recent contributors from the shared registry...
-          </div>
-        ) : !hasContributors ? (
-          <EmptyState
-            action={
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleOpenChange(false)}
-              >
-                Close
-              </Button>
-            }
-            description="Create a contributor in the shared registry first, then reopen this dialog."
-            title="No contributors available"
-          />
-        ) : (
-          <form
-            className="grid gap-5"
-            noValidate
-            onSubmit={form.handleSubmit(handleSubmit)}
-          >
+        <DialogBody>
+          {contributorListQuery.isLoading ? (
+            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
+              Loading recent contributors from the shared registry...
+            </div>
+          ) : !hasContributors ? (
+            <EmptyState
+              action={
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleOpenChange(false)}
+                >
+                  Close
+                </Button>
+              }
+              description="Create a contributor in the shared registry first, then reopen this dialog."
+              title="No contributors available"
+            />
+          ) : (
+            <form
+              className="grid gap-5"
+              noValidate
+              onSubmit={form.handleSubmit(handleSubmit)}
+            >
             {problemMessage ? (
               <ProblemAlert
                 description={problemMessage}
@@ -370,8 +372,9 @@ export function AssignContributorDialog({
                 Assign contributor
               </SubmitButton>
             </DialogFooter>
-          </form>
-        )}
+            </form>
+          )}
+        </DialogBody>
       </DialogContent>
     </Dialog>
   );

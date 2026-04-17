@@ -176,7 +176,7 @@ describe("Shared data and language patterns", () => {
     expect(screen.getByText("Ready")).toBeVisible();
   });
 
-  it("switches between language tabs and renders localized content", () => {
+  it("supports keyboard navigation across language tabs", () => {
     function LanguageTabsHarness() {
       const [value, setValue] = useState("tr");
 
@@ -203,8 +203,11 @@ describe("Shared data and language patterns", () => {
     );
     expect(screen.getByText("tr workspace")).toBeVisible();
 
-    fireEvent.mouseDown(screen.getByRole("tab", { name: /english/i }));
+    const englishTab = screen.getByRole("tab", { name: /english/i });
 
+    englishTab.focus();
+    fireEvent.keyDown(englishTab, { key: "Enter", code: "Enter" });
+    fireEvent.keyUp(englishTab, { key: "Enter", code: "Enter" });
     expect(screen.getByText("en workspace")).toBeVisible();
   });
 });

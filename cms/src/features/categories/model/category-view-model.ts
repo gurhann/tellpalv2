@@ -1,5 +1,4 @@
 import type {
-  AdminEligibleCategoryContentResponse,
   AdminCategoryLocalizationResponse,
   AdminCategoryResponse,
   CategoryLocalizationStatus,
@@ -7,6 +6,7 @@ import type {
 } from "@/features/categories/api/category-admin";
 import type {
   AdminCategoryContentResponse,
+  AdminEligibleCategoryContentResponse,
 } from "@/features/categories/api/category-curation-admin";
 import { mapLanguage, supportedCmsLanguageOptions } from "@/lib/languages";
 

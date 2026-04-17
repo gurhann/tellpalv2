@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -201,20 +202,24 @@ export function ContentLocalizationTabs({
               </DialogDescription>
             </DialogHeader>
 
-            <ContentLocalizationForm
-              key={defaultCreateLanguageCode}
-              availableLanguages={availableLanguages}
-              content={content}
-              initialValues={getCreateLocalizationFormDefaults(
-                defaultCreateLanguageCode,
-              )}
-              mode="create"
-              onCancel={() => setIsCreateDialogOpen(false)}
-              onSuccess={(savedLocalization) => {
-                setIsCreateDialogOpen(false);
-                setActiveLanguage(savedLocalization.languageCode.toLowerCase());
-              }}
-            />
+            <DialogBody>
+              <ContentLocalizationForm
+                key={defaultCreateLanguageCode}
+                availableLanguages={availableLanguages}
+                content={content}
+                initialValues={getCreateLocalizationFormDefaults(
+                  defaultCreateLanguageCode,
+                )}
+                mode="create"
+                onCancel={() => setIsCreateDialogOpen(false)}
+                onSuccess={(savedLocalization) => {
+                  setIsCreateDialogOpen(false);
+                  setActiveLanguage(
+                    savedLocalization.languageCode.toLowerCase(),
+                  );
+                }}
+              />
+            </DialogBody>
           </DialogContent>
         </Dialog>
       </>
@@ -270,20 +275,22 @@ export function ContentLocalizationTabs({
             </DialogDescription>
           </DialogHeader>
 
-          <ContentLocalizationForm
-            key={defaultCreateLanguageCode}
-            availableLanguages={availableLanguages}
-            content={content}
-            initialValues={getCreateLocalizationFormDefaults(
-              defaultCreateLanguageCode,
-            )}
-            mode="create"
-            onCancel={() => setIsCreateDialogOpen(false)}
-            onSuccess={(savedLocalization) => {
-              setIsCreateDialogOpen(false);
-              setActiveLanguage(savedLocalization.languageCode.toLowerCase());
-            }}
-          />
+          <DialogBody>
+            <ContentLocalizationForm
+              key={defaultCreateLanguageCode}
+              availableLanguages={availableLanguages}
+              content={content}
+              initialValues={getCreateLocalizationFormDefaults(
+                defaultCreateLanguageCode,
+              )}
+              mode="create"
+              onCancel={() => setIsCreateDialogOpen(false)}
+              onSuccess={(savedLocalization) => {
+                setIsCreateDialogOpen(false);
+                setActiveLanguage(savedLocalization.languageCode.toLowerCase());
+              }}
+            />
+          </DialogBody>
         </DialogContent>
       </Dialog>
     </>

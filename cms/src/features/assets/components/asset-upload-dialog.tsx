@@ -5,6 +5,7 @@ import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -240,7 +241,7 @@ export function AssetUploadDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <DialogBody className="space-y-4">
           {kindIsLocked ? (
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3 text-sm text-muted-foreground">
               <p className="font-medium text-foreground">
@@ -333,7 +334,7 @@ export function AssetUploadDialog({
           {uploadMutation.problem ? (
             <ProblemAlert problem={uploadMutation.problem} />
           ) : null}
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button
