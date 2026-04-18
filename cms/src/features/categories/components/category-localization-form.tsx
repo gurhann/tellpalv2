@@ -315,60 +315,71 @@ export function CategoryLocalizationForm({
           <FieldError error={form.formState.errors.description} />
         </div>
 
-        <Controller
-          control={form.control}
-          name="imageMediaId"
-          render={({ field }) => (
-            <AssetPickerField
-              advancedLabel="Advanced image asset options"
-              description={copy.imageDescription}
-              disabled={saveLocalization.isPending}
-              error={form.formState.errors.imageMediaId}
-              id="imageMediaId"
-              label={copy.imageLabel}
-              manualInputLabel={`${copy.imageLabel} id`}
-              mediaType="IMAGE"
-              pickerDescription={copy.imagePickerDescription}
-              pickerTitle={copy.imagePickerTitle}
-              placeholder={copy.optional}
-              testId="category-localization-image-asset"
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
-            {copy.status}
-          </label>
+        <div
+          className="md:col-span-2"
+          data-testid="category-localization-image-row"
+        >
           <Controller
             control={form.control}
-            name="status"
+            name="imageMediaId"
             render={({ field }) => (
-              <Select
+              <AssetPickerField
+                advancedLabel="Advanced image asset options"
+                description={copy.imageDescription}
                 disabled={saveLocalization.isPending}
+                error={form.formState.errors.imageMediaId}
+                id="imageMediaId"
+                label={copy.imageLabel}
+                manualInputLabel={`${copy.imageLabel} id`}
+                mediaType="IMAGE"
+                pickerDescription={copy.imagePickerDescription}
+                pickerTitle={copy.imagePickerTitle}
+                placeholder={copy.optional}
+                testId="category-localization-image-asset"
                 value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger
-                  aria-invalid={Boolean(form.formState.errors.status)}
-                  aria-label={copy.status}
-                  className="w-full"
-                >
-                  <SelectValue placeholder={copy.selectStatus} />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoryLocalizationStatusOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                variant="editor"
+                onChange={field.onChange}
+              />
             )}
           />
-          <FieldError error={form.formState.errors.status} />
+        </div>
+
+        <div
+          className="grid gap-5 md:col-span-2 md:grid-cols-2"
+          data-testid="category-localization-metadata-row"
+        >
+          <div className="space-y-2 md:max-w-md">
+            <label className="text-sm font-medium text-foreground">
+              {copy.status}
+            </label>
+            <Controller
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <Select
+                  disabled={saveLocalization.isPending}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    aria-invalid={Boolean(form.formState.errors.status)}
+                    aria-label={copy.status}
+                    className="w-full"
+                  >
+                    <SelectValue placeholder={copy.selectStatus} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categoryLocalizationStatusOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldError error={form.formState.errors.status} />
+          </div>
         </div>
 
         {status === "PUBLISHED" ? (

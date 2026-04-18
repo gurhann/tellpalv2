@@ -2,6 +2,7 @@ import { Archive, LoaderCircle, Send } from "lucide-react";
 import { useState } from "react";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
+import { toastMutation } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,28 +16,14 @@ import type {
   ContentReadViewModel,
 } from "@/features/contents/model/content-view-model";
 import { useContentLocalizationActions } from "@/features/contents/mutations/use-content-localization-actions";
+import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import type { ApiProblemDetail } from "@/types/api";
-import { toastMutation } from "@/components/forms/form-utils";
 
 type PublicationActionsProps = {
   content: ContentReadViewModel;
   localization: ContentLocalizationViewModel;
 };
-
-function formatPublishedAt(publishedAt: string | null) {
-  if (!publishedAt) {
-    return "Not published";
-  }
-
-  const timestamp = new Date(publishedAt);
-
-  if (Number.isNaN(timestamp.getTime())) {
-    return publishedAt;
-  }
-
-  return `${timestamp.toISOString().slice(0, 16).replace("T", " ")} UTC`;
-}
 
 function getGenericActionProblem(error: unknown): ApiProblemDetail {
   if (error instanceof Error && error.message.trim().length > 0) {
@@ -60,6 +47,7 @@ export function PublicationActions({
   content,
   localization,
 }: PublicationActionsProps) {
+  const { formatDateTime, locale } = useI18n();
   const { publishLocalization, archiveLocalization } =
     useContentLocalizationActions(content.summary.id);
   const [actionProblem, setActionProblem] = useState<ApiProblemDetail | null>(
@@ -68,6 +56,50 @@ export function PublicationActions({
   const isPublishing = publishLocalization.isPending;
   const isArchiving = archiveLocalization.isPending;
   const isMutating = isPublishing || isArchiving;
+  const copy =
+    locale === "tr"
+      ? {
+          title: "Yayinlama",
+          description:
+            "Bu dil kaydi icin yayin aksiyonlarini buradan tamamlayin.",
+          publishLoading: `${localization.languageLabel} dili yayinlaniyor...`,
+          publishSuccess: `${localization.languageLabel} dili yayina alindi.`,
+          archiveLoading: `${localization.languageLabel} dili arsivleniyor...`,
+          archiveSuccess: `${localization.languageLabel} dili arsivlendi.`,
+          publishLabel: "Dili yayina al",
+          archiveLabel: "Dili arsivle",
+          publishedAt: "Yayinlandi",
+          notPublished: "Henuz yayinlanmadi",
+          storyGate:
+            "Yayinlama, yerellestirilmis hikaye sayfalari ve isleme tamamlandiginda anlamli hale gelir.",
+          defaultGate:
+            "Yayinlama, bu dil metadata'si ve isleme adimlari hazir oldugunda anlamli hale gelir.",
+        }
+      : {
+          title: "Publishing",
+          description: "Complete publication actions for this locale here.",
+          publishLoading: `Publishing ${localization.languageLabel} locale...`,
+          publishSuccess: `${localization.languageLabel} locale published.`,
+          archiveLoading: `Archiving ${localization.languageLabel} locale...`,
+          archiveSuccess: `${localization.languageLabel} locale archived.`,
+          publishLabel: "Publish locale",
+          archiveLabel: "Archive locale",
+          publishedAt: "Published",
+          notPublished: "Not yet published",
+          storyGate:
+            "Publishing is meaningful once localized story pages and processing are complete.",
+          defaultGate:
+            "Publishing is meaningful once this locale metadata and processing steps are ready.",
+        };
+  const publishedAtLabel = localization.publishedAt
+    ? formatDateTime(localization.publishedAt, {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : copy.notPublished;
 
   async function handlePublish() {
     setActionProblem(null);
@@ -79,8 +111,8 @@ export function PublicationActions({
           languageCode: localization.languageCode,
         }),
         {
-          loading: `Publishing ${localization.languageLabel} locale...`,
-          success: `${localization.languageLabel} locale published.`,
+          loading: copy.publishLoading,
+          success: copy.publishSuccess,
         },
       );
     } catch (error) {
@@ -100,8 +132,8 @@ export function PublicationActions({
       await toastMutation(
         archiveLocalization.mutateAsync(localization.languageCode),
         {
-          loading: `Archiving ${localization.languageLabel} locale...`,
-          success: `${localization.languageLabel} locale archived.`,
+          loading: copy.archiveLoading,
+          success: copy.archiveSuccess,
         },
       );
     } catch (error) {
@@ -116,54 +148,23 @@ export function PublicationActions({
   return (
     <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
       <CardHeader className="gap-2 border-b border-border/60 bg-muted/10 pb-4">
-        <CardTitle>Publishing</CardTitle>
-        <CardDescription>
-          Review readiness, then publish or archive this locale.
-        </CardDescription>
+        <CardTitle>{copy.title}</CardTitle>
+        <CardDescription>{copy.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 pt-5">
         {actionProblem ? <ProblemAlert problem={actionProblem} /> : null}
 
-        <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
-          <dl className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
-              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Status
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-foreground">
-                {localization.statusLabel}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
-              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Processing
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-foreground">
-                {localization.processingStatusLabel}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
-              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Mobile visibility
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-foreground">
-                {localization.visibleToMobile ? "Visible" : "Hidden"}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
-              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Published at
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-foreground">
-                {formatPublishedAt(localization.publishedAt)}
-              </dd>
-            </div>
-          </dl>
-
+        <div className="rounded-2xl border border-border/70 bg-muted/15 px-4 py-3">
           <p className="text-sm leading-6 text-muted-foreground">
             {content.summary.supportsStoryPages
-              ? "Publishing stays locked until localized story pages and processing are complete."
-              : "Publishing stays locked until localization completeness and processing are ready."}
+              ? copy.storyGate
+              : copy.defaultGate}
+          </p>
+          <p className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            {copy.publishedAt}
+          </p>
+          <p className="mt-1 text-sm font-medium text-foreground">
+            {publishedAtLabel}
           </p>
         </div>
 
@@ -181,7 +182,7 @@ export function PublicationActions({
             ) : (
               <Send className="size-4" />
             )}
-            Publish locale
+            {copy.publishLabel}
           </Button>
           <Button
             type="button"
@@ -194,7 +195,7 @@ export function PublicationActions({
             ) : (
               <Archive className="size-4" />
             )}
-            Archive locale
+            {copy.archiveLabel}
           </Button>
         </div>
       </CardContent>

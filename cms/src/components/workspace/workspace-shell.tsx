@@ -33,22 +33,22 @@ export function WorkspaceShell({
   return (
     <div
       className={cn(
-        "grid gap-6 xl:grid-cols-[minmax(0,1fr)_21rem] xl:items-start",
+        "grid gap-5 xl:grid-cols-[minmax(0,1fr)_18.5rem] xl:items-start",
         className,
       )}
     >
-      <div className={cn("min-w-0 space-y-6", !aside && "xl:col-span-2")}>
+      <div className={cn("min-w-0 space-y-5", !aside && "xl:col-span-2")}>
         <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
-          <CardHeader className="gap-4 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] sm:flex sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0 space-y-3">
+          <CardHeader className="gap-3 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] px-5 py-5 sm:flex sm:flex-row sm:items-start sm:justify-between sm:px-6">
+            <div className="min-w-0 space-y-2">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 {eyebrow}
               </p>
-              <div className="space-y-2">
-                <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              <div className="space-y-1.5">
+                <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                   {title}
                 </h1>
-                <CardDescription className="max-w-3xl text-sm leading-6 sm:text-base">
+                <CardDescription className="max-w-3xl text-sm leading-6">
                   {description}
                 </CardDescription>
               </div>
@@ -64,13 +64,13 @@ export function WorkspaceShell({
           </CardHeader>
 
           {toolbar ? (
-            <CardContent className="border-t border-border/40 bg-muted/10 py-5">
+            <CardContent className="bg-muted/10 px-5 py-4 sm:px-6">
               {toolbar}
             </CardContent>
           ) : null}
         </Card>
 
-        <div className="space-y-6">{children}</div>
+        <div className="space-y-5">{children}</div>
       </div>
 
       {aside ? (

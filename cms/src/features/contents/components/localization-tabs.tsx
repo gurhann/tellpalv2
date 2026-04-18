@@ -15,10 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  WorkspaceInfoCard,
-  WorkspaceKeyValueGrid,
-} from "@/components/workspace/workspace-primitives";
 import { ContentLocalizationForm } from "@/features/contents/components/content-localization-form";
 import { PublicationActions } from "@/features/contents/components/publication-actions";
 import type {
@@ -107,31 +103,6 @@ function LocalizationWorkspacePane({
 
   return (
     <div className="grid gap-4">
-      <WorkspaceInfoCard
-        title={`${localization.languageLabel} locale`}
-        description={getLocalizationDescription(localization)}
-      >
-        <WorkspaceKeyValueGrid
-          items={[
-            {
-              label: "Status",
-              value: localization.statusLabel,
-              tone: localization.isPublished ? "success" : "warning",
-            },
-            {
-              label: "Processing",
-              value: localization.processingStatusLabel,
-              tone: localization.isProcessingComplete ? "success" : "warning",
-            },
-            {
-              label: "Mobile visibility",
-              value: localization.visibleToMobile ? "Visible" : "Hidden",
-              tone: localization.visibleToMobile ? "success" : "warning",
-            },
-          ]}
-        />
-      </WorkspaceInfoCard>
-
       <ContentLocalizationForm
         key={localizationFormKey}
         content={content}

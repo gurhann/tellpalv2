@@ -546,7 +546,11 @@ describe("Content integration", () => {
     fireEvent.click(screen.getByRole("button", { name: /publish locale/i }));
 
     expect(await screen.findAllByText("Published")).not.toHaveLength(0);
-    expect(await screen.findAllByText("Visible")).not.toHaveLength(0);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /publish locale/i }),
+      ).toBeDisabled();
+    });
   });
 
   it("surfaces publish conflicts inline when the backend rejects a story publish", async () => {

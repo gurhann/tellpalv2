@@ -75,20 +75,46 @@ Registry toolbar rules:
 - The same state must not be summarized in the header, rail, and section body at the same time unless each layer supports a different concrete decision.
 - Detail screens should read like editors, not dashboards. Inside the primary workspace, prefer one sequential edit flow over side-by-side metric cards.
 
-## 6. Accessibility and Interaction Rules
+## 6. Detail Workspace Contract
+
+Detail and workspace routes must follow one shared composition contract.
+
+- The route header owns identity, a short route-level explanation, and route-level actions only.
+- Header toolbars must stay compact. Use them for contextual controls or lightweight status identity, not metric dashboards.
+- The main lane must present one dominant sequential workflow. Child components must not add a second competing summary section for the same workflow.
+- The same state must not be summarized in the toolbar, rail, form-top summary, and publication panel at the same time.
+- Right rails on detail routes must stay operational and compact:
+  - at most three concise stats by default
+  - no nested summary cards when the same information is already visible in the main lane
+  - no metadata restatement from editable forms
+- Publishing or operational cards may show only the minimum gating context needed for the next action. They must not mirror editable status controls.
+- Editorial asset pickers inside forms must use compact editor density:
+  - reduced preview height
+  - reduced nested borders
+  - clear primary and secondary actions
+  - technical or debug helper copy hidden behind advanced affordances or kept visually secondary
+- Editorial asset picker fields must not be forced into half-width columns beside small metadata inputs.
+- Large media fields should occupy a full row, while small metadata inputs such as duration or status should be grouped on a separate compact row beneath them.
+- Detail routes should preserve the primary workspace at all supported widths. The rail may remain visible, but it must not visually outweigh the main lane.
+
+## 7. Accessibility and Interaction Rules
 
 - Visible labels are required for search and filter groups.
 - Buttons and chips must preserve keyboard access and announce selected state.
 - Touch targets must remain comfortable at all supported breakpoints.
 - Reduced-motion users must not receive decorative motion that changes layout comprehension.
 
-## 7. Visual Regression Policy
+## 8. Visual Regression Policy
 
 - Functional tests alone are not sufficient for layout-affecting route changes.
 - Screenshot tests are required for key CMS surfaces where spacing, hierarchy, or composition regressions are likely.
 - The first required visual set is:
   - contents registry toolbar
   - categories registry toolbar
+- Detail workspace coverage must include:
+  - `/contents/:contentId`
+  - `/categories/:categoryId`
+  - viewport widths `390`, `768`, `1280`, and `1440`
 - Additional registry and detail surfaces should be added through `cms/docs/ui-regression-task-list.md`.
 
 Visual harness requirements:
@@ -99,7 +125,7 @@ Visual harness requirements:
 - stable time when the UI depends on dates or clocks
 - suppressed transient visual noise when possible
 
-## 8. Current Reference Problems and Resolutions
+## 9. Current Reference Problems and Resolutions
 
 Reference issue A:
 
@@ -140,3 +166,14 @@ Required resolution pattern:
 - keep locale work as the dominant primary workspace
 - let the route own section hierarchy and let child components render body content only
 - keep the rail minimal and operational
+
+Reference issue E:
+
+- Detail routes drifted back toward dashboard composition through repeated status summaries, oversized metric toolbars, and heavy asset picker panels.
+
+Required resolution pattern:
+
+- keep header and toolbar compact
+- keep one dominant editor flow in the main lane
+- keep rails limited to operational summaries that drive a concrete next action
+- keep editorial asset pickers visually lighter than the form sections they support

@@ -119,6 +119,36 @@ describe("ContentLocalizationForm", () => {
     expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
   });
 
+  it("keeps cover media on a full-width row and groups metadata beneath it", () => {
+    render(
+      <ContentLocalizationForm
+        content={storyContentViewModel}
+        initialValues={mapLocalizationToFormValues(
+          storyContentViewModel.localizations[0],
+        )}
+        localization={storyContentViewModel.localizations[0]}
+        mode="update"
+      />,
+    );
+
+    const coverRow = screen.getByTestId("content-localization-cover-row");
+    const metadataRow = screen.getByTestId("content-localization-metadata-row");
+
+    expect(coverRow).toContainElement(
+      screen.getByTestId("content-localization-cover-asset"),
+    );
+    expect(metadataRow).toContainElement(
+      screen.getByLabelText(/duration minutes/i),
+    );
+    expect(metadataRow).toContainElement(screen.getByLabelText(/^status$/i));
+    expect(metadataRow).toContainElement(
+      screen.getByLabelText(/processing status/i),
+    );
+    expect(coverRow).not.toContainElement(
+      screen.getByLabelText(/duration minutes/i),
+    );
+  });
+
   it("requires publishedAt when the localization status is published", async () => {
     const saveLocalization = makeMutationState();
     contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue(

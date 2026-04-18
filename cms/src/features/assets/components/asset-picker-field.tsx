@@ -30,6 +30,7 @@ type AssetPickerFieldProps = {
   advancedLabel?: string;
   manualInputLabel?: string;
   testId?: string;
+  variant?: "default" | "editor";
 };
 
 export function AssetPickerField({
@@ -47,6 +48,7 @@ export function AssetPickerField({
   advancedLabel,
   manualInputLabel,
   testId,
+  variant = "default",
 }: AssetPickerFieldProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -65,6 +67,7 @@ export function AssetPickerField({
   const resolvedAdvancedLabel =
     advancedLabel ?? `Advanced ${normalizedLabel} options`;
   const resolvedManualInputLabel = manualInputLabel ?? "Manual asset id";
+  const isEditor = variant === "editor";
 
   function handleManualValueChange(nextValue: string) {
     if (nextValue.trim().length === 0) {
@@ -98,24 +101,44 @@ export function AssetPickerField({
         {label}
       </label>
 
-      <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
+      <div
+        className={cn(
+          "rounded-2xl border border-border/70 bg-card/95 shadow-sm",
+          isEditor ? "p-3" : "p-4",
+        )}
+      >
         {value === null ? (
-          <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 px-4 py-5">
+          <div
+            className={cn(
+              "rounded-2xl border border-dashed border-border/70 bg-muted/20",
+              isEditor ? "px-3 py-4" : "px-4 py-5",
+            )}
+          >
             <p className="text-sm font-medium text-foreground">
               No asset selected
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p
+              className={cn(
+                "mt-1 text-muted-foreground",
+                isEditor ? "text-xs leading-5" : "text-sm",
+              )}
+            >
               Upload a new {mediaType.toLowerCase()} asset here or browse an
               existing one without leaving this editor.
             </p>
           </div>
         ) : assetDetailQuery.isLoading ? (
-          <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 px-4 py-5 text-sm text-muted-foreground">
+          <div
+            className={cn(
+              "rounded-2xl border border-dashed border-border/70 bg-muted/20 text-muted-foreground",
+              isEditor ? "px-3 py-4 text-xs leading-5" : "px-4 py-5 text-sm",
+            )}
+          >
             Loading selected asset details...
           </div>
         ) : selectedAsset ? (
           <div className="space-y-3">
-            <AssetFieldPreview asset={selectedAsset} />
+            <AssetFieldPreview asset={selectedAsset} variant={variant} />
             {selectedAssetHasWrongMediaType ? (
               <p className="text-sm text-destructive">
                 Asset #{selectedAsset.id} is {selectedAsset.mediaTypeLabel}, but
@@ -135,7 +158,7 @@ export function AssetPickerField({
           </div>
         ) : null}
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className={cn("mt-4 flex flex-wrap gap-2", isEditor && "mt-3")}>
           {uploadKind ? (
             <Button
               type="button"
@@ -185,12 +208,22 @@ export function AssetPickerField({
         </div>
 
         {description ? (
-          <p className="mt-4 text-sm text-muted-foreground">{description}</p>
+          <p
+            className={cn(
+              "mt-4 text-muted-foreground",
+              isEditor ? "text-xs leading-5" : "text-sm",
+            )}
+          >
+            {description}
+          </p>
         ) : null}
-        <p className="mt-2 text-xs text-muted-foreground">
-          Normal editorial flows can upload and bind assets here. Media Utility
-          stays available for registry, debug, and manual inspection work.
-        </p>
+        {!isEditor ? (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Normal editorial flows can upload and bind assets here. Media
+            Utility stays available for registry, debug, and manual inspection
+            work.
+          </p>
+        ) : null}
       </div>
 
       {isAdvancedOpen ? (
@@ -214,6 +247,12 @@ export function AssetPickerField({
                 Use this only when you already know the asset id. Upload and
                 browse actions above remain the default workflow.
               </p>
+              {isEditor ? (
+                <p className="text-xs">
+                  Media Utility remains available for registry, debug, and
+                  manual inspection work.
+                </p>
+              ) : null}
               <a
                 className="font-medium text-foreground underline underline-offset-4"
                 href="/media"

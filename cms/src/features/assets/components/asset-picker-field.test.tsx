@@ -183,6 +183,38 @@ describe("AssetPickerField", () => {
     expect(screen.getByLabelText(/manual asset id/i)).toBeVisible();
   });
 
+  it("keeps debug helper copy hidden in editor variant until advanced is opened", () => {
+    assetDetailMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+
+    render(
+      <TestWrapper>
+        <AssetPickerField
+          id="coverMediaId"
+          label="Cover asset"
+          mediaType="IMAGE"
+          pickerDescription="Pick cover asset"
+          pickerTitle="Pick cover asset"
+          value={null}
+          variant="editor"
+          onChange={vi.fn()}
+        />
+      </TestWrapper>,
+    );
+
+    expect(
+      screen.queryByText(/media utility stays available/i),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /advanced/i }));
+
+    expect(screen.getByText(/media utility remains available/i)).toBeVisible();
+  });
+
   it("updates the selected asset through the picker dialog", () => {
     assetDetailMocks.useAssetDetail.mockReturnValue({
       asset: null,

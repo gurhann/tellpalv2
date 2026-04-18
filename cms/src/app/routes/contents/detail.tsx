@@ -192,30 +192,14 @@ export function ContentDetailRoute() {
         (locale === "tr" ? "Henuz secilmedi" : "Not selected");
 
       return (
-        <div className="flex flex-col gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-4 text-sm">
+        <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-background/80 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-3 text-sm">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {copy.contentType}
               </span>
               <WorkspaceStatusPill tone="accent">
                 {content.summary.typeLabel}
-              </WorkspaceStatusPill>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                {copy.lifecycle}
-              </span>
-              <WorkspaceStatusPill
-                tone={content.summary.active ? "success" : "default"}
-              >
-                {content.summary.active
-                  ? locale === "tr"
-                    ? "Aktif"
-                    : "Active"
-                  : locale === "tr"
-                    ? "Pasif"
-                    : "Inactive"}
               </WorkspaceStatusPill>
             </div>
             <div className="flex items-center gap-2">
@@ -394,6 +378,7 @@ export function ContentDetailRoute() {
       <TaskRail
         title={copy.operationsSnapshot}
         description={copy.operationsDescription}
+        variant="detail"
         stats={[
           {
             label: copy.visibility,

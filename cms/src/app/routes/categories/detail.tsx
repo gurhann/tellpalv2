@@ -18,9 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { TaskRail } from "@/components/workspace/task-rail";
 import {
-  WorkspaceInfoCard,
   WorkspaceKeyValueGrid,
-  WorkspaceMetricCard,
   WorkspaceStatusPill,
 } from "@/components/workspace/workspace-primitives";
 import { CategoryCurationPanel } from "@/features/categories/components/category-curation-panel";
@@ -108,6 +106,10 @@ export function CategoryDetailRoute() {
           workspaceHandoff: "Kategori handoff'u",
           workspaceHandoffDescription:
             "Metadata lane, dil calisma alani ve kurasyon lane ayni rota uzerinde kalir; secili dil baglami kaybolmaz.",
+          categoryType: "Tur",
+          operationsSnapshot: "Kurasyon Rayi",
+          operationsDescription:
+            "Sag ray, secili dil ve kurasyon hazirligi icin gereken kisa operasyon ozetini tasir.",
           selectedLocale: "Secili dil",
           localeFocus: "Dil odagi",
           curationPosture: "Kurasyon durusu",
@@ -116,6 +118,7 @@ export function CategoryDetailRoute() {
           metadataLane: "Metadata Lane",
           localizationLane: "Dil Calisma Alani",
           curationLane: "Kurasyon Lane",
+          localeCount: "Dil sayisi",
           localizationSnapshot: "Yerellestirme Ozeti",
           snapshotDescription:
             "Kalici yerellestirme sekmeleri admin API uzerinden hydrate olur ve yenileme sonrasi gorunur kalir.",
@@ -183,6 +186,10 @@ export function CategoryDetailRoute() {
           workspaceHandoff: "Workspace handoff",
           workspaceHandoffDescription:
             "Metadata, locale workspaces, and curation stay on one route so the selected language context never drops away.",
+          categoryType: "Type",
+          operationsSnapshot: "Curation rail",
+          operationsDescription:
+            "The rail carries a compact operational summary for the selected locale and curation readiness.",
           selectedLocale: "Selected locale",
           localeFocus: "Locale focus",
           curationPosture: "Curation posture",
@@ -191,6 +198,7 @@ export function CategoryDetailRoute() {
           metadataLane: "Metadata lane",
           localizationLane: "Localization workspace",
           curationLane: "Curation lane",
+          localeCount: "Locale count",
           localizationSnapshot: "Localization snapshot",
           snapshotDescription:
             "Persisted localization tabs hydrate from the admin API and remain visible after refresh.",
@@ -269,40 +277,46 @@ export function CategoryDetailRoute() {
   function renderToolbar() {
     if (category) {
       return (
-        <div className="grid gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:grid-cols-3">
-          <WorkspaceMetricCard
-            detail={copy.workspaceHandoffDescription}
-            label={copy.metadataLane}
-            tone="accent"
-            value={category.typeLabel}
-          />
-          <WorkspaceMetricCard
-            detail={selectedLocalization?.statusLabel}
-            label={copy.selectedLocale}
-            tone={
-              selectedLocalization?.isPublished
-                ? "success"
-                : selectedLocalization
-                  ? "warning"
-                  : "default"
-            }
-            value={
-              selectedLocalization?.languageLabel ??
-              (locale === "tr" ? "Henuz yok" : "None yet")
-            }
-          />
-          <WorkspaceMetricCard
-            detail={selectedLocalization?.name ?? copy.snapshotDescription}
-            label={copy.curationPosture}
-            tone={
-              selectedLocalization?.isPublished ? "success" : "warning"
-            }
-            value={
-              selectedLocalization?.isPublished
+        <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-background/80 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.categoryType}
+              </span>
+              <WorkspaceStatusPill tone="accent">
+                {category.typeLabel}
+              </WorkspaceStatusPill>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.selectedLocale}
+              </span>
+              <WorkspaceStatusPill
+                tone={
+                  selectedLocalization?.isPublished
+                    ? "success"
+                    : selectedLocalization
+                      ? "warning"
+                      : "default"
+                }
+              >
+                {selectedLocalization?.languageLabel ??
+                  (locale === "tr" ? "Henuz yok" : "None yet")}
+              </WorkspaceStatusPill>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {copy.curationPosture}
+            </span>
+            <WorkspaceStatusPill
+              tone={selectedLocalization?.isPublished ? "success" : "warning"}
+            >
+              {selectedLocalization?.isPublished
                 ? copy.curationReady
-                : copy.curationWaiting
-            }
-          />
+                : copy.curationWaiting}
+            </WorkspaceStatusPill>
+          </div>
         </div>
       );
     }
@@ -450,42 +464,6 @@ export function CategoryDetailRoute() {
           description={copy.localizationDescription}
           title={copy.localizationTitle}
         >
-          <WorkspaceInfoCard
-            title={copy.localizationSnapshot}
-            description={copy.snapshotDescription}
-          >
-            <WorkspaceKeyValueGrid
-              items={[
-                {
-                  label: copy.publishedLocale,
-                  value: localizations
-                    .filter((localization) => localization.isPublished)
-                    .length.toString(),
-                  tone:
-                    localizations.some((localization) => localization.isPublished)
-                      ? "success"
-                      : "warning",
-                },
-                {
-                  label: copy.imageReady,
-                  value: localizations
-                    .filter((localization) => localization.hasImage)
-                    .length.toString(),
-                  tone:
-                    localizations.length > 0 &&
-                    localizations.every((localization) => localization.hasImage)
-                      ? "success"
-                      : "warning",
-                },
-                {
-                  label: copy.curationItems,
-                  value: curationItems.length.toString(),
-                  tone: curationItems.length > 0 ? "accent" : "default",
-                },
-              ]}
-            />
-          </WorkspaceInfoCard>
-
           {localizationQuery.isLoading && localizations.length === 0 ? (
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardContent className="flex min-h-52 flex-col items-center justify-center gap-4 px-6 py-12 text-center">
@@ -518,28 +496,6 @@ export function CategoryDetailRoute() {
                   problem={localizationQuery.problem}
                 />
               ) : null}
-
-              <WorkspaceInfoCard
-                title={`${copy.localeFocus}: ${selectedLocalization.languageLabel}`}
-                description={selectedLocalization.name}
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <WorkspaceStatusPill
-                    tone={selectedLocalization.isPublished ? "success" : "warning"}
-                  >
-                    {selectedLocalization.statusLabel}
-                  </WorkspaceStatusPill>
-                  <WorkspaceStatusPill
-                    tone={selectedLocalization.hasImage ? "success" : "warning"}
-                  >
-                    {selectedLocalization.hasImage
-                      ? copy.imageReady
-                      : locale === "tr"
-                        ? "Gorsel eksik"
-                        : "Image missing"}
-                  </WorkspaceStatusPill>
-                </div>
-              </WorkspaceInfoCard>
 
               <LanguageTabs
                 items={tabItems}
@@ -612,15 +568,13 @@ export function CategoryDetailRoute() {
 
     return (
       <TaskRail
-        title={copy.localizationSnapshot}
-        description={copy.snapshotDescription}
+        title={copy.operationsSnapshot}
+        description={copy.operationsDescription}
+        variant="detail"
         stats={[
           {
-            label: copy.localizationLane,
-            value:
-              localizations.length === 0
-                ? copy.snapshotNone
-                : copy.snapshotSome(localizations.length),
+            label: copy.localeCount,
+            value: localizations.length.toString(),
             tone: localizations.length > 0 ? "success" : "warning",
           },
           {
@@ -630,48 +584,15 @@ export function CategoryDetailRoute() {
               (locale === "tr" ? "Henuz yok" : "None yet"),
           },
           {
-            label: copy.curationLane,
+            label: copy.curationItems,
             value:
-              selectedLocalization?.isPublished
-                ? copy.curationReady
-                : copy.curationWaiting,
-            tone:
-              selectedLocalization?.isPublished ? "success" : "warning",
+              curationItems.length > 0
+                ? curationItems.length.toString()
+                : copy.noneYet,
+            tone: curationItems.length > 0 ? "accent" : "default",
           },
         ]}
-      >
-        <div className="grid gap-4">
-          <WorkspaceInfoCard
-            title={copy.metadataLane}
-            description={copy.workspaceHandoffDescription}
-            className="bg-background/80"
-          >
-            <WorkspaceKeyValueGrid
-              items={[
-                { label: "Slug", value: category.slug },
-                {
-                  label: copy.publishedLocale,
-                  value: localizations
-                    .filter((localization) => localization.isPublished)
-                    .length.toString(),
-                  tone:
-                    localizations.some((localization) => localization.isPublished)
-                      ? "success"
-                      : "warning",
-                },
-                {
-                  label: copy.curationItems,
-                  value:
-                    curationItems.length > 0
-                      ? curationItems.length.toString()
-                      : copy.noneYet,
-                  tone: curationItems.length > 0 ? "accent" : "default",
-                },
-              ]}
-            />
-          </WorkspaceInfoCard>
-        </div>
-      </TaskRail>
+      />
     );
   }
 

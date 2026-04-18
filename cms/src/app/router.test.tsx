@@ -328,6 +328,7 @@ describe("CMS router auth flow", () => {
     expect(screen.queryByText(/content profile/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/release posture/i)).not.toBeInTheDocument();
+    expect(screen.getAllByText(/^status$/i)).toHaveLength(1);
   });
 
   it("renders the category studio shell for /categories", async () => {
@@ -440,6 +441,8 @@ describe("CMS router auth flow", () => {
     ).toBeDisabled();
     expect(screen.getByText(/no localizations yet/i)).toBeInTheDocument();
     expect(screen.queryByText(/snapshot notes/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/localization snapshot/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
   });
 
   it("renders hidden authenticated UI lab routes without adding them to navigation", async () => {

@@ -354,11 +354,7 @@ describe("Category integration", () => {
       expect(window.location.pathname).toBe("/categories/99");
     });
     expect(await screen.findByDisplayValue("dream-lullabies")).toBeVisible();
-    expect(
-      (await screen.findAllByRole("heading", {
-        name: /localization snapshot/i,
-      })).length,
-    ).toBeGreaterThan(0);
+    expect(screen.queryByText(/localization snapshot/i)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /open curation lane/i })).toBeDisabled();
 
     fireEvent.change(screen.getByLabelText(/slug/i), {

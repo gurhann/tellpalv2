@@ -15,17 +15,20 @@ import { cn } from "@/lib/utils";
 type AssetFieldPreviewProps = {
   asset: AssetViewModel;
   className?: string;
+  variant?: "default" | "editor";
 };
 
 export function AssetFieldPreview({
   asset,
   className,
+  variant = "default",
 }: AssetFieldPreviewProps) {
   const { t } = useI18n();
   const preview = useAssetPreview(asset, true);
   const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null);
   const hasMediaLoadError =
     preview.previewUrl !== null && failedPreviewUrl === preview.previewUrl;
+  const isEditor = variant === "editor";
 
   async function handleRetryPreview() {
     setFailedPreviewUrl(null);
@@ -35,13 +38,24 @@ export function AssetFieldPreview({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/70 bg-muted/20 p-4",
+        "rounded-2xl border border-border/70 bg-muted/20",
+        isEditor ? "p-3" : "p-4",
         className,
       )}
     >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div
+        className={cn(
+          "flex flex-col sm:flex-row sm:items-start sm:justify-between",
+          isEditor ? "gap-2.5" : "gap-3",
+        )}
+      >
         <div className="min-w-0 space-y-1">
-          <p className="break-all text-sm font-medium text-foreground">
+          <p
+            className={cn(
+              "break-all font-medium text-foreground",
+              isEditor ? "text-xs leading-5" : "text-sm",
+            )}
+          >
             {asset.objectPath}
           </p>
           <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -56,7 +70,12 @@ export function AssetFieldPreview({
             </span>
           </div>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background px-3 py-1 text-xs text-muted-foreground">
+        <span
+          className={cn(
+            "inline-flex items-center gap-2 rounded-full border border-border/70 bg-background text-xs text-muted-foreground",
+            isEditor ? "px-2.5 py-1" : "px-3 py-1",
+          )}
+        >
           {asset.previewKind === "image" ? (
             <ImageIcon className="size-3.5" />
           ) : asset.previewKind === "audio" ? (
@@ -103,11 +122,24 @@ export function AssetFieldPreview({
           </Button>
         </div>
       ) : asset.previewKind === "image" && preview.previewUrl ? (
-        <div className="mt-4 overflow-hidden rounded-2xl border border-border/70 bg-background/90 p-3">
-          <div className="flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/15 p-3">
+        <div
+          className={cn(
+            "mt-4 overflow-hidden rounded-2xl bg-background/90",
+            isEditor ? "p-2" : "border border-border/70 p-3",
+          )}
+        >
+          <div
+            className={cn(
+              "flex items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/15",
+              isEditor ? "min-h-28 p-2.5" : "min-h-40 p-3",
+            )}
+          >
             <img
               alt={t("assets.imageAlt", { assetId: asset.id })}
-              className="max-h-56 w-full rounded-lg object-contain"
+              className={cn(
+                "w-full rounded-lg object-contain",
+                isEditor ? "max-h-40" : "max-h-56",
+              )}
               loading="lazy"
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
               src={preview.previewUrl}

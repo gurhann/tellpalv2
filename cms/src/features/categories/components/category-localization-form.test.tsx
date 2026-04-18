@@ -170,6 +170,36 @@ describe("CategoryLocalizationForm", () => {
     ).toBeVisible();
   });
 
+  it("keeps the image asset on a full-width row and places status beneath it", () => {
+    render(
+      <CategoryLocalizationForm
+        availableLanguages={[{ code: "en", label: "English" }]}
+        categoryId={7}
+        initialValues={{
+          languageCode: "en",
+          name: "Featured Sleep",
+          description: null,
+          imageMediaId: 4,
+          status: "DRAFT",
+          publishedAt: null,
+        }}
+        mode="update"
+      />,
+    );
+
+    const imageRow = screen.getByTestId("category-localization-image-row");
+    const metadataRow = screen.getByTestId(
+      "category-localization-metadata-row",
+    );
+    const statusTrigger = screen.getByLabelText(/^status$/i);
+
+    expect(imageRow).toContainElement(
+      screen.getByTestId("category-localization-image-asset"),
+    );
+    expect(metadataRow).toContainElement(statusTrigger);
+    expect(imageRow).not.toContainElement(statusTrigger);
+  });
+
   it("submits update payloads with the current language preserved", async () => {
     const mutationState = makeLocalizationMutationState({
       mutateAsync: vi.fn().mockResolvedValue({
