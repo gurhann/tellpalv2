@@ -45,6 +45,7 @@ Do not close a UI issue with a visual patch alone when the root cause is in a sh
 - Horizontal scroll in admin toolbars is not allowed.
 - Production routes must not add generic `notes` or `notlar` cards in rails or sidebars.
 - If explanatory text is needed, place it in a section description, inline helper text near the action, or a structured status card instead of a standalone notes panel.
+- Production rails must not duplicate metadata that is already shown or editable in the main lane.
 
 ## Responsive and Visual Review Rules
 

@@ -59,6 +59,8 @@ Use right rails for:
 - key-value operational context
 - direct handoff actions
 
+Do not keep rail cards that simply restate metadata already visible or editable in the main lane.
+
 If guidance is needed, keep it in section descriptions or inline helper text near the relevant control.
 
 ## Registry Toolbar Contract

@@ -68,6 +68,8 @@ Registry toolbar rules:
   - short inline helper text directly adjacent to the action it explains
 - Right rails should prioritize operational state, readiness, counts, and actionable handoff context over prose reminders.
 - Explanatory copy that does not change user decisions should be removed instead of moved into another decorative card.
+- Right rails must not repeat metadata that is already visible in the main editing lane.
+- Cards such as `content profile`, `metadata profile`, or similar summary duplicates should be removed when the same values are already editable or visible in the main section.
 
 ## 6. Accessibility and Interaction Rules
 
@@ -115,3 +117,12 @@ Required resolution pattern:
 - remove generic note cards from production routes
 - keep aside content limited to metrics, status summaries, key-value grids, and direct handoff actions
 - add regression assertions so note-card headings do not silently return
+
+Reference issue C:
+
+- Right rails repeated the same metadata that the main form already exposed, adding noise without new decision support.
+
+Required resolution pattern:
+
+- remove duplicated profile cards from the rail
+- keep the rail focused on operational summary, not repeated form content

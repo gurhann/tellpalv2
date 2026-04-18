@@ -74,6 +74,19 @@ This list tracks UI debt, regression coverage, and standards follow-up work sepa
 - Exit criteria:
   - production note-card headings are removed and guarded by tests
 
+### UI-REG-003B `DONE` Remove duplicated rail profile summaries
+
+- Problem pattern:
+  - right rails repeated metadata that was already visible and editable in the main lane
+- Affected routes:
+  - `/contents/:contentId`
+- Required standard:
+  - rails carry operational summary only and do not mirror the metadata form
+- Regression guard:
+  - route interaction assertions
+- Exit criteria:
+  - duplicated profile summary cards are removed from the content detail rail
+
 ## P1
 
 ### UI-REG-004 `TODO` Move remaining registry routes to the shared toolbar

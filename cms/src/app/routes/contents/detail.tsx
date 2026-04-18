@@ -112,15 +112,10 @@ export function ContentDetailRoute() {
           localeWorkspace: "Dil Calisma Alani",
           workspaceDescription:
             "Sekmeler yayin durumu, gorunurluk ve islem hazirligini tek yuzeyde toplar.",
-          metadataGuidance:
-            "Metadata alani icerik tipini sabit tutar; external key, yas araligi ve aktiflik durumu burada yonetilir.",
           publishGuidance:
             "Yayinlama ve arsivleme aksiyonlari her dil sekmesinde canli; conflict geri bildirimleri ayni baglamda gorunur.",
           storyEditorGuidance:
             "Hikaye icerikleri secili dili koruyarak sayfa editorunu dogrudan bu ekrandan acar.",
-          contentProfile: "Icerik Profili",
-          fixedAfterCreate: "Olusturma sonrasi sabit",
-          editableInLane: "Bu alanda duzenlenebilir",
           mobileVisible: "Mobil gorunur",
           notVisible: "Gizli",
           metadataTitle: "Metadata",
@@ -193,15 +188,10 @@ export function ContentDetailRoute() {
           localeWorkspace: "Locale workspace",
           workspaceDescription:
             "Tabs keep publication state, visibility, and processing posture in one place.",
-          metadataGuidance:
-            "Metadata keeps content type fixed while external key, age range, and activity remain editable here.",
           publishGuidance:
             "Publish and archive actions now live inside each language tab, including backend conflict surfaces.",
           storyEditorGuidance:
             "Story records can open their page editor directly from this screen, preserving the currently selected language.",
-          contentProfile: "Content profile",
-          fixedAfterCreate: "Fixed after create",
-          editableInLane: "Editable in lane",
           mobileVisible: "Mobile visible",
           notVisible: "Hidden",
           metadataTitle: "Metadata",
@@ -558,39 +548,7 @@ export function ContentDetailRoute() {
               : copy.storyPagesUnused,
           },
         ]}
-      >
-        <div className="grid gap-4">
-          <WorkspaceInfoCard
-            title={copy.contentProfile}
-            description={copy.metadataGuidance}
-            className="bg-background/80"
-          >
-            <WorkspaceKeyValueGrid
-              items={[
-                {
-                  label: copy.fixedAfterCreate,
-                  value: content.summary.typeLabel,
-                  tone: "accent",
-                },
-                {
-                  label: copy.editableInLane,
-                  value:
-                    locale === "tr"
-                      ? "External key, yas araligi, aktiflik"
-                      : "External key, age range, active state",
-                },
-                {
-                  label: copy.storyStructure,
-                  value: content.summary.supportsStoryPages
-                    ? copy.storyPagesCount(content.summary.pageCount ?? 0)
-                    : copy.storyPagesUnused,
-                  tone: content.summary.supportsStoryPages ? "accent" : "default",
-                },
-              ]}
-            />
-          </WorkspaceInfoCard>
-        </div>
-      </TaskRail>
+      />
     );
   }
 

@@ -319,6 +319,7 @@ describe("CMS router auth flow", () => {
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
     expect(screen.queryByText(/locale notes/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/contributor notes/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/content profile/i)).not.toBeInTheDocument();
   });
 
   it("renders the category studio shell for /categories", async () => {
