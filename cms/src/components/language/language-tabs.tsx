@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CheckCircle2 } from "lucide-react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import {
@@ -79,20 +80,27 @@ export function LanguageTabs({
           {items.map((item) => (
             <TabsTrigger
               key={item.code}
-              className="min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-border/70 data-active:bg-background data-active:shadow-sm"
+              className="group/language-tab min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-emerald-300 data-active:bg-emerald-50/80 data-active:shadow-[0_0_0_1px_rgba(16,185,129,0.12)]"
               disabled={item.disabled}
               value={item.code}
               onClick={() => onValueChange(item.code)}
             >
               <div className="flex min-h-full w-full flex-col items-start gap-2">
-                <LanguageBadge
-                  code={item.code}
-                  label={item.label}
-                  meta={item.meta}
-                  tone={item.tone}
-                />
+                <div className="flex w-full items-start justify-between gap-2">
+                  <LanguageBadge
+                    code={item.code}
+                    label={item.label}
+                    meta={item.meta}
+                    tone={item.tone}
+                    className="group-aria-selected/language-tab:bg-white"
+                  />
+                  <span className="mt-0.5 hidden rounded-full bg-emerald-600/10 p-1 text-emerald-700 group-aria-selected/language-tab:inline-flex">
+                    <CheckCircle2 className="size-3.5" />
+                    <span className="sr-only">Selected language</span>
+                  </span>
+                </div>
                 {item.description ? (
-                  <p className="line-clamp-2 max-w-full text-xs leading-5 text-muted-foreground">
+                  <p className="line-clamp-2 max-w-full text-xs leading-5 text-muted-foreground group-aria-selected/language-tab:text-foreground/80">
                     {item.description}
                   </p>
                 ) : null}

@@ -170,7 +170,7 @@ describe("CategoryLocalizationForm", () => {
     ).toBeVisible();
   });
 
-  it("keeps the image asset on a full-width row and places status beneath it", () => {
+  it("pairs the image asset with a dedicated metadata sidebar", () => {
     render(
       <CategoryLocalizationForm
         availableLanguages={[{ code: "en", label: "English" }]}
@@ -187,12 +187,15 @@ describe("CategoryLocalizationForm", () => {
       />,
     );
 
+    const imageLayout = screen.getByTestId("category-localization-cover-layout");
     const imageRow = screen.getByTestId("category-localization-image-row");
     const metadataRow = screen.getByTestId(
       "category-localization-metadata-row",
     );
     const statusTrigger = screen.getByLabelText(/^status$/i);
 
+    expect(imageLayout).toContainElement(imageRow);
+    expect(imageLayout).toContainElement(metadataRow);
     expect(imageRow).toContainElement(
       screen.getByTestId("category-localization-image-asset"),
     );

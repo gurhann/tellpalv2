@@ -68,6 +68,8 @@ export function AssetPickerField({
     advancedLabel ?? `Advanced ${normalizedLabel} options`;
   const resolvedManualInputLabel = manualInputLabel ?? "Manual asset id";
   const isEditor = variant === "editor";
+  const shouldInlineEditorActions = isEditor && selectedAsset !== null;
+  const useInlineSelectedEditorSurface = isEditor && selectedAsset !== null;
 
   function handleManualValueChange(nextValue: string) {
     if (nextValue.trim().length === 0) {
@@ -95,6 +97,57 @@ export function AssetPickerField({
     };
   }
 
+  const actionButtons = (
+    <>
+      {uploadKind ? (
+        <Button
+          type="button"
+          variant="default"
+          onClick={() => setIsUploadOpen(true)}
+          disabled={disabled}
+        >
+          <UploadCloud className="size-4" />
+          Upload new
+        </Button>
+      ) : null}
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => setIsDialogOpen(true)}
+        disabled={disabled}
+      >
+        <Search className="size-4" />
+        Browse existing
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => onChange(null)}
+        disabled={disabled || value === null}
+      >
+        <Trash2 className="size-4" />
+        Clear
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        data-testid={testId ? `${testId}-advanced` : undefined}
+        title={resolvedAdvancedLabel}
+        className="text-muted-foreground"
+        onClick={() => setIsAdvancedOpen((current) => !current)}
+        disabled={disabled}
+      >
+        <ChevronDown
+          className={cn(
+            "size-4 transition-transform",
+            isAdvancedOpen ? "rotate-180" : "rotate-0",
+          )}
+        />
+        Advanced
+      </Button>
+    </>
+  );
+
   return (
     <div className="space-y-3" data-testid={testId}>
       <label className="text-sm font-medium text-foreground" htmlFor={id}>
@@ -104,7 +157,11 @@ export function AssetPickerField({
       <div
         className={cn(
           "rounded-2xl border border-border/70 bg-card/95 shadow-sm",
-          isEditor ? "p-3" : "p-4",
+          useInlineSelectedEditorSurface
+            ? "border-0 bg-transparent p-0 shadow-none"
+            : isEditor
+              ? "p-3"
+              : "p-4",
         )}
       >
         {value === null ? (
@@ -138,7 +195,11 @@ export function AssetPickerField({
           </div>
         ) : selectedAsset ? (
           <div className="space-y-3">
-            <AssetFieldPreview asset={selectedAsset} variant={variant} />
+            <AssetFieldPreview
+              actions={shouldInlineEditorActions ? actionButtons : undefined}
+              asset={selectedAsset}
+              variant={variant}
+            />
             {selectedAssetHasWrongMediaType ? (
               <p className="text-sm text-destructive">
                 Asset #{selectedAsset.id} is {selectedAsset.mediaTypeLabel}, but
@@ -158,56 +219,13 @@ export function AssetPickerField({
           </div>
         ) : null}
 
-        <div className={cn("mt-4 flex flex-wrap gap-2", isEditor && "mt-3")}>
-          {uploadKind ? (
-            <Button
-              type="button"
-              variant="default"
-              onClick={() => setIsUploadOpen(true)}
-              disabled={disabled}
-            >
-              <UploadCloud className="size-4" />
-              Upload new
-            </Button>
-          ) : null}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsDialogOpen(true)}
-            disabled={disabled}
-          >
-            <Search className="size-4" />
-            Browse existing
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onChange(null)}
-            disabled={disabled || value === null}
-          >
-            <Trash2 className="size-4" />
-            Clear
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            data-testid={testId ? `${testId}-advanced` : undefined}
-            title={resolvedAdvancedLabel}
-            className="text-muted-foreground"
-            onClick={() => setIsAdvancedOpen((current) => !current)}
-            disabled={disabled}
-          >
-            <ChevronDown
-              className={cn(
-                "size-4 transition-transform",
-                isAdvancedOpen ? "rotate-180" : "rotate-0",
-              )}
-            />
-            Advanced
-          </Button>
-        </div>
+        {!shouldInlineEditorActions ? (
+          <div className={cn("mt-4 flex flex-wrap gap-2", isEditor && "mt-3")}>
+            {actionButtons}
+          </div>
+        ) : null}
 
-        {description ? (
+        {description && !shouldInlineEditorActions ? (
           <p
             className={cn(
               "mt-4 text-muted-foreground",

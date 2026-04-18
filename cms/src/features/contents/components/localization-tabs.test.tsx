@@ -86,6 +86,9 @@ describe("ContentLocalizationTabs", () => {
       screen.getByRole("button", { name: /publish locale/i }),
     ).toBeVisible();
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
+    expect(
+      screen.queryByTestId("content-localization-active-language-banner"),
+    ).not.toBeInTheDocument();
   });
 
   it("shows an empty-state workflow when the content has no localizations", () => {

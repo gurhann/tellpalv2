@@ -93,8 +93,12 @@ Detail and workspace routes must follow one shared composition contract.
   - reduced nested borders
   - clear primary and secondary actions
   - technical or debug helper copy hidden behind advanced affordances or kept visually secondary
-- Editorial asset picker fields must not be forced into half-width columns beside small metadata inputs.
-- Large media fields should occupy a full row, while small metadata inputs such as duration or status should be grouped on a separate compact row beneath them.
+- Editorial asset picker fields must not be forced into half-width columns beside a single orphan input.
+- When a cover or illustration field directly supports publishing decisions, prefer a balanced two-column block:
+  - media card on the left
+  - compact metadata stack on the right
+  - mobile and tablet layouts may collapse back to one column
+- Use a full-width media row only when there is no closely related metadata stack to pair beside it.
 - Detail routes should preserve the primary workspace at all supported widths. The rail may remain visible, but it must not visually outweigh the main lane.
 
 ## 7. Accessibility and Interaction Rules

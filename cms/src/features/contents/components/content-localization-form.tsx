@@ -442,151 +442,153 @@ export function ContentLocalizationForm({
         )}
 
         <div
-          className="md:col-span-2"
-          data-testid="content-localization-cover-row"
+          className="grid gap-5 md:col-span-2 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]"
+          data-testid="content-localization-cover-layout"
         >
-          <Controller
-            control={form.control}
-            name="coverMediaId"
-            render={({ field }) => (
-              <AssetPickerField
-                advancedLabel="Advanced cover asset options"
-                description={copy.coverDescription}
-                disabled={saveLocalization.isPending}
-                error={form.formState.errors.coverMediaId}
-                id="coverMediaId"
-                label={copy.coverLabel}
-                manualInputLabel={`${copy.coverLabel} id`}
-                mediaType="IMAGE"
-                pickerDescription={copy.coverPickerDescription}
-                pickerTitle={copy.coverPickerTitle}
+          <div data-testid="content-localization-cover-row">
+            <Controller
+              control={form.control}
+              name="coverMediaId"
+              render={({ field }) => (
+                <AssetPickerField
+                  advancedLabel="Advanced cover asset options"
+                  description={copy.coverDescription}
+                  disabled={saveLocalization.isPending}
+                  error={form.formState.errors.coverMediaId}
+                  id="coverMediaId"
+                  label={copy.coverLabel}
+                  manualInputLabel={`${copy.coverLabel} id`}
+                  mediaType="IMAGE"
+                  pickerDescription={copy.coverPickerDescription}
+                  pickerTitle={copy.coverPickerTitle}
+                  placeholder={copy.optional}
+                  testId="content-localization-cover-asset"
+                  value={field.value}
+                  variant="editor"
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+
+          <div
+            className="space-y-5 rounded-2xl border border-border/70 bg-muted/10 p-4"
+            data-testid="content-localization-metadata-row"
+          >
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium text-foreground"
+                htmlFor="durationMinutes"
+              >
+                {copy.durationMinutes}
+              </label>
+              <Input
+                id="durationMinutes"
+                inputMode="numeric"
                 placeholder={copy.optional}
-                testId="content-localization-cover-asset"
-                value={field.value}
-                variant="editor"
-                onChange={field.onChange}
+                type="number"
+                {...form.register("durationMinutes", {
+                  setValueAs: (value) => {
+                    if (value === "" || value === null || value === undefined) {
+                      return null;
+                    }
+
+                    return Number(value);
+                  },
+                })}
+                disabled={saveLocalization.isPending}
               />
-            )}
-          />
-        </div>
+              <FieldError error={form.formState.errors.durationMinutes} />
+            </div>
 
-        <div
-          className="grid gap-5 md:col-span-2 md:grid-cols-3"
-          data-testid="content-localization-metadata-row"
-        >
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="durationMinutes"
-            >
-              {copy.durationMinutes}
-            </label>
-            <Input
-              id="durationMinutes"
-              inputMode="numeric"
-              placeholder={copy.optional}
-              type="number"
-              {...form.register("durationMinutes", {
-                setValueAs: (value) => {
-                  if (value === "" || value === null || value === undefined) {
-                    return null;
-                  }
-
-                  return Number(value);
-                },
-              })}
-              disabled={saveLocalization.isPending}
-            />
-            <FieldError error={form.formState.errors.durationMinutes} />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              {copy.status}
-            </label>
-            <Controller
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <Select
-                  disabled={saveLocalization.isPending}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger
-                    aria-invalid={Boolean(form.formState.errors.status)}
-                    aria-label={copy.status}
-                    className="w-full"
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">
+                {copy.status}
+              </label>
+              <Controller
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <Select
+                    disabled={saveLocalization.isPending}
+                    value={field.value}
+                    onValueChange={field.onChange}
                   >
-                    <SelectValue placeholder={copy.selectStatus} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {localizationStatusOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <FieldError error={form.formState.errors.status} />
-          </div>
+                    <SelectTrigger
+                      aria-invalid={Boolean(form.formState.errors.status)}
+                      aria-label={copy.status}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder={copy.selectStatus} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {localizationStatusOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <FieldError error={form.formState.errors.status} />
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              {copy.processingStatus}
-            </label>
-            <Controller
-              control={form.control}
-              name="processingStatus"
-              render={({ field }) => (
-                <Select
-                  disabled={saveLocalization.isPending}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger
-                    aria-invalid={Boolean(form.formState.errors.processingStatus)}
-                    aria-label={copy.processingStatus}
-                    className="w-full"
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">
+                {copy.processingStatus}
+              </label>
+              <Controller
+                control={form.control}
+                name="processingStatus"
+                render={({ field }) => (
+                  <Select
+                    disabled={saveLocalization.isPending}
+                    value={field.value}
+                    onValueChange={field.onChange}
                   >
-                    <SelectValue placeholder={copy.selectProcessingStatus} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {processingStatusOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <FieldError error={form.formState.errors.processingStatus} />
+                    <SelectTrigger
+                      aria-invalid={Boolean(form.formState.errors.processingStatus)}
+                      aria-label={copy.processingStatus}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder={copy.selectProcessingStatus} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {processingStatusOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <FieldError error={form.formState.errors.processingStatus} />
+            </div>
+
+            {status === "PUBLISHED" ? (
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-medium text-foreground"
+                  htmlFor="publishedAt"
+                >
+                  {copy.publishedAt}
+                </label>
+                <Input
+                  id="publishedAt"
+                  type="datetime-local"
+                  {...form.register("publishedAt")}
+                  disabled={saveLocalization.isPending}
+                />
+                <p className="text-sm text-muted-foreground">
+                  {copy.publishedHelp}
+                </p>
+                <FieldError error={form.formState.errors.publishedAt} />
+              </div>
+            ) : null}
           </div>
         </div>
-
-        {status === "PUBLISHED" ? (
-          <div className="space-y-2 md:col-span-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="publishedAt"
-            >
-              {copy.publishedAt}
-            </label>
-            <Input
-              id="publishedAt"
-              type="datetime-local"
-              {...form.register("publishedAt")}
-              disabled={saveLocalization.isPending}
-            />
-            <p className="text-sm text-muted-foreground">
-              {copy.publishedHelp}
-            </p>
-            <FieldError error={form.formState.errors.publishedAt} />
-          </div>
-        ) : null}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

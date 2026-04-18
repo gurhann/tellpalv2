@@ -119,7 +119,7 @@ describe("ContentLocalizationForm", () => {
     expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
   });
 
-  it("keeps cover media on a full-width row and groups metadata beneath it", () => {
+  it("pairs cover media with a dedicated metadata sidebar", () => {
     render(
       <ContentLocalizationForm
         content={storyContentViewModel}
@@ -131,9 +131,12 @@ describe("ContentLocalizationForm", () => {
       />,
     );
 
+    const coverLayout = screen.getByTestId("content-localization-cover-layout");
     const coverRow = screen.getByTestId("content-localization-cover-row");
     const metadataRow = screen.getByTestId("content-localization-metadata-row");
 
+    expect(coverLayout).toContainElement(coverRow);
+    expect(coverLayout).toContainElement(metadataRow);
     expect(coverRow).toContainElement(
       screen.getByTestId("content-localization-cover-asset"),
     );

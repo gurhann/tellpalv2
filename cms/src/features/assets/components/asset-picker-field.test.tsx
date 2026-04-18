@@ -154,6 +154,73 @@ describe("AssetPickerField", () => {
     expect(screen.getByLabelText(/audio preview for asset #1/i)).toBeVisible();
   });
 
+  it("renders editor image previews as a portrait-focused cover card", () => {
+    assetDetailMocks.useAssetDetail.mockReturnValue({
+      asset: phoneThumbnailAssetViewModel,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+
+    render(
+      <TestWrapper>
+        <AssetPickerField
+          id="coverMediaId"
+          label="Cover asset"
+          mediaType="IMAGE"
+          pickerDescription="Pick cover asset"
+          pickerTitle="Pick cover asset"
+          value={phoneThumbnailAssetViewModel.id}
+          variant="editor"
+          onChange={vi.fn()}
+        />
+      </TestWrapper>,
+    );
+
+    expect(
+      screen.getByTestId("asset-field-preview-editor-cover"),
+    ).toBeVisible();
+    expect(
+      screen.getByTestId("asset-field-preview-editor-cover-stage"),
+    ).toBeVisible();
+    expect(screen.getByText(/mobile cover preview/i)).toBeVisible();
+    expect(
+      screen.getByTestId("asset-field-preview-editor-cover-actions"),
+    ).toContainElement(screen.getByRole("button", { name: /upload new/i }));
+    expect(
+      screen.queryByText(/cover assets are shown in a portrait-focused frame/i),
+    ).not.toBeInTheDocument();
+  });
+
+  it("opens a larger preview dialog when the cover image is clicked", () => {
+    assetDetailMocks.useAssetDetail.mockReturnValue({
+      asset: phoneThumbnailAssetViewModel,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+
+    render(
+      <TestWrapper>
+        <AssetPickerField
+          id="coverMediaId"
+          label="Cover asset"
+          mediaType="IMAGE"
+          pickerDescription="Pick cover asset"
+          pickerTitle="Pick cover asset"
+          value={phoneThumbnailAssetViewModel.id}
+          variant="editor"
+          onChange={vi.fn()}
+        />
+      </TestWrapper>,
+    );
+
+    fireEvent.click(screen.getByTestId("asset-field-preview-image-button"));
+
+    expect(screen.getByText(/kapak onizlemesi|gorsel onizleme/i)).toBeVisible();
+    expect(screen.getByRole("dialog")).toBeVisible();
+  });
+
   it("opens advanced mode before exposing manual asset input", () => {
     assetDetailMocks.useAssetDetail.mockReturnValue({
       asset: null,
