@@ -76,6 +76,7 @@ export function ContentForm({
           selectContentType: "Icerik turu secin",
           contentTypeFixed:
             "Icerik turu olusturulduktan sonra sabittir. Bu form yalnizca external key, age range ve aktiflik durumunu gunceller.",
+          contentTypeLocked: "Olusturma sonrasi sabit",
           externalKey: "External key",
           ageRange: "Yas araligi",
           optional: "Opsiyonel",
@@ -100,6 +101,7 @@ export function ContentForm({
           selectContentType: "Select content type",
           contentTypeFixed:
             "Content type is fixed after creation. This form updates external key, age range, and active state only.",
+          contentTypeLocked: "Locked after creation",
           externalKey: "External key",
           ageRange: "Age range",
           optional: "Optional",
@@ -216,13 +218,18 @@ export function ContentForm({
             <p className="text-sm font-medium text-foreground">
               {copy.contentType}
             </p>
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-              <p className="text-sm font-medium text-foreground">
-                {contentTypeOptions.find(
-                  (option) => option.value === selectedType,
-                )?.label ?? selectedType}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-border/70 bg-muted/10 px-4 py-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center rounded-full border border-border/70 bg-background px-3 py-1 text-sm font-medium text-foreground">
+                  {contentTypeOptions.find(
+                    (option) => option.value === selectedType,
+                  )?.label ?? selectedType}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {copy.contentTypeLocked}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {copy.contentTypeFixed}
               </p>
             </div>

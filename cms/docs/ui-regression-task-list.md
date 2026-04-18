@@ -87,6 +87,22 @@ This list tracks UI debt, regression coverage, and standards follow-up work sepa
 - Exit criteria:
   - duplicated profile summary cards are removed from the content detail rail
 
+### UI-REG-003C `DONE` Simplify content detail into a single primary workspace
+
+- Problem pattern:
+  - header, rail, and nested child sections all summarized the same content state, so the next editing step was unclear
+- Affected routes:
+  - `/contents/:contentId`
+- Required standard:
+  - one dominant locale-first workspace
+  - minimal operational rail
+  - no duplicate child section ownership
+- Regression guard:
+  - route assertions
+  - visual screenshot baseline
+- Exit criteria:
+  - content detail reads as one primary workflow with metadata and contributor work as secondary lanes
+
 ## P1
 
 ### UI-REG-004 `TODO` Move remaining registry routes to the shared toolbar

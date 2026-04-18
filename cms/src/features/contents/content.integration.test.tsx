@@ -531,7 +531,8 @@ describe("Content integration", () => {
     expect(
       await screen.findByRole("heading", { name: /locale workspace/i }),
     ).toBeVisible();
-    expect(screen.getAllByText(/story handoff/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/content profile/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/story handoff/i)).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(/^title$/i), {
       target: { value: "Regenraum Fokus" },
@@ -545,7 +546,7 @@ describe("Content integration", () => {
     fireEvent.click(screen.getByRole("button", { name: /publish locale/i }));
 
     expect(await screen.findAllByText("Published")).not.toHaveLength(0);
-    expect(screen.getByText("Visible")).toBeVisible();
+    expect(await screen.findAllByText("Visible")).not.toHaveLength(0);
   });
 
   it("surfaces publish conflicts inline when the backend rejects a story publish", async () => {

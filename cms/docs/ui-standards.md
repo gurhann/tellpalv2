@@ -70,6 +70,10 @@ Registry toolbar rules:
 - Explanatory copy that does not change user decisions should be removed instead of moved into another decorative card.
 - Right rails must not repeat metadata that is already visible in the main editing lane.
 - Cards such as `content profile`, `metadata profile`, or similar summary duplicates should be removed when the same values are already editable or visible in the main section.
+- Detail routes must have one dominant primary workspace.
+- Child components inside a detail route must not open a second competing section or header for the same workflow that the route already owns.
+- The same state must not be summarized in the header, rail, and section body at the same time unless each layer supports a different concrete decision.
+- Detail screens should read like editors, not dashboards. Inside the primary workspace, prefer one sequential edit flow over side-by-side metric cards.
 
 ## 6. Accessibility and Interaction Rules
 
@@ -126,3 +130,13 @@ Required resolution pattern:
 
 - remove duplicated profile cards from the rail
 - keep the rail focused on operational summary, not repeated form content
+
+Reference issue D:
+
+- The content detail screen split the same workflow across route sections, nested child sections, and repeated summary cards, making the primary next step unclear.
+
+Required resolution pattern:
+
+- keep locale work as the dominant primary workspace
+- let the route own section hierarchy and let child components render body content only
+- keep the rail minimal and operational

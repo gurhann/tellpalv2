@@ -60,7 +60,9 @@ describe("ContentContributorPanel", () => {
       wrapper: createWrapper(),
     });
 
-    expect(screen.getByText(/contributor assignments/i)).toBeVisible();
+    expect(
+      screen.queryByRole("heading", { name: /contributor assignments/i }),
+    ).not.toBeInTheDocument();
     expect(screen.getAllByText("Annie Case")).toHaveLength(2);
     expect(screen.getByText("M. Rivers")).toBeVisible();
     expect(screen.getByText("Author")).toBeVisible();

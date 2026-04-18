@@ -2,8 +2,14 @@ import { Archive, LoaderCircle, Send } from "lucide-react";
 import { useState } from "react";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
-import { FormSection } from "@/components/forms/form-section";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import type {
   ContentLocalizationViewModel,
   ContentReadViewModel,
@@ -108,40 +114,57 @@ export function PublicationActions({
   }
 
   return (
-    <FormSection
-      title="Publication Controls"
-      description="Status, processing, and mobile visibility are derived from the backend rules for this locale."
-    >
-      {actionProblem ? <ProblemAlert problem={actionProblem} /> : null}
+    <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
+      <CardHeader className="gap-2 border-b border-border/60 bg-muted/10 pb-4">
+        <CardTitle>Publishing</CardTitle>
+        <CardDescription>
+          Review readiness, then publish or archive this locale.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4 pt-5">
+        {actionProblem ? <ProblemAlert problem={actionProblem} /> : null}
 
-      <div className="grid gap-3">
-        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-          <dl className="space-y-3 text-sm text-muted-foreground">
-            <div className="flex items-center justify-between gap-3">
-              <dt>Status</dt>
-              <dd className="font-medium text-foreground">
+        <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-4">
+          <dl className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
+              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Status
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-foreground">
                 {localization.statusLabel}
               </dd>
             </div>
-            <div className="flex items-center justify-between gap-3">
-              <dt>Processing</dt>
-              <dd className="font-medium text-foreground">
+            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
+              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Processing
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-foreground">
                 {localization.processingStatusLabel}
               </dd>
             </div>
-            <div className="flex items-center justify-between gap-3">
-              <dt>Published at</dt>
-              <dd className="font-medium text-foreground">
-                {formatPublishedAt(localization.publishedAt)}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <dt>Mobile visibility</dt>
-              <dd className="font-medium text-foreground">
+            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
+              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Mobile visibility
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-foreground">
                 {localization.visibleToMobile ? "Visible" : "Hidden"}
               </dd>
             </div>
+            <div className="rounded-xl border border-border/60 bg-background px-3 py-3">
+              <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Published at
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-foreground">
+                {formatPublishedAt(localization.publishedAt)}
+              </dd>
+            </div>
           </dl>
+
+          <p className="text-sm leading-6 text-muted-foreground">
+            {content.summary.supportsStoryPages
+              ? "Publishing stays locked until localized story pages and processing are complete."
+              : "Publishing stays locked until localization completeness and processing are ready."}
+          </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -174,13 +197,7 @@ export function PublicationActions({
             Archive locale
           </Button>
         </div>
-
-        <div className="rounded-2xl border border-border/70 bg-background px-4 py-4 text-sm leading-6 text-muted-foreground">
-          {content.summary.supportsStoryPages
-            ? "Story publishes depend on localized story pages being complete. If required page text or page audio is missing, the backend can reject publish with content_state_conflict."
-            : "Non-story publishes depend on localization completeness and processing readiness. Missing body text, audio bindings, or incomplete processing keep mobile visibility off."}
-        </div>
-      </div>
-    </FormSection>
+      </CardContent>
+    </Card>
   );
 }

@@ -63,6 +63,13 @@ Do not keep rail cards that simply restate metadata already visible or editable 
 
 If guidance is needed, keep it in section descriptions or inline helper text near the relevant control.
 
+For detail routes:
+
+- keep one dominant primary workspace
+- do not let child components create a second competing section for the same workflow
+- do not repeat the same status summary in the header, rail, and body unless each layer supports a different action
+- make detail screens feel like editors, not dashboards; inside the main workspace prefer a sequential flow over side-by-side metric summaries
+
 ## Registry Toolbar Contract
 
 Registry routes must use the shared `RegistryToolbar` primitive.

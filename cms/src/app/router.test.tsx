@@ -305,8 +305,14 @@ describe("CMS router auth flow", () => {
       await screen.findByRole("heading", { name: /evening garden/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("link", { name: /open story pages/i })[0],
+      screen.getByRole("link", { name: /open story pages/i }),
     ).toHaveAttribute("href", "/contents/42/story-pages?language=en");
+    expect(
+      screen.getAllByRole("heading", { name: /locale workspace/i }),
+    ).toHaveLength(1);
+    expect(
+      screen.getAllByRole("heading", { name: /contributor assignments/i }),
+    ).toHaveLength(1);
     expect(
       screen.getByRole("tablist", { name: /content localization tabs/i }),
     ).toBeInTheDocument();
@@ -320,6 +326,8 @@ describe("CMS router auth flow", () => {
     expect(screen.queryByText(/locale notes/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/contributor notes/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/content profile/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/release posture/i)).not.toBeInTheDocument();
   });
 
   it("renders the category studio shell for /categories", async () => {

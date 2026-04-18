@@ -9,9 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TaskRail } from "@/components/workspace/task-rail";
 import {
-  WorkspaceInfoCard,
-  WorkspaceKeyValueGrid,
-  WorkspaceMetricCard,
   WorkspaceStatusPill,
 } from "@/components/workspace/workspace-primitives";
 import { ContentForm } from "@/features/contents/components/content-form";
@@ -67,7 +64,7 @@ export function ContentDetailRoute() {
           routeLoading:
             "Metadata, dil calisma alanlari ve contributor akislari yukleniyor.",
           routeLoaded: (externalKey: string) =>
-            `${externalKey} icin dil hazirligini, metadata'yi ve kredi atamalarini ayni yuzeyden yonetin.`,
+            `${externalKey} icin bir dil secin, icerigi guncelleyin ve hazir oldugunda yayina alin.`,
           notFoundDescription:
             "Admin API bu rota icin bir icerik kaydi dondurmedi.",
           retryDescription:
@@ -84,38 +81,25 @@ export function ContentDetailRoute() {
           detailUnavailableDescription:
             "Bu icerik rotasi icin henuz detay payload'i yok.",
           eyebrow: "Editoryal Cekirdek",
-          workspaceHandoff: "Calisma alani handoff'u",
-          workspaceHandoffDescription:
-            "Secili dil baglami korunur; metadata, yayin durumu ve hikaye duzenleme bir sonraki adima dagilmadan ilerler.",
           selectedLocale: "Secili dil",
-          releasePosture: "Yayin durusu",
-          storyHandoff: "Hikaye handoff'u",
-          storyHandoffReady:
-            "Hikaye sayfalari secili dille dogrudan acilmaya hazir.",
-          storyHandoffUnavailable:
-            "Bu icerik tipi hikaye sayfasi calisma alani kullanmiyor.",
+          contentType: "Tur",
+          lifecycle: "Durum",
           openStoryPages: "Hikaye sayfalarini ac",
           storyPagesUnavailable: "Hikaye sayfalari kullanilamiyor",
           operationsSnapshot: "Hazirlik Rayi",
           operationsDescription:
-            "Sag ray canli dil hazirligini, islem durumunu ve hikaye handoff'unu taranabilir tutar.",
-          visibility: "Gorunurluk",
-          processing: "Isleme",
-          storyStructure: "Hikaye Yapisi",
-          visibilityDescription: (visible: number, total: number) =>
-            `${total} yerellestirmenin ${visible} tanesi mobilde gorunur.`,
-          processingDescription: (ready: number, total: number) =>
-            `${total} yerellestirmenin ${ready} tanesinin islemesi tamamlandi.`,
+            "Sag ray yalnizca yayin karari icin gereken canli durumu gosterir.",
+          visibility: "Mobil hazirlik",
+          processing: "Isleme hazirligi",
+          storyStructure: "Hikaye sayfalari",
+          readinessCount: (ready: number, total: number) =>
+            `${ready}/${total} hazir`,
           storyPagesCount: (count: number) =>
-            `${count} hikaye sayfasi alt rota altinda canli.`,
-          storyPagesUnused: "Bu icerik turunde hikaye sayfalari kullanilmiyor.",
+            `${count} sayfa`,
+          storyPagesUnused: "Kullanilmiyor",
           localeWorkspace: "Dil Calisma Alani",
           workspaceDescription:
-            "Sekmeler yayin durumu, gorunurluk ve islem hazirligini tek yuzeyde toplar.",
-          publishGuidance:
-            "Yayinlama ve arsivleme aksiyonlari her dil sekmesinde canli; conflict geri bildirimleri ayni baglamda gorunur.",
-          storyEditorGuidance:
-            "Hikaye icerikleri secili dili koruyarak sayfa editorunu dogrudan bu ekrandan acar.",
+            "Yerellestirme bu ekrandaki ana calisma alani olarak kalir; secili dil, form ve yayin aksiyonlari ayni baglamda birlikte gorunur.",
           mobileVisible: "Mobil gorunur",
           notVisible: "Gizli",
           metadataTitle: "Metadata",
@@ -143,7 +127,7 @@ export function ContentDetailRoute() {
           routeLoading:
             "Loading metadata, locale workspaces, and contributor workflows.",
           routeLoaded: (externalKey: string) =>
-            `Review locale readiness, metadata, and credits for ${externalKey} in one editorial workspace.`,
+            `Choose a locale for ${externalKey}, update the record, and publish when it is ready.`,
           notFoundDescription:
             "The admin API did not return a content record for this route.",
           retryDescription:
@@ -160,38 +144,25 @@ export function ContentDetailRoute() {
           detailUnavailableDescription:
             "No detail payload is available for this content route yet.",
           eyebrow: "Editorial Core",
-          workspaceHandoff: "Workspace handoff",
-          workspaceHandoffDescription:
-            "The selected locale remains in context so metadata review, publication checks, and the story editor handoff stay on one surface.",
           selectedLocale: "Selected locale",
-          releasePosture: "Release posture",
-          storyHandoff: "Story handoff",
-          storyHandoffReady:
-            "Story pages are ready to open in the current language context.",
-          storyHandoffUnavailable:
-            "This content type does not use the story page workspace.",
+          contentType: "Type",
+          lifecycle: "Status",
           openStoryPages: "Open story pages",
           storyPagesUnavailable: "Story pages unavailable",
           operationsSnapshot: "Readiness rail",
           operationsDescription:
-            "The right rail keeps locale readiness, processing, and story structure glanceable while the main lane stays focused on editorial work.",
-          visibility: "Visibility",
-          processing: "Processing",
-          storyStructure: "Story structure",
-          visibilityDescription: (visible: number, total: number) =>
-            `${visible} of ${total} localizations are mobile visible.`,
-          processingDescription: (ready: number, total: number) =>
-            `${ready} of ${total} localizations are processing complete.`,
+            "The rail stays limited to the live checks needed before publishing.",
+          visibility: "Mobile readiness",
+          processing: "Processing readiness",
+          storyStructure: "Story pages",
+          readinessCount: (ready: number, total: number) =>
+            `${ready}/${total} ready`,
           storyPagesCount: (count: number) =>
-            `${count} story page${count === 1 ? "" : "s"} live under the child route.`,
-          storyPagesUnused: "Story pages are not used for this content type.",
+            `${count} pages`,
+          storyPagesUnused: "Not used",
           localeWorkspace: "Locale workspace",
           workspaceDescription:
-            "Tabs keep publication state, visibility, and processing posture in one place.",
-          publishGuidance:
-            "Publish and archive actions now live inside each language tab, including backend conflict surfaces.",
-          storyEditorGuidance:
-            "Story records can open their page editor directly from this screen, preserving the currently selected language.",
+            "Localization remains the primary workspace on this screen, with the selected locale, form, and publication controls visible together.",
           mobileVisible: "Mobile visible",
           notVisible: "Hidden",
           metadataTitle: "Metadata",
@@ -216,45 +187,42 @@ export function ContentDetailRoute() {
 
   function renderToolbar() {
     if (content) {
+      const selectedLocaleLabel =
+        selectedLocalization?.languageLabel ??
+        (locale === "tr" ? "Henuz secilmedi" : "Not selected");
+
       return (
-        <div className="grid gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <p className="text-sm font-semibold tracking-tight text-foreground">
-                {copy.workspaceHandoff}
-              </p>
-              <p className="text-sm leading-6 text-muted-foreground">
-                {copy.workspaceHandoffDescription}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <WorkspaceStatusPill tone="accent">
-                  {content.summary.typeLabel}
-                </WorkspaceStatusPill>
-                <WorkspaceStatusPill
-                  tone={content.summary.active ? "success" : "default"}
-                >
-                  {content.summary.active
-                    ? locale === "tr"
-                      ? "Aktif"
-                      : "Active"
-                    : locale === "tr"
-                      ? "Pasif"
-                      : "Inactive"}
-                </WorkspaceStatusPill>
-                {selectedLocalization ? (
-                  <WorkspaceStatusPill
-                    tone={selectedLocalization.isPublished ? "success" : "warning"}
-                  >
-                    {selectedLocalization.languageLabel}:{" "}
-                    {selectedLocalization.statusLabel}
-                  </WorkspaceStatusPill>
-                ) : null}
-              </div>
+        <div className="flex flex-col gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.contentType}
+              </span>
+              <WorkspaceStatusPill tone="accent">
+                {content.summary.typeLabel}
+              </WorkspaceStatusPill>
             </div>
-            <div className="grid gap-3 md:grid-cols-3">
-              <WorkspaceMetricCard
-                detail={selectedLocalization?.statusLabel}
-                label={copy.selectedLocale}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.lifecycle}
+              </span>
+              <WorkspaceStatusPill
+                tone={content.summary.active ? "success" : "default"}
+              >
+                {content.summary.active
+                  ? locale === "tr"
+                    ? "Aktif"
+                    : "Active"
+                  : locale === "tr"
+                    ? "Pasif"
+                    : "Inactive"}
+              </WorkspaceStatusPill>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {copy.selectedLocale}
+              </span>
+              <WorkspaceStatusPill
                 tone={
                   selectedLocalization?.isPublished
                     ? "success"
@@ -262,50 +230,13 @@ export function ContentDetailRoute() {
                       ? "warning"
                       : "default"
                 }
-                value={
-                  selectedLocalization?.languageLabel ??
-                  (locale === "tr" ? "Henuz secilmedi" : "Not selected yet")
-                }
-              />
-              <WorkspaceMetricCard
-                detail={copy.publishGuidance}
-                label={copy.releasePosture}
-                tone={
-                  selectedLocalization?.isPublished
-                    ? "success"
-                    : selectedLocalization
-                      ? "warning"
-                      : "default"
-                }
-                value={
-                  selectedLocalization?.processingStatusLabel ??
-                  (locale === "tr" ? "Bekliyor" : "Pending")
-                }
-              />
-              <WorkspaceMetricCard
-                detail={
-                  content.summary.supportsStoryPages
-                    ? copy.storyHandoffReady
-                    : copy.storyHandoffUnavailable
-                }
-                label={copy.storyHandoff}
-                tone={content.summary.supportsStoryPages ? "accent" : "default"}
-                value={
-                  content.summary.supportsStoryPages
-                    ? selectedLocalization?.languageLabel ??
-                      (locale === "tr" ? "Dil secin" : "Choose locale")
-                    : locale === "tr"
-                      ? "Kullanilmiyor"
-                      : "Not used"
-                }
-              />
+              >
+                {selectedLocaleLabel}
+              </WorkspaceStatusPill>
             </div>
           </div>
-          <WorkspaceInfoCard
-            title={copy.storyHandoff}
-            description={copy.storyEditorGuidance}
-            className="bg-background/85"
-          >
+
+          <div className="shrink-0">
             <StoryPageEntryLink
               canOpen={canOpenStoryPages}
               contentId={parsedContentId}
@@ -313,7 +244,7 @@ export function ContentDetailRoute() {
               preferredLanguageCode={storyPageLanguageCode}
               unavailableLabel={copy.storyPagesUnavailable}
             />
-          </WorkspaceInfoCard>
+          </div>
         </div>
       );
     }
@@ -426,60 +357,6 @@ export function ContentDetailRoute() {
           description={copy.workspaceDescription}
           title={copy.localeWorkspace}
         >
-          {selectedLocalization ? (
-            <div className="grid gap-4">
-              <WorkspaceInfoCard
-                title={`${copy.selectedLocale}: ${selectedLocalization.languageLabel}`}
-                description={selectedLocalization.title}
-              >
-                <WorkspaceKeyValueGrid
-                  items={[
-                    {
-                      label: copy.releasePosture,
-                      value: selectedLocalization.statusLabel,
-                      tone: selectedLocalization.isPublished
-                        ? "success"
-                        : "warning",
-                    },
-                    {
-                      label: copy.processing,
-                      value: selectedLocalization.processingStatusLabel,
-                      tone:
-                        selectedLocalization.processingStatus === "COMPLETED"
-                          ? "success"
-                          : "warning",
-                    },
-                    {
-                      label: copy.visibility,
-                      value: selectedLocalization.visibleToMobile
-                        ? copy.mobileVisible
-                        : copy.notVisible,
-                      tone: selectedLocalization.visibleToMobile
-                        ? "success"
-                        : "warning",
-                    },
-                  ]}
-                />
-              </WorkspaceInfoCard>
-              <WorkspaceInfoCard
-                title={copy.storyHandoff}
-                description={
-                  content.summary.supportsStoryPages
-                    ? copy.storyHandoffReady
-                    : copy.storyHandoffUnavailable
-                }
-              >
-                <StoryPageEntryLink
-                  canOpen={canOpenStoryPages}
-                  contentId={parsedContentId}
-                  label={copy.openStoryPages}
-                  preferredLanguageCode={storyPageLanguageCode}
-                  unavailableLabel={copy.storyPagesUnavailable}
-                />
-              </WorkspaceInfoCard>
-            </div>
-          ) : null}
-
           <ContentLocalizationTabs
             content={content}
             onActiveLanguageChange={setActiveStoryLanguageCode}
@@ -520,7 +397,7 @@ export function ContentDetailRoute() {
         stats={[
           {
             label: copy.visibility,
-            value: copy.visibilityDescription(
+            value: copy.readinessCount(
               content.visibleToMobileLocalizationCount,
               content.localizationCount,
             ),
@@ -531,7 +408,7 @@ export function ContentDetailRoute() {
           },
           {
             label: copy.processing,
-            value: copy.processingDescription(
+            value: copy.readinessCount(
               content.processingCompleteLocalizationCount,
               content.localizationCount,
             ),

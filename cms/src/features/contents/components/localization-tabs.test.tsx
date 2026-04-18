@@ -71,6 +71,9 @@ describe("ContentLocalizationTabs", () => {
     render(<ContentLocalizationTabs content={storyContentViewModel} />);
 
     expect(
+      screen.queryByRole("heading", { name: /localization workspace/i }),
+    ).not.toBeInTheDocument();
+    expect(
       screen.getByRole("tablist", { name: /content localization tabs/i }),
     ).toBeVisible();
     expect(

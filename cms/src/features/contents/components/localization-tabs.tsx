@@ -2,7 +2,6 @@ import { CirclePlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
-import { FormSection } from "@/components/forms/form-section";
 import {
   LanguageTabs,
   type LanguageTabItem,
@@ -16,6 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  WorkspaceInfoCard,
+  WorkspaceKeyValueGrid,
+} from "@/components/workspace/workspace-primitives";
 import { ContentLocalizationForm } from "@/features/contents/components/content-localization-form";
 import { PublicationActions } from "@/features/contents/components/publication-actions";
 import type {
@@ -103,19 +106,39 @@ function LocalizationWorkspacePane({
   ].join("|");
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <FormSection
-        title={`${localization.languageLabel} Localization`}
-        description="Edit locale metadata, asset bindings, and processing status for this language."
+    <div className="grid gap-4">
+      <WorkspaceInfoCard
+        title={`${localization.languageLabel} locale`}
+        description={getLocalizationDescription(localization)}
       >
-        <ContentLocalizationForm
-          key={localizationFormKey}
-          content={content}
-          initialValues={initialValues}
-          localization={localization}
-          mode="update"
+        <WorkspaceKeyValueGrid
+          items={[
+            {
+              label: "Status",
+              value: localization.statusLabel,
+              tone: localization.isPublished ? "success" : "warning",
+            },
+            {
+              label: "Processing",
+              value: localization.processingStatusLabel,
+              tone: localization.isProcessingComplete ? "success" : "warning",
+            },
+            {
+              label: "Mobile visibility",
+              value: localization.visibleToMobile ? "Visible" : "Hidden",
+              tone: localization.visibleToMobile ? "success" : "warning",
+            },
+          ]}
         />
-      </FormSection>
+      </WorkspaceInfoCard>
+
+      <ContentLocalizationForm
+        key={localizationFormKey}
+        content={content}
+        initialValues={initialValues}
+        localization={localization}
+        mode="update"
+      />
 
       <PublicationActions content={content} localization={localization} />
     </div>
@@ -172,26 +195,21 @@ export function ContentLocalizationTabs({
   if (content.localizations.length === 0) {
     return (
       <>
-        <FormSection
-          title="Localization Workspace"
-          description="This content exists, but it does not have any localization snapshots yet."
-        >
-          <EmptyState
-            action={
-              availableLanguages.length > 0 ? (
-                <Button
-                  type="button"
-                  onClick={() => setIsCreateDialogOpen(true)}
-                >
-                  <CirclePlus className="size-4" />
-                  Create first localization
-                </Button>
-              ) : null
-            }
-            description="Add the first locale to unlock metadata editing, publication controls, and per-language processing visibility."
-            title="No localizations yet"
-          />
-        </FormSection>
+        <EmptyState
+          action={
+            availableLanguages.length > 0 ? (
+              <Button
+                type="button"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                <CirclePlus className="size-4" />
+                Create first localization
+              </Button>
+            ) : null
+          }
+          description="Add the first locale to unlock metadata editing, publication controls, and per-language processing visibility."
+          title="No localizations yet"
+        />
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogContent className="sm:max-w-3xl">
@@ -228,42 +246,37 @@ export function ContentLocalizationTabs({
 
   return (
     <>
-      <FormSection
-        title="Localization Workspace"
-        description="Each language workspace can now edit metadata, monitor processing, and trigger publish or archive actions."
-        actions={
-          availableLanguages.length > 0 ? (
-            <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
-              <CirclePlus className="size-4" />
-              Add localization
-            </Button>
-          ) : null
-        }
-        contentClassName="gap-4"
-      >
-        <LanguageTabs
-          items={localizationTabs}
-          listLabel="Content localization tabs"
-          onValueChange={handleActiveLanguageChange}
-          renderContent={(item) => {
-            const localization = content.localizations.find(
-              (entry) => entry.languageCode === item.code,
-            );
+      {availableLanguages.length > 0 ? (
+        <div className="flex justify-end">
+          <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
+            <CirclePlus className="size-4" />
+            Add localization
+          </Button>
+        </div>
+      ) : null}
 
-            if (!localization) {
-              return null;
-            }
+      <LanguageTabs
+        items={localizationTabs}
+        listLabel="Content localization tabs"
+        onValueChange={handleActiveLanguageChange}
+        renderContent={(item) => {
+          const localization = content.localizations.find(
+            (entry) => entry.languageCode === item.code,
+          );
 
-            return (
-              <LocalizationWorkspacePane
-                content={content}
-                localization={localization}
-              />
-            );
-          }}
-          value={resolvedActiveLanguage}
-        />
-      </FormSection>
+          if (!localization) {
+            return null;
+          }
+
+          return (
+            <LocalizationWorkspacePane
+              content={content}
+              localization={localization}
+            />
+          );
+        }}
+        value={resolvedActiveLanguage}
+      />
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent className="sm:max-w-3xl">
