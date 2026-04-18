@@ -424,6 +424,17 @@ test("create, edit, and publish flows work in the browser", async ({
   await expect(
     page.getByRole("heading", { name: /content studio/i }),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: /^story$/i })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /^meditation$/i }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: /^meditation$/i }).click();
+  await expect(page.getByText("Regenraum Pause")).toBeVisible();
+  await expect(page.getByText("Evening Garden")).toHaveCount(0);
+  await expect(
+    page.getByText(/Meditation \| All states \| 1 \/ 2 records/i),
+  ).toBeVisible();
 
   await page.getByRole("button", { name: /^create content$/i }).click();
   await page.getByLabel(/content type/i).click();

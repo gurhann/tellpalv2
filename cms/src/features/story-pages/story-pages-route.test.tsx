@@ -142,6 +142,7 @@ describe("StoryPagesRoute", () => {
     expect(screen.getByText(/ready illustrations/i)).toBeInTheDocument();
     expect(screen.getByText(/3 localized illustrations/i)).toBeInTheDocument();
     expect(screen.getAllByText(/2 locales/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/structure notes/i)).not.toBeInTheDocument();
   });
 
   it("keeps non-story content out of the route shell", () => {

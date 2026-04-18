@@ -117,15 +117,12 @@ export function CategoryDetailRoute() {
           localizationLane: "Dil Calisma Alani",
           curationLane: "Kurasyon Lane",
           localizationSnapshot: "Yerellestirme Ozeti",
-          snapshotNotes: "Yerellestirme Notlari",
           snapshotDescription:
             "Kalici yerellestirme sekmeleri admin API uzerinden hydrate olur ve yenileme sonrasi gorunur kalir.",
           snapshotNone:
             "Bu kategori icin henuz saklanan kategori yerellestirmesi yok.",
           snapshotSome: (count: number) =>
             `${count} dil calisma alani su anda backend uzerinden hydrate ediliyor.`,
-          snapshotRules:
-            "Yayinlanmis yerellestirmeler ekleme ve siralama aksiyonlari icin on kosuldur. Secili dil yayinlanmamis olsa bile saklanan kurasyon satirlari gorunur kalir.",
           createDialogTitle: "Kategori yerellestirmesi olustur",
           createDialogDescription:
             "Bu kategori icin bir dil calisma alani olusturun. Kaydedilen yerellestirmeler backend okumasinda kalir ve yenileme sonrasi gorunur kalir.",
@@ -195,7 +192,6 @@ export function CategoryDetailRoute() {
           localizationLane: "Localization workspace",
           curationLane: "Curation lane",
           localizationSnapshot: "Localization snapshot",
-          snapshotNotes: "Snapshot notes",
           snapshotDescription:
             "Persisted localization tabs hydrate from the admin API and remain visible after refresh.",
           snapshotNone:
@@ -204,8 +200,6 @@ export function CategoryDetailRoute() {
             `${count} localization workspace${
               count === 1 ? "" : "s"
             } currently hydrated from the backend.`,
-          snapshotRules:
-            "Published localizations are the prerequisite for add and reorder actions. Stored curated rows still remain visible even when the selected locale is not published.",
           createDialogTitle: "Create category localization",
           createDialogDescription:
             "Create a language workspace for this category. Saved localizations persist in backend reads and remain visible after refresh.",
@@ -647,15 +641,6 @@ export function CategoryDetailRoute() {
         ]}
       >
         <div className="grid gap-4">
-          <WorkspaceInfoCard
-            title={copy.snapshotNotes}
-            description={copy.snapshotDescription}
-            className="bg-background/80"
-          >
-            <p className="text-sm leading-6 text-muted-foreground">
-              {copy.snapshotRules}
-            </p>
-          </WorkspaceInfoCard>
           <WorkspaceInfoCard
             title={copy.metadataLane}
             description={copy.workspaceHandoffDescription}

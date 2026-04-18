@@ -613,11 +613,6 @@ function StoryPagesWorkspace({
           localeHandoff: "Locale handoff",
           localeHandoffDescription:
             "Bu editor parent content detail rotasindan gelen dil baglamini korur.",
-          structureTitle: "Yapi notlari",
-          structureDescription:
-            "Editori kullanarak govde metni, audio ve yerellestirilmis illustrasyonlari sayfa sayfa tamamlayin.",
-          structureNext:
-            "Content detail rotesine dondugunuzde ayni dil odagi korunur.",
           toolbarLocale: "Aktif dil",
           toolbarPages: "Toplam sayfa",
           toolbarCoverage: "Hazir illustrasyon",
@@ -637,11 +632,6 @@ function StoryPagesWorkspace({
           localeHandoff: "Locale handoff",
           localeHandoffDescription:
             "This editor preserves the language context carried from the parent content detail route.",
-          structureTitle: "Structure notes",
-          structureDescription:
-            "Use the editor to finish body text, audio, and localized illustrations page by page.",
-          structureNext:
-            "When you return to content detail, the same locale focus remains available.",
           toolbarLocale: "Active locale",
           toolbarPages: "Total pages",
           toolbarCoverage: "Ready illustrations",
@@ -698,15 +688,6 @@ function StoryPagesWorkspace({
                   },
                 ]}
               />
-            </WorkspaceInfoCard>
-            <WorkspaceInfoCard
-              title={copy.structureTitle}
-              description={copy.structureDescription}
-              className="bg-background/80"
-            >
-              <p className="text-sm leading-6 text-muted-foreground">
-                {copy.structureNext}
-              </p>
             </WorkspaceInfoCard>
           </TaskRail>
         }

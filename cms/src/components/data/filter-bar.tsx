@@ -16,6 +16,11 @@ type FilterBarSummaryProps = ComponentPropsWithoutRef<"div"> & {
   children?: ReactNode;
 };
 
+type FilterBarSectionProps = ComponentPropsWithoutRef<"div"> & {
+  children: ReactNode;
+  label?: ReactNode;
+};
+
 export function FilterBar({ children, className, ...props }: FilterBarProps) {
   return (
     <section
@@ -63,6 +68,24 @@ export function FilterBarActions({
       )}
       {...props}
     >
+      {children}
+    </div>
+  );
+}
+
+export function FilterBarSection({
+  children,
+  label,
+  className,
+  ...props
+}: FilterBarSectionProps) {
+  return (
+    <div className={cn("min-w-0 space-y-2", className)} {...props}>
+      {label ? (
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+          {label}
+        </p>
+      ) : null}
       {children}
     </div>
   );

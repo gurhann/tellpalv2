@@ -10,10 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TaskRail } from "@/components/workspace/task-rail";
-import {
-  WorkspaceInfoCard,
-  WorkspaceKeyValueGrid,
-} from "@/components/workspace/workspace-primitives";
 import { AssetDetailSheet } from "@/features/assets/components/asset-detail-sheet";
 import { AssetTable } from "@/features/assets/components/asset-table";
 import { AssetUploadDialog } from "@/features/assets/components/asset-upload-dialog";
@@ -51,12 +47,6 @@ export function MediaRoute() {
           imageAssets: "Gorsel",
           audioAssets: "Ses",
           archiveAssets: "Arsiv",
-          notesTitle: "Operator notlari",
-          notesDescription:
-            "Normal editorial akislar asset baglamayi alan icinden yapar; bu utility ise registry, debug ve metadata duzeltme icin kalir.",
-          resultLabel: "Filtre sonucu",
-          nextStepLabel: "Secim sonrasi",
-          nextStepValue: "Detail drawer",
         }
       : {
           eyebrow: "Media",
@@ -74,12 +64,6 @@ export function MediaRoute() {
           imageAssets: "Images",
           audioAssets: "Audio",
           archiveAssets: "Archives",
-          notesTitle: "Operator notes",
-          notesDescription:
-            "Editorial flows can bind assets from field-level pickers; this utility remains for registry, debug, and metadata repair work.",
-          resultLabel: "Filtered result",
-          nextStepLabel: "After selection",
-          nextStepValue: "Detail drawer",
         };
 
   const filteredAssets = useMemo(() => {
@@ -160,30 +144,7 @@ export function MediaRoute() {
                 value: `${archiveCount}`,
               },
             ]}
-          >
-            <WorkspaceInfoCard
-              title={copy.notesTitle}
-              description={copy.notesDescription}
-              className="bg-background/80"
-            >
-              <WorkspaceKeyValueGrid
-                items={[
-                  {
-                    label: copy.resultLabel,
-                    value:
-                      locale === "tr"
-                        ? `${filteredAssets.length} asset`
-                        : `${filteredAssets.length} assets`,
-                  },
-                  {
-                    label: copy.nextStepLabel,
-                    value: copy.nextStepValue,
-                    tone: "accent",
-                  },
-                ]}
-              />
-            </WorkspaceInfoCard>
-          </TaskRail>
+          />
         }
         actions={
           <>

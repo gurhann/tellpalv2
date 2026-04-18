@@ -5,8 +5,16 @@ import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cmsRoutes } from "@/app/router";
-import { archivedCategoryViewModel } from "@/features/categories/test/fixtures";
-import { storyContentViewModel } from "@/features/contents/test/fixtures";
+import {
+  archivedCategoryViewModel,
+  bedtimeMeditationCategoryViewModel,
+  featuredSleepCategoryViewModel,
+} from "@/features/categories/test/fixtures";
+import {
+  inactiveContentViewModel,
+  meditationContentViewModel,
+  storyContentViewModel,
+} from "@/features/contents/test/fixtures";
 import {
   AuthContext,
   type AuthContextValue,
@@ -62,7 +70,11 @@ function makeSession(
 
 function makeContentListState() {
   return {
-    contents: [storyContentViewModel],
+    contents: [
+      storyContentViewModel,
+      meditationContentViewModel,
+      inactiveContentViewModel,
+    ],
     isLoading: false,
     isFetching: false,
     problem: null,
@@ -82,7 +94,11 @@ function makeContentDetailState() {
 
 function makeCategoryListState() {
   return {
-    categories: [archivedCategoryViewModel],
+    categories: [
+      featuredSleepCategoryViewModel,
+      bedtimeMeditationCategoryViewModel,
+      archivedCategoryViewModel,
+    ],
     isLoading: false,
     isFetching: false,
     problem: null,
@@ -267,6 +283,11 @@ describe("CMS router auth flow", () => {
     expect(
       await screen.findByRole("heading", { name: /content studio/i }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Content type")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^meditation$/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/editorial notes/i)).not.toBeInTheDocument();
   });
 
   it("renders live content detail data for /contents/:contentId", async () => {
@@ -296,6 +317,8 @@ describe("CMS router auth flow", () => {
       screen.getByRole("button", { name: /publish locale/i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
+    expect(screen.queryByText(/locale notes/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/contributor notes/i)).not.toBeInTheDocument();
   });
 
   it("renders the category studio shell for /categories", async () => {
@@ -319,6 +342,73 @@ describe("CMS router auth flow", () => {
     expect(
       screen.getByRole("button", { name: /create category/i }),
     ).toBeEnabled();
+    expect(screen.getByText("Category type")).toBeInTheDocument();
+    expect(screen.getAllByText("Access").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/curation notes/i)).not.toBeInTheDocument();
+  });
+
+  it("filters content registry rows by type and state", async () => {
+    renderRouter({
+      initialEntries: ["/contents"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    await screen.findByRole("heading", { name: /content studio/i });
+
+    fireEvent.click(screen.getByRole("button", { name: /^meditation$/i }));
+
+    expect(screen.getByText("Regenraum Pause")).toBeInTheDocument();
+    expect(screen.queryByText("Evening Garden")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Meditation \| All states \| 1 \/ 3 records/i),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /^inactive$/i }));
+
+    expect(screen.queryByText("Rain Room Reset")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Meditation \| Inactive \| 0 \/ 3 records/i),
+    ).toBeInTheDocument();
+  });
+
+  it("filters category registry rows by type, access, and state", async () => {
+    renderRouter({
+      initialEntries: ["/categories"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    await screen.findByRole("heading", {
+      name: /^categories$/i,
+      level: 1,
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /^meditation$/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^premium$/i }));
+
+    expect(screen.getByText("bedtime-meditations")).toBeInTheDocument();
+    expect(screen.queryByText("featured-sleep")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Meditation \| Premium \| All states \| 1 \/ 3 records/i,
+      ),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /^inactive$/i }));
+
+    expect(screen.queryByText("bedtime-meditations")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Meditation \| Premium \| Inactive \| 0 \/ 3 records/i),
+    ).toBeInTheDocument();
   });
 
   it("renders the category detail shell for /categories/:categoryId", async () => {
@@ -340,6 +430,7 @@ describe("CMS router auth flow", () => {
       screen.getByRole("button", { name: /open curation/i }),
     ).toBeDisabled();
     expect(screen.getByText(/no localizations yet/i)).toBeInTheDocument();
+    expect(screen.queryByText(/snapshot notes/i)).not.toBeInTheDocument();
   });
 
   it("renders hidden authenticated UI lab routes without adding them to navigation", async () => {

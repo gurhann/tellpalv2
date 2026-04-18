@@ -19,6 +19,11 @@ Kaynak gercekler repo icindeki mevcut backend kodu, `architecture.md`, `.kiro/sp
 - `M03-T02` ve sonrasi CMS query/form/mutation task'larina baslamadan once `be/docs/admin-api-rules.md` okunmalidir.
 - Yeni bir backend validation veya precondition ogrenilirse once kod veya test kaynaginda dogrulanir, sonra rulebook guncellenir, sonra frontend task devam eder.
 
+## UI Standards Notu
+
+- UI kalite ve regresyon task'lari feature backlog'dan ayri olarak `cms/docs/ui-regression-task-list.md` icinde takip edilir.
+- CMS layout ve interaction degisiklikleri `cms/docs/ui-standards.md` ve `cms/AGENTS.md` ile uyumlu olmalidir.
+
 ## Mevcut Gercek Durum
 
 - Backend admin API hazir ve testlerle korunuyor.

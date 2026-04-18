@@ -3,11 +3,9 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-  FilterBar,
-  FilterBarActions,
-  FilterBarGroup,
-  FilterBarSummary,
-} from "@/components/data/filter-bar";
+  RegistryToolbar,
+  RegistryToolbarGroup,
+} from "@/components/data/registry-toolbar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,16 +17,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { TaskRail } from "@/components/workspace/task-rail";
-import {
-  WorkspaceInfoCard,
-  WorkspaceKeyValueGrid,
-} from "@/components/workspace/workspace-primitives";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentListTable } from "@/features/contents/components/content-list-table";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { useContentList } from "@/features/contents/queries/use-content-list";
 import { getCreateContentFormDefaults } from "@/features/contents/schema/content-schema";
 import { useI18n } from "@/i18n/locale-provider";
+import {
+  buildRegistryFilterSummary,
+  sortRegistryTypeLabels,
+} from "@/lib/registry-filters";
 
 export function ContentsIndexRoute() {
   const { locale } = useI18n();
@@ -51,6 +49,10 @@ export function ContentsIndexRoute() {
           refresh: "Yenile",
           create: "Icerik olustur",
           searchLabel: "Icerik kayitlarini ara",
+          filtersAria: "Icerik registry filtreleri",
+          searchGroupLabel: "Arama",
+          typeGroupLabel: "Icerik turu",
+          stateGroupLabel: "Durum",
           searchPlaceholder:
             "External key veya yerellestirilmis basliga gore ara",
           filterTypes: "Tum turler",
@@ -64,12 +66,6 @@ export function ContentsIndexRoute() {
           activeRecords: "Aktif kayit",
           storyWorkspaces: "Story workspace",
           localeCoverage: "Dil kapsami",
-          notesTitle: "Editor notlari",
-          notesDescription:
-            "Secim sonrasi detail, locale ve story handoff ayni akista devam eder.",
-          resultLabel: "Arama sonucu",
-          nextStepLabel: "Sonraki adim",
-          nextStepValue: "Detay calisma alani",
         }
       : {
           eyebrow: "Editorial Core",
@@ -79,6 +75,10 @@ export function ContentsIndexRoute() {
           refresh: "Refresh",
           create: "Create content",
           searchLabel: "Search content registry",
+          filtersAria: "Content registry filters",
+          searchGroupLabel: "Search",
+          typeGroupLabel: "Content type",
+          stateGroupLabel: "State",
           searchPlaceholder: "Search by external key or localized title",
           filterTypes: "All types",
           filterStates: "All states",
@@ -91,12 +91,6 @@ export function ContentsIndexRoute() {
           activeRecords: "Active records",
           storyWorkspaces: "Story workspaces",
           localeCoverage: "Locale coverage",
-          notesTitle: "Editorial notes",
-          notesDescription:
-            "After selection, detail, locale, and story handoff continue in one flow.",
-          resultLabel: "Search result",
-          nextStepLabel: "Next step",
-          nextStepValue: "Detail workspace",
         };
 
   const typeOptions = useMemo(() => {
@@ -106,7 +100,7 @@ export function ContentsIndexRoute() {
       nextOptions.add(content.summary.typeLabel);
     });
 
-    return ["ALL", ...Array.from(nextOptions)];
+    return ["ALL", ...sortRegistryTypeLabels(Array.from(nextOptions))];
   }, [contentListQuery.contents]);
 
   const filteredContents = useMemo(() => {
@@ -167,14 +161,28 @@ export function ContentsIndexRoute() {
       ),
     [filteredContents],
   );
-  const filterSummaryTitle =
-    locale === "tr"
-      ? `${filteredContents.length} / ${contentListQuery.contents.length} kayit`
-      : `${filteredContents.length} / ${contentListQuery.contents.length} records`;
+  const selectedStateLabel =
+    selectedState === "ALL"
+      ? copy.filterStates
+      : selectedState === "ACTIVE"
+        ? locale === "tr"
+          ? "Aktif"
+          : "Active"
+        : locale === "tr"
+          ? "Pasif"
+          : "Inactive";
+  const filterSummaryTitle = buildRegistryFilterSummary({
+    locale,
+    filteredCount: filteredContents.length,
+    totalCount: contentListQuery.contents.length,
+    selectedType,
+    allTypesLabel: copy.filterTypes,
+    selectedStateLabel,
+  });
   const filterSummaryDescription =
     locale === "tr"
-      ? "Arama ve durum filtreleri icerik registry gorunumunu aninda daraltir."
-      : "Search and state filters narrow the content registry immediately.";
+      ? "Arama, tur ve durum filtreleri registry gorunumunu aninda daraltir."
+      : "Search, type, and state filters narrow the registry immediately.";
 
   return (
     <>
@@ -206,30 +214,7 @@ export function ContentsIndexRoute() {
                     : "warning",
               },
             ]}
-          >
-            <WorkspaceInfoCard
-              title={copy.notesTitle}
-              description={copy.notesDescription}
-              className="bg-background/80"
-            >
-              <WorkspaceKeyValueGrid
-                items={[
-                  {
-                    label: copy.resultLabel,
-                    value:
-                      locale === "tr"
-                        ? `${filteredContents.length} kayit`
-                        : `${filteredContents.length} records`,
-                  },
-                  {
-                    label: copy.nextStepLabel,
-                    value: copy.nextStepValue,
-                    tone: "accent",
-                  },
-                ]}
-              />
-            </WorkspaceInfoCard>
-          </TaskRail>
+          />
         }
         actions={
           <>
@@ -252,63 +237,80 @@ export function ContentsIndexRoute() {
           </>
         }
         toolbar={
-          <FilterBar aria-label={copy.title}>
-            <FilterBarGroup>
-              <div className="relative min-w-[16rem] flex-1">
-                <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
-                <Input
-                  aria-label={copy.searchLabel}
-                  className="pl-8"
-                  placeholder={copy.searchPlaceholder}
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-            </FilterBarGroup>
-            <FilterBarActions>
-              {typeOptions.map((typeOption) => (
-                <Button
-                  key={typeOption}
-                  type="button"
-                  variant={selectedType === typeOption ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedType(typeOption)}
-                >
-                  {typeOption === "ALL" ? copy.filterTypes : typeOption}
-                </Button>
-              ))}
-              {[
-                {
-                  key: "ALL" as const,
-                  label: copy.filterStates,
-                },
-                {
-                  key: "ACTIVE" as const,
-                  label: locale === "tr" ? "Aktif" : "Active",
-                },
-                {
-                  key: "INACTIVE" as const,
-                  label: locale === "tr" ? "Pasif" : "Inactive",
-                },
-              ].map((stateOption) => (
-                <Button
-                  key={stateOption.key}
-                  type="button"
-                  variant={
-                    selectedState === stateOption.key ? "secondary" : "outline"
-                  }
-                  size="sm"
-                  onClick={() => setSelectedState(stateOption.key)}
-                >
-                  {stateOption.label}
-                </Button>
-              ))}
-            </FilterBarActions>
-            <FilterBarSummary
-              title={filterSummaryTitle}
-              description={filterSummaryDescription}
-            />
-          </FilterBar>
+          <RegistryToolbar
+            ariaLabel={copy.filtersAria}
+            search={
+              <RegistryToolbarGroup className="w-full" label={copy.searchGroupLabel}>
+                <div className="relative min-w-[16rem] flex-1">
+                  <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
+                  <Input
+                    aria-label={copy.searchLabel}
+                    className="pl-8"
+                    placeholder={copy.searchPlaceholder}
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                  />
+                </div>
+              </RegistryToolbarGroup>
+            }
+            filters={
+              <>
+                <RegistryToolbarGroup label={copy.typeGroupLabel}>
+                <div className="flex flex-wrap items-center gap-2">
+                  {typeOptions.map((typeOption) => (
+                    <Button
+                      key={typeOption}
+                      type="button"
+                      variant={
+                        selectedType === typeOption ? "secondary" : "outline"
+                      }
+                      size="sm"
+                      aria-pressed={selectedType === typeOption}
+                      onClick={() => setSelectedType(typeOption)}
+                    >
+                      {typeOption === "ALL" ? copy.filterTypes : typeOption}
+                    </Button>
+                  ))}
+                </div>
+                </RegistryToolbarGroup>
+                <RegistryToolbarGroup label={copy.stateGroupLabel}>
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    {
+                      key: "ALL" as const,
+                      label: copy.filterStates,
+                    },
+                    {
+                      key: "ACTIVE" as const,
+                      label: locale === "tr" ? "Aktif" : "Active",
+                    },
+                    {
+                      key: "INACTIVE" as const,
+                      label: locale === "tr" ? "Pasif" : "Inactive",
+                    },
+                  ].map((stateOption) => (
+                    <Button
+                      key={stateOption.key}
+                      type="button"
+                      variant={
+                        selectedState === stateOption.key
+                          ? "secondary"
+                          : "outline"
+                      }
+                      size="sm"
+                      aria-pressed={selectedState === stateOption.key}
+                      onClick={() => setSelectedState(stateOption.key)}
+                    >
+                      {stateOption.label}
+                    </Button>
+                  ))}
+                </div>
+                </RegistryToolbarGroup>
+              </>
+            }
+            summaryTitle={filterSummaryTitle}
+            summaryDescription={filterSummaryDescription}
+          />
         }
       >
         <ContentListTable

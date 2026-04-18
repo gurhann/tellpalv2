@@ -3,11 +3,9 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-  FilterBar,
-  FilterBarActions,
-  FilterBarGroup,
-  FilterBarSummary,
-} from "@/components/data/filter-bar";
+  RegistryToolbar,
+  RegistryToolbarGroup,
+} from "@/components/data/registry-toolbar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,16 +17,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { TaskRail } from "@/components/workspace/task-rail";
-import {
-  WorkspaceInfoCard,
-  WorkspaceKeyValueGrid,
-} from "@/components/workspace/workspace-primitives";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryListTable } from "@/features/categories/components/category-list-table";
 import { useCategoryList } from "@/features/categories/queries/use-category-list";
 import { getCreateCategoryFormDefaults } from "@/features/categories/schema/category-schema";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { useI18n } from "@/i18n/locale-provider";
+import {
+  buildRegistryFilterSummary,
+  sortRegistryTypeLabels,
+} from "@/lib/registry-filters";
 
 export function CategoriesIndexRoute() {
   const { locale } = useI18n();
@@ -54,6 +52,11 @@ export function CategoriesIndexRoute() {
           refresh: "Yenile",
           create: "Kategori olustur",
           searchLabel: "Kategori ara",
+          filtersAria: "Kategori registry filtreleri",
+          searchGroupLabel: "Arama",
+          typeGroupLabel: "Kategori turu",
+          accessGroupLabel: "Erisim",
+          stateGroupLabel: "Durum",
           searchPlaceholder: "Slug'a gore ara",
           filterTypes: "Tum turler",
           filterAccess: "Tum erisim tipleri",
@@ -67,12 +70,6 @@ export function CategoriesIndexRoute() {
           activeRecords: "Aktif kayit",
           premiumRecords: "Premium kayit",
           storyCategories: "Story kategori",
-          notesTitle: "Kurasyon notlari",
-          notesDescription:
-            "Secilen kategori metadata lane, locale workspace ve curation lane ile ayni akista acilir.",
-          resultLabel: "Arama sonucu",
-          nextStepLabel: "Sonraki adim",
-          nextStepValue: "Kategori detail workspace",
         }
       : {
           eyebrow: "Category Studio",
@@ -82,6 +79,11 @@ export function CategoriesIndexRoute() {
           refresh: "Refresh",
           create: "Create category",
           searchLabel: "Search categories",
+          filtersAria: "Category registry filters",
+          searchGroupLabel: "Search",
+          typeGroupLabel: "Category type",
+          accessGroupLabel: "Access",
+          stateGroupLabel: "State",
           searchPlaceholder: "Search by slug",
           filterTypes: "All types",
           filterAccess: "All access types",
@@ -95,12 +97,6 @@ export function CategoriesIndexRoute() {
           activeRecords: "Active records",
           premiumRecords: "Premium records",
           storyCategories: "Story categories",
-          notesTitle: "Curation notes",
-          notesDescription:
-            "Selected categories open with metadata, locale workspace, and curation staying on one route.",
-          resultLabel: "Search result",
-          nextStepLabel: "Next step",
-          nextStepValue: "Category detail workspace",
         };
 
   const typeOptions = useMemo(() => {
@@ -110,7 +106,7 @@ export function CategoriesIndexRoute() {
       nextOptions.add(category.typeLabel);
     });
 
-    return ["ALL", ...Array.from(nextOptions)];
+    return ["ALL", ...sortRegistryTypeLabels(Array.from(nextOptions))];
   }, [categoryListQuery.categories]);
 
   const filteredCategories = useMemo(() => {
@@ -164,14 +160,37 @@ export function CategoriesIndexRoute() {
       filteredCategories.filter((category) => category.type === "STORY").length,
     [filteredCategories],
   );
-  const filterSummaryTitle =
-    locale === "tr"
-      ? `${filteredCategories.length} / ${categoryListQuery.categories.length} kayit`
-      : `${filteredCategories.length} / ${categoryListQuery.categories.length} records`;
+  const selectedAccessLabel =
+    selectedAccess === "ALL"
+      ? copy.filterAccess
+      : selectedAccess === "PREMIUM"
+        ? "Premium"
+        : locale === "tr"
+          ? "Standart"
+          : "Standard";
+  const selectedStateLabel =
+    selectedState === "ALL"
+      ? copy.filterState
+      : selectedState === "ACTIVE"
+        ? locale === "tr"
+          ? "Aktif"
+          : "Active"
+        : locale === "tr"
+          ? "Pasif"
+          : "Inactive";
+  const filterSummaryTitle = buildRegistryFilterSummary({
+    locale,
+    filteredCount: filteredCategories.length,
+    totalCount: categoryListQuery.categories.length,
+    selectedType,
+    allTypesLabel: copy.filterTypes,
+    selectedAccessLabel,
+    selectedStateLabel,
+  });
   const filterSummaryDescription =
     locale === "tr"
-      ? "Arama ve filtreler kategori registry gorunumunu aninda daraltir."
-      : "Search and filters narrow the category registry immediately.";
+      ? "Arama, tur, erisim ve durum filtreleri kategori registry gorunumunu aninda daraltir."
+      : "Search, type, access, and state filters narrow the category registry immediately.";
 
   return (
     <>
@@ -198,30 +217,7 @@ export function CategoriesIndexRoute() {
                 value: `${storyCategoryCount} / ${filteredCategories.length}`,
               },
             ]}
-          >
-            <WorkspaceInfoCard
-              title={copy.notesTitle}
-              description={copy.notesDescription}
-              className="bg-background/80"
-            >
-              <WorkspaceKeyValueGrid
-                items={[
-                  {
-                    label: copy.resultLabel,
-                    value:
-                      locale === "tr"
-                        ? `${filteredCategories.length} kayit`
-                        : `${filteredCategories.length} records`,
-                  },
-                  {
-                    label: copy.nextStepLabel,
-                    value: copy.nextStepValue,
-                    tone: "accent",
-                  },
-                ]}
-              />
-            </WorkspaceInfoCard>
-          </TaskRail>
+          />
         }
         actions={
           <>
@@ -244,91 +240,113 @@ export function CategoriesIndexRoute() {
           </>
         }
         toolbar={
-          <FilterBar aria-label={copy.title}>
-            <FilterBarGroup>
-              <div className="relative min-w-[16rem] flex-1">
-                <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
-                <Input
-                  aria-label={copy.searchLabel}
-                  className="pl-8"
-                  placeholder={copy.searchPlaceholder}
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-            </FilterBarGroup>
-            <FilterBarActions>
-              {typeOptions.map((typeOption) => (
-                <Button
-                  key={typeOption}
-                  type="button"
-                  variant={selectedType === typeOption ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedType(typeOption)}
-                >
-                  {typeOption === "ALL" ? copy.filterTypes : typeOption}
-                </Button>
-              ))}
-              {[
-                {
-                  key: "ALL" as const,
-                  label: copy.filterAccess,
-                },
-                {
-                  key: "PREMIUM" as const,
-                  label: "Premium",
-                },
-                {
-                  key: "STANDARD" as const,
-                  label: locale === "tr" ? "Standart" : "Standard",
-                },
-              ].map((accessOption) => (
-                <Button
-                  key={accessOption.key}
-                  type="button"
-                  variant={
-                    selectedAccess === accessOption.key
-                      ? "secondary"
-                      : "outline"
-                  }
-                  size="sm"
-                  onClick={() => setSelectedAccess(accessOption.key)}
-                >
-                  {accessOption.label}
-                </Button>
-              ))}
-              {[
-                {
-                  key: "ALL" as const,
-                  label: copy.filterState,
-                },
-                {
-                  key: "ACTIVE" as const,
-                  label: locale === "tr" ? "Aktif" : "Active",
-                },
-                {
-                  key: "INACTIVE" as const,
-                  label: locale === "tr" ? "Pasif" : "Inactive",
-                },
-              ].map((stateOption) => (
-                <Button
-                  key={stateOption.key}
-                  type="button"
-                  variant={
-                    selectedState === stateOption.key ? "secondary" : "outline"
-                  }
-                  size="sm"
-                  onClick={() => setSelectedState(stateOption.key)}
-                >
-                  {stateOption.label}
-                </Button>
-              ))}
-            </FilterBarActions>
-            <FilterBarSummary
-              title={filterSummaryTitle}
-              description={filterSummaryDescription}
-            />
-          </FilterBar>
+          <RegistryToolbar
+            ariaLabel={copy.filtersAria}
+            search={
+              <RegistryToolbarGroup className="w-full" label={copy.searchGroupLabel}>
+                <div className="relative min-w-[16rem] flex-1">
+                  <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
+                  <Input
+                    aria-label={copy.searchLabel}
+                    className="pl-8"
+                    placeholder={copy.searchPlaceholder}
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                  />
+                </div>
+              </RegistryToolbarGroup>
+            }
+            filters={
+              <>
+                <RegistryToolbarGroup label={copy.typeGroupLabel}>
+                <div className="flex flex-wrap items-center gap-2">
+                  {typeOptions.map((typeOption) => (
+                    <Button
+                      key={typeOption}
+                      type="button"
+                      variant={
+                        selectedType === typeOption ? "secondary" : "outline"
+                      }
+                      size="sm"
+                      aria-pressed={selectedType === typeOption}
+                      onClick={() => setSelectedType(typeOption)}
+                    >
+                      {typeOption === "ALL" ? copy.filterTypes : typeOption}
+                    </Button>
+                  ))}
+                </div>
+                </RegistryToolbarGroup>
+                <RegistryToolbarGroup label={copy.accessGroupLabel}>
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    {
+                      key: "ALL" as const,
+                      label: copy.filterAccess,
+                    },
+                    {
+                      key: "PREMIUM" as const,
+                      label: "Premium",
+                    },
+                    {
+                      key: "STANDARD" as const,
+                      label: locale === "tr" ? "Standart" : "Standard",
+                    },
+                  ].map((accessOption) => (
+                    <Button
+                      key={accessOption.key}
+                      type="button"
+                      variant={
+                        selectedAccess === accessOption.key
+                          ? "secondary"
+                          : "outline"
+                      }
+                      size="sm"
+                      aria-pressed={selectedAccess === accessOption.key}
+                      onClick={() => setSelectedAccess(accessOption.key)}
+                    >
+                      {accessOption.label}
+                    </Button>
+                  ))}
+                </div>
+                </RegistryToolbarGroup>
+                <RegistryToolbarGroup label={copy.stateGroupLabel}>
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    {
+                      key: "ALL" as const,
+                      label: copy.filterState,
+                    },
+                    {
+                      key: "ACTIVE" as const,
+                      label: locale === "tr" ? "Aktif" : "Active",
+                    },
+                    {
+                      key: "INACTIVE" as const,
+                      label: locale === "tr" ? "Pasif" : "Inactive",
+                    },
+                  ].map((stateOption) => (
+                    <Button
+                      key={stateOption.key}
+                      type="button"
+                      variant={
+                        selectedState === stateOption.key
+                          ? "secondary"
+                          : "outline"
+                      }
+                      size="sm"
+                      aria-pressed={selectedState === stateOption.key}
+                      onClick={() => setSelectedState(stateOption.key)}
+                    >
+                      {stateOption.label}
+                    </Button>
+                  ))}
+                </div>
+                </RegistryToolbarGroup>
+              </>
+            }
+            summaryTitle={filterSummaryTitle}
+            summaryDescription={filterSummaryDescription}
+          />
         }
       >
         <CategoryListTable

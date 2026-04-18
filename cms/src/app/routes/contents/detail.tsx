@@ -110,7 +110,6 @@ export function ContentDetailRoute() {
             `${count} hikaye sayfasi alt rota altinda canli.`,
           storyPagesUnused: "Bu icerik turunde hikaye sayfalari kullanilmiyor.",
           localeWorkspace: "Dil Calisma Alani",
-          localeNotes: "Dil Notlari",
           workspaceDescription:
             "Sekmeler yayin durumu, gorunurluk ve islem hazirligini tek yuzeyde toplar.",
           metadataGuidance:
@@ -119,10 +118,7 @@ export function ContentDetailRoute() {
             "Yayinlama ve arsivleme aksiyonlari her dil sekmesinde canli; conflict geri bildirimleri ayni baglamda gorunur.",
           storyEditorGuidance:
             "Hikaye icerikleri secili dili koruyarak sayfa editorunu dogrudan bu ekrandan acar.",
-          contributorGuidance:
-            "Contributor kredileri artik gercek backend atamalarini okur; bu yuzden kredi sirasi ve dil kapsami ayni review dongusunde kalir.",
           contentProfile: "Icerik Profili",
-          contributorNotes: "Contributor Notlari",
           fixedAfterCreate: "Olusturma sonrasi sabit",
           editableInLane: "Bu alanda duzenlenebilir",
           mobileVisible: "Mobil gorunur",
@@ -195,7 +191,6 @@ export function ContentDetailRoute() {
             `${count} story page${count === 1 ? "" : "s"} live under the child route.`,
           storyPagesUnused: "Story pages are not used for this content type.",
           localeWorkspace: "Locale workspace",
-          localeNotes: "Locale notes",
           workspaceDescription:
             "Tabs keep publication state, visibility, and processing posture in one place.",
           metadataGuidance:
@@ -204,10 +199,7 @@ export function ContentDetailRoute() {
             "Publish and archive actions now live inside each language tab, including backend conflict surfaces.",
           storyEditorGuidance:
             "Story records can open their page editor directly from this screen, preserving the currently selected language.",
-          contributorGuidance:
-            "Contributor credits now read from persisted backend assignments, so ordering and language scope stay inside the same editorial review loop.",
           contentProfile: "Content profile",
-          contributorNotes: "Contributor notes",
           fixedAfterCreate: "Fixed after create",
           editableInLane: "Editable in lane",
           mobileVisible: "Mobile visible",
@@ -569,15 +561,6 @@ export function ContentDetailRoute() {
       >
         <div className="grid gap-4">
           <WorkspaceInfoCard
-            title={copy.localeNotes}
-            description={copy.workspaceDescription}
-            className="bg-background/80"
-          >
-            <p className="text-sm leading-6 text-muted-foreground">
-              {copy.publishGuidance}
-            </p>
-          </WorkspaceInfoCard>
-          <WorkspaceInfoCard
             title={copy.contentProfile}
             description={copy.metadataGuidance}
             className="bg-background/80"
@@ -606,11 +589,6 @@ export function ContentDetailRoute() {
               ]}
             />
           </WorkspaceInfoCard>
-          <WorkspaceInfoCard
-            title={copy.contributorNotes}
-            description={copy.contributorGuidance}
-            className="bg-background/80"
-          />
         </div>
       </TaskRail>
     );

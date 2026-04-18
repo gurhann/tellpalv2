@@ -11,6 +11,8 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:e2e:visual": "playwright test e2e/visual",
+    "test:e2e:visual:update": "playwright test e2e/visual --update-snapshots",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -4,6 +4,9 @@
 This repository is now organized for multiple apps. The Spring Boot backend lives under `be/`, so
 all backend code, build files, and backend docs should stay there.
 
+The CMS frontend lives under `cms/`. Any work that changes frontend layout, shared UI primitives,
+route composition, or screenshot regression coverage must also follow `cms/AGENTS.md`.
+
 Key backend paths:
 
 - `be/src/main/java`: application code
@@ -27,14 +30,16 @@ Shared project skills currently include:
 - `task-decomposition`
 - `run-maven-tests`
 - `apply-project-standards`
+- `cms-ui-guardrails`
 
 ## Standards Read Order
 Before planning or implementing work, read documents in this order when they exist:
 
 1. `AGENTS.md`
-2. `be/docs/project-memory.md`
-3. relevant files under `be/docs/adr`
-4. `architecture.md` and other project-specific design docs
+2. `cms/AGENTS.md` when the task touches `cms/`
+3. `be/docs/project-memory.md` when the task touches backend standards or architecture
+4. relevant files under `be/docs/adr`
+5. `architecture.md` and other project-specific design docs
 
 ## Standards Package
 This repository follows a reusable engineering standards package under
@@ -95,3 +100,10 @@ Do not commit secrets, tokens, or private download URLs. Preserve Spring Modulit
 Use `architecture.md` at the repository root as the canonical backend architecture reference. For
 backend design, planning, schema, module boundary, and implementation decisions, consult this
 document first and keep new work aligned with it.
+
+For CMS frontend work:
+
+- read `cms/AGENTS.md`
+- use `ui-ux-pro-max` for layout and interaction changes
+- use `senior-frontend` for shared primitive and frontend architecture changes
+- use `cms-ui-guardrails` for TellPal CMS-specific UI review and regression rules
