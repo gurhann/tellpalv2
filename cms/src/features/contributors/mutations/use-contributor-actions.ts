@@ -2,13 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   contributorAdminApi,
-  type AdminContentContributorResponse,
   type AdminContributorResponse,
 } from "@/features/contributors/api/contributor-admin";
 import {
-  mapAdminContentContributor,
   mapAdminContributor,
-  type ContentContributorViewModel,
   type ContributorViewModel,
 } from "@/features/contributors/model/contributor-view-model";
 import type { ContributorFormValues } from "@/features/contributors/schema/contributor-schema";
@@ -17,7 +14,9 @@ import { queryKeys } from "@/lib/query-keys";
 type UseContributorActionsOptions = {
   onCreateSuccess?: (contributor: AdminContributorResponse) => void;
   onRenameSuccess?: (contributor: AdminContributorResponse) => void;
-  onAssignSuccess?: (assignment: AdminContentContributorResponse) => void;
+  onDeleteSuccess?: (contributorId: number) => void;
+  onAssignSuccess?: (contentId: number) => void;
+  onUnassignSuccess?: (contentId: number) => void;
 };
 
 function updateContributorListCache(
@@ -45,36 +44,12 @@ function updateContributorListCache(
   );
 }
 
-function updateContentAssignmentsCache(
-  assignments: ContentContributorViewModel[] | undefined,
-  savedAssignment: AdminContentContributorResponse,
-) {
-  const nextAssignment = mapAdminContentContributor(savedAssignment);
-
-  if (!assignments) {
-    return [nextAssignment];
-  }
-
-  const existingIndex = assignments.findIndex(
-    (assignment) =>
-      assignment.contributorId === savedAssignment.contributorId &&
-      assignment.role === savedAssignment.role &&
-      assignment.languageCode === nextAssignment.languageCode,
-  );
-
-  if (existingIndex === -1) {
-    return [...assignments, nextAssignment];
-  }
-
-  return assignments.map((assignment, index) =>
-    index === existingIndex ? nextAssignment : assignment,
-  );
-}
-
 export function useContributorActions({
   onCreateSuccess,
   onRenameSuccess,
+  onDeleteSuccess,
   onAssignSuccess,
+  onUnassignSuccess,
 }: UseContributorActionsOptions = {}) {
   const queryClient = useQueryClient();
 
@@ -139,6 +114,24 @@ export function useContributorActions({
     },
   });
 
+  const deleteContributor = useMutation({
+    mutationFn: async ({ contributorId }: { contributorId: number }) => {
+      await contributorAdminApi.deleteContributor(contributorId);
+      return contributorId;
+    },
+    onSuccess: async (contributorId) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contributors.lists(),
+        }),
+        queryClient.removeQueries({
+          queryKey: queryKeys.contributors.detail(contributorId),
+        }),
+      ]);
+      onDeleteSuccess?.(contributorId);
+    },
+  });
+
   const assignContributor = useMutation({
     mutationFn: async ({
       contentId,
@@ -156,22 +149,49 @@ export function useContributorActions({
       };
     }) => contributorAdminApi.assignContributor(contentId, values),
     onSuccess: async (assignment) => {
-      queryClient.setQueryData<ContentContributorViewModel[]>(
-        queryKeys.contributors.assignments(assignment.contentId),
-        (assignments) => updateContentAssignmentsCache(assignments, assignment),
-      );
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.contributors.assignments(assignment.contentId),
+      });
+      onAssignSuccess?.(assignment.contentId);
+    },
+  });
 
-      onAssignSuccess?.(assignment);
+  const unassignContributor = useMutation({
+    mutationFn: async ({
+      contentId,
+      values,
+    }: {
+      contentId: number;
+      values: {
+        contributorId: number;
+        role: Parameters<
+          typeof contributorAdminApi.unassignContributor
+        >[1]["role"];
+        languageCode?: string | null;
+      };
+    }) => {
+      await contributorAdminApi.unassignContributor(contentId, values);
+      return contentId;
+    },
+    onSuccess: async (contentId) => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.contributors.assignments(contentId),
+      });
+      onUnassignSuccess?.(contentId);
     },
   });
 
   return {
     createContributor,
     renameContributor,
+    deleteContributor,
     assignContributor,
+    unassignContributor,
     isPending:
       createContributor.isPending ||
       renameContributor.isPending ||
-      assignContributor.isPending,
+      deleteContributor.isPending ||
+      assignContributor.isPending ||
+      unassignContributor.isPending,
   };
 }

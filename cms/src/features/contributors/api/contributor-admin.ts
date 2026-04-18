@@ -29,6 +29,12 @@ export type AssignContentContributorInput = {
   sortOrder: number;
 };
 
+export type UnassignContentContributorInput = {
+  contributorId: number;
+  role: ContributorRole;
+  languageCode?: string | null;
+};
+
 export const adminContributorResponseSchema = z.object({
   contributorId: z.number().int().positive(),
   displayName: z.string().min(1),
@@ -54,11 +60,9 @@ export type AdminContributorResponse = z.infer<
 export type AdminContentContributorResponse = z.infer<
   typeof adminContentContributorResponseSchema
 >;
-
-export const contributorAdminBacklogDependencies = {
-  deleteContributor: "BG03",
-  unassignContributor: "BG03",
-} as const;
+export const adminContentContributorListResponseSchema = z.array(
+  adminContentContributorResponseSchema,
+);
 
 export const contributorAdminApi = {
   createContributor(input: CreateContributorInput) {
@@ -85,6 +89,17 @@ export const contributorAdminApi = {
       },
     );
   },
+  deleteContributor(contributorId: number) {
+    return apiClient.delete<void>(`/api/admin/contributors/${contributorId}`);
+  },
+  listContentContributors(contentId: number) {
+    return apiClient.get<AdminContentContributorResponse[]>(
+      `/api/admin/contents/${contentId}/contributors`,
+      {
+        responseSchema: adminContentContributorListResponseSchema,
+      },
+    );
+  },
   assignContributor(contentId: number, input: AssignContentContributorInput) {
     return apiClient.post<AdminContentContributorResponse>(
       `/api/admin/contents/${contentId}/contributors`,
@@ -92,6 +107,23 @@ export const contributorAdminApi = {
         body: input,
         responseSchema: adminContentContributorResponseSchema,
       },
+    );
+  },
+  unassignContributor(
+    contentId: number,
+    input: UnassignContentContributorInput,
+  ) {
+    const search = new URLSearchParams({
+      contributorId: String(input.contributorId),
+      role: input.role,
+    });
+
+    if (input.languageCode && input.languageCode.trim().length > 0) {
+      search.set("languageCode", input.languageCode.trim());
+    }
+
+    return apiClient.delete<void>(
+      `/api/admin/contents/${contentId}/contributors?${search.toString()}`,
     );
   },
 };

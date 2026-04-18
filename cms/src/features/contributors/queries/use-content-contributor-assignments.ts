@@ -1,7 +1,11 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
+import { contributorAdminApi } from "@/features/contributors/api/contributor-admin";
+import { mapAdminContentContributor } from "@/features/contributors/model/contributor-view-model";
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import { queryKeys } from "@/lib/query-keys";
+import { ApiClientError } from "@/lib/http/client";
+import type { ApiProblemDetail } from "@/types/api";
 
 function sortAssignments(assignments: ContentContributorViewModel[]) {
   return [...assignments].sort((left, right) => {
@@ -33,11 +37,8 @@ function sortAssignments(assignments: ContentContributorViewModel[]) {
 }
 
 export function useContentContributorAssignments(contentId: number | null) {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
     enabled: contentId !== null,
-    staleTime: Infinity,
     queryKey: contentId
       ? queryKeys.contributors.assignments(contentId)
       : queryKeys.contributors.assignments(-1),
@@ -46,17 +47,30 @@ export function useContentContributorAssignments(contentId: number | null) {
         return [] as ContentContributorViewModel[];
       }
 
-      return (
-        queryClient.getQueryData<ContentContributorViewModel[]>(
-          queryKeys.contributors.assignments(contentId),
-        ) ?? []
-      );
+      const response =
+        await contributorAdminApi.listContentContributors(contentId);
+      return response.map(mapAdminContentContributor);
     },
-    initialData: [] as ContentContributorViewModel[],
   });
+
+  const problem =
+    query.error instanceof ApiClientError
+      ? query.error.problem
+      : query.error
+        ? ({
+            type: "about:blank",
+            title: "Request failed",
+            status: 500,
+            detail:
+              query.error instanceof Error
+                ? query.error.message
+                : "The content contributor assignments could not be loaded.",
+          } satisfies ApiProblemDetail)
+        : null;
 
   return {
     ...query,
     assignments: sortAssignments(query.data ?? []),
+    problem,
   };
 }

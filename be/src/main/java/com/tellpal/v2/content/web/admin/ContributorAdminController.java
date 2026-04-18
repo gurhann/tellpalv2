@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -98,6 +101,21 @@ public class ContributorAdminController {
                 request.toCommand(contributorId)));
     }
 
+    @DeleteMapping("/contributors/{contributorId}")
+    @Operation(summary = "Delete a contributor", description = "Deletes one contributor profile when it is not assigned to content.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Contributor deleted"),
+            @ApiResponse(responseCode = "400", description = "Delete request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Contributor was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Contributor is still assigned to content", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public ResponseEntity<Void> deleteContributor(@PathVariable Long contributorId) {
+        contributorManagementService.deleteContributor(new DeleteContributorCommand(contributorId));
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/contents/{contentId}/contributors")
     @Operation(
             summary = "Assign a contributor to content",
@@ -116,6 +134,59 @@ public class ContributorAdminController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AdminContentContributorResponse.from(
                         contributorManagementService.assignContentContributor(request.toCommand(contentId))));
+    }
+
+    @GetMapping("/contents/{contentId}/contributors")
+    @Operation(
+            summary = "List content contributors",
+            description = "Returns the contributor credits already attached to one content item.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributor assignments returned"),
+            @ApiResponse(responseCode = "400", description = "List request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminContentContributorResponse> listContentContributors(@PathVariable Long contentId) {
+        return contributorManagementService.listContentContributors(contentId).stream()
+                .map(AdminContentContributorResponse::from)
+                .toList();
+    }
+
+    @DeleteMapping("/contents/{contentId}/contributors")
+    @Operation(
+            summary = "Unassign a contributor from content",
+            description = "Removes one contributor credit identified by contributor, role, and optional language scope.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Contributor assignment removed"),
+            @ApiResponse(responseCode = "400", description = "Unassign request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or contributor assignment was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public ResponseEntity<Void> unassignContributor(
+            @PathVariable Long contentId,
+            @RequestParam @Positive(message = "contributorId must be positive") Long contributorId,
+            @RequestParam ContributorRole role,
+            @RequestParam(required = false) String languageCode) {
+        contributorManagementService.unassignContentContributor(
+                new UnassignContentContributorCommand(
+                        contentId,
+                        contributorId,
+                        role,
+                        resolveOptionalLanguageCode(languageCode)));
+        return ResponseEntity.noContent().build();
+    }
+
+    static LanguageCode resolveOptionalLanguageCode(String languageCode) {
+        if (languageCode == null) {
+            return null;
+        }
+        String normalizedLanguageCode = languageCode.trim();
+        if (normalizedLanguageCode.isEmpty()) {
+            throw new IllegalArgumentException("languageCode must not be blank when provided");
+        }
+        return LanguageCode.from(normalizedLanguageCode);
     }
 }
 
@@ -149,19 +220,11 @@ record AssignContentContributorRequest(
         int sortOrder) {
 
     AssignContentContributorCommand toCommand(Long contentId) {
-        LanguageCode resolvedLanguageCode = null;
-        if (languageCode != null) {
-            String normalizedLanguageCode = languageCode.trim();
-            if (normalizedLanguageCode.isEmpty()) {
-                throw new IllegalArgumentException("languageCode must not be blank when provided");
-            }
-            resolvedLanguageCode = LanguageCode.from(normalizedLanguageCode);
-        }
         return new AssignContentContributorCommand(
                 contentId,
                 contributorId,
                 role,
-                resolvedLanguageCode,
+                ContributorAdminController.resolveOptionalLanguageCode(languageCode),
                 creditName,
                 sortOrder);
     }

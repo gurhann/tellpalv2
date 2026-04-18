@@ -18,6 +18,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { TaskRail } from "@/components/workspace/task-rail";
+import {
+  WorkspaceInfoCard,
+  WorkspaceKeyValueGrid,
+} from "@/components/workspace/workspace-primitives";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentListTable } from "@/features/contents/components/content-list-table";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
@@ -39,20 +44,32 @@ export function ContentsIndexRoute() {
   const copy =
     locale === "tr"
       ? {
-          eyebrow: "Editoryal Çekirdek",
-          title: "İçerik Stüdyosu",
+          eyebrow: "Editoryal Cekirdek",
+          title: "Icerik Studyosu",
           description:
-            "İçerik kayıtlarını açın, filtreleyin ve doğrudan görev odaklı detay çalışma alanına geçin.",
+            "Icerik kayitlarini acin, filtreleyin ve gorev odakli detay calisma alanina gecin.",
           refresh: "Yenile",
-          create: "İçerik oluştur",
-          searchLabel: "İçerik kayıtlarını ara",
+          create: "Icerik olustur",
+          searchLabel: "Icerik kayitlarini ara",
           searchPlaceholder:
-            "External key veya yerelleştirilmiş başlığa göre ara",
-          filterTypes: "Tüm türler",
-          filterStates: "Tüm durumlar",
-          createDialogTitle: "İçerik oluştur",
+            "External key veya yerellestirilmis basliga gore ara",
+          filterTypes: "Tum turler",
+          filterStates: "Tum durumlar",
+          createDialogTitle: "Icerik olustur",
           createDialogDescription:
-            "Temel metadata ile yeni bir editoryal kayıt oluşturun. Kaydetme sonrası CMS yeni detay rotasını açar.",
+            "Temel metadata ile yeni bir editoryal kayit olusturun. Kaydetme sonrasi CMS yeni detay rotasini acar.",
+          railTitle: "Registry snapshot",
+          railDescription:
+            "Liste hafif kalirken yayin ve story hazirligini sag tarafta koruyun.",
+          activeRecords: "Aktif kayit",
+          storyWorkspaces: "Story workspace",
+          localeCoverage: "Dil kapsami",
+          notesTitle: "Editor notlari",
+          notesDescription:
+            "Secim sonrasi detail, locale ve story handoff ayni akista devam eder.",
+          resultLabel: "Arama sonucu",
+          nextStepLabel: "Sonraki adim",
+          nextStepValue: "Detay calisma alani",
         }
       : {
           eyebrow: "Editorial Core",
@@ -68,6 +85,18 @@ export function ContentsIndexRoute() {
           createDialogTitle: "Create content",
           createDialogDescription:
             "Create a new editorial record with base metadata. After save, the CMS opens the new detail route.",
+          railTitle: "Registry snapshot",
+          railDescription:
+            "Keep release posture and story readiness visible while the main lane stays quiet.",
+          activeRecords: "Active records",
+          storyWorkspaces: "Story workspaces",
+          localeCoverage: "Locale coverage",
+          notesTitle: "Editorial notes",
+          notesDescription:
+            "After selection, detail, locale, and story handoff continue in one flow.",
+          resultLabel: "Search result",
+          nextStepLabel: "Next step",
+          nextStepValue: "Detail workspace",
         };
 
   const typeOptions = useMemo(() => {
@@ -112,12 +141,96 @@ export function ContentsIndexRoute() {
     });
   }, [contentListQuery.contents, deferredSearch, selectedState, selectedType]);
 
+  const activeRecordCount = useMemo(
+    () => filteredContents.filter((content) => content.summary.active).length,
+    [filteredContents],
+  );
+  const storyWorkspaceCount = useMemo(
+    () =>
+      filteredContents.filter((content) => content.summary.supportsStoryPages)
+        .length,
+    [filteredContents],
+  );
+  const filteredLocaleCount = useMemo(
+    () =>
+      filteredContents.reduce(
+        (sum, content) => sum + content.localizationCount,
+        0,
+      ),
+    [filteredContents],
+  );
+  const filteredVisibleLocaleCount = useMemo(
+    () =>
+      filteredContents.reduce(
+        (sum, content) => sum + content.visibleToMobileLocalizationCount,
+        0,
+      ),
+    [filteredContents],
+  );
+  const filterSummaryTitle =
+    locale === "tr"
+      ? `${filteredContents.length} / ${contentListQuery.contents.length} kayit`
+      : `${filteredContents.length} / ${contentListQuery.contents.length} records`;
+  const filterSummaryDescription =
+    locale === "tr"
+      ? "Arama ve durum filtreleri icerik registry gorunumunu aninda daraltir."
+      : "Search and state filters narrow the content registry immediately.";
+
   return (
     <>
       <ContentPageShell
         eyebrow={copy.eyebrow}
         title={copy.title}
         description={copy.description}
+        aside={
+          <TaskRail
+            title={copy.railTitle}
+            description={copy.railDescription}
+            stats={[
+              {
+                label: copy.activeRecords,
+                value: `${activeRecordCount} / ${filteredContents.length}`,
+                tone: activeRecordCount > 0 ? "success" : "default",
+              },
+              {
+                label: copy.storyWorkspaces,
+                value: `${storyWorkspaceCount} / ${filteredContents.length}`,
+              },
+              {
+                label: copy.localeCoverage,
+                value: `${filteredVisibleLocaleCount} / ${filteredLocaleCount}`,
+                tone:
+                  filteredVisibleLocaleCount === filteredLocaleCount &&
+                  filteredLocaleCount > 0
+                    ? "success"
+                    : "warning",
+              },
+            ]}
+          >
+            <WorkspaceInfoCard
+              title={copy.notesTitle}
+              description={copy.notesDescription}
+              className="bg-background/80"
+            >
+              <WorkspaceKeyValueGrid
+                items={[
+                  {
+                    label: copy.resultLabel,
+                    value:
+                      locale === "tr"
+                        ? `${filteredContents.length} kayit`
+                        : `${filteredContents.length} records`,
+                  },
+                  {
+                    label: copy.nextStepLabel,
+                    value: copy.nextStepValue,
+                    tone: "accent",
+                  },
+                ]}
+              />
+            </WorkspaceInfoCard>
+          </TaskRail>
+        }
         actions={
           <>
             <Button
@@ -192,16 +305,8 @@ export function ContentsIndexRoute() {
               ))}
             </FilterBarActions>
             <FilterBarSummary
-              title={
-                locale === "tr"
-                  ? `${filteredContents.length} / ${contentListQuery.contents.length} kayıt`
-                  : `${filteredContents.length} / ${contentListQuery.contents.length} records`
-              }
-              description={
-                locale === "tr"
-                  ? "Arama ve durum filtreleri içerik registry görünümünü anında daraltır."
-                  : "Search and state filters narrow the content registry immediately."
-              }
+              title={filterSummaryTitle}
+              description={filterSummaryDescription}
             />
           </FilterBar>
         }

@@ -41,6 +41,32 @@ class ContentTest {
     }
 
     @Test
+    void unassignContributorRemovesOnlyTheExactLanguageScopedAssignment() {
+        Content content = Content.create(ContentType.STORY, "story-unassign-language", 6, true);
+        Contributor contributor = persistedContributor(1L, "Alice");
+
+        content.assignContributor(contributor, ContributorRole.AUTHOR, null, null, 0);
+        content.assignContributor(contributor, ContributorRole.AUTHOR, LanguageCode.TR, null, 1);
+
+        content.unassignContributor(1L, ContributorRole.AUTHOR, LanguageCode.TR);
+
+        assertThat(content.getContributors()).hasSize(1);
+        assertThat(content.getContributors().iterator().next().getLanguageCode()).isNull();
+    }
+
+    @Test
+    void unassignContributorRejectsMissingExactMatch() {
+        Content content = Content.create(ContentType.STORY, "story-unassign-missing", 6, true);
+        Contributor contributor = persistedContributor(1L, "Alice");
+
+        content.assignContributor(contributor, ContributorRole.AUTHOR, null, null, 0);
+
+        assertThatThrownBy(() -> content.unassignContributor(1L, ContributorRole.AUTHOR, LanguageCode.TR))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("not found");
+    }
+
+    @Test
     void storyLocalizationRejectsBodyTextAndSingleAudioReference() {
         Content content = Content.create(ContentType.STORY, "story-localization-rules", 5, true);
 

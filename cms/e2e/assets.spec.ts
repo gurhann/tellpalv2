@@ -105,6 +105,8 @@ test("media utility supports detail edit and cached URL refresh in the browser",
 }) => {
   const session = makeSession();
   const assets = makeAssets();
+  const tinyImageDataUrl =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO8B9pQAAAAASUVORK5CYII=";
   const tinyAudioDataUrl =
     "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
   const uploadedAsset: AssetResponse = {
@@ -251,6 +253,33 @@ test("media utility supports detail edit and cached URL refresh in the browser",
   });
 
   await page.route(
+    "**/api/admin/media/4/download-url-cache/refresh",
+    async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.fallback();
+        return;
+      }
+
+      const nextAsset = assets.find((asset) => asset.assetId === 4);
+
+      if (!nextAsset) {
+        throw new Error("Asset #4 was not found.");
+      }
+
+      nextAsset.cachedDownloadUrl = tinyImageDataUrl;
+      nextAsset.downloadUrlCachedAt = "2026-04-05T18:15:00Z";
+      nextAsset.downloadUrlExpiresAt = "2026-04-19T19:15:00Z";
+      nextAsset.updatedAt = "2026-04-05T18:15:00Z";
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(nextAsset),
+      });
+    },
+  );
+
+  await page.route(
     "**/api/admin/media/11/download-url-cache/refresh",
     async (route) => {
       if (route.request().method() !== "POST") {
@@ -266,7 +295,7 @@ test("media utility supports detail edit and cached URL refresh in the browser",
 
       nextAsset.cachedDownloadUrl = tinyAudioDataUrl;
       nextAsset.downloadUrlCachedAt = "2026-04-05T18:15:00Z";
-      nextAsset.downloadUrlExpiresAt = "2026-04-05T19:15:00Z";
+      nextAsset.downloadUrlExpiresAt = "2026-04-19T19:15:00Z";
       nextAsset.updatedAt = "2026-04-05T18:15:00Z";
 
       await route.fulfill({
@@ -283,10 +312,8 @@ test("media utility supports detail edit and cached URL refresh in the browser",
     page.getByRole("heading", { name: /^media utility$/i, level: 1 }),
   ).toBeVisible();
 
-  await page
-    .getByRole("table")
-    .getByText("/content/images/evening-garden-page-1.jpg")
-    .click();
+  await page.getByRole("row", { name: /asset #4/i }).click();
+  await expect(page.getByRole("heading", { name: /asset #4/i })).toBeVisible();
   await expect(
     page.getByRole("img", { name: /preview of asset #4/i }),
   ).toBeVisible();
@@ -319,11 +346,6 @@ test("media utility supports detail edit and cached URL refresh in the browser",
 
   await expect(page.getByText(/^available$/i)).toBeVisible();
   await expect(page.getByLabel(/audio preview for asset #11/i)).toBeVisible();
-  await expect(
-    page.getByText(
-      /3 recent assets already carry a cached download url snapshot\./i,
-    ),
-  ).toBeVisible();
 
   await page.reload();
 
@@ -331,8 +353,7 @@ test("media utility supports detail edit and cached URL refresh in the browser",
     page.getByRole("heading", { name: /^media utility$/i, level: 1 }),
   ).toBeVisible();
   await page
-    .getByRole("table", { name: /recent asset registry/i })
-    .getByText(uploadedAsset.objectPath)
+    .getByRole("row", { name: /asset #11/i })
     .click();
   await expect(page.getByLabel(/mime type/i)).toHaveValue("audio/wav");
   await expect(page.getByText(/^available$/i)).toBeVisible();

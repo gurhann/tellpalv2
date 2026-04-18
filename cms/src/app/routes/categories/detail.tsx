@@ -17,10 +17,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TaskRail } from "@/components/workspace/task-rail";
+import {
+  WorkspaceInfoCard,
+  WorkspaceKeyValueGrid,
+  WorkspaceMetricCard,
+  WorkspaceStatusPill,
+} from "@/components/workspace/workspace-primitives";
 import { CategoryCurationPanel } from "@/features/categories/components/category-curation-panel";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryLocalizationForm } from "@/features/categories/components/category-localization-form";
-import { CategorySummaryCard } from "@/features/categories/components/category-summary-card";
 import { useCategoryCuration } from "@/features/categories/queries/use-category-curation";
 import { useCategoryDetail } from "@/features/categories/queries/use-category-detail";
 import { useCategoryLocalizations } from "@/features/categories/queries/use-category-localizations";
@@ -54,87 +59,92 @@ export function CategoryDetailRoute() {
   const copy =
     locale === "tr"
       ? {
-          detailFallbackTitle: "Kategori Detayı",
+          detailFallbackTitle: "Kategori Detayi",
           routeLoading:
-            "CMS temel kategori metadata'sını admin API üzerinden yüklüyor. Yerelleştirme ve kürasyon yüzeyleri, mevcut okuma payload'ı dar kalsa bile ekranda kalır.",
+            "Metadata, yerellestirme ve kurasyon calisma alanlari yukleniyor.",
           routeMissing:
-            "Bu rota kategori kaydından geçerli bir sayısal kategori kimliği bekler.",
+            "Bu rota kategori kaydindan gecerli bir sayisal kategori kimligi bekler.",
           routeLoaded: (slug: string) =>
-            `${slug} için metadata, yerelleştirme ve kürasyon akışlarını yönetin.`,
-          detailStatus: "Detay Durumu",
+            `${slug} icin metadata, dil calisma alanlari ve kurasyon akislarini ayni yuzeyden yonetin.`,
           route: "Rota",
-          inlineStates:
-            "Satır içi yükleme, hata ve bulunamadı durumları bu kabuk içinde kalır.",
-          invalidRoute: "Geçersiz rota",
-          categoryNotFound: "Kategori bulunamadı",
-          metadataUnavailable: "Metadata kullanılamıyor",
-          metadataLoading: "Metadata yükleniyor",
+          invalidRoute: "Gecersiz rota",
+          categoryNotFound: "Kategori bulunamadi",
+          metadataUnavailable: "Metadata kullanilamiyor",
+          metadataLoading: "Metadata yukleniyor",
           invalidDescription:
-            "Geçerli bir kategori detay çalışma alanı yüklemek için kayıttan bir kategori açın.",
+            "Gecerli bir kategori detay calisma alani yuklemek icin kayittan bir kategori acin.",
           notFoundDescription:
-            "Admin API bu rota için bir kategori kaydı döndürmedi.",
+            "Admin API bu rota icin bir kategori kaydi dondurmedi.",
           retryDescription:
-            "Temel kategori metadata'sını geri getirmek için detay sorgusunu yeniden deneyin.",
+            "Temel kategori metadata'sini geri getirmek icin detay sorgusunu yeniden deneyin.",
           detailQueryDescription:
-            "Detay kabuğu mevcut temel kategori metadata'sını istiyor.",
-          returnToRegistry: "Kategori kaydına dön",
-          loadingTitle: "Kategori detayı yükleniyor",
+            "Detay kabugu mevcut temel kategori metadata'sini istiyor.",
+          returnToRegistry: "Kategori kaydina don",
+          loadingTitle: "Kategori detayi yukleniyor",
           loadingDescription:
-            "CMS bu kategori kaydı için güncel temel metadata'yı istiyor.",
+            "CMS bu kategori kaydi icin guncel temel metadata'yi istiyor.",
           categoryNotFoundDescription:
-            "İstenen kategori kaydı mevcut backend ortamında bulunmuyor.",
-          detailUnavailable: "Kategori detayı kullanılamıyor",
+            "Istenen kategori kaydi mevcut backend ortaminda bulunmuyor.",
+          detailUnavailable: "Kategori detayi kullanilamiyor",
           detailUnavailableDescription:
-            "Bu kategori rotası için henüz detay payload'ı yok.",
+            "Bu kategori rotasi icin henuz detay payload'i yok.",
           metadataTitle: "Metadata",
           metadataDescription:
-            "Temel kategori metadata'sını güncelleyin. Kategori oluşturulduktan sonra tür sabit kalır; slug, premium ve aktiflik durumu burada değiştirilebilir.",
-          localizationTitle: "Yerelleştirme",
+            "Temel kategori metadata'sini guncelleyin. Kategori turu olusturulduktan sonra sabit kalir; slug, premium ve aktiflik durumu burada degistirilebilir.",
+          localizationTitle: "Dil Calisma Alanlari",
           localizationDescription:
-            "Kategori yerelleştirme oluşturma, güncelleme ve okuma artık canlı. Bu çalışma alanı artık kalıcı yerelleştirme sekmelerini admin API'den hydrate ediyor.",
-          createLocalization: "Yerelleştirme oluştur",
-          loadingLocalizations: "Yerelleştirmeler yükleniyor",
+            "Her dil calisma alani yayin durumu, gorsel hazirligi ve duzenlenebilir icerigi ayni yuzeyde tutar.",
+          createLocalization: "Yerellestirme olustur",
+          loadingLocalizations: "Yerellestirmeler yukleniyor",
           loadingLocalizationsDescription:
-            "CMS bu kategori için kalıcı yerelleştirme sekmelerini istiyor.",
-          noLocalizationsTitle: "Henüz yerelleştirme yok",
+            "CMS bu kategori icin kalici yerellestirme sekmelerini istiyor.",
+          noLocalizationsTitle: "Henuz yerellestirme yok",
           noLocalizationsDescription:
-            "Bu kategori için kalıcı bir dil çalışma alanı açmak üzere ilk yerelleştirmeyi oluşturun.",
-          createFirstLocalization: "İlk yerelleştirmeyi oluştur",
-          localizationTabs: "Kategori yerelleştirme sekmeleri",
-          openCuration: "Kürasyonu aç",
-          categoryStudio: "Kategori Stüdyosu",
-          categorySummary: "Kategori Özeti",
-          summaryDescription:
-            "Bu detay görünümü kategori metadata'sını, kalıcı yerelleştirme sekmelerini ve dil bazlı kürasyonu bir araya getirir.",
-          summaryCardOne:
-            "Stüdyo, yükleme, yeniden deneme ve bulunamadı durumlarında kabuğu kararlı tutabilmek için önce temel kategori metadata'sını yükler.",
-          summaryCardTwo:
-            "Yerelleştirme oluşturma, güncelleme ve liste okuma canlıdır; kürasyon da artık bu kalıcı dil çalışma alanlarını yansıtır. Kürasyon satırları seçili dil bazında hydrate olur.",
-          snapshotTitle: "Yerelleştirme Özeti",
+            "Bu kategori icin ilk dil calisma alanini acmak uzere ilk yerellestirmeyi olusturun.",
+          createFirstLocalization: "Ilk yerellestirmeyi olustur",
+          localizationTabs: "Kategori yerellestirme sekmeleri",
+          openCuration: "Kurasyon alanina git",
+          categoryStudio: "Kategori Studyosu",
+          workspaceHandoff: "Kategori handoff'u",
+          workspaceHandoffDescription:
+            "Metadata lane, dil calisma alani ve kurasyon lane ayni rota uzerinde kalir; secili dil baglami kaybolmaz.",
+          selectedLocale: "Secili dil",
+          localeFocus: "Dil odagi",
+          curationPosture: "Kurasyon durusu",
+          curationReady: "Kurasyona hazir",
+          curationWaiting: "On kosul bekliyor",
+          metadataLane: "Metadata Lane",
+          localizationLane: "Dil Calisma Alani",
+          curationLane: "Kurasyon Lane",
+          localizationSnapshot: "Yerellestirme Ozeti",
+          snapshotNotes: "Yerellestirme Notlari",
           snapshotDescription:
-            "Kalıcı yerelleştirme sekmeleri artık admin API üzerinden hydrate olur ve yenilemeden sonra görünür kalır.",
+            "Kalici yerellestirme sekmeleri admin API uzerinden hydrate olur ve yenileme sonrasi gorunur kalir.",
           snapshotNone:
-            "Bu kategori için henüz saklanan kategori yerelleştirmesi yok.",
+            "Bu kategori icin henuz saklanan kategori yerellestirmesi yok.",
           snapshotSome: (count: number) =>
-            `${count} yerelleştirme çalışma alanı şu anda backend üzerinden hydrate ediliyor.`,
+            `${count} dil calisma alani su anda backend uzerinden hydrate ediliyor.`,
           snapshotRules:
-            "Yayınlanmış yerelleştirmeler ekleme ve sıralama aksiyonları için ön koşuldur. Seçili dil yayınlanmamış olsa bile saklanan kürasyon satırları görünür kalır.",
-          createDialogTitle: "Kategori yerelleştirmesi oluştur",
+            "Yayinlanmis yerellestirmeler ekleme ve siralama aksiyonlari icin on kosuldur. Secili dil yayinlanmamis olsa bile saklanan kurasyon satirlari gorunur kalir.",
+          createDialogTitle: "Kategori yerellestirmesi olustur",
           createDialogDescription:
-            "Bu kategori için bir dil çalışma alanı oluşturun. Kaydedilen yerelleştirmeler backend okumasında kalır ve yenilemeden sonra görünür kalır.",
+            "Bu kategori icin bir dil calisma alani olusturun. Kaydedilen yerellestirmeler backend okumasinda kalir ve yenileme sonrasi gorunur kalir.",
+          typeFixed: "Tur sabit",
+          stateEditable: "Bu alanda duzenlenir",
+          publishedLocale: "Yayinlanmis dil",
+          imageReady: "Gorsel hazir",
+          curationItems: "Kurasyon ogeleri",
+          noneYet: "Henuz yok",
         }
       : {
           detailFallbackTitle: "Category Detail",
           routeLoading:
-            "Loading metadata, localization, and curation workflows.",
+            "Loading metadata, localization workspaces, and curation lanes.",
           routeMissing:
             "This route expects a valid numeric category id from the category registry.",
           routeLoaded: (slug: string) =>
-            `Manage metadata, localization, and curation workflows for ${slug}.`,
-          detailStatus: "Detail Status",
+            `Review metadata, locale workspaces, and curation for ${slug} on one route.`,
           route: "Route",
-          inlineStates:
-            "Inline loading, error, and not-found states stay inside this shell.",
           invalidRoute: "Invalid route",
           categoryNotFound: "Category not found",
           metadataUnavailable: "Metadata unavailable",
@@ -158,10 +168,10 @@ export function CategoryDetailRoute() {
             "No detail payload is available for this category route yet.",
           metadataTitle: "Metadata",
           metadataDescription:
-            "Update the base category metadata. Category creation is live from the registry, and this form now saves slug, premium, and active state through the admin API.",
-          localizationTitle: "Localization",
+            "Update the base category metadata. Category type remains fixed after creation, while slug, premium, and active state stay editable here.",
+          localizationTitle: "Locale workspaces",
           localizationDescription:
-            "Category localization creation, update, and read are live. This workspace now hydrates persisted localization tabs from the admin API.",
+            "Each locale workspace keeps publication state, image readiness, and editable copy on the same surface.",
           createLocalization: "Create localization",
           loadingLocalizations: "Loading localizations",
           loadingLocalizationsDescription:
@@ -171,18 +181,23 @@ export function CategoryDetailRoute() {
             "Create the first category localization to open a persistent language workspace for this category.",
           createFirstLocalization: "Create first localization",
           localizationTabs: "Category localization tabs",
-          openCuration: "Open curation",
+          openCuration: "Open curation lane",
           categoryStudio: "Category Studio",
-          categorySummary: "Category Summary",
-          summaryDescription:
-            "This detail view combines category metadata, persisted localization tabs, and language-scoped curation.",
-          summaryCardOne:
-            "Base category metadata loads first so the studio can keep the shell stable through loading, retry, and not-found states.",
-          summaryCardTwo:
-            "Localization create, update, and list reads are live, and curation now mirrors those persisted language workspaces. Curated rows hydrate per selected language.",
-          snapshotTitle: "Localization Snapshot",
+          workspaceHandoff: "Workspace handoff",
+          workspaceHandoffDescription:
+            "Metadata, locale workspaces, and curation stay on one route so the selected language context never drops away.",
+          selectedLocale: "Selected locale",
+          localeFocus: "Locale focus",
+          curationPosture: "Curation posture",
+          curationReady: "Ready for curation",
+          curationWaiting: "Waiting on prerequisite",
+          metadataLane: "Metadata lane",
+          localizationLane: "Localization workspace",
+          curationLane: "Curation lane",
+          localizationSnapshot: "Localization snapshot",
+          snapshotNotes: "Snapshot notes",
           snapshotDescription:
-            "Persisted localization tabs now hydrate from the admin API and remain visible after refresh.",
+            "Persisted localization tabs hydrate from the admin API and remain visible after refresh.",
           snapshotNone:
             "No category localizations are stored for this category yet.",
           snapshotSome: (count: number) =>
@@ -194,6 +209,12 @@ export function CategoryDetailRoute() {
           createDialogTitle: "Create category localization",
           createDialogDescription:
             "Create a language workspace for this category. Saved localizations persist in backend reads and remain visible after refresh.",
+          typeFixed: "Type fixed",
+          stateEditable: "Editable here",
+          publishedLocale: "Published locales",
+          imageReady: "Image ready",
+          curationItems: "Curation items",
+          noneYet: "None yet",
         };
   const routeTitle =
     category?.slug ??
@@ -244,16 +265,52 @@ export function CategoryDetailRoute() {
     meta: localization.statusLabel,
     description: localization.hasImage
       ? locale === "tr"
-        ? "Bu dil çalışma alanı için görsel hazır."
-        : "Image ready for this language workspace."
+        ? "Bu dil calisma alani icin gorsel hazir."
+        : "Image ready for this locale workspace."
       : locale === "tr"
-        ? "Bu dil çalışma alanı için henüz görsel seçilmedi."
-        : "No image selected yet for this language workspace.",
+        ? "Bu dil calisma alani icin henuz gorsel secilmedi."
+        : "No image selected yet for this locale workspace.",
   }));
 
   function renderToolbar() {
     if (category) {
-      return <CategorySummaryCard category={category} />;
+      return (
+        <div className="grid gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:grid-cols-3">
+          <WorkspaceMetricCard
+            detail={copy.workspaceHandoffDescription}
+            label={copy.metadataLane}
+            tone="accent"
+            value={category.typeLabel}
+          />
+          <WorkspaceMetricCard
+            detail={selectedLocalization?.statusLabel}
+            label={copy.selectedLocale}
+            tone={
+              selectedLocalization?.isPublished
+                ? "success"
+                : selectedLocalization
+                  ? "warning"
+                  : "default"
+            }
+            value={
+              selectedLocalization?.languageLabel ??
+              (locale === "tr" ? "Henuz yok" : "None yet")
+            }
+          />
+          <WorkspaceMetricCard
+            detail={selectedLocalization?.name ?? copy.snapshotDescription}
+            label={copy.curationPosture}
+            tone={
+              selectedLocalization?.isPublished ? "success" : "warning"
+            }
+            value={
+              selectedLocalization?.isPublished
+                ? copy.curationReady
+                : copy.curationWaiting
+            }
+          />
+        </div>
+      );
     }
 
     const title = !hasValidCategoryId
@@ -363,6 +420,19 @@ export function CategoryDetailRoute() {
           description={copy.metadataDescription}
           title={copy.metadataTitle}
         >
+          <WorkspaceKeyValueGrid
+            items={[
+              { label: "Slug", value: category.slug },
+              { label: copy.typeFixed, value: category.typeLabel, tone: "accent" },
+              {
+                label: copy.stateEditable,
+                value:
+                  locale === "tr"
+                    ? "Slug, premium, aktiflik"
+                    : "Slug, premium, active state",
+              },
+            ]}
+          />
           <CategoryForm
             categoryId={category.id}
             initialValues={mapCategoryReadToFormValues(category)}
@@ -382,9 +452,46 @@ export function CategoryDetailRoute() {
               {copy.createLocalization}
             </Button>
           }
+          contentClassName="gap-4"
           description={copy.localizationDescription}
           title={copy.localizationTitle}
         >
+          <WorkspaceInfoCard
+            title={copy.localizationSnapshot}
+            description={copy.snapshotDescription}
+          >
+            <WorkspaceKeyValueGrid
+              items={[
+                {
+                  label: copy.publishedLocale,
+                  value: localizations
+                    .filter((localization) => localization.isPublished)
+                    .length.toString(),
+                  tone:
+                    localizations.some((localization) => localization.isPublished)
+                      ? "success"
+                      : "warning",
+                },
+                {
+                  label: copy.imageReady,
+                  value: localizations
+                    .filter((localization) => localization.hasImage)
+                    .length.toString(),
+                  tone:
+                    localizations.length > 0 &&
+                    localizations.every((localization) => localization.hasImage)
+                      ? "success"
+                      : "warning",
+                },
+                {
+                  label: copy.curationItems,
+                  value: curationItems.length.toString(),
+                  tone: curationItems.length > 0 ? "accent" : "default",
+                },
+              ]}
+            />
+          </WorkspaceInfoCard>
+
           {localizationQuery.isLoading && localizations.length === 0 ? (
             <Card className="border border-border/70 bg-card/95 shadow-lg shadow-slate-950/5">
               <CardContent className="flex min-h-52 flex-col items-center justify-center gap-4 px-6 py-12 text-center">
@@ -417,6 +524,28 @@ export function CategoryDetailRoute() {
                   problem={localizationQuery.problem}
                 />
               ) : null}
+
+              <WorkspaceInfoCard
+                title={`${copy.localeFocus}: ${selectedLocalization.languageLabel}`}
+                description={selectedLocalization.name}
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <WorkspaceStatusPill
+                    tone={selectedLocalization.isPublished ? "success" : "warning"}
+                  >
+                    {selectedLocalization.statusLabel}
+                  </WorkspaceStatusPill>
+                  <WorkspaceStatusPill
+                    tone={selectedLocalization.hasImage ? "success" : "warning"}
+                  >
+                    {selectedLocalization.hasImage
+                      ? copy.imageReady
+                      : locale === "tr"
+                        ? "Gorsel eksik"
+                        : "Image missing"}
+                  </WorkspaceStatusPill>
+                </div>
+              </WorkspaceInfoCard>
 
               <LanguageTabs
                 items={tabItems}
@@ -489,11 +618,11 @@ export function CategoryDetailRoute() {
 
     return (
       <TaskRail
-        title={copy.categorySummary}
-        description={copy.summaryDescription}
+        title={copy.localizationSnapshot}
+        description={copy.snapshotDescription}
         stats={[
           {
-            label: copy.snapshotTitle,
+            label: copy.localizationLane,
             value:
               localizations.length === 0
                 ? copy.snapshotNone
@@ -501,18 +630,61 @@ export function CategoryDetailRoute() {
             tone: localizations.length > 0 ? "success" : "warning",
           },
           {
-            label: locale === "tr" ? "Seçili dil" : "Selected locale",
+            label: copy.selectedLocale,
             value:
               selectedLocalization?.languageLabel ??
-              (locale === "tr" ? "Henüz yok" : "None yet"),
+              (locale === "tr" ? "Henuz yok" : "None yet"),
+          },
+          {
+            label: copy.curationLane,
+            value:
+              selectedLocalization?.isPublished
+                ? copy.curationReady
+                : copy.curationWaiting,
+            tone:
+              selectedLocalization?.isPublished ? "success" : "warning",
           },
         ]}
       >
-        <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-          <p>{copy.summaryCardOne}</p>
-          <p>{copy.summaryCardTwo}</p>
-          <p>{copy.snapshotDescription}</p>
-          <p>{copy.snapshotRules}</p>
+        <div className="grid gap-4">
+          <WorkspaceInfoCard
+            title={copy.snapshotNotes}
+            description={copy.snapshotDescription}
+            className="bg-background/80"
+          >
+            <p className="text-sm leading-6 text-muted-foreground">
+              {copy.snapshotRules}
+            </p>
+          </WorkspaceInfoCard>
+          <WorkspaceInfoCard
+            title={copy.metadataLane}
+            description={copy.workspaceHandoffDescription}
+            className="bg-background/80"
+          >
+            <WorkspaceKeyValueGrid
+              items={[
+                { label: "Slug", value: category.slug },
+                {
+                  label: copy.publishedLocale,
+                  value: localizations
+                    .filter((localization) => localization.isPublished)
+                    .length.toString(),
+                  tone:
+                    localizations.some((localization) => localization.isPublished)
+                      ? "success"
+                      : "warning",
+                },
+                {
+                  label: copy.curationItems,
+                  value:
+                    curationItems.length > 0
+                      ? curationItems.length.toString()
+                      : copy.noneYet,
+                  tone: curationItems.length > 0 ? "accent" : "default",
+                },
+              ]}
+            />
+          </WorkspaceInfoCard>
         </div>
       </TaskRail>
     );

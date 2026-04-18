@@ -349,13 +349,6 @@ export function AssignContributorDialog({
               shown in the content detail view.
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4 text-sm text-muted-foreground">
-              Existing backend assignments cannot be hydrated yet because the
-              admin API has no content-contributor read endpoint. This dialog
-              prevents duplicates only for assignments created in the current
-              session.
-            </div>
-
             <DialogFooter>
               <Button
                 type="button"

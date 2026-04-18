@@ -1,15 +1,20 @@
 package com.tellpal.v2.content.application;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
 import com.tellpal.v2.content.domain.Content;
@@ -65,6 +70,18 @@ public class ContributorManagementService {
     }
 
     /**
+     * Deletes one contributor when it is no longer referenced by content assignments.
+     */
+    @Transactional
+    public void deleteContributor(DeleteContributorCommand command) {
+        Contributor contributor = loadContributor(command.contributorId());
+        if (contentRepository.existsContributorAssignment(command.contributorId())) {
+            throw new ContributorInUseException(command.contributorId());
+        }
+        contributorRepository.delete(contributor);
+    }
+
+    /**
      * Assigns a contributor to content for one role and optional language scope.
      */
     @Transactional
@@ -81,8 +98,41 @@ public class ContributorManagementService {
                 command.contentId(),
                 contentRepository.save(content).getContributors().stream()
                         .filter(candidate -> candidate == assignment)
-                        .findFirst()
-                        .orElse(assignment));
+                .findFirst()
+                .orElse(assignment));
+    }
+
+    /**
+     * Lists contributor assignments already attached to one content aggregate.
+     */
+    @Transactional(readOnly = true)
+    public List<ContentContributorRecord> listContentContributors(Long contentId) {
+        return loadContentForContributorAdminRead(contentId).getContributors().stream()
+                .map(assignment -> ContentManagementMapper.toContentContributorRecord(contentId, assignment))
+                .sorted(Comparator
+                        .comparing(ContentContributorRecord::languageCode, Comparator.nullsFirst(Enum::compareTo))
+                        .thenComparing(ContentContributorRecord::role)
+                        .thenComparingInt(ContentContributorRecord::sortOrder)
+                        .thenComparing(ContentContributorRecord::contributorDisplayName))
+                .toList();
+    }
+
+    /**
+     * Removes one contributor assignment from content by exact role and scope match.
+     */
+    @Transactional
+    public void unassignContentContributor(UnassignContentContributorCommand command) {
+        Content content = loadContent(command.contentId());
+        try {
+            content.unassignContributor(command.contributorId(), command.role(), command.languageCode());
+        } catch (IllegalArgumentException exception) {
+            throw new ContentContributorNotFoundException(
+                    command.contentId(),
+                    command.contributorId(),
+                    command.role(),
+                    command.languageCode());
+        }
+        contentRepository.save(content);
     }
 
     private Contributor loadContributor(Long contributorId) {
@@ -92,6 +142,11 @@ public class ContributorManagementService {
 
     private Content loadContent(Long contentId) {
         return contentRepository.findById(contentId)
+                .orElseThrow(() -> new ContentNotFoundException(contentId));
+    }
+
+    private Content loadContentForContributorAdminRead(Long contentId) {
+        return contentRepository.findByIdForContributorAdminRead(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }
 

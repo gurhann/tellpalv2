@@ -33,6 +33,16 @@ public final class ContributorManagementCommands {
     }
 
     /**
+     * Command for deleting a contributor.
+     */
+    public record DeleteContributorCommand(Long contributorId) {
+
+        public DeleteContributorCommand {
+            contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
+        }
+    }
+
+    /**
      * Command for assigning a contributor to content.
      */
     public record AssignContentContributorCommand(
@@ -56,6 +66,22 @@ public final class ContributorManagementCommands {
                     creditName = null;
                 }
             }
+        }
+    }
+
+    /**
+     * Command for removing a contributor assignment from content.
+     */
+    public record UnassignContentContributorCommand(
+            Long contentId,
+            Long contributorId,
+            ContributorRole role,
+            LanguageCode languageCode) {
+
+        public UnassignContentContributorCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
+            role = requireRole(role);
         }
     }
 

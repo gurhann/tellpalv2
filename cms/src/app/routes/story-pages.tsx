@@ -23,6 +23,12 @@ import {
   type LanguageTabItem,
 } from "@/components/language/language-tabs";
 import { TaskRail } from "@/components/workspace/task-rail";
+import {
+  WorkspaceInfoCard,
+  WorkspaceKeyValueGrid,
+  WorkspaceMetricCard,
+  WorkspaceStatusPill,
+} from "@/components/workspace/workspace-primitives";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import type {
   ContentReadViewModel,
@@ -42,6 +48,7 @@ import {
 } from "@/features/story-pages/queries/use-story-pages";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
+import { useI18n } from "@/i18n/locale-provider";
 import type { ApiProblemDetail } from "@/types/api";
 
 type StoryPageFieldErrors = {
@@ -553,6 +560,7 @@ function StoryPagesWorkspace({
   content,
   preferredLanguageCode = null,
 }: StoryPagesWorkspaceProps) {
+  const { locale } = useI18n();
   const storyPagesQuery = useStoryPages(content.summary.id);
   const storyPageActions = useStoryPageActions({
     contentId: content.summary.id,
@@ -582,24 +590,80 @@ function StoryPagesWorkspace({
   const completeCoverageCount = storyPages.filter(
     (storyPage) => storyPage.hasCompleteIllustrationCoverage,
   ).length;
+  const preferredLanguageLabel =
+    content.localizations.find(
+      (localization) => localization.languageCode === preferredLanguageCode,
+    )?.languageLabel ??
+    content.primaryLocalization?.languageLabel ??
+    (locale === "tr" ? "Dil secilmedi" : "No locale selected");
+  const copy =
+    locale === "tr"
+      ? {
+          eyebrow: "Story Editor",
+          description:
+            "Sayfa yapisini ve yerellestirilmis payload'lari ayni editor yuzeyinde yonetin.",
+          readinessTitle: "Story readiness",
+          readinessDescription:
+            "Yapiyi sabit tutarken body, audio ve illustrasyon kapsamını secili dil baglamiyla izleyin.",
+          returnToContent: "Icerik detayina don",
+          addPage: "Sayfa ekle",
+          storyPages: "Story pages",
+          localizedPages: "Yerellestirilmis sayfalar",
+          illustrationCoverage: "Illustrasyon kapsami",
+          localeHandoff: "Locale handoff",
+          localeHandoffDescription:
+            "Bu editor parent content detail rotasindan gelen dil baglamini korur.",
+          structureTitle: "Yapi notlari",
+          structureDescription:
+            "Editori kullanarak govde metni, audio ve yerellestirilmis illustrasyonlari sayfa sayfa tamamlayin.",
+          structureNext:
+            "Content detail rotesine dondugunuzde ayni dil odagi korunur.",
+          toolbarLocale: "Aktif dil",
+          toolbarPages: "Toplam sayfa",
+          toolbarCoverage: "Hazir illustrasyon",
+        }
+      : {
+          eyebrow: "Story Editor",
+          description:
+            "Manage page structure and localized payloads on one editor surface.",
+          readinessTitle: "Story readiness",
+          readinessDescription:
+            "Keep the structure stable while tracking body, audio, and illustration coverage in the current locale context.",
+          returnToContent: "Return to content detail",
+          addPage: "Add story page",
+          storyPages: "Story pages",
+          localizedPages: "Localized pages",
+          illustrationCoverage: "Illustration coverage",
+          localeHandoff: "Locale handoff",
+          localeHandoffDescription:
+            "This editor preserves the language context carried from the parent content detail route.",
+          structureTitle: "Structure notes",
+          structureDescription:
+            "Use the editor to finish body text, audio, and localized illustrations page by page.",
+          structureNext:
+            "When you return to content detail, the same locale focus remains available.",
+          toolbarLocale: "Active locale",
+          toolbarPages: "Total pages",
+          toolbarCoverage: "Ready illustrations",
+        };
 
   return (
     <>
       <ContentPageShell
-        eyebrow="Story Editor"
+        eyebrow={copy.eyebrow}
         title={routeTitle}
-        description="Manage story page structure and localized page content."
+        description={copy.description}
         aside={
           <TaskRail
-            title="Story readiness"
-            description="Keep the structure stable while you complete localized page payloads."
+            title={copy.readinessTitle}
+            description={copy.readinessDescription}
             stats={[
               {
-                label: "Pages",
+                label: copy.storyPages,
                 value: `${storyPageCount} total`,
               },
               {
-                label: "Localized pages",
+                label: copy.localizedPages,
                 value: `${localizedStoryPageCount} with at least one locale`,
                 tone:
                   localizedStoryPageCount === storyPageCount
@@ -607,7 +671,7 @@ function StoryPagesWorkspace({
                     : "warning",
               },
               {
-                label: "Illustration coverage",
+                label: copy.illustrationCoverage,
                 value: `${completeCoverageCount} fully complete`,
                 tone:
                   completeCoverageCount === storyPageCount
@@ -616,16 +680,34 @@ function StoryPagesWorkspace({
               },
             ]}
           >
-            <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-              <p>
-                Use the editor to finish body text, audio, and localized
-                illustrations page by page.
+            <WorkspaceInfoCard
+              title={copy.localeHandoff}
+              description={copy.localeHandoffDescription}
+              className="bg-background/80"
+            >
+              <WorkspaceKeyValueGrid
+                items={[
+                  {
+                    label: copy.toolbarLocale,
+                    value: preferredLanguageLabel,
+                    tone: "accent",
+                  },
+                  {
+                    label: copy.storyPages,
+                    value: `${storyPageCount}`,
+                  },
+                ]}
+              />
+            </WorkspaceInfoCard>
+            <WorkspaceInfoCard
+              title={copy.structureTitle}
+              description={copy.structureDescription}
+              className="bg-background/80"
+            >
+              <p className="text-sm leading-6 text-muted-foreground">
+                {copy.structureNext}
               </p>
-              <p>
-                The story detail route keeps the language context, so editors
-                can jump in without reselecting the active locale.
-              </p>
-            </div>
+            </WorkspaceInfoCard>
           </TaskRail>
         }
         actions={
@@ -633,7 +715,7 @@ function StoryPagesWorkspace({
             <Button asChild type="button" variant="outline">
               <Link to={`/contents/${content.summary.id}`}>
                 <ArrowLeft className="size-4" />
-                Return to content detail
+                {copy.returnToContent}
               </Link>
             </Button>
             <Button
@@ -642,28 +724,59 @@ function StoryPagesWorkspace({
               disabled={isMutating}
             >
               <Plus className="size-4" />
-              Add story page
+              {copy.addPage}
             </Button>
           </>
         }
         toolbar={
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background px-4 py-3">
-            <span className="text-sm font-semibold text-foreground">
-              {content.summary.externalKey}
-            </span>
-            <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium text-foreground">
-              {storyPageCount} story page{storyPageCount === 1 ? "" : "s"}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {localizedStoryPageCount} localized
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {illustratedLocalizationCount} illustrations
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {content.localizationCount} locale
-              {content.localizationCount === 1 ? "" : "s"}
-            </span>
+          <div className="grid gap-4 rounded-[1.7rem] border border-border/70 bg-muted/15 p-4 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="grid gap-3 md:grid-cols-3">
+              <WorkspaceMetricCard
+                label={copy.toolbarLocale}
+                value={preferredLanguageLabel}
+                detail={content.summary.externalKey}
+                tone="accent"
+              />
+              <WorkspaceMetricCard
+                label={copy.toolbarPages}
+                value={`${storyPageCount}`}
+                detail={`${localizedStoryPageCount} localized`}
+                tone={
+                  localizedStoryPageCount === storyPageCount
+                    ? "success"
+                    : "warning"
+                }
+              />
+              <WorkspaceMetricCard
+                label={copy.toolbarCoverage}
+                value={`${completeCoverageCount}`}
+                detail={`${illustratedLocalizationCount} localized illustrations`}
+                tone={
+                  completeCoverageCount === storyPageCount
+                    ? "success"
+                    : "warning"
+                }
+              />
+            </div>
+            <WorkspaceInfoCard
+              title={copy.localeHandoff}
+              description={copy.localeHandoffDescription}
+              className="bg-background/85"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <WorkspaceStatusPill tone="accent">
+                  {content.summary.typeLabel}
+                </WorkspaceStatusPill>
+                <WorkspaceStatusPill
+                  tone={content.summary.active ? "success" : "default"}
+                >
+                  {content.summary.active ? "Active" : "Inactive"}
+                </WorkspaceStatusPill>
+                <WorkspaceStatusPill tone="default">
+                  {preferredLanguageLabel}
+                </WorkspaceStatusPill>
+              </div>
+            </WorkspaceInfoCard>
           </div>
         }
       >
@@ -683,7 +796,7 @@ function StoryPagesWorkspace({
               disabled={isMutating}
             >
               <Plus className="size-4" />
-              Add first story page
+              {locale === "tr" ? "Ilk sayfayi ekle" : "Add first story page"}
             </Button>
           }
           isMutationPending={isMutating}

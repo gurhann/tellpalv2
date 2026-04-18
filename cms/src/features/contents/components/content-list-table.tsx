@@ -21,11 +21,10 @@ function getLocalizationSummary(
 ) {
   if (content.localizationCount === 0) {
     return {
-      title:
-        locale === "tr" ? "Henüz yerelleştirme yok" : "No localizations yet",
+      title: locale === "tr" ? "Henuz yerellestirme yok" : "No localizations yet",
       detail:
         locale === "tr"
-          ? "İlk dil çalışma alanını eklemek için kaydı açın."
+          ? "Ilk dil calisma alanini eklemek icin kaydi acin."
           : "Open the record to add the first language workspace.",
     };
   }
@@ -56,7 +55,7 @@ export function ContentListTable({
   const columns: DataTableColumn<ContentReadViewModel>[] = [
     {
       id: "content",
-      header: locale === "tr" ? "İçerik" : "Content",
+      header: locale === "tr" ? "Icerik" : "Content",
       cell: (content) => (
         <div className="space-y-1">
           <p className="font-medium text-foreground">
@@ -70,7 +69,7 @@ export function ContentListTable({
     },
     {
       id: "format",
-      header: locale === "tr" ? "Tür" : "Format",
+      header: locale === "tr" ? "Tur" : "Format",
       cell: (content) => (
         <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium tracking-tight text-foreground">
           {content.summary.typeLabel}
@@ -100,7 +99,7 @@ export function ContentListTable({
     },
     {
       id: "localizations",
-      header: locale === "tr" ? "Yerelleştirmeler" : "Localizations",
+      header: locale === "tr" ? "Yerellestirmeler" : "Localizations",
       cell: (content) => {
         const summary = getLocalizationSummary(content, locale);
 
@@ -116,7 +115,7 @@ export function ContentListTable({
     },
     {
       id: "pages",
-      header: locale === "tr" ? "Hikaye Sayfaları" : "Story Pages",
+      header: locale === "tr" ? "Hikaye Sayfalari" : "Story Pages",
       cell: (content) => (
         <span className="text-sm text-muted-foreground">
           {content.summary.supportsStoryPages
@@ -139,13 +138,11 @@ export function ContentListTable({
         columns={columns}
         emptyDescription={
           locale === "tr"
-            ? "İçerik listesi admin API üzerinden yüklenemedi."
+            ? "Icerik listesi admin API uzerinden yuklenemedi."
             : "The content list could not be loaded from the admin API."
         }
         emptyTitle={
-          locale === "tr"
-            ? "İçerik listesi kullanılamıyor"
-            : "Content list unavailable"
+          locale === "tr" ? "Icerik listesi kullanilamiyor" : "Content list unavailable"
         }
         getRowId={(content) => content.summary.id.toString()}
         onRetry={onRetry}
@@ -157,25 +154,23 @@ export function ContentListTable({
 
   return (
     <DataTable
-      caption={
-        locale === "tr" ? "İçerik kayıt tablosu" : "Content registry table"
-      }
+      caption={locale === "tr" ? "Icerik kayit tablosu" : "Content registry table"}
       columns={columns}
       emptyDescription={
         locale === "tr"
-          ? "Henüz içerik kaydı yok. Editoryal kataloğu başlatmak için ilk içeriği oluşturun."
+          ? "Henuz icerik kaydi yok. Editoryal katalogu baslatmak icin ilk icerigi olusturun."
           : "No content records exist yet. Create the first content item to start the editorial catalog."
       }
-      emptyTitle={locale === "tr" ? "İçerik kaydı yok" : "No content records"}
+      emptyTitle={locale === "tr" ? "Icerik kaydi yok" : "No content records"}
       getRowId={(content) => content.summary.id.toString()}
       isLoading={isLoading}
       loadingDescription={
         locale === "tr"
-          ? "CMS, içerik metadatasını ve yerelleştirme özetlerini admin API üzerinden istiyor."
+          ? "CMS, icerik metadata'sini ve yerellestirme ozetlerini admin API uzerinden istiyor."
           : "The CMS is requesting content metadata and localization snapshots from the admin API."
       }
       loadingTitle={
-        locale === "tr" ? "İçerik kaydı yükleniyor" : "Loading content registry"
+        locale === "tr" ? "Icerik kaydi yukleniyor" : "Loading content registry"
       }
       onRetry={onRetry}
       onRowClick={onContentSelect}

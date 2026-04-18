@@ -19,6 +19,11 @@ public interface ContributorRepository {
     List<Contributor> findRecent(int limit);
 
     /**
+     * Deletes one contributor profile.
+     */
+    void delete(Contributor contributor);
+
+    /**
      * Persists contributor profile changes.
      */
     Contributor save(Contributor contributor);

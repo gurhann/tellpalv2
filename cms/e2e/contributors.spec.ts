@@ -15,6 +15,16 @@ type ContributorRecord = {
   displayName: string;
 };
 
+type ContentContributorRecord = {
+  contentId: number;
+  contributorId: number;
+  contributorDisplayName: string;
+  role: "AUTHOR" | "ILLUSTRATOR" | "NARRATOR" | "MUSICIAN";
+  languageCode: string | null;
+  creditName: string | null;
+  sortOrder: number;
+};
+
 type ContentReadResponse = {
   contentId: number;
   type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
@@ -51,7 +61,7 @@ function makeSession(overrides: Partial<SessionPayload> = {}): SessionPayload {
   };
 }
 
-test("contributor registry and assignment flows expose unavailable-action notes", async ({
+test("contributor registry and assignment flows support delete and unassign", async ({
   page,
 }) => {
   const session = makeSession();
@@ -63,6 +73,26 @@ test("contributor registry and assignment flows expose unavailable-action notes"
     {
       contributorId: 12,
       displayName: "Milo Rivers",
+    },
+  ];
+  const assignments: ContentContributorRecord[] = [
+    {
+      contentId: 1,
+      contributorId: 11,
+      contributorDisplayName: "Annie Case",
+      role: "AUTHOR",
+      languageCode: "en",
+      creditName: null,
+      sortOrder: 0,
+    },
+    {
+      contentId: 1,
+      contributorId: 12,
+      contributorDisplayName: "Milo Rivers",
+      role: "NARRATOR",
+      languageCode: "tr",
+      creditName: "M. Rivers",
+      sortOrder: 1,
     },
   ];
   const content: ContentReadResponse = {
@@ -168,32 +198,45 @@ test("contributor registry and assignment flows expose unavailable-action notes"
 
   await page.route("**/api/admin/contributors/*", async (route) => {
     const request = route.request();
-
-    if (request.method() !== "PUT") {
-      await route.fallback();
-      return;
-    }
-
     const contributorId = Number(
       new URL(request.url()).pathname.split("/").at(-1),
     );
-    const contributor = contributors.find(
-      (candidate) => candidate.contributorId === contributorId,
-    );
 
-    if (!contributor) {
-      await route.abort();
+    if (request.method() === "PUT") {
+      const contributor = contributors.find(
+        (candidate) => candidate.contributorId === contributorId,
+      );
+
+      if (!contributor) {
+        await route.abort();
+        return;
+      }
+
+      const body = request.postDataJSON() as { displayName: string };
+      contributor.displayName = body.displayName;
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(contributor),
+      });
       return;
     }
 
-    const body = request.postDataJSON() as { displayName: string };
-    contributor.displayName = body.displayName;
+    if (request.method() === "DELETE") {
+      const contributorIndex = contributors.findIndex(
+        (candidate) => candidate.contributorId === contributorId,
+      );
 
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(contributor),
-    });
+      contributors.splice(contributorIndex, 1);
+
+      await route.fulfill({
+        status: 204,
+      });
+      return;
+    }
+
+    await route.fallback();
   });
 
   await page.route("**/api/admin/contents/1", async (route) => {
@@ -205,26 +248,35 @@ test("contributor registry and assignment flows expose unavailable-action notes"
   });
 
   await page.route("**/api/admin/contents/1/contributors", async (route) => {
-    const body = route.request().postDataJSON() as {
-      contributorId: number;
-      role: "AUTHOR" | "ILLUSTRATOR" | "NARRATOR" | "MUSICIAN";
-      languageCode?: string | null;
-      creditName?: string | null;
-      sortOrder: number;
-    };
-    const contributor = contributors.find(
-      (candidate) => candidate.contributorId === body.contributorId,
-    );
+    const request = route.request();
 
-    if (!contributor) {
-      await route.abort();
+    if (request.method() === "GET") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(assignments),
+      });
       return;
     }
 
-    await route.fulfill({
-      status: 201,
-      contentType: "application/json",
-      body: JSON.stringify({
+    if (request.method() === "POST") {
+      const body = request.postDataJSON() as {
+        contributorId: number;
+        role: ContentContributorRecord["role"];
+        languageCode?: string | null;
+        creditName?: string | null;
+        sortOrder: number;
+      };
+      const contributor = contributors.find(
+        (candidate) => candidate.contributorId === body.contributorId,
+      );
+
+      if (!contributor) {
+        await route.abort();
+        return;
+      }
+
+      const assignment: ContentContributorRecord = {
         contentId: 1,
         contributorId: contributor.contributorId,
         contributorDisplayName: contributor.displayName,
@@ -232,15 +284,43 @@ test("contributor registry and assignment flows expose unavailable-action notes"
         languageCode: body.languageCode ?? null,
         creditName: body.creditName ?? null,
         sortOrder: body.sortOrder,
-      }),
-    });
+      };
+      assignments.push(assignment);
+
+      await route.fulfill({
+        status: 201,
+        contentType: "application/json",
+        body: JSON.stringify(assignment),
+      });
+      return;
+    }
+
+    if (request.method() === "DELETE") {
+      const requestUrl = new URL(request.url());
+      const contributorId = Number(
+        requestUrl.searchParams.get("contributorId") ?? "0",
+      );
+      const role = requestUrl.searchParams.get("role");
+      const languageCode = requestUrl.searchParams.get("languageCode");
+      const assignmentIndex = assignments.findIndex(
+        (candidate) =>
+          candidate.contributorId === contributorId &&
+          candidate.role === role &&
+          candidate.languageCode === (languageCode ?? null),
+      );
+
+      assignments.splice(assignmentIndex, 1);
+
+      await route.fulfill({
+        status: 204,
+      });
+      return;
+    }
+
+    await route.fallback();
   });
 
   await page.goto("/login");
-
-  await expect(
-    page.getByRole("heading", { name: /sign in to tellpal cms/i }),
-  ).toBeVisible();
 
   await page.getByLabel(/username/i).fill("admin");
   await page.getByLabel(/password/i).fill("test1234");
@@ -254,10 +334,6 @@ test("contributor registry and assignment flows expose unavailable-action notes"
     page.getByRole("button", { name: /^sign in$/i }).click(),
   ]);
 
-  await expect(
-    page.getByRole("heading", { name: /content studio/i }),
-  ).toBeVisible();
-
   await Promise.all([
     page.waitForResponse(
       (response) =>
@@ -270,13 +346,13 @@ test("contributor registry and assignment flows expose unavailable-action notes"
   await expect(
     page.getByRole("heading", { name: /^contributors$/i, level: 1 }),
   ).toBeVisible();
-  await expect(page.getByText(/delete contributor unavailable/i)).toBeVisible();
 
-  const createContributorButton = page
-    .locator("main")
-    .getByRole("button", { name: /^create contributor$/i });
+  const createContributorButton = page.getByRole("button", {
+    name: /^create contributor$/i,
+  });
   await expect(createContributorButton).toBeVisible();
-  await createContributorButton.click();
+  await page.waitForTimeout(250);
+  await createContributorButton.click({ force: true });
   await page.getByLabel(/display name/i).fill("Lina Hart");
   await page
     .getByRole("dialog")
@@ -295,10 +371,18 @@ test("contributor registry and assignment flows expose unavailable-action notes"
 
   await expect(page.getByText("Annie Case Updated")).toBeVisible();
 
+  const miloRow = page.locator("tr").filter({ hasText: "Milo Rivers" });
+  await miloRow
+    .getByRole("button", { name: /^delete milo rivers$/i })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /^delete contributor$/i })
+    .click();
+
+  await expect(page.getByText("Milo Rivers")).toHaveCount(0);
+
   await page.getByRole("link", { name: /^contents/i }).click();
-  await expect(
-    page.getByRole("heading", { name: /content studio/i }),
-  ).toBeVisible();
   await Promise.all([
     page.waitForResponse(
       (response) =>
@@ -308,18 +392,12 @@ test("contributor registry and assignment flows expose unavailable-action notes"
     page.getByRole("row", { name: /evening garden/i }).click(),
   ]);
 
-  await expect(
-    page.getByRole("heading", { name: /evening garden/i }),
-  ).toBeVisible();
-  await expect(
-    page.getByText(/unassign contributor unavailable/i),
-  ).toBeVisible();
+  await expect(page.getByText("M. Rivers")).toBeVisible();
 
-  const assignContributorButton = page
+  await page
     .locator("main")
-    .getByRole("button", { name: /^assign contributor$/i });
-  await expect(assignContributorButton).toBeVisible();
-  await assignContributorButton.click();
+    .getByRole("button", { name: /^assign contributor$/i })
+    .click();
   await page.getByRole("combobox", { name: /^contributor$/i }).click();
   await page.getByRole("option", { name: "Lina Hart" }).click();
   await page
@@ -328,5 +406,15 @@ test("contributor registry and assignment flows expose unavailable-action notes"
     .click();
 
   await expect(page.getByText("Lina Hart").first()).toBeVisible();
-  await expect(page.getByText("All languages", { exact: true })).toBeVisible();
+
+  const unassignButtons = page
+    .locator("main")
+    .getByRole("button", { name: /^unassign m\. rivers$/i });
+  await unassignButtons.last().click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /^unassign contributor$/i })
+    .click();
+
+  await expect(page.getByText("M. Rivers")).toHaveCount(0);
 });

@@ -2,9 +2,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import type { PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { queryKeys } from "@/lib/query-keys";
 import {
   contentContributorViewModels,
   globalContentContributorViewModel,
@@ -16,7 +15,19 @@ import {
 
 import { ContentContributorPanel } from "./content-contributor-panel";
 
-function createWrapper(seed?: { queryKey: readonly unknown[]; data: unknown }) {
+const contributorHookMocks = vi.hoisted(() => ({
+  useContentContributorAssignments: vi.fn(),
+}));
+
+vi.mock(
+  "@/features/contributors/queries/use-content-contributor-assignments",
+  () => ({
+    useContentContributorAssignments:
+      contributorHookMocks.useContentContributorAssignments,
+  }),
+);
+
+function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -24,10 +35,6 @@ function createWrapper(seed?: { queryKey: readonly unknown[]; data: unknown }) {
       },
     },
   });
-
-  if (seed) {
-    queryClient.setQueryData(seed.queryKey, seed.data);
-  }
 
   return function Wrapper({ children }: PropsWithChildren) {
     return (
@@ -39,29 +46,38 @@ function createWrapper(seed?: { queryKey: readonly unknown[]; data: unknown }) {
 }
 
 describe("ContentContributorPanel", () => {
-  it("renders current-session contributor assignments from the cache", () => {
-    render(<ContentContributorPanel content={storyContentViewModel} />, {
-      wrapper: createWrapper({
-        queryKey: queryKeys.contributors.assignments(1),
-        data: [
-          globalContentContributorViewModel,
-          ...contentContributorViewModels,
-        ],
-      }),
+  it("renders contributor assignments loaded from the backend query", () => {
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: [
+        globalContentContributorViewModel,
+        ...contentContributorViewModels,
+      ],
+      isLoading: false,
+      problem: null,
     });
 
-    expect(
-      screen.getAllByText(/current-session assignments?/i)[0],
-    ).toBeVisible();
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+
+    expect(screen.getByText(/contributor assignments/i)).toBeVisible();
     expect(screen.getAllByText("Annie Case")).toHaveLength(2);
     expect(screen.getByText("M. Rivers")).toBeVisible();
     expect(screen.getByText("Author")).toBeVisible();
     expect(screen.getByText("Turkish")).toBeVisible();
     expect(screen.getByText("All languages")).toBeVisible();
-    expect(screen.getByText(/unassign contributor unavailable/i)).toBeVisible();
+    expect(
+      screen.getAllByRole("button", { name: /unassign/i }),
+    ).toHaveLength(3);
   });
 
   it("keeps assignment enabled when the content has no localizations", () => {
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: [],
+      isLoading: false,
+      problem: null,
+    });
+
     render(<ContentContributorPanel content={inactiveContentViewModel} />, {
       wrapper: createWrapper(),
     });

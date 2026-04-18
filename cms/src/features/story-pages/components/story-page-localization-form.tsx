@@ -64,7 +64,7 @@ export function StoryPageLocalizationForm({
   onSave,
 }: StoryPageLocalizationFormProps) {
   const { locale } = useI18n();
-  const copy =
+  let copy =
     locale === "tr"
       ? {
           missingParentLocalization:
@@ -154,6 +154,52 @@ export function StoryPageLocalizationForm({
           createLocalization: "Create page localization",
           saveLocalization: "Save page localization",
         };
+  if (locale === "tr") {
+    copy = {
+      missingParentLocalization:
+        "Hikaye sayfalarini duzenlemeden once bu dil icin parent icerik yerellestirmesini olusturun.",
+      genericSaveError: "Hikaye sayfasi yerellestirmesi kaydedilemedi.",
+      illustrationRequired: "Illustrasyon asset id zorunludur.",
+      createLoading: "Sayfa yerellestirmesi olusturuluyor...",
+      updateLoading: "Sayfa yerellestirmesi kaydediliyor...",
+      createSuccess: "Sayfa yerellestirmesi olusturuldu.",
+      updateSuccess: "Sayfa yerellestirmesi kaydedildi.",
+      parentLocale: "Ust dil",
+      bodyReady: "Govde hazir",
+      bodyMissing: "Govde eksik",
+      bodyMissingHelp:
+        "Bos anlati metni eksik kalir ve bu dilde hikaye yayinini engeller.",
+      audioLinked: "Ses bagli",
+      audioMissing: "Ses eksik",
+      audioMissingHelp:
+        "Bu dil yayin icin hazir olmadan once ses alani bir `AUDIO` asset'ine baglanmalidir.",
+      illustrationLinked: "Illustrasyon bagli",
+      illustrationMissing: "Illustrasyon eksik",
+      publishReady: "Bu sayfa dili yayin kontrolleri icin hazir.",
+      publishBlocked:
+        "Hikaye yayini icin hala govde metni, ses ve yerellestirilmis illustrasyon gerekiyor.",
+      bodyText: "Govde metni",
+      localizedNarrative: "Yerellestirilmis sayfa anlatisi",
+      bodyHelp:
+        "Bos govde metni bos durum olarak kaydedilir ve bu dili yayin icin eksik birakir.",
+      illustrationDescription:
+        "Yerellestirilmis illustrasyonu buradan yukleyin veya bu hikaye sayfasi icin mevcut `IMAGE` asset'lerini secin.",
+      illustrationLabel: "Illustrasyon asset'i",
+      illustrationPickerDescription:
+        "Bu yerellestirilmis hikaye sayfasi illustrasyonu icin son gorsel asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
+      illustrationPickerTitle: "Hikaye sayfasi illustrasyonu sec",
+      audioDescription:
+        "Sayfa editorunden cikmadan bu sayfa icin yerellestirilmis anlatimi yukleyin veya secin.",
+      audioLabel: "Ses asset'i",
+      audioPickerDescription:
+        "Bu yerellestirilmis hikaye sayfasi icin son ses asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
+      audioPickerTitle: "Hikaye sayfasi ses asset'ini sec",
+      optional: "Opsiyonel",
+      required: "Zorunlu",
+      createLocalization: "Sayfa yerellestirmesi olustur",
+      saveLocalization: "Sayfa yerellestirmesini kaydet",
+    };
+  }
   const existingLocalization =
     storyPage.localizations.find(
       (localization) =>
@@ -332,15 +378,18 @@ export function StoryPageLocalizationForm({
         name="illustrationMediaId"
         render={({ field }) => (
           <AssetPickerField
+            advancedLabel="Advanced illustration asset options"
             description={copy.illustrationDescription}
             disabled={isPending}
             error={form.formState.errors.illustrationMediaId}
             id={`story-page-illustration-${contentLocalization.languageCode}`}
             label={copy.illustrationLabel}
+            manualInputLabel={`${copy.illustrationLabel} id`}
             mediaType="IMAGE"
             pickerDescription={copy.illustrationPickerDescription}
             pickerTitle={copy.illustrationPickerTitle}
             placeholder={copy.required}
+            testId={`story-page-${contentLocalization.languageCode}-illustration-asset`}
             value={field.value}
             onChange={field.onChange}
           />
@@ -352,15 +401,18 @@ export function StoryPageLocalizationForm({
         name="audioMediaId"
         render={({ field }) => (
           <AssetPickerField
+            advancedLabel="Advanced audio asset options"
             description={copy.audioDescription}
             disabled={isPending}
             error={form.formState.errors.audioMediaId}
             id={`story-page-audio-${contentLocalization.languageCode}`}
             label={copy.audioLabel}
+            manualInputLabel={`${copy.audioLabel} id`}
             mediaType="AUDIO"
             pickerDescription={copy.audioPickerDescription}
             pickerTitle={copy.audioPickerTitle}
             placeholder={copy.optional}
+            testId={`story-page-${contentLocalization.languageCode}-audio-asset`}
             value={field.value}
             onChange={field.onChange}
           />

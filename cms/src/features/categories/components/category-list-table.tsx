@@ -36,7 +36,7 @@ export function CategoryListTable({
     },
     {
       id: "type",
-      header: locale === "tr" ? "Tür" : "Type",
+      header: locale === "tr" ? "Tur" : "Type",
       cell: (category) => (
         <span className="inline-flex rounded-full border border-border/70 bg-muted/35 px-2.5 py-1 text-xs font-medium tracking-tight text-foreground">
           {category.typeLabel}
@@ -45,7 +45,7 @@ export function CategoryListTable({
     },
     {
       id: "access",
-      header: locale === "tr" ? "Erişim" : "Access",
+      header: locale === "tr" ? "Erisim" : "Access",
       cell: (category) => (
         <span
           className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${
@@ -91,12 +91,12 @@ export function CategoryListTable({
         columns={columns}
         emptyDescription={
           locale === "tr"
-            ? "Kategori kaydı admin API üzerinden yüklenemedi."
+            ? "Kategori kaydi admin API uzerinden yuklenemedi."
             : "The category registry could not be loaded from the admin API."
         }
         emptyTitle={
           locale === "tr"
-            ? "Kategori kaydı kullanılamıyor"
+            ? "Kategori kaydi kullanilamiyor"
             : "Category registry unavailable"
         }
         getRowId={(category) => category.id.toString()}
@@ -109,29 +109,23 @@ export function CategoryListTable({
 
   return (
     <DataTable
-      caption={
-        locale === "tr" ? "Kategori kayıt tablosu" : "Category registry table"
-      }
+      caption={locale === "tr" ? "Kategori kayit tablosu" : "Category registry table"}
       columns={columns}
       emptyDescription={
         locale === "tr"
-          ? "Henüz kategori yok. İçerikleri gruplamaya başlamak için ilk kategoriyi oluşturun."
+          ? "Henuz kategori yok. Icerikleri gruplamaya baslamak icin ilk kategoriyi olusturun."
           : "No categories exist yet. Create the first category to start grouping content."
       }
-      emptyTitle={
-        locale === "tr" ? "Kategori kaydı yok" : "No category records"
-      }
+      emptyTitle={locale === "tr" ? "Kategori kaydi yok" : "No category records"}
       getRowId={(category) => category.id.toString()}
       isLoading={isLoading}
       loadingDescription={
         locale === "tr"
-          ? "CMS, kategori metadatasını admin API üzerinden istiyor."
+          ? "CMS, kategori metadata'sini admin API uzerinden istiyor."
           : "The CMS is requesting category metadata from the admin API."
       }
       loadingTitle={
-        locale === "tr"
-          ? "Kategori kaydı yükleniyor"
-          : "Loading category registry"
+        locale === "tr" ? "Kategori kaydi yukleniyor" : "Loading category registry"
       }
       onRetry={onRetry}
       onRowClick={onCategorySelect}

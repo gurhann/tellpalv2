@@ -49,7 +49,10 @@ function makeSession(overrides: Partial<SessionPayload> = {}): SessionPayload {
 test("create, edit, and publish flows work in the browser", async ({
   page,
 }) => {
-  const session = makeSession();
+  const session = makeSession({
+    accessTokenExpiresAt: "2026-05-29T10:00:00Z",
+    refreshTokenExpiresAt: "2026-06-28T10:00:00Z",
+  });
   const tinyAudioDataUrl =
     "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
   const mediaAssets = [
@@ -121,8 +124,12 @@ test("create, edit, and publish flows work in the browser", async ({
   ];
   let createdDetail: ContentReadResponse | null = null;
 
-  await page.addInitScript(() => {
-    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
+  await page.route("**/api/admin/auth/login", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(session),
+    });
   });
 
   await page.route("**/api/admin/auth/refresh", async (route) => {
@@ -329,6 +336,32 @@ test("create, edit, and publish flows work in the browser", async ({
     });
   });
 
+  await page.route("**/api/admin/contributors", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([]),
+    });
+  });
+
+  await page.route("**/api/admin/contents/99/contributors", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.fallback();
+      return;
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([]),
+    });
+  });
+
   await page.route("**/api/admin/media/*", async (route) => {
     const assetId = Number(route.request().url().split("/").pop());
     const asset = mediaAssets.find((entry) => entry.assetId === assetId);
@@ -384,8 +417,10 @@ test("create, edit, and publish flows work in the browser", async ({
     },
   );
 
-  await page.goto("/contents");
-
+  await page.goto("/login");
+  await page.getByLabel(/username/i).fill("admin");
+  await page.getByLabel(/password/i).fill("test1234");
+  await page.getByRole("button", { name: /^sign in$/i }).click();
   await expect(
     page.getByRole("heading", { name: /content studio/i }),
   ).toBeVisible();
@@ -404,13 +439,28 @@ test("create, edit, and publish flows work in the browser", async ({
     page.getByRole("heading", { name: /content #99/i }),
   ).toBeVisible();
 
-  await page.getByLabel(/external key/i).fill("lullaby.smoke-harbor.v2");
-  await page.getByRole("button", { name: /save metadata/i }).click();
-  await expect(page.getByLabel(/external key/i)).toHaveValue(
+  const metadataRegion = page.getByRole("region", { name: /^metadata$/i });
+  await metadataRegion.getByLabel(/external key/i).fill(
+    "lullaby.smoke-harbor.v2",
+  );
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/admin/contents/99") &&
+        response.request().method() === "PUT",
+    ),
+    metadataRegion
+      .getByRole("button", { name: /save metadata/i })
+      .evaluate((button) => {
+        (button as HTMLButtonElement).click();
+      }),
+  ]);
+  await expect(metadataRegion.getByLabel(/external key/i)).toHaveValue(
     "lullaby.smoke-harbor.v2",
   );
 
   await page
+    .getByRole("region", { name: /localization workspace/i })
     .getByRole("button", { name: /create first localization/i })
     .click();
   const localizationDialog = page.getByRole("dialog");

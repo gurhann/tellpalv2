@@ -357,13 +357,13 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     page.getByRole("heading", { name: /story pages for evening garden/i }),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: /edit/i }).click();
+  await page.getByRole("button", { name: /edit page 1/i }).click();
   const editorDialog = page.getByRole("dialog", { name: /edit story page/i });
   await editorDialog
     .getByRole("button", { name: /advanced/i })
     .nth(0)
     .click({ force: true });
-  let illustrationField = editorDialog.getByLabel(/illustration asset/i);
+  let illustrationField = editorDialog.getByLabel(/illustration asset id/i);
 
   await expect(editorDialog).toBeVisible();
   await expect(illustrationField).toHaveValue("41");
@@ -388,7 +388,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     .getByRole("button", { name: /advanced/i })
     .nth(0)
     .click({ force: true });
-  illustrationField = editorDialog.getByLabel(/illustration asset/i);
+  illustrationField = editorDialog.getByLabel(/illustration asset id/i);
   await expect(illustrationField).toHaveValue("42");
 
   await illustrationField.fill("52");
@@ -411,7 +411,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     .getByRole("button", { name: /advanced/i })
     .nth(0)
     .click({ force: true });
-  illustrationField = editorDialog.getByLabel(/illustration asset/i);
+  illustrationField = editorDialog.getByLabel(/illustration asset id/i);
   await expect(illustrationField).toHaveValue("51");
 });
 
@@ -705,8 +705,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   ).toBeVisible();
 
   await storyPageTable
-    .getByRole("button", { name: /^edit$/i })
-    .nth(1)
+    .getByRole("button", { name: /^edit page 2$/i })
     .click();
   const createEditorDialog = page.getByRole("dialog", {
     name: /edit story page/i,
@@ -723,8 +722,8 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   await createEditorDialog
     .getByLabel(/body text/i)
     .fill("Tilki gece bahcesindeki taslara yavasca yaklasir.");
-  await createEditorDialog.getByLabel(/illustration asset/i).fill("52");
-  await createEditorDialog.getByLabel(/audio asset/i).fill("84");
+  await createEditorDialog.getByLabel(/illustration asset id/i).fill("52");
+  await createEditorDialog.getByLabel(/audio asset id/i).fill("84");
   await Promise.all([
     page.waitForResponse(
       (response) =>
@@ -739,13 +738,12 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   ]);
 
   await expect(
-    createEditorDialog.getByLabel(/illustration asset/i),
+    createEditorDialog.getByLabel(/illustration asset id/i),
   ).toHaveValue("52");
   await page.getByRole("button", { name: /close editor/i }).click();
 
   await storyPageTable
-    .getByRole("button", { name: /^delete$/i })
-    .nth(1)
+    .getByRole("button", { name: /^delete page 2$/i })
     .click();
   await page.getByRole("button", { name: /delete page/i }).click();
 

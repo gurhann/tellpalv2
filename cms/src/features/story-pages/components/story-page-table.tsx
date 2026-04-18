@@ -105,6 +105,7 @@ function createColumns({
       cell: (storyPage) => (
         <div className="flex items-center justify-end gap-2">
           <Button
+            aria-label={`Edit page ${storyPage.pageNumber}`}
             disabled={isMutationPending}
             type="button"
             variant="outline"
@@ -114,6 +115,7 @@ function createColumns({
             Edit
           </Button>
           <Button
+            aria-label={`Delete page ${storyPage.pageNumber}`}
             disabled={isMutationPending}
             type="button"
             variant="ghost"

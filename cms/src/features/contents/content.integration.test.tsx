@@ -193,6 +193,13 @@ describe("Content integration", () => {
           return jsonResponse(createdRecord);
         }
 
+        if (
+          /^\/api\/admin\/contents\/\d+\/contributors$/.test(url.pathname) &&
+          method === "GET"
+        ) {
+          return jsonResponse([]);
+        }
+
         if (url.pathname === "/api/admin/media" && method === "GET") {
           return jsonResponse([]);
         }
@@ -368,6 +375,13 @@ describe("Content integration", () => {
           return jsonResponse(detailRecord);
         }
 
+        if (
+          /^\/api\/admin\/contents\/\d+\/contributors$/.test(url.pathname) &&
+          method === "GET"
+        ) {
+          return jsonResponse([]);
+        }
+
         if (url.pathname === "/api/admin/contents/1" && method === "PUT") {
           return problemResponse(
             403,
@@ -439,6 +453,13 @@ describe("Content integration", () => {
         }
 
         if (
+          /^\/api\/admin\/contents\/\d+\/contributors$/.test(url.pathname) &&
+          method === "GET"
+        ) {
+          return jsonResponse([]);
+        }
+
+        if (
           url.pathname === "/api/admin/contents/2/localizations/de" &&
           method === "PUT"
         ) {
@@ -507,6 +528,10 @@ describe("Content integration", () => {
     });
 
     await screen.findByRole("heading", { name: /regenraum pause/i });
+    expect(
+      await screen.findByRole("heading", { name: /locale workspace/i }),
+    ).toBeVisible();
+    expect(screen.getAllByText(/story handoff/i).length).toBeGreaterThan(0);
 
     fireEvent.change(screen.getByLabelText(/^title$/i), {
       target: { value: "Regenraum Fokus" },
@@ -544,6 +569,13 @@ describe("Content integration", () => {
 
         if (url.pathname === "/api/admin/contents/1" && method === "GET") {
           return jsonResponse(detailRecord);
+        }
+
+        if (
+          /^\/api\/admin\/contents\/\d+\/contributors$/.test(url.pathname) &&
+          method === "GET"
+        ) {
+          return jsonResponse([]);
         }
 
         if (

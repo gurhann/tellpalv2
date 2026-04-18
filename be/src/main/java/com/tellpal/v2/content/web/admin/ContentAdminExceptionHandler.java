@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetMediaTypeMismatchException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetReferenceNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessAlreadyExistsException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLocalizationAlreadyExistsException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLocalizationNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContentExternalKeyException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
@@ -22,7 +24,8 @@ import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 @RestControllerAdvice(basePackageClasses = {
         ContentAdminController.class,
         StoryPageAdminController.class,
-        FreeAccessAdminController.class
+        FreeAccessAdminController.class,
+        ContributorAdminController.class
 })
 public class ContentAdminExceptionHandler {
 
@@ -95,6 +98,28 @@ public class ContentAdminExceptionHandler {
                 "Contributor not found",
                 exception.getMessage(),
                 "contributor_not_found",
+                request);
+    }
+
+    @ExceptionHandler(ContentContributorNotFoundException.class)
+    ProblemDetail handleContentContributorNotFound(
+            ContentContributorNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Content contributor not found",
+                exception.getMessage(),
+                "content_contributor_not_found",
+                request);
+    }
+
+    @ExceptionHandler(ContributorInUseException.class)
+    ProblemDetail handleContributorInUse(ContributorInUseException exception, HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Contributor is still in use",
+                exception.getMessage(),
+                "contributor_in_use",
                 request);
     }
 

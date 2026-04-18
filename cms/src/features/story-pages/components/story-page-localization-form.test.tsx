@@ -70,7 +70,7 @@ describe("StoryPageLocalizationForm", () => {
       target: { value: "" },
     });
     fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
-    fireEvent.change(screen.getByLabelText(/audio asset/i), {
+    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
       target: { value: "" },
     });
     fireEvent.click(
@@ -143,10 +143,10 @@ describe("StoryPageLocalizationForm", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[0]!);
     fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
-    fireEvent.change(screen.getByLabelText(/illustration asset/i), {
+    fireEvent.change(screen.getByLabelText(/illustration asset id/i), {
       target: { value: "4" },
     });
-    fireEvent.change(screen.getByLabelText(/audio asset/i), {
+    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
       target: { value: "3" },
     });
     fireEvent.click(

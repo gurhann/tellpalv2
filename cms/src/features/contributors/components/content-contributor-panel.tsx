@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
+import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
 import { AssignContributorDialog } from "@/features/contributors/components/assign-contributor-dialog";
-import { MissingActionsNote } from "@/features/contributors/components/missing-actions-note";
+import { UnassignContributorButton } from "@/features/contributors/components/unassign-contributor-button";
 import { useContentContributorAssignments } from "@/features/contributors/queries/use-content-contributor-assignments";
 
 type ContentContributorPanelProps = {
@@ -51,7 +52,13 @@ export function ContentContributorPanel({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {assignments.length === 0 ? (
+          {assignmentQuery.problem ? (
+            <ProblemAlert problem={assignmentQuery.problem} />
+          ) : assignmentQuery.isLoading ? (
+            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
+              Loading contributor assignments from the admin API...
+            </div>
+          ) : assignments.length === 0 ? (
             <EmptyState
               action={
                 <Button
@@ -62,8 +69,8 @@ export function ContentContributorPanel({
                   Assign first contributor
                 </Button>
               }
-              description="Use the assignment dialog to add global or localized author, illustrator, narrator, or musician credits. Existing backend credits will become visible when a read endpoint is added."
-              title="No current-session assignments yet"
+              description="Use the assignment dialog to add global or localized author, illustrator, narrator, or musician credits."
+              title="No contributor assignments yet"
             />
           ) : (
             <div className="grid gap-3">
@@ -91,17 +98,13 @@ export function ContentContributorPanel({
                       <span className="inline-flex items-center rounded-full border border-border/70 bg-background px-3 py-1">
                         Sort {assignment.sortOrder}
                       </span>
+                      <UnassignContributorButton assignment={assignment} />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-
-          <MissingActionsNote
-            actionLabel="Unassign contributor"
-            description="The admin API still has no content-contributor unassign endpoint. This panel keeps successful current-session assignments visible, but it intentionally renders no remove button."
-          />
         </CardContent>
       </Card>
 

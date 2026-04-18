@@ -216,6 +216,19 @@ public class Content extends BaseJpaEntity {
         return assignment;
     }
 
+    /**
+     * Removes one contributor assignment identified by contributor, role, and optional language.
+     */
+    public void unassignContributor(Long contributorId, ContributorRole role, LanguageCode languageCode) {
+        requirePositiveContributorId(contributorId);
+        requireRole(role);
+        boolean removed = contributors.removeIf(assignment ->
+                assignment.matchesAssignment(contributorId, role, languageCode));
+        if (!removed) {
+            throw new IllegalArgumentException("Contributor assignment not found for role and language");
+        }
+    }
+
     private ContentLocalization createLocalization(
             LanguageCode languageCode,
             String title,
@@ -294,6 +307,10 @@ public class Content extends BaseJpaEntity {
 
     private static Long requireContributorId(Contributor contributor) {
         Long contributorId = contributor.getId();
+        return requirePositiveContributorId(contributorId);
+    }
+
+    private static Long requirePositiveContributorId(Long contributorId) {
         if (contributorId == null || contributorId <= 0) {
             throw new IllegalStateException("Contributor must be persisted before content assignment");
         }

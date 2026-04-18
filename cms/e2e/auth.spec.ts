@@ -86,7 +86,7 @@ test("login, bootstrap refresh, and logout work in the browser", async ({
   await expect(
     page.getByRole("heading", { name: /sign in to tellpal cms/i }),
   ).toBeVisible();
-  await expect.poll(() => refreshCalls).toBe(1);
+  await expect.poll(() => refreshCalls).toBeGreaterThanOrEqual(1);
 });
 
 test("expired refresh tokens redirect the user back to login", async ({

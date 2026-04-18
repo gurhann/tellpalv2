@@ -436,9 +436,11 @@ test("category create, edit, and localize use content-aligned types", async ({
   await expect(
     page.getByRole("heading", { name: /calm-lullabies/i }),
   ).toBeVisible();
-  await expect(page.getByText(/lullaby \/ standard \/ active/i)).toBeVisible();
   await expect(
-    page.getByText(/category type determines which content family/i),
+    page.getByText(/review metadata, locale workspaces, and curation/i),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/slug, premium, active state/i),
   ).toBeVisible();
 
   await page.getByLabel(/slug/i).fill("calm-lullabies-v2");
@@ -786,6 +788,30 @@ test("category curation add reorder remove survives refresh with hydrated locali
     },
   );
 
+  await page.route(
+    "**/api/admin/categories/7/localizations/en/eligible-contents**",
+    async (route) => {
+      if (route.request().method() !== "GET") {
+        await route.fallback();
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([
+          {
+            contentId: 11,
+            externalKey: "story.starry-forest",
+            localizedTitle: "Starry Forest",
+            languageCode: "en",
+            publishedAt: "2026-03-30T09:00:00Z",
+          },
+        ]),
+      });
+    },
+  );
+
   await page.route("**/api/admin/contents", async (route) => {
     if (route.request().method() !== "GET") {
       await route.fallback();
@@ -929,7 +955,7 @@ test("category curation add reorder remove survives refresh with hydrated locali
   await expect(
     page.getByRole("heading", { name: /add curated content/i }),
   ).toBeVisible();
-  await page.getByRole("button", { name: /#11 story\.starry-forest/i }).click();
+  await page.getByRole("button", { name: /starry forest/i }).click();
   await Promise.all([
     page.waitForResponse(
       (response) =>

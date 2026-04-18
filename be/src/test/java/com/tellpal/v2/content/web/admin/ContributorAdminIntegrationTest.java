@@ -3,6 +3,7 @@ package com.tellpal.v2.content.web.admin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -248,6 +249,105 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """.formatted(illustratorId)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+    }
+
+    @Test
+    void listAndUnassignContentContributorsRoundTripWithAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "list-contributor-story", 4, true));
+        Long contributorId = createContributor(accessToken, "List Author");
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contributorId": %d,
+                                  "role": "AUTHOR",
+                                  "languageCode": "tr",
+                                  "creditName": "List Author",
+                                  "sortOrder": 0
+                                }
+                                """.formatted(contributorId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contributorId").value(contributorId))
+                .andExpect(jsonPath("$[0].languageCode").value("tr"));
+
+        mockMvc.perform(delete("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("contributorId", contributorId.toString())
+                        .param("role", "AUTHOR")
+                        .param("languageCode", "tr"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void unassignMissingContributorAssignmentReturnsNotFoundProblemDetail() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "missing-assignment-story", 4, true));
+        Long contributorId = createContributor(accessToken, "Missing Assignment");
+
+        mockMvc.perform(delete("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("contributorId", contributorId.toString())
+                        .param("role", "AUTHOR")
+                        .param("languageCode", "tr"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_not_found"));
+    }
+
+    @Test
+    void deleteContributorRequiresAssignmentsToBeRemovedFirst() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "delete-contributor-story", 4, true));
+        Long contributorId = createContributor(accessToken, "Delete Protected");
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contributorId": %d,
+                                  "role": "AUTHOR",
+                                  "creditName": null,
+                                  "sortOrder": 0
+                                }
+                                """.formatted(contributorId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(delete("/api/admin/contributors/{contributorId}", contributorId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("contributor_in_use"));
+
+        mockMvc.perform(delete("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("contributorId", contributorId.toString())
+                        .param("role", "AUTHOR"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(delete("/api/admin/contributors/{contributorId}", contributorId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].contributorId", Matchers.not(Matchers.hasItem(contributorId.intValue()))));
     }
 
     private Long createContributor(String accessToken, String displayName) throws Exception {

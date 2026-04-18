@@ -19,7 +19,9 @@ import { useContributorActions } from "./use-contributor-actions";
 const contributorAdminApiMock = vi.hoisted(() => ({
   createContributor: vi.fn(),
   renameContributor: vi.fn(),
+  deleteContributor: vi.fn(),
   assignContributor: vi.fn(),
+  unassignContributor: vi.fn(),
 }));
 
 vi.mock("@/features/contributors/api/contributor-admin", async () => {
@@ -33,7 +35,9 @@ vi.mock("@/features/contributors/api/contributor-admin", async () => {
       ...actual.contributorAdminApi,
       createContributor: contributorAdminApiMock.createContributor,
       renameContributor: contributorAdminApiMock.renameContributor,
+      deleteContributor: contributorAdminApiMock.deleteContributor,
       assignContributor: contributorAdminApiMock.assignContributor,
+      unassignContributor: contributorAdminApiMock.unassignContributor,
     },
   };
 });
@@ -49,7 +53,9 @@ function createWrapper(queryClient: QueryClient) {
 beforeEach(() => {
   contributorAdminApiMock.createContributor.mockReset();
   contributorAdminApiMock.renameContributor.mockReset();
+  contributorAdminApiMock.deleteContributor.mockReset();
   contributorAdminApiMock.assignContributor.mockReset();
+  contributorAdminApiMock.unassignContributor.mockReset();
 });
 
 describe("useContributorActions", () => {
@@ -185,7 +191,52 @@ describe("useContributorActions", () => {
     );
   });
 
-  it("assigns a contributor inside one content context and updates the local assignment cache", async () => {
+  it("deletes a contributor and clears contributor caches", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+    const removeQueries = vi.spyOn(queryClient, "removeQueries");
+
+    queryClient.setQueryData(queryKeys.contributors.list({ limit: 12 }), [
+      contributorViewModels[0],
+    ]);
+    queryClient.setQueryData(
+      queryKeys.contributors.detail(11),
+      contributorViewModels[0],
+    );
+    contributorAdminApiMock.deleteContributor.mockResolvedValue(undefined);
+
+    const { result } = renderHook(
+      () =>
+        useContributorActions({
+          onDeleteSuccess: vi.fn(),
+        }),
+      {
+        wrapper: createWrapper(queryClient),
+      },
+    );
+
+    await act(async () => {
+      await result.current.deleteContributor.mutateAsync({
+        contributorId: 11,
+      });
+    });
+
+    expect(contributorAdminApiMock.deleteContributor).toHaveBeenCalledWith(11);
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.lists(),
+    });
+    expect(removeQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.detail(11),
+    });
+  });
+
+  it("assigns a contributor inside one content context and invalidates the assignment query", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -202,11 +253,9 @@ describe("useContributorActions", () => {
       creditName: "M. Rivers",
       sortOrder: 1,
     };
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
     const onAssignSuccess = vi.fn();
 
-    queryClient.setQueryData(queryKeys.contributors.assignments(1), [
-      contentContributorViewModels[0],
-    ]);
     contributorAdminApiMock.assignContributor.mockResolvedValue(assignment);
 
     const { result } = renderHook(
@@ -239,28 +288,13 @@ describe("useContributorActions", () => {
       creditName: "M. Rivers",
       sortOrder: 1,
     });
-    expect(
-      queryClient.getQueryData<
-        Array<{ contributorId: number; role: string; languageCode: string }>
-      >(queryKeys.contributors.assignments(1)),
-    ).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          contributorId: 11,
-          role: "AUTHOR",
-          languageCode: "en",
-        }),
-        expect.objectContaining({
-          contributorId: 12,
-          role: "NARRATOR",
-          languageCode: "tr",
-        }),
-      ]),
-    );
-    expect(onAssignSuccess).toHaveBeenCalledWith(assignment);
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.assignments(1),
+    });
+    expect(onAssignSuccess).toHaveBeenCalledWith(1);
   });
 
-  it("stores global assignments with a null language scope in the local cache", async () => {
+  it("unassigns a contributor and invalidates the assignment query", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -268,58 +302,46 @@ describe("useContributorActions", () => {
         },
       },
     });
-    const assignment: AdminContentContributorResponse = {
-      contentId: 1,
-      contributorId: 13,
-      contributorDisplayName: "Sena Yildiz",
-      role: "ILLUSTRATOR",
-      languageCode: null,
-      creditName: null,
-      sortOrder: 0,
-    };
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+    const onUnassignSuccess = vi.fn();
 
-    contributorAdminApiMock.assignContributor.mockResolvedValue(assignment);
+    queryClient.setQueryData(queryKeys.contributors.assignments(1), [
+      contentContributorViewModels[0],
+    ]);
+    contributorAdminApiMock.unassignContributor.mockResolvedValue(undefined);
 
-    const { result } = renderHook(() => useContributorActions(), {
-      wrapper: createWrapper(queryClient),
-    });
+    const { result } = renderHook(
+      () =>
+        useContributorActions({
+          onUnassignSuccess,
+        }),
+      {
+        wrapper: createWrapper(queryClient),
+      },
+    );
 
     await act(async () => {
-      await result.current.assignContributor.mutateAsync({
+      await result.current.unassignContributor.mutateAsync({
         contentId: 1,
         values: {
-          contributorId: 13,
-          role: "ILLUSTRATOR",
-          languageCode: null,
-          creditName: null,
-          sortOrder: 0,
+          contributorId: 11,
+          role: "AUTHOR",
+          languageCode: "en",
         },
       });
     });
 
-    expect(contributorAdminApiMock.assignContributor).toHaveBeenCalledWith(1, {
-      contributorId: 13,
-      role: "ILLUSTRATOR",
-      languageCode: null,
-      creditName: null,
-      sortOrder: 0,
-    });
-    expect(
-      queryClient.getQueryData<
-        Array<{
-          contributorId: number;
-          role: string;
-          languageCode: string | null;
-        }>
-      >(queryKeys.contributors.assignments(1)),
-    ).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          contributorId: 13,
-          role: "ILLUSTRATOR",
-          languageCode: null,
-        }),
-      ]),
+    expect(contributorAdminApiMock.unassignContributor).toHaveBeenCalledWith(
+      1,
+      {
+        contributorId: 11,
+        role: "AUTHOR",
+        languageCode: "en",
+      },
     );
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.assignments(1),
+    });
+    expect(onUnassignSuccess).toHaveBeenCalledWith(1);
   });
 });

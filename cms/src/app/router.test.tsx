@@ -284,7 +284,7 @@ describe("CMS router auth flow", () => {
       await screen.findByRole("heading", { name: /evening garden/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /open story pages/i }),
+      screen.getAllByRole("link", { name: /open story pages/i })[0],
     ).toHaveAttribute("href", "/contents/42/story-pages?language=en");
     expect(
       screen.getByRole("tablist", { name: /content localization tabs/i }),

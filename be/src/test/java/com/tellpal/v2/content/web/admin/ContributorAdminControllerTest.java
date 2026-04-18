@@ -1,7 +1,9 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -14,12 +16,14 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
@@ -91,6 +95,31 @@ class ContributorAdminControllerTest {
     }
 
     @Test
+    void deleteContributorReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/api/admin/contributors/11"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void listContentContributorsReturnsAssignments() throws Exception {
+        when(contributorManagementService.listContentContributors(51L)).thenReturn(List.of(
+                new ContentContributorRecord(
+                        51L,
+                        11L,
+                        "Elif Yilmaz",
+                        ContributorRole.AUTHOR,
+                        LanguageCode.TR,
+                        "E. Yilmaz",
+                        0)));
+
+        mockMvc.perform(get("/api/admin/contents/51/contributors"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contributorId").value(11))
+                .andExpect(jsonPath("$[0].languageCode").value("tr"));
+    }
+
+    @Test
     void assignContributorReturnsCreatedResponse() throws Exception {
         when(contributorManagementService.assignContentContributor(any())).thenReturn(new ContentContributorRecord(
                 51L,
@@ -149,6 +178,15 @@ class ContributorAdminControllerTest {
     }
 
     @Test
+    void unassignContributorReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/api/admin/contents/51/contributors")
+                        .param("contributorId", "11")
+                        .param("role", "AUTHOR")
+                        .param("languageCode", "tr"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void missingContributorBecomesNotFoundProblemDetails() throws Exception {
         when(contributorManagementService.renameContributor(any())).thenThrow(new ContributorNotFoundException(77L));
 
@@ -163,5 +201,30 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.title").value("Contributor not found"))
                 .andExpect(jsonPath("$.errorCode").value("contributor_not_found"))
                 .andExpect(jsonPath("$.requestId").isNotEmpty());
+    }
+
+    @Test
+    void contributorInUseBecomesConflictProblemDetails() throws Exception {
+        doThrow(new ContributorInUseException(11L))
+                .when(contributorManagementService)
+                .deleteContributor(any());
+
+        mockMvc.perform(delete("/api/admin/contributors/11"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("contributor_in_use"));
+    }
+
+    @Test
+    void missingContentContributorBecomesNotFoundProblemDetails() throws Exception {
+        doThrow(new ContentContributorNotFoundException(51L, 11L, ContributorRole.AUTHOR, LanguageCode.TR))
+                .when(contributorManagementService)
+                .unassignContentContributor(any());
+
+        mockMvc.perform(delete("/api/admin/contents/51/contributors")
+                        .param("contributorId", "11")
+                        .param("role", "AUTHOR")
+                        .param("languageCode", "tr"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_not_found"));
     }
 }

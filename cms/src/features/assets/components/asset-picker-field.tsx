@@ -27,6 +27,9 @@ type AssetPickerFieldProps = {
   placeholder?: string;
   pickerTitle: string;
   pickerDescription: string;
+  advancedLabel?: string;
+  manualInputLabel?: string;
+  testId?: string;
 };
 
 export function AssetPickerField({
@@ -41,6 +44,9 @@ export function AssetPickerField({
   placeholder = "Optional",
   pickerTitle,
   pickerDescription,
+  advancedLabel,
+  manualInputLabel,
+  testId,
 }: AssetPickerFieldProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -56,6 +62,9 @@ export function AssetPickerField({
   const selectedAssetHasWrongMediaType =
     selectedAsset !== null && selectedAsset.mediaType !== mediaType;
   const normalizedLabel = label.replaceAll("*", "").trim().toLowerCase();
+  const resolvedAdvancedLabel =
+    advancedLabel ?? `Advanced ${normalizedLabel} options`;
+  const resolvedManualInputLabel = manualInputLabel ?? "Manual asset id";
 
   function handleManualValueChange(nextValue: string) {
     if (nextValue.trim().length === 0) {
@@ -84,7 +93,7 @@ export function AssetPickerField({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-testid={testId}>
       <label className="text-sm font-medium text-foreground" htmlFor={id}>
         {label}
       </label>
@@ -159,6 +168,8 @@ export function AssetPickerField({
           <Button
             type="button"
             variant="ghost"
+            data-testid={testId ? `${testId}-advanced` : undefined}
+            title={resolvedAdvancedLabel}
             className="text-muted-foreground"
             onClick={() => setIsAdvancedOpen((current) => !current)}
             disabled={disabled}
@@ -186,10 +197,11 @@ export function AssetPickerField({
         <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground" htmlFor={id}>
-              Manual asset id
+              {resolvedManualInputLabel}
             </label>
             <Input
               id={id}
+              data-testid={testId ? `${testId}-input` : undefined}
               inputMode="numeric"
               placeholder={placeholder}
               type="number"

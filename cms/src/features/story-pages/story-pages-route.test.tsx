@@ -135,10 +135,12 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
-    expect(screen.getByText(/2 story pages/i)).toBeInTheDocument();
+    expect(screen.getByText(/total pages/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 localized/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
     expect(screen.getByText(/story\.evening-garden/i)).toBeInTheDocument();
-    expect(screen.getByText(/3 illustrations/i)).toBeInTheDocument();
+    expect(screen.getByText(/ready illustrations/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 localized illustrations/i)).toBeInTheDocument();
     expect(screen.getAllByText(/2 locales/i).length).toBeGreaterThan(0);
   });
 
@@ -225,7 +227,9 @@ describe("StoryPagesRoute", () => {
 
     renderStoryRoute();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /edit/i })[0]!);
+    fireEvent.click(
+      screen.getByRole("button", { name: /edit page 1/i }),
+    );
 
     expect(
       screen.getByRole("heading", { name: /edit story page/i }),
@@ -276,7 +280,9 @@ describe("StoryPagesRoute", () => {
 
     renderStoryRoute("/contents/1/story-pages?language=tr");
 
-    fireEvent.click(screen.getAllByRole("button", { name: /edit/i })[0]!);
+    fireEvent.click(
+      screen.getByRole("button", { name: /edit page 1/i }),
+    );
 
     expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
   });

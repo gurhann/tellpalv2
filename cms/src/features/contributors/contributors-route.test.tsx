@@ -53,6 +53,11 @@ describe("ContributorsRoute", () => {
         isPending: false,
         reset: vi.fn(),
       },
+      deleteContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
       renameContributor: {
         mutateAsync: vi.fn(),
         isPending: false,
@@ -74,9 +79,7 @@ describe("ContributorsRoute", () => {
     expect(screen.getByText("Annie Case")).toBeInTheDocument();
     expect(screen.getByText(/^Latest 12 records$/i)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /rename/i })).toHaveLength(3);
-    expect(
-      screen.getByText(/delete contributor unavailable/i),
-    ).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /delete/i })).toHaveLength(3);
   });
 
   it("renders empty contributor state inline when no records exist", () => {
@@ -85,6 +88,11 @@ describe("ContributorsRoute", () => {
     );
     contributorActionMocks.useContributorActions.mockReturnValue({
       createContributor: {
+        mutateAsync: vi.fn(),
+        isPending: false,
+        reset: vi.fn(),
+      },
+      deleteContributor: {
         mutateAsync: vi.fn(),
         isPending: false,
         reset: vi.fn(),

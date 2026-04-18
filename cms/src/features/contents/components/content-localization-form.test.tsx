@@ -247,7 +247,7 @@ describe("ContentLocalizationForm", () => {
       target: { value: "Regenraum Pause" },
     });
     fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
-    fireEvent.change(screen.getByLabelText(/manual asset id/i), {
+    fireEvent.change(screen.getByLabelText(/cover asset id/i), {
       target: { value: "8" },
     });
     fireEvent.change(screen.getByLabelText(/duration minutes/i), {

@@ -1,4 +1,4 @@
-import { PencilLine, Signature } from "lucide-react";
+import { PencilLine, Signature, Trash2 } from "lucide-react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,18 @@ type ContributorTableProps = {
   problem?: ApiProblemDetail | null;
   onRetry?: () => void;
   onRenameContributor?: (contributor: ContributorViewModel) => void;
+  onDeleteContributor?: (contributor: ContributorViewModel) => void;
   isMutationPending?: boolean;
 };
 
 function createContributorColumns({
   onRenameContributor,
+  onDeleteContributor,
   isMutationPending,
-}: Pick<ContributorTableProps, "onRenameContributor" | "isMutationPending">) {
+}: Pick<
+  ContributorTableProps,
+  "onRenameContributor" | "onDeleteContributor" | "isMutationPending"
+>) {
   return [
     {
       id: "contributor",
@@ -43,7 +48,7 @@ function createContributorColumns({
         </div>
       ),
     },
-    ...(onRenameContributor
+    ...(onRenameContributor || onDeleteContributor
       ? [
           {
             id: "actions",
@@ -51,16 +56,31 @@ function createContributorColumns({
             align: "right" as const,
             cellClassName: "w-[1%]",
             cell: (contributor: ContributorViewModel) => (
-              <div className="flex justify-end">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isMutationPending}
-                  onClick={() => onRenameContributor(contributor)}
-                >
-                  <PencilLine className="size-4" />
-                  Rename
-                </Button>
+              <div className="flex justify-end gap-2">
+                {onRenameContributor ? (
+                  <Button
+                    aria-label={`Rename ${contributor.displayName}`}
+                    type="button"
+                    variant="outline"
+                    disabled={isMutationPending}
+                    onClick={() => onRenameContributor(contributor)}
+                  >
+                    <PencilLine className="size-4" />
+                    Rename
+                  </Button>
+                ) : null}
+                {onDeleteContributor ? (
+                  <Button
+                    aria-label={`Delete ${contributor.displayName}`}
+                    type="button"
+                    variant="outline"
+                    disabled={isMutationPending}
+                    onClick={() => onDeleteContributor(contributor)}
+                  >
+                    <Trash2 className="size-4" />
+                    Delete
+                  </Button>
+                ) : null}
               </div>
             ),
           },
@@ -75,10 +95,12 @@ export function ContributorTable({
   problem = null,
   onRetry,
   onRenameContributor,
+  onDeleteContributor,
   isMutationPending = false,
 }: ContributorTableProps) {
   const contributorColumns = createContributorColumns({
     onRenameContributor,
+    onDeleteContributor,
     isMutationPending,
   });
 

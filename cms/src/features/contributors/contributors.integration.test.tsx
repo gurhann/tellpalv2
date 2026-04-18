@@ -6,7 +6,10 @@ import type {
   AdminContentContributorResponse,
   AdminContributorResponse,
 } from "@/features/contributors/api/contributor-admin";
-import { contributorResponses } from "@/features/contributors/test/fixtures";
+import {
+  contentContributorResponses,
+  contributorResponses,
+} from "@/features/contributors/test/fixtures";
 import { storyContentReadResponse } from "@/features/contents/test/fixtures";
 import type { AdminSessionPayload } from "@/types/api";
 
@@ -108,7 +111,7 @@ afterEach(async () => {
 
 describe("Contributor integration", () => {
   it(
-    "creates and renames contributors from the live registry route",
+    "creates, renames, and deletes contributors from the live registry route",
     async () => {
       const session = makeSession();
       const contributors = cloneJson(contributorResponses);
@@ -158,6 +161,19 @@ describe("Contributor integration", () => {
             return jsonResponse(contributor);
           }
 
+          if (
+            url.pathname.startsWith("/api/admin/contributors/") &&
+            method === "DELETE"
+          ) {
+            const contributorId = Number(url.pathname.split("/").at(-1));
+            const contributorIndex = contributors.findIndex(
+              (candidate) => candidate.contributorId === contributorId,
+            );
+
+            contributors.splice(contributorIndex, 1);
+            return new Response(null, { status: 204 });
+          }
+
           throw new Error(`Unexpected request to ${method} ${url.pathname}`);
         });
 
@@ -169,8 +185,6 @@ describe("Contributor integration", () => {
       });
 
       await screen.findByRole("heading", { name: /^contributors$/i, level: 1 });
-
-      expect(screen.getByText(/delete contributor unavailable/i)).toBeVisible();
 
       fireEvent.click(
         screen.getByRole("button", { name: /^create contributor$/i }),
@@ -206,15 +220,34 @@ describe("Contributor integration", () => {
       );
 
       expect(await screen.findByText("Annie Case Updated")).toBeVisible();
+
+      const deleteRow = screen.getByText("Milo Rivers").closest("tr");
+      expect(deleteRow).not.toBeNull();
+
+      fireEvent.click(
+        within(deleteRow as HTMLTableRowElement).getByRole("button", {
+          name: /^delete milo rivers$/i,
+        }),
+      );
+
+      const deleteDialog = await screen.findByRole("dialog");
+      fireEvent.click(
+        within(deleteDialog).getByRole("button", {
+          name: /^delete contributor$/i,
+        }),
+      );
+
+      expect(await screen.findByText("Annie Case Updated")).toBeVisible();
+      expect(screen.queryByText("Milo Rivers")).not.toBeInTheDocument();
     },
     15_000,
   );
 
-  it("assigns a global contributor from content detail and keeps the unavailable-action note visible", async () => {
+  it("loads persisted assignments, assigns a contributor, and unassigns a contributor from content detail", async () => {
     const session = makeSession();
     const content = cloneJson(storyContentReadResponse);
     const contributors = cloneJson(contributorResponses);
-    const assignments: AdminContentContributorResponse[] = [];
+    const assignments = cloneJson(contentContributorResponses);
     const fetchMock = vi
       .fn<typeof fetch>()
       .mockImplementation(async (input, init) => {
@@ -231,6 +264,13 @@ describe("Contributor integration", () => {
 
         if (url.pathname === "/api/admin/contributors" && method === "GET") {
           return jsonResponse(contributors);
+        }
+
+        if (
+          url.pathname === "/api/admin/contents/1/contributors" &&
+          method === "GET"
+        ) {
+          return jsonResponse(assignments);
         }
 
         if (
@@ -266,6 +306,26 @@ describe("Contributor integration", () => {
           return jsonResponse(assignment, 201);
         }
 
+        if (
+          url.pathname === "/api/admin/contents/1/contributors" &&
+          method === "DELETE"
+        ) {
+          const contributorId = Number(
+            url.searchParams.get("contributorId") ?? "0",
+          );
+          const role = url.searchParams.get("role");
+          const languageCode = url.searchParams.get("languageCode");
+          const assignmentIndex = assignments.findIndex(
+            (candidate) =>
+              candidate.contributorId === contributorId &&
+              candidate.role === role &&
+              candidate.languageCode === (languageCode ?? null),
+          );
+
+          assignments.splice(assignmentIndex, 1);
+          return new Response(null, { status: 204 });
+        }
+
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -277,8 +337,7 @@ describe("Contributor integration", () => {
     });
 
     await screen.findByRole("heading", { name: /evening garden/i });
-
-    expect(screen.getByText(/unassign contributor unavailable/i)).toBeVisible();
+    expect(await screen.findByText("M. Rivers")).toBeVisible();
 
     fireEvent.click(
       screen.getByRole("button", { name: /^assign contributor$/i }),
@@ -290,15 +349,33 @@ describe("Contributor integration", () => {
     });
     fireEvent.click(contributorSelect);
     fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Annie Case"),
+      within(screen.getByRole("listbox")).getByText("Sena Yildiz"),
     );
     fireEvent.click(
       within(dialog).getByRole("button", { name: /^assign contributor$/i }),
     );
 
-    expect(await screen.findByText("All languages")).toBeVisible();
-    expect(screen.getAllByText("Annie Case").at(0)).toBeVisible();
-    expect(assignments).toHaveLength(1);
-    expect(assignments[0]?.languageCode).toBeNull();
+    expect((await screen.findAllByText("Sena Yildiz")).length).toBeGreaterThan(
+      0,
+    );
+
+    const unassignButtons = screen.getAllByRole("button", {
+      name: /^unassign m\. rivers$/i,
+    });
+    fireEvent.click(unassignButtons[unassignButtons.length - 1]!);
+
+    const unassignDialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      within(unassignDialog).getByRole("button", {
+        name: /^unassign contributor$/i,
+      }),
+    );
+
+    expect((await screen.findAllByText("Sena Yildiz")).length).toBeGreaterThan(
+      0,
+    );
+    expect(
+      assignments.some((assignment) => assignment.creditName === "M. Rivers"),
+    ).toBe(false);
   });
 });

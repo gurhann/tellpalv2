@@ -320,15 +320,18 @@ export function CategoryLocalizationForm({
           name="imageMediaId"
           render={({ field }) => (
             <AssetPickerField
+              advancedLabel="Advanced image asset options"
               description={copy.imageDescription}
               disabled={saveLocalization.isPending}
               error={form.formState.errors.imageMediaId}
               id="imageMediaId"
               label={copy.imageLabel}
+              manualInputLabel={`${copy.imageLabel} id`}
               mediaType="IMAGE"
               pickerDescription={copy.imagePickerDescription}
               pickerTitle={copy.imagePickerTitle}
               placeholder={copy.optional}
+              testId="category-localization-image-asset"
               value={field.value}
               onChange={field.onChange}
             />

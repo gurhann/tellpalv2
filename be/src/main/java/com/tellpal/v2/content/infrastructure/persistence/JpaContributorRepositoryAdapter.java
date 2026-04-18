@@ -29,6 +29,11 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     }
 
     @Override
+    public void delete(Contributor contributor) {
+        repository.delete(contributor);
+    }
+
+    @Override
     public Contributor save(Contributor contributor) {
         return repository.save(contributor);
     }

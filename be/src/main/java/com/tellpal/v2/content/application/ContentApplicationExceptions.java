@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.asset.api.AssetMediaType;
+import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -69,6 +70,28 @@ public final class ContentApplicationExceptions {
 
         public ContributorNotFoundException(Long contributorId) {
             super("Contributor not found: " + contributorId);
+        }
+    }
+
+    public static final class ContentContributorNotFoundException extends RuntimeException {
+
+        public ContentContributorNotFoundException(Long contentId, Long contributorId, ContributorRole role,
+                LanguageCode languageCode) {
+            super("Content contributor assignment not found for content "
+                    + contentId
+                    + ", contributor "
+                    + contributorId
+                    + ", role "
+                    + role
+                    + " and language "
+                    + (languageCode == null ? "global" : languageCode.value()));
+        }
+    }
+
+    public static final class ContributorInUseException extends RuntimeException {
+
+        public ContributorInUseException(Long contributorId) {
+            super("Contributor is still assigned to content and cannot be deleted: " + contributorId);
         }
     }
 

@@ -36,6 +36,15 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long> {
             """)
     Optional<Content> findByIdForStoryPageAdminRead(Long id);
 
+    @Query("""
+            select distinct content
+            from Content content
+            left join fetch content.contributors assignment
+            left join fetch assignment.contributor
+            where content.id = :id
+            """)
+    Optional<Content> findByIdForContributorAdminRead(Long id);
+
     Optional<Content> findByExternalKey(String externalKey);
 
     boolean existsByExternalKey(String externalKey);
@@ -43,4 +52,12 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long> {
     List<Content> findAllByActiveTrue();
 
     List<Content> findAllByActiveTrueAndIdIn(Collection<Long> contentIds);
+
+    @Query("""
+            select count(assignment) > 0
+            from Content content
+            join content.contributors assignment
+            where assignment.contributor.id = :contributorId
+            """)
+    boolean existsContributorAssignment(Long contributorId);
 }

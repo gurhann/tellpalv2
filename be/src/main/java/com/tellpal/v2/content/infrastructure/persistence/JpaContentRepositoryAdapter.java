@@ -34,6 +34,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
+    public Optional<Content> findByIdForContributorAdminRead(Long id) {
+        return repository.findByIdForContributorAdminRead(id);
+    }
+
+    @Override
     public Optional<Content> findByExternalKey(String externalKey) {
         return repository.findByExternalKey(externalKey);
     }
@@ -56,6 +61,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     @Override
     public List<Content> findAllActiveByIdIn(Collection<Long> contentIds) {
         return repository.findAllByActiveTrueAndIdIn(contentIds);
+    }
+
+    @Override
+    public boolean existsContributorAssignment(Long contributorId) {
+        return repository.existsContributorAssignment(contributorId);
     }
 
     @Override

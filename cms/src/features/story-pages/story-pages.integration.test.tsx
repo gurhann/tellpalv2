@@ -222,7 +222,9 @@ describe("Story pages integration", () => {
       expect(screen.getByText("Page 2")).toBeVisible();
     });
 
-    fireEvent.click(screen.getAllByRole("button", { name: /^delete$/i })[1]!);
+    fireEvent.click(
+      screen.getByRole("button", { name: /^delete page 2$/i }),
+    );
 
     const deleteDialog = await screen.findByRole("dialog");
     fireEvent.click(
@@ -398,7 +400,7 @@ describe("Story pages integration", () => {
     });
     await screen.findByText("Page 2");
 
-    fireEvent.click(screen.getByRole("button", { name: /^edit$/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^edit page 2$/i }));
 
     const editorDialog = await screen.findByRole("dialog");
     const turkishTab = await within(editorDialog).findByRole("tab", {
@@ -435,12 +437,12 @@ describe("Story pages integration", () => {
       within(turkishForm!).getAllByRole("button", { name: /advanced/i })[1]!,
     );
     fireEvent.change(
-      within(turkishForm!).getByLabelText(/illustration asset/i),
+      within(turkishForm!).getByLabelText(/illustration asset id/i),
       {
         target: { value: "52" },
       },
     );
-    fireEvent.change(within(turkishForm!).getByLabelText(/audio asset/i), {
+    fireEvent.change(within(turkishForm!).getByLabelText(/audio asset id/i), {
       target: { value: "84" },
     });
     fireEvent.click(

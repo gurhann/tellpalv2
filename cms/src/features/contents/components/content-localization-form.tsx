@@ -86,7 +86,7 @@ export function ContentLocalizationForm({
   onCancel,
 }: ContentLocalizationFormProps) {
   const { locale } = useI18n();
-  const copy =
+  let copy =
     locale === "tr"
       ? {
           genericSaveError:
@@ -178,6 +178,53 @@ export function ContentLocalizationForm({
           optional: "Optional",
           required: "Required",
         };
+  if (locale === "tr") {
+    copy = {
+      genericSaveError:
+        "Yerellestirme degisiklikleri kaydedilemedi. Tekrar deneyin.",
+      createLoading: "Yerellestirme olusturuluyor...",
+      updateLoading: "Yerellestirme kaydediliyor...",
+      createSuccess: "Yerellestirme olusturuldu.",
+      updateSuccess: "Yerellestirme kaydedildi.",
+      languageExists: "Bu icerik icin bu dil zaten var.",
+      language: "Dil",
+      selectLanguage: "Dil secin",
+      localeCode: "Dil kodu",
+      title: "Baslik",
+      localizedTitle: "Yerellestirilmis baslik",
+      description: "Aciklama",
+      localizedDescription: "Bu dil icin kisa editoryal ozet",
+      storyGuidance:
+        "Hikaye yerellestirmeleri anlati metnini ve sayfa bazli sesi story pages alt rotasinda tutar. Bu form yalnizca icerik seviyesinde yasayan dil metadata'sini, durumu ve asset baglantilarini duzenler.",
+      bodyText: "Govde metni",
+      localizedBody: "Yerellestirilmis govde metni",
+      audioDescription:
+        "Bu yerellestirme icin yeni bir ses dosyasi yukleyin veya mevcut `AUDIO` asset'leri buradan secin.",
+      audioLabel: "Ses asset'i *",
+      audioPickerDescription:
+        "Bu icerik yerellestirmesi icin son ses asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
+      audioPickerTitle: "Yerellestirme ses asset'i sec",
+      coverDescription:
+        "Kapak gorselini buradan yukleyin veya editorden cikmadan mevcut `IMAGE` asset'lerini secin.",
+      coverLabel: "Kapak asset'i",
+      coverPickerDescription:
+        "Yerellestirilmis kapak icin son gorsel asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
+      coverPickerTitle: "Yerellestirme kapak asset'i sec",
+      durationMinutes: "Sure (dakika)",
+      status: "Durum",
+      selectStatus: "Durum secin",
+      processingStatus: "Isleme durumu",
+      selectProcessingStatus: "Isleme durumu secin",
+      publishedAt: "Yayinlanma zamani",
+      publishedHelp:
+        "Yayinlama icin zaman damgasi gerekir. Mevcut bir dil kaydini geriye donuk doldururken veya manuel yayin penceresi hazirlarken bunu kullanin.",
+      cancel: "Iptal",
+      createLocalization: "Yerellestirme olustur",
+      saveLocalization: "Yerellestirmeyi kaydet",
+      optional: "Opsiyonel",
+      required: "Zorunlu",
+    };
+  }
   const form = useZodForm<ContentLocalizationFormValues>({
     schema: useMemo(
       () => createContentLocalizationSchema(content.summary.type),
@@ -368,15 +415,18 @@ export function ContentLocalizationForm({
               name="audioMediaId"
               render={({ field }) => (
                 <AssetPickerField
+                  advancedLabel="Advanced audio asset options"
                   description={copy.audioDescription}
                   disabled={saveLocalization.isPending}
                   error={form.formState.errors.audioMediaId}
                   id="audioMediaId"
                   label={copy.audioLabel}
+                  manualInputLabel={`${copy.audioLabel.replace("*", "").trim()} id`}
                   mediaType="AUDIO"
                   pickerDescription={copy.audioPickerDescription}
                   pickerTitle={copy.audioPickerTitle}
                   placeholder={copy.required}
+                  testId="content-localization-audio-asset"
                   value={field.value}
                   onChange={field.onChange}
                 />
@@ -390,15 +440,18 @@ export function ContentLocalizationForm({
           name="coverMediaId"
           render={({ field }) => (
             <AssetPickerField
+              advancedLabel="Advanced cover asset options"
               description={copy.coverDescription}
               disabled={saveLocalization.isPending}
               error={form.formState.errors.coverMediaId}
               id="coverMediaId"
               label={copy.coverLabel}
+              manualInputLabel={`${copy.coverLabel} id`}
               mediaType="IMAGE"
               pickerDescription={copy.coverPickerDescription}
               pickerTitle={copy.coverPickerTitle}
               placeholder={copy.optional}
+              testId="content-localization-cover-asset"
               value={field.value}
               onChange={field.onChange}
             />

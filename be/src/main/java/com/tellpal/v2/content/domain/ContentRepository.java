@@ -26,6 +26,11 @@ public interface ContentRepository {
     Optional<Content> findByIdForStoryPageAdminRead(Long id);
 
     /**
+     * Loads one aggregate with contributor assignment state for admin contributor flows.
+     */
+    Optional<Content> findByIdForContributorAdminRead(Long id);
+
+    /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */
     Optional<Content> findByExternalKey(String externalKey);
@@ -49,6 +54,11 @@ public interface ContentRepository {
      * Loads the active aggregates for the provided ids and ignores inactive or missing entries.
      */
     List<Content> findAllActiveByIdIn(Collection<Long> contentIds);
+
+    /**
+     * Returns whether any content aggregate currently references the contributor.
+     */
+    boolean existsContributorAssignment(Long contributorId);
 
     /**
      * Persists the current aggregate state, including nested localizations and story pages.

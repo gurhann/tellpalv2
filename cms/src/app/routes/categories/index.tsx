@@ -18,6 +18,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { TaskRail } from "@/components/workspace/task-rail";
+import {
+  WorkspaceInfoCard,
+  WorkspaceKeyValueGrid,
+} from "@/components/workspace/workspace-primitives";
 import { CategoryForm } from "@/features/categories/components/category-form";
 import { CategoryListTable } from "@/features/categories/components/category-list-table";
 import { useCategoryList } from "@/features/categories/queries/use-category-list";
@@ -42,20 +47,32 @@ export function CategoriesIndexRoute() {
   const copy =
     locale === "tr"
       ? {
-          eyebrow: "Kategori Stüdyosu",
+          eyebrow: "Kategori Studyosu",
           title: "Kategoriler",
           description:
-            "Kategori kayıtlarını filtreleyin, oluşturun ve görev odaklı detay stüdyosuna geçin.",
+            "Kategori kayitlarini filtreleyin, olusturun ve detay studyosuna gecin.",
           refresh: "Yenile",
-          create: "Kategori oluştur",
+          create: "Kategori olustur",
           searchLabel: "Kategori ara",
-          searchPlaceholder: "Slug’a göre ara",
-          filterTypes: "Tüm türler",
-          filterAccess: "Tüm erişim tipleri",
-          filterState: "Tüm durumlar",
-          createDialogTitle: "Kategori oluştur",
+          searchPlaceholder: "Slug'a gore ara",
+          filterTypes: "Tum turler",
+          filterAccess: "Tum erisim tipleri",
+          filterState: "Tum durumlar",
+          createDialogTitle: "Kategori olustur",
           createDialogDescription:
-            "Temel metadata ile yeni bir kategori oluşturun. Kaydetme sonrası CMS yeni detay rotasını açar.",
+            "Temel metadata ile yeni bir kategori olusturun. Kaydetme sonrasi CMS yeni detay rotasini acar.",
+          railTitle: "Category posture",
+          railDescription:
+            "Localization ve curation handoff'una gecmeden once tip, erisim ve aktiflik dengesini taranabilir tutun.",
+          activeRecords: "Aktif kayit",
+          premiumRecords: "Premium kayit",
+          storyCategories: "Story kategori",
+          notesTitle: "Kurasyon notlari",
+          notesDescription:
+            "Secilen kategori metadata lane, locale workspace ve curation lane ile ayni akista acilir.",
+          resultLabel: "Arama sonucu",
+          nextStepLabel: "Sonraki adim",
+          nextStepValue: "Kategori detail workspace",
         }
       : {
           eyebrow: "Category Studio",
@@ -72,6 +89,18 @@ export function CategoriesIndexRoute() {
           createDialogTitle: "Create category",
           createDialogDescription:
             "Create a new category with base metadata. After save, the CMS opens the new detail route.",
+          railTitle: "Category posture",
+          railDescription:
+            "Keep type, access, and activation balance visible before moving into localization and curation lanes.",
+          activeRecords: "Active records",
+          premiumRecords: "Premium records",
+          storyCategories: "Story categories",
+          notesTitle: "Curation notes",
+          notesDescription:
+            "Selected categories open with metadata, locale workspace, and curation staying on one route.",
+          resultLabel: "Search result",
+          nextStepLabel: "Next step",
+          nextStepValue: "Category detail workspace",
         };
 
   const typeOptions = useMemo(() => {
@@ -122,12 +151,78 @@ export function CategoriesIndexRoute() {
     selectedType,
   ]);
 
+  const activeRecordCount = useMemo(
+    () => filteredCategories.filter((category) => category.active).length,
+    [filteredCategories],
+  );
+  const premiumRecordCount = useMemo(
+    () => filteredCategories.filter((category) => category.premium).length,
+    [filteredCategories],
+  );
+  const storyCategoryCount = useMemo(
+    () =>
+      filteredCategories.filter((category) => category.type === "STORY").length,
+    [filteredCategories],
+  );
+  const filterSummaryTitle =
+    locale === "tr"
+      ? `${filteredCategories.length} / ${categoryListQuery.categories.length} kayit`
+      : `${filteredCategories.length} / ${categoryListQuery.categories.length} records`;
+  const filterSummaryDescription =
+    locale === "tr"
+      ? "Arama ve filtreler kategori registry gorunumunu aninda daraltir."
+      : "Search and filters narrow the category registry immediately.";
+
   return (
     <>
       <ContentPageShell
         eyebrow={copy.eyebrow}
         title={copy.title}
         description={copy.description}
+        aside={
+          <TaskRail
+            title={copy.railTitle}
+            description={copy.railDescription}
+            stats={[
+              {
+                label: copy.activeRecords,
+                value: `${activeRecordCount} / ${filteredCategories.length}`,
+                tone: activeRecordCount > 0 ? "success" : "default",
+              },
+              {
+                label: copy.premiumRecords,
+                value: `${premiumRecordCount} / ${filteredCategories.length}`,
+              },
+              {
+                label: copy.storyCategories,
+                value: `${storyCategoryCount} / ${filteredCategories.length}`,
+              },
+            ]}
+          >
+            <WorkspaceInfoCard
+              title={copy.notesTitle}
+              description={copy.notesDescription}
+              className="bg-background/80"
+            >
+              <WorkspaceKeyValueGrid
+                items={[
+                  {
+                    label: copy.resultLabel,
+                    value:
+                      locale === "tr"
+                        ? `${filteredCategories.length} kayit`
+                        : `${filteredCategories.length} records`,
+                  },
+                  {
+                    label: copy.nextStepLabel,
+                    value: copy.nextStepValue,
+                    tone: "accent",
+                  },
+                ]}
+              />
+            </WorkspaceInfoCard>
+          </TaskRail>
+        }
         actions={
           <>
             <Button
@@ -230,16 +325,8 @@ export function CategoriesIndexRoute() {
               ))}
             </FilterBarActions>
             <FilterBarSummary
-              title={
-                locale === "tr"
-                  ? `${filteredCategories.length} / ${categoryListQuery.categories.length} kayıt`
-                  : `${filteredCategories.length} / ${categoryListQuery.categories.length} records`
-              }
-              description={
-                locale === "tr"
-                  ? "Arama ve filtreler kategori registry görünümünü anında daraltır."
-                  : "Search and filters narrow the category registry immediately."
-              }
+              title={filterSummaryTitle}
+              description={filterSummaryDescription}
             />
           </FilterBar>
         }
@@ -247,9 +334,7 @@ export function CategoriesIndexRoute() {
         <CategoryListTable
           categories={filteredCategories}
           isLoading={categoryListQuery.isLoading}
-          onCategorySelect={(category) =>
-            navigate(`/categories/${category.id}`)
-          }
+          onCategorySelect={(category) => navigate(`/categories/${category.id}`)}
           onRetry={() => void categoryListQuery.refetch()}
           problem={categoryListQuery.problem}
         />
