@@ -5,7 +5,7 @@ import { apiClient } from "@/lib/http/client";
 const pageNumberSchema = z.number().int().positive();
 
 export type AddStoryPageInput = {
-  pageNumber: number;
+  afterPageNumber?: number | null;
 };
 
 export type UpsertStoryPageLocalizationInput = {

@@ -40,10 +40,27 @@ public class StoryPageManagementService {
     @Transactional
     public StoryPageRecord addStoryPage(AddStoryPageCommand command) {
         Content content = loadContent(command.contentId());
-        StoryPage storyPage = content.addStoryPage(command.pageNumber());
+        if (command.afterPageNumber() == null) {
+            StoryPage storyPage = content.addStoryPage(null);
+            return ContentManagementMapper.toStoryPageRecord(
+                    command.contentId(),
+                    contentRepository.save(content).findStoryPage(storyPage.getPageNumber()).orElse(storyPage));
+        }
+
+        int temporaryOffset = requireTemporaryOffset(content);
+        loadStoryPage(content, command.afterPageNumber());
+        content.offsetStoryPagesAfter(command.afterPageNumber(), temporaryOffset);
+        contentRepository.saveAndFlush(content);
+
+        int insertedPageNumber = command.afterPageNumber() + 1;
+        StoryPage insertedPage = content.addStoryPageAt(insertedPageNumber);
+        contentRepository.saveAndFlush(content);
+
+        content.renumberStoryPagesContiguously();
+        Content persistedContent = contentRepository.save(content);
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
-                contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
+                persistedContent.findStoryPage(insertedPageNumber).orElse(insertedPage));
     }
 
     /**
@@ -65,7 +82,11 @@ public class StoryPageManagementService {
     public void removeStoryPage(RemoveStoryPageCommand command) {
         Content content = loadContent(command.contentId());
         loadStoryPage(content, command.pageNumber());
-        content.removeStoryPage(command.pageNumber());
+        content.offsetStoryPagesAfter(command.pageNumber(), requireTemporaryOffset(content));
+        contentRepository.saveAndFlush(content);
+        content.removeStoryPageOnly(command.pageNumber());
+        contentRepository.saveAndFlush(content);
+        content.renumberStoryPagesContiguously();
         contentRepository.save(content);
     }
 
@@ -119,5 +140,13 @@ public class StoryPageManagementService {
             throw new IllegalStateException("Content must be persisted before story-page operations");
         }
         return contentId;
+    }
+
+    private static int requireTemporaryOffset(Content content) {
+        Integer pageCount = content.getPageCount();
+        if (pageCount == null || pageCount < 0) {
+            throw new IllegalStateException("Story page count must be available for renumbering");
+        }
+        return pageCount + 1;
     }
 }

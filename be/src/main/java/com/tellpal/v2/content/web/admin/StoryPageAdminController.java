@@ -159,11 +159,11 @@ public class StoryPageAdminController {
 }
 
 record AddStoryPageRequest(
-        @Positive(message = "pageNumber must be positive")
-        int pageNumber) {
+        @Positive(message = "afterPageNumber must be positive")
+        Integer afterPageNumber) {
 
     AddStoryPageCommand toCommand(Long contentId) {
-        return new AddStoryPageCommand(contentId, pageNumber);
+        return new AddStoryPageCommand(contentId, afterPageNumber);
     }
 }
 

@@ -161,11 +161,12 @@ describe("Story pages integration", () => {
 
           if (method === "POST") {
             const body = (await readRequestJson(init)) as {
-              pageNumber: number;
+              afterPageNumber?: number | null;
             };
+            const pageNumber = (body?.afterPageNumber ?? storyPages.length) + 1;
             const createdPage: AdminStoryPageReadResponse = {
               contentId: 1,
-              pageNumber: body.pageNumber,
+              pageNumber,
               localizationCount: 0,
               localizations: [],
             };
@@ -173,7 +174,7 @@ describe("Story pages integration", () => {
 
             return jsonResponse({
               contentId: 1,
-              pageNumber: body.pageNumber,
+              pageNumber,
               localizationCount: 0,
             });
           }
@@ -210,17 +211,11 @@ describe("Story pages integration", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /^add story page$/i }));
 
-    const createDialog = await screen.findByRole("dialog");
-    fireEvent.change(within(createDialog).getByLabelText(/page number/i), {
-      target: { value: "2" },
-    });
-    fireEvent.click(
-      within(createDialog).getByRole("button", { name: /^add story page$/i }),
-    );
-
     await waitFor(() => {
       expect(screen.getByText("Page 2")).toBeVisible();
     });
+    await screen.findByRole("heading", { name: /page 2 .* english/i });
+    fireEvent.click(screen.getByRole("button", { name: /close editor/i }));
 
     fireEvent.click(
       screen.getByRole("button", { name: /^delete page 2$/i }),

@@ -22,6 +22,7 @@ import com.tellpal.v2.content.application.ContentManagementCommands.CreateConten
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.RemoveStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
@@ -79,8 +80,8 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "moonlight-story", 5, true));
 
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
         storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 2));
         storyPageManagementService.removeStoryPage(new RemoveStoryPageCommand(content.contentId(), 1));
 
         Integer pageCount = jdbcTemplate.queryForObject(
@@ -91,6 +92,30 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(pageCount).isEqualTo(1);
         assertThat(contentLookupApi.findById(content.contentId()))
                 .hasValueSatisfying(reference -> assertThat(reference.pageCount()).isEqualTo(1));
+    }
+
+    @Test
+    void insertingAndRemovingStoryPagesKeepsPageNumbersContiguous() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "renumber-story", 5, true));
+
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
+        StoryPageRecord inserted = storyPageManagementService.addStoryPage(
+                new AddStoryPageCommand(content.contentId(), 1));
+
+        assertThat(inserted.pageNumber()).isEqualTo(2);
+        assertThat(jdbcTemplate.queryForList(
+                "select page_number from story_pages where content_id = ? order by page_number",
+                Integer.class,
+                content.contentId())).containsExactly(1, 2, 3);
+
+        storyPageManagementService.removeStoryPage(new RemoveStoryPageCommand(content.contentId(), 2));
+
+        assertThat(jdbcTemplate.queryForList(
+                "select page_number from story_pages where content_id = ? order by page_number",
+                Integer.class,
+                content.contentId())).containsExactly(1, 2);
     }
 
     @Test

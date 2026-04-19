@@ -88,7 +88,7 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
                 ProcessingStatus.PENDING,
                 null));
 
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
         storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
                 content.contentId(),
                 1,

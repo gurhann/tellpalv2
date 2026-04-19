@@ -46,6 +46,10 @@ public class StoryPage extends BaseJpaEntity {
         return pageNumber;
     }
 
+    void renumber(int pageNumber) {
+        this.pageNumber = requirePositive(pageNumber, "Story page number must be positive");
+    }
+
     public Set<StoryPageLocalization> getLocalizations() {
         return Collections.unmodifiableSet(localizations);
     }

@@ -77,6 +77,24 @@ function makeStoryPageState(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function makeStoryPageQuery(pageNumber?: number | null) {
+  if (pageNumber === 3) {
+    return {
+      ...storyPageViewModels[0],
+      pageNumber: 3,
+      localizationCount: 0,
+      localizations: [],
+      primaryLocalization: null,
+      languageCodes: [],
+      illustratedLocalizationCount: 0,
+      missingIllustrationCount: 0,
+      hasCompleteIllustrationCoverage: false,
+    };
+  }
+
+  return storyPageViewModels[0];
+}
+
 function renderStoryRoute(initialEntry = "/contents/1/story-pages") {
   return render(
     <MemoryRouter initialEntries={[initialEntry]}>
@@ -94,11 +112,13 @@ describe("StoryPagesRoute", () => {
   it("renders the story-only route shell for STORY content", () => {
     contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
-    storyPageHookMocks.useStoryPage.mockReturnValue({
-      storyPage: storyPageViewModels[0],
-      isLoading: false,
-      problem: null,
-    });
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
+    );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
@@ -135,14 +155,13 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
-    expect(screen.getByText(/total pages/i)).toBeInTheDocument();
-    expect(screen.getByText(/2 localized/i)).toBeInTheDocument();
+    expect(screen.getByText(/active locale/i)).toBeInTheDocument();
+    expect(screen.getByText(/ready in selected locale/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
-    expect(screen.getByText(/story\.evening-garden/i)).toBeInTheDocument();
-    expect(screen.getByText(/ready illustrations/i)).toBeInTheDocument();
-    expect(screen.getByText(/3 localized illustrations/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/2 locales/i).length).toBeGreaterThan(0);
-    expect(screen.queryByText(/structure notes/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/english status/i)).toBeInTheDocument();
+    expect(screen.getByText(/all locale coverage/i)).toBeInTheDocument();
+    expect(screen.queryByText(/locale handoff/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/story readiness/i)).toBeInTheDocument();
   });
 
   it("keeps non-story content out of the route shell", () => {
@@ -150,11 +169,13 @@ describe("StoryPagesRoute", () => {
       makeDetailState({ content: inactiveContentViewModel }),
     );
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
-    storyPageHookMocks.useStoryPage.mockReturnValue({
-      storyPage: storyPageViewModels[0],
-      isLoading: false,
-      problem: null,
-    });
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
+    );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
@@ -196,11 +217,13 @@ describe("StoryPagesRoute", () => {
   it("opens the page editor with parent language workspaces", () => {
     contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
-    storyPageHookMocks.useStoryPage.mockReturnValue({
-      storyPage: storyPageViewModels[0],
-      isLoading: false,
-      problem: null,
-    });
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
+    );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
@@ -233,9 +256,8 @@ describe("StoryPagesRoute", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: /edit story page/i }),
+      screen.getByRole("heading", { name: /page 1 .* english/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Localized page workspaces")).toBeInTheDocument();
     expect(screen.getAllByText(/english/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/turkish/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/illustration asset/i).length).toBeGreaterThan(
@@ -249,11 +271,13 @@ describe("StoryPagesRoute", () => {
   it("opens the page editor focused on the locale requested by the content detail route", () => {
     contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
-    storyPageHookMocks.useStoryPage.mockReturnValue({
-      storyPage: storyPageViewModels[0],
-      isLoading: false,
-      problem: null,
-    });
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
+    );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
@@ -286,5 +310,56 @@ describe("StoryPagesRoute", () => {
     );
 
     expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
+
+  it("creates a page immediately and opens the editor", async () => {
+    const addStoryPage = vi.fn().mockResolvedValue({
+      contentId: 1,
+      pageNumber: 3,
+      localizationCount: 0,
+    });
+
+    contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
+    storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
+    );
+    storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+      addStoryPage: { isPending: false, mutateAsync: addStoryPage },
+      removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /^add story page$/i }));
+
+    expect(addStoryPage).toHaveBeenCalledWith({ afterPageNumber: null });
+    expect(
+      await screen.findByRole("heading", { name: /page 3 .* english/i }),
+    ).toBeInTheDocument();
   });
 });

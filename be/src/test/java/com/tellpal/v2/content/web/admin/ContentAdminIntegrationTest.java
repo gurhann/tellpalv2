@@ -146,9 +146,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "pageNumber": 1
-                                }
+                                {}
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.pageNumber").value(1));
@@ -311,13 +309,11 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "pageNumber": 2
-                                }
+                                {}
                                 """))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(put("/api/admin/contents/{contentId}/story-pages/2/localizations/tr", contentId)
+        mockMvc.perform(put("/api/admin/contents/{contentId}/story-pages/1/localizations/tr", contentId)
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
@@ -334,16 +330,16 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].contentId").value(contentId))
-                .andExpect(jsonPath("$[0].pageNumber").value(2))
+                .andExpect(jsonPath("$[0].pageNumber").value(1))
                 .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
                 .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(audioMediaId))
                 .andExpect(jsonPath("$[0].localizations[0].illustrationMediaId").value(illustrationMediaId));
 
-        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages/2", contentId)
+        mockMvc.perform(get("/api/admin/contents/{contentId}/story-pages/1", contentId)
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(contentId))
-                .andExpect(jsonPath("$.pageNumber").value(2))
+                .andExpect(jsonPath("$.pageNumber").value(1))
                 .andExpect(jsonPath("$.localizations[0].bodyText").value("Bir varmis bir yokmus."))
                 .andExpect(jsonPath("$.localizations[0].illustrationMediaId").value(illustrationMediaId));
     }
@@ -496,9 +492,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "pageNumber": 1
-                                }
+                                {}
                                 """))
                 .andExpect(status().isCreated());
 

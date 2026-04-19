@@ -1,7 +1,9 @@
 package com.tellpal.v2.content.domain;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -164,11 +166,31 @@ public class Content extends BaseJpaEntity {
     /**
      * Adds a story page and updates aggregate-owned page count.
      */
-    public StoryPage addStoryPage(int pageNumber) {
+    public StoryPage addStoryPage(Integer afterPageNumber) {
         ensureStoryType();
-        if (storyPages.stream().anyMatch(page -> page.getPageNumber() == pageNumber)) {
-            throw new IllegalArgumentException("Story page number must be unique within a content item");
+        List<StoryPage> orderedStoryPages = getOrderedStoryPages();
+        int insertIndex = orderedStoryPages.size();
+
+        if (afterPageNumber != null) {
+            insertIndex = indexOfPage(orderedStoryPages, afterPageNumber);
+            if (insertIndex < 0) {
+                throw new IllegalArgumentException("Story page not found: " + afterPageNumber);
+            }
+            insertIndex += 1;
         }
+
+        StoryPage storyPage = new StoryPage(this, orderedStoryPages.size() + 1);
+        storyPages.add(storyPage);
+        orderedStoryPages.add(insertIndex, storyPage);
+        renumberStoryPages(orderedStoryPages);
+        return storyPage;
+    }
+
+    /**
+     * Adds a story page at an explicit page number without renumbering the remaining pages.
+     */
+    public StoryPage addStoryPageAt(int pageNumber) {
+        ensureStoryType();
         StoryPage storyPage = new StoryPage(this, pageNumber);
         storyPages.add(storyPage);
         syncPageCount();
@@ -176,14 +198,51 @@ public class Content extends BaseJpaEntity {
     }
 
     /**
+     * Applies a temporary positive offset to pages after the supplied page number.
+     */
+    public void offsetStoryPagesAfter(int pageNumber, int offset) {
+        ensureStoryType();
+        if (offset <= 0) {
+            throw new IllegalArgumentException("Story page offset must be positive");
+        }
+        for (StoryPage storyPage : storyPages) {
+            if (storyPage.getPageNumber() > pageNumber) {
+                storyPage.renumber(storyPage.getPageNumber() + offset);
+            }
+        }
+    }
+
+    /**
+     * Renumbers all story pages so the aggregate stays contiguous from page 1.
+     */
+    public void renumberStoryPagesContiguously() {
+        ensureStoryType();
+        renumberStoryPages(getOrderedStoryPages());
+    }
+
+    /**
      * Removes a story page and updates aggregate-owned page count.
      */
     public void removeStoryPage(int pageNumber) {
         ensureStoryType();
-        boolean removed = storyPages.removeIf(page -> page.getPageNumber() == pageNumber);
-        if (!removed) {
+        List<StoryPage> orderedStoryPages = getOrderedStoryPages();
+        int removedIndex = indexOfPage(orderedStoryPages, pageNumber);
+        if (removedIndex < 0) {
             throw new IllegalArgumentException("Story page not found: " + pageNumber);
         }
+        StoryPage removedStoryPage = orderedStoryPages.remove(removedIndex);
+        storyPages.remove(removedStoryPage);
+        renumberStoryPages(orderedStoryPages);
+    }
+
+    /**
+     * Removes a story page without renumbering the remaining pages.
+     */
+    public void removeStoryPageOnly(int pageNumber) {
+        ensureStoryType();
+        StoryPage removedStoryPage = findStoryPage(pageNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Story page not found: " + pageNumber));
+        storyPages.remove(removedStoryPage);
         syncPageCount();
     }
 
@@ -246,6 +305,28 @@ public class Content extends BaseJpaEntity {
 
     private void syncPageCount() {
         pageCount = storyPages.size();
+    }
+
+    private List<StoryPage> getOrderedStoryPages() {
+        return storyPages.stream()
+                .sorted(Comparator.comparingInt(StoryPage::getPageNumber))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    private void renumberStoryPages(List<StoryPage> orderedStoryPages) {
+        for (int index = 0; index < orderedStoryPages.size(); index += 1) {
+            orderedStoryPages.get(index).renumber(index + 1);
+        }
+        syncPageCount();
+    }
+
+    private static int indexOfPage(List<StoryPage> orderedStoryPages, int pageNumber) {
+        for (int index = 0; index < orderedStoryPages.size(); index += 1) {
+            if (orderedStoryPages.get(index).getPageNumber() == pageNumber) {
+                return index;
+            }
+        }
+        return -1;
     }
 
     private void validateLocalizationFieldsForType(String bodyText, Long audioMediaId) {

@@ -72,4 +72,9 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     public Content save(Content content) {
         return repository.save(content);
     }
+
+    @Override
+    public Content saveAndFlush(Content content) {
+        return repository.saveAndFlush(content);
+    }
 }

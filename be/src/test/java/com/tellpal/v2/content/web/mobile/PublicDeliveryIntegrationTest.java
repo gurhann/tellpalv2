@@ -249,7 +249,7 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                 ProcessingStatus.PENDING,
                 PUBLISHED_AT));
 
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
         storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
                 content.contentId(),
                 1,
@@ -336,7 +336,7 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                 LocalizationStatus.PUBLISHED,
                 ProcessingStatus.PENDING,
                 PUBLISHED_AT));
-        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), 1));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
         storyPageManagementService.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(
                 content.contentId(),
                 1,

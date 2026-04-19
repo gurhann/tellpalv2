@@ -15,7 +15,7 @@ class StoryPageCountPropertyTest {
         Content content = Content.create(ContentType.STORY, "story-pages-" + pageCount, null, true);
 
         IntStream.rangeClosed(1, pageCount)
-                .forEach(content::addStoryPage);
+                .forEach(ignored -> content.addStoryPage(null));
 
         assertThat(content.getPageCount()).isEqualTo(pageCount);
         assertThat(content.getStoryPages()).hasSize(pageCount);

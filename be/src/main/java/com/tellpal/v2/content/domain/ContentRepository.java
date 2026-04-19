@@ -64,4 +64,9 @@ public interface ContentRepository {
      * Persists the current aggregate state, including nested localizations and story pages.
      */
     Content save(Content content);
+
+    /**
+     * Persists and flushes the current aggregate state so subsequent renumbering steps see stable rows.
+     */
+    Content saveAndFlush(Content content);
 }

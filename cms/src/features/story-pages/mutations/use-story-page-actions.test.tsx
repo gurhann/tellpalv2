@@ -70,12 +70,12 @@ describe("useStoryPageActions", () => {
 
     await act(async () => {
       await result.current.addStoryPage.mutateAsync({
-        pageNumber: 3,
+        afterPageNumber: 2,
       });
     });
 
     expect(storyPageAdminApiMock.addStoryPage).toHaveBeenCalledWith(1, {
-      pageNumber: 3,
+      afterPageNumber: 2,
     });
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: queryKeys.contents.storyPages(1),

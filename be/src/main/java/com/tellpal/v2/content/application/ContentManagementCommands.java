@@ -127,11 +127,11 @@ public final class ContentManagementCommands {
     /**
      * Command for adding a story page.
      */
-    public record AddStoryPageCommand(Long contentId, int pageNumber) {
+    public record AddStoryPageCommand(Long contentId, Integer afterPageNumber) {
 
         public AddStoryPageCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
-            pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
+            afterPageNumber = normalizePositiveNumber(afterPageNumber, "Story page number must be positive");
         }
     }
 
@@ -237,6 +237,16 @@ public final class ContentManagementCommands {
     }
 
     private static int requirePositiveNumber(int value, String message) {
+        if (value <= 0) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private static Integer normalizePositiveNumber(Integer value, String message) {
+        if (value == null) {
+            return null;
+        }
         if (value <= 0) {
             throw new IllegalArgumentException(message);
         }

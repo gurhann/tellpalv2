@@ -10,6 +10,7 @@ import {
   useZodForm,
 } from "@/components/forms/form-utils";
 import { Textarea } from "@/components/ui/textarea";
+import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives";
 import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
 import type { AdminStoryPageLocalizationResponse } from "@/features/contents/api/story-page-admin";
 import type {
@@ -153,6 +154,8 @@ export function StoryPageLocalizationForm({
           required: "Required",
           createLocalization: "Create page localization",
           saveLocalization: "Save page localization",
+          localeReady: "Locale ready",
+          localeBlocked: "Locale incomplete",
         };
   if (locale === "tr") {
     copy = {
@@ -198,6 +201,8 @@ export function StoryPageLocalizationForm({
       required: "Zorunlu",
       createLocalization: "Sayfa yerellestirmesi olustur",
       saveLocalization: "Sayfa yerellestirmesini kaydet",
+      localeReady: "Dil hazir",
+      localeBlocked: "Dil eksik",
     };
   }
   const existingLocalization =
@@ -319,41 +324,32 @@ export function StoryPageLocalizationForm({
       noValidate
       onSubmit={form.handleSubmit(handleSubmit)}
     >
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-          <p className="text-sm font-medium text-foreground">
+      <div className="grid gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <WorkspaceStatusPill tone="accent">
             {contentLocalization.languageLabel}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.parentLocale}: {contentLocalization.title}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-          <p className="text-sm font-medium text-foreground">
+          </WorkspaceStatusPill>
+          <WorkspaceStatusPill tone={hasBodyText ? "success" : "warning"}>
             {hasBodyText ? copy.bodyReady : copy.bodyMissing}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.bodyMissingHelp}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-          <p className="text-sm font-medium text-foreground">
-            {hasAudioAsset ? copy.audioLinked : copy.audioMissing}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.audioMissingHelp}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-3">
-          <p className="text-sm font-medium text-foreground">
+          </WorkspaceStatusPill>
+          <WorkspaceStatusPill tone={hasIllustration ? "success" : "warning"}>
             {hasIllustration
               ? copy.illustrationLinked
               : copy.illustrationMissing}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {isReadyForPublish ? copy.publishReady : copy.publishBlocked}
-          </p>
+          </WorkspaceStatusPill>
+          <WorkspaceStatusPill tone={hasAudioAsset ? "success" : "warning"}>
+            {hasAudioAsset ? copy.audioLinked : copy.audioMissing}
+          </WorkspaceStatusPill>
+          <WorkspaceStatusPill tone={isReadyForPublish ? "success" : "warning"}>
+            {isReadyForPublish ? copy.localeReady : copy.localeBlocked}
+          </WorkspaceStatusPill>
         </div>
+        <p className="text-sm text-muted-foreground">
+          {copy.parentLocale}: {contentLocalization.title}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {isReadyForPublish ? copy.publishReady : copy.publishBlocked}
+        </p>
       </div>
 
       <div className="space-y-2">

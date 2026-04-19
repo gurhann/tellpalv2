@@ -242,9 +242,7 @@ class ContentAdminControllerTest {
         mockMvc.perform(post("/api/admin/contents/51/story-pages")
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "pageNumber": 1
-                                }
+                                {}
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/admin/contents/51/story-pages/1"))
@@ -338,9 +336,7 @@ class ContentAdminControllerTest {
         mockMvc.perform(post("/api/admin/contents/91/story-pages")
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "pageNumber": 1
-                                }
+                                {}
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.title").value("Content state conflict"))

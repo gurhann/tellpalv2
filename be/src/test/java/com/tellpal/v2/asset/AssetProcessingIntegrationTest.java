@@ -91,7 +91,7 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 Instant.parse("2026-01-01T00:00:00Z")));
         storyPageManagementService.addStoryPage(new AddStoryPageCommand(
                 content.contentId(),
-                1));
+                null));
 
         AssetProcessingRecord started = scheduleAndStart(new ScheduleAssetProcessingCommand(
                 content.contentId(),
