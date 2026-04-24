@@ -162,4 +162,26 @@ describe("StoryPageLocalizationForm", () => {
       });
     });
   });
+
+  it("groups illustration and audio fields into one compact media workspace", () => {
+    render(
+      <StoryPageLocalizationForm
+        contentLocalization={storyContentViewModel.localizations[0]!}
+        storyPage={firstStoryPageViewModel}
+        onSave={vi.fn()}
+      />,
+    );
+
+    const mediaGroup = screen.getByTestId("story-page-media-assets");
+
+    expect(mediaGroup).toHaveClass(
+      "md:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]",
+    );
+    expect(mediaGroup).toContainElement(
+      screen.getByTestId("story-page-en-illustration-asset"),
+    );
+    expect(mediaGroup).toContainElement(
+      screen.getByTestId("story-page-en-audio-asset"),
+    );
+  });
 });

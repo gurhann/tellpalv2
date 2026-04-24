@@ -1,9 +1,12 @@
-import { ArrowRight, Languages, Pencil, Plus, Trash2 } from "lucide-react";
+import { Languages, Pencil, Plus, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
 import { Button } from "@/components/ui/button";
-import type { StoryPageLocalizationViewModel, StoryPageReadViewModel } from "@/features/contents/model/content-view-model";
+import type {
+  StoryPageLocalizationViewModel,
+  StoryPageReadViewModel,
+} from "@/features/contents/model/content-view-model";
 import { useI18n } from "@/i18n/locale-provider";
 import type { ApiProblemDetail } from "@/types/api";
 
@@ -154,13 +157,14 @@ function createColumns({
       id: "all-locales",
       header: copy.allLocales,
       cell: (storyPage) => {
-        const readyLocales = availableLocalizations.filter((available) =>
-          getLocalizationState(
-            storyPage.localizations.find(
-              (localization) =>
-                localization.languageCode === available.languageCode,
-            ) ?? null,
-          ).isReady,
+        const readyLocales = availableLocalizations.filter(
+          (available) =>
+            getLocalizationState(
+              storyPage.localizations.find(
+                (localization) =>
+                  localization.languageCode === available.languageCode,
+              ) ?? null,
+            ).isReady,
         );
         const missingCodes = availableLocalizations
           .filter(
@@ -289,7 +293,8 @@ export function StoryPageTable({
           nextStep: "Siradaki is",
           actions: "Aksiyonlar",
           noLocalization: "Henuz hazir degil",
-          noLocalizationDetail: "Bu dil icin sayfa payload'i henuz olusturulmadi.",
+          noLocalizationDetail:
+            "Bu dil icin sayfa payload'i henuz olusturulmadi.",
           missingPrefix: "Eksik:",
           ready: "Hazir",
           incomplete: "Eksik",

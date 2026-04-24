@@ -94,6 +94,9 @@ Detail and workspace routes must follow one shared composition contract.
   - clear primary and secondary actions
   - technical or debug helper copy hidden behind advanced affordances or kept visually secondary
 - Editorial asset picker fields must not be forced into half-width columns beside a single orphan input.
+- Story-page illustration and audio pickers for the same locale must be grouped as one media workspace:
+  - desktop and tablet layouts should pair the image and audio pickers in a balanced two-column grid
+  - narrow layouts may stack the pickers, but they must keep compact editor density
 - When a cover or illustration field directly supports publishing decisions, prefer a balanced two-column block:
   - media card on the left
   - compact metadata stack on the right

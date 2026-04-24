@@ -106,6 +106,7 @@ export function StoryPageLocalizationForm({
           audioPickerDescription:
             "Bu yerelleştirilmiş hikaye sayfası için son ses asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
           audioPickerTitle: "Hikaye sayfası ses asset'ini seç",
+          mediaAssets: "Sayfa medyası",
           optional: "Opsiyonel",
           required: "Zorunlu",
           createLocalization: "Sayfa yerelleştirmesi oluştur",
@@ -150,6 +151,7 @@ export function StoryPageLocalizationForm({
           audioPickerDescription:
             "Select a recent audio asset for this localized story page. Uploading from this field stays available, and manual asset ids remain under Advanced.",
           audioPickerTitle: "Pick story page audio asset",
+          mediaAssets: "Page media",
           optional: "Optional",
           required: "Required",
           createLocalization: "Create page localization",
@@ -197,6 +199,7 @@ export function StoryPageLocalizationForm({
       audioPickerDescription:
         "Bu yerellestirilmis hikaye sayfasi icin son ses asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
       audioPickerTitle: "Hikaye sayfasi ses asset'ini sec",
+      mediaAssets: "Sayfa medyasi",
       optional: "Opsiyonel",
       required: "Zorunlu",
       createLocalization: "Sayfa yerellestirmesi olustur",
@@ -369,51 +372,63 @@ export function StoryPageLocalizationForm({
         <FieldError error={form.formState.errors.bodyText} />
       </div>
 
-      <Controller
-        control={form.control}
-        name="illustrationMediaId"
-        render={({ field }) => (
-          <AssetPickerField
-            advancedLabel="Advanced illustration asset options"
-            description={copy.illustrationDescription}
-            disabled={isPending}
-            error={form.formState.errors.illustrationMediaId}
-            id={`story-page-illustration-${contentLocalization.languageCode}`}
-            label={copy.illustrationLabel}
-            manualInputLabel={`${copy.illustrationLabel} id`}
-            mediaType="IMAGE"
-            pickerDescription={copy.illustrationPickerDescription}
-            pickerTitle={copy.illustrationPickerTitle}
-            placeholder={copy.required}
-            testId={`story-page-${contentLocalization.languageCode}-illustration-asset`}
-            value={field.value}
-            onChange={field.onChange}
+      <fieldset className="space-y-3">
+        <legend className="text-sm font-medium text-foreground">
+          {copy.mediaAssets}
+        </legend>
+        <div
+          className="grid gap-4 md:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] md:items-start"
+          data-testid="story-page-media-assets"
+        >
+          <Controller
+            control={form.control}
+            name="illustrationMediaId"
+            render={({ field }) => (
+              <AssetPickerField
+                advancedLabel="Advanced illustration asset options"
+                description={copy.illustrationDescription}
+                disabled={isPending}
+                error={form.formState.errors.illustrationMediaId}
+                id={`story-page-illustration-${contentLocalization.languageCode}`}
+                label={copy.illustrationLabel}
+                manualInputLabel={`${copy.illustrationLabel} id`}
+                mediaType="IMAGE"
+                pickerDescription={copy.illustrationPickerDescription}
+                pickerTitle={copy.illustrationPickerTitle}
+                placeholder={copy.required}
+                testId={`story-page-${contentLocalization.languageCode}-illustration-asset`}
+                value={field.value}
+                variant="editor"
+                onChange={field.onChange}
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={form.control}
-        name="audioMediaId"
-        render={({ field }) => (
-          <AssetPickerField
-            advancedLabel="Advanced audio asset options"
-            description={copy.audioDescription}
-            disabled={isPending}
-            error={form.formState.errors.audioMediaId}
-            id={`story-page-audio-${contentLocalization.languageCode}`}
-            label={copy.audioLabel}
-            manualInputLabel={`${copy.audioLabel} id`}
-            mediaType="AUDIO"
-            pickerDescription={copy.audioPickerDescription}
-            pickerTitle={copy.audioPickerTitle}
-            placeholder={copy.optional}
-            testId={`story-page-${contentLocalization.languageCode}-audio-asset`}
-            value={field.value}
-            onChange={field.onChange}
+          <Controller
+            control={form.control}
+            name="audioMediaId"
+            render={({ field }) => (
+              <AssetPickerField
+                advancedLabel="Advanced audio asset options"
+                description={copy.audioDescription}
+                disabled={isPending}
+                error={form.formState.errors.audioMediaId}
+                id={`story-page-audio-${contentLocalization.languageCode}`}
+                label={copy.audioLabel}
+                manualInputLabel={`${copy.audioLabel} id`}
+                mediaType="AUDIO"
+                pickerDescription={copy.audioPickerDescription}
+                pickerTitle={copy.audioPickerTitle}
+                placeholder={copy.optional}
+                testId={`story-page-${contentLocalization.languageCode}-audio-asset`}
+                value={field.value}
+                variant="editor"
+                onChange={field.onChange}
+              />
+            )}
           />
-        )}
-      />
+        </div>
+      </fieldset>
 
       <FieldError error={form.formState.errors.root?.serverError} />
 

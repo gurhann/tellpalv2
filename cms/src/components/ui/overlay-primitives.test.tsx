@@ -50,6 +50,9 @@ describe("Overlay primitives", () => {
 
     expect(dialog).toHaveClass(
       "max-h-[calc(100dvh-1.5rem)]",
+      "min-h-0",
+      "flex",
+      "flex-col",
       "overflow-hidden",
     );
     expect(body).toHaveClass("min-h-0", "overflow-y-auto", "px-5", "pb-5");

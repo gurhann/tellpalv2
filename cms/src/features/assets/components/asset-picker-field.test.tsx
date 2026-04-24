@@ -183,7 +183,7 @@ describe("AssetPickerField", () => {
     expect(
       screen.getByTestId("asset-field-preview-editor-cover-stage"),
     ).toBeVisible();
-    expect(screen.getByText(/mobile cover preview/i)).toBeVisible();
+    expect(screen.getByText(/portrait preview/i)).toBeVisible();
     expect(
       screen.getByTestId("asset-field-preview-editor-cover-actions"),
     ).toContainElement(screen.getByRole("button", { name: /upload new/i }));
@@ -280,6 +280,42 @@ describe("AssetPickerField", () => {
     fireEvent.click(screen.getByRole("button", { name: /advanced/i }));
 
     expect(screen.getByText(/media utility remains available/i)).toBeVisible();
+  });
+
+  it("keeps selected audio editor actions inside the compact preview card", () => {
+    assetDetailMocks.useAssetDetail.mockReturnValue({
+      asset: originalAudioAssetViewModel,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+    previewHookMocks.useAssetPreview.mockReturnValue({
+      previewUrl: "https://storage.test/audio-preview-1.mp3",
+      previewStatus: "available",
+      previewErrorMessage: null,
+      isRefreshing: false,
+      refreshPreview: vi.fn(),
+    });
+
+    render(
+      <TestWrapper>
+        <AssetPickerField
+          id="audioMediaId"
+          label="Audio asset"
+          mediaType="AUDIO"
+          pickerDescription="Pick audio asset"
+          pickerTitle="Pick audio asset"
+          value={originalAudioAssetViewModel.id}
+          variant="editor"
+          onChange={vi.fn()}
+        />
+      </TestWrapper>,
+    );
+
+    expect(screen.getByTestId("asset-field-preview-actions")).toContainElement(
+      screen.getByRole("button", { name: /upload new/i }),
+    );
+    expect(screen.getByLabelText(/audio preview for asset #1/i)).toBeVisible();
   });
 
   it("updates the selected asset through the picker dialog", () => {

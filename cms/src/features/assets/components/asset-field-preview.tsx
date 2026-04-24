@@ -156,7 +156,7 @@ export function AssetFieldPreview({
           )}
           data-testid="asset-field-preview-editor-cover"
         >
-          <div className="grid gap-4 md:grid-cols-[minmax(13rem,15rem)_1fr] md:items-start">
+          <div className="grid gap-4 xl:grid-cols-[minmax(13rem,15rem)_1fr] xl:items-start">
             <div
               className="mx-auto w-full max-w-[15rem]"
               data-testid="asset-field-preview-editor-cover-stage"
@@ -169,7 +169,7 @@ export function AssetFieldPreview({
             <div className="min-w-0 space-y-3">
               <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                  Mobile cover preview
+                  Portrait preview
                 </p>
                 <p className="break-all text-sm font-medium text-foreground">
                   {asset.objectPath}
@@ -289,6 +289,15 @@ export function AssetFieldPreview({
                 : t("assets.previewKind.unavailable")}
           </span>
         </div>
+
+        {actions ? (
+          <div
+            className="mt-3 flex flex-wrap gap-2"
+            data-testid="asset-field-preview-actions"
+          >
+            {actions}
+          </div>
+        ) : null}
 
         {asset.previewKind === "image" && preview.previewUrl ? (
           <div
