@@ -103,6 +103,9 @@ Detail and workspace routes must follow one shared composition contract.
   - mobile and tablet layouts may collapse back to one column
 - Use a full-width media row only when there is no closely related metadata stack to pair beside it.
 - Detail routes should preserve the primary workspace at all supported widths. The rail may remain visible, but it must not visually outweigh the main lane.
+- Story-page workspaces must expose an in-route active language control when table status, readiness counts, and editor defaults depend on a selected locale.
+  - the active language control must update the route state or URL so refreshes and handoffs preserve context
+  - the table status header, rail readiness count, and newly opened editor must all use the same selected language
 
 ## 7. Accessibility and Interaction Rules
 

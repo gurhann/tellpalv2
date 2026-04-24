@@ -16,6 +16,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   LanguageTabs,
   type LanguageTabItem,
 } from "@/components/language/language-tabs";
@@ -72,7 +79,8 @@ function getLocalizationState(
   return {
     isReady: missingParts.length === 0,
     missingParts,
-    tone: missingParts.length === 0 ? ("success" as const) : ("warning" as const),
+    tone:
+      missingParts.length === 0 ? ("success" as const) : ("warning" as const),
   };
 }
 
@@ -128,7 +136,7 @@ function EditStoryPageDialog({
     (localization) => localization.languageCode === preferredLanguageCode,
   )
     ? preferredLanguageCode
-    : content.localizations[0]?.languageCode ?? null;
+    : (content.localizations[0]?.languageCode ?? null);
   const [activeLanguageCode, setActiveLanguageCode] = useState(
     resolvedPreferredLanguageCode ?? "",
   );
@@ -148,7 +156,8 @@ function EditStoryPageDialog({
     "";
   const activeLanguageLabel =
     content.localizations.find(
-      (localization) => localization.languageCode === resolvedActiveLanguageCode,
+      (localization) =>
+        localization.languageCode === resolvedActiveLanguageCode,
     )?.languageLabel ?? resolvedActiveLanguageCode.toUpperCase();
 
   return (
@@ -182,15 +191,14 @@ function EditStoryPageDialog({
               renderContent={(item) => {
                 const contentLocalization =
                   content.localizations.find(
-                    (localization) =>
-                      localization.languageCode === item.code,
+                    (localization) => localization.languageCode === item.code,
                   ) ?? null;
 
                 if (!contentLocalization) {
                   return (
                     <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-                      Story page payloads can open only after the parent
-                      content locale exists for this language.
+                      Story page payloads can open only after the parent content
+                      locale exists for this language.
                     </div>
                   );
                 }
@@ -280,8 +288,8 @@ function DeleteStoryPageDialog({
         <DialogHeader>
           <DialogTitle>Delete story page</DialogTitle>
           <DialogDescription>
-            Page {storyPage?.pageNumber ?? "?"} will be removed. Following
-            pages shift up to keep the story order contiguous.
+            Page {storyPage?.pageNumber ?? "?"} will be removed. Following pages
+            shift up to keep the story order contiguous.
           </DialogDescription>
         </DialogHeader>
 
@@ -289,8 +297,8 @@ function DeleteStoryPageDialog({
           {problem ? <ProblemAlert problem={problem} /> : null}
 
           <div className="rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-muted-foreground">
-            Localized page payloads owned by this page are removed together
-            with the page structure.
+            Localized page payloads owned by this page are removed together with
+            the page structure.
           </div>
         </DialogBody>
 
@@ -322,11 +330,13 @@ function DeleteStoryPageDialog({
 type StoryPagesWorkspaceProps = {
   content: ContentReadViewModel;
   preferredLanguageCode?: string | null;
+  onPreferredLanguageCodeChange?: (languageCode: string) => void;
 };
 
 function StoryPagesWorkspace({
   content,
   preferredLanguageCode = null,
+  onPreferredLanguageCodeChange,
 }: StoryPagesWorkspaceProps) {
   const { locale } = useI18n();
   const storyPagesQuery = useStoryPages(content.summary.id);
@@ -358,22 +368,24 @@ function StoryPagesWorkspace({
   const storyPageCount = storyPagesQuery.isSuccess
     ? storyPages.length
     : (content.summary.pageCount ?? 0);
-  const selectedLocaleReadyCount = storyPages.filter((storyPage) =>
-    getLocalizationState(
-      storyPage.localizations.find(
-        (localization) =>
-          localization.languageCode === resolvedPreferredLanguageCode,
-      ) ?? null,
-    ).isReady,
-  ).length;
-  const fullyReadyPageCount = storyPages.filter((storyPage) =>
-    content.localizations.every((contentLocalization) =>
+  const selectedLocaleReadyCount = storyPages.filter(
+    (storyPage) =>
       getLocalizationState(
         storyPage.localizations.find(
           (localization) =>
-            localization.languageCode === contentLocalization.languageCode,
+            localization.languageCode === resolvedPreferredLanguageCode,
         ) ?? null,
       ).isReady,
+  ).length;
+  const fullyReadyPageCount = storyPages.filter((storyPage) =>
+    content.localizations.every(
+      (contentLocalization) =>
+        getLocalizationState(
+          storyPage.localizations.find(
+            (localization) =>
+              localization.languageCode === contentLocalization.languageCode,
+          ) ?? null,
+        ).isReady,
     ),
   ).length;
   const isMutating = storyPageActions.isPending;
@@ -390,6 +402,7 @@ function StoryPagesWorkspace({
           addPage: "Sayfa ekle",
           addFirstPage: "Ilk sayfayi ekle",
           activeLocale: "Aktif dil",
+          activeLocaleControl: "Aktif dili degistir",
           activeLocaleHint: "Yeni sayfalar bu dil editoru ile acilir.",
           totalPages: "Toplam sayfa",
           selectedLocaleReady: "Secili dilde hazir",
@@ -408,6 +421,7 @@ function StoryPagesWorkspace({
           addPage: "Add story page",
           addFirstPage: "Add first story page",
           activeLocale: "Active locale",
+          activeLocaleControl: "Change active locale",
           activeLocaleHint: "New pages open in this locale editor.",
           totalPages: "Total pages",
           selectedLocaleReady: "Ready in selected locale",
@@ -484,14 +498,44 @@ function StoryPagesWorkspace({
           </>
         }
         toolbar={
-          <div className="flex flex-wrap items-center gap-2 rounded-[1.4rem] border border-border/70 bg-muted/15 px-4 py-3">
-            <WorkspaceStatusPill tone="accent">
-              {copy.activeLocale}
-            </WorkspaceStatusPill>
-            <WorkspaceStatusPill>{preferredLanguageLabel}</WorkspaceStatusPill>
-            <span className="text-sm text-muted-foreground">
-              {copy.activeLocaleHint}
-            </span>
+          <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-muted/15 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              <WorkspaceStatusPill tone="accent">
+                {copy.activeLocale}
+              </WorkspaceStatusPill>
+              <span className="text-sm text-muted-foreground">
+                {copy.activeLocaleHint}
+              </span>
+            </div>
+            <div className="flex min-w-0 items-center gap-2">
+              <label className="sr-only" htmlFor="story-pages-active-language">
+                {copy.activeLocaleControl}
+              </label>
+              <Select
+                value={resolvedPreferredLanguageCode ?? undefined}
+                onValueChange={(languageCode) =>
+                  onPreferredLanguageCodeChange?.(languageCode)
+                }
+              >
+                <SelectTrigger
+                  id="story-pages-active-language"
+                  className="h-10 w-full min-w-44 bg-background sm:w-56"
+                  aria-label={copy.activeLocaleControl}
+                >
+                  <SelectValue placeholder={preferredLanguageLabel} />
+                </SelectTrigger>
+                <SelectContent>
+                  {content.localizations.map((localization) => (
+                    <SelectItem
+                      key={localization.languageCode}
+                      value={localization.languageCode}
+                    >
+                      {localization.languageLabel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         }
       >
@@ -562,11 +606,17 @@ function StoryPagesWorkspace({
 
 export function StoryPagesRoute() {
   const { contentId = "" } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
   const preferredLanguageCode = searchParams.get("language");
+
+  function handlePreferredLanguageCodeChange(languageCode: string) {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set("language", languageCode);
+    setSearchParams(nextSearchParams, { replace: true });
+  }
 
   return (
     <StoryContentGuard contentId={hasValidContentId ? parsedContentId : null}>
@@ -574,6 +624,7 @@ export function StoryPagesRoute() {
         <StoryPagesWorkspace
           content={content}
           preferredLanguageCode={preferredLanguageCode}
+          onPreferredLanguageCodeChange={handlePreferredLanguageCodeChange}
         />
       )}
     </StoryContentGuard>

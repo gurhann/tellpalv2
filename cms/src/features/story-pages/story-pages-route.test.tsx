@@ -155,7 +155,10 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
-    expect(screen.getByText(/active locale/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Active locale$/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", { name: /change active locale/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/ready in selected locale/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
     expect(screen.getByText(/english status/i)).toBeInTheDocument();
@@ -251,9 +254,7 @@ describe("StoryPagesRoute", () => {
 
     renderStoryRoute();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /edit page 1/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /edit page 1/i }));
 
     expect(
       screen.getByRole("heading", { name: /page 1 .* english/i }),
@@ -305,9 +306,59 @@ describe("StoryPagesRoute", () => {
 
     renderStoryRoute("/contents/1/story-pages?language=tr");
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /edit page 1/i }),
+    fireEvent.click(screen.getByRole("button", { name: /edit page 1/i }));
+
+    expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
+
+  it("changes the active story page language from the workspace toolbar", async () => {
+    contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
+    storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
+    storyPageHookMocks.useStoryPage.mockImplementation(
+      (_contentId, pageNumber) => ({
+        storyPage: makeStoryPageQuery(pageNumber),
+        isLoading: false,
+        problem: null,
+      }),
     );
+    storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+      addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+      assets: [],
+      isLoading: false,
+      isSuccess: true,
+      problem: null,
+    });
+    assetDetailHookMocks.useAssetDetail.mockReturnValue({
+      asset: null,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+    });
+
+    renderStoryRoute();
+
+    fireEvent.click(
+      screen.getByRole("combobox", { name: /change active locale/i }),
+    );
+    fireEvent.click(await screen.findByRole("option", { name: /turkish/i }));
+
+    expect(
+      screen.getByRole("combobox", { name: /change active locale/i }),
+    ).toHaveTextContent(/turkish/i);
+    expect(screen.getByText(/turkish status/i)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 1/i }));
 
     expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
   });
