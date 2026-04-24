@@ -22,8 +22,10 @@ import com.tellpal.v2.category.application.CategoryApplicationExceptions.Content
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.DuplicateCategorySlugException;
 import com.tellpal.v2.category.application.CategoryCurationService;
 import com.tellpal.v2.category.application.CategoryManagementCommands.AddCategoryContentCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.CategoryContentOrderAssignment;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.CreateCategoryLocalizationCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.ReorderCategoryContentsCommand;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryLocalizationRecord;
 import com.tellpal.v2.category.application.CategoryManagementService;
 import com.tellpal.v2.category.domain.CategoryType;
@@ -195,6 +197,47 @@ class CategoryManagementIntegrationTest extends PostgresIntegrationTestBase {
                 .isInstanceOf(CategoryContentTypeMismatchException.class)
                 .hasMessageContaining("MEDITATION")
                 .hasMessageContaining("STORY");
+    }
+
+    @Test
+    void reorderContentsReplacesWholeLanguageLaneInOneTransaction() {
+        Long categoryId = createPublishedCategory("featured-sleep", CategoryType.STORY);
+        Long firstContentId = createContentWithLocalization("sleep-star-tr", LanguageCode.TR, true);
+        Long secondContentId = createContentWithLocalization("sleep-star-tr-2", LanguageCode.TR, true);
+
+        categoryCurationService.addContent(new AddCategoryContentCommand(
+                categoryId,
+                LanguageCode.TR,
+                firstContentId,
+                0));
+        categoryCurationService.addContent(new AddCategoryContentCommand(
+                categoryId,
+                LanguageCode.TR,
+                secondContentId,
+                1));
+
+        categoryCurationService.reorderContents(new ReorderCategoryContentsCommand(
+                categoryId,
+                LanguageCode.TR,
+                List.of(
+                        new CategoryContentOrderAssignment(secondContentId, 0),
+                        new CategoryContentOrderAssignment(firstContentId, 1))));
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                """
+                        select content_id, display_order
+                        from category_contents
+                        where category_id = ? and language_code = ?
+                        order by display_order asc
+                        """,
+                categoryId,
+                LanguageCode.TR.value());
+
+        assertThat(rows).hasSize(2);
+        assertThat(rows.get(0).get("content_id")).isEqualTo(secondContentId);
+        assertThat(rows.get(0).get("display_order")).isEqualTo(0);
+        assertThat(rows.get(1).get("content_id")).isEqualTo(firstContentId);
+        assertThat(rows.get(1).get("display_order")).isEqualTo(1);
     }
 
     private Long createPublishedCategory(String slug, CategoryType type) {

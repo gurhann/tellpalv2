@@ -1,4 +1,4 @@
-import { CirclePlus, ListFilter } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -12,9 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AddCuratedContentDialog } from "@/features/categories/components/add-curated-content-dialog";
-import { CurationTable } from "@/features/categories/components/curation-table";
-import { CurationOrderEditor } from "@/features/categories/components/curation-order-editor";
 import { CategoryLanguageWorkspace } from "@/features/categories/components/category-language-workspace";
+import { CuratedContentList } from "@/features/categories/components/curated-content-list";
 import type {
   CategoryCurationItemViewModel,
   CategoryLocalizationViewModel,
@@ -49,8 +48,6 @@ export function CategoryCurationPanel({
 }: CategoryCurationPanelProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const canAddCuratedContent = Boolean(selectedLocalization?.isPublished);
-  const canAdjustOrder =
-    Boolean(selectedLocalization?.isPublished) && curationItems.length > 0;
 
   const tabItems = localizations.map((localization) => ({
     code: localization.languageCode,
@@ -88,21 +85,6 @@ export function CategoryCurationPanel({
               <CirclePlus className="size-4" />
               Add curated content
             </Button>
-            {canAdjustOrder && selectedLocalization ? (
-              <Button asChild type="button" variant="outline">
-                <a
-                  href={`#curation-order-editor-${selectedLocalization.languageCode}`}
-                >
-                  <ListFilter className="size-4" />
-                  Adjust order
-                </a>
-              </Button>
-            ) : (
-              <Button disabled type="button" variant="outline">
-                <ListFilter className="size-4" />
-                Adjust order
-              </Button>
-            )}
           </div>
         </div>
       </CardHeader>
@@ -156,22 +138,17 @@ export function CategoryCurationPanel({
               <div className="space-y-5">
                 {!selectedLocalization.isPublished ? (
                   <p className="text-sm text-muted-foreground">
-                    Publish this localization before adding or reordering
-                    curated content.
+                    Publish this localization before adding, removing, or
+                    reordering curated content.
                   </p>
                 ) : null}
-                <CurationTable
+                <CuratedContentList
                   category={category}
                   items={curationItems}
                   isLoading={curationIsLoading}
                   localization={selectedLocalization}
                   problem={curationProblem}
                   onRetry={onRetryCuration}
-                />
-                <CurationOrderEditor
-                  category={category}
-                  items={curationItems}
-                  localization={selectedLocalization}
                 />
               </div>
             ) : null}

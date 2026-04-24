@@ -46,4 +46,9 @@ public class JpaCategoryRepositoryAdapter implements CategoryRepository {
     public Category save(Category category) {
         return repository.save(category);
     }
+
+    @Override
+    public void flush() {
+        repository.flush();
+    }
 }

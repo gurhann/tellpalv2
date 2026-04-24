@@ -51,7 +51,13 @@ describe("CategoryCurationPanel", () => {
     expect(
       screen.getByRole("button", { name: /add curated content/i }),
     ).toBeEnabled();
-    expect(screen.getByRole("link", { name: /adjust order/i })).toBeEnabled();
+    expect(
+      screen.queryByRole("button", { name: /adjust order/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: /english curated content list/i }),
+    ).toBeVisible();
+    expect(screen.queryByText(/display order editor/i)).not.toBeInTheDocument();
   });
 
   it("shows an empty state and inactive actions when no localization is available", () => {
@@ -79,8 +85,8 @@ describe("CategoryCurationPanel", () => {
       screen.getByRole("button", { name: /add curated content/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /adjust order/i }),
-    ).toBeDisabled();
+      screen.queryByRole("button", { name: /adjust order/i }),
+    ).not.toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", { name: /create first localization/i }),
@@ -109,7 +115,11 @@ describe("CategoryCurationPanel", () => {
       screen.getByRole("button", { name: /add curated content/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /adjust order/i }),
-    ).toBeDisabled();
+      screen.queryByRole("button", { name: /adjust order/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(/no curated content yet/i)).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: /reorder evening garden/i }),
+    ).not.toBeInTheDocument();
   });
 });

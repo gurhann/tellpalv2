@@ -19,6 +19,13 @@ export type UpdateCategoryContentOrderInput = {
   displayOrder: number;
 };
 
+export type ReorderCategoryContentsInput = {
+  items: Array<{
+    contentId: number;
+    displayOrder: number;
+  }>;
+};
+
 export type ListEligibleCategoryContentsInput = {
   query?: string;
   limit?: number;
@@ -119,6 +126,19 @@ export const categoryCurationAdminApi = {
       {
         body: input,
         responseSchema: adminCategoryContentResponseSchema,
+      },
+    );
+  },
+  reorderCuratedContent(
+    categoryId: number,
+    languageCode: string,
+    input: ReorderCategoryContentsInput,
+  ) {
+    return apiClient.put<AdminCategoryContentResponse[]>(
+      `${getBasePath(categoryId, languageCode)}/reorder`,
+      {
+        body: input,
+        responseSchema: adminCategoryContentListResponseSchema,
       },
     );
   },

@@ -2,7 +2,10 @@ package com.tellpal.v2.category.domain;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -160,6 +163,41 @@ public class Category extends BaseJpaEntity {
         requireDisplayOrderAvailability(languageCode, displayOrder, contentId);
         curatedContent.updateDisplayOrder(displayOrder);
         return curatedContent;
+    }
+
+    /**
+     * Replaces the display order of all curated content links for one language in one aggregate operation.
+     */
+    public void reorderContents(LanguageCode languageCode, Map<Long, Integer> assignments) {
+        LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
+        requirePublishedLocalization(requiredLanguageCode);
+        if (assignments == null || assignments.isEmpty()) {
+            throw new IllegalArgumentException("Curated content reorder assignments must not be empty");
+        }
+
+        Map<Long, CategoryContent> languageContents = curatedContents.stream()
+                .filter(candidate -> candidate.matchesLanguage(requiredLanguageCode))
+                .collect(java.util.stream.Collectors.toMap(
+                        CategoryContent::getContentId,
+                        candidate -> candidate,
+                        (left, _right) -> left,
+                        LinkedHashMap::new));
+
+        if (languageContents.size() != assignments.size() || !languageContents.keySet().equals(assignments.keySet())) {
+            throw new IllegalArgumentException("Curated content reorder assignments must match the current language lane");
+        }
+
+        List<Integer> normalizedDisplayOrders = assignments.values().stream()
+                .sorted()
+                .toList();
+        for (int expectedOrder = 0; expectedOrder < normalizedDisplayOrders.size(); expectedOrder++) {
+            if (normalizedDisplayOrders.get(expectedOrder) != expectedOrder) {
+                throw new IllegalArgumentException("Curated content reorder display orders must form a contiguous sequence");
+            }
+        }
+
+        languageContents.forEach((contentId, categoryContent) ->
+                categoryContent.updateDisplayOrder(assignments.get(contentId)));
     }
 
     public void removeContent(LanguageCode languageCode, Long contentId) {

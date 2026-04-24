@@ -336,6 +336,41 @@ class CategoryAdminControllerTest {
     }
 
     @Test
+    void reorderCuratedContentReturnsUpdatedCollection() throws Exception {
+        when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.TR)).thenReturn(List.of(
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.TR,
+                        91L,
+                        0,
+                        "story.kis-corbasi-festivali",
+                        "Kis Corbasi Festivali"),
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.TR,
+                        77L,
+                        1,
+                        "story.ecenin-fasulye-deneyi",
+                        "Ecenin Fasulye Deneyi")));
+
+        mockMvc.perform(put("/api/admin/categories/42/localizations/tr/contents/reorder")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "items": [
+                                    { "contentId": 91, "displayOrder": 0 },
+                                    { "contentId": 77, "displayOrder": 1 }
+                                  ]
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].contentId").value(91))
+                .andExpect(jsonPath("$[0].displayOrder").value(0))
+                .andExpect(jsonPath("$[1].contentId").value(77))
+                .andExpect(jsonPath("$[1].displayOrder").value(1));
+    }
+
+    @Test
     void unpublishedCategoryLocalizationBecomesConflictProblemDetails() throws Exception {
         when(categoryCurationService.addContent(any()))
                 .thenThrow(new CategoryLocalizationNotPublishedException(42L, LanguageCode.TR));

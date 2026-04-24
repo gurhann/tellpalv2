@@ -37,4 +37,9 @@ public interface CategoryRepository {
      * Persists category metadata, localization changes and curated content links.
      */
     Category save(Category category);
+
+    /**
+     * Flushes pending category persistence changes to the database.
+     */
+    void flush();
 }

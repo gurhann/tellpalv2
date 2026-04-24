@@ -1,6 +1,9 @@
 package com.tellpal.v2.category.application;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.tellpal.v2.category.domain.CategoryType;
 import com.tellpal.v2.category.domain.LocalizationStatus;
@@ -102,6 +105,49 @@ public final class CategoryManagementCommands {
 
         public UpdateCategoryContentOrderCommand {
             validateCategoryContentCommand(categoryId, languageCode, contentId, displayOrder);
+        }
+    }
+
+    /**
+     * Command for replacing the order of all curated content in one language lane.
+     */
+    public record ReorderCategoryContentsCommand(
+            Long categoryId,
+            LanguageCode languageCode,
+            List<CategoryContentOrderAssignment> assignments) {
+
+        public ReorderCategoryContentsCommand {
+            categoryId = requirePositiveId(categoryId, "Category ID must be positive");
+            languageCode = requireLanguageCode(languageCode);
+            if (assignments == null || assignments.isEmpty()) {
+                throw new IllegalArgumentException("Curated content reorder assignments must not be empty");
+            }
+            Set<Long> contentIds = assignments.stream()
+                    .map(CategoryContentOrderAssignment::contentId)
+                    .collect(Collectors.toSet());
+            if (contentIds.size() != assignments.size()) {
+                throw new IllegalArgumentException("Curated content reorder must not contain duplicate content ids");
+            }
+            Set<Integer> displayOrders = assignments.stream()
+                    .map(CategoryContentOrderAssignment::displayOrder)
+                    .collect(Collectors.toSet());
+            if (displayOrders.size() != assignments.size()) {
+                throw new IllegalArgumentException("Curated content reorder must not contain duplicate display orders");
+            }
+            assignments = List.copyOf(assignments);
+        }
+    }
+
+    /**
+     * Assignment item used by curated content reorder commands.
+     */
+    public record CategoryContentOrderAssignment(Long contentId, int displayOrder) {
+
+        public CategoryContentOrderAssignment {
+            requirePositiveId(contentId, "Content ID must be positive");
+            if (displayOrder < 0) {
+                throw new IllegalArgumentException("Category display order must not be negative");
+            }
         }
     }
 

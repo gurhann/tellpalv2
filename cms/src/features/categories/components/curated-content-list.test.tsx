@@ -11,9 +11,10 @@ import {
   categoryCurationItemViewModels,
   featuredSleepCategoryViewModel,
   featuredSleepEnglishLocalizationViewModel,
+  featuredSleepTurkishLocalizationViewModel,
 } from "@/features/categories/test/fixtures";
 
-import { CurationTable } from "./curation-table";
+import { CuratedContentList } from "./curated-content-list";
 
 const curationActionMocks = vi.hoisted(() => ({
   useCategoryCurationActions: vi.fn(),
@@ -40,13 +41,14 @@ beforeEach(() => {
   curationActionMocks.useCategoryCurationActions.mockReset();
   curationActionMocks.useCategoryCurationActions.mockReturnValue({
     removeCuratedContent: makeMutationState(),
+    reorderCuratedContent: makeMutationState(),
   });
 });
 
-describe("CurationTable", () => {
-  it("renders hydrated curated rows with content and order columns", () => {
+describe("CuratedContentList", () => {
+  it("renders one editable list surface with content identity and remove actions", () => {
     render(
-      <CurationTable
+      <CuratedContentList
         category={featuredSleepCategoryViewModel}
         items={categoryCurationItemViewModels}
         isLoading={false}
@@ -57,16 +59,13 @@ describe("CurationTable", () => {
     );
 
     expect(
-      screen.getByRole("columnheader", { name: /content/i }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("columnheader", { name: /display order/i }),
+      screen.getByRole("list", { name: /english curated content list/i }),
     ).toBeVisible();
     expect(screen.getByText(/^Evening Garden$/i)).toBeVisible();
     expect(screen.getByText(/^Moonlight Meadow$/i)).toBeVisible();
-    expect(
-      screen.getByText(/#1\s+·\s+story\.evening-garden\s+·\s+English/i),
-    ).toBeVisible();
+    expect(screen.getAllByRole("button", { name: /^remove$/i })).toHaveLength(
+      2,
+    );
   });
 
   it("confirms and removes one curated row", async () => {
@@ -75,10 +74,11 @@ describe("CurationTable", () => {
     });
     curationActionMocks.useCategoryCurationActions.mockReturnValue({
       removeCuratedContent,
+      reorderCuratedContent: makeMutationState(),
     });
 
     render(
-      <CurationTable
+      <CuratedContentList
         category={featuredSleepCategoryViewModel}
         items={categoryCurationItemViewModels}
         isLoading={false}
@@ -88,14 +88,13 @@ describe("CurationTable", () => {
       />,
     );
 
-    fireEvent.click(screen.getAllByRole("button", { name: /remove/i })[0]!);
+    fireEvent.click(screen.getAllByRole("button", { name: /^remove$/i })[0]!);
 
     expect(
       await screen.findByRole("heading", { name: /remove curated content/i }),
     ).toBeVisible();
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).getByText(/^Evening Garden$/i)).toBeVisible();
-    expect(within(dialog).getByText(/story\.evening-garden/i)).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: /^remove content$/i }));
 
@@ -104,5 +103,67 @@ describe("CurationTable", () => {
         contentId: 1,
       });
     });
+  });
+
+  it("reorders curated rows through the keyboard drag handle", async () => {
+    const reorderCuratedContent = makeMutationState({
+      mutateAsync: vi.fn().mockResolvedValue(categoryCurationItemViewModels),
+    });
+    curationActionMocks.useCategoryCurationActions.mockReturnValue({
+      removeCuratedContent: makeMutationState(),
+      reorderCuratedContent,
+    });
+
+    render(
+      <CuratedContentList
+        category={featuredSleepCategoryViewModel}
+        items={categoryCurationItemViewModels}
+        isLoading={false}
+        localization={featuredSleepEnglishLocalizationViewModel}
+        problem={null}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    const handle = screen.getByRole("button", {
+      name: /reorder moonlight meadow/i,
+    });
+
+    fireEvent.keyDown(handle, { key: "ArrowUp", code: "ArrowUp" });
+
+    await waitFor(() => {
+      expect(reorderCuratedContent.mutateAsync).toHaveBeenCalledWith({
+        items: [
+          {
+            ...categoryCurationItemViewModels[1],
+            displayOrder: 0,
+          },
+          {
+            ...categoryCurationItemViewModels[0],
+            displayOrder: 1,
+          },
+        ],
+      });
+    });
+  });
+
+  it("keeps drag handles disabled for unpublished localizations", () => {
+    render(
+      <CuratedContentList
+        category={featuredSleepCategoryViewModel}
+        items={categoryCurationItemViewModels}
+        isLoading={false}
+        localization={featuredSleepTurkishLocalizationViewModel}
+        problem={null}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /reorder evening garden/i }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /reorder moonlight meadow/i }),
+    ).toBeDisabled();
   });
 });

@@ -25,6 +25,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.tellpal.v2.category.api.AdminCategoryCurationQueryApi;
 import com.tellpal.v2.category.application.CategoryCurationService;
 import com.tellpal.v2.category.application.CategoryManagementCommands.AddCategoryContentCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.CategoryContentOrderAssignment;
+import com.tellpal.v2.category.application.CategoryManagementCommands.ReorderCategoryContentsCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.RemoveCategoryContentCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryContentOrderCommand;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -140,6 +142,25 @@ public class CategoryCurationAdminController {
         return findCuratedContentResponse(categoryId, languageCode, contentId);
     }
 
+    @PutMapping("/contents/reorder")
+    @Operation(summary = "Reorder curated content", description = "Replaces the display order of all curated content links for one localized category lane.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Curated content order replaced"),
+            @ApiResponse(responseCode = "400", description = "Reorder request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Curated content entry was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminCategoryContentResponse> reorderCuratedContent(
+            @PathVariable Long categoryId,
+            @PathVariable String languageCode,
+            @Valid @RequestBody ReorderCategoryContentsRequest request) {
+        categoryCurationService.reorderContents(request.toCommand(categoryId, languageCode));
+        return categoryCurationQueryApi.listCategoryContents(categoryId, LanguageCode.from(languageCode)).stream()
+                .map(AdminCategoryContentResponse::from)
+                .toList();
+    }
+
     @DeleteMapping("/contents/{contentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Remove curated content", description = "Removes one content item from a localized category curation list.")
@@ -193,5 +214,31 @@ record UpdateCategoryContentOrderRequest(
                 LanguageCode.from(languageCode),
                 contentId,
                 displayOrder);
+    }
+}
+
+record ReorderCategoryContentsRequest(
+        @NotNull(message = "items is required")
+        java.util.List<@Valid ReorderCategoryContentItemRequest> items) {
+
+    ReorderCategoryContentsCommand toCommand(Long categoryId, String languageCode) {
+        return new ReorderCategoryContentsCommand(
+                categoryId,
+                LanguageCode.from(languageCode),
+                items.stream()
+                        .map(ReorderCategoryContentItemRequest::toAssignment)
+                        .toList());
+    }
+}
+
+record ReorderCategoryContentItemRequest(
+        @NotNull(message = "contentId is required")
+        @Positive(message = "contentId must be positive")
+        Long contentId,
+        @Min(value = 0, message = "displayOrder must not be negative")
+        int displayOrder) {
+
+    CategoryContentOrderAssignment toAssignment() {
+        return new CategoryContentOrderAssignment(contentId, displayOrder);
     }
 }

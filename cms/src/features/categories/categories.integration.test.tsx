@@ -579,27 +579,37 @@ describe("Category integration", () => {
 
         if (
           url.pathname ===
-            "/api/admin/categories/7/localizations/en/contents/11" &&
+            "/api/admin/categories/7/localizations/en/contents/reorder" &&
           method === "PUT"
         ) {
           const body = (await readRequestJson(init)) as {
-            displayOrder: number;
+            items: Array<{
+              contentId: number;
+              displayOrder: number;
+            }>;
           };
 
-          const nextRow = {
-            categoryId: 7,
-            languageCode: "en",
-            contentId: 11,
-            displayOrder: body.displayOrder,
-            externalKey: "story.starry-forest",
-            localizedTitle: "Starry Forest",
-          } satisfies AdminCategoryContentResponse;
+          const rowByContentId = new Map(
+            curationRows.map((row) => [row.contentId, row]),
+          );
+          curationRows = body.items
+            .map((item) => {
+              const currentRow = rowByContentId.get(item.contentId);
 
-          curationRows = curationRows
-            .map((row) => (row.contentId === 11 ? nextRow : row))
+              if (!currentRow) {
+                throw new Error(
+                  `Unexpected reorder item for content ${item.contentId}`,
+                );
+              }
+
+              return {
+                ...currentRow,
+                displayOrder: item.displayOrder,
+              };
+            })
             .sort((left, right) => left.displayOrder - right.displayOrder);
 
-          return jsonResponse(nextRow);
+          return jsonResponse(curationRows);
         }
 
         if (
@@ -637,10 +647,10 @@ describe("Category integration", () => {
         }),
       ).not.toBeInTheDocument();
     });
-    const curationTable = screen.getByRole("table", {
-      name: /english curated content table/i,
+    const curatedList = screen.getByRole("list", {
+      name: /english curated content list/i,
     });
-    expect(within(curationTable).getByText(/^Evening Garden$/i)).toBeVisible();
+    expect(within(curatedList).getByText(/^Evening Garden$/i)).toBeVisible();
 
     fireEvent.click(
       screen.getByRole("button", { name: /add curated content/i }),
@@ -657,20 +667,27 @@ describe("Category integration", () => {
     );
 
     await waitFor(() => {
-      expect(within(curationTable).getByText(/^Starry Forest$/i)).toBeVisible();
+      expect(within(curatedList).getByText(/^Starry Forest$/i)).toBeVisible();
+    });
+    await waitFor(() => {
+      expect(
+        screen.getByText(/drag rows to reorder english curated story items/i),
+      ).toBeVisible();
     });
 
-    const orderInput = document.querySelector(
-      "#curation-order-11",
-    ) as HTMLInputElement | null;
-    expect(orderInput).not.toBeNull();
-    fireEvent.change(orderInput!, {
-      target: { value: "2" },
+    const moveUpButton = screen.getByRole("button", {
+      name: /move starry forest up/i,
     });
-    fireEvent.click(screen.getAllByRole("button", { name: /save order/i })[1]!);
+    await waitFor(() => {
+      expect(moveUpButton).toBeEnabled();
+    });
+    await act(async () => {
+      fireEvent.click(moveUpButton);
+    });
 
     await waitFor(() => {
-      expect(orderInput).toHaveValue(2);
+      expect(curationRows.map((row) => row.contentId)).toEqual([11, 1]);
+      expect(curationRows.map((row) => row.displayOrder)).toEqual([0, 1]);
     });
 
     await act(async () => {
@@ -700,23 +717,29 @@ describe("Category integration", () => {
         }),
       ).not.toBeInTheDocument();
     });
-    const refreshedCurationTable = refreshedApp.getByRole("table", {
-      name: /english curated content table/i,
+    const refreshedCuratedList = refreshedApp.getByRole("list", {
+      name: /english curated content list/i,
     });
     expect(
-      within(refreshedCurationTable).getByText(/^Evening Garden$/i),
+      within(refreshedCuratedList).getByText(/^Evening Garden$/i),
     ).toBeVisible();
     expect(
-      within(refreshedCurationTable).getByText(/^Starry Forest$/i),
+      within(refreshedCuratedList).getByText(/^Starry Forest$/i),
     ).toBeVisible();
-    const refreshedOrderInput = document.querySelector(
-      "#curation-order-11",
-    ) as HTMLInputElement | null;
-    expect(refreshedOrderInput).not.toBeNull();
-    expect(refreshedOrderInput).toHaveValue(2);
+    const refreshedRows = within(refreshedCuratedList).getAllByRole("listitem");
+    expect(
+      within(refreshedRows[0]!).getByText(/^Starry Forest$/i),
+    ).toBeVisible();
+    expect(
+      within(refreshedRows[1]!).getByText(/^Evening Garden$/i),
+    ).toBeVisible();
 
+    const eveningGardenRow = within(refreshedCuratedList)
+      .getAllByRole("listitem")
+      .find((row) => within(row).queryByText(/^Evening Garden$/i));
+    expect(eveningGardenRow).toBeDefined();
     fireEvent.click(
-      refreshedApp.getAllByRole("button", { name: /^remove$/i })[0]!,
+      within(eveningGardenRow!).getByRole("button", { name: /^remove$/i }),
     );
     expect(
       await refreshedApp.findByRole("heading", {
@@ -729,7 +752,7 @@ describe("Category integration", () => {
 
     await waitFor(() => {
       expect(
-        within(refreshedCurationTable).queryByText(/^Evening Garden$/i),
+        within(refreshedCuratedList).queryByText(/^Evening Garden$/i),
       ).not.toBeInTheDocument();
     });
 
@@ -760,14 +783,14 @@ describe("Category integration", () => {
         }),
       ).not.toBeInTheDocument();
     });
-    const afterRemovalTable = afterRemovalApp.getByRole("table", {
-      name: /english curated content table/i,
+    const afterRemovalList = afterRemovalApp.getByRole("list", {
+      name: /english curated content list/i,
     });
     expect(
-      within(afterRemovalTable).queryByText(/^Evening Garden$/i),
+      within(afterRemovalList).queryByText(/^Evening Garden$/i),
     ).not.toBeInTheDocument();
     expect(
-      within(afterRemovalTable).getByText(/^Starry Forest$/i),
+      within(afterRemovalList).getByText(/^Starry Forest$/i),
     ).toBeVisible();
   }, 15_000);
 });

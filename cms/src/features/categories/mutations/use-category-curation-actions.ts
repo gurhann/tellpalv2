@@ -17,6 +17,10 @@ type UpdateCuratedContentOrderVariables = {
   displayOrder: number;
 };
 
+type ReorderCuratedContentVariables = {
+  items: CategoryCurationItemViewModel[];
+};
+
 function sortCurationItems(
   items: CategoryCurationItemViewModel[],
 ): CategoryCurationItemViewModel[] {
@@ -45,6 +49,15 @@ function upsertCurationItem(
         );
 
   return sortCurationItems(nextRecords);
+}
+
+function normalizeCurationItems(
+  items: CategoryCurationItemViewModel[],
+): CategoryCurationItemViewModel[] {
+  return sortCurationItems(items).map((item, index) => ({
+    ...item,
+    displayOrder: index,
+  }));
 }
 
 export function useCategoryCurationActions({
@@ -103,6 +116,61 @@ export function useCategoryCurationActions({
           (records) => upsertCurationItem(records, curationItem),
         );
 
+        await queryClient.invalidateQueries({
+          queryKey: curationKey,
+        });
+        await queryClient.invalidateQueries({
+          queryKey: eligibleContentsRootKey,
+        });
+      },
+    }),
+    reorderCuratedContent: useMutation({
+      mutationFn: async ({ items }: ReorderCuratedContentVariables) => {
+        const normalizedItems = normalizeCurationItems(items);
+        const response = await categoryCurationAdminApi.reorderCuratedContent(
+          categoryId,
+          languageCode,
+          {
+            items: normalizedItems.map((item) => ({
+              contentId: item.contentId,
+              displayOrder: item.displayOrder,
+            })),
+          },
+        );
+        return response.map(mapAdminCategoryCurationItem);
+      },
+      onMutate: async ({ items }) => {
+        const normalizedItems = normalizeCurationItems(items);
+
+        await queryClient.cancelQueries({
+          queryKey: curationKey,
+        });
+
+        const previousItems =
+          queryClient.getQueryData<CategoryCurationItemViewModel[]>(
+            curationKey,
+          ) ?? [];
+
+        queryClient.setQueryData<CategoryCurationItemViewModel[]>(
+          curationKey,
+          normalizedItems,
+        );
+
+        return { previousItems };
+      },
+      onSuccess: async (records) => {
+        queryClient.setQueryData<CategoryCurationItemViewModel[]>(
+          curationKey,
+          sortCurationItems(records),
+        );
+      },
+      onError: (_error, _variables, context) => {
+        queryClient.setQueryData<CategoryCurationItemViewModel[]>(
+          curationKey,
+          context?.previousItems ?? [],
+        );
+      },
+      onSettled: async () => {
         await queryClient.invalidateQueries({
           queryKey: curationKey,
         });

@@ -1,5 +1,10 @@
 package com.tellpal.v2.category.application;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,6 +13,7 @@ import com.tellpal.v2.category.application.CategoryApplicationExceptions.Categor
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
 import com.tellpal.v2.category.application.CategoryManagementCommands.AddCategoryContentCommand;
+import com.tellpal.v2.category.application.CategoryManagementCommands.ReorderCategoryContentsCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.RemoveCategoryContentCommand;
 import com.tellpal.v2.category.application.CategoryManagementCommands.UpdateCategoryContentOrderCommand;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryContentRecord;
@@ -77,6 +83,45 @@ public class CategoryCurationService {
                 command.categoryId(),
                 categoryRepository.save(category).findCuratedContent(command.languageCode(), command.contentId())
                         .orElse(categoryContent));
+    }
+
+    /**
+     * Replaces the order of all curated content links for one language in one transaction.
+     */
+    @Transactional
+    public void reorderContents(ReorderCategoryContentsCommand command) {
+        Category category = loadCategory(command.categoryId());
+        requirePublishedLocalization(category, command.languageCode());
+        command.assignments().forEach(assignment -> {
+            loadCuratedContent(category, command.languageCode(), assignment.contentId());
+            contentReferenceValidator.requireCuratableContent(
+                    category.getType(),
+                    assignment.contentId(),
+                    command.languageCode());
+        });
+
+        Map<Long, Integer> targetAssignments = command.assignments().stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        CategoryManagementCommands.CategoryContentOrderAssignment::contentId,
+                        CategoryManagementCommands.CategoryContentOrderAssignment::displayOrder,
+                        (_left, right) -> right,
+                        LinkedHashMap::new));
+        List<CategoryContent> languageContents = category.getCuratedContents().stream()
+                .filter(candidate -> candidate.matchesLanguage(command.languageCode()))
+                .sorted(Comparator.comparingInt(CategoryContent::getDisplayOrder))
+                .toList();
+        int temporaryOrderOffset = languageContents.stream()
+                .mapToInt(CategoryContent::getDisplayOrder)
+                .max()
+                .orElse(0) + targetAssignments.size() + 1;
+
+        languageContents.forEach(categoryContent ->
+                categoryContent.updateDisplayOrder(categoryContent.getDisplayOrder() + temporaryOrderOffset));
+        categoryRepository.save(category);
+        categoryRepository.flush();
+
+        category.reorderContents(command.languageCode(), targetAssignments);
+        categoryRepository.save(category);
     }
 
     /**

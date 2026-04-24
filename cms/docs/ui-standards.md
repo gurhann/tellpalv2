@@ -110,6 +110,8 @@ Detail and workspace routes must follow one shared composition contract.
   - primary line: localized title for the selected lane language
   - secondary line: `#contentId`, `externalKey`, and lane language label
   - id-only labels such as `Content #123` are allowed only as a final fallback when no richer identity is available
+  - content management and ordering must live in one dominant list surface; the same curated row must not be repeated in a separate order editor panel
+  - when reorder is a direct manipulation workflow, prefer in-list drag handles over a second reorder section or jump link
 
 ## 7. Accessibility and Interaction Rules
 
