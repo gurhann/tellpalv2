@@ -44,6 +44,8 @@ const curatedContent = [
     languageCode: "en",
     contentId: 11,
     displayOrder: 0,
+    externalKey: "story.ecenin-fasulye-deneyi",
+    localizedTitle: "Ecenin Fasulye Deneyi",
   },
 ];
 
@@ -65,13 +67,16 @@ for (const viewport of visualViewports) {
       });
     });
 
-    await page.route("**/api/admin/categories/7/localizations", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(localizations),
-      });
-    });
+    await page.route(
+      "**/api/admin/categories/7/localizations",
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(localizations),
+        });
+      },
+    );
 
     await page.route(
       "**/api/admin/categories/7/localizations/en/contents",

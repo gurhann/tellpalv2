@@ -60,6 +60,9 @@ describe("CurationOrderEditor", () => {
       />,
     );
 
+    expect(screen.getByText(/^Evening Garden$/i)).toBeVisible();
+    expect(screen.getByText(/^Moonlight Meadow$/i)).toBeVisible();
+
     fireEvent.change(screen.getByDisplayValue("2"), {
       target: { value: "1" },
     });

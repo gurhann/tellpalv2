@@ -354,8 +354,12 @@ describe("Category integration", () => {
       expect(window.location.pathname).toBe("/categories/99");
     });
     expect(await screen.findByDisplayValue("dream-lullabies")).toBeVisible();
-    expect(screen.queryByText(/localization snapshot/i)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /open curation lane/i })).toBeDisabled();
+    expect(
+      screen.queryByText(/localization snapshot/i),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /open curation lane/i }),
+    ).toBeDisabled();
 
     fireEvent.change(screen.getByLabelText(/slug/i), {
       target: { value: "dream-lullabies-v2" },
@@ -498,6 +502,8 @@ describe("Category integration", () => {
         languageCode: "en",
         contentId: 1,
         displayOrder: 0,
+        externalKey: "story.evening-garden",
+        localizedTitle: "Evening Garden",
       },
     ];
     const fetchMock = vi
@@ -560,6 +566,8 @@ describe("Category integration", () => {
             languageCode: "en",
             contentId: body.contentId,
             displayOrder: body.displayOrder,
+            externalKey: "story.starry-forest",
+            localizedTitle: "Starry Forest",
           } satisfies AdminCategoryContentResponse;
 
           curationRows = [...curationRows, nextRow].sort(
@@ -583,6 +591,8 @@ describe("Category integration", () => {
             languageCode: "en",
             contentId: 11,
             displayOrder: body.displayOrder,
+            externalKey: "story.starry-forest",
+            localizedTitle: "Starry Forest",
           } satisfies AdminCategoryContentResponse;
 
           curationRows = curationRows
@@ -630,7 +640,7 @@ describe("Category integration", () => {
     const curationTable = screen.getByRole("table", {
       name: /english curated content table/i,
     });
-    expect(within(curationTable).getByText(/^Content #1$/i)).toBeVisible();
+    expect(within(curationTable).getByText(/^Evening Garden$/i)).toBeVisible();
 
     fireEvent.click(
       screen.getByRole("button", { name: /add curated content/i }),
@@ -647,7 +657,7 @@ describe("Category integration", () => {
     );
 
     await waitFor(() => {
-      expect(within(curationTable).getByText(/^Content #11$/i)).toBeVisible();
+      expect(within(curationTable).getByText(/^Starry Forest$/i)).toBeVisible();
     });
 
     const orderInput = document.querySelector(
@@ -694,10 +704,10 @@ describe("Category integration", () => {
       name: /english curated content table/i,
     });
     expect(
-      within(refreshedCurationTable).getByText(/^Content #1$/i),
+      within(refreshedCurationTable).getByText(/^Evening Garden$/i),
     ).toBeVisible();
     expect(
-      within(refreshedCurationTable).getByText(/^Content #11$/i),
+      within(refreshedCurationTable).getByText(/^Starry Forest$/i),
     ).toBeVisible();
     const refreshedOrderInput = document.querySelector(
       "#curation-order-11",
@@ -719,7 +729,7 @@ describe("Category integration", () => {
 
     await waitFor(() => {
       expect(
-        within(refreshedCurationTable).queryByText(/^Content #1$/i),
+        within(refreshedCurationTable).queryByText(/^Evening Garden$/i),
       ).not.toBeInTheDocument();
     });
 
@@ -754,8 +764,10 @@ describe("Category integration", () => {
       name: /english curated content table/i,
     });
     expect(
-      within(afterRemovalTable).queryByText(/^Content #1$/i),
+      within(afterRemovalTable).queryByText(/^Evening Garden$/i),
     ).not.toBeInTheDocument();
-    expect(within(afterRemovalTable).getByText(/^Content #11$/i)).toBeVisible();
+    expect(
+      within(afterRemovalTable).getByText(/^Starry Forest$/i),
+    ).toBeVisible();
   }, 15_000);
 });

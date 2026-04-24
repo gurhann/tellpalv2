@@ -109,6 +109,8 @@ export const featuredSleepEnglishCurationResponse: AdminCategoryContentResponse 
     languageCode: "en",
     contentId: 1,
     displayOrder: 0,
+    externalKey: "story.evening-garden",
+    localizedTitle: "Evening Garden",
   };
 
 export const featuredSleepEnglishSecondCurationResponse: AdminCategoryContentResponse =
@@ -117,6 +119,8 @@ export const featuredSleepEnglishSecondCurationResponse: AdminCategoryContentRes
     languageCode: "en",
     contentId: 10,
     displayOrder: 2,
+    externalKey: "story.moonlight-meadow",
+    localizedTitle: "Moonlight Meadow",
   };
 
 export const categoryCurationResponses: AdminCategoryContentResponse[] = [

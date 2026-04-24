@@ -56,6 +56,8 @@ export type CategoryCurationItemViewModel = {
   languageLabel: string;
   contentId: number;
   displayOrder: number;
+  externalKey: string;
+  localizedTitle: string | null;
 };
 
 export type EligibleCategoryContentViewModel = {
@@ -142,6 +144,8 @@ export function mapAdminCategoryCurationItem(
     languageLabel: language.label,
     contentId: curationItem.contentId,
     displayOrder: curationItem.displayOrder,
+    externalKey: curationItem.externalKey,
+    localizedTitle: curationItem.localizedTitle,
   };
 }
 

@@ -4,6 +4,7 @@ import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CuratedContentIdentity } from "@/features/categories/components/curated-content-identity";
 import type {
   CategoryCurationItemViewModel,
   CategoryLocalizationViewModel,
@@ -87,12 +88,13 @@ function CurationOrderRow({
     <div className="rounded-2xl border border-border/70 bg-background px-4 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-foreground">
-            Content #{item.contentId}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Stored row in the {localization.languageLabel} curation lane.
-          </p>
+          <CuratedContentIdentity
+            contentId={item.contentId}
+            externalKey={item.externalKey}
+            languageLabel={localization.languageLabel}
+            localizedTitle={item.localizedTitle}
+            metaClassName="text-sm text-muted-foreground"
+          />
         </div>
 
         <div className="grid gap-2 sm:grid-cols-[minmax(0,10rem)_auto]">

@@ -113,8 +113,8 @@ public class CategoryCurationAdminController {
             @PathVariable Long categoryId,
             @PathVariable String languageCode,
             @Valid @RequestBody AddCategoryContentRequest request) {
-        AdminCategoryContentResponse response = AdminCategoryContentResponse.from(
-                categoryCurationService.addContent(request.toCommand(categoryId, languageCode)));
+        categoryCurationService.addContent(request.toCommand(categoryId, languageCode));
+        AdminCategoryContentResponse response = findCuratedContentResponse(categoryId, languageCode, request.contentId());
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{contentId}")
                 .buildAndExpand(response.contentId())
@@ -136,8 +136,8 @@ public class CategoryCurationAdminController {
             @PathVariable String languageCode,
             @PathVariable Long contentId,
             @Valid @RequestBody UpdateCategoryContentOrderRequest request) {
-        return AdminCategoryContentResponse.from(categoryCurationService.updateContentOrder(
-                request.toCommand(categoryId, languageCode, contentId)));
+        categoryCurationService.updateContentOrder(request.toCommand(categoryId, languageCode, contentId));
+        return findCuratedContentResponse(categoryId, languageCode, contentId);
     }
 
     @DeleteMapping("/contents/{contentId}")
@@ -157,6 +157,17 @@ public class CategoryCurationAdminController {
                 categoryId,
                 LanguageCode.from(languageCode),
                 contentId));
+    }
+
+    private AdminCategoryContentResponse findCuratedContentResponse(
+            Long categoryId,
+            String languageCode,
+            Long contentId) {
+        return categoryCurationQueryApi.listCategoryContents(categoryId, LanguageCode.from(languageCode)).stream()
+                .filter(view -> view.contentId().equals(contentId))
+                .findFirst()
+                .map(AdminCategoryContentResponse::from)
+                .orElseThrow(() -> new IllegalStateException("Curated content response must exist after mutation"));
     }
 }
 

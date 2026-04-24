@@ -33,7 +33,6 @@ import com.tellpal.v2.category.application.CategoryApplicationExceptions.Categor
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryContentTypeMismatchException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryLocalizationNotPublishedException;
 import com.tellpal.v2.category.application.CategoryApplicationExceptions.CategoryNotFoundException;
-import com.tellpal.v2.category.application.CategoryManagementResults.CategoryContentRecord;
 import com.tellpal.v2.category.application.CategoryManagementResults.CategoryLocalizationRecord;
 import com.tellpal.v2.category.application.CategoryCurationService;
 import com.tellpal.v2.category.application.CategoryManagementService;
@@ -232,11 +231,14 @@ class CategoryAdminControllerTest {
 
     @Test
     void addCuratedContentReturnsCreatedResponse() throws Exception {
-        when(categoryCurationService.addContent(any())).thenReturn(new CategoryContentRecord(
-                42L,
-                LanguageCode.TR,
-                77L,
-                0));
+        when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.TR)).thenReturn(List.of(
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.TR,
+                        77L,
+                        0,
+                        "story.ecenin-fasulye-deneyi",
+                        "Ecenin Fasulye Deneyi")));
 
         mockMvc.perform(post("/api/admin/categories/42/localizations/tr/contents")
                         .contentType("application/json")
@@ -251,22 +253,40 @@ class CategoryAdminControllerTest {
                         "Location",
                         "http://localhost/api/admin/categories/42/localizations/tr/contents/77"))
                 .andExpect(jsonPath("$.contentId").value(77))
+                .andExpect(jsonPath("$.externalKey").value("story.ecenin-fasulye-deneyi"))
+                .andExpect(jsonPath("$.localizedTitle").value("Ecenin Fasulye Deneyi"))
                 .andExpect(jsonPath("$.displayOrder").value(0));
     }
 
     @Test
     void listCuratedContentReturnsOrderedResponses() throws Exception {
         when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.TR)).thenReturn(List.of(
-                new AdminCategoryContentView(42L, LanguageCode.TR, 77L, 0),
-                new AdminCategoryContentView(42L, LanguageCode.TR, 91L, 3)));
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.TR,
+                        77L,
+                        0,
+                        "story.ecenin-fasulye-deneyi",
+                        "Ecenin Fasulye Deneyi"),
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.TR,
+                        91L,
+                        3,
+                        "story.gece-bahcesi",
+                        "Gece Bahcesi")));
 
         mockMvc.perform(get("/api/admin/categories/42/localizations/tr/contents"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].categoryId").value(42))
                 .andExpect(jsonPath("$[0].languageCode").value("tr"))
                 .andExpect(jsonPath("$[0].contentId").value(77))
+                .andExpect(jsonPath("$[0].externalKey").value("story.ecenin-fasulye-deneyi"))
+                .andExpect(jsonPath("$[0].localizedTitle").value("Ecenin Fasulye Deneyi"))
                 .andExpect(jsonPath("$[0].displayOrder").value(0))
                 .andExpect(jsonPath("$[1].contentId").value(91))
+                .andExpect(jsonPath("$[1].externalKey").value("story.gece-bahcesi"))
+                .andExpect(jsonPath("$[1].localizedTitle").value("Gece Bahcesi"))
                 .andExpect(jsonPath("$[1].displayOrder").value(3));
     }
 
@@ -291,11 +311,14 @@ class CategoryAdminControllerTest {
 
     @Test
     void updateCuratedContentOrderReturnsUpdatedResponse() throws Exception {
-        when(categoryCurationService.updateContentOrder(any())).thenReturn(new CategoryContentRecord(
-                42L,
-                LanguageCode.EN,
-                91L,
-                3));
+        when(categoryCurationQueryApi.listCategoryContents(42L, LanguageCode.EN)).thenReturn(List.of(
+                new AdminCategoryContentView(
+                        42L,
+                        LanguageCode.EN,
+                        91L,
+                        3,
+                        "story.evening-garden",
+                        "Evening Garden")));
 
         mockMvc.perform(put("/api/admin/categories/42/localizations/en/contents/91")
                         .contentType("application/json")
@@ -307,6 +330,8 @@ class CategoryAdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.languageCode").value("en"))
                 .andExpect(jsonPath("$.contentId").value(91))
+                .andExpect(jsonPath("$.externalKey").value("story.evening-garden"))
+                .andExpect(jsonPath("$.localizedTitle").value("Evening Garden"))
                 .andExpect(jsonPath("$.displayOrder").value(3));
     }
 

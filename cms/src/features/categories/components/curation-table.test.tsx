@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -56,8 +62,11 @@ describe("CurationTable", () => {
     expect(
       screen.getByRole("columnheader", { name: /display order/i }),
     ).toBeVisible();
-    expect(screen.getByText(/^Content #1$/i)).toBeVisible();
-    expect(screen.getByText(/^Content #10$/i)).toBeVisible();
+    expect(screen.getByText(/^Evening Garden$/i)).toBeVisible();
+    expect(screen.getByText(/^Moonlight Meadow$/i)).toBeVisible();
+    expect(
+      screen.getByText(/#1\s+·\s+story\.evening-garden\s+·\s+English/i),
+    ).toBeVisible();
   });
 
   it("confirms and removes one curated row", async () => {
@@ -84,6 +93,9 @@ describe("CurationTable", () => {
     expect(
       await screen.findByRole("heading", { name: /remove curated content/i }),
     ).toBeVisible();
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(/^Evening Garden$/i)).toBeVisible();
+    expect(within(dialog).getByText(/story\.evening-garden/i)).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: /^remove content$/i }));
 

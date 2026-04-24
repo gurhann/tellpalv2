@@ -106,6 +106,10 @@ Detail and workspace routes must follow one shared composition contract.
 - Story-page workspaces must expose an in-route active language control when table status, readiness counts, and editor defaults depend on a selected locale.
   - the active language control must update the route state or URL so refreshes and handoffs preserve context
   - the table status header, rail readiness count, and newly opened editor must all use the same selected language
+- Category curation lanes must render persisted curated rows with title-first content identity.
+  - primary line: localized title for the selected lane language
+  - secondary line: `#contentId`, `externalKey`, and lane language label
+  - id-only labels such as `Content #123` are allowed only as a final fallback when no richer identity is available
 
 ## 7. Accessibility and Interaction Rules
 

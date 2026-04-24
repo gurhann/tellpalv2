@@ -1,4 +1,5 @@
 import { useDeferredValue, useMemo, useState } from "react";
+import { z } from "zod";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -20,6 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { CuratedContentIdentity } from "@/features/categories/components/curated-content-identity";
 import type {
   CategoryCurationItemViewModel,
   CategoryLocalizationViewModel,
@@ -28,7 +30,6 @@ import type {
 } from "@/features/categories/model/category-view-model";
 import { useCategoryCurationActions } from "@/features/categories/mutations/use-category-curation-actions";
 import { useEligibleCategoryContents } from "@/features/categories/queries/use-eligible-category-contents";
-import { z } from "zod";
 
 const addCuratedContentSchema = z.object({
   selectedContentId: z
@@ -223,8 +224,8 @@ export function AddCuratedContentDialog({
           <DialogTitle>Add curated content</DialogTitle>
           <DialogDescription>
             Select one published {category.typeLabel.toLowerCase()} record for
-            the {localization.languageLabel} category lane. Only addable
-            content for this type and language is listed here.
+            the {localization.languageLabel} category lane. Only addable content
+            for this type and language is listed here.
           </DialogDescription>
         </DialogHeader>
 
@@ -234,144 +235,149 @@ export function AddCuratedContentDialog({
             noValidate
             onSubmit={form.handleSubmit(handleSubmit)}
           >
-          {problemMessage ? (
-            <ProblemAlert
-              description={problemMessage}
-              title="Curated content could not be added"
-            />
-          ) : null}
-
-          <div className="grid gap-5 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-            <div className="space-y-3">
-              <label
-                className="text-sm font-medium text-foreground"
-                htmlFor="category-curation-search"
-              >
-                Search eligible content
-              </label>
-              <Input
-                id="category-curation-search"
-                aria-label="Search eligible content"
-                placeholder={`Search ${category.typeLabel.toLowerCase()} title, external key, or content id`}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                disabled={addCuratedContent.isPending}
+            {problemMessage ? (
+              <ProblemAlert
+                description={problemMessage}
+                title="Curated content could not be added"
               />
-              <p className="text-sm text-muted-foreground">
-                Results are limited to published {localization.languageLabel}{" "}
-                {category.typeLabel.toLowerCase()} records that are not already
-                in this lane.
-              </p>
-              <FieldError error={form.formState.errors.selectedContentId} />
+            ) : null}
+
+            <div className="grid gap-5 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+              <div className="space-y-3">
+                <label
+                  className="text-sm font-medium text-foreground"
+                  htmlFor="category-curation-search"
+                >
+                  Search eligible content
+                </label>
+                <Input
+                  id="category-curation-search"
+                  aria-label="Search eligible content"
+                  placeholder={`Search ${category.typeLabel.toLowerCase()} title, external key, or content id`}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  disabled={addCuratedContent.isPending}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Results are limited to published {localization.languageLabel}{" "}
+                  {category.typeLabel.toLowerCase()} records that are not
+                  already in this lane.
+                </p>
+                <FieldError error={form.formState.errors.selectedContentId} />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-medium text-foreground"
+                  htmlFor="category-curation-display-order"
+                >
+                  Display order
+                </label>
+                <Input
+                  id="category-curation-display-order"
+                  inputMode="numeric"
+                  min={0}
+                  type="number"
+                  {...form.register("displayOrder", {
+                    setValueAs: (value) => Number(value),
+                  })}
+                  disabled={addCuratedContent.isPending}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Display orders must stay unique within the{" "}
+                  {localization.languageLabel} curation lane.
+                </p>
+                <FieldError error={form.formState.errors.displayOrder} />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-foreground"
-                htmlFor="category-curation-display-order"
-              >
-                Display order
-              </label>
-              <Input
-                id="category-curation-display-order"
-                inputMode="numeric"
-                min={0}
-                type="number"
-                {...form.register("displayOrder", {
-                  setValueAs: (value) => Number(value),
-                })}
-                disabled={addCuratedContent.isPending}
-              />
-              <p className="text-sm text-muted-foreground">
-                Display orders must stay unique within the{" "}
-                {localization.languageLabel} curation lane.
-              </p>
-              <FieldError error={form.formState.errors.displayOrder} />
-            </div>
-          </div>
+            {selectedContentSummary ? (
+              <div className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-4">
+                <p className="text-sm font-medium text-foreground">
+                  Selected content
+                </p>
+                <CuratedContentIdentity
+                  className="mt-3"
+                  contentId={selectedContentSummary.contentId}
+                  externalKey={selectedContentSummary.externalKey}
+                  languageLabel={selectedContentSummary.languageLabel}
+                  localizedTitle={selectedContentSummary.localizedTitle}
+                  metaClassName="text-sm text-muted-foreground"
+                />
+              </div>
+            ) : null}
 
-          {selectedContentSummary ? (
-            <div className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-4">
+            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
               <p className="text-sm font-medium text-foreground">
-                Selected content
+                Eligible published {category.typeLabel.toLowerCase()} records in{" "}
+                {localization.languageLabel}
               </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {selectedContentSummary.localizedTitle}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                #{selectedContentSummary.contentId} ·{" "}
-                {selectedContentSummary.externalKey} ·{" "}
-                {selectedContentSummary.languageLabel}
-              </p>
+
+              {eligibleContentsQuery.problem ? (
+                <div className="mt-4">
+                  <ProblemAlert problem={eligibleContentsQuery.problem} />
+                </div>
+              ) : eligibleContentsQuery.isLoading ? (
+                <EmptyState
+                  className="mt-4 min-h-44"
+                  title="Loading eligible content"
+                  description={`The CMS is requesting published ${localization.languageLabel} ${category.typeLabel.toLowerCase()} candidates from the admin API.`}
+                />
+              ) : eligibleContentsQuery.items.length > 0 ? (
+                <div className="mt-4 grid max-h-[22rem] gap-3 overflow-y-auto pr-1">
+                  {eligibleContentsQuery.items.map((content) => {
+                    const isSelected = content.contentId === selectedContentId;
+
+                    return (
+                      <button
+                        key={content.contentId}
+                        type="button"
+                        className={`rounded-2xl border px-4 py-4 text-left shadow-sm transition-colors ${
+                          isSelected
+                            ? "border-primary/30 bg-primary/5"
+                            : "border-border/70 bg-card/90 hover:border-primary/20"
+                        }`}
+                        onClick={() => {
+                          form.setValue(
+                            "selectedContentId",
+                            content.contentId,
+                            {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            },
+                          );
+                          setSelectedContentSummary(
+                            toSelectedContentSummary(content),
+                          );
+                        }}
+                        disabled={addCuratedContent.isPending}
+                      >
+                        <CuratedContentIdentity
+                          contentId={content.contentId}
+                          externalKey={content.externalKey}
+                          languageLabel={localization.languageLabel}
+                          localizedTitle={content.localizedTitle}
+                          metaClassName="text-sm text-muted-foreground"
+                        />
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {formatPublishedAt(content.publishedAt)}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <EmptyState
+                  className="mt-4 min-h-44"
+                  title="No eligible content found"
+                  description={
+                    deferredSearch.trim().length > 0
+                      ? `No published ${category.typeLabel.toLowerCase()} records matched the current search for ${localization.languageLabel}.`
+                      : `No published ${category.typeLabel.toLowerCase()} records are currently available for ${localization.languageLabel} in this curation lane.`
+                  }
+                />
+              )}
             </div>
-          ) : null}
-
-          <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4">
-            <p className="text-sm font-medium text-foreground">
-              Eligible published {category.typeLabel.toLowerCase()} records in{" "}
-              {localization.languageLabel}
-            </p>
-
-            {eligibleContentsQuery.problem ? (
-              <div className="mt-4">
-                <ProblemAlert problem={eligibleContentsQuery.problem} />
-              </div>
-            ) : eligibleContentsQuery.isLoading ? (
-              <EmptyState
-                className="mt-4 min-h-44"
-                title="Loading eligible content"
-                description={`The CMS is requesting published ${localization.languageLabel} ${category.typeLabel.toLowerCase()} candidates from the admin API.`}
-              />
-            ) : eligibleContentsQuery.items.length > 0 ? (
-              <div className="mt-4 grid max-h-[22rem] gap-3 overflow-y-auto pr-1">
-                {eligibleContentsQuery.items.map((content) => {
-                  const isSelected = content.contentId === selectedContentId;
-
-                  return (
-                    <button
-                      key={content.contentId}
-                      type="button"
-                      className={`rounded-2xl border px-4 py-4 text-left shadow-sm transition-colors ${
-                        isSelected
-                          ? "border-primary/30 bg-primary/5"
-                          : "border-border/70 bg-card/90 hover:border-primary/20"
-                      }`}
-                      onClick={() => {
-                        form.setValue("selectedContentId", content.contentId, {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                        setSelectedContentSummary(
-                          toSelectedContentSummary(content),
-                        );
-                      }}
-                      disabled={addCuratedContent.isPending}
-                    >
-                      <p className="text-sm font-medium text-foreground">
-                        {content.localizedTitle}
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        #{content.contentId} · {content.externalKey}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {formatPublishedAt(content.publishedAt)}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <EmptyState
-                className="mt-4 min-h-44"
-                title="No eligible content found"
-                description={
-                  deferredSearch.trim().length > 0
-                    ? `No published ${category.typeLabel.toLowerCase()} records matched the current search for ${localization.languageLabel}.`
-                    : `No published ${category.typeLabel.toLowerCase()} records are currently available for ${localization.languageLabel} in this curation lane.`
-                }
-              />
-            )}
-          </div>
 
             <DialogFooter>
               <Button

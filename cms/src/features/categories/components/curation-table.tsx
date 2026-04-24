@@ -5,6 +5,7 @@ import { DataTable, type DataTableColumn } from "@/components/data/data-table";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { toastMutation } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
+import { CuratedContentIdentity } from "@/features/categories/components/curated-content-identity";
 import {
   Dialog,
   DialogBody,
@@ -54,15 +55,12 @@ export function CurationTable({
       id: "content",
       header: "Content",
       cell: (item) => (
-        <div className="space-y-1">
-          <p className="font-medium text-foreground">
-            Content #{item.contentId}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {localization.languageLabel} curated{" "}
-            {category.typeLabel.toLowerCase()} row
-          </p>
-        </div>
+        <CuratedContentIdentity
+          contentId={item.contentId}
+          externalKey={item.externalKey}
+          languageLabel={localization.languageLabel}
+          localizedTitle={item.localizedTitle}
+        />
       ),
     },
     {
@@ -159,13 +157,26 @@ export function CurationTable({
           <DialogHeader>
             <DialogTitle>Remove curated content</DialogTitle>
             <DialogDescription>
-              Remove content #{pendingRemoval?.contentId} from the{" "}
-              {localization.languageLabel} curation lane for category #
+              Remove{" "}
+              {pendingRemoval?.localizedTitle?.trim() ||
+                pendingRemoval?.externalKey ||
+                `content #${pendingRemoval?.contentId ?? "?"}`}{" "}
+              from the {localization.languageLabel} curation lane for category #
               {category.id}.
             </DialogDescription>
           </DialogHeader>
 
           <DialogBody className="grid gap-4">
+            {pendingRemoval ? (
+              <div className="rounded-2xl border border-border/70 bg-muted/15 px-4 py-4">
+                <CuratedContentIdentity
+                  contentId={pendingRemoval.contentId}
+                  externalKey={pendingRemoval.externalKey}
+                  languageLabel={localization.languageLabel}
+                  localizedTitle={pendingRemoval.localizedTitle}
+                />
+              </div>
+            ) : null}
             {removeProblemMessage ? (
               <ProblemAlert
                 description={removeProblemMessage}

@@ -3,6 +3,7 @@ package com.tellpal.v2.content.application;
 import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.api.ContentLocalizationReference;
 import com.tellpal.v2.content.api.ContentReference;
+import com.tellpal.v2.content.api.LocalizedContentIdentityReference;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.LocalizationStatus;
@@ -32,5 +33,16 @@ final class ContentApiMapper {
                 localization.getLanguageCode(),
                 localization.getStatus() == LocalizationStatus.PUBLISHED,
                 localization.isVisibleToMobile());
+    }
+
+    static LocalizedContentIdentityReference toLocalizedIdentityReference(
+            Long contentId,
+            String externalKey,
+            ContentLocalization localization) {
+        return new LocalizedContentIdentityReference(
+                contentId,
+                externalKey,
+                localization.getTitle(),
+                localization.getLanguageCode());
     }
 }

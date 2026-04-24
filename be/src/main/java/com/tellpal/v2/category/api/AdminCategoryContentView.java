@@ -9,7 +9,9 @@ public record AdminCategoryContentView(
         Long categoryId,
         LanguageCode languageCode,
         Long contentId,
-        int displayOrder) {
+        int displayOrder,
+        String externalKey,
+        String localizedTitle) {
 
     public AdminCategoryContentView {
         if (categoryId == null || categoryId <= 0) {
@@ -24,5 +26,9 @@ public record AdminCategoryContentView(
         if (displayOrder < 0) {
             throw new IllegalArgumentException("Display order must not be negative");
         }
+        if (externalKey == null || externalKey.isBlank()) {
+            throw new IllegalArgumentException("Content external key must not be blank");
+        }
+        externalKey = externalKey.trim();
     }
 }

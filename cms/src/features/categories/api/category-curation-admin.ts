@@ -29,6 +29,8 @@ export const adminCategoryContentResponseSchema = z.object({
   languageCode: z.string().min(1),
   contentId: z.number().int().positive(),
   displayOrder: z.number().int().nonnegative(),
+  externalKey: z.string().min(1),
+  localizedTitle: z.string().nullable(),
 });
 
 export const adminCategoryContentListResponseSchema = z.array(

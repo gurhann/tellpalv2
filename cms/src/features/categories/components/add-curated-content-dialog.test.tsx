@@ -19,7 +19,8 @@ const curationActionMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/features/categories/queries/use-eligible-category-contents", () => ({
-  useEligibleCategoryContents: eligibleContentsQueryMocks.useEligibleCategoryContents,
+  useEligibleCategoryContents:
+    eligibleContentsQueryMocks.useEligibleCategoryContents,
 }));
 
 vi.mock(
@@ -87,8 +88,10 @@ describe("AddCuratedContentDialog", () => {
     });
     expect(screen.queryByLabelText(/content id/i)).not.toBeInTheDocument();
     expect(screen.getByText(/starry forest/i)).toBeVisible();
+    expect(screen.getByText(/story\.starry-forest/i)).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: /starry forest/i }));
+    expect(screen.getAllByText(/starry forest/i)).toHaveLength(2);
     fireEvent.click(
       screen.getByRole("button", { name: /^add curated content$/i }),
     );
@@ -129,9 +132,7 @@ describe("AddCuratedContentDialog", () => {
       />,
     );
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /evening garden/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /evening garden/i }));
     fireEvent.change(screen.getByLabelText(/display order/i), {
       target: { value: "3" },
     });

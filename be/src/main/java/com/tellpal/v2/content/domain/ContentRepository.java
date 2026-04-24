@@ -20,6 +20,11 @@ public interface ContentRepository {
     Optional<Content> findByIdForAdminRead(Long id);
 
     /**
+     * Loads aggregates with localization state for admin read flows by id.
+     */
+    List<Content> findAllByIdForAdminReadIn(Collection<Long> ids);
+
+    /**
      * Loads one aggregate with its story pages and localized page payloads for admin story-page
      * read flows.
      */

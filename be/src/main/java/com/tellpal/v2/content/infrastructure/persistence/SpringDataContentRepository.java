@@ -30,6 +30,15 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long> {
     @Query("""
             select distinct content
             from Content content
+            left join fetch content.localizations
+            where content.id in :ids
+            order by content.id asc
+            """)
+    List<Content> findAllByIdForAdminReadIn(Collection<Long> ids);
+
+    @Query("""
+            select distinct content
+            from Content content
             left join fetch content.storyPages storyPage
             left join fetch storyPage.localizations
             where content.id = :id

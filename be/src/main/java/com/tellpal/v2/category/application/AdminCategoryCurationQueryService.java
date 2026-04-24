@@ -2,6 +2,7 @@ package com.tellpal.v2.category.application;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import com.tellpal.v2.category.application.CategoryApplicationExceptions.Categor
 import com.tellpal.v2.category.domain.Category;
 import com.tellpal.v2.category.domain.CategoryRepository;
 import com.tellpal.v2.content.api.EligibleContentQueryApi;
+import com.tellpal.v2.content.api.LocalizedContentIdentityLookupApi;
+import com.tellpal.v2.content.api.LocalizedContentIdentityReference;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -29,12 +32,15 @@ public class AdminCategoryCurationQueryService implements AdminCategoryCurationQ
 
     private final CategoryRepository categoryRepository;
     private final EligibleContentQueryApi eligibleContentQueryApi;
+    private final LocalizedContentIdentityLookupApi localizedContentIdentityLookupApi;
 
     public AdminCategoryCurationQueryService(
             CategoryRepository categoryRepository,
-            EligibleContentQueryApi eligibleContentQueryApi) {
+            EligibleContentQueryApi eligibleContentQueryApi,
+            LocalizedContentIdentityLookupApi localizedContentIdentityLookupApi) {
         this.categoryRepository = categoryRepository;
         this.eligibleContentQueryApi = eligibleContentQueryApi;
+        this.localizedContentIdentityLookupApi = localizedContentIdentityLookupApi;
     }
 
     /**
@@ -48,15 +54,30 @@ public class AdminCategoryCurationQueryService implements AdminCategoryCurationQ
         Long requiredCategoryId = requirePersistedCategoryId(category);
         category.findLocalization(requiredLanguageCode)
                 .orElseThrow(() -> new CategoryLocalizationNotFoundException(requiredCategoryId, requiredLanguageCode));
-        return category.getCuratedContents().stream()
+        List<com.tellpal.v2.category.domain.CategoryContent> curatedContents = category.getCuratedContents().stream()
                 .filter(categoryContent -> categoryContent.matchesLanguage(requiredLanguageCode))
                 .sorted(Comparator.comparingInt(com.tellpal.v2.category.domain.CategoryContent::getDisplayOrder)
                         .thenComparing(com.tellpal.v2.category.domain.CategoryContent::getContentId))
-                .map(categoryContent -> new AdminCategoryContentView(
-                        requiredCategoryId,
-                        categoryContent.getLanguageCode(),
-                        categoryContent.getContentId(),
-                        categoryContent.getDisplayOrder()))
+                .toList();
+        Map<Long, LocalizedContentIdentityReference> localizedIdentities = localizedContentIdentityLookupApi
+                .findLocalizedIdentities(
+                        curatedContents.stream()
+                                .map(com.tellpal.v2.category.domain.CategoryContent::getContentId)
+                                .toList(),
+                        requiredLanguageCode);
+        return curatedContents.stream()
+                .map(categoryContent -> {
+                    LocalizedContentIdentityReference identity = localizedIdentities.get(categoryContent.getContentId());
+                    return new AdminCategoryContentView(
+                            requiredCategoryId,
+                            categoryContent.getLanguageCode(),
+                            categoryContent.getContentId(),
+                            categoryContent.getDisplayOrder(),
+                            identity != null
+                                    ? identity.externalKey()
+                                    : fallbackExternalKey(categoryContent.getContentId()),
+                            identity != null ? identity.localizedTitle() : null);
+                })
                 .toList();
     }
 
@@ -115,5 +136,9 @@ public class AdminCategoryCurationQueryService implements AdminCategoryCurationQ
             throw new IllegalStateException("Category must be persisted before curation query mapping");
         }
         return categoryId;
+    }
+
+    private static String fallbackExternalKey(Long contentId) {
+        return "content-" + contentId;
     }
 }
