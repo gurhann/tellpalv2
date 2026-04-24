@@ -25,6 +25,11 @@
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",
       "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
+    },
+    "use-railway": {
+      "source": "railwayapp/railway-skills",
+      "sourceType": "github",
+      "computedHash": "276b1889ce15a894d12d0c6d9aa434aea228a41b5565c69f2b214871b540f063"
     }
   }
 }
