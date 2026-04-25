@@ -18,4 +18,4 @@ COPY --from=build /workspace/target/tellpal-v2-backend-0.0.1-SNAPSHOT.jar app.ja
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar"]

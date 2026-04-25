@@ -2,6 +2,7 @@ be/target/
 be/.jqwik-database
 be/.env
 be/var/
+ops/railway/production.env
 cms/node_modules/
 cms/dist/
 cms/dist-ssr/
