@@ -16,6 +16,7 @@ public record AdminSecurityProperties(
         Duration accessTokenTtl,
         Duration refreshTokenTtl,
         int bcryptStrength,
+        BruteForceProperties bruteForce,
         CorsProperties cors) {
 
     private static final int MIN_JWT_SECRET_BYTES = 32;
@@ -36,6 +37,7 @@ public record AdminSecurityProperties(
         if (bcryptStrength < 10 || bcryptStrength > 31) {
             throw new IllegalArgumentException("Admin BCrypt strength must be between 10 and 31");
         }
+        bruteForce = bruteForce == null ? BruteForceProperties.defaults() : bruteForce;
         cors = cors == null ? new CorsProperties(List.of()) : cors;
     }
 
@@ -56,6 +58,44 @@ public record AdminSecurityProperties(
                             .filter(origin -> origin != null && !origin.isBlank())
                             .map(String::trim)
                             .toList();
+        }
+    }
+
+    public record BruteForceProperties(
+            boolean enabled,
+            Duration window,
+            Duration lockoutDuration,
+            int maxLoginFailuresPerUsername,
+            int maxLoginFailuresPerIp,
+            int maxRefreshFailuresPerIp,
+            int maxEntries) {
+
+        private static final Duration DEFAULT_WINDOW = Duration.ofMinutes(15);
+        private static final Duration DEFAULT_LOCKOUT_DURATION = Duration.ofMinutes(15);
+
+        public BruteForceProperties {
+            if (window == null || window.isZero() || window.isNegative()) {
+                throw new IllegalArgumentException("Admin brute-force window must be positive");
+            }
+            if (lockoutDuration == null || lockoutDuration.isZero() || lockoutDuration.isNegative()) {
+                throw new IllegalArgumentException("Admin brute-force lockout duration must be positive");
+            }
+            if (maxLoginFailuresPerUsername < 1) {
+                throw new IllegalArgumentException("Admin login username failure limit must be positive");
+            }
+            if (maxLoginFailuresPerIp < 1) {
+                throw new IllegalArgumentException("Admin login IP failure limit must be positive");
+            }
+            if (maxRefreshFailuresPerIp < 1) {
+                throw new IllegalArgumentException("Admin refresh IP failure limit must be positive");
+            }
+            if (maxEntries < 1) {
+                throw new IllegalArgumentException("Admin brute-force max entries must be positive");
+            }
+        }
+
+        static BruteForceProperties defaults() {
+            return new BruteForceProperties(true, DEFAULT_WINDOW, DEFAULT_LOCKOUT_DURATION, 5, 20, 30, 10_000);
         }
     }
 }

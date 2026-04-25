@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Instant;
+import java.time.Duration;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.tellpal.v2.admin.api.AdminAuthenticationApi;
 import com.tellpal.v2.admin.api.AdminAuthenticationResult;
 import com.tellpal.v2.admin.application.AdminAuthenticationFailedException;
+import com.tellpal.v2.admin.application.AdminAuthenticationRateLimitExceededException;
 import com.tellpal.v2.shared.web.admin.AdminApiExceptionHandler;
 import com.tellpal.v2.shared.web.admin.AdminAuthenticationFacade;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
@@ -123,6 +125,31 @@ class AdminAuthControllerTest {
                 .andExpect(jsonPath("$.title").value("Authentication failed"))
                 .andExpect(jsonPath("$.detail").value("Invalid admin credentials"))
                 .andExpect(jsonPath("$.errorCode").value("auth_failed"))
+                .andExpect(jsonPath("$.requestId").isNotEmpty())
+                .andExpect(jsonPath("$.path").value("/api/admin/auth/login"));
+    }
+
+    @Test
+    void rateLimitedAuthenticationBecomesTooManyRequestsProblemDetails() throws Exception {
+        when(adminAuthenticationApi.login(org.mockito.ArgumentMatchers.any()))
+                .thenThrow(new AdminAuthenticationRateLimitExceededException(
+                        "Too many authentication attempts",
+                        Duration.ofMinutes(15)));
+
+        mockMvc.perform(post("/api/admin/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "admin-root",
+                                  "password": "wrong"
+                                }
+                                """))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header()
+                        .string("Retry-After", "900"))
+                .andExpect(jsonPath("$.title").value("Too many authentication attempts"))
+                .andExpect(jsonPath("$.detail").value("Too many authentication attempts. Please retry later."))
+                .andExpect(jsonPath("$.errorCode").value("auth_rate_limited"))
                 .andExpect(jsonPath("$.requestId").isNotEmpty())
                 .andExpect(jsonPath("$.path").value("/api/admin/auth/login"));
     }

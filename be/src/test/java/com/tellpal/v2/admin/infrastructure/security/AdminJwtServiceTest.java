@@ -22,6 +22,14 @@ class AdminJwtServiceTest {
             Duration.ofHours(1),
             Duration.ofDays(30),
             10,
+            new AdminSecurityProperties.BruteForceProperties(
+                    true,
+                    Duration.ofMinutes(15),
+                    Duration.ofMinutes(15),
+                    5,
+                    20,
+                    30,
+                    10_000),
             new AdminSecurityProperties.CorsProperties(java.util.List.of()));
 
     private final AdminSecurityConfiguration configuration = new AdminSecurityConfiguration();

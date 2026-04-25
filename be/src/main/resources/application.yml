@@ -75,6 +75,14 @@ tellpal:
       access-token-ttl: ${TELLPAL_ADMIN_ACCESS_TOKEN_TTL:PT1H}
       refresh-token-ttl: ${TELLPAL_ADMIN_REFRESH_TOKEN_TTL:P30D}
       bcrypt-strength: ${TELLPAL_ADMIN_BCRYPT_STRENGTH:10}
+      brute-force:
+        enabled: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_ENABLED:true}
+        window: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_WINDOW:PT15M}
+        lockout-duration: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_LOCKOUT:PT15M}
+        max-login-failures-per-username: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_MAX_LOGIN_FAILURES_PER_USERNAME:5}
+        max-login-failures-per-ip: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_MAX_LOGIN_FAILURES_PER_IP:20}
+        max-refresh-failures-per-ip: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_MAX_REFRESH_FAILURES_PER_IP:30}
+        max-entries: ${TELLPAL_ADMIN_AUTH_BRUTE_FORCE_MAX_ENTRIES:10000}
       bootstrap:
         username: ${TELLPAL_ADMIN_BOOTSTRAP_USERNAME:}
         password: ${TELLPAL_ADMIN_BOOTSTRAP_PASSWORD:}

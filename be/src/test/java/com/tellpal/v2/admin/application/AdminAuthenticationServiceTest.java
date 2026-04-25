@@ -63,6 +63,9 @@ class AdminAuthenticationServiceTest {
     @Mock
     private AdminJwtService adminJwtService;
 
+    @Mock
+    private AdminAuthenticationAttemptGuard adminAuthenticationAttemptGuard;
+
     private AdminAuthenticationService adminAuthenticationService;
 
     @BeforeEach
@@ -81,7 +84,16 @@ class AdminAuthenticationServiceTest {
                         Duration.ofHours(1),
                         Duration.ofDays(30),
                         10,
-                        new AdminSecurityProperties.CorsProperties(java.util.List.of())));
+                        new AdminSecurityProperties.BruteForceProperties(
+                                true,
+                                Duration.ofMinutes(15),
+                                Duration.ofMinutes(15),
+                                5,
+                                20,
+                                30,
+                                10_000),
+                        new AdminSecurityProperties.CorsProperties(java.util.List.of())),
+                adminAuthenticationAttemptGuard);
     }
 
     @Test
@@ -113,6 +125,45 @@ class AdminAuthenticationServiceTest {
         assertThat(adminUser.getLastLoginAt()).isEqualTo(FIXED_NOW);
         verify(adminUserRepository).save(adminUser);
         verify(adminRefreshTokenRepository).save(any(AdminRefreshToken.class));
+        verify(adminAuthenticationAttemptGuard).assertLoginAllowed("admin-root", "127.0.0.1");
+        verify(adminAuthenticationAttemptGuard).clearLoginFailures("admin-root");
+    }
+
+    @Test
+    void loginRecordsFailuresForUnknownUsersAndWrongPasswords() {
+        when(adminUserRepository.findByUsername("missing-admin")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> adminAuthenticationService.login(
+                new AdminLoginCommand("missing-admin", "s3cret", null, "203.0.113.10")))
+                .isInstanceOf(AdminAuthenticationFailedException.class);
+
+        verify(adminAuthenticationAttemptGuard).recordLoginFailure("missing-admin", "203.0.113.10");
+
+        AdminUser adminUser = persistedAdminUser(42L, "admin-root", "stored-password-hash", Set.of("ADMIN"));
+        when(adminUserRepository.findByUsername("admin-root")).thenReturn(Optional.of(adminUser));
+        when(adminPasswordHasher.matches("wrong", "stored-password-hash")).thenReturn(false);
+
+        assertThatThrownBy(() -> adminAuthenticationService.login(
+                new AdminLoginCommand("admin-root", "wrong", null, "203.0.113.11")))
+                .isInstanceOf(AdminAuthenticationFailedException.class);
+
+        verify(adminAuthenticationAttemptGuard).recordLoginFailure("admin-root", "203.0.113.11");
+    }
+
+    @Test
+    void loginStopsBeforePasswordVerificationWhenRateLimited() {
+        org.mockito.Mockito.doThrow(new AdminAuthenticationRateLimitExceededException(
+                        "Too many authentication attempts",
+                        Duration.ofMinutes(15)))
+                .when(adminAuthenticationAttemptGuard)
+                .assertLoginAllowed("admin-root", "203.0.113.10");
+
+        assertThatThrownBy(() -> adminAuthenticationService.login(
+                new AdminLoginCommand("admin-root", "s3cret", null, "203.0.113.10")))
+                .isInstanceOf(AdminAuthenticationRateLimitExceededException.class);
+
+        verify(adminUserRepository, never()).findByUsername(any());
+        verify(adminPasswordHasher, never()).matches(any(), any());
     }
 
     @Test
@@ -147,10 +198,42 @@ class AdminAuthenticationServiceTest {
         assertThat(refreshed.refreshToken()).isEqualTo("replacement-raw-token");
         assertThat(currentToken.getReplacedByTokenHash()).isEqualTo("replacement-token-hash");
         assertThat(currentToken.getRevokedAt()).isEqualTo(FIXED_NOW);
+        verify(adminAuthenticationAttemptGuard).assertRefreshAllowed("current-token-hash", "127.0.0.1");
+        verify(adminAuthenticationAttemptGuard).clearRefreshFailures("current-token-hash");
 
         assertThatThrownBy(() -> adminAuthenticationService.refresh(
                 new AdminRefreshCommand("current-raw-token", "Mozilla", "127.0.0.1")))
                 .isInstanceOf(AdminRefreshTokenReuseException.class);
+        verify(adminAuthenticationAttemptGuard).recordRefreshFailure("current-token-hash", "127.0.0.1");
+    }
+
+    @Test
+    void refreshRecordsFailureForInvalidTokens() {
+        when(adminRefreshTokenHasher.hash("invalid-raw-token")).thenReturn("invalid-token-hash");
+        when(adminRefreshTokenRepository.findByRefreshTokenHash("invalid-token-hash")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> adminAuthenticationService.refresh(
+                new AdminRefreshCommand("invalid-raw-token", "Mozilla", "203.0.113.10")))
+                .isInstanceOf(AdminAuthenticationFailedException.class);
+
+        verify(adminAuthenticationAttemptGuard).assertRefreshAllowed("invalid-token-hash", "203.0.113.10");
+        verify(adminAuthenticationAttemptGuard).recordRefreshFailure("invalid-token-hash", "203.0.113.10");
+    }
+
+    @Test
+    void refreshStopsBeforeLookupWhenRateLimited() {
+        when(adminRefreshTokenHasher.hash("current-raw-token")).thenReturn("current-token-hash");
+        org.mockito.Mockito.doThrow(new AdminAuthenticationRateLimitExceededException(
+                        "Too many authentication attempts",
+                        Duration.ofMinutes(15)))
+                .when(adminAuthenticationAttemptGuard)
+                .assertRefreshAllowed("current-token-hash", "203.0.113.10");
+
+        assertThatThrownBy(() -> adminAuthenticationService.refresh(
+                new AdminRefreshCommand("current-raw-token", "Mozilla", "203.0.113.10")))
+                .isInstanceOf(AdminAuthenticationRateLimitExceededException.class);
+
+        verify(adminRefreshTokenRepository, never()).findByRefreshTokenHash(any());
     }
 
     @Test

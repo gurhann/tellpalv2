@@ -31,7 +31,12 @@ import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = "tellpal.security.admin.cors.allowed-origins=http://localhost:5173")
+@TestPropertySource(properties = {
+        "tellpal.security.admin.cors.allowed-origins=http://localhost:5173",
+        "tellpal.security.admin.brute-force.max-login-failures-per-username=5",
+        "tellpal.security.admin.brute-force.max-login-failures-per-ip=20",
+        "tellpal.security.admin.brute-force.max-refresh-failures-per-ip=30"
+})
 class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired
@@ -101,6 +106,36 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
                                 }
                                 """))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void repeatedWrongPasswordsAreRateLimited() throws Exception {
+        seedAdmin("admin-root", "secret", true, "ADMIN");
+
+        for (int attempt = 0; attempt < 5; attempt++) {
+            mockMvc.perform(post("/api/admin/auth/login")
+                            .contentType("application/json")
+                            .header("X-Forwarded-For", "203.0.113.99")
+                            .content("""
+                                    {
+                                      "username": "admin-root",
+                                      "password": "wrong"
+                                    }
+                                    """))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        mockMvc.perform(post("/api/admin/auth/login")
+                        .contentType("application/json")
+                        .header("X-Forwarded-For", "203.0.113.99")
+                        .content("""
+                                {
+                                  "username": "admin-root",
+                                  "password": "wrong"
+                                }
+                                """))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(header().exists("Retry-After"));
     }
 
     @Test

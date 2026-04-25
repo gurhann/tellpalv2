@@ -4,10 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.tellpal.v2.admin.application.AdminAuthenticationFailedException;
+import com.tellpal.v2.admin.application.AdminAuthenticationRateLimitExceededException;
 import com.tellpal.v2.admin.application.AdminRefreshTokenReuseException;
 import com.tellpal.v2.admin.application.AdminUserDisabledException;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
@@ -32,6 +34,21 @@ public class AdminAuthExceptionHandler {
                 exception.getMessage(),
                 "auth_failed",
                 request);
+    }
+
+    @ExceptionHandler(AdminAuthenticationRateLimitExceededException.class)
+    ResponseEntity<ProblemDetail> handleAuthenticationRateLimitExceeded(
+            AdminAuthenticationRateLimitExceededException exception,
+            HttpServletRequest request) {
+        ProblemDetail problemDetail = problemDetailsFactory.create(
+                HttpStatus.TOO_MANY_REQUESTS,
+                "Too many authentication attempts",
+                "Too many authentication attempts. Please retry later.",
+                "auth_rate_limited",
+                request);
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header("Retry-After", Long.toString(exception.getRetryAfter().toSeconds()))
+                .body(problemDetail);
     }
 
     @ExceptionHandler(AdminUserDisabledException.class)

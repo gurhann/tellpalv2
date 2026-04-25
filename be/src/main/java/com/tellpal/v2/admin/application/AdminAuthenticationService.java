@@ -44,6 +44,7 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
     private final AdminRefreshTokenGenerator adminRefreshTokenGenerator;
     private final AdminJwtService adminJwtService;
     private final AdminSecurityProperties adminSecurityProperties;
+    private final AdminAuthenticationAttemptGuard adminAuthenticationAttemptGuard;
 
     public AdminAuthenticationService(
             Clock clock,
@@ -53,7 +54,8 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
             AdminRefreshTokenHasher adminRefreshTokenHasher,
             AdminRefreshTokenGenerator adminRefreshTokenGenerator,
             AdminJwtService adminJwtService,
-            AdminSecurityProperties adminSecurityProperties) {
+            AdminSecurityProperties adminSecurityProperties,
+            AdminAuthenticationAttemptGuard adminAuthenticationAttemptGuard) {
         this.clock = clock;
         this.adminUserRepository = adminUserRepository;
         this.adminRefreshTokenRepository = adminRefreshTokenRepository;
@@ -62,6 +64,7 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
         this.adminRefreshTokenGenerator = adminRefreshTokenGenerator;
         this.adminJwtService = adminJwtService;
         this.adminSecurityProperties = adminSecurityProperties;
+        this.adminAuthenticationAttemptGuard = adminAuthenticationAttemptGuard;
     }
 
     /**
@@ -73,18 +76,24 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
     @Override
     @Transactional
     public AdminAuthenticationResult login(AdminLoginCommand command) {
+        adminAuthenticationAttemptGuard.assertLoginAllowed(command.username(), command.ipAddress());
         AdminUser adminUser = adminUserRepository.findByUsername(command.username())
-                .orElseThrow(() -> new AdminAuthenticationFailedException("Invalid admin credentials"));
+                .orElseThrow(() -> {
+                    adminAuthenticationAttemptGuard.recordLoginFailure(command.username(), command.ipAddress());
+                    return new AdminAuthenticationFailedException("Invalid admin credentials");
+                });
         if (!adminUser.isActive()) {
             throw new AdminUserDisabledException(requireAdminUserId(adminUser));
         }
         if (!adminPasswordHasher.matches(command.password(), adminUser.getPasswordHash())) {
+            adminAuthenticationAttemptGuard.recordLoginFailure(command.username(), command.ipAddress());
             throw new AdminAuthenticationFailedException("Invalid admin credentials");
         }
 
         Instant issuedAt = Instant.now(clock);
         adminUser.recordLogin(issuedAt);
         adminUserRepository.save(adminUser);
+        adminAuthenticationAttemptGuard.clearLoginFailures(command.username());
         return issueAuthentication(adminUser, issuedAt, command.userAgent(), command.ipAddress());
     }
 
@@ -99,16 +108,23 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
     public AdminAuthenticationResult refresh(AdminRefreshCommand command) {
         Instant issuedAt = Instant.now(clock);
         String refreshTokenHash = adminRefreshTokenHasher.hash(command.refreshToken());
+        adminAuthenticationAttemptGuard.assertRefreshAllowed(refreshTokenHash, command.ipAddress());
         AdminRefreshToken currentToken = adminRefreshTokenRepository.findByRefreshTokenHash(refreshTokenHash)
-                .orElseThrow(() -> new AdminAuthenticationFailedException("Invalid refresh token"));
+                .orElseThrow(() -> {
+                    adminAuthenticationAttemptGuard.recordRefreshFailure(refreshTokenHash, command.ipAddress());
+                    return new AdminAuthenticationFailedException("Invalid refresh token");
+                });
 
         if (currentToken.getReplacedByTokenHash() != null) {
+            adminAuthenticationAttemptGuard.recordRefreshFailure(refreshTokenHash, command.ipAddress());
             throw new AdminRefreshTokenReuseException("Refresh token has already been rotated");
         }
         if (currentToken.isRevoked()) {
+            adminAuthenticationAttemptGuard.recordRefreshFailure(refreshTokenHash, command.ipAddress());
             throw new AdminAuthenticationFailedException("Refresh token is revoked");
         }
         if (currentToken.isExpiredAt(issuedAt)) {
+            adminAuthenticationAttemptGuard.recordRefreshFailure(refreshTokenHash, command.ipAddress());
             throw new AdminAuthenticationFailedException("Refresh token is expired");
         }
 
@@ -121,6 +137,7 @@ public class AdminAuthenticationService implements AdminAuthenticationApi {
         currentToken.markRotatedTo(replacementToken.hash());
         currentToken.revoke(issuedAt);
         adminRefreshTokenRepository.save(currentToken);
+        adminAuthenticationAttemptGuard.clearRefreshFailures(refreshTokenHash);
 
         return issueAuthentication(adminUser, issuedAt, command.userAgent(), command.ipAddress(), replacementToken);
     }
