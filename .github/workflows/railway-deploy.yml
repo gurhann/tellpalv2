@@ -65,7 +65,20 @@ jobs:
             backend=true
             cms=true
           else
-            changed_files="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
+            before="${{ github.event.before }}"
+            current="${{ github.sha }}"
+
+            if ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+              git fetch --no-tags --depth=1 origin "$before" || true
+            fi
+
+            if git cat-file -e "$before^{commit}" 2>/dev/null; then
+              changed_files="$(git diff --name-only "$before" "$current")"
+            else
+              echo "Previous commit $before is unavailable; deploying both services."
+              changed_files=$'be/\ncms/'
+            fi
+
             if grep -Eq '^(be/|ops/railway/|\.github/workflows/railway-deploy\.yml)' <<< "$changed_files"; then
               backend=true
             fi
