@@ -70,6 +70,7 @@ Read order:
 
 - Railway production deploys are documented in `ops/railway/README.md`; keep that runbook current whenever deploy behavior changes.
 - Production topology is one Railway project with `tellpal-be`, `tellpal-cms`, and managed `Postgres` services.
+- Pushes to `main` deploy production through `.github/workflows/railway-deploy.yml` when backend, CMS, Railway ops, or workflow files change. The workflow requires a GitHub Actions `RAILWAY_TOKEN` secret.
 - Backend deploys use `be/Dockerfile` with Railway Dockerfile builder and a start command that writes the base64 Firebase service account JSON to `/tmp/firebase-service-account.json` before starting Java.
 - CMS deploys from `cms/` as a Vite static app with `RAILPACK_SPA_OUTPUT_DIR=dist`.
 - Local and production currently share the same Firebase project and bucket. Environment isolation is by storage path prefix: `local` for local development and `prod` for Railway production.

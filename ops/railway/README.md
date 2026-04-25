@@ -98,6 +98,42 @@ railway up C:\github\tellpalv2\cms --path-as-root --service tellpal-cms --enviro
 Always use `--path-as-root` for this monorepo. Without it, Railway may analyze the repository root
 instead of the app directory and choose the wrong build plan.
 
+## GitHub push deploys
+
+The repository includes `.github/workflows/railway-deploy.yml` for production deploys from GitHub
+Actions.
+
+The workflow runs on pushes to `main` when one of these paths changes:
+
+- `be/**`
+- `cms/**`
+- `ops/railway/**`
+- `.github/workflows/railway-deploy.yml`
+
+It deploys only the changed service:
+
+- backend-related changes deploy `tellpal-be`
+- CMS-related changes deploy `tellpal-cms`
+- `ops/railway/**` or workflow changes deploy both services
+
+The workflow can also be started manually from the GitHub Actions UI with independent backend/CMS
+toggles.
+
+Required GitHub repository secret:
+
+```text
+RAILWAY_TOKEN=<Railway account or project token with deploy access>
+```
+
+Create the token in Railway, then add it under GitHub repository settings:
+
+```text
+Settings > Secrets and variables > Actions > New repository secret
+```
+
+Do not commit Railway tokens or put them in workflow files. The workflow passes the token only as
+the `RAILWAY_TOKEN` environment variable for `railway up`.
+
 ## Admin bootstrap
 
 Production does not seed an admin user through Flyway migrations.
@@ -130,6 +166,7 @@ Required verification for every production deploy:
 
 - `cd be && .\mvnw test`
 - `cd cms && npm run build`
+- GitHub Actions deploy workflow succeeds when deploy is triggered by pushing to `main`.
 - Backend deployment status is `SUCCESS`.
 - CMS deployment status is `SUCCESS`.
 - `GET https://<backend-domain>/actuator/health` returns `{"status":"UP"}`.

@@ -75,6 +75,10 @@ Railway is the canonical production deploy target for this project. Follow
 `ops/railway/README.md` for service topology, environment variables, deploy
 commands, admin bootstrap, and verification steps.
 
+Pushes to `main` deploy production through `.github/workflows/railway-deploy.yml`
+when backend, CMS, Railway ops, or workflow files change. The workflow requires a
+GitHub Actions `RAILWAY_TOKEN` secret.
+
 Before production deploys, run the relevant local checks:
 
 - `cd be && ./mvnw test` for backend changes

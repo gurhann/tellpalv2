@@ -1,0 +1,106 @@
+name: Railway Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "be/**"
+      - "cms/**"
+      - "ops/railway/**"
+      - ".github/workflows/railway-deploy.yml"
+  workflow_dispatch:
+    inputs:
+      deploy_backend:
+        description: "Deploy tellpal-be"
+        required: true
+        type: boolean
+        default: true
+      deploy_cms:
+        description: "Deploy tellpal-cms"
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: railway-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Railway production
+    runs-on: ubuntu-latest
+    env:
+      RAILWAY_PROJECT_ID: 7cdc95be-e51d-44a0-9e47-14d4c3e989a1
+      RAILWAY_ENVIRONMENT: production
+      RAILWAY_BACKEND_SERVICE: tellpal-be
+      RAILWAY_CMS_SERVICE: tellpal-cms
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli
+
+      - name: Detect changed services
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          backend=false
+          cms=false
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            backend="${{ inputs.deploy_backend }}"
+            cms="${{ inputs.deploy_cms }}"
+          elif [[ "${{ github.event.before }}" =~ ^0+$ ]]; then
+            backend=true
+            cms=true
+          else
+            changed_files="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
+            if grep -Eq '^(be/|ops/railway/|\.github/workflows/railway-deploy\.yml)' <<< "$changed_files"; then
+              backend=true
+            fi
+            if grep -Eq '^(cms/|ops/railway/|\.github/workflows/railway-deploy\.yml)' <<< "$changed_files"; then
+              cms=true
+            fi
+          fi
+
+          echo "backend=$backend" >> "$GITHUB_OUTPUT"
+          echo "cms=$cms" >> "$GITHUB_OUTPUT"
+          echo "Backend deploy: $backend"
+          echo "CMS deploy: $cms"
+
+      - name: Deploy backend
+        if: steps.changes.outputs.backend == 'true'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up "$GITHUB_WORKSPACE/be" \
+            --path-as-root \
+            --project "$RAILWAY_PROJECT_ID" \
+            --environment "$RAILWAY_ENVIRONMENT" \
+            --service "$RAILWAY_BACKEND_SERVICE" \
+            --ci \
+            --message "github ${GITHUB_SHA}: deploy backend"
+
+      - name: Deploy CMS
+        if: steps.changes.outputs.cms == 'true'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up "$GITHUB_WORKSPACE/cms" \
+            --path-as-root \
+            --project "$RAILWAY_PROJECT_ID" \
+            --environment "$RAILWAY_ENVIRONMENT" \
+            --service "$RAILWAY_CMS_SERVICE" \
+            --ci \
+            --message "github ${GITHUB_SHA}: deploy cms"
