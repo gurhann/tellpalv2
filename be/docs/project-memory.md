@@ -19,6 +19,7 @@ Read order:
 - `be/docs/admin-api-rules.md`
 - `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
+- `ops/railway/README.md`
 - `be/docs/adr/`
 
 ## Active Architectural Decisions
@@ -65,9 +66,21 @@ Read order:
 - Asset runtime now expects real Firebase Storage credentials in local development. Local and production share one bucket, and environment isolation happens through the configured path prefix (`local` or `prod`).
 - Asset upload and generated processing paths are prefix-aware. New manual uploads land under `/{prefix}/manual/...`, and generated variants/packages land under `/{prefix}/content/...`.
 
+## Deployment Defaults
+
+- Railway production deploys are documented in `ops/railway/README.md`; keep that runbook current whenever deploy behavior changes.
+- Production topology is one Railway project with `tellpal-be`, `tellpal-cms`, and managed `Postgres` services.
+- Backend deploys use `be/Dockerfile` with Railway Dockerfile builder and a start command that writes the base64 Firebase service account JSON to `/tmp/firebase-service-account.json` before starting Java.
+- CMS deploys from `cms/` as a Vite static app with `RAILPACK_SPA_OUTPUT_DIR=dist`.
+- Local and production currently share the same Firebase project and bucket. Environment isolation is by storage path prefix: `local` for local development and `prod` for Railway production.
+- Production admin users are not seeded by Flyway. Use temporary admin bootstrap environment variables, confirm login, then remove those variables from Railway.
+- RevenueCat webhook authorization is optional for startup for now; a blank header means webhook calls remain unauthorized, not publicly accepted.
+- Every production deploy should verify backend tests, CMS build, Railway service status, backend health, CMS load, CORS behavior, and startup logs.
+
 ## Review Red Flags
 
 - new public contracts without documentation
 - durable policy changes without ADR or project-memory updates
 - comments that narrate obvious code instead of exposing intent
 - new cross-module dependencies into internal packages
+- deploy changes that bypass `ops/railway/README.md`, hard-code Railway/Firebase secrets, or leave bootstrap credentials configured after use

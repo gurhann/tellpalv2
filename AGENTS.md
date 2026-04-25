@@ -69,6 +69,22 @@ Run commands from `be/`:
 
 Use the Maven wrapper instead of a system Maven install when possible.
 
+## Deployment Guidelines
+
+Railway is the canonical production deploy target for this project. Follow
+`ops/railway/README.md` for service topology, environment variables, deploy
+commands, admin bootstrap, and verification steps.
+
+Before production deploys, run the relevant local checks:
+
+- `cd be && ./mvnw test` for backend changes
+- `cd cms && npm run build` for CMS changes
+
+Keep deployment behavior environment-driven. Do not hard-code Railway domains,
+Firebase credential paths, database URLs, admin credentials, or secrets in code.
+Local and production currently share the same Firebase project and bucket; storage
+isolation is handled through the configured path prefix.
+
 ## Coding Style & Naming Conventions
 Use constructor injection, keep methods small, and avoid field injection. Model DDD concepts explicitly: entities represent domain concepts, services orchestrate use cases, and controllers stay thin.
 
