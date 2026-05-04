@@ -1,0 +1,36 @@
+{
+  "canonical_content_count": 345,
+  "categories": 105,
+  "category_types": {
+    "AUDIO_STORY": 4,
+    "LULLABY": 4,
+    "MEDITATION": 4,
+    "STORY": 93
+  },
+  "content_type_counts": {
+    "LULLABY": 33,
+    "MEDITATION": 18,
+    "STORY": 307,
+    "UNRESOLVED": 157
+  },
+  "drive_copy_plan_entries": 529,
+  "drive_match_status_counts": {
+    "AMBIGUOUS": 521,
+    "CANDIDATE": 1376,
+    "LIKELY": 475,
+    "MATCHED": 64,
+    "MISSING": 81
+  },
+  "inventory_rows": 515,
+  "missing_category_links": 0,
+  "out_of_scope_decision_rules": {
+    "audio_story_scope_exclusion": 154,
+    "manual_scope_exclusion": 3
+  },
+  "resolution_status_counts": {
+    "LIKELY": 29,
+    "MATCHED": 329,
+    "OUT_OF_SCOPE": 157
+  },
+  "story_category_links": 1434
+}

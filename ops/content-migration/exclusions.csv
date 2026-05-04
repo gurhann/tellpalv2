@@ -1,0 +1,4 @@
+legacy_id,name,reason
+343,Os Super Detetives,Out of scope for this migration because category type and page_count disagree; review manually later.
+366,The Opposites-Town,Out of scope for this migration because page_count is missing and category links include both STORY and AUDIO_STORY.
+442,Robô Robison e Gata Aveia ao Trabalho,Out of scope for this migration because category type and page_count disagree; review manually later.
