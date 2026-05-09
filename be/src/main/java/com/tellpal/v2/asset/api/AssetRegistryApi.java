@@ -19,6 +19,16 @@ public interface AssetRegistryApi {
     AssetRecord completeUpload(CompleteMediaAssetUploadCommand command);
 
     /**
+     * Uploads through the backend when the browser cannot reach Firebase Storage directly.
+     */
+    AssetRecord proxyUpload(ProxyMediaAssetUploadCommand command);
+
+    /**
+     * Uploads an original CMS media file through the backend without exposing storage URLs.
+     */
+    AssetRecord uploadFromBackend(BackendMediaAssetUploadCommand command);
+
+    /**
      * Registers a new media asset for a storage location that is not already known to the system.
      */
     AssetRecord register(RegisterMediaAssetCommand command);
@@ -47,4 +57,14 @@ public interface AssetRegistryApi {
      * Refreshes the cached signed download URL for an existing asset.
      */
     AssetRecord refreshDownloadUrlCache(RefreshMediaAssetDownloadUrlCommand command);
+
+    /**
+     * Issues a short-lived token for backend-streamed CMS media preview.
+     */
+    AssetContentAccessToken issueContentAccessToken(Long assetId);
+
+    /**
+     * Opens backend-streamed media content after validating the short-lived content token.
+     */
+    AssetContent openContent(Long assetId, String token, AssetContentRange range);
 }

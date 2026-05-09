@@ -496,11 +496,15 @@ stack.
 
 - `POST /api/admin/media`
 - `POST /api/admin/media/uploads`
-- `POST /api/admin/media/uploads/complete`
+- `POST /api/admin/media/uploads/complete` (deprecated compatibility)
+- `POST /api/admin/media/uploads/proxy` (deprecated compatibility)
 - `GET /api/admin/media`
 - `GET /api/admin/media/{assetId}`
 - `PUT /api/admin/media/{assetId}/metadata`
-- `POST /api/admin/media/{assetId}/download-url-cache/refresh`
+- `POST /api/admin/media/{assetId}/download-url-cache/refresh` (deprecated compatibility)
+- `POST /api/admin/media/{assetId}/content-token`
+- `GET /api/admin/media/{assetId}/content`
+- `HEAD /api/admin/media/{assetId}/content`
 - `POST /api/admin/media-processing`
 - `GET /api/admin/media-processing`
 - `GET /api/admin/media-processing/{contentId}/localizations/{languageCode}`
@@ -517,8 +521,14 @@ stack.
   - `fileName`
   - `mimeType`
   - `byteSize` must be positive
+- Backend upload:
+  - `kind`
+  - `file`
 - Upload completion:
   - `uploadToken`
+- Proxied upload:
+  - `uploadToken`
+  - `file`
 - Asset metadata update:
   - all fields optional, but validated when present
 - Processing schedule:
@@ -535,8 +545,11 @@ stack.
 - Duplicate asset registration for the same `provider + objectPath` is forbidden.
 - Asset `byteSize` must not be negative.
 - Asset checksum must be a lowercase SHA-256 hex string when present.
-- Direct upload initiation supports only `ORIGINAL_IMAGE` and `ORIGINAL_AUDIO`.
-- Direct upload `mimeType` must match the selected original upload kind.
+- CMS backend upload supports only `ORIGINAL_IMAGE` and `ORIGINAL_AUDIO`.
+- CMS backend upload derives `fileName`, `mimeType`, and `byteSize` from the multipart file.
+- CMS backend upload `mimeType` must match the selected original upload kind.
+- Deprecated direct upload initiation supports only `ORIGINAL_IMAGE` and `ORIGINAL_AUDIO`.
+- Deprecated direct upload `mimeType` must match the selected original upload kind.
 - Story processing requires `pageCount` and forbids omitting it.
 - Non-story processing forbids `pageCount`.
 - Non-story processing requires `audioSourceAssetId`.
@@ -547,9 +560,9 @@ stack.
 - Asset registration trims `objectPath` and metadata text fields.
 - Asset kind determines stored media type. CMS should use returned `mediaType` and `kind` instead
   of inferring media type from filenames.
-- Asset direct uploads always target `FIREBASE_STORAGE`, not `LOCAL_STUB`.
-- Asset direct upload object paths must stay inside the configured Firebase path prefix.
-- Manual direct uploads land under:
+- Asset CMS uploads always target `FIREBASE_STORAGE`, not `LOCAL_STUB`.
+- Asset CMS upload object paths must stay inside the configured Firebase path prefix.
+- Manual CMS uploads land under:
   - `/{prefix}/manual/images/original/{yyyy}/{MM}/{uuid}-{sanitizedFileName}`
   - `/{prefix}/manual/audio/original/{yyyy}/{MM}/{uuid}-{sanitizedFileName}`
 - Generated processing assets also use the same prefix model and land under `/{prefix}/content/...`.
@@ -558,6 +571,10 @@ stack.
   refreshed expiry to be after the cache timestamp.
 - Upload completion is idempotent for `FIREBASE_STORAGE + objectPath`. Repeating finalize against
   the same uploaded object reuses the existing asset row and refreshes mutable metadata.
+- CMS preview uses backend-issued content tokens, not Firebase/GCS signed URLs in the browser.
+- Content tokens are short-lived and bind to the current `assetId + provider + objectPath`.
+- `GET` and `HEAD /api/admin/media/{assetId}/content` are token-authenticated through the query
+  token and support single byte ranges for image/audio previews.
 - Processing recent list `limit` must be positive and is capped at `100`.
 - Scheduling processing for a localization with no existing processing record creates a `PENDING`
   record.
@@ -584,6 +601,11 @@ stack.
   `complete`, `fail`, or lease recovery.
 - Upload completion requires the Firebase object to already exist and to match the initiated
   `mimeType` and `byteSize`.
+- Proxied upload uses the same upload token contract as direct upload, writes the file through the
+  backend storage client, and then runs the same completion validation.
+- Backend upload writes the multipart stream through the storage client, verifies stored
+  `mimeType` and `byteSize`, then registers or reuses the asset row.
+- Content token issuance is available only for image and audio assets.
 
 ### Expected ProblemDetail Error Codes
 
@@ -592,6 +614,10 @@ stack.
 - `asset_upload_token_invalid`
 - `asset_upload_object_not_found`
 - `asset_upload_metadata_mismatch`
+- `asset_content_token_invalid`
+- `asset_content_unavailable`
+- `asset_content_not_found`
+- `asset_content_range_not_satisfiable`
 - `asset_processing_not_found`
 - `asset_processing_localization_not_found`
 - `asset_processing_conflict`
@@ -612,10 +638,14 @@ stack.
 ### Frontend Form and Query Implications
 
 - Asset library UI should expect recent-only listings with no search or pagination contract.
-- Asset upload UI should use the signed upload handshake:
-  - initiate upload
-  - upload directly to Firebase Storage
-  - complete upload
+- Asset upload UI should send a multipart request directly to `POST /api/admin/media/uploads`.
+- CMS should not send media bytes directly to Firebase/GCS from the browser.
+- Deprecated signed upload endpoints remain for compatibility, but new CMS upload flows must not
+  call them by default.
+- Asset previews should call `POST /api/admin/media/{assetId}/content-token` and render the returned
+  backend preview URL.
+- CMS preview components should not render `storage.googleapis.com` or other Firebase/GCS signed
+  URLs directly.
 - Asset register and metadata forms should validate checksum shape and non-negative byte size before
   submit.
 - Asset pickers should use backend `mediaType` for filtering instead of only relying on `kind`

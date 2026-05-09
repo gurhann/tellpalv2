@@ -14,6 +14,10 @@ import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.Ass
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingNotFoundException;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
 import com.tellpal.v2.asset.application.MediaAssetAlreadyExistsException;
+import com.tellpal.v2.asset.application.MediaAssetContentNotFoundException;
+import com.tellpal.v2.asset.application.MediaAssetContentRangeNotSatisfiableException;
+import com.tellpal.v2.asset.application.MediaAssetContentTokenInvalidException;
+import com.tellpal.v2.asset.application.MediaAssetContentUnavailableException;
 import com.tellpal.v2.asset.application.MediaAssetNotFoundException;
 import com.tellpal.v2.asset.application.MediaAssetUploadMetadataMismatchException;
 import com.tellpal.v2.asset.application.MediaAssetUploadObjectNotFoundException;
@@ -82,6 +86,54 @@ public class AssetAdminExceptionHandler {
                 "Uploaded asset metadata does not match the upload request",
                 exception.getMessage(),
                 "asset_upload_metadata_mismatch",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetContentTokenInvalidException.class)
+    ProblemDetail handleContentTokenInvalid(
+            MediaAssetContentTokenInvalidException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Asset content token is invalid",
+                exception.getMessage(),
+                "asset_content_token_invalid",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetContentUnavailableException.class)
+    ProblemDetail handleContentUnavailable(
+            MediaAssetContentUnavailableException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Asset content is unavailable",
+                exception.getMessage(),
+                "asset_content_unavailable",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetContentNotFoundException.class)
+    ProblemDetail handleContentNotFound(
+            MediaAssetContentNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Asset content not found",
+                exception.getMessage(),
+                "asset_content_not_found",
+                request);
+    }
+
+    @ExceptionHandler(MediaAssetContentRangeNotSatisfiableException.class)
+    ProblemDetail handleContentRangeNotSatisfiable(
+            MediaAssetContentRangeNotSatisfiableException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE,
+                "Asset content range is not satisfiable",
+                exception.getMessage(),
+                "asset_content_range_not_satisfiable",
                 request);
     }
 

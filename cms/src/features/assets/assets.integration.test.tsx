@@ -122,7 +122,7 @@ afterEach(async () => {
 });
 
 describe("Asset integration", () => {
-  it("hydrates the media utility, saves metadata, and refreshes cached download URLs", async () => {
+  it("hydrates the media utility, uploads through backend, and saves metadata", async () => {
     const session = makeSession();
     const assets = cloneJson(assetResponses);
     const uploadedAsset = cloneJson(uploadedFirebaseImageAssetResponse);
@@ -147,26 +147,23 @@ describe("Asset integration", () => {
         }
 
         if (url.pathname === "/api/admin/media/uploads" && method === "POST") {
-          return jsonResponse({
-            provider: "FIREBASE_STORAGE",
-            objectPath: uploadedAsset.objectPath,
-            uploadUrl:
-              "https://firebase-storage.test/upload/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg",
-            httpMethod: "PUT",
-            requiredHeaders: {
-              "Content-Type": "image/jpeg",
-            },
-            expiresAt: "2026-04-04T18:30:00Z",
-            uploadToken: "upload-token-12",
-          });
+          expect(init?.body).toBeInstanceOf(FormData);
+          const formData = init?.body as FormData;
+          expect(formData.get("kind")).toBe("ORIGINAL_IMAGE");
+          expect(formData.get("file")).toBeInstanceOf(File);
+          assets.unshift(uploadedAsset);
+          return jsonResponse(uploadedAsset);
         }
 
         if (
-          url.pathname === "/api/admin/media/uploads/complete" &&
+          url.pathname === "/api/admin/media/12/content-token" &&
           method === "POST"
         ) {
-          assets.unshift(uploadedAsset);
-          return jsonResponse(uploadedAsset);
+          return jsonResponse({
+            previewUrl:
+              "https://api.tellpal.test/api/admin/media/12/content?token=preview-token",
+            expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+          });
         }
 
         if (
@@ -188,25 +185,6 @@ describe("Asset integration", () => {
           nextAsset.byteSize = body.byteSize ?? null;
           nextAsset.checksumSha256 = body.checksumSha256 ?? null;
           nextAsset.updatedAt = "2026-04-04T18:10:00Z";
-
-          return jsonResponse(nextAsset);
-        }
-
-        if (
-          url.pathname === "/api/admin/media/12/download-url-cache/refresh" &&
-          method === "POST"
-        ) {
-          const nextAsset = assets.find((asset) => asset.assetId === 12);
-
-          if (!nextAsset) {
-            throw new Error("Uploaded image asset #12 was not found.");
-          }
-
-          nextAsset.cachedDownloadUrl =
-            "https://storage.googleapis.com/tellpal-prod/local/manual/images/original/2026/04/asset-12-bedtime-cover.jpg";
-          nextAsset.downloadUrlCachedAt = "2026-05-05T18:15:00Z";
-          nextAsset.downloadUrlExpiresAt = "2026-05-05T19:15:00Z";
-          nextAsset.updatedAt = "2026-05-05T18:15:00Z";
 
           return jsonResponse(nextAsset);
         }
@@ -238,7 +216,7 @@ describe("Asset integration", () => {
     expect(
       await screen.findByRole("heading", { name: /asset #12/i }),
     ).toBeVisible();
-    expect(uploadHelperMock).toHaveBeenCalledTimes(1);
+    expect(uploadHelperMock).not.toHaveBeenCalled();
     expect(
       await screen.findAllByText(uploadedFirebaseImageAssetResponse.objectPath),
     ).toHaveLength(2);
@@ -248,7 +226,7 @@ describe("Asset integration", () => {
           const url = new URL(typeof input === "string" ? input : input.url);
 
           return (
-            url.pathname === "/api/admin/media/12/download-url-cache/refresh" &&
+            url.pathname === "/api/admin/media/12/content-token" &&
             init?.method === "POST"
           );
         }),
@@ -268,14 +246,6 @@ describe("Asset integration", () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText(/mime type/i)).toHaveValue("image/jpeg");
-    });
-
-    fireEvent.click(
-      screen.getAllByRole("button", { name: /refresh cached url/i })[1]!,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText(/^available$/i)).toBeVisible();
     });
 
     expect(screen.getByText(/last cached:/i)).toBeVisible();

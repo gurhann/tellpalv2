@@ -57,6 +57,12 @@ export type CompleteAssetUploadInput = {
   checksumSha256?: string | null;
 };
 
+export type UploadAssetInput = {
+  kind: UploadableAssetKind;
+  file: File;
+  checksumSha256?: string | null;
+};
+
 export const adminAssetResponseSchema = z.object({
   assetId: z.number().int().positive(),
   provider: assetProviderSchema,
@@ -83,13 +89,33 @@ export const adminAssetUploadResponseSchema = z.object({
   expiresAt: z.string().min(1),
   uploadToken: z.string().min(1),
 });
+export const adminAssetContentTokenResponseSchema = z.object({
+  previewUrl: z.string().url(),
+  expiresAt: z.string().min(1),
+});
 
 export type AdminAssetResponse = z.infer<typeof adminAssetResponseSchema>;
 export type AdminAssetUploadResponse = z.infer<
   typeof adminAssetUploadResponseSchema
 >;
+export type AdminAssetContentTokenResponse = z.infer<
+  typeof adminAssetContentTokenResponseSchema
+>;
 
 export const assetAdminApi = {
+  uploadAsset(input: UploadAssetInput, options: { signal?: AbortSignal } = {}) {
+    const formData = new FormData();
+    formData.set("kind", input.kind);
+    formData.set("file", input.file);
+    if (input.checksumSha256) {
+      formData.set("checksumSha256", input.checksumSha256);
+    }
+    return apiClient.post<AdminAssetResponse>(`${basePath}/uploads`, {
+      body: formData,
+      responseSchema: adminAssetResponseSchema,
+      signal: options.signal,
+    });
+  },
   initiateAssetUpload(input: InitiateAssetUploadInput) {
     return apiClient.post<AdminAssetUploadResponse>(`${basePath}/uploads`, {
       body: input,
@@ -99,6 +125,18 @@ export const assetAdminApi = {
   completeAssetUpload(input: CompleteAssetUploadInput) {
     return apiClient.post<AdminAssetResponse>(`${basePath}/uploads/complete`, {
       body: input,
+      responseSchema: adminAssetResponseSchema,
+    });
+  },
+  proxyAssetUpload(input: CompleteAssetUploadInput & { file: File }) {
+    const formData = new FormData();
+    formData.set("uploadToken", input.uploadToken);
+    formData.set("file", input.file);
+    if (input.checksumSha256) {
+      formData.set("checksumSha256", input.checksumSha256);
+    }
+    return apiClient.post<AdminAssetResponse>(`${basePath}/uploads/proxy`, {
+      body: formData,
       responseSchema: adminAssetResponseSchema,
     });
   },
@@ -133,6 +171,14 @@ export const assetAdminApi = {
       `${basePath}/${assetId}/download-url-cache/refresh`,
       {
         responseSchema: adminAssetResponseSchema,
+      },
+    );
+  },
+  issueAssetContentToken(assetId: number) {
+    return apiClient.post<AdminAssetContentTokenResponse>(
+      `${basePath}/${assetId}/content-token`,
+      {
+        responseSchema: adminAssetContentTokenResponseSchema,
       },
     );
   },

@@ -126,7 +126,7 @@ export const enMessages = {
     "Update MIME type, byte size, and checksum while keeping provider and object path read-only.",
   "assets.cachedUrlTitle": "Cached download URL",
   "assets.cachedUrlDescription":
-    "Refresh the stored signed URL snapshot without leaving the asset detail workspace.",
+    "Legacy signed URL metadata remains visible for mobile/public delivery diagnostics.",
   "assets.lastCached": "Last cached: {value}",
   "assets.loadingDetail": "Loading asset detail",
   "assets.loadingDetailDescription":
@@ -136,7 +136,7 @@ export const enMessages = {
     "Select an asset from the recent registry to inspect its metadata.",
   "assets.previewTitle": "Preview",
   "assets.previewDescription":
-    "Inspect image assets inline or play audio assets directly from the signed Firebase download URL snapshot.",
+    "Inspect image assets inline or play audio assets through the backend preview stream.",
   "assets.previewKind.image": "Image preview",
   "assets.previewKind.audio": "Audio preview",
   "assets.previewKind.unavailable": "Preview unavailable",
@@ -148,12 +148,12 @@ export const enMessages = {
     "Archive assets stay inspectable through metadata and cached download URL controls, but they do not render inline previews.",
   "assets.previewLoadingTitle": "Loading preview",
   "assets.previewLoadingDescription":
-    "The CMS is preparing a fresh signed URL before rendering the asset preview.",
+    "The CMS is preparing a backend preview token before rendering the asset.",
   "assets.previewLoadFailedTitle": "Preview could not be loaded",
   "assets.previewLoadFailedDescription":
     "The preview request failed before the browser could load the asset.",
   "assets.previewLoadBrowserDescription":
-    "The browser could not render the signed asset URL. Refresh the preview to request one more signed URL snapshot.",
+    "The browser could not render the backend preview stream. Refresh the preview to request a new preview token.",
   "assets.retryPreview": "Retry preview",
   "assets.imageAlt": "Preview of asset #{assetId}",
   "assets.audioAria": "Audio preview for asset #{assetId}",
@@ -314,7 +314,7 @@ export const trMessages = {
     "Provider ve object path salt okunur kalırken MIME type, byte size ve checksum alanlarını güncelleyin.",
   "assets.cachedUrlTitle": "Önbellekteki indirme URL’si",
   "assets.cachedUrlDescription":
-    "Asset detay çalışma alanından ayrılmadan saklanan signed URL özetini yenileyin.",
+    "Legacy signed URL metadata mobil/public teslimat tanısı için görünür kalır.",
   "assets.lastCached": "Son önbellekleme: {value}",
   "assets.loadingDetail": "Asset detayı yükleniyor",
   "assets.loadingDetailDescription":
@@ -324,7 +324,7 @@ export const trMessages = {
     "Metadata’sını incelemek için son kayıt listesinden bir asset seçin.",
   "assets.previewTitle": "Önizleme",
   "assets.previewDescription":
-    "Görsel asset’leri satır içinde inceleyin veya signed Firebase indirme URL’si üzerinden ses asset’lerini doğrudan oynatın.",
+    "Görsel asset’leri satır içinde inceleyin veya backend önizleme stream’i üzerinden ses asset’lerini oynatın.",
   "assets.previewKind.image": "Görsel önizleme",
   "assets.previewKind.audio": "Ses önizleme",
   "assets.previewKind.unavailable": "Önizleme yok",
@@ -335,12 +335,12 @@ export const trMessages = {
     "Arşiv asset’leri metadata ve önbellekteki indirme URL’si üzerinden incelenebilir, ancak satır içinde önizlenmez.",
   "assets.previewLoadingTitle": "Önizleme yükleniyor",
   "assets.previewLoadingDescription":
-    "CMS asset önizlemesini render etmeden önce yeni bir signed URL hazırlıyor.",
+    "CMS asset önizlemesini render etmeden önce backend önizleme token’ı hazırlıyor.",
   "assets.previewLoadFailedTitle": "Önizleme yüklenemedi",
   "assets.previewLoadFailedDescription":
     "Tarayıcı asset’i yüklemeden önce önizleme isteği başarısız oldu.",
   "assets.previewLoadBrowserDescription":
-    "Tarayıcı signed asset URL’sini render edemedi. Yeni bir signed URL özeti istemek için önizlemeyi yenileyin.",
+    "Tarayıcı backend önizleme stream’ini render edemedi. Yeni bir önizleme token’ı istemek için önizlemeyi yenileyin.",
   "assets.retryPreview": "Önizlemeyi tekrar dene",
   "assets.imageAlt": "Asset #{assetId} önizlemesi",
   "assets.audioAria": "Asset #{assetId} için ses önizlemesi",

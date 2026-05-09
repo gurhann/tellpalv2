@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.infrastructure.storage;
 
 import java.time.Instant;
+import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,31 @@ public class AssetStorageClientRegistry {
 
     public Optional<StorageObjectMetadata> findObjectMetadata(StorageProvider provider, String objectPath) {
         return clientFor(provider).findObjectMetadata(requireObjectPath(objectPath));
+    }
+
+    public void uploadObject(
+            StorageProvider provider,
+            String objectPath,
+            String mimeType,
+            long byteSize,
+            InputStream content) {
+        if (mimeType == null || mimeType.isBlank()) {
+            throw new IllegalArgumentException("Upload MIME type must not be blank");
+        }
+        if (byteSize <= 0) {
+            throw new IllegalArgumentException("Upload byte size must be positive");
+        }
+        if (content == null) {
+            throw new IllegalArgumentException("Upload content stream must not be null");
+        }
+        clientFor(provider).uploadObject(requireObjectPath(objectPath), mimeType.trim(), byteSize, content);
+    }
+
+    public Optional<StorageObjectContent> openObject(
+            StorageProvider provider,
+            String objectPath,
+            StorageObjectRange range) {
+        return clientFor(provider).openObject(requireObjectPath(objectPath), range);
     }
 
     private AssetStorageClient clientFor(StorageProvider provider) {

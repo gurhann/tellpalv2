@@ -1,14 +1,21 @@
 package com.tellpal.v2.asset.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +28,10 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 
+import com.tellpal.v2.asset.api.AssetContent;
+import com.tellpal.v2.asset.api.AssetContentAccessToken;
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetMediaType;
 import com.tellpal.v2.asset.api.AssetRecord;
@@ -123,6 +133,48 @@ class AssetAdminControllerTest {
     }
 
     @Test
+    void proxyUploadReturnsRegisteredAsset() throws Exception {
+        when(assetRegistryApi.proxyUpload(any()))
+                .thenReturn(sampleAssetRecord(22L, "/local/manual/images/original/2026/04/upload.jpg", null));
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.jpg",
+                "image/jpeg",
+                "image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        mockMvc.perform(multipart("/api/admin/media/uploads/proxy")
+                        .file(file)
+                        .param("uploadToken", "signed-upload-token")
+                        .param("checksumSha256", SAMPLE_CHECKSUM))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assetId").value(22))
+                .andExpect(jsonPath("$.kind").value("ORIGINAL_IMAGE"));
+
+        verify(assetRegistryApi).proxyUpload(any());
+    }
+
+    @Test
+    void backendUploadReturnsRegisteredAsset() throws Exception {
+        when(assetRegistryApi.uploadFromBackend(any()))
+                .thenReturn(sampleAssetRecord(23L, "/local/manual/images/original/2026/04/backend.jpg", null));
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "backend.jpg",
+                "image/jpeg",
+                "image-bytes".getBytes(StandardCharsets.UTF_8));
+
+        mockMvc.perform(multipart("/api/admin/media/uploads")
+                        .file(file)
+                        .param("kind", "ORIGINAL_IMAGE")
+                        .param("checksumSha256", SAMPLE_CHECKSUM))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assetId").value(23))
+                .andExpect(jsonPath("$.provider").value("LOCAL_STUB"));
+
+        verify(assetRegistryApi).uploadFromBackend(any());
+    }
+
+    @Test
     void listRecentAssetsReturnsArray() throws Exception {
         when(assetRegistryApi.listRecent(2)).thenReturn(List.of(
                 sampleAssetRecord(11L, "/assets/cover.jpg", null),
@@ -176,6 +228,66 @@ class AssetAdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.assetId").value(11))
                 .andExpect(jsonPath("$.cachedDownloadUrl").value("http://localhost:8080/_stub/assets/cover.jpg"));
+    }
+
+    @Test
+    void issueContentTokenReturnsBackendPreviewUrl() throws Exception {
+        when(assetRegistryApi.issueContentAccessToken(11L))
+                .thenReturn(new AssetContentAccessToken("content-token", Instant.parse("2026-04-04T18:15:00Z")));
+
+        mockMvc.perform(post("/api/admin/media/11/content-token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.previewUrl").value("http://localhost/api/admin/media/11/content?token=content-token"))
+                .andExpect(jsonPath("$.expiresAt").value("2026-04-04T18:15:00Z"));
+    }
+
+    @Test
+    void streamContentReturnsBackendMediaBytes() throws Exception {
+        byte[] content = "image-bytes".getBytes(StandardCharsets.UTF_8);
+        when(assetRegistryApi.openContent(eq(11L), eq("content-token"), isNull()))
+                .thenReturn(new AssetContent(
+                        11L,
+                        "cover.jpg",
+                        "image/jpeg",
+                        content.length,
+                        content.length,
+                        null,
+                        null,
+                        new ByteArrayInputStream(content)));
+
+        mockMvc.perform(get("/api/admin/media/11/content").param("token", "content-token"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Accept-Ranges", "bytes"))
+                .andExpect(header().longValue("Content-Length", content.length))
+                .andExpect(header().string("Content-Type", "image/jpeg"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().bytes(content));
+    }
+
+    @Test
+    void streamContentPassesSingleRangeToApplicationService() throws Exception {
+        byte[] content = "age".getBytes(StandardCharsets.UTF_8);
+        when(assetRegistryApi.openContent(
+                        eq(11L),
+                        eq("content-token"),
+                        argThat(range -> range != null
+                                && range.startInclusive() == 2L
+                                && range.endInclusive() == 4L)))
+                .thenReturn(new AssetContent(
+                        11L,
+                        "cover.jpg",
+                        "image/jpeg",
+                        10L,
+                        content.length,
+                        2L,
+                        4L,
+                        new ByteArrayInputStream(content)));
+
+        mockMvc.perform(get("/api/admin/media/11/content")
+                        .param("token", "content-token")
+                        .header("Range", "bytes=2-4"))
+                .andExpect(status().isPartialContent())
+                .andExpect(header().string("Content-Range", "bytes 2-4/10"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().bytes(content));
     }
 
     @Test

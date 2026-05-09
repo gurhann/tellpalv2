@@ -1,5 +1,7 @@
 package com.tellpal.v2.asset.application;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
@@ -10,24 +12,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetKind;
+import com.tellpal.v2.asset.api.AssetContent;
+import com.tellpal.v2.asset.api.AssetContentAccessToken;
+import com.tellpal.v2.asset.api.AssetContentRange;
 import com.tellpal.v2.asset.api.AssetUploadRequest;
 import com.tellpal.v2.asset.api.AssetRecord;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageLocation;
+import com.tellpal.v2.asset.api.BackendMediaAssetUploadCommand;
 import com.tellpal.v2.asset.api.CompleteMediaAssetUploadCommand;
 import com.tellpal.v2.asset.api.InitiateMediaAssetUploadCommand;
+import com.tellpal.v2.asset.api.ProxyMediaAssetUploadCommand;
 import com.tellpal.v2.asset.api.RefreshMediaAssetDownloadUrlCommand;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
 import com.tellpal.v2.asset.api.UpdateMediaAssetMetadataCommand;
 import com.tellpal.v2.asset.domain.MediaAsset;
+import com.tellpal.v2.asset.domain.MediaAssetType;
 import com.tellpal.v2.asset.domain.MediaAssetRepository;
 import com.tellpal.v2.asset.domain.MediaKind;
 import com.tellpal.v2.asset.domain.StorageProvider;
+import com.tellpal.v2.asset.infrastructure.storage.AssetContentTokenClaims;
+import com.tellpal.v2.asset.infrastructure.storage.AssetContentTokenService;
 import com.tellpal.v2.asset.infrastructure.storage.AssetStorageObjectPathBuilder;
 import com.tellpal.v2.asset.infrastructure.storage.AssetStorageClientRegistry;
 import com.tellpal.v2.asset.infrastructure.storage.AssetUploadTokenClaims;
 import com.tellpal.v2.asset.infrastructure.storage.AssetUploadTokenService;
 import com.tellpal.v2.asset.infrastructure.storage.StorageObjectMetadata;
+import com.tellpal.v2.asset.infrastructure.storage.StorageObjectContent;
+import com.tellpal.v2.asset.infrastructure.storage.StorageObjectRange;
 import com.tellpal.v2.asset.infrastructure.storage.StorageSignedDownloadUrl;
 import com.tellpal.v2.asset.infrastructure.storage.StorageSignedUploadUrl;
 
@@ -42,18 +54,21 @@ public class AssetRegistryService implements AssetRegistryApi {
     private final AssetStorageClientRegistry assetStorageClientRegistry;
     private final AssetStorageObjectPathBuilder assetStorageObjectPathBuilder;
     private final AssetUploadTokenService assetUploadTokenService;
+    private final AssetContentTokenService assetContentTokenService;
 
     public AssetRegistryService(
             Clock clock,
             MediaAssetRepository mediaAssetRepository,
             AssetStorageClientRegistry assetStorageClientRegistry,
             AssetStorageObjectPathBuilder assetStorageObjectPathBuilder,
-            AssetUploadTokenService assetUploadTokenService) {
+            AssetUploadTokenService assetUploadTokenService,
+            AssetContentTokenService assetContentTokenService) {
         this.clock = clock;
         this.mediaAssetRepository = mediaAssetRepository;
         this.assetStorageClientRegistry = assetStorageClientRegistry;
         this.assetStorageObjectPathBuilder = assetStorageObjectPathBuilder;
         this.assetUploadTokenService = assetUploadTokenService;
+        this.assetContentTokenService = assetContentTokenService;
     }
 
     /**
@@ -104,23 +119,76 @@ public class AssetRegistryService implements AssetRegistryApi {
         StorageObjectMetadata objectMetadata = assetStorageClientRegistry.findObjectMetadata(provider, objectPath)
                 .orElseThrow(() -> new MediaAssetUploadObjectNotFoundException(objectPath));
         validateUploadedObject(uploadClaims, objectMetadata);
+        return registerOrUpdateUploadedAsset(
+                provider,
+                objectPath,
+                uploadClaims.kind(),
+                objectMetadata,
+                command.checksumSha256());
+    }
 
+    private AssetRecord registerOrUpdateUploadedAsset(
+            StorageProvider provider,
+            String objectPath,
+            MediaKind kind,
+            StorageObjectMetadata objectMetadata,
+            String checksumSha256) {
         Optional<MediaAsset> existingAsset = mediaAssetRepository.findByProviderAndObjectPath(provider, objectPath);
         if (existingAsset.isPresent()) {
             MediaAsset mediaAsset = existingAsset.get();
             mediaAsset.updateMetadata(
                     objectMetadata.mimeType(),
                     objectMetadata.byteSize(),
-                    command.checksumSha256());
+                    checksumSha256);
             return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
         }
 
-        MediaAsset mediaAsset = MediaAsset.register(provider, objectPath, uploadClaims.kind());
+        MediaAsset mediaAsset = MediaAsset.register(provider, objectPath, kind);
         mediaAsset.updateMetadata(
                 objectMetadata.mimeType(),
                 objectMetadata.byteSize(),
-                command.checksumSha256());
+                checksumSha256);
         return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
+    }
+
+    /**
+     * Uploads file bytes from the backend, then reuses the normal completion validation.
+     */
+    @Override
+    @Transactional
+    public AssetRecord proxyUpload(ProxyMediaAssetUploadCommand command) {
+        AssetUploadTokenClaims uploadClaims = decodeUploadClaims(command.uploadToken());
+        String objectPath = requireManagedFirebasePath(uploadClaims.objectPath());
+        validateProxyUpload(command, uploadClaims);
+        uploadObject(uploadClaims.provider(), objectPath, uploadClaims.mimeType(), command.byteSize(), command.content());
+        return completeUpload(new CompleteMediaAssetUploadCommand(command.uploadToken(), command.checksumSha256()));
+    }
+
+    /**
+     * Uploads a CMS asset through the backend and registers it after storage metadata validation.
+     */
+    @Override
+    @Transactional
+    public AssetRecord uploadFromBackend(BackendMediaAssetUploadCommand command) {
+        AssetKind uploadKind = requireSupportedUploadKind(command.kind());
+        String mimeType = normalizeUploadMimeType(command.mimeType());
+        validateUploadMimeType(uploadKind, mimeType);
+        Instant issuedAt = Instant.now(clock);
+        String objectPath = requireManagedFirebasePath(assetStorageObjectPathBuilder.manualUploadPath(
+                uploadKind,
+                command.fileName(),
+                issuedAt));
+        StorageProvider provider = StorageProvider.FIREBASE_STORAGE;
+        uploadObject(provider, objectPath, mimeType, command.byteSize(), command.content());
+        StorageObjectMetadata objectMetadata = assetStorageClientRegistry.findObjectMetadata(provider, objectPath)
+                .orElseThrow(() -> new MediaAssetUploadObjectNotFoundException(objectPath));
+        validateBackendUploadedObject(mimeType, command.byteSize(), objectMetadata);
+        return registerOrUpdateUploadedAsset(
+                provider,
+                objectPath,
+                AssetApiMapper.toDomain(uploadKind),
+                objectMetadata,
+                command.checksumSha256());
     }
 
     /**
@@ -210,6 +278,55 @@ public class AssetRegistryService implements AssetRegistryApi {
         return AssetApiMapper.toRecord(mediaAssetRepository.save(mediaAsset));
     }
 
+    /**
+     * Issues a backend preview token for image and audio CMS assets.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AssetContentAccessToken issueContentAccessToken(Long assetId) {
+        MediaAsset mediaAsset = loadMediaAsset(assetId);
+        requirePreviewable(mediaAsset);
+        return assetContentTokenService.issue(
+                mediaAsset.getId(),
+                mediaAsset.getProvider(),
+                mediaAsset.getObjectPath());
+    }
+
+    /**
+     * Opens backend-streamed content after checking the token still matches the current asset.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AssetContent openContent(Long assetId, String token, AssetContentRange range) {
+        AssetContentTokenClaims claims = decodeContentClaims(token);
+        if (!claims.assetId().equals(requireAssetId(assetId))) {
+            throw new MediaAssetContentTokenInvalidException("Asset content token does not match the requested asset");
+        }
+        MediaAsset mediaAsset = loadMediaAsset(assetId);
+        requirePreviewable(mediaAsset);
+        if (!claims.provider().equals(mediaAsset.getProvider())
+                || !claims.objectPath().equals(mediaAsset.getObjectPath())) {
+            throw new MediaAssetContentTokenInvalidException("Asset content token no longer matches the asset storage location");
+        }
+
+        StorageObjectMetadata metadata = assetStorageClientRegistry
+                .findObjectMetadata(mediaAsset.getProvider(), mediaAsset.getObjectPath())
+                .orElseThrow(() -> new MediaAssetContentNotFoundException(mediaAsset.getObjectPath()));
+        StorageObjectRange storageRange = resolveStorageRange(range, metadata.byteSize());
+        StorageObjectContent storageContent = assetStorageClientRegistry
+                .openObject(mediaAsset.getProvider(), mediaAsset.getObjectPath(), storageRange)
+                .orElseThrow(() -> new MediaAssetContentNotFoundException(mediaAsset.getObjectPath()));
+        return new AssetContent(
+                mediaAsset.getId(),
+                fileNameFromPath(mediaAsset.getObjectPath()),
+                contentMimeType(mediaAsset, storageContent),
+                metadata.byteSize(),
+                storageContent.contentLength(),
+                storageContent.rangeStartInclusive(),
+                storageContent.rangeEndInclusive(),
+                storageContent.content());
+    }
+
     private MediaAsset loadMediaAsset(Long assetId) {
         return mediaAssetRepository.findById(requireAssetId(assetId))
                 .orElseThrow(() -> new MediaAssetNotFoundException(assetId));
@@ -234,6 +351,14 @@ public class AssetRegistryService implements AssetRegistryApi {
             return assetUploadTokenService.verifyAndDecode(uploadToken);
         } catch (IllegalArgumentException exception) {
             throw new MediaAssetUploadTokenInvalidException("Asset upload token is invalid", exception);
+        }
+    }
+
+    private AssetContentTokenClaims decodeContentClaims(String token) {
+        try {
+            return assetContentTokenService.verifyAndDecode(token);
+        } catch (IllegalArgumentException exception) {
+            throw new MediaAssetContentTokenInvalidException("Asset content token is invalid", exception);
         }
     }
 
@@ -285,5 +410,98 @@ public class AssetRegistryService implements AssetRegistryApi {
             throw new MediaAssetUploadMetadataMismatchException(
                     "Uploaded object byte size does not match the initiated upload request");
         }
+    }
+
+    private static void validateProxyUpload(
+            ProxyMediaAssetUploadCommand command,
+            AssetUploadTokenClaims uploadClaims) {
+        if (!uploadClaims.provider().equals(StorageProvider.FIREBASE_STORAGE)) {
+            throw new MediaAssetUploadTokenInvalidException("Asset upload token provider is invalid");
+        }
+        String uploadedMimeType = normalizeUploadMimeType(command.mimeType());
+        if (!uploadedMimeType.equalsIgnoreCase(uploadClaims.mimeType())) {
+            throw new MediaAssetUploadMetadataMismatchException(
+                    "Proxied upload MIME type does not match the initiated upload request");
+        }
+        if (command.byteSize() != uploadClaims.byteSize()) {
+            throw new MediaAssetUploadMetadataMismatchException(
+                    "Proxied upload byte size does not match the initiated upload request");
+        }
+    }
+
+    private static void validateBackendUploadedObject(
+            String expectedMimeType,
+            long expectedByteSize,
+            StorageObjectMetadata objectMetadata) {
+        String storedMimeType = normalizeUploadMimeType(objectMetadata.mimeType());
+        if (!storedMimeType.equalsIgnoreCase(expectedMimeType)) {
+            throw new MediaAssetUploadMetadataMismatchException(
+                    "Uploaded object MIME type does not match the backend upload request");
+        }
+        if (!objectMetadata.byteSize().equals(expectedByteSize)) {
+            throw new MediaAssetUploadMetadataMismatchException(
+                    "Uploaded object byte size does not match the backend upload request");
+        }
+    }
+
+    private void uploadObject(
+            StorageProvider provider,
+            String objectPath,
+            String mimeType,
+            long byteSize,
+            InputStream content) {
+        try (InputStream inputStream = content) {
+            assetStorageClientRegistry.uploadObject(provider, objectPath, mimeType, byteSize, inputStream);
+        } catch (IOException exception) {
+            throw new IllegalStateException("Asset upload stream could not be closed", exception);
+        }
+    }
+
+    private static void requirePreviewable(MediaAsset mediaAsset) {
+        MediaAssetType mediaType = mediaAsset.getMediaType();
+        if (mediaType == MediaAssetType.IMAGE || mediaType == MediaAssetType.AUDIO) {
+            return;
+        }
+        throw new MediaAssetContentUnavailableException(mediaAsset.getId());
+    }
+
+    private static StorageObjectRange resolveStorageRange(AssetContentRange range, long byteSize) {
+        if (range == null) {
+            return null;
+        }
+        if (byteSize <= 0) {
+            throw new MediaAssetContentRangeNotSatisfiableException("Asset content range cannot be served for an empty object");
+        }
+        long start;
+        long end;
+        if (range.suffixLength() != null) {
+            long contentLength = Math.min(range.suffixLength(), byteSize);
+            start = byteSize - contentLength;
+            end = byteSize - 1;
+        } else {
+            start = range.startInclusive();
+            if (start >= byteSize) {
+                throw new MediaAssetContentRangeNotSatisfiableException("Asset content range starts after the object end");
+            }
+            end = range.endInclusive() == null ? byteSize - 1 : Math.min(range.endInclusive(), byteSize - 1);
+        }
+        return new StorageObjectRange(start, end);
+    }
+
+    private static String contentMimeType(MediaAsset mediaAsset, StorageObjectContent storageContent) {
+        if (mediaAsset.getMimeType() != null && !mediaAsset.getMimeType().isBlank()) {
+            return mediaAsset.getMimeType();
+        }
+        return storageContent.mimeType();
+    }
+
+    private static String fileNameFromPath(String objectPath) {
+        String normalizedPath = objectPath == null ? "asset" : objectPath.trim();
+        int separatorIndex = normalizedPath.lastIndexOf('/');
+        String fileName = separatorIndex >= 0 ? normalizedPath.substring(separatorIndex + 1) : normalizedPath;
+        if (fileName.isBlank()) {
+            return "asset";
+        }
+        return fileName.replaceAll("[\\r\\n\"]", "_");
     }
 }

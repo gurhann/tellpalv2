@@ -11,7 +11,7 @@ export type ApiRequestAuthMode = "required" | "optional" | "none";
 export type ApiRequestOptions<TResponse> = {
   path: string;
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  body?: JsonValue;
+  body?: JsonValue | FormData;
   headers?: HeadersInit;
   auth?: ApiRequestAuthMode;
   responseSchema?: ZodType<TResponse>;
@@ -104,10 +104,14 @@ export function createApiClient(config: ApiClientConfig) {
       headers.set("Authorization", `Bearer ${accessToken}`);
     }
 
-    let body: string | undefined;
+    let body: string | FormData | undefined;
     if (requestOptions.body !== undefined) {
-      headers.set("Content-Type", "application/json");
-      body = JSON.stringify(requestOptions.body);
+      if (requestOptions.body instanceof FormData) {
+        body = requestOptions.body;
+      } else {
+        headers.set("Content-Type", "application/json");
+        body = JSON.stringify(requestOptions.body);
+      }
     }
 
     const response = await fetchImplementation(url.toString(), {

@@ -22,6 +22,10 @@ spring:
     enabled: true
     locations: classpath:db/migration
     validate-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: ${TELLPAL_ADMIN_UPLOAD_MAX_FILE_SIZE:200MB}
+      max-request-size: ${TELLPAL_ADMIN_UPLOAD_MAX_REQUEST_SIZE:200MB}
 
 management:
   endpoints:
@@ -63,6 +67,7 @@ tellpal:
         path-prefix: ${TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX:prod}
         signed-upload-ttl: ${TELLPAL_ASSET_STORAGE_FIREBASE_SIGNED_UPLOAD_TTL:PT15M}
         signed-download-ttl: ${TELLPAL_ASSET_STORAGE_FIREBASE_SIGNED_DOWNLOAD_TTL:PT15M}
+        backend-content-ttl: ${TELLPAL_ASSET_STORAGE_BACKEND_CONTENT_TTL:PT15M}
     processing:
       poller:
         enabled: ${TELLPAL_ASSET_PROCESSING_POLLER_ENABLED:true}

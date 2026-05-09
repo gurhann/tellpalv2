@@ -8,7 +8,6 @@ import {
   useZodForm,
 } from "@/components/forms/form-utils";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import { useUpdateAssetMetadata } from "@/features/assets/mutations/use-update-asset-metadata";
@@ -186,9 +185,6 @@ export function AssetMetadataForm({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        <Button type="button" variant="outline" disabled>
-          Refresh cached URL
-        </Button>
         <SubmitButton
           isPending={updateMutation.isPending}
           pendingLabel={copy.saving}

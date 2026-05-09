@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.infrastructure.storage;
 
 import java.time.Instant;
+import java.io.InputStream;
 import java.util.Optional;
 
 import com.tellpal.v2.asset.domain.StorageProvider;
@@ -15,7 +16,15 @@ public interface AssetStorageClient {
         throw new UnsupportedOperationException("Signed upload URLs are not supported for provider " + provider());
     }
 
+    default void uploadObject(String objectPath, String mimeType, long byteSize, InputStream content) {
+        throw new UnsupportedOperationException("Backend uploads are not supported for provider " + provider());
+    }
+
     default Optional<StorageObjectMetadata> findObjectMetadata(String objectPath) {
+        return Optional.empty();
+    }
+
+    default Optional<StorageObjectContent> openObject(String objectPath, StorageObjectRange range) {
         return Optional.empty();
     }
 }

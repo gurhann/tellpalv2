@@ -173,6 +173,7 @@ class AssetRegistryIntegrationTest extends PostgresIntegrationTestBase {
                                 "ignored",
                                 "test",
                                 java.time.Duration.ofMinutes(15),
+                                java.time.Duration.ofMinutes(15),
                                 java.time.Duration.ofMinutes(15))));
 
         assertThat(pathBuilder.originalRoot("STORY", "moonlight-story", com.tellpal.v2.shared.domain.LanguageCode.TR))

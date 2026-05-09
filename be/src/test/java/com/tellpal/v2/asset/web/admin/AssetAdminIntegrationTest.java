@@ -3,13 +3,19 @@ package com.tellpal.v2.asset.web.admin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.tellpal.v2.asset.infrastructure.storage.FakeFirebaseStorageAssetClient;
@@ -160,5 +166,80 @@ class AssetAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cachedDownloadUrl").value(org.hamcrest.Matchers.containsString("firebase-storage.test/download/")));
+    }
+
+    @Test
+    void proxiedFirebaseUploadWorksWithAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        byte[] imageBytes = "image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        MvcResult initiateResult = mockMvc.perform(post("/api/admin/media/uploads")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "kind": "ORIGINAL_IMAGE",
+                                  "fileName": "cover.jpg",
+                                  "mimeType": "image/jpeg",
+                                  "byteSize": %d
+                                }
+                                """.formatted(imageBytes.length)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String objectPath = readPayload(initiateResult).get("objectPath").asText();
+        String uploadToken = readPayload(initiateResult).get("uploadToken").asText();
+        MockMultipartFile file = new MockMultipartFile("file", "cover.jpg", "image/jpeg", imageBytes);
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/admin/media/uploads/proxy")
+                        .file(file)
+                        .param("uploadToken", uploadToken)
+                        .param("checksumSha256", INITIAL_CHECKSUM)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("FIREBASE_STORAGE"))
+                .andExpect(jsonPath("$.objectPath").value(objectPath))
+                .andExpect(jsonPath("$.byteSize").value(imageBytes.length));
+    }
+
+    @Test
+    void backendUploadAndContentStreamingWorkWithAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+        byte[] imageBytes = "image-bytes".getBytes(StandardCharsets.UTF_8);
+        MockMultipartFile file = new MockMultipartFile("file", "cover.jpg", "image/jpeg", imageBytes);
+
+        MvcResult uploadResult = mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/admin/media/uploads")
+                        .file(file)
+                        .param("kind", "ORIGINAL_IMAGE")
+                        .param("checksumSha256", INITIAL_CHECKSUM)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("FIREBASE_STORAGE"))
+                .andExpect(jsonPath("$.byteSize").value(imageBytes.length))
+                .andReturn();
+
+        Long assetId = readPayload(uploadResult).get("assetId").asLong();
+
+        MvcResult tokenResult = mockMvc.perform(post("/api/admin/media/{assetId}/content-token", assetId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.previewUrl").isNotEmpty())
+                .andReturn();
+
+        String previewUrl = readPayload(tokenResult).get("previewUrl").asText();
+        String token = new URI(previewUrl).getQuery().replace("token=", "");
+
+        mockMvc.perform(get("/api/admin/media/{assetId}/content", assetId)
+                        .param("token", token))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Accept-Ranges", "bytes"))
+                .andExpect(content().bytes(imageBytes));
+
+        mockMvc.perform(get("/api/admin/media/{assetId}/content", assetId)
+                        .param("token", token)
+                        .header("Range", "bytes=0-4"))
+                .andExpect(status().isPartialContent())
+                .andExpect(header().string("Content-Range", "bytes 0-4/%d".formatted(imageBytes.length)))
+                .andExpect(content().bytes("image".getBytes(StandardCharsets.UTF_8)));
     }
 }

@@ -28,6 +28,12 @@ Backend production runs with:
 - Storage isolation through `TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX=prod`.
 - Firebase service account JSON provided as a base64 Railway variable and written to
   `/tmp/firebase-service-account.json` by the Railway start command.
+- CMS upload and preview traffic flows through the backend. Firebase Storage bucket CORS may remain
+  configured for deprecated signed-upload diagnostics, but the CMS no longer depends on browser
+  access to `storage.googleapis.com`.
+- Backend multipart upload defaults to `200MB` through `TELLPAL_ADMIN_UPLOAD_MAX_FILE_SIZE` and
+  `TELLPAL_ADMIN_UPLOAD_MAX_REQUEST_SIZE`.
+- Backend preview tokens default to `PT15M` through `TELLPAL_ASSET_STORAGE_BACKEND_CONTENT_TTL`.
 - RevenueCat webhook authorization header optional for now. If
   `TELLPAL_REVENUECAT_AUTHORIZATION_HEADER` is blank, the app starts, but RevenueCat webhook
   requests remain unauthorized.
@@ -172,6 +178,9 @@ Required verification for every production deploy:
 - `GET https://<backend-domain>/actuator/health` returns `{"status":"UP"}`.
 - CMS login screen loads over the public CMS domain.
 - CMS API calls do not produce CORS failures.
+- CMS asset upload completes through `POST /api/admin/media/uploads` as multipart form data.
+- CMS image/audio previews render backend content URLs from
+  `POST /api/admin/media/{assetId}/content-token`, not Firebase/GCS signed URLs.
 - Backend logs do not contain Flyway migration, Firebase credential, database connection, or startup
   exceptions.
 

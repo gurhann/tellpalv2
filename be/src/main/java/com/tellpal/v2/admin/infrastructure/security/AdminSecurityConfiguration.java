@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -76,6 +77,8 @@ public class AdminSecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/admin/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/admin/media/*/content").permitAll()
+                        .requestMatchers(HttpMethod.HEAD, "/api/admin/media/*/content").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(adminAuthenticationEntryPoint)
@@ -94,9 +97,13 @@ public class AdminSecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource(AdminSecurityProperties properties) {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(properties.cors().allowedOrigins());
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of(AdminWebRequestSupport.REQUEST_ID_HEADER));
+        configuration.setExposedHeaders(List.of(
+                AdminWebRequestSupport.REQUEST_ID_HEADER,
+                "Accept-Ranges",
+                "Content-Length",
+                "Content-Range"));
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -15,10 +15,12 @@ public record AssetStorageFirebaseProperties(
         String credentialsPath,
         String pathPrefix,
         Duration signedUploadTtl,
-        Duration signedDownloadTtl) {
+        Duration signedDownloadTtl,
+        Duration backendContentTtl) {
 
     public AssetStorageFirebaseProperties {
         signedUploadTtl = signedUploadTtl == null ? Duration.ofMinutes(15) : signedUploadTtl;
         signedDownloadTtl = signedDownloadTtl == null ? Duration.ofMinutes(15) : signedDownloadTtl;
+        backendContentTtl = backendContentTtl == null ? Duration.ofMinutes(15) : backendContentTtl;
     }
 }

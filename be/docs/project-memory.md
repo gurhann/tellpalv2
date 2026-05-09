@@ -31,7 +31,7 @@ Read order:
 - `ADR-0005`: REST endpoints use OpenAPI-based documentation with operation-level summaries, auth, and core error responses.
 - `ADR-0006`: story-page illustrations are localization-scoped and resolved from `story_page_localizations`, not page roots.
 - `ADR-0007`: category type aligns with curated content type and no longer supports legacy `CONTENT` or `PARENT_GUIDANCE` values.
-- `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and direct browser uploads.
+- `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and backend-mediated CMS uploads/previews.
 
 ## Coding and Documentation Defaults
 
@@ -65,6 +65,9 @@ Read order:
 - Category type is now content-aligned. Category seed and curation test data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`, and curated content must match the selected category type.
 - Asset runtime now expects real Firebase Storage credentials in local development. Local and production share one bucket, and environment isolation happens through the configured path prefix (`local` or `prod`).
 - Asset upload and generated processing paths are prefix-aware. New manual uploads land under `/{prefix}/manual/...`, and generated variants/packages land under `/{prefix}/content/...`.
+- CMS asset upload and preview are backend-mediated. Browsers send multipart uploads to the admin
+  API and render short-lived backend preview URLs; Firebase/GCS signed upload and download URLs
+  remain only for deprecated compatibility and mobile/public delivery needs.
 
 ## Deployment Defaults
 
