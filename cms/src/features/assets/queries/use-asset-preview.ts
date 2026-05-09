@@ -2,8 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { assetAdminApi } from "@/features/assets/api/asset-admin";
-import { ASSET_PREVIEW_EXPIRY_BUFFER_MS } from "@/features/assets/lib/asset-preview";
+import {
+  ASSET_PREVIEW_EXPIRY_BUFFER_MS,
+  normalizeBackendPreviewUrl,
+} from "@/features/assets/lib/asset-preview";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
+import { appEnv } from "@/lib/env";
 import { ApiClientError } from "@/lib/http/client";
 
 type UseAssetPreviewResult = {
@@ -97,10 +101,14 @@ export function useAssetPreview(
       const response = await assetAdminApi.issueAssetContentToken(
         targetAsset.id,
       );
+      const normalizedPreviewUrl = normalizeBackendPreviewUrl(
+        response.previewUrl,
+        appEnv.VITE_API_BASE_URL,
+      );
       const previewSource =
         targetAsset.previewKind === "audio"
-          ? await createAudioObjectUrl(response.previewUrl, targetAsset.mimeType)
-          : { previewUrl: response.previewUrl, objectUrl: false };
+          ? await createAudioObjectUrl(normalizedPreviewUrl, targetAsset.mimeType)
+          : { previewUrl: normalizedPreviewUrl, objectUrl: false };
 
       return {
         assetId: targetAsset.id,

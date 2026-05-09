@@ -26,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import com.tellpal.v2.asset.api.AssetContent;
 import com.tellpal.v2.asset.api.AssetContentAccessToken;
@@ -56,6 +58,9 @@ class AssetAdminControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private AssetAdminController assetAdminController;
 
     @MockitoBean
     private AssetRegistryApi assetRegistryApi;
@@ -238,6 +243,24 @@ class AssetAdminControllerTest {
         mockMvc.perform(post("/api/admin/media/11/content-token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.previewUrl").value("http://localhost/api/admin/media/11/content?token=content-token"))
+                .andExpect(jsonPath("$.expiresAt").value("2026-04-04T18:15:00Z"));
+    }
+
+    @Test
+    void issueContentTokenUsesForwardedProxyHeadersForBackendPreviewUrl() throws Exception {
+        MockMvc forwardedMockMvc = MockMvcBuilders
+                .standaloneSetup(assetAdminController)
+                .addFilters(new ForwardedHeaderFilter())
+                .build();
+        when(assetRegistryApi.issueContentAccessToken(11L))
+                .thenReturn(new AssetContentAccessToken("content-token", Instant.parse("2026-04-04T18:15:00Z")));
+
+        forwardedMockMvc.perform(post("/api/admin/media/11/content-token")
+                        .header("X-Forwarded-Proto", "https")
+                        .header("X-Forwarded-Host", "tellpal-be-production.up.railway.app"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.previewUrl").value(
+                        "https://tellpal-be-production.up.railway.app/api/admin/media/11/content?token=content-token"))
                 .andExpect(jsonPath("$.expiresAt").value("2026-04-04T18:15:00Z"));
     }
 

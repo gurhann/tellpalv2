@@ -2,6 +2,7 @@ import {
   ASSET_PREVIEW_EXPIRY_BUFFER_MS,
   getAssetPreviewKind,
   hasUsableCachedDownloadUrl,
+  normalizeBackendPreviewUrl,
   shouldRefreshAssetPreviewUrl,
 } from "@/features/assets/lib/asset-preview";
 
@@ -75,5 +76,34 @@ describe("asset preview helpers", () => {
         now,
       ),
     ).toBe(true);
+  });
+
+  it("normalizes backend preview URLs to the configured API protocol", () => {
+    expect(
+      normalizeBackendPreviewUrl(
+        "http://tellpal-be-production.up.railway.app/api/admin/media/10/content?token=preview-token",
+        "https://tellpal-be-production.up.railway.app",
+      ),
+    ).toBe(
+      "https://tellpal-be-production.up.railway.app/api/admin/media/10/content?token=preview-token",
+    );
+
+    expect(
+      normalizeBackendPreviewUrl(
+        "http://other-storage.test/api/admin/media/10/content?token=preview-token",
+        "https://tellpal-be-production.up.railway.app",
+      ),
+    ).toBe(
+      "http://other-storage.test/api/admin/media/10/content?token=preview-token",
+    );
+
+    expect(
+      normalizeBackendPreviewUrl(
+        "https://tellpal-be-production.up.railway.app/api/admin/media/10/content?token=preview-token",
+        "https://tellpal-be-production.up.railway.app",
+      ),
+    ).toBe(
+      "https://tellpal-be-production.up.railway.app/api/admin/media/10/content?token=preview-token",
+    );
   });
 });

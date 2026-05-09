@@ -58,3 +58,22 @@ export function shouldRefreshAssetPreviewUrl(
     !hasUsableCachedDownloadUrl(asset, now)
   );
 }
+
+export function normalizeBackendPreviewUrl(
+  previewUrl: string,
+  apiBaseUrl: string,
+) {
+  try {
+    const preview = new URL(previewUrl);
+    const apiBase = new URL(apiBaseUrl);
+
+    if (preview.host !== apiBase.host || preview.protocol === apiBase.protocol) {
+      return previewUrl;
+    }
+
+    preview.protocol = apiBase.protocol;
+    return preview.toString();
+  } catch {
+    return previewUrl;
+  }
+}
