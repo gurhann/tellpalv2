@@ -120,3 +120,14 @@ Set one credential source before calling Drive APIs:
   `.google-drive-token.json` unless `GOOGLE_OAUTH_TOKEN_PATH` is set.
 
 Credential files and tokens must not be committed.
+
+## Manual story inventory workflow
+
+When collecting stories one by one into the manual inventory folder, copy every matching source file
+while preserving enough of the original Drive path to keep variants understandable. If image
+revision files are present, copy those files too. Audio files do not need revision notes because
+audio will be sourced separately.
+
+For every target folder that contains image revisions, add or update a plain text note named
+`NOT - Resim Revizeleri.txt`. The note should list the copied revision image filenames and their
+original source paths, and should state that audio files are outside the scope of the note.
