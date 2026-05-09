@@ -55,18 +55,22 @@ async function createAudioObjectUrl(previewUrl: string, mimeType: string | null)
     return { previewUrl, objectUrl: false };
   }
 
-  const response = await fetch(previewUrl, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error("Audio preview could not be loaded.");
+  try {
+    const response = await fetch(previewUrl, { cache: "no-store" });
+    if (!response.ok) {
+      return { previewUrl, objectUrl: false };
+    }
+
+    const sourceBlob = await response.blob();
+    const blob =
+      mimeType && sourceBlob.type !== mimeType
+        ? sourceBlob.slice(0, sourceBlob.size, mimeType)
+        : sourceBlob;
+
+    return { previewUrl: URL.createObjectURL(blob), objectUrl: true };
+  } catch {
+    return { previewUrl, objectUrl: false };
   }
-
-  const sourceBlob = await response.blob();
-  const blob =
-    mimeType && sourceBlob.type !== mimeType
-      ? sourceBlob.slice(0, sourceBlob.size, mimeType)
-      : sourceBlob;
-
-  return { previewUrl: URL.createObjectURL(blob), objectUrl: true };
 }
 
 function previewErrorMessage(error: unknown) {

@@ -234,4 +234,43 @@ describe("useAssetPreview", () => {
       "blob:https://cms.tellpal.test/audio",
     );
   });
+
+  it("falls back to the backend preview URL when audio blob loading fails", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+    vi.stubGlobal("URL", {
+      ...URL,
+      createObjectURL: vi.fn(),
+      revokeObjectURL: vi.fn(),
+    });
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    }));
+    assetAdminApiMock.issueAssetContentToken.mockResolvedValue({
+      previewUrl:
+        "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    });
+
+    const { result } = renderHook(
+      () => useAssetPreview(originalAudioAssetViewModel, true),
+      {
+        wrapper: createWrapper(queryClient),
+      },
+    );
+
+    await waitFor(() => expect(result.current.previewStatus).toBe("available"));
+
+    expect(result.current.previewUrl).toBe(
+      "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+    );
+  });
 });
