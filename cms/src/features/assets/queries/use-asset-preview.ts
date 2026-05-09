@@ -18,6 +18,7 @@ type PreviewTokenState = {
   assetId: number;
   previewUrl: string;
   expiresAt: string;
+  objectUrl: boolean;
 };
 
 function hasUsablePreviewToken(
@@ -33,6 +34,39 @@ function hasUsablePreviewToken(
     return false;
   }
   return expiresAt - now > ASSET_PREVIEW_EXPIRY_BUFFER_MS;
+}
+
+function revokePreviewUrl(tokenState: PreviewTokenState | null) {
+  if (tokenState?.objectUrl) {
+    URL.revokeObjectURL(tokenState.previewUrl);
+  }
+}
+
+function canCreateObjectUrl() {
+  return (
+    typeof URL !== "undefined" &&
+    typeof URL.createObjectURL === "function" &&
+    typeof URL.revokeObjectURL === "function"
+  );
+}
+
+async function createAudioObjectUrl(previewUrl: string, mimeType: string | null) {
+  if (!canCreateObjectUrl()) {
+    return { previewUrl, objectUrl: false };
+  }
+
+  const response = await fetch(previewUrl, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error("Audio preview could not be loaded.");
+  }
+
+  const sourceBlob = await response.blob();
+  const blob =
+    mimeType && sourceBlob.type !== mimeType
+      ? sourceBlob.slice(0, sourceBlob.size, mimeType)
+      : sourceBlob;
+
+  return { previewUrl: URL.createObjectURL(blob), objectUrl: true };
 }
 
 function previewErrorMessage(error: unknown) {
@@ -55,13 +89,26 @@ export function useAssetPreview(
     null,
   );
   const contentTokenMutation = useMutation({
-    mutationFn: async (assetId: number) =>
-      assetAdminApi.issueAssetContentToken(assetId),
-    onSuccess: (response, assetId) => {
-      setPreviewToken({
-        assetId,
-        previewUrl: response.previewUrl,
+    mutationFn: async (targetAsset: AssetViewModel) => {
+      const response = await assetAdminApi.issueAssetContentToken(
+        targetAsset.id,
+      );
+      const previewSource =
+        targetAsset.previewKind === "audio"
+          ? await createAudioObjectUrl(response.previewUrl, targetAsset.mimeType)
+          : { previewUrl: response.previewUrl, objectUrl: false };
+
+      return {
+        assetId: targetAsset.id,
+        previewUrl: previewSource.previewUrl,
         expiresAt: response.expiresAt,
+        objectUrl: previewSource.objectUrl,
+      };
+    },
+    onSuccess: (nextToken) => {
+      setPreviewToken((currentToken) => {
+        revokePreviewUrl(currentToken);
+        return nextToken;
       });
     },
   });
@@ -100,10 +147,16 @@ export function useAssetPreview(
     }
 
     lastAutoRefreshKeyRef.current = autoRefreshKey;
-    void issueContentToken(asset.id).catch(() => {
+    void issueContentToken(asset).catch(() => {
       return undefined;
     });
   }, [asset, enabled, isRefreshing, issueContentToken, previewToken]);
+
+  useEffect(() => {
+    return () => {
+      revokePreviewUrl(previewToken);
+    };
+  }, [previewToken]);
 
   async function refreshPreview(options: { force?: boolean } = {}) {
     if (!asset || !asset.isPreviewable) {
@@ -118,7 +171,7 @@ export function useAssetPreview(
     }
 
     lastAutoRefreshKeyRef.current = null;
-    await issueContentToken(asset.id);
+    await issueContentToken(asset);
   }
 
   if (!isPreviewable) {

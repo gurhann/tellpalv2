@@ -142,14 +142,11 @@ export function AssetPreviewCard({ asset, open }: AssetPreviewCardProps) {
               aria-label={t("assets.audioAria", { assetId: asset.id })}
               className="w-full"
               controls
+              key={preview.previewUrl}
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
               preload="metadata"
-            >
-              <source
-                src={preview.previewUrl}
-                type={asset.mimeType ?? undefined}
-              />
-            </audio>
+              src={preview.previewUrl}
+            />
           </div>
         </div>
       ) : (

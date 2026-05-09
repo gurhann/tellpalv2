@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { PropsWithChildren } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   contentArchiveAssetViewModel,
   originalAudioAssetViewModel,
+  phoneThumbnailAssetViewModel,
 } from "@/features/assets/test/fixtures";
 
 import { useAssetPreview } from "./use-asset-preview";
@@ -40,6 +41,10 @@ beforeEach(() => {
   assetAdminApiMock.issueAssetContentToken.mockReset();
 });
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe("useAssetPreview", () => {
   it("loads a backend preview URL for previewable assets", async () => {
     const queryClient = new QueryClient({
@@ -54,24 +59,24 @@ describe("useAssetPreview", () => {
     });
     assetAdminApiMock.issueAssetContentToken.mockResolvedValue({
       previewUrl:
-        "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+        "https://api.tellpal.test/api/admin/media/4/content?token=preview-token",
       expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     });
 
     const { result } = renderHook(
-      () => useAssetPreview(originalAudioAssetViewModel, true),
+      () => useAssetPreview(phoneThumbnailAssetViewModel, true),
       {
         wrapper: createWrapper(queryClient),
       },
     );
 
     await waitFor(() => {
-      expect(assetAdminApiMock.issueAssetContentToken).toHaveBeenCalledWith(1);
+      expect(assetAdminApiMock.issueAssetContentToken).toHaveBeenCalledWith(4);
     });
 
     await waitFor(() => expect(result.current.previewStatus).toBe("available"));
     expect(result.current.previewUrl).toBe(
-      "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+      "https://api.tellpal.test/api/admin/media/4/content?token=preview-token",
     );
     expect(result.current.previewUrl).not.toContain("storage.googleapis.com");
   });
@@ -147,17 +152,17 @@ describe("useAssetPreview", () => {
     assetAdminApiMock.issueAssetContentToken
       .mockResolvedValueOnce({
         previewUrl:
-          "https://api.tellpal.test/api/admin/media/1/content?token=first-token",
+          "https://api.tellpal.test/api/admin/media/4/content?token=first-token",
         expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
       })
       .mockResolvedValueOnce({
         previewUrl:
-          "https://api.tellpal.test/api/admin/media/1/content?token=second-token",
+          "https://api.tellpal.test/api/admin/media/4/content?token=second-token",
         expiresAt: new Date(Date.now() + 70 * 60 * 1000).toISOString(),
       });
 
     const { result } = renderHook(
-      () => useAssetPreview(originalAudioAssetViewModel, true),
+      () => useAssetPreview(phoneThumbnailAssetViewModel, true),
       {
         wrapper: createWrapper(queryClient),
       },
@@ -169,8 +174,64 @@ describe("useAssetPreview", () => {
 
     await waitFor(() => {
       expect(result.current.previewUrl).toBe(
-        "https://api.tellpal.test/api/admin/media/1/content?token=second-token",
+        "https://api.tellpal.test/api/admin/media/4/content?token=second-token",
       );
     });
+  });
+
+  it("loads audio previews through a browser object URL", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+    const createObjectUrl = vi.fn(() => "blob:https://cms.tellpal.test/audio");
+    const revokeObjectUrl = vi.fn();
+    vi.stubGlobal("URL", {
+      ...URL,
+      createObjectURL: createObjectUrl,
+      revokeObjectURL: revokeObjectUrl,
+    });
+    const fetchMock = vi.fn(async () => {
+      return {
+        ok: true,
+        blob: async () => new Blob(["audio-bytes"], { type: "audio/mpeg" }),
+      } as Response;
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    assetAdminApiMock.issueAssetContentToken.mockResolvedValue({
+      previewUrl:
+        "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    });
+
+    const { result, unmount } = renderHook(
+      () => useAssetPreview(originalAudioAssetViewModel, true),
+      {
+        wrapper: createWrapper(queryClient),
+      },
+    );
+
+    await waitFor(() => expect(result.current.previewStatus).toBe("available"));
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",
+      { cache: "no-store" },
+    );
+    expect(createObjectUrl).toHaveBeenCalledWith(expect.any(Blob));
+    expect(result.current.previewUrl).toBe(
+      "blob:https://cms.tellpal.test/audio",
+    );
+
+    unmount();
+
+    expect(revokeObjectUrl).toHaveBeenCalledWith(
+      "blob:https://cms.tellpal.test/audio",
+    );
   });
 });

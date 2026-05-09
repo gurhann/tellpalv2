@@ -127,14 +127,11 @@ export function AssetFieldPreview({
             aria-label={t("assets.audioAria", { assetId: asset.id })}
             className="w-full"
             controls
+            key={preview.previewUrl}
             onError={() => setFailedPreviewUrl(preview.previewUrl)}
             preload="metadata"
-          >
-            <source
-              src={preview.previewUrl}
-              type={asset.mimeType ?? undefined}
-            />
-          </audio>
+            src={preview.previewUrl}
+          />
         </div>
       );
     }
@@ -321,14 +318,11 @@ export function AssetFieldPreview({
               aria-label={t("assets.audioAria", { assetId: asset.id })}
               className="w-full"
               controls
+              key={preview.previewUrl}
               onError={() => setFailedPreviewUrl(preview.previewUrl)}
               preload="metadata"
-            >
-              <source
-                src={preview.previewUrl}
-                type={asset.mimeType ?? undefined}
-              />
-            </audio>
+              src={preview.previewUrl}
+            />
           </div>
         ) : (
           <div className="mt-4">{renderPreviewStatus()}</div>

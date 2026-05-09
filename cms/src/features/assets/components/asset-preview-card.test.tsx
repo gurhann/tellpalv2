@@ -51,7 +51,10 @@ describe("AssetPreviewCard", () => {
 
     render(<AssetPreviewCard asset={originalAudioAssetViewModel} open />);
 
-    expect(screen.getByLabelText(/audio preview for asset #1/i)).toBeVisible();
+    expect(screen.getByLabelText(/audio preview for asset #1/i)).toHaveAttribute(
+      "src",
+      "https://cdn.tellpal.test/assets/1.wav",
+    );
   });
 
   it("keeps archive assets in an unavailable preview state", () => {

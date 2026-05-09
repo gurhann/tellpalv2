@@ -151,7 +151,10 @@ describe("AssetPickerField", () => {
       </TestWrapper>,
     );
 
-    expect(screen.getByLabelText(/audio preview for asset #1/i)).toBeVisible();
+    expect(screen.getByLabelText(/audio preview for asset #1/i)).toHaveAttribute(
+      "src",
+      "https://storage.test/audio-preview-1.mp3",
+    );
   });
 
   it("renders editor image previews as a portrait-focused cover card", () => {
@@ -315,7 +318,10 @@ describe("AssetPickerField", () => {
     expect(screen.getByTestId("asset-field-preview-actions")).toContainElement(
       screen.getByRole("button", { name: /upload new/i }),
     );
-    expect(screen.getByLabelText(/audio preview for asset #1/i)).toBeVisible();
+    expect(screen.getByLabelText(/audio preview for asset #1/i)).toHaveAttribute(
+      "src",
+      "https://storage.test/audio-preview-1.mp3",
+    );
   });
 
   it("updates the selected asset through the picker dialog", () => {
