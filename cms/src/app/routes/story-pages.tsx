@@ -1,5 +1,11 @@
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -112,8 +118,10 @@ type EditStoryPageDialogProps = {
   content: ContentReadViewModel;
   pageNumber: number | null;
   preferredLanguageCode?: string | null;
+  storyPages: StoryPageReadViewModel[];
   isPending: boolean;
   onClose: () => void;
+  onNavigatePage: (pageNumber: number) => void;
   onUpsertLocalization: (input: {
     pageNumber: number;
     languageCode: string;
@@ -127,8 +135,10 @@ function EditStoryPageDialog({
   content,
   pageNumber,
   preferredLanguageCode = null,
+  storyPages,
   isPending,
   onClose,
+  onNavigatePage,
   onUpsertLocalization,
 }: EditStoryPageDialogProps) {
   const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
@@ -139,6 +149,32 @@ function EditStoryPageDialog({
     : (content.localizations[0]?.languageCode ?? null);
   const [activeLanguageCode, setActiveLanguageCode] = useState(
     resolvedPreferredLanguageCode ?? "",
+  );
+  const [dirtyLanguages, setDirtyLanguages] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [pendingNavigationPageNumber, setPendingNavigationPageNumber] =
+    useState<number | null>(null);
+
+  useEffect(() => {
+    setDirtyLanguages({});
+    setPendingNavigationPageNumber(null);
+  }, [pageNumber]);
+
+  const handleDirtyChange = useCallback(
+    (languageCode: string, isDirty: boolean) => {
+      setDirtyLanguages((currentDirtyLanguages) => {
+        if (currentDirtyLanguages[languageCode] === isDirty) {
+          return currentDirtyLanguages;
+        }
+
+        return {
+          ...currentDirtyLanguages,
+          [languageCode]: isDirty,
+        };
+      });
+    },
+    [],
   );
 
   if (pageNumber === null) {
@@ -159,84 +195,189 @@ function EditStoryPageDialog({
       (localization) =>
         localization.languageCode === resolvedActiveLanguageCode,
     )?.languageLabel ?? resolvedActiveLanguageCode.toUpperCase();
+  const orderedStoryPages = [...storyPages].sort(
+    (firstStoryPage, secondStoryPage) =>
+      firstStoryPage.pageNumber - secondStoryPage.pageNumber,
+  );
+  const activeNavigationIndex = orderedStoryPages.findIndex(
+    (storyPageNavigationItem) =>
+      storyPageNavigationItem.pageNumber === pageNumber,
+  );
+  const previousPageNumber =
+    activeNavigationIndex > 0
+      ? (orderedStoryPages[activeNavigationIndex - 1]?.pageNumber ?? null)
+      : null;
+  const nextPageNumber =
+    activeNavigationIndex >= 0 &&
+    activeNavigationIndex < orderedStoryPages.length - 1
+      ? (orderedStoryPages[activeNavigationIndex + 1]?.pageNumber ?? null)
+      : null;
+  const hasUnsavedChanges = Object.values(dirtyLanguages).some(Boolean);
+
+  function handleNavigatePage(targetPageNumber: number | null | undefined) {
+    if (!targetPageNumber || targetPageNumber === pageNumber || isPending) {
+      return;
+    }
+
+    if (hasUnsavedChanges) {
+      setPendingNavigationPageNumber(targetPageNumber);
+      return;
+    }
+
+    onNavigatePage(targetPageNumber);
+  }
+
+  function handleConfirmNavigation() {
+    if (pendingNavigationPageNumber === null) {
+      return;
+    }
+
+    const targetPageNumber = pendingNavigationPageNumber;
+    setDirtyLanguages({});
+    setPendingNavigationPageNumber(null);
+    onNavigatePage(targetPageNumber);
+  }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{`Page ${pageNumber} · ${activeLanguageLabel}`}</DialogTitle>
-          <DialogDescription>
-            Complete body, illustration, and audio for the selected locale.
-          </DialogDescription>
-        </DialogHeader>
-
-        <DialogBody className="grid gap-6">
-          {storyPageQuery.problem ? (
-            <ProblemAlert problem={storyPageQuery.problem} />
-          ) : null}
-
-          {storyPageQuery.isLoading && !storyPage ? (
-            <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground">
-              Loading the latest story page payloads...
+    <>
+      <Dialog open onOpenChange={(open) => !open && onClose()}>
+        <DialogContent className="sm:max-w-4xl">
+          <DialogHeader>
+            <div className="flex flex-col gap-3 pr-10 sm:flex-row sm:items-center sm:justify-between">
+              <DialogTitle>{`Page ${pageNumber} · ${activeLanguageLabel}`}</DialogTitle>
+              <div
+                className="flex flex-wrap items-center gap-2"
+                aria-label="Story page navigation"
+              >
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  aria-label="Previous page"
+                  disabled={previousPageNumber === null || isPending}
+                  onClick={() => handleNavigatePage(previousPageNumber)}
+                >
+                  <ChevronLeft className="size-4" />
+                  Previous page
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  aria-label="Next page"
+                  disabled={nextPageNumber === null || isPending}
+                  onClick={() => handleNavigatePage(nextPageNumber)}
+                >
+                  Next page
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
             </div>
-          ) : null}
+            <DialogDescription>
+              Complete body, illustration, and audio for the selected locale.
+            </DialogDescription>
+          </DialogHeader>
 
-          {storyPage ? (
-            <LanguageTabs
-              items={languageItems}
-              value={resolvedActiveLanguageCode}
-              onValueChange={setActiveLanguageCode}
-              emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
-              emptyTitle="No parent locales available"
-              renderContent={(item) => {
-                const contentLocalization =
-                  content.localizations.find(
-                    (localization) => localization.languageCode === item.code,
-                  ) ?? null;
+          <DialogBody className="grid gap-6">
+            {storyPageQuery.problem ? (
+              <ProblemAlert problem={storyPageQuery.problem} />
+            ) : null}
 
-                if (!contentLocalization) {
+            {storyPageQuery.isLoading && !storyPage ? (
+              <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground">
+                Loading the latest story page payloads...
+              </div>
+            ) : null}
+
+            {storyPage ? (
+              <LanguageTabs
+                items={languageItems}
+                value={resolvedActiveLanguageCode}
+                onValueChange={setActiveLanguageCode}
+                emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
+                emptyTitle="No parent locales available"
+                renderContent={(item) => {
+                  const contentLocalization =
+                    content.localizations.find(
+                      (localization) => localization.languageCode === item.code,
+                    ) ?? null;
+
+                  if (!contentLocalization) {
+                    return (
+                      <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                        Story page payloads can open only after the parent
+                        content locale exists for this language.
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-                      Story page payloads can open only after the parent content
-                      locale exists for this language.
-                    </div>
-                  );
-                }
-
-                return (
-                  <StoryPageLocalizationForm
-                    key={`${storyPage.pageNumber}-${item.code}`}
-                    contentLocalization={contentLocalization}
-                    isPending={isPending}
-                    storyPage={storyPage}
-                    onSave={({
-                      languageCode,
-                      bodyText,
-                      audioMediaId,
-                      illustrationMediaId,
-                    }) =>
-                      onUpsertLocalization({
-                        pageNumber: storyPage.pageNumber,
+                    <StoryPageLocalizationForm
+                      key={`${storyPage.pageNumber}-${item.code}`}
+                      contentLocalization={contentLocalization}
+                      isPending={isPending}
+                      storyPage={storyPage}
+                      onDirtyChange={handleDirtyChange}
+                      onSave={({
                         languageCode,
                         bodyText,
                         audioMediaId,
                         illustrationMediaId,
-                      })
-                    }
-                  />
-                );
-              }}
-            />
-          ) : null}
-        </DialogBody>
+                      }) =>
+                        onUpsertLocalization({
+                          pageNumber: storyPage.pageNumber,
+                          languageCode,
+                          bodyText,
+                          audioMediaId,
+                          illustrationMediaId,
+                        })
+                      }
+                    />
+                  );
+                }}
+              />
+            ) : null}
+          </DialogBody>
 
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
-            Close editor
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Close editor
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={pendingNavigationPageNumber !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingNavigationPageNumber(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Discard unsaved changes?</DialogTitle>
+            <DialogDescription>
+              This page has unsaved edits. Discard them before moving to another
+              story page.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPendingNavigationPageNumber(null)}
+            >
+              Stay on page
+            </Button>
+            <Button type="button" onClick={handleConfirmNavigation}>
+              Discard changes and continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -576,8 +717,10 @@ function StoryPagesWorkspace({
         content={content}
         pageNumber={editingPageNumber}
         preferredLanguageCode={resolvedPreferredLanguageCode}
+        storyPages={storyPages}
         isPending={storyPageActions.isPending}
         onClose={() => setEditingPageNumber(null)}
+        onNavigatePage={setEditingPageNumber}
         onUpsertLocalization={(input) =>
           storyPageActions.upsertStoryPageLocalization.mutateAsync({
             pageNumber: input.pageNumber,

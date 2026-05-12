@@ -85,6 +85,14 @@ function makeStoryPageState(overrides: Record<string, unknown> = {}) {
 }
 
 function makeStoryPageQuery(pageNumber?: number | null) {
+  const matchingStoryPage = storyPageViewModels.find(
+    (storyPage) => storyPage.pageNumber === pageNumber,
+  );
+
+  if (matchingStoryPage) {
+    return matchingStoryPage;
+  }
+
   if (pageNumber === 3) {
     return {
       ...storyPageViewModels[0],
@@ -100,6 +108,59 @@ function makeStoryPageQuery(pageNumber?: number | null) {
   }
 
   return storyPageViewModels[0];
+}
+
+function makeStoryPagesWithThree() {
+  return [...storyPageViewModels, makeStoryPageQuery(3)];
+}
+
+function mockStoryRouteDependencies({
+  storyPages = storyPageViewModels,
+  upsertStoryPageLocalization = vi.fn(),
+}: {
+  storyPages?: typeof storyPageViewModels;
+  upsertStoryPageLocalization?: ReturnType<typeof vi.fn>;
+} = {}) {
+  contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
+  storyPageHookMocks.useStoryPages.mockReturnValue(
+    makeStoryPageState({ storyPages }),
+  );
+  storyPageHookMocks.useStoryPage.mockImplementation(
+    (_contentId, pageNumber) => ({
+      storyPage: makeStoryPageQuery(pageNumber),
+      isLoading: false,
+      problem: null,
+    }),
+  );
+  storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+    addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    upsertStoryPageLocalization: {
+      isPending: false,
+      mutateAsync: upsertStoryPageLocalization,
+    },
+    isPending: false,
+  });
+  recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+    assets: [],
+    isLoading: false,
+    isSuccess: true,
+    problem: null,
+  });
+  recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+    assets: [],
+    isLoading: false,
+    isSuccess: true,
+    problem: null,
+  });
+  assetDetailHookMocks.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+  });
+
+  return { upsertStoryPageLocalization };
 }
 
 function renderStoryRoute(initialEntry = "/contents/1/story-pages") {
@@ -378,6 +439,118 @@ describe("StoryPagesRoute", () => {
     fireEvent.click(screen.getByRole("button", { name: /edit page 1/i }));
 
     expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
+
+  it("shows previous and next controls in the page editor header", () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 2/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /page 2 .* english/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /previous page/i }),
+    ).toBeEnabled();
+    expect(screen.getByRole("button", { name: /next page/i })).toBeEnabled();
+  });
+
+  it("moves to the previous and next story pages without closing the editor", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 2/i }));
+    fireEvent.click(screen.getByRole("button", { name: /previous page/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /page 1 .* english/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /page 3 .* english/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("disables boundary navigation controls", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 1/i }));
+
+    expect(
+      screen.getByRole("button", { name: /previous page/i }),
+    ).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /page 3 .* english/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /next page/i })).toBeDisabled();
+  });
+
+  it("keeps the active editor language while navigating story pages", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute("/contents/1/story-pages?language=tr");
+
+    fireEvent.click(screen.getByRole("button", { name: /continue page 2/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /page 2 .* turkish/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /page 3 .* turkish/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
+
+  it("asks before discarding dirty editor changes during page navigation", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 2/i }));
+    fireEvent.change(screen.getAllByLabelText(/body text/i)[0]!, {
+      target: { value: "Unsaved page draft." },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /discard unsaved changes/i,
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /stay on page/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /page 2 .* english/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: /discard unsaved changes/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /next page/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /discard changes and continue/i }),
+    );
+
+    expect(
+      await screen.findByRole("heading", { name: /page 3 .* english/i }),
+    ).toBeInTheDocument();
   });
 
   it("creates a page immediately and opens the editor", async () => {

@@ -30,6 +30,7 @@ vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
 }));
 
 beforeEach(() => {
+  vi.mocked(assetAdminApi.getAsset).mockReset();
   assetDetailHookMock.useAssetDetail.mockReset();
   uploadAssetHookMock.useUploadAsset.mockReset();
   assetDetailHookMock.useAssetDetail.mockReturnValue({
@@ -204,5 +205,97 @@ describe("StoryPageLocalizationForm", () => {
     expect(mediaGroup).toContainElement(
       screen.getByTestId("story-page-en-audio-asset-dropzone"),
     );
+  });
+
+  it("reports dirty state when body text changes", async () => {
+    const onDirtyChange = vi.fn();
+
+    render(
+      <StoryPageLocalizationForm
+        contentLocalization={storyContentViewModel.localizations[0]!}
+        storyPage={firstStoryPageViewModel}
+        onDirtyChange={onDirtyChange}
+        onSave={vi.fn()}
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText(/body text/i), {
+      target: { value: "A changed page draft." },
+    });
+
+    await waitFor(() => {
+      expect(onDirtyChange).toHaveBeenCalledWith("en", true);
+    });
+  });
+
+  it("reports dirty state when an asset field changes", async () => {
+    const onDirtyChange = vi.fn();
+
+    render(
+      <StoryPageLocalizationForm
+        contentLocalization={storyContentViewModel.localizations[0]!}
+        storyPage={firstStoryPageViewModel}
+        onDirtyChange={onDirtyChange}
+        onSave={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[0]!);
+    fireEvent.change(screen.getByLabelText(/illustration asset id/i), {
+      target: { value: "44" },
+    });
+
+    await waitFor(() => {
+      expect(onDirtyChange).toHaveBeenCalledWith("en", true);
+    });
+  });
+
+  it("clears dirty state after a successful save reset", async () => {
+    const onDirtyChange = vi.fn();
+    const onSave = vi.fn().mockResolvedValue({
+      contentId: 1,
+      pageNumber: 1,
+      languageCode: "en",
+      bodyText: "Saved page body.",
+      audioMediaId: 81,
+      illustrationMediaId: 41,
+    });
+
+    vi.mocked(assetAdminApi.getAsset).mockImplementation(async (assetId) => ({
+      assetId,
+      provider: "LOCAL_STUB",
+      objectPath: `/content/assets/${assetId}`,
+      mediaType: assetId === 81 ? "AUDIO" : "IMAGE",
+      kind: assetId === 81 ? "ORIGINAL_AUDIO" : "ORIGINAL_IMAGE",
+      mimeType: assetId === 81 ? "audio/mpeg" : "image/jpeg",
+      byteSize: null,
+      checksumSha256: null,
+      cachedDownloadUrl: null,
+      downloadUrlCachedAt: null,
+      downloadUrlExpiresAt: null,
+      createdAt: "2026-03-31T12:00:00Z",
+      updatedAt: "2026-03-31T12:00:00Z",
+    }));
+
+    render(
+      <StoryPageLocalizationForm
+        contentLocalization={storyContentViewModel.localizations[0]!}
+        storyPage={firstStoryPageViewModel}
+        onDirtyChange={onDirtyChange}
+        onSave={onSave}
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText(/body text/i), {
+      target: { value: "Saved page body." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /save page localization/i }),
+    );
+
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalled();
+      expect(onDirtyChange).toHaveBeenCalledWith("en", false);
+    });
   });
 });

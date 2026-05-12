@@ -34,6 +34,7 @@ type StoryPageLocalizationFormProps = {
   storyPage: StoryPageReadViewModel;
   contentLocalization: ContentLocalizationViewModel;
   isPending?: boolean;
+  onDirtyChange?: (languageCode: string, isDirty: boolean) => void;
   onSave: (input: {
     languageCode: string;
     bodyText: string | null;
@@ -62,6 +63,7 @@ export function StoryPageLocalizationForm({
   storyPage,
   contentLocalization,
   isPending = false,
+  onDirtyChange,
   onSave,
 }: StoryPageLocalizationFormProps) {
   const { locale } = useI18n();
@@ -227,6 +229,7 @@ export function StoryPageLocalizationForm({
   const hasAudioAsset = audioMediaId !== null;
   const hasIllustration = typeof illustrationMediaId === "number";
   const isReadyForPublish = hasBodyText && hasAudioAsset && hasIllustration;
+  const isFormDirty = form.formState.isDirty;
 
   useEffect(() => {
     form.reset(
@@ -236,7 +239,17 @@ export function StoryPageLocalizationForm({
             contentLocalization.languageCode,
           ),
     );
-  }, [contentLocalization.languageCode, existingLocalization, form]);
+    onDirtyChange?.(contentLocalization.languageCode, false);
+  }, [
+    contentLocalization.languageCode,
+    existingLocalization,
+    form,
+    onDirtyChange,
+  ]);
+
+  useEffect(() => {
+    onDirtyChange?.(contentLocalization.languageCode, isFormDirty);
+  }, [contentLocalization.languageCode, isFormDirty, onDirtyChange]);
 
   async function handleSubmit(values: StoryPageLocalizationFormValues) {
     form.clearErrors();
@@ -291,6 +304,7 @@ export function StoryPageLocalizationForm({
         audioMediaId: savedLocalization.audioMediaId,
         illustrationMediaId: savedLocalization.illustrationMediaId,
       });
+      onDirtyChange?.(savedLocalization.languageCode, false);
     } catch (error) {
       if (error instanceof ApiClientError) {
         if (error.problem.errorCode === "asset_media_type_mismatch") {
