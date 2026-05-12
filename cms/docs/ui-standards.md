@@ -97,6 +97,10 @@ Detail and workspace routes must follow one shared composition contract.
 - Story-page illustration and audio pickers for the same locale must be grouped as one media workspace:
   - desktop and tablet layouts should pair the image and audio pickers in a balanced two-column grid
   - narrow layouts may stack the pickers, but they must keep compact editor density
+- Asset picker fields that support uploads must also support direct file drop:
+  - accepted file types must match the picker media type
+  - invalid type, empty drop, and multi-file drop states must show inline feedback
+  - upload progress must be visible and the existing upload/browse buttons must remain available as non-drag alternatives
 - When a cover or illustration field directly supports publishing decisions, prefer a balanced two-column block:
   - media card on the left
   - compact metadata stack on the right

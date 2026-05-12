@@ -47,10 +47,7 @@ function renderRoute() {
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={["/media-processing"]}>
         <Routes>
-          <Route
-            path="/media-processing"
-            element={<MediaProcessingRoute />}
-          />
+          <Route path="/media-processing" element={<MediaProcessingRoute />} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -112,7 +109,9 @@ describe("MediaProcessingRoute", () => {
     expect(
       screen.getAllByRole("button", { name: /retry/i }).length,
     ).toBeGreaterThan(0);
-    expect(screen.getByRole("button", { name: /schedule processing/i })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: /schedule processing/i }),
+    ).toBeEnabled();
   });
 
   it("refreshes the recent processing query on demand", () => {
@@ -165,10 +164,34 @@ describe("MediaProcessingRoute", () => {
   it("opens the schedule dialog on demand", () => {
     renderRoute();
 
-    fireEvent.click(screen.getByRole("button", { name: /schedule processing/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /schedule processing/i }),
+    );
 
     expect(
       screen.getByRole("heading", { name: /schedule processing/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("schedule-cover-source-asset-dropzone"),
+    ).toBeVisible();
+    expect(
+      screen.getByTestId("schedule-audio-source-asset-dropzone"),
+    ).toBeVisible();
+  });
+
+  it("exposes direct drop zones in the retry dialog", () => {
+    renderRoute();
+
+    fireEvent.click(screen.getAllByRole("button", { name: /retry/i })[0]!);
+
+    expect(
+      screen.getByRole("heading", { name: /retry processing/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("retry-cover-source-asset-dropzone"),
+    ).toBeVisible();
+    expect(
+      screen.getByTestId("retry-audio-source-asset-dropzone"),
+    ).toBeVisible();
   });
 });

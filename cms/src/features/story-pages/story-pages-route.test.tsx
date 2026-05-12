@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StoryPagesRoute } from "@/app/routes/story-pages";
 import {
@@ -28,6 +28,9 @@ const recentAudioAssetHookMocks = vi.hoisted(() => ({
 const assetDetailHookMocks = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
 }));
+const uploadAssetHookMocks = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
+}));
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
   useContentDetail: contentDetailHookMocks.useContentDetail,
@@ -52,6 +55,10 @@ vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
 
 vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMocks.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMocks.useUploadAsset,
 }));
 
 function makeDetailState(overrides: Record<string, unknown> = {}) {
@@ -107,6 +114,16 @@ function renderStoryRoute(initialEntry = "/contents/1/story-pages") {
     </MemoryRouter>,
   );
 }
+
+beforeEach(() => {
+  uploadAssetHookMocks.useUploadAsset.mockReset();
+  uploadAssetHookMocks.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
+  });
+});
 
 describe("StoryPagesRoute", () => {
   it("renders the story-only route shell for STORY content", () => {

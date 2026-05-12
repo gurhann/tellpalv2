@@ -14,6 +14,9 @@ const contentLocalizationActionsMock = vi.hoisted(() => ({
 const assetDetailHookMock = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
 }));
+const uploadAssetHookMock = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
+}));
 
 vi.mock(
   "@/features/contents/mutations/use-content-localization-actions",
@@ -25,6 +28,10 @@ vi.mock(
 
 vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMock.useUploadAsset,
 }));
 
 function makeMutationState(overrides: Record<string, unknown> = {}) {
@@ -40,6 +47,7 @@ function makeMutationState(overrides: Record<string, unknown> = {}) {
 beforeEach(() => {
   contentLocalizationActionsMock.useContentLocalizationActions.mockReset();
   assetDetailHookMock.useAssetDetail.mockReset();
+  uploadAssetHookMock.useUploadAsset.mockReset();
   contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue({
     saveLocalization: makeMutationState(),
     publishLocalization: makeMutationState(),
@@ -50,6 +58,12 @@ beforeEach(() => {
     isLoading: false,
     problem: null,
     isNotFound: false,
+  });
+  uploadAssetHookMock.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
   });
 });
 

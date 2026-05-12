@@ -287,7 +287,8 @@ export function RetryProcessingDialog({
                       {job.lastErrorCode ?? "No code"}
                     </p>
                     <p className="mt-1 text-sm leading-6 text-rose-800">
-                      {job.lastErrorMessage ?? "No detailed message was stored."}
+                      {job.lastErrorMessage ??
+                        "No detailed message was stored."}
                     </p>
                   </div>
                 ) : null}
@@ -307,6 +308,7 @@ export function RetryProcessingDialog({
                         pickerDescription={copy.coverPickerDescription}
                         pickerTitle={copy.coverPickerTitle}
                         placeholder={copy.optional}
+                        testId="retry-cover-source-asset"
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -327,6 +329,7 @@ export function RetryProcessingDialog({
                         pickerDescription={copy.audioPickerDescription}
                         pickerTitle={copy.audioPickerTitle}
                         placeholder={copy.optional}
+                        testId="retry-audio-source-asset"
                         value={field.value}
                         onChange={field.onChange}
                       />

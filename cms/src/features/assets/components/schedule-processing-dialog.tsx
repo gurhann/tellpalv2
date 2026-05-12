@@ -308,7 +308,10 @@ export function ScheduleProcessingDialog({
                       }
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
-                      <SelectTrigger className="w-full" aria-label={copy.content}>
+                      <SelectTrigger
+                        className="w-full"
+                        aria-label={copy.content}
+                      >
                         <SelectValue placeholder={copy.contentPlaceholder} />
                       </SelectTrigger>
                       <SelectContent>
@@ -344,7 +347,10 @@ export function ScheduleProcessingDialog({
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full" aria-label={copy.language}>
+                      <SelectTrigger
+                        className="w-full"
+                        aria-label={copy.language}
+                      >
                         <SelectValue placeholder={copy.languagePlaceholder} />
                       </SelectTrigger>
                       <SelectContent>
@@ -365,13 +371,17 @@ export function ScheduleProcessingDialog({
                     {copy.noLocalizations}
                   </p>
                 ) : (
-                  <p className="text-sm text-muted-foreground">{copy.readOnly}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {copy.readOnly}
+                  </p>
                 )}
                 <FieldError error={form.formState.errors.languageCode} />
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-foreground">{copy.type}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {copy.type}
+                </p>
                 <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-3 text-sm text-foreground">
                   {selectedContent?.summary.typeLabel ?? "—"}
                 </div>
@@ -411,6 +421,7 @@ export function ScheduleProcessingDialog({
                     pickerDescription={copy.coverPickerDescription}
                     pickerTitle={copy.coverPickerTitle}
                     placeholder={copy.optional}
+                    testId="schedule-cover-source-asset"
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -431,6 +442,7 @@ export function ScheduleProcessingDialog({
                     pickerDescription={copy.audioPickerDescription}
                     pickerTitle={copy.audioPickerTitle}
                     placeholder={copy.optional}
+                    testId="schedule-audio-source-asset"
                     value={field.value}
                     onChange={field.onChange}
                   />

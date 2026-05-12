@@ -22,6 +22,10 @@ const assetDetailHookMock = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
 }));
 
+const uploadAssetHookMock = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
+}));
+
 vi.mock(
   "@/features/categories/mutations/use-category-localization-actions",
   () => ({
@@ -41,6 +45,10 @@ vi.mock("@/features/story-pages/lib/illustration-asset-validation", () => ({
 
 vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMock.useUploadAsset,
 }));
 
 function makeProblem(
@@ -85,6 +93,7 @@ beforeEach(() => {
   recentImageAssetHookMocks.useRecentImageAssets.mockReset();
   illustrationValidationMocks.validateIllustrationAssetId.mockReset();
   assetDetailHookMock.useAssetDetail.mockReset();
+  uploadAssetHookMock.useUploadAsset.mockReset();
 
   localizationActionHookMock.useCategoryLocalizationActions.mockReturnValue({
     saveLocalization: makeLocalizationMutationState(),
@@ -101,6 +110,12 @@ beforeEach(() => {
     isLoading: false,
     problem: null,
     isNotFound: false,
+  });
+  uploadAssetHookMock.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
   });
 });
 
@@ -187,7 +202,9 @@ describe("CategoryLocalizationForm", () => {
       />,
     );
 
-    const imageLayout = screen.getByTestId("category-localization-cover-layout");
+    const imageLayout = screen.getByTestId(
+      "category-localization-cover-layout",
+    );
     const imageRow = screen.getByTestId("category-localization-image-row");
     const metadataRow = screen.getByTestId(
       "category-localization-metadata-row",
@@ -198,6 +215,9 @@ describe("CategoryLocalizationForm", () => {
     expect(imageLayout).toContainElement(metadataRow);
     expect(imageRow).toContainElement(
       screen.getByTestId("category-localization-image-asset"),
+    );
+    expect(imageRow).toContainElement(
+      screen.getByTestId("category-localization-image-asset-dropzone"),
     );
     expect(metadataRow).toContainElement(statusTrigger);
     expect(imageRow).not.toContainElement(statusTrigger);

@@ -11,6 +11,10 @@ const assetDetailHookMock = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
 }));
 
+const uploadAssetHookMock = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
+}));
+
 vi.mock("@/features/assets/api/asset-admin", () => ({
   assetAdminApi: {
     getAsset: vi.fn(),
@@ -21,13 +25,24 @@ vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMock.useAssetDetail,
 }));
 
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMock.useUploadAsset,
+}));
+
 beforeEach(() => {
   assetDetailHookMock.useAssetDetail.mockReset();
+  uploadAssetHookMock.useUploadAsset.mockReset();
   assetDetailHookMock.useAssetDetail.mockReturnValue({
     asset: null,
     isLoading: false,
     problem: null,
     isNotFound: false,
+  });
+  uploadAssetHookMock.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
   });
 });
 
@@ -181,7 +196,13 @@ describe("StoryPageLocalizationForm", () => {
       screen.getByTestId("story-page-en-illustration-asset"),
     );
     expect(mediaGroup).toContainElement(
+      screen.getByTestId("story-page-en-illustration-asset-dropzone"),
+    );
+    expect(mediaGroup).toContainElement(
       screen.getByTestId("story-page-en-audio-asset"),
+    );
+    expect(mediaGroup).toContainElement(
+      screen.getByTestId("story-page-en-audio-asset-dropzone"),
     );
   });
 });

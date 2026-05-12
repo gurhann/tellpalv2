@@ -1,5 +1,5 @@
 import { LoaderCircle, UploadCloud } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type DragEvent } from "react";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
@@ -20,10 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  createTypedBrowserFile,
+  formatByteSize,
+  getAcceptForUploadKind,
+  getUploadKindForMimeType,
+  inferMimeType,
+  uploadKindMatchesMimeType,
+} from "@/features/assets/lib/asset-upload-file";
 import { useUploadAsset } from "@/features/assets/mutations/use-upload-asset";
 import type { AssetViewModel } from "@/features/assets/model/asset-view-model";
 import type { UploadableAssetKind } from "@/features/assets/api/asset-admin";
 import { useI18n } from "@/i18n/locale-provider";
+import { cn } from "@/lib/utils";
 
 type AssetUploadDialogProps = {
   open: boolean;
@@ -33,49 +42,6 @@ type AssetUploadDialogProps = {
   title?: string;
   description?: string;
 };
-
-function inferMimeType(file: File) {
-  if (file.type) {
-    return file.type;
-  }
-
-  const normalizedName = file.name.trim().toLowerCase();
-  if (normalizedName.endsWith(".jpg") || normalizedName.endsWith(".jpeg")) {
-    return "image/jpeg";
-  }
-  if (normalizedName.endsWith(".png")) {
-    return "image/png";
-  }
-  if (normalizedName.endsWith(".webp")) {
-    return "image/webp";
-  }
-  if (normalizedName.endsWith(".mp3")) {
-    return "audio/mpeg";
-  }
-  if (normalizedName.endsWith(".wav")) {
-    return "audio/wav";
-  }
-  if (normalizedName.endsWith(".m4a")) {
-    return "audio/mp4";
-  }
-  if (normalizedName.endsWith(".ogg")) {
-    return "audio/ogg";
-  }
-  return null;
-}
-
-function formatByteSize(byteSize: number) {
-  if (byteSize < 1024) {
-    return `${byteSize} B`;
-  }
-
-  const kiloBytes = byteSize / 1024;
-  if (kiloBytes < 1024) {
-    return `${kiloBytes.toFixed(1)} KB`;
-  }
-
-  return `${(kiloBytes / 1024).toFixed(1)} MB`;
-}
 
 export function AssetUploadDialog({
   open,
@@ -100,6 +66,8 @@ export function AssetUploadDialog({
           imageRequired:
             "Orijinal görsel yüklemeleri bir görsel dosyası gerektirir.",
           audioRequired: "Orijinal ses yüklemeleri bir ses dosyası gerektirir.",
+          dropFile: "Bir gorsel veya ses dosyasini buraya birakin.",
+          multipleFiles: "Tek seferde yalnizca bir dosya birakin.",
           progress: "Yükleme ilerlemesi",
           invalidTitle: "Yükleme isteği geçersiz",
           cancel: "İptal",
@@ -118,6 +86,8 @@ export function AssetUploadDialog({
             "The browser could not infer a supported MIME type from the selected file.",
           imageRequired: "Original image uploads require an image file.",
           audioRequired: "Original audio uploads require an audio file.",
+          dropFile: "Drop one image or audio file here.",
+          multipleFiles: "Drop one file at a time.",
           progress: "Upload progress",
           invalidTitle: "Upload request is invalid",
           cancel: "Cancel",
@@ -130,7 +100,7 @@ export function AssetUploadDialog({
       {
         value: "ORIGINAL_IMAGE" as const,
         label: locale === "tr" ? "Orijinal görsel" : "Original image",
-        accept: "image/*",
+        accept: getAcceptForUploadKind("ORIGINAL_IMAGE"),
         helper:
           locale === "tr"
             ? "Kaynak illüstrasyonları, kapakları veya ham görsel çalışmaları yükleyin."
@@ -139,7 +109,7 @@ export function AssetUploadDialog({
       {
         value: "ORIGINAL_AUDIO" as const,
         label: locale === "tr" ? "Orijinal ses" : "Original audio",
-        accept: "audio/*",
+        accept: getAcceptForUploadKind("ORIGINAL_AUDIO"),
         helper:
           locale === "tr"
             ? "Kaynak anlatımı veya özgün uzun form ses dosyasını yükleyin."
@@ -156,6 +126,7 @@ export function AssetUploadDialog({
   const [validationMessage, setValidationMessage] = useState<string | null>(
     null,
   );
+  const [isDropActive, setIsDropActive] = useState(false);
   const uploadMutation = useUploadAsset({
     onSuccess: async (asset) => {
       onUploaded?.(asset);
@@ -185,6 +156,110 @@ export function AssetUploadDialog({
     onOpenChange(nextOpen);
   }
 
+  function hasDraggedFiles(dataTransfer: DataTransfer) {
+    return Array.from(dataTransfer.types).includes("Files");
+  }
+
+  function getFileKindValidationMessage(
+    file: File,
+    nextKind: UploadableAssetKind,
+  ) {
+    const mimeType = inferMimeType(file);
+    if (!mimeType) {
+      return copy.unsupportedMime;
+    }
+
+    if (!uploadKindMatchesMimeType(nextKind, mimeType)) {
+      return nextKind === "ORIGINAL_IMAGE"
+        ? copy.imageRequired
+        : copy.audioRequired;
+    }
+
+    return null;
+  }
+
+  function selectUploadFile(file: File | null) {
+    if (!file) {
+      setSelectedFile(null);
+      setValidationMessage(null);
+      return;
+    }
+
+    const mimeType = inferMimeType(file);
+    if (!mimeType) {
+      setSelectedFile(null);
+      setValidationMessage(copy.unsupportedMime);
+      return;
+    }
+
+    const nextKind = fixedKind ?? getUploadKindForMimeType(mimeType);
+    if (!nextKind) {
+      setSelectedFile(null);
+      setValidationMessage(copy.unsupportedMime);
+      return;
+    }
+
+    const validationError = getFileKindValidationMessage(file, nextKind);
+    if (validationError) {
+      setSelectedFile(null);
+      setValidationMessage(validationError);
+      return;
+    }
+
+    setSelectedKind(nextKind);
+    setSelectedFile(file);
+    setValidationMessage(null);
+  }
+
+  function handleDragEnter(event: DragEvent<HTMLDivElement>) {
+    if (uploadMutation.isPending || !hasDraggedFiles(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    setIsDropActive(true);
+  }
+
+  function handleDragOver(event: DragEvent<HTMLDivElement>) {
+    if (uploadMutation.isPending || !hasDraggedFiles(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    setIsDropActive(true);
+  }
+
+  function handleDragLeave(event: DragEvent<HTMLDivElement>) {
+    const nextTarget = event.relatedTarget;
+    if (
+      nextTarget instanceof Node &&
+      event.currentTarget.contains(nextTarget)
+    ) {
+      return;
+    }
+
+    setIsDropActive(false);
+  }
+
+  function handleDrop(event: DragEvent<HTMLDivElement>) {
+    if (uploadMutation.isPending) {
+      return;
+    }
+
+    event.preventDefault();
+    setIsDropActive(false);
+
+    const files = Array.from(event.dataTransfer.files);
+    if (files.length !== 1) {
+      setSelectedFile(null);
+      setValidationMessage(copy.multipleFiles);
+      return;
+    }
+
+    selectUploadFile(files[0]!);
+  }
+
   async function handleSubmit() {
     if (!selectedFile) {
       setValidationMessage(copy.chooseFile);
@@ -197,28 +272,18 @@ export function AssetUploadDialog({
       return;
     }
 
-    if (
-      selectedKind === "ORIGINAL_IMAGE" &&
-      !mimeType.toLowerCase().startsWith("image/")
-    ) {
-      setValidationMessage(copy.imageRequired);
-      return;
-    }
-
-    if (
-      selectedKind === "ORIGINAL_AUDIO" &&
-      !mimeType.toLowerCase().startsWith("audio/")
-    ) {
-      setValidationMessage(copy.audioRequired);
+    const validationError = getFileKindValidationMessage(
+      selectedFile,
+      selectedKind,
+    );
+    if (validationError) {
+      setValidationMessage(validationError);
       return;
     }
 
     setValidationMessage(null);
     setProgress(0);
-    const browserFile = new File([selectedFile], selectedFile.name, {
-      type: mimeType,
-      lastModified: selectedFile.lastModified,
-    });
+    const browserFile = createTypedBrowserFile(selectedFile, mimeType);
     await uploadMutation.mutateAsync({
       file: browserFile,
       kind: selectedKind,
@@ -280,7 +345,17 @@ export function AssetUploadDialog({
             </div>
           )}
 
-          <div className="grid gap-2">
+          <div
+            className={cn(
+              "grid gap-2 rounded-2xl border border-dashed border-border/70 bg-muted/15 p-3 transition-colors",
+              isDropActive && "border-primary bg-primary/8",
+            )}
+            data-testid="asset-upload-dialog-dropzone"
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
             <label
               className="text-sm font-medium text-foreground"
               htmlFor="asset-upload-file"
@@ -292,11 +367,11 @@ export function AssetUploadDialog({
               accept={selectedKindOption.accept}
               disabled={uploadMutation.isPending}
               onChange={(event) => {
-                setSelectedFile(event.target.files?.[0] ?? null);
-                setValidationMessage(null);
+                selectUploadFile(event.target.files?.[0] ?? null);
               }}
               type="file"
             />
+            <p className="text-sm text-muted-foreground">{copy.dropFile}</p>
           </div>
 
           {selectedFile ? (

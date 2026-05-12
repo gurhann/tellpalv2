@@ -22,6 +22,10 @@ const assetDetailHookMock = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
 }));
 
+const uploadAssetHookMock = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
+}));
+
 vi.mock(
   "@/features/contents/mutations/use-content-localization-actions",
   () => ({
@@ -32,6 +36,10 @@ vi.mock(
 
 vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMock.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMock.useUploadAsset,
 }));
 
 function makeProblem(
@@ -72,6 +80,7 @@ function makeMutationState(overrides: Record<string, unknown> = {}) {
 beforeEach(() => {
   contentLocalizationActionsMock.useContentLocalizationActions.mockReset();
   assetDetailHookMock.useAssetDetail.mockReset();
+  uploadAssetHookMock.useUploadAsset.mockReset();
   contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue({
     saveLocalization: makeMutationState(),
     publishLocalization: makeMutationState(),
@@ -82,6 +91,12 @@ beforeEach(() => {
     isLoading: false,
     problem: null,
     isNotFound: false,
+  });
+  uploadAssetHookMock.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
   });
 });
 
@@ -116,6 +131,9 @@ describe("ContentLocalizationForm", () => {
 
     expect(screen.getByLabelText(/body text/i)).toBeVisible();
     expect(screen.getByText(/audio asset/i)).toBeVisible();
+    expect(
+      screen.getByTestId("content-localization-audio-asset-dropzone"),
+    ).toBeVisible();
     expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
   });
 
@@ -139,6 +157,9 @@ describe("ContentLocalizationForm", () => {
     expect(coverLayout).toContainElement(metadataRow);
     expect(coverRow).toContainElement(
       screen.getByTestId("content-localization-cover-asset"),
+    );
+    expect(coverRow).toContainElement(
+      screen.getByTestId("content-localization-cover-asset-dropzone"),
     );
     expect(metadataRow).toContainElement(
       screen.getByLabelText(/duration minutes/i),
