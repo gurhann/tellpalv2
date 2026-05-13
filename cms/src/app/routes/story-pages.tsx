@@ -155,10 +155,13 @@ function EditStoryPageDialog({
   );
   const [pendingNavigationPageNumber, setPendingNavigationPageNumber] =
     useState<number | null>(null);
+  const [isPendingCloseConfirmationOpen, setIsPendingCloseConfirmationOpen] =
+    useState(false);
 
   useEffect(() => {
     setDirtyLanguages({});
     setPendingNavigationPageNumber(null);
+    setIsPendingCloseConfirmationOpen(false);
   }, [pageNumber]);
 
   const handleDirtyChange = useCallback(
@@ -227,6 +230,19 @@ function EditStoryPageDialog({
     onNavigatePage(targetPageNumber);
   }
 
+  function handleRequestClose() {
+    if (isPending) {
+      return;
+    }
+
+    if (hasUnsavedChanges) {
+      setIsPendingCloseConfirmationOpen(true);
+      return;
+    }
+
+    onClose();
+  }
+
   function handleConfirmNavigation() {
     if (pendingNavigationPageNumber === null) {
       return;
@@ -238,9 +254,15 @@ function EditStoryPageDialog({
     onNavigatePage(targetPageNumber);
   }
 
+  function handleConfirmClose() {
+    setDirtyLanguages({});
+    setIsPendingCloseConfirmationOpen(false);
+    onClose();
+  }
+
   return (
     <>
-      <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <Dialog open onOpenChange={(open) => !open && handleRequestClose()}>
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
             <div className="flex flex-col gap-3 pr-10 sm:flex-row sm:items-center sm:justify-between">
@@ -340,7 +362,11 @@ function EditStoryPageDialog({
           </DialogBody>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleRequestClose}
+            >
               Close editor
             </Button>
           </DialogFooter>
@@ -373,6 +399,37 @@ function EditStoryPageDialog({
             </Button>
             <Button type="button" onClick={handleConfirmNavigation}>
               Discard changes and continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isPendingCloseConfirmationOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsPendingCloseConfirmationOpen(false);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Discard unsaved changes?</DialogTitle>
+            <DialogDescription>
+              This page has unsaved edits. Discard them before closing the
+              editor.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsPendingCloseConfirmationOpen(false)}
+            >
+              Stay on page
+            </Button>
+            <Button type="button" onClick={handleConfirmClose}>
+              Discard changes and close
             </Button>
           </DialogFooter>
         </DialogContent>

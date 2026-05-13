@@ -553,6 +553,45 @@ describe("StoryPagesRoute", () => {
     ).toBeInTheDocument();
   });
 
+  it("asks before discarding dirty editor changes when closing the editor", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute();
+
+    fireEvent.click(screen.getByRole("button", { name: /edit page 2/i }));
+    fireEvent.change(screen.getAllByLabelText(/body text/i)[0]!, {
+      target: { value: "Unsaved page draft." },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /close editor/i }));
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /discard unsaved changes/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/discard them before closing the editor/i),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /stay on page/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /page 2 .* english/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /close editor/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /discard changes and close/i }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("heading", { name: /page 2 .* english/i }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   it("creates a page immediately and opens the editor", async () => {
     const addStoryPage = vi.fn().mockResolvedValue({
       contentId: 1,
