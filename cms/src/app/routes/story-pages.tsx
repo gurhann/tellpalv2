@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
+  Play,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -40,6 +41,7 @@ import type {
   StoryPageReadViewModel,
 } from "@/features/contents/model/content-view-model";
 import type { AdminStoryPageLocalizationResponse } from "@/features/contents/api/story-page-admin";
+import { StoryContentPreviewDialog } from "@/features/story-pages/components/story-content-preview-dialog";
 import { StoryPageLocalizationForm } from "@/features/story-pages/components/story-page-localization-form";
 import { StoryPageTable } from "@/features/story-pages/components/story-page-table";
 import { StoryContentGuard } from "@/features/story-pages/guards/story-content-guard";
@@ -529,12 +531,16 @@ type StoryPagesWorkspaceProps = {
   content: ContentReadViewModel;
   preferredLanguageCode?: string | null;
   onPreferredLanguageCodeChange?: (languageCode: string) => void;
+  initialEditingPageNumber?: number | null;
+  onEditingPageNumberChange?: (pageNumber: number | null) => void;
 };
 
 function StoryPagesWorkspace({
   content,
   preferredLanguageCode = null,
   onPreferredLanguageCodeChange,
+  initialEditingPageNumber = null,
+  onEditingPageNumberChange,
 }: StoryPagesWorkspaceProps) {
   const { locale } = useI18n();
   const storyPagesQuery = useStoryPages(content.summary.id);
@@ -544,6 +550,7 @@ function StoryPagesWorkspace({
   const [editingPageNumber, setEditingPageNumber] = useState<number | null>(
     null,
   );
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [deletingStoryPage, setDeletingStoryPage] =
     useState<StoryPageReadViewModel | null>(null);
 
@@ -587,6 +594,16 @@ function StoryPagesWorkspace({
     ),
   ).length;
   const isMutating = storyPageActions.isPending;
+
+  useEffect(() => {
+    setEditingPageNumber(initialEditingPageNumber ?? null);
+  }, [initialEditingPageNumber]);
+
+  function handleEditingPageNumberChange(pageNumber: number | null) {
+    setEditingPageNumber(pageNumber);
+    onEditingPageNumberChange?.(pageNumber);
+  }
+
   const copy =
     locale === "tr"
       ? {
@@ -597,6 +614,7 @@ function StoryPagesWorkspace({
           readinessDescription:
             "Rail yalnizca bir sonraki editor kararini destekleyen sayfa durumlarini gosterir.",
           returnToContent: "Icerik detayina don",
+          previewStory: "Hikayeyi onizle",
           addPage: "Sayfa ekle",
           addFirstPage: "Ilk sayfayi ekle",
           activeLocale: "Aktif dil",
@@ -616,6 +634,7 @@ function StoryPagesWorkspace({
           readinessDescription:
             "The rail stays compact and only tracks the next operational decision.",
           returnToContent: "Return to content detail",
+          previewStory: "Preview story",
           addPage: "Add story page",
           addFirstPage: "Add first story page",
           activeLocale: "Active locale",
@@ -640,7 +659,7 @@ function StoryPagesWorkspace({
       },
     );
 
-    setEditingPageNumber(storyPage.pageNumber);
+    handleEditingPageNumberChange(storyPage.pageNumber);
   }
 
   return (
@@ -684,6 +703,15 @@ function StoryPagesWorkspace({
                 <ArrowLeft className="size-4" />
                 {copy.returnToContent}
               </Link>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsPreviewOpen(true)}
+              disabled={storyPagesQuery.isLoading && storyPages.length === 0}
+            >
+              <Play className="size-4" />
+              {copy.previewStory}
             </Button>
             <Button
               type="button"
@@ -749,7 +777,7 @@ function StoryPagesWorkspace({
           problem={storyPagesQuery.problem}
           onRetry={() => void storyPagesQuery.refetch()}
           onEditStoryPage={(storyPage) =>
-            setEditingPageNumber(storyPage.pageNumber)
+            handleEditingPageNumberChange(storyPage.pageNumber)
           }
           onAddAfterStoryPage={(storyPage) =>
             void handleAddStoryPage(storyPage.pageNumber)
@@ -769,6 +797,21 @@ function StoryPagesWorkspace({
         />
       </ContentPageShell>
 
+      <StoryContentPreviewDialog
+        content={content}
+        storyPages={storyPages}
+        languageCode={resolvedPreferredLanguageCode}
+        open={isPreviewOpen}
+        isLoading={storyPagesQuery.isLoading}
+        problem={storyPagesQuery.problem}
+        onRetry={() => void storyPagesQuery.refetch()}
+        onOpenChange={setIsPreviewOpen}
+        onEditPage={(pageNumber) => {
+          setIsPreviewOpen(false);
+          handleEditingPageNumberChange(pageNumber);
+        }}
+      />
+
       <EditStoryPageDialog
         key={editingPageNumber ?? "story-page-edit-closed"}
         content={content}
@@ -776,8 +819,8 @@ function StoryPagesWorkspace({
         preferredLanguageCode={resolvedPreferredLanguageCode}
         storyPages={storyPages}
         isPending={storyPageActions.isPending}
-        onClose={() => setEditingPageNumber(null)}
-        onNavigatePage={setEditingPageNumber}
+        onClose={() => handleEditingPageNumberChange(null)}
+        onNavigatePage={handleEditingPageNumberChange}
         onUpsertLocalization={(input) =>
           storyPageActions.upsertStoryPageLocalization.mutateAsync({
             pageNumber: input.pageNumber,
@@ -811,10 +854,28 @@ export function StoryPagesRoute() {
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
   const preferredLanguageCode = searchParams.get("language");
+  const pageSearchParam = searchParams.get("page");
+  const parsedPageNumber = pageSearchParam ? Number(pageSearchParam) : null;
+  const initialEditingPageNumber =
+    typeof parsedPageNumber === "number" &&
+    Number.isInteger(parsedPageNumber) &&
+    parsedPageNumber > 0
+      ? parsedPageNumber
+      : null;
 
   function handlePreferredLanguageCodeChange(languageCode: string) {
     const nextSearchParams = new URLSearchParams(searchParams);
     nextSearchParams.set("language", languageCode);
+    setSearchParams(nextSearchParams, { replace: true });
+  }
+
+  function handleEditingPageNumberChange(pageNumber: number | null) {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    if (pageNumber) {
+      nextSearchParams.set("page", `${pageNumber}`);
+    } else {
+      nextSearchParams.delete("page");
+    }
     setSearchParams(nextSearchParams, { replace: true });
   }
 
@@ -825,6 +886,8 @@ export function StoryPagesRoute() {
           content={content}
           preferredLanguageCode={preferredLanguageCode}
           onPreferredLanguageCodeChange={handlePreferredLanguageCodeChange}
+          initialEditingPageNumber={initialEditingPageNumber}
+          onEditingPageNumberChange={handleEditingPageNumberChange}
         />
       )}
     </StoryContentGuard>

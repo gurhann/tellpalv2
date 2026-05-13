@@ -1,8 +1,13 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StoryPagesRoute } from "@/app/routes/story-pages";
+import type { AdminAssetResponse } from "@/features/assets/api/asset-admin";
+import {
+  mapAdminAsset,
+  type AssetViewModel,
+} from "@/features/assets/model/asset-view-model";
 import {
   inactiveContentViewModel,
   storyContentViewModel,
@@ -27,6 +32,9 @@ const recentAudioAssetHookMocks = vi.hoisted(() => ({
 }));
 const assetDetailHookMocks = vi.hoisted(() => ({
   useAssetDetail: vi.fn(),
+}));
+const assetPreviewHookMocks = vi.hoisted(() => ({
+  useAssetPreview: vi.fn(),
 }));
 const uploadAssetHookMocks = vi.hoisted(() => ({
   useUploadAsset: vi.fn(),
@@ -55,6 +63,10 @@ vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
 
 vi.mock("@/features/assets/queries/use-asset-detail", () => ({
   useAssetDetail: assetDetailHookMocks.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-preview", () => ({
+  useAssetPreview: assetPreviewHookMocks.useAssetPreview,
 }));
 
 vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
@@ -114,6 +126,60 @@ function makeStoryPagesWithThree() {
   return [...storyPageViewModels, makeStoryPageQuery(3)];
 }
 
+function makeAsset(id: number, mediaType: "IMAGE" | "AUDIO"): AssetViewModel {
+  const extension = mediaType === "IMAGE" ? "jpg" : "mp3";
+
+  return mapAdminAsset({
+    assetId: id,
+    provider: "FIREBASE_STORAGE",
+    objectPath: `/preview/story/${id}.${extension}`,
+    mediaType,
+    kind: mediaType === "IMAGE" ? "ORIGINAL_IMAGE" : "ORIGINAL_AUDIO",
+    mimeType: mediaType === "IMAGE" ? "image/jpeg" : "audio/mpeg",
+    byteSize: 1024,
+    checksumSha256: null,
+    cachedDownloadUrl: null,
+    downloadUrlCachedAt: null,
+    downloadUrlExpiresAt: null,
+    createdAt: "2026-04-01T10:00:00Z",
+    updatedAt: "2026-04-01T10:00:00Z",
+  } satisfies AdminAssetResponse);
+}
+
+const previewAssets = new Map<number, AssetViewModel>([
+  [41, makeAsset(41, "IMAGE")],
+  [42, makeAsset(42, "IMAGE")],
+  [43, makeAsset(43, "IMAGE")],
+  [81, makeAsset(81, "AUDIO")],
+  [82, makeAsset(82, "AUDIO")],
+  [83, makeAsset(83, "AUDIO")],
+]);
+
+function makeAssetDetailState(assetId: number | null) {
+  return {
+    asset: assetId ? (previewAssets.get(assetId) ?? null) : null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+function makeAssetPreviewState(asset: AssetViewModel | null, enabled: boolean) {
+  return {
+    previewUrl:
+      enabled && asset
+        ? `https://cdn.tellpal.test/assets/${asset.id}.${
+            asset.previewKind === "audio" ? "mp3" : "jpg"
+          }`
+        : null,
+    previewStatus: enabled && asset ? "available" : "unavailable",
+    previewErrorMessage: null,
+    isRefreshing: false,
+    refreshPreview: vi.fn().mockResolvedValue(undefined),
+  } as const;
+}
+
 function mockStoryRouteDependencies({
   storyPages = storyPageViewModels,
   upsertStoryPageLocalization = vi.fn(),
@@ -153,12 +219,10 @@ function mockStoryRouteDependencies({
     isSuccess: true,
     problem: null,
   });
-  assetDetailHookMocks.useAssetDetail.mockReturnValue({
-    asset: null,
-    isLoading: false,
-    problem: null,
-    isNotFound: false,
-  });
+  assetDetailHookMocks.useAssetDetail.mockImplementation(makeAssetDetailState);
+  assetPreviewHookMocks.useAssetPreview.mockImplementation(
+    makeAssetPreviewState,
+  );
 
   return { upsertStoryPageLocalization };
 }
@@ -169,14 +233,50 @@ function renderStoryRoute(initialEntry = "/contents/1/story-pages") {
       <Routes>
         <Route
           path="/contents/:contentId/story-pages"
-          element={<StoryPagesRoute />}
+          element={
+            <>
+              <StoryPagesRoute />
+              <LocationProbe />
+            </>
+          }
         />
       </Routes>
     </MemoryRouter>,
   );
 }
 
+function LocationProbe() {
+  const location = useLocation();
+
+  return (
+    <span data-testid="location">
+      {location.pathname}
+      {location.search}
+    </span>
+  );
+}
+
 beforeEach(() => {
+  Object.defineProperty(window.HTMLMediaElement.prototype, "play", {
+    configurable: true,
+    value: vi.fn().mockResolvedValue(undefined),
+  });
+  Object.defineProperty(window.HTMLMediaElement.prototype, "pause", {
+    configurable: true,
+    value: vi.fn(),
+  });
+  assetDetailHookMocks.useAssetDetail.mockReset();
+  assetDetailHookMocks.useAssetDetail.mockReturnValue({
+    asset: null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn().mockResolvedValue(undefined),
+  });
+  assetPreviewHookMocks.useAssetPreview.mockReset();
+  assetPreviewHookMocks.useAssetPreview.mockImplementation(
+    makeAssetPreviewState,
+  );
   uploadAssetHookMocks.useUploadAsset.mockReset();
   uploadAssetHookMocks.useUploadAsset.mockReturnValue({
     mutateAsync: vi.fn(),
@@ -230,6 +330,9 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.getByRole("link", { name: /return to content detail/i }),
     ).toHaveAttribute("href", "/contents/1");
+    expect(
+      screen.getByRole("button", { name: /preview story/i }),
+    ).toBeEnabled();
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
@@ -514,6 +617,51 @@ describe("StoryPagesRoute", () => {
       await screen.findByRole("heading", { name: /page 3 .* turkish/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/parent locale: aksam bahcesi/i)).toBeVisible();
+  });
+
+  it("opens the editor from the page query param and clears page on close", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute("/contents/1/story-pages?language=tr&page=2");
+
+    expect(
+      await screen.findByRole("heading", { name: /page 2 .* turkish/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /close editor/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("heading", { name: /page 2 .* turkish/i }),
+      ).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId("location")).toHaveTextContent(
+      "/contents/1/story-pages?language=tr",
+    );
+  });
+
+  it("opens the current story page editor from the route preview", async () => {
+    mockStoryRouteDependencies({ storyPages: makeStoryPagesWithThree() });
+
+    renderStoryRoute("/contents/1/story-pages?language=en");
+
+    fireEvent.click(screen.getByRole("button", { name: /preview story/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /preview story/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /^edit page$/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /page 1 .* english/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: /preview story/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("location")).toHaveTextContent(
+      "/contents/1/story-pages?language=en&page=1",
+    );
   });
 
   it("asks before discarding dirty editor changes during page navigation", async () => {

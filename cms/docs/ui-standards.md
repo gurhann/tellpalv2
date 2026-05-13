@@ -113,6 +113,12 @@ Detail and workspace routes must follow one shared composition contract.
 - Sequential story-page editor modals must keep compact previous/next navigation controls in the header beside the current page identity.
   - first and last page boundary controls must be disabled
   - dirty form navigation must require an explicit discard confirmation before changing pages
+- Story content preview players must use the currently selected locale as the playback source.
+  - each page preview shows the localized illustration and plays the localized audio for that page
+  - audio completion, not a fixed timer, advances to the next page
+  - visible play/pause, previous/next, progress, retry, and edit controls must remain available without relying on autoplay
+  - missing localization, illustration, audio, asset detail, or preview token states must stop playback and offer an edit handoff for the affected page
+  - autoplay and reduced-motion constraints must degrade to a paused player with explicit user controls instead of hiding the failure
 - Category curation lanes must render persisted curated rows with title-first content identity.
   - primary line: localized title for the selected lane language
   - secondary line: `#contentId`, `externalKey`, and lane language label

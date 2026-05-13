@@ -110,6 +110,16 @@ describe("story page queries", () => {
     expect(result.current.problem).toBeNull();
   });
 
+  it("can defer loading story pages until explicitly enabled", () => {
+    const { result } = renderHook(() => useStoryPages(1, { enabled: false }), {
+      wrapper: createWrapper(),
+    });
+
+    expect(result.current.storyPages).toEqual([]);
+    expect(result.current.isPending).toBe(true);
+    expect(storyPageAdminApiMock.listStoryPages).not.toHaveBeenCalled();
+  });
+
   it("surfaces generic list problems for unexpected failures", async () => {
     storyPageAdminApiMock.listStoryPages.mockRejectedValue(
       new Error("Story page read timed out"),

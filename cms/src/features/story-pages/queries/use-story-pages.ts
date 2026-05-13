@@ -27,10 +27,18 @@ function getApiProblem(error: unknown, fallbackDetail: string) {
   } satisfies ApiProblemDetail;
 }
 
-export function useStoryPages(contentId: number | null) {
+type UseStoryPagesOptions = {
+  enabled?: boolean;
+};
+
+export function useStoryPages(
+  contentId: number | null,
+  options: UseStoryPagesOptions = {},
+) {
+  const hasValidContentId = typeof contentId === "number" && contentId > 0;
   const query = useQuery({
     queryKey: queryKeys.contents.storyPages(contentId ?? 0),
-    enabled: typeof contentId === "number" && contentId > 0,
+    enabled: hasValidContentId && (options.enabled ?? true),
     queryFn: async () => {
       const response = await storyPageAdminApi.listStoryPages(
         contentId as number,

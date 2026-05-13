@@ -5,6 +5,11 @@ import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cmsRoutes } from "@/app/router";
+import type { AdminAssetResponse } from "@/features/assets/api/asset-admin";
+import {
+  mapAdminAsset,
+  type AssetViewModel,
+} from "@/features/assets/model/asset-view-model";
 import {
   archivedCategoryViewModel,
   bedtimeMeditationCategoryViewModel,
@@ -20,6 +25,7 @@ import {
   type AuthContextValue,
 } from "@/features/auth/providers/auth-context";
 import type { AuthSessionState } from "@/features/auth/model/session-store";
+import { storyPageViewModels } from "@/features/story-pages/test/fixtures";
 import type { AdminSessionPayload, ApiProblemDetail } from "@/types/api";
 
 const contentHookMocks = vi.hoisted(() => ({
@@ -31,6 +37,29 @@ const categoryHookMocks = vi.hoisted(() => ({
   useCategoryList: vi.fn(),
   useCategoryDetail: vi.fn(),
   useCategoryLocalizations: vi.fn(),
+}));
+
+const storyPageHookMocks = vi.hoisted(() => ({
+  useStoryPages: vi.fn(),
+  useStoryPage: vi.fn(),
+}));
+const storyPageMutationMocks = vi.hoisted(() => ({
+  useStoryPageActions: vi.fn(),
+}));
+const recentImageAssetHookMocks = vi.hoisted(() => ({
+  useRecentImageAssets: vi.fn(),
+}));
+const recentAudioAssetHookMocks = vi.hoisted(() => ({
+  useRecentAudioAssets: vi.fn(),
+}));
+const assetDetailHookMocks = vi.hoisted(() => ({
+  useAssetDetail: vi.fn(),
+}));
+const assetPreviewHookMocks = vi.hoisted(() => ({
+  useAssetPreview: vi.fn(),
+}));
+const uploadAssetHookMocks = vi.hoisted(() => ({
+  useUploadAsset: vi.fn(),
 }));
 
 vi.mock("@/features/contents/queries/use-content-list", () => ({
@@ -51,6 +80,35 @@ vi.mock("@/features/categories/queries/use-category-detail", () => ({
 
 vi.mock("@/features/categories/queries/use-category-localizations", () => ({
   useCategoryLocalizations: categoryHookMocks.useCategoryLocalizations,
+}));
+
+vi.mock("@/features/story-pages/queries/use-story-pages", () => ({
+  useStoryPages: storyPageHookMocks.useStoryPages,
+  useStoryPage: storyPageHookMocks.useStoryPage,
+}));
+
+vi.mock("@/features/story-pages/mutations/use-story-page-actions", () => ({
+  useStoryPageActions: storyPageMutationMocks.useStoryPageActions,
+}));
+
+vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
+  useRecentImageAssets: recentImageAssetHookMocks.useRecentImageAssets,
+}));
+
+vi.mock("@/features/story-pages/queries/use-recent-audio-assets", () => ({
+  useRecentAudioAssets: recentAudioAssetHookMocks.useRecentAudioAssets,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-detail", () => ({
+  useAssetDetail: assetDetailHookMocks.useAssetDetail,
+}));
+
+vi.mock("@/features/assets/queries/use-asset-preview", () => ({
+  useAssetPreview: assetPreviewHookMocks.useAssetPreview,
+}));
+
+vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
+  useUploadAsset: uploadAssetHookMocks.useUploadAsset,
 }));
 
 function makeSession(
@@ -124,6 +182,82 @@ function makeCategoryLocalizationState() {
     isNotFound: false,
     refetch: vi.fn(),
   };
+}
+
+function makeStoryPageListState() {
+  return {
+    storyPages: storyPageViewModels,
+    isLoading: false,
+    isFetching: false,
+    isSuccess: true,
+    problem: null,
+    refetch: vi.fn(),
+  };
+}
+
+function makeStoryPageDetailState(pageNumber: number | null) {
+  return {
+    storyPage:
+      storyPageViewModels.find(
+        (storyPage) => storyPage.pageNumber === pageNumber,
+      ) ?? storyPageViewModels[0],
+    isLoading: false,
+    problem: null,
+  };
+}
+
+function makeAsset(id: number, mediaType: "IMAGE" | "AUDIO"): AssetViewModel {
+  const extension = mediaType === "IMAGE" ? "jpg" : "mp3";
+
+  return mapAdminAsset({
+    assetId: id,
+    provider: "FIREBASE_STORAGE",
+    objectPath: `/preview/story/${id}.${extension}`,
+    mediaType,
+    kind: mediaType === "IMAGE" ? "ORIGINAL_IMAGE" : "ORIGINAL_AUDIO",
+    mimeType: mediaType === "IMAGE" ? "image/jpeg" : "audio/mpeg",
+    byteSize: 1024,
+    checksumSha256: null,
+    cachedDownloadUrl: null,
+    downloadUrlCachedAt: null,
+    downloadUrlExpiresAt: null,
+    createdAt: "2026-04-01T10:00:00Z",
+    updatedAt: "2026-04-01T10:00:00Z",
+  } satisfies AdminAssetResponse);
+}
+
+const previewAssets = new Map<number, AssetViewModel>([
+  [41, makeAsset(41, "IMAGE")],
+  [42, makeAsset(42, "IMAGE")],
+  [43, makeAsset(43, "IMAGE")],
+  [81, makeAsset(81, "AUDIO")],
+  [82, makeAsset(82, "AUDIO")],
+  [83, makeAsset(83, "AUDIO")],
+]);
+
+function makeAssetDetailState(assetId: number | null) {
+  return {
+    asset: assetId ? (previewAssets.get(assetId) ?? null) : null,
+    isLoading: false,
+    problem: null,
+    isNotFound: false,
+    refetch: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+function makeAssetPreviewState(asset: AssetViewModel | null, enabled: boolean) {
+  return {
+    previewUrl:
+      enabled && asset
+        ? `https://cdn.tellpal.test/assets/${asset.id}.${
+            asset.previewKind === "audio" ? "mp3" : "jpg"
+          }`
+        : null,
+    previewStatus: enabled && asset ? "available" : "unavailable",
+    previewErrorMessage: null,
+    isRefreshing: false,
+    refreshPreview: vi.fn().mockResolvedValue(undefined),
+  } as const;
 }
 
 type TestAuthProviderProps = {
@@ -217,11 +351,27 @@ function renderRouter(options: {
 }
 
 beforeEach(() => {
+  Object.defineProperty(window.HTMLMediaElement.prototype, "play", {
+    configurable: true,
+    value: vi.fn().mockResolvedValue(undefined),
+  });
+  Object.defineProperty(window.HTMLMediaElement.prototype, "pause", {
+    configurable: true,
+    value: vi.fn(),
+  });
   contentHookMocks.useContentList.mockReset();
   contentHookMocks.useContentDetail.mockReset();
   categoryHookMocks.useCategoryList.mockReset();
   categoryHookMocks.useCategoryDetail.mockReset();
   categoryHookMocks.useCategoryLocalizations.mockReset();
+  storyPageHookMocks.useStoryPages.mockReset();
+  storyPageHookMocks.useStoryPage.mockReset();
+  storyPageMutationMocks.useStoryPageActions.mockReset();
+  recentImageAssetHookMocks.useRecentImageAssets.mockReset();
+  recentAudioAssetHookMocks.useRecentAudioAssets.mockReset();
+  assetDetailHookMocks.useAssetDetail.mockReset();
+  assetPreviewHookMocks.useAssetPreview.mockReset();
+  uploadAssetHookMocks.useUploadAsset.mockReset();
   contentHookMocks.useContentList.mockReturnValue(makeContentListState());
   contentHookMocks.useContentDetail.mockReturnValue(makeContentDetailState());
   categoryHookMocks.useCategoryList.mockReturnValue(makeCategoryListState());
@@ -231,6 +381,38 @@ beforeEach(() => {
   categoryHookMocks.useCategoryLocalizations.mockReturnValue(
     makeCategoryLocalizationState(),
   );
+  storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageListState());
+  storyPageHookMocks.useStoryPage.mockImplementation((_contentId, pageNumber) =>
+    makeStoryPageDetailState(pageNumber),
+  );
+  storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+    addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+    isPending: false,
+  });
+  recentImageAssetHookMocks.useRecentImageAssets.mockReturnValue({
+    assets: [],
+    isLoading: false,
+    isSuccess: true,
+    problem: null,
+  });
+  recentAudioAssetHookMocks.useRecentAudioAssets.mockReturnValue({
+    assets: [],
+    isLoading: false,
+    isSuccess: true,
+    problem: null,
+  });
+  assetDetailHookMocks.useAssetDetail.mockImplementation(makeAssetDetailState);
+  assetPreviewHookMocks.useAssetPreview.mockImplementation(
+    makeAssetPreviewState,
+  );
+  uploadAssetHookMocks.useUploadAsset.mockReturnValue({
+    mutateAsync: vi.fn(),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
+  });
 });
 
 describe("CMS router auth flow", () => {
@@ -308,6 +490,9 @@ describe("CMS router auth flow", () => {
       screen.getByRole("link", { name: /open story pages/i }),
     ).toHaveAttribute("href", "/contents/42/story-pages?language=en");
     expect(
+      screen.getByRole("button", { name: /preview story/i }),
+    ).toBeEnabled();
+    expect(
       screen.getAllByRole("heading", { name: /locale workspace/i }),
     ).toHaveLength(1);
     expect(
@@ -329,6 +514,63 @@ describe("CMS router auth flow", () => {
     expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/release posture/i)).not.toBeInTheDocument();
     expect(screen.getAllByText(/^status$/i)).toHaveLength(1);
+  });
+
+  it("does not expose story preview on non-story content detail routes", async () => {
+    contentHookMocks.useContentDetail.mockReturnValue({
+      content: meditationContentViewModel,
+      isLoading: false,
+      problem: null,
+      isNotFound: false,
+      refetch: vi.fn(),
+    });
+
+    renderRouter({
+      initialEntries: ["/contents/2"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: /regenraum pause/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /preview story/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("navigates from content detail preview to the selected story page editor", async () => {
+    const { router } = renderRouter({
+      initialEntries: ["/contents/42"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: /preview story/i }),
+    );
+
+    expect(
+      await screen.findByRole("heading", { name: /preview story/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /^edit page$/i }));
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/contents/42/story-pages");
+      expect(router.state.location.search).toBe("?language=en&page=1");
+    });
+    expect(
+      await screen.findByRole("heading", { name: /page 1 .* english/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders the category studio shell for /categories", async () => {
@@ -441,7 +683,9 @@ describe("CMS router auth flow", () => {
     ).toBeDisabled();
     expect(screen.getByText(/no localizations yet/i)).toBeInTheDocument();
     expect(screen.queryByText(/snapshot notes/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/localization snapshot/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/localization snapshot/i),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
   });
 
@@ -471,7 +715,9 @@ describe("CMS router auth flow", () => {
 
   it("renders hidden authenticated Variant A mockup routes and supports deep links", async () => {
     renderRouter({
-      initialEntries: ["/labs/mockups/contents/demo-content/story-pages?language=tr"],
+      initialEntries: [
+        "/labs/mockups/contents/demo-content/story-pages?language=tr",
+      ],
       authState: {
         status: "authenticated",
         isBootstrapped: true,
@@ -485,9 +731,7 @@ describe("CMS router auth flow", () => {
         name: /story page editor mockup/i,
       }),
     ).toBeInTheDocument();
-    expect(
-      screen.getAllByText(/preferred locale/i).length,
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText(/preferred locale/i).length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();

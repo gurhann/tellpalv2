@@ -1,6 +1,6 @@
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Play } from "lucide-react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -8,9 +8,7 @@ import { FormSection } from "@/components/forms/form-section";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TaskRail } from "@/components/workspace/task-rail";
-import {
-  WorkspaceStatusPill,
-} from "@/components/workspace/workspace-primitives";
+import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
@@ -18,11 +16,14 @@ import { StoryPageEntryLink } from "@/features/contents/components/story-page-en
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
 import { ContentContributorPanel } from "@/features/contributors/components/content-contributor-panel";
+import { StoryContentPreviewDialog } from "@/features/story-pages/components/story-content-preview-dialog";
+import { useStoryPages } from "@/features/story-pages/queries/use-story-pages";
 import { useI18n } from "@/i18n/locale-provider";
 
 export function ContentDetailRoute() {
   const { locale, t } = useI18n();
   const { contentId = "" } = useParams();
+  const navigate = useNavigate();
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
@@ -32,6 +33,7 @@ export function ContentDetailRoute() {
   const [activeStoryLanguageCode, setActiveStoryLanguageCode] = useState<
     string | null
   >(null);
+  const [isStoryPreviewOpen, setIsStoryPreviewOpen] = useState(false);
   const content = contentQuery.content;
   const storyPageLanguageCode =
     activeStoryLanguageCode ??
@@ -44,6 +46,10 @@ export function ContentDetailRoute() {
     content?.primaryLocalization ??
     null;
   const canOpenStoryPages = content?.summary.supportsStoryPages ?? false;
+  const previewStoryPagesQuery = useStoryPages(
+    hasValidContentId ? parsedContentId : null,
+    { enabled: isStoryPreviewOpen && canOpenStoryPages },
+  );
   const copy =
     locale === "tr"
       ? {
@@ -85,6 +91,7 @@ export function ContentDetailRoute() {
           contentType: "Tur",
           lifecycle: "Durum",
           openStoryPages: "Hikaye sayfalarini ac",
+          previewStory: "Hikayeyi onizle",
           storyPagesUnavailable: "Hikaye sayfalari kullanilamiyor",
           operationsSnapshot: "Hazirlik Rayi",
           operationsDescription:
@@ -94,8 +101,7 @@ export function ContentDetailRoute() {
           storyStructure: "Hikaye sayfalari",
           readinessCount: (ready: number, total: number) =>
             `${ready}/${total} hazir`,
-          storyPagesCount: (count: number) =>
-            `${count} sayfa`,
+          storyPagesCount: (count: number) => `${count} sayfa`,
           storyPagesUnused: "Kullanilmiyor",
           localeWorkspace: "Dil Calisma Alani",
           workspaceDescription:
@@ -148,6 +154,7 @@ export function ContentDetailRoute() {
           contentType: "Type",
           lifecycle: "Status",
           openStoryPages: "Open story pages",
+          previewStory: "Preview story",
           storyPagesUnavailable: "Story pages unavailable",
           operationsSnapshot: "Readiness rail",
           operationsDescription:
@@ -157,8 +164,7 @@ export function ContentDetailRoute() {
           storyStructure: "Story pages",
           readinessCount: (ready: number, total: number) =>
             `${ready}/${total} ready`,
-          storyPagesCount: (count: number) =>
-            `${count} pages`,
+          storyPagesCount: (count: number) => `${count} pages`,
           storyPagesUnused: "Not used",
           localeWorkspace: "Locale workspace",
           workspaceDescription:
@@ -220,7 +226,17 @@ export function ContentDetailRoute() {
             </div>
           </div>
 
-          <div className="shrink-0">
+          <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+            {canOpenStoryPages ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsStoryPreviewOpen(true)}
+              >
+                <Play className="size-4" />
+                {copy.previewStory}
+              </Button>
+            ) : null}
             <StoryPageEntryLink
               canOpen={canOpenStoryPages}
               contentId={parsedContentId}
@@ -414,15 +430,43 @@ export function ContentDetailRoute() {
     );
   }
 
+  function handlePreviewEditPage(pageNumber: number) {
+    const nextSearchParams = new URLSearchParams();
+    if (storyPageLanguageCode) {
+      nextSearchParams.set("language", storyPageLanguageCode);
+    }
+    nextSearchParams.set("page", `${pageNumber}`);
+    setIsStoryPreviewOpen(false);
+    void navigate(
+      `/contents/${parsedContentId}/story-pages?${nextSearchParams.toString()}`,
+    );
+  }
+
   return (
-    <ContentPageShell
-      eyebrow={copy.eyebrow}
-      title={routeTitle}
-      description={routeDescription}
-      toolbar={renderToolbar()}
-      aside={renderAside()}
-    >
-      {renderDetailContent()}
-    </ContentPageShell>
+    <>
+      <ContentPageShell
+        eyebrow={copy.eyebrow}
+        title={routeTitle}
+        description={routeDescription}
+        toolbar={renderToolbar()}
+        aside={renderAside()}
+      >
+        {renderDetailContent()}
+      </ContentPageShell>
+
+      {content && canOpenStoryPages ? (
+        <StoryContentPreviewDialog
+          content={content}
+          storyPages={previewStoryPagesQuery.storyPages}
+          languageCode={storyPageLanguageCode}
+          open={isStoryPreviewOpen}
+          isLoading={previewStoryPagesQuery.isLoading}
+          problem={previewStoryPagesQuery.problem}
+          onRetry={() => void previewStoryPagesQuery.refetch()}
+          onOpenChange={setIsStoryPreviewOpen}
+          onEditPage={handlePreviewEditPage}
+        />
+      ) : null}
+    </>
   );
 }
