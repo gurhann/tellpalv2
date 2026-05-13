@@ -259,11 +259,6 @@ export function StoryContentPreviewDialog({
     !blockingIssue &&
     !isMediaLoading &&
     Boolean(activeStoryPage && imagePreviewUrl && audioPreviewUrl);
-  const progressValue =
-    duration > 0
-      ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
-      : 0;
-
   useEffect(() => {
     if (!open) {
       audioRef.current?.pause();
@@ -579,12 +574,6 @@ export function StoryContentPreviewDialog({
                 <span className="w-10 text-right text-xs tabular-nums text-muted-foreground">
                   {formatTime(duration)}
                 </span>
-              </div>
-              <div className="h-1 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-primary"
-                  style={{ width: `${progressValue}%` }}
-                />
               </div>
               {playbackProblem ? (
                 <p className="text-sm text-muted-foreground" role="status">
