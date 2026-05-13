@@ -131,6 +131,27 @@ beforeEach(() => {
 });
 
 describe("StoryContentPreviewDialog", () => {
+  it("keeps modal body fixed while only the page list scrolls", () => {
+    renderPreviewDialog();
+
+    expect(document.querySelector('[data-slot="dialog-body"]')).toHaveClass(
+      "overflow-hidden",
+      "flex-1",
+      "min-h-0",
+    );
+    expect(
+      screen.getByRole("navigation", { name: /story preview pages/i }),
+    ).toHaveClass("overflow-y-auto", "min-h-0", "flex-1");
+    expect(screen.getByText(/active page/i).parentElement).toHaveClass(
+      "shrink-0",
+    );
+    expect(
+      screen.getByRole("img", {
+        name: /story page 1 illustration preview/i,
+      }),
+    ).toHaveClass("h-full", "max-h-full", "object-contain");
+  });
+
   it("loads the selected locale page illustration and audio preview", async () => {
     renderPreviewDialog();
 

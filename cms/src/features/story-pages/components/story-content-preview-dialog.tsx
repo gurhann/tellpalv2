@@ -424,7 +424,7 @@ export function StoryContentPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-5xl">
+      <DialogContent className="h-[calc(100dvh-2rem)] sm:max-w-[72rem]">
         <DialogHeader>
           <div className="flex flex-col gap-3 pr-10 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-1">
@@ -442,10 +442,10 @@ export function StoryContentPreviewDialog({
           </div>
         </DialogHeader>
 
-        <DialogBody className="grid gap-4 pt-5">
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
-            <div className="min-h-[22rem] rounded-2xl border border-border/70 bg-muted/20 p-3 sm:min-h-[30rem]">
-              <div className="flex h-full min-h-[20rem] items-center justify-center rounded-xl border border-dashed border-border/70 bg-background/90 p-3 sm:min-h-[28rem]">
+        <DialogBody className="flex flex-1 flex-col gap-4 overflow-hidden pt-5">
+          <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_15rem]">
+            <div className="min-h-0 rounded-2xl border border-border/70 bg-muted/20 p-2">
+              <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-dashed border-border/70 bg-background/90 p-2">
                 {isMediaLoading ? (
                   <div className="flex flex-col items-center gap-3 text-sm text-muted-foreground">
                     <LoaderCircle className="size-6 animate-spin" />
@@ -472,7 +472,7 @@ export function StoryContentPreviewDialog({
                 ) : imagePreviewUrl && activePageNumber ? (
                   <img
                     alt={`Story page ${activePageNumber} illustration preview`}
-                    className="max-h-[30rem] w-full rounded-xl object-contain"
+                    className="h-full max-h-full w-full rounded-xl object-contain"
                     src={imagePreviewUrl}
                   />
                 ) : (
@@ -486,8 +486,8 @@ export function StoryContentPreviewDialog({
               </div>
             </div>
 
-            <div className="grid content-start gap-3 rounded-2xl border border-border/70 bg-card/95 p-4">
-              <div>
+            <div className="flex min-h-0 flex-col gap-3 rounded-2xl border border-border/70 bg-card/95 p-4">
+              <div className="shrink-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Active page
                 </p>
@@ -501,7 +501,11 @@ export function StoryContentPreviewDialog({
                 </p>
               </div>
 
-              <div className="grid gap-2">
+              <div
+                className="grid min-h-0 flex-1 content-start gap-2 overflow-y-auto pr-1"
+                aria-label="Story preview pages"
+                role="navigation"
+              >
                 {orderedStoryPages.map((storyPage, index) => {
                   const localization = getSelectedLocalization(
                     storyPage,
