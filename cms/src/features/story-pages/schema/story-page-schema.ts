@@ -41,6 +41,10 @@ export type StoryPageLocalizationFormValues = {
   illustrationMediaId: number | null;
 };
 
+export type StoryPageTextlessIllustrationFormValues = {
+  textlessIllustrationMediaId: number | null;
+};
+
 export const storyPageLocalizationSchema = z.object({
   languageCode: z
     .string()
@@ -66,6 +70,19 @@ export const storyPageLocalizationSchema = z.object({
       })
       .int("Illustration asset id must be a whole number.")
       .positive("Illustration asset id must be positive."),
+  ),
+});
+
+export const storyPageTextlessIllustrationSchema = z.object({
+  textlessIllustrationMediaId: z.preprocess(
+    parseNullableInteger,
+    z
+      .number({
+        error: "Textless illustration asset id must be a valid number.",
+      })
+      .int("Textless illustration asset id must be a whole number.")
+      .positive("Textless illustration asset id must be positive.")
+      .nullable(),
   ),
 });
 

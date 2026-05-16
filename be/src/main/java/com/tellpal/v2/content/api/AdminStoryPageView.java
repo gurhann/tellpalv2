@@ -8,6 +8,7 @@ import java.util.List;
 public record AdminStoryPageView(
         Long contentId,
         int pageNumber,
+        Long textlessIllustrationMediaId,
         int localizationCount,
         List<AdminStoryPageLocalizationView> localizations) {
 
@@ -17,6 +18,9 @@ public record AdminStoryPageView(
         }
         if (pageNumber <= 0) {
             throw new IllegalArgumentException("Story page number must be positive");
+        }
+        if (textlessIllustrationMediaId != null && textlessIllustrationMediaId <= 0) {
+            throw new IllegalArgumentException("Textless illustration media ID must be positive");
         }
         if (localizationCount < 0) {
             throw new IllegalArgumentException("Localization count must not be negative");

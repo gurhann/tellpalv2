@@ -18,6 +18,7 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNo
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContentExternalKeyException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageTextlessIllustrationsMissingException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
@@ -88,6 +89,18 @@ public class ContentAdminExceptionHandler {
                 "Story page not found",
                 exception.getMessage(),
                 "story_page_not_found",
+                request);
+    }
+
+    @ExceptionHandler(StoryPageTextlessIllustrationsMissingException.class)
+    ProblemDetail handleStoryPageTextlessIllustrationsMissing(
+            StoryPageTextlessIllustrationsMissingException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Textless story page illustrations are missing",
+                exception.getMessage(),
+                "story_page_textless_illustrations_missing",
                 request);
     }
 

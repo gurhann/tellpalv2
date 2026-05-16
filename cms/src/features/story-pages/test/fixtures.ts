@@ -8,6 +8,7 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
   {
     contentId: 1,
     pageNumber: 1,
+    textlessIllustrationMediaId: 501,
     localizationCount: 2,
     localizations: [
       {
@@ -31,6 +32,7 @@ export const storyPageReadResponses: AdminStoryPageReadResponse[] = [
   {
     contentId: 1,
     pageNumber: 2,
+    textlessIllustrationMediaId: null,
     localizationCount: 1,
     localizations: [
       {

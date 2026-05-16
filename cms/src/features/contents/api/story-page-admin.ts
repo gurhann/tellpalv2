@@ -8,6 +8,10 @@ export type AddStoryPageInput = {
   afterPageNumber?: number | null;
 };
 
+export type UpdateStoryPageInput = {
+  textlessIllustrationMediaId?: number | null;
+};
+
 export type UpsertStoryPageLocalizationInput = {
   bodyText?: string | null;
   audioMediaId?: number | null;
@@ -17,6 +21,7 @@ export type UpsertStoryPageLocalizationInput = {
 export const adminStoryPageResponseSchema = z.object({
   contentId: z.number().int().positive(),
   pageNumber: pageNumberSchema,
+  textlessIllustrationMediaId: z.number().int().positive().nullable(),
   localizationCount: z.number().int().nonnegative(),
 });
 
@@ -73,8 +78,26 @@ export const storyPageAdminApi = {
       responseSchema: adminStoryPageResponseSchema,
     });
   },
+  updateStoryPage(
+    contentId: number,
+    pageNumber: number,
+    input: UpdateStoryPageInput,
+  ) {
+    return apiClient.put<AdminStoryPageResponse>(
+      `${getBasePath(contentId)}/${pageNumber}`,
+      {
+        body: input,
+        responseSchema: adminStoryPageResponseSchema,
+      },
+    );
+  },
   removeStoryPage(contentId: number, pageNumber: number) {
     return apiClient.delete<void>(`${getBasePath(contentId)}/${pageNumber}`);
+  },
+  exportTextlessIllustrations(contentId: number) {
+    return apiClient.download({
+      path: `${getBasePath(contentId)}/textless-illustrations/export`,
+    });
   },
   upsertStoryPageLocalization(
     contentId: number,

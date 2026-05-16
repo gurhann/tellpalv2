@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -41,6 +42,10 @@ import com.tellpal.v2.content.application.ContentManagementResults.StoryPageReco
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContentPublicationService;
 import com.tellpal.v2.content.application.StoryPageManagementService;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService.TextlessIllustrationExport;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService.TextlessIllustrationExportPage;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService.TextlessIllustrationManifest;
 import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -64,6 +69,9 @@ class ContentAdminControllerTest {
 
     @MockitoBean
     private StoryPageManagementService storyPageManagementService;
+
+    @MockitoBean
+    private StoryPageTextlessIllustrationExportService storyPageTextlessIllustrationExportService;
 
     @MockitoBean
     private AdminStoryPageQueryApi adminStoryPageQueryApi;
@@ -237,7 +245,7 @@ class ContentAdminControllerTest {
 
     @Test
     void addStoryPageReturnsCreatedResponse() throws Exception {
-        when(storyPageManagementService.addStoryPage(any())).thenReturn(new StoryPageRecord(51L, 1, 0));
+        when(storyPageManagementService.addStoryPage(any())).thenReturn(new StoryPageRecord(51L, 1, null, 0));
 
         mockMvc.perform(post("/api/admin/contents/51/story-pages")
                         .contentType("application/json")
@@ -248,6 +256,7 @@ class ContentAdminControllerTest {
                 .andExpect(header().string("Location", "http://localhost/api/admin/contents/51/story-pages/1"))
                 .andExpect(jsonPath("$.contentId").value(51))
                 .andExpect(jsonPath("$.pageNumber").value(1))
+                .andExpect(jsonPath("$.textlessIllustrationMediaId").doesNotExist())
                 .andExpect(jsonPath("$.localizationCount").value(0));
     }
 
@@ -256,6 +265,7 @@ class ContentAdminControllerTest {
         when(adminStoryPageQueryApi.listStoryPages(51L)).thenReturn(List.of(new AdminStoryPageView(
                 51L,
                 1,
+                77L,
                 1,
                 List.of(new AdminStoryPageLocalizationView(
                         51L,
@@ -270,6 +280,7 @@ class ContentAdminControllerTest {
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].contentId").value(51))
                 .andExpect(jsonPath("$[0].pageNumber").value(1))
+                .andExpect(jsonPath("$[0].textlessIllustrationMediaId").value(77))
                 .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
                 .andExpect(jsonPath("$[0].localizations[0].audioMediaId").value(99))
                 .andExpect(jsonPath("$[0].localizations[0].illustrationMediaId").value(88));
@@ -280,6 +291,7 @@ class ContentAdminControllerTest {
         when(adminStoryPageQueryApi.findStoryPage(51L, 2)).thenReturn(Optional.of(new AdminStoryPageView(
                 51L,
                 2,
+                null,
                 1,
                 List.of(new AdminStoryPageLocalizationView(
                         51L,
@@ -296,6 +308,61 @@ class ContentAdminControllerTest {
                 .andExpect(jsonPath("$.localizations[0].languageCode").value("en"))
                 .andExpect(jsonPath("$.localizations[0].bodyText").value("Look at the moon."))
                 .andExpect(jsonPath("$.localizations[0].illustrationMediaId").value(77));
+    }
+
+    @Test
+    void updateStoryPageStoresTextlessIllustrationReference() throws Exception {
+        when(storyPageManagementService.updateStoryPage(any()))
+                .thenReturn(new StoryPageRecord(51L, 2, 123L, 1));
+
+        mockMvc.perform(put("/api/admin/contents/51/story-pages/2")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "textlessIllustrationMediaId": 123
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(51))
+                .andExpect(jsonPath("$.pageNumber").value(2))
+                .andExpect(jsonPath("$.textlessIllustrationMediaId").value(123));
+
+        verify(storyPageManagementService).updateStoryPage(argThat(command ->
+                command.contentId().equals(51L)
+                        && command.pageNumber() == 2
+                        && command.textlessIllustrationMediaId().equals(123L)));
+    }
+
+    @Test
+    void exportTextlessIllustrationsReturnsZipAttachment() throws Exception {
+        TextlessIllustrationExport export = new TextlessIllustrationExport(
+                "moonlight-story-textless-story-pages.zip",
+                new TextlessIllustrationManifest(
+                        51L,
+                        "moonlight-story",
+                        Instant.parse("2026-03-17T09:00:00Z"),
+                        2,
+                        List.of(new TextlessIllustrationExportPage(
+                                1,
+                                123L,
+                                "/source/page-1.jpg",
+                                "image/jpeg",
+                                "page-001/textless.jpg")),
+                        List.of(2)),
+                List.of(new TextlessIllustrationExportPage(
+                        1,
+                        123L,
+                        "/source/page-1.jpg",
+                        "image/jpeg",
+                        "page-001/textless.jpg")));
+        when(storyPageTextlessIllustrationExportService.prepareExport(51L)).thenReturn(export);
+
+        mockMvc.perform(get("/api/admin/contents/51/story-pages/textless-illustrations/export"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/zip"))
+                .andExpect(header().string(
+                        "Content-Disposition",
+                        containsString("filename*=UTF-8''moonlight-story-textless-story-pages.zip")));
     }
 
     @Test

@@ -109,6 +109,8 @@ function makeStoryPageQuery(pageNumber?: number | null) {
     return {
       ...storyPageViewModels[0],
       pageNumber: 3,
+      textlessIllustrationAssetId: null,
+      hasTextlessIllustration: false,
       localizationCount: 0,
       localizations: [],
       primaryLocalization: null,
@@ -150,6 +152,7 @@ const previewAssets = new Map<number, AssetViewModel>([
   [41, makeAsset(41, "IMAGE")],
   [42, makeAsset(42, "IMAGE")],
   [43, makeAsset(43, "IMAGE")],
+  [501, makeAsset(501, "IMAGE")],
   [81, makeAsset(81, "AUDIO")],
   [82, makeAsset(82, "AUDIO")],
   [83, makeAsset(83, "AUDIO")],
@@ -200,7 +203,9 @@ function mockStoryRouteDependencies({
   );
   storyPageMutationMocks.useStoryPageActions.mockReturnValue({
     addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
     removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+    exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
     upsertStoryPageLocalization: {
       isPending: false,
       mutateAsync: upsertStoryPageLocalization,
@@ -299,7 +304,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
@@ -334,6 +341,9 @@ describe("StoryPagesRoute", () => {
       screen.getByRole("button", { name: /preview story/i }),
     ).toBeEnabled();
     expect(
+      screen.getByRole("button", { name: /export textless images/i }),
+    ).toBeEnabled();
+    expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
     expect(screen.getByText(/^Active locale$/i)).toBeInTheDocument();
@@ -343,6 +353,11 @@ describe("StoryPagesRoute", () => {
     expect(screen.getByText(/ready in selected locale/i)).toBeInTheDocument();
     expect(screen.getByText(/page 1/i)).toBeInTheDocument();
     expect(screen.getByText(/english status/i)).toBeInTheDocument();
+    expect(screen.getByText(/textless source/i)).toBeInTheDocument();
+    expect(screen.getByText(/source image linked/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/source image missing/i).length).toBeGreaterThan(
+      0,
+    );
     expect(screen.getByText(/all locale coverage/i)).toBeInTheDocument();
     expect(screen.queryByText(/locale handoff/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/story readiness/i)).toBeInTheDocument();
@@ -362,7 +377,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
@@ -410,7 +427,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
@@ -446,6 +465,12 @@ describe("StoryPagesRoute", () => {
       0,
     );
     expect(
+      screen.getByRole("heading", { name: /textless\/source illustration/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /save source image/i }),
+    ).toBeInTheDocument();
+    expect(
       screen.getAllByRole("button", { name: /save page localization/i }).length,
     ).toBeGreaterThan(0);
   });
@@ -462,7 +487,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
@@ -504,7 +531,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
@@ -744,6 +773,7 @@ describe("StoryPagesRoute", () => {
     const addStoryPage = vi.fn().mockResolvedValue({
       contentId: 1,
       pageNumber: 3,
+      textlessIllustrationMediaId: null,
       localizationCount: 0,
     });
 
@@ -758,7 +788,9 @@ describe("StoryPagesRoute", () => {
     );
     storyPageMutationMocks.useStoryPageActions.mockReturnValue({
       addStoryPage: { isPending: false, mutateAsync: addStoryPage },
+      updateStoryPage: { isPending: false, mutateAsync: vi.fn() },
       removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
       upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });

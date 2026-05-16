@@ -81,6 +81,8 @@ export type ContentReadViewModel = {
 export type StoryPageViewModel = {
   contentId: number;
   pageNumber: number;
+  textlessIllustrationAssetId: number | null;
+  hasTextlessIllustration: boolean;
   localizationCount: number;
   hasLocalizations: boolean;
 };
@@ -207,6 +209,8 @@ export function mapAdminStoryPage(
   return {
     contentId: storyPage.contentId,
     pageNumber: storyPage.pageNumber,
+    textlessIllustrationAssetId: storyPage.textlessIllustrationMediaId,
+    hasTextlessIllustration: storyPage.textlessIllustrationMediaId !== null,
     localizationCount: storyPage.localizationCount,
     hasLocalizations: storyPage.localizationCount > 0,
   };

@@ -113,6 +113,10 @@ Detail and workspace routes must follow one shared composition contract.
 - Sequential story-page editor modals must keep compact previous/next navigation controls in the header beside the current page identity.
   - first and last page boundary controls must be disabled
   - dirty form navigation must require an explicit discard confirmation before changing pages
+- Story-page textless/source illustrations are page-level assets, not locale-level payloads.
+  - keep the source image picker above locale tabs in the story page editor
+  - source image coverage must not affect publication readiness or locale completeness states
+  - handoff/export actions must stay compact in the route toolbar or operational rail
 - Story content preview players must use the currently selected locale as the playback source.
   - each page preview shows the localized illustration and plays the localized audio for that page
   - audio completion, not a fixed timer, advances to the next page

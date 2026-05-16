@@ -64,12 +64,16 @@ public class StoryPageManagementService {
     }
 
     /**
-     * Updates illustration metadata for an existing story page.
+     * Updates language-independent source illustration metadata for an existing story page.
      */
     @Transactional
     public StoryPageRecord updateStoryPage(UpdateStoryPageCommand command) {
         Content content = loadContent(command.contentId());
         StoryPage storyPage = loadStoryPage(content, command.pageNumber());
+        assetReferenceValidator.requireImageAsset(
+                command.textlessIllustrationMediaId(),
+                "textlessIllustrationMediaId");
+        storyPage.updateTextlessIllustrationMediaId(command.textlessIllustrationMediaId());
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
                 contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));

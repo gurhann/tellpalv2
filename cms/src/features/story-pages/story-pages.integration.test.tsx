@@ -116,6 +116,7 @@ describe("Story pages integration", () => {
       {
         contentId: 1,
         pageNumber: 1,
+        textlessIllustrationMediaId: 501,
         localizationCount: 2,
         localizations: [
           {
@@ -167,6 +168,7 @@ describe("Story pages integration", () => {
             const createdPage: AdminStoryPageReadResponse = {
               contentId: 1,
               pageNumber,
+              textlessIllustrationMediaId: null,
               localizationCount: 0,
               localizations: [],
             };
@@ -175,6 +177,7 @@ describe("Story pages integration", () => {
             return jsonResponse({
               contentId: 1,
               pageNumber,
+              textlessIllustrationMediaId: null,
               localizationCount: 0,
             });
           }
@@ -217,9 +220,7 @@ describe("Story pages integration", () => {
     await screen.findByRole("heading", { name: /page 2 .* english/i });
     fireEvent.click(screen.getByRole("button", { name: /close editor/i }));
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /^delete page 2$/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /^delete page 2$/i }));
 
     const deleteDialog = await screen.findByRole("dialog");
     fireEvent.click(
@@ -237,6 +238,7 @@ describe("Story pages integration", () => {
     const storyPageRecord: AdminStoryPageReadResponse = {
       contentId: 1,
       pageNumber: 2,
+      textlessIllustrationMediaId: null,
       localizationCount: 1,
       localizations: [
         {

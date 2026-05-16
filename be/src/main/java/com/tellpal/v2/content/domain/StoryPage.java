@@ -31,6 +31,9 @@ public class StoryPage extends BaseJpaEntity {
     @Column(name = "page_number", nullable = false)
     private int pageNumber;
 
+    @Column(name = "textless_illustration_media_id")
+    private Long textlessIllustrationMediaId;
+
     @OneToMany(mappedBy = "storyPage", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StoryPageLocalization> localizations = new LinkedHashSet<>();
 
@@ -44,6 +47,16 @@ public class StoryPage extends BaseJpaEntity {
 
     public int getPageNumber() {
         return pageNumber;
+    }
+
+    public Long getTextlessIllustrationMediaId() {
+        return textlessIllustrationMediaId;
+    }
+
+    public void updateTextlessIllustrationMediaId(Long textlessIllustrationMediaId) {
+        this.textlessIllustrationMediaId = normalizePositiveId(
+                textlessIllustrationMediaId,
+                "Textless illustration media ID must be positive");
     }
 
     void renumber(int pageNumber) {
@@ -115,4 +128,13 @@ public class StoryPage extends BaseJpaEntity {
         return value;
     }
 
+    private static Long normalizePositiveId(Long value, String message) {
+        if (value == null) {
+            return null;
+        }
+        if (value <= 0) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
 }

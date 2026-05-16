@@ -5,12 +5,14 @@ import {
   type AddStoryPageInput,
   type AdminStoryPageLocalizationResponse,
   type AdminStoryPageResponse,
+  type UpdateStoryPageInput,
 } from "@/features/contents/api/story-page-admin";
 import { queryKeys } from "@/lib/query-keys";
 
 type UseStoryPageActionsOptions = {
   contentId: number;
   onAddSuccess?: (storyPage: AdminStoryPageResponse) => void;
+  onUpdateSuccess?: (storyPage: AdminStoryPageResponse) => void;
   onDeleteSuccess?: (pageNumber: number) => void;
   onLocalizationSuccess?: (
     localization: AdminStoryPageLocalizationResponse,
@@ -20,6 +22,7 @@ type UseStoryPageActionsOptions = {
 export function useStoryPageActions({
   contentId,
   onAddSuccess,
+  onUpdateSuccess,
   onDeleteSuccess,
   onLocalizationSuccess,
 }: UseStoryPageActionsOptions) {
@@ -66,6 +69,20 @@ export function useStoryPageActions({
     },
   });
 
+  const updateStoryPage = useMutation({
+    mutationFn: async ({
+      pageNumber,
+      input,
+    }: {
+      pageNumber: number;
+      input: UpdateStoryPageInput;
+    }) => storyPageAdminApi.updateStoryPage(contentId, pageNumber, input),
+    onSuccess: async (storyPage) => {
+      await invalidateStoryPageQueries(storyPage.pageNumber);
+      onUpdateSuccess?.(storyPage);
+    },
+  });
+
   const upsertStoryPageLocalization = useMutation({
     mutationFn: async ({
       pageNumber,
@@ -101,12 +118,33 @@ export function useStoryPageActions({
     },
   });
 
+  const exportTextlessIllustrations = useMutation({
+    mutationFn: async () => {
+      const download =
+        await storyPageAdminApi.exportTextlessIllustrations(contentId);
+      const fileName =
+        download.fileName ?? `content-${contentId}-textless-story-pages.zip`;
+      const objectUrl = URL.createObjectURL(download.blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = fileName;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+      return fileName;
+    },
+  });
+
   return {
     addStoryPage,
+    updateStoryPage,
     removeStoryPage,
     upsertStoryPageLocalization,
+    exportTextlessIllustrations,
     isPending:
       addStoryPage.isPending ||
+      updateStoryPage.isPending ||
       removeStoryPage.isPending ||
       upsertStoryPageLocalization.isPending,
   };

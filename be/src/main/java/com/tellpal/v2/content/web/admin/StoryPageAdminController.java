@@ -4,9 +4,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tellpal.v2.content.api.AdminStoryPageQueryApi;
@@ -25,6 +30,8 @@ import com.tellpal.v2.content.application.ContentManagementCommands.RemoveStoryP
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand;
 import com.tellpal.v2.content.application.StoryPageManagementService;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService;
+import com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportService.TextlessIllustrationExport;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
 
@@ -44,12 +51,15 @@ public class StoryPageAdminController {
 
     private final AdminStoryPageQueryApi adminStoryPageQueryApi;
     private final StoryPageManagementService storyPageManagementService;
+    private final StoryPageTextlessIllustrationExportService textlessIllustrationExportService;
 
     public StoryPageAdminController(
             AdminStoryPageQueryApi adminStoryPageQueryApi,
-            StoryPageManagementService storyPageManagementService) {
+            StoryPageManagementService storyPageManagementService,
+            StoryPageTextlessIllustrationExportService textlessIllustrationExportService) {
         this.adminStoryPageQueryApi = adminStoryPageQueryApi;
         this.storyPageManagementService = storyPageManagementService;
+        this.textlessIllustrationExportService = textlessIllustrationExportService;
     }
 
     @GetMapping
@@ -67,6 +77,29 @@ public class StoryPageAdminController {
         return adminStoryPageQueryApi.listStoryPages(contentId).stream()
                 .map(AdminStoryPageReadResponse::from)
                 .toList();
+    }
+
+    @GetMapping("/textless-illustrations/export")
+    @Operation(
+            summary = "Export textless story page illustrations",
+            description = "Downloads a ZIP package containing language-independent story-page source illustrations and a manifest.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Textless illustration ZIP returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "No textless illustrations are available", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public ResponseEntity<StreamingResponseBody> exportTextlessIllustrations(@PathVariable Long contentId) {
+        TextlessIllustrationExport export = textlessIllustrationExportService.prepareExport(contentId);
+        StreamingResponseBody body = outputStream -> textlessIllustrationExportService.writeZip(export, outputStream);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/zip"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                        .filename(export.fileName(), StandardCharsets.UTF_8)
+                        .build()
+                        .toString())
+                .body(body);
     }
 
     @GetMapping("/{pageNumber}")
@@ -167,10 +200,12 @@ record AddStoryPageRequest(
     }
 }
 
-record UpdateStoryPageRequest() {
+record UpdateStoryPageRequest(
+        @Positive(message = "textlessIllustrationMediaId must be positive")
+        Long textlessIllustrationMediaId) {
 
     UpdateStoryPageCommand toCommand(Long contentId, int pageNumber) {
-        return new UpdateStoryPageCommand(contentId, pageNumber);
+        return new UpdateStoryPageCommand(contentId, pageNumber, textlessIllustrationMediaId);
     }
 }
 

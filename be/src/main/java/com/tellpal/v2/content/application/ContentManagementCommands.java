@@ -138,11 +138,14 @@ public final class ContentManagementCommands {
     /**
      * Command for updating one story page.
      */
-    public record UpdateStoryPageCommand(Long contentId, int pageNumber) {
+    public record UpdateStoryPageCommand(Long contentId, int pageNumber, Long textlessIllustrationMediaId) {
 
         public UpdateStoryPageCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
+            textlessIllustrationMediaId = normalizePositiveId(
+                    textlessIllustrationMediaId,
+                    "Textless illustration media ID must be positive");
         }
     }
 

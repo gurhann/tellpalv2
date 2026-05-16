@@ -16,6 +16,7 @@ final class StoryPageAdminQueryMapper {
         return new AdminStoryPageView(
                 contentId,
                 storyPage.getPageNumber(),
+                storyPage.getTextlessIllustrationMediaId(),
                 storyPage.getLocalizations().size(),
                 storyPage.getLocalizations().stream()
                         .sorted(Comparator.comparing(localization -> localization.getLanguageCode().value()))

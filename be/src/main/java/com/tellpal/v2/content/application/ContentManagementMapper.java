@@ -36,6 +36,7 @@ final class ContentManagementMapper {
         return new StoryPageRecord(
                 contentId,
                 storyPage.getPageNumber(),
+                storyPage.getTextlessIllustrationMediaId(),
                 storyPage.getLocalizations().size());
     }
 

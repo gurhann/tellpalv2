@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
+  Download,
   Play,
   Plus,
   Trash2,
@@ -40,9 +41,13 @@ import type {
   ContentReadViewModel,
   StoryPageReadViewModel,
 } from "@/features/contents/model/content-view-model";
-import type { AdminStoryPageLocalizationResponse } from "@/features/contents/api/story-page-admin";
+import type {
+  AdminStoryPageLocalizationResponse,
+  AdminStoryPageResponse,
+} from "@/features/contents/api/story-page-admin";
 import { StoryContentPreviewDialog } from "@/features/story-pages/components/story-content-preview-dialog";
 import { StoryPageLocalizationForm } from "@/features/story-pages/components/story-page-localization-form";
+import { StoryPageTextlessIllustrationForm } from "@/features/story-pages/components/story-page-textless-illustration-form";
 import { StoryPageTable } from "@/features/story-pages/components/story-page-table";
 import { StoryContentGuard } from "@/features/story-pages/guards/story-content-guard";
 import { useStoryPageActions } from "@/features/story-pages/mutations/use-story-page-actions";
@@ -124,6 +129,10 @@ type EditStoryPageDialogProps = {
   isPending: boolean;
   onClose: () => void;
   onNavigatePage: (pageNumber: number) => void;
+  onUpdateStoryPage: (input: {
+    pageNumber: number;
+    textlessIllustrationMediaId: number | null;
+  }) => Promise<AdminStoryPageResponse>;
   onUpsertLocalization: (input: {
     pageNumber: number;
     languageCode: string;
@@ -141,6 +150,7 @@ function EditStoryPageDialog({
   isPending,
   onClose,
   onNavigatePage,
+  onUpdateStoryPage,
   onUpsertLocalization,
 }: EditStoryPageDialogProps) {
   const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
@@ -155,6 +165,7 @@ function EditStoryPageDialog({
   const [dirtyLanguages, setDirtyLanguages] = useState<Record<string, boolean>>(
     {},
   );
+  const [isPageMediaDirty, setIsPageMediaDirty] = useState(false);
   const [pendingNavigationPageNumber, setPendingNavigationPageNumber] =
     useState<number | null>(null);
   const [isPendingCloseConfirmationOpen, setIsPendingCloseConfirmationOpen] =
@@ -162,6 +173,7 @@ function EditStoryPageDialog({
 
   useEffect(() => {
     setDirtyLanguages({});
+    setIsPageMediaDirty(false);
     setPendingNavigationPageNumber(null);
     setIsPendingCloseConfirmationOpen(false);
   }, [pageNumber]);
@@ -217,7 +229,8 @@ function EditStoryPageDialog({
     activeNavigationIndex < orderedStoryPages.length - 1
       ? (orderedStoryPages[activeNavigationIndex + 1]?.pageNumber ?? null)
       : null;
-  const hasUnsavedChanges = Object.values(dirtyLanguages).some(Boolean);
+  const hasUnsavedChanges =
+    isPageMediaDirty || Object.values(dirtyLanguages).some(Boolean);
 
   function handleNavigatePage(targetPageNumber: number | null | undefined) {
     if (!targetPageNumber || targetPageNumber === pageNumber || isPending) {
@@ -252,12 +265,14 @@ function EditStoryPageDialog({
 
     const targetPageNumber = pendingNavigationPageNumber;
     setDirtyLanguages({});
+    setIsPageMediaDirty(false);
     setPendingNavigationPageNumber(null);
     onNavigatePage(targetPageNumber);
   }
 
   function handleConfirmClose() {
     setDirtyLanguages({});
+    setIsPageMediaDirty(false);
     setIsPendingCloseConfirmationOpen(false);
     onClose();
   }
@@ -314,52 +329,66 @@ function EditStoryPageDialog({
             ) : null}
 
             {storyPage ? (
-              <LanguageTabs
-                items={languageItems}
-                value={resolvedActiveLanguageCode}
-                onValueChange={setActiveLanguageCode}
-                emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
-                emptyTitle="No parent locales available"
-                renderContent={(item) => {
-                  const contentLocalization =
-                    content.localizations.find(
-                      (localization) => localization.languageCode === item.code,
-                    ) ?? null;
-
-                  if (!contentLocalization) {
-                    return (
-                      <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-                        Story page payloads can open only after the parent
-                        content locale exists for this language.
-                      </div>
-                    );
+              <>
+                <StoryPageTextlessIllustrationForm
+                  storyPage={storyPage}
+                  isPending={isPending}
+                  onDirtyChange={setIsPageMediaDirty}
+                  onSave={({ textlessIllustrationMediaId }) =>
+                    onUpdateStoryPage({
+                      pageNumber: storyPage.pageNumber,
+                      textlessIllustrationMediaId,
+                    })
                   }
+                />
+                <LanguageTabs
+                  items={languageItems}
+                  value={resolvedActiveLanguageCode}
+                  onValueChange={setActiveLanguageCode}
+                  emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
+                  emptyTitle="No parent locales available"
+                  renderContent={(item) => {
+                    const contentLocalization =
+                      content.localizations.find(
+                        (localization) =>
+                          localization.languageCode === item.code,
+                      ) ?? null;
 
-                  return (
-                    <StoryPageLocalizationForm
-                      key={`${storyPage.pageNumber}-${item.code}`}
-                      contentLocalization={contentLocalization}
-                      isPending={isPending}
-                      storyPage={storyPage}
-                      onDirtyChange={handleDirtyChange}
-                      onSave={({
-                        languageCode,
-                        bodyText,
-                        audioMediaId,
-                        illustrationMediaId,
-                      }) =>
-                        onUpsertLocalization({
-                          pageNumber: storyPage.pageNumber,
+                    if (!contentLocalization) {
+                      return (
+                        <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                          Story page payloads can open only after the parent
+                          content locale exists for this language.
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <StoryPageLocalizationForm
+                        key={`${storyPage.pageNumber}-${item.code}`}
+                        contentLocalization={contentLocalization}
+                        isPending={isPending}
+                        storyPage={storyPage}
+                        onDirtyChange={handleDirtyChange}
+                        onSave={({
                           languageCode,
                           bodyText,
                           audioMediaId,
                           illustrationMediaId,
-                        })
-                      }
-                    />
-                  );
-                }}
-              />
+                        }) =>
+                          onUpsertLocalization({
+                            pageNumber: storyPage.pageNumber,
+                            languageCode,
+                            bodyText,
+                            audioMediaId,
+                            illustrationMediaId,
+                          })
+                        }
+                      />
+                    );
+                  }}
+                />
+              </>
             ) : null}
           </DialogBody>
 
@@ -593,6 +622,9 @@ function StoryPagesWorkspace({
         ).isReady,
     ),
   ).length;
+  const textlessIllustrationCount = storyPages.filter(
+    (storyPage) => storyPage.hasTextlessIllustration,
+  ).length;
   const isMutating = storyPageActions.isPending;
 
   useEffect(() => {
@@ -623,6 +655,9 @@ function StoryPagesWorkspace({
           totalPages: "Toplam sayfa",
           selectedLocaleReady: "Secili dilde hazir",
           fullyReady: "Tam hazir",
+          exportTextless: "Yazisiz gorselleri indir",
+          exportLoading: "Yazisiz gorseller hazirlaniyor...",
+          exportSuccess: "{fileName} indirildi.",
           addLoading: "Sayfa ekleniyor...",
           addSuccess: "Page {page} created.",
         }
@@ -643,6 +678,9 @@ function StoryPagesWorkspace({
           totalPages: "Total pages",
           selectedLocaleReady: "Ready in selected locale",
           fullyReady: "Fully ready pages",
+          exportTextless: "Export textless images",
+          exportLoading: "Preparing textless images...",
+          exportSuccess: "{fileName} downloaded.",
           addLoading: "Creating story page...",
           addSuccess: "Page {page} created.",
         };
@@ -660,6 +698,17 @@ function StoryPagesWorkspace({
     );
 
     handleEditingPageNumberChange(storyPage.pageNumber);
+  }
+
+  async function handleExportTextlessIllustrations() {
+    await toastMutation(
+      storyPageActions.exportTextlessIllustrations.mutateAsync(),
+      {
+        loading: copy.exportLoading,
+        success: (fileName) =>
+          copy.exportSuccess.replace("{fileName}", fileName),
+      },
+    );
   }
 
   return (
@@ -703,6 +752,18 @@ function StoryPagesWorkspace({
                 <ArrowLeft className="size-4" />
                 {copy.returnToContent}
               </Link>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void handleExportTextlessIllustrations()}
+              disabled={
+                textlessIllustrationCount === 0 ||
+                storyPageActions.exportTextlessIllustrations.isPending
+              }
+            >
+              <Download className="size-4" />
+              {copy.exportTextless}
             </Button>
             <Button
               type="button"
@@ -821,6 +882,14 @@ function StoryPagesWorkspace({
         isPending={storyPageActions.isPending}
         onClose={() => handleEditingPageNumberChange(null)}
         onNavigatePage={handleEditingPageNumberChange}
+        onUpdateStoryPage={(input) =>
+          storyPageActions.updateStoryPage.mutateAsync({
+            pageNumber: input.pageNumber,
+            input: {
+              textlessIllustrationMediaId: input.textlessIllustrationMediaId,
+            },
+          })
+        }
         onUpsertLocalization={(input) =>
           storyPageActions.upsertStoryPageLocalization.mutateAsync({
             pageNumber: input.pageNumber,

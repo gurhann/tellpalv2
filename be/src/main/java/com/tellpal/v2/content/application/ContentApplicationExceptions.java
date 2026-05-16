@@ -47,6 +47,13 @@ public final class ContentApplicationExceptions {
         }
     }
 
+    public static final class StoryPageTextlessIllustrationsMissingException extends RuntimeException {
+
+        public StoryPageTextlessIllustrationsMissingException(Long contentId) {
+            super("No textless story page illustrations are available for content " + contentId);
+        }
+    }
+
     public static final class AssetReferenceNotFoundException extends RuntimeException {
 
         public AssetReferenceNotFoundException(String fieldName, Long assetId) {

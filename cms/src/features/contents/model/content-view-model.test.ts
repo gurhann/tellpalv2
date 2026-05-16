@@ -258,6 +258,7 @@ describe("content view model mappers", () => {
     const pageDto: AdminStoryPageResponse = {
       contentId: 14,
       pageNumber: 3,
+      textlessIllustrationMediaId: 77,
       localizationCount: 2,
     };
 
@@ -273,6 +274,8 @@ describe("content view model mappers", () => {
     expect(mapAdminStoryPage(pageDto)).toEqual({
       contentId: 14,
       pageNumber: 3,
+      textlessIllustrationAssetId: 77,
+      hasTextlessIllustration: true,
       localizationCount: 2,
       hasLocalizations: true,
     });
@@ -296,6 +299,7 @@ describe("content view model mappers", () => {
       mapAdminStoryPageRead({
         contentId: 14,
         pageNumber: 3,
+        textlessIllustrationMediaId: null,
         localizationCount: 2,
         localizations: [
           {
@@ -319,6 +323,8 @@ describe("content view model mappers", () => {
     ).toEqual({
       contentId: 14,
       pageNumber: 3,
+      textlessIllustrationAssetId: null,
+      hasTextlessIllustration: false,
       localizationCount: 2,
       hasLocalizations: true,
       localizations: [

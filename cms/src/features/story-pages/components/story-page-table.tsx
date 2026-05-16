@@ -1,4 +1,4 @@
-import { Languages, Pencil, Plus, Trash2 } from "lucide-react";
+import { FileImage, Languages, Pencil, Plus, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
@@ -92,10 +92,13 @@ function createColumns({
   copy: {
     page: string;
     selectedStatus: string;
+    sourceImage: string;
     allLocales: string;
     nextStep: string;
     actions: string;
     noLocalization: string;
+    sourceLinked: string;
+    sourceMissing: string;
     noLocalizationDetail: string;
     missingPrefix: string;
     ready: string;
@@ -152,6 +155,25 @@ function createColumns({
           </div>
         );
       },
+    },
+    {
+      id: "source-image",
+      header: copy.sourceImage,
+      cell: (storyPage) => (
+        <div className="space-y-1">
+          <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+            <FileImage className="size-4 text-primary" />
+            {storyPage.hasTextlessIllustration
+              ? copy.sourceLinked
+              : copy.sourceMissing}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {storyPage.hasTextlessIllustration
+              ? `Asset #${storyPage.textlessIllustrationAssetId}`
+              : copy.sourceMissing}
+          </p>
+        </div>
+      ),
     },
     {
       id: "all-locales",
@@ -289,10 +311,13 @@ export function StoryPageTable({
       ? {
           page: "Sayfa",
           selectedStatus: "{locale} durumu",
+          sourceImage: "Yazisiz kaynak",
           allLocales: "Tum locale kapsami",
           nextStep: "Siradaki is",
           actions: "Aksiyonlar",
           noLocalization: "Henuz hazir degil",
+          sourceLinked: "Kaynak gorsel bagli",
+          sourceMissing: "Kaynak gorsel eksik",
           noLocalizationDetail:
             "Bu dil icin sayfa payload'i henuz olusturulmadi.",
           missingPrefix: "Eksik:",
@@ -311,10 +336,13 @@ export function StoryPageTable({
       : {
           page: "Page",
           selectedStatus: "{locale} status",
+          sourceImage: "Textless source",
           allLocales: "All locale coverage",
           nextStep: "Next step",
           actions: "Actions",
           noLocalization: "Not ready yet",
+          sourceLinked: "Source image linked",
+          sourceMissing: "Source image missing",
           noLocalizationDetail:
             "No localized page payload exists yet for this language.",
           missingPrefix: "Missing:",

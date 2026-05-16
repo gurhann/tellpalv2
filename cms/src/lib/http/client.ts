@@ -18,6 +18,19 @@ export type ApiRequestOptions<TResponse> = {
   signal?: AbortSignal;
 };
 
+export type ApiDownloadOptions = {
+  path: string;
+  method?: "GET" | "POST";
+  headers?: HeadersInit;
+  auth?: ApiRequestAuthMode;
+  signal?: AbortSignal;
+};
+
+export type ApiDownloadResponse = {
+  blob: Blob;
+  fileName: string | null;
+};
+
 export type ApiClientConfig = {
   baseUrl: string;
   fetch?: typeof fetch;
@@ -86,6 +99,18 @@ export function createApiClient(config: ApiClientConfig) {
     };
 
     return executeRequest(normalizedOptions);
+  }
+
+  async function download(
+    requestOptions: ApiDownloadOptions,
+  ): Promise<ApiDownloadResponse> {
+    const normalizedOptions = {
+      auth: "required" as const,
+      ...requestOptions,
+      method: requestOptions.method ?? "GET",
+    };
+
+    return executeDownload(normalizedOptions);
   }
 
   async function executeRequest<TResponse>(
@@ -177,6 +202,70 @@ export function createApiClient(config: ApiClientConfig) {
     }
   }
 
+  async function executeDownload(
+    requestOptions: Required<
+      Pick<ApiDownloadOptions, "path" | "method" | "auth">
+    > &
+      Omit<ApiDownloadOptions, "path" | "method" | "auth">,
+    overrideAccessToken?: string | null,
+    hasRetriedAfterRefresh = false,
+  ): Promise<ApiDownloadResponse> {
+    const url = new URL(requestOptions.path, config.baseUrl);
+    const headers = new Headers(requestOptions.headers);
+    headers.set("Accept", "*/*");
+
+    const accessToken =
+      overrideAccessToken ?? config.getAccessToken?.() ?? null;
+
+    if (requestOptions.auth !== "none" && accessToken) {
+      headers.set("Authorization", `Bearer ${accessToken}`);
+    }
+
+    const response = await fetchImplementation(url.toString(), {
+      method: requestOptions.method,
+      headers,
+      signal: requestOptions.signal,
+    });
+
+    if (
+      response.status === 401 &&
+      requestOptions.auth !== "none" &&
+      !hasRetriedAfterRefresh &&
+      config.refreshAccessToken
+    ) {
+      const refreshedAccessToken = await refreshAccessTokenOnce();
+
+      if (refreshedAccessToken) {
+        return executeDownload(requestOptions, refreshedAccessToken, true);
+      }
+    }
+
+    if (!response.ok) {
+      let responseBody: unknown | null = null;
+
+      try {
+        responseBody = await readJsonBody(response);
+      } catch {
+        responseBody = null;
+      }
+
+      const problem = toApiProblemDetail(responseBody, response);
+
+      if (response.status === 401) {
+        config.onUnauthorized?.(problem);
+      }
+
+      throw new ApiClientError(problem, response);
+    }
+
+    return {
+      blob: await response.blob(),
+      fileName: parseContentDispositionFileName(
+        response.headers.get("Content-Disposition"),
+      ),
+    };
+  }
+
   async function refreshAccessTokenOnce() {
     if (!config.refreshAccessToken) {
       return null;
@@ -196,6 +285,7 @@ export function createApiClient(config: ApiClientConfig) {
 
   return {
     request,
+    download,
     get<TResponse>(
       path: string,
       options?: Omit<ApiRequestOptions<TResponse>, "path" | "method">,
@@ -227,6 +317,20 @@ export function createApiClient(config: ApiClientConfig) {
       return request<TResponse>({ ...options, path, method: "DELETE" });
     },
   };
+}
+
+function parseContentDispositionFileName(contentDisposition: string | null) {
+  if (!contentDisposition) {
+    return null;
+  }
+
+  const encodedMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+  if (encodedMatch?.[1]) {
+    return decodeURIComponent(encodedMatch[1].trim().replaceAll('"', ""));
+  }
+
+  const match = contentDisposition.match(/filename="?([^";]+)"?/i);
+  return match?.[1]?.trim() ?? null;
 }
 
 const apiClientAuthBridge = createAuthBridge();
