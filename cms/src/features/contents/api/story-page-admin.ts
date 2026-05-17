@@ -3,6 +3,13 @@ import { z } from "zod";
 import { apiClient } from "@/lib/http/client";
 
 const pageNumberSchema = z.number().int().positive();
+const nullableStoryPageAssetIdSchema = z
+  .number()
+  .int()
+  .positive()
+  .nullable()
+  .optional()
+  .transform((value) => value ?? null);
 
 export type AddStoryPageInput = {
   afterPageNumber?: number | null;
@@ -21,7 +28,7 @@ export type UpsertStoryPageLocalizationInput = {
 export const adminStoryPageResponseSchema = z.object({
   contentId: z.number().int().positive(),
   pageNumber: pageNumberSchema,
-  textlessIllustrationMediaId: z.number().int().positive().nullable(),
+  textlessIllustrationMediaId: nullableStoryPageAssetIdSchema,
   localizationCount: z.number().int().nonnegative(),
 });
 
