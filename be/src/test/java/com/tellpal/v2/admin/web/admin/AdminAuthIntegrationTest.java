@@ -110,7 +110,7 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
 
     @Test
     void repeatedWrongPasswordsAreRateLimited() throws Exception {
-        seedAdmin("admin-root", "secret", true, "ADMIN");
+        seedAdmin("rate-limited-admin", "secret", true, "ADMIN");
 
         for (int attempt = 0; attempt < 5; attempt++) {
             mockMvc.perform(post("/api/admin/auth/login")
@@ -118,7 +118,7 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
                             .header("X-Forwarded-For", "203.0.113.99")
                             .content("""
                                     {
-                                      "username": "admin-root",
+                                      "username": "rate-limited-admin",
                                       "password": "wrong"
                                     }
                                     """))
@@ -130,7 +130,7 @@ class AdminAuthIntegrationTest extends PostgresIntegrationTestBase {
                         .header("X-Forwarded-For", "203.0.113.99")
                         .content("""
                                 {
-                                  "username": "admin-root",
+                                  "username": "rate-limited-admin",
                                   "password": "wrong"
                                 }
                                 """))
