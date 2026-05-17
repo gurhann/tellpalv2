@@ -365,7 +365,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   const editorDialog = page.getByRole("dialog", { name: /page 1 .* english/i });
   await editorDialog
     .getByRole("button", { name: /^advanced$/i })
-    .nth(1)
+    .nth(0)
     .click();
   let illustrationField = editorDialog.getByLabel(/illustration asset id/i);
 
@@ -394,7 +394,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   await expect(turkishEditorDialog).toBeVisible();
   await turkishEditorDialog
     .getByRole("button", { name: /^advanced$/i })
-    .nth(1)
+    .nth(0)
     .click();
   illustrationField = turkishEditorDialog.getByLabel(/illustration asset id/i);
   await expect(illustrationField).toHaveValue("42");
@@ -415,11 +415,13 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   await expect(illustrationField).toHaveValue("52");
 
   await page.getByRole("tab", { name: /english/i }).click();
-  await editorDialog
-    .getByRole("button", { name: /advanced/i })
-    .nth(1)
-    .click();
   illustrationField = editorDialog.getByLabel(/illustration asset id/i);
+  if (!(await illustrationField.isVisible())) {
+    await editorDialog
+      .getByRole("button", { name: /^advanced$/i })
+      .nth(0)
+      .click();
+  }
   await expect(illustrationField).toHaveValue("51");
 });
 
@@ -723,11 +725,11 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   await expect(turkishCreateEditorDialog).toBeVisible();
   await turkishCreateEditorDialog
     .getByRole("button", { name: /^advanced$/i })
-    .nth(1)
+    .nth(0)
     .click();
   await turkishCreateEditorDialog
     .getByRole("button", { name: /^advanced$/i })
-    .nth(2)
+    .nth(1)
     .click();
   await turkishCreateEditorDialog
     .getByLabel(/body text/i)

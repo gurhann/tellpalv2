@@ -24,6 +24,9 @@ const storyPageHookMocks = vi.hoisted(() => ({
 const storyPageMutationMocks = vi.hoisted(() => ({
   useStoryPageActions: vi.fn(),
 }));
+const contentMutationMocks = vi.hoisted(() => ({
+  useSaveContent: vi.fn(),
+}));
 const recentImageAssetHookMocks = vi.hoisted(() => ({
   useRecentImageAssets: vi.fn(),
 }));
@@ -39,6 +42,9 @@ const assetPreviewHookMocks = vi.hoisted(() => ({
 const uploadAssetHookMocks = vi.hoisted(() => ({
   useUploadAsset: vi.fn(),
 }));
+const assetAdminApiMocks = vi.hoisted(() => ({
+  getAsset: vi.fn(),
+}));
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
   useContentDetail: contentDetailHookMocks.useContentDetail,
@@ -51,6 +57,10 @@ vi.mock("@/features/story-pages/queries/use-story-pages", () => ({
 
 vi.mock("@/features/story-pages/mutations/use-story-page-actions", () => ({
   useStoryPageActions: storyPageMutationMocks.useStoryPageActions,
+}));
+
+vi.mock("@/features/contents/mutations/use-save-content", () => ({
+  useSaveContent: contentMutationMocks.useSaveContent,
 }));
 
 vi.mock("@/features/story-pages/queries/use-recent-image-assets", () => ({
@@ -72,6 +82,19 @@ vi.mock("@/features/assets/queries/use-asset-preview", () => ({
 vi.mock("@/features/assets/mutations/use-upload-asset", () => ({
   useUploadAsset: uploadAssetHookMocks.useUploadAsset,
 }));
+
+vi.mock("@/features/assets/api/asset-admin", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@/features/assets/api/asset-admin")>();
+
+  return {
+    ...actual,
+    assetAdminApi: {
+      ...actual.assetAdminApi,
+      getAsset: assetAdminApiMocks.getAsset,
+    },
+  };
+});
 
 function makeDetailState(overrides: Record<string, unknown> = {}) {
   return {
@@ -289,6 +312,40 @@ beforeEach(() => {
     problem: null,
     reset: vi.fn(),
   });
+  assetAdminApiMocks.getAsset.mockReset();
+  assetAdminApiMocks.getAsset.mockImplementation(async (assetId: number) => ({
+    assetId,
+    provider: "FIREBASE_STORAGE",
+    objectPath: `/preview/story/${assetId}.jpg`,
+    mediaType: "IMAGE",
+    kind: "ORIGINAL_IMAGE",
+    mimeType: "image/jpeg",
+    byteSize: 1024,
+    checksumSha256: null,
+    cachedDownloadUrl: null,
+    downloadUrlCachedAt: null,
+    downloadUrlExpiresAt: null,
+    createdAt: "2026-04-01T10:00:00Z",
+    updatedAt: "2026-04-01T10:00:00Z",
+  }));
+  contentMutationMocks.useSaveContent.mockReset();
+  contentMutationMocks.useSaveContent.mockReturnValue({
+    mutateAsync: vi.fn().mockResolvedValue({
+      ...storyContentViewModel.summary,
+      contentId: storyContentViewModel.summary.id,
+      type: storyContentViewModel.summary.type,
+      externalKey: storyContentViewModel.summary.externalKey,
+      ageRange: storyContentViewModel.summary.ageRange,
+      active: storyContentViewModel.summary.active,
+      textlessCoverMediaId: storyContentViewModel.summary.textlessCoverAssetId,
+      pageCount: storyContentViewModel.summary.pageCount,
+      createdAt: storyContentViewModel.summary.createdAt,
+      updatedAt: storyContentViewModel.summary.updatedAt,
+    }),
+    isPending: false,
+    problem: null,
+    reset: vi.fn(),
+  });
 });
 
 describe("StoryPagesRoute", () => {
@@ -432,6 +489,98 @@ describe("StoryPagesRoute", () => {
     ).toBeEnabled();
   });
 
+  it("opens source image management from the route view query", () => {
+    mockStoryRouteDependencies();
+
+    renderStoryRoute("/contents/1/story-pages?view=source-images&page=2");
+
+    expect(screen.getByRole("tab", { name: /source images/i })).toHaveAttribute(
+      "data-state",
+      "active",
+    );
+    expect(
+      screen.getByRole("heading", { name: /^source images$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /textless cover/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /textless\/source illustration/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /page 2/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("saves the selected source page image from the source manager", async () => {
+    const updateStoryPage = vi.fn().mockResolvedValue({
+      pageNumber: 2,
+      textlessIllustrationMediaId: 777,
+    });
+    mockStoryRouteDependencies();
+    storyPageMutationMocks.useStoryPageActions.mockReturnValue({
+      addStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      updateStoryPage: { isPending: false, mutateAsync: updateStoryPage },
+      removeStoryPage: { isPending: false, mutateAsync: vi.fn() },
+      exportTextlessIllustrations: { isPending: false, mutateAsync: vi.fn() },
+      upsertStoryPageLocalization: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+
+    renderStoryRoute("/contents/1/story-pages?view=source-images&page=2");
+
+    fireEvent.click(
+      screen.getByTestId("story-page-textless-illustration-advanced"),
+    );
+    fireEvent.change(
+      screen.getByTestId("story-page-textless-illustration-input"),
+      {
+        target: { value: "777" },
+      },
+    );
+    fireEvent.click(screen.getByRole("button", { name: /save source image/i }));
+
+    await waitFor(() => {
+      expect(updateStoryPage).toHaveBeenCalledWith({
+        pageNumber: 2,
+        input: {
+          textlessIllustrationMediaId: 777,
+        },
+      });
+    });
+  });
+
+  it("confirms before leaving a dirty source page image edit", async () => {
+    mockStoryRouteDependencies();
+
+    renderStoryRoute("/contents/1/story-pages?view=source-images&page=1");
+
+    fireEvent.click(
+      screen.getByTestId("story-page-textless-illustration-advanced"),
+    );
+    fireEvent.change(
+      screen.getByTestId("story-page-textless-illustration-input"),
+      {
+        target: { value: "777" },
+      },
+    );
+    fireEvent.click(screen.getByRole("button", { name: /page 2/i }));
+
+    expect(
+      screen.getByRole("heading", { name: /unsaved source image change/i }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /discard changes and continue/i }),
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("location")).toHaveTextContent(
+        "/contents/1/story-pages?view=source-images&page=2",
+      );
+    });
+  });
+
   it("opens the page editor with parent language workspaces", () => {
     contentDetailHookMocks.useContentDetail.mockReturnValue(makeDetailState());
     storyPageHookMocks.useStoryPages.mockReturnValue(makeStoryPageState());
@@ -482,11 +631,8 @@ describe("StoryPagesRoute", () => {
       0,
     );
     expect(
-      screen.getByRole("heading", { name: /textless\/source illustration/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /save source image/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole("heading", { name: /textless\/source illustration/i }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getAllByRole("button", { name: /save page localization/i }).length,
     ).toBeGreaterThan(0);

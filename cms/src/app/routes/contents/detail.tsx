@@ -1,4 +1,4 @@
-import { LoaderCircle, Play } from "lucide-react";
+import { FileImage, LoaderCircle, Play } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -12,7 +12,6 @@ import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import { ContentTextlessCoverForm } from "@/features/contents/components/content-textless-cover-form";
 import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
@@ -114,7 +113,10 @@ export function ContentDetailRoute() {
             "Temel icerik metadata'sini guncelleyin. Icerik turu olusturulduktan sonra sabittir; external key, yas araligi ve aktiflik durumu burada degistirilebilir.",
           sourceCoverTitle: "Yazisiz Hikaye Kapagi",
           sourceCoverDescription:
-            "Dil bagimsiz kapak kaynagini lokalize kapaklardan ayri tutun. Bu alan yayin hazirligini etkilemez.",
+            "Dil bagimsiz kapak ve sayfa kaynaklari ayri source images ekraninda yonetilir.",
+          sourceCoverLinked: "Kaynak kapak bagli",
+          sourceCoverMissing: "Kaynak kapak eksik",
+          manageSourceImages: "Kaynak gorselleri yonet",
           contributorsTitle: "Contributor Atamalari",
           contributorsDescription:
             "Paylasilan contributor kayitlarini bu icerige rol, dil, gorunen kredi adi ve siralama metadatasi ile baglayin.",
@@ -180,7 +182,10 @@ export function ContentDetailRoute() {
             "Update the base content metadata. Content type is fixed after creation, while external key, age range, and active state can be changed here.",
           sourceCoverTitle: "Textless Story Cover",
           sourceCoverDescription:
-            "Keep the language-independent cover source separate from localized covers. This field does not affect publishing readiness.",
+            "Language-independent cover and page sources are managed in the source images workspace.",
+          sourceCoverLinked: "Source cover linked",
+          sourceCoverMissing: "Source cover missing",
+          manageSourceImages: "Manage source images",
           contributorsTitle: "Contributor assignments",
           contributorsDescription:
             "Assign shared contributor registry entries to this content item with role, language, display credit, and ordering metadata.",
@@ -357,6 +362,13 @@ export function ContentDetailRoute() {
       );
     }
 
+    const sourceImagesSearchParams = new URLSearchParams();
+    sourceImagesSearchParams.set("view", "source-images");
+    if (storyPageLanguageCode) {
+      sourceImagesSearchParams.set("language", storyPageLanguageCode);
+    }
+    const sourceImagesHref = `/contents/${parsedContentId}/story-pages?${sourceImagesSearchParams.toString()}`;
+
     return (
       <>
         <FormSection
@@ -375,7 +387,28 @@ export function ContentDetailRoute() {
             description={copy.sourceCoverDescription}
             title={copy.sourceCoverTitle}
           >
-            <ContentTextlessCoverForm content={content} />
+            <div className="flex flex-col gap-4 rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                  <FileImage className="size-5" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    {content.summary.hasTextlessCover
+                      ? copy.sourceCoverLinked
+                      : copy.sourceCoverMissing}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {content.summary.textlessCoverAssetId
+                      ? `Asset #${content.summary.textlessCoverAssetId}`
+                      : copy.sourceCoverDescription}
+                  </p>
+                </div>
+              </div>
+              <Button asChild type="button" variant="outline">
+                <Link to={sourceImagesHref}>{copy.manageSourceImages}</Link>
+              </Button>
+            </div>
           </FormSection>
         ) : null}
 

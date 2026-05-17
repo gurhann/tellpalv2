@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,7 @@ import {
 import { TaskRail } from "@/components/workspace/task-rail";
 import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
+import { ContentTextlessCoverForm } from "@/features/contents/components/content-textless-cover-form";
 import type {
   ContentReadViewModel,
   StoryPageReadViewModel,
@@ -129,10 +131,6 @@ type EditStoryPageDialogProps = {
   isPending: boolean;
   onClose: () => void;
   onNavigatePage: (pageNumber: number) => void;
-  onUpdateStoryPage: (input: {
-    pageNumber: number;
-    textlessIllustrationMediaId: number | null;
-  }) => Promise<AdminStoryPageResponse>;
   onUpsertLocalization: (input: {
     pageNumber: number;
     languageCode: string;
@@ -150,7 +148,6 @@ function EditStoryPageDialog({
   isPending,
   onClose,
   onNavigatePage,
-  onUpdateStoryPage,
   onUpsertLocalization,
 }: EditStoryPageDialogProps) {
   const storyPageQuery = useStoryPage(content.summary.id, pageNumber);
@@ -165,7 +162,6 @@ function EditStoryPageDialog({
   const [dirtyLanguages, setDirtyLanguages] = useState<Record<string, boolean>>(
     {},
   );
-  const [isPageMediaDirty, setIsPageMediaDirty] = useState(false);
   const [pendingNavigationPageNumber, setPendingNavigationPageNumber] =
     useState<number | null>(null);
   const [isPendingCloseConfirmationOpen, setIsPendingCloseConfirmationOpen] =
@@ -173,7 +169,6 @@ function EditStoryPageDialog({
 
   useEffect(() => {
     setDirtyLanguages({});
-    setIsPageMediaDirty(false);
     setPendingNavigationPageNumber(null);
     setIsPendingCloseConfirmationOpen(false);
   }, [pageNumber]);
@@ -229,8 +224,7 @@ function EditStoryPageDialog({
     activeNavigationIndex < orderedStoryPages.length - 1
       ? (orderedStoryPages[activeNavigationIndex + 1]?.pageNumber ?? null)
       : null;
-  const hasUnsavedChanges =
-    isPageMediaDirty || Object.values(dirtyLanguages).some(Boolean);
+  const hasUnsavedChanges = Object.values(dirtyLanguages).some(Boolean);
 
   function handleNavigatePage(targetPageNumber: number | null | undefined) {
     if (!targetPageNumber || targetPageNumber === pageNumber || isPending) {
@@ -265,14 +259,12 @@ function EditStoryPageDialog({
 
     const targetPageNumber = pendingNavigationPageNumber;
     setDirtyLanguages({});
-    setIsPageMediaDirty(false);
     setPendingNavigationPageNumber(null);
     onNavigatePage(targetPageNumber);
   }
 
   function handleConfirmClose() {
     setDirtyLanguages({});
-    setIsPageMediaDirty(false);
     setIsPendingCloseConfirmationOpen(false);
     onClose();
   }
@@ -329,66 +321,52 @@ function EditStoryPageDialog({
             ) : null}
 
             {storyPage ? (
-              <>
-                <StoryPageTextlessIllustrationForm
-                  storyPage={storyPage}
-                  isPending={isPending}
-                  onDirtyChange={setIsPageMediaDirty}
-                  onSave={({ textlessIllustrationMediaId }) =>
-                    onUpdateStoryPage({
-                      pageNumber: storyPage.pageNumber,
-                      textlessIllustrationMediaId,
-                    })
-                  }
-                />
-                <LanguageTabs
-                  items={languageItems}
-                  value={resolvedActiveLanguageCode}
-                  onValueChange={setActiveLanguageCode}
-                  emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
-                  emptyTitle="No parent locales available"
-                  renderContent={(item) => {
-                    const contentLocalization =
-                      content.localizations.find(
-                        (localization) =>
-                          localization.languageCode === item.code,
-                      ) ?? null;
+              <LanguageTabs
+                items={languageItems}
+                value={resolvedActiveLanguageCode}
+                onValueChange={setActiveLanguageCode}
+                emptyDescription="Create a content localization first. Story page payloads can only be edited for existing parent locales."
+                emptyTitle="No parent locales available"
+                renderContent={(item) => {
+                  const contentLocalization =
+                    content.localizations.find(
+                      (localization) => localization.languageCode === item.code,
+                    ) ?? null;
 
-                    if (!contentLocalization) {
-                      return (
-                        <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-                          Story page payloads can open only after the parent
-                          content locale exists for this language.
-                        </div>
-                      );
-                    }
-
+                  if (!contentLocalization) {
                     return (
-                      <StoryPageLocalizationForm
-                        key={`${storyPage.pageNumber}-${item.code}`}
-                        contentLocalization={contentLocalization}
-                        isPending={isPending}
-                        storyPage={storyPage}
-                        onDirtyChange={handleDirtyChange}
-                        onSave={({
+                      <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                        Story page payloads can open only after the parent
+                        content locale exists for this language.
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <StoryPageLocalizationForm
+                      key={`${storyPage.pageNumber}-${item.code}`}
+                      contentLocalization={contentLocalization}
+                      isPending={isPending}
+                      storyPage={storyPage}
+                      onDirtyChange={handleDirtyChange}
+                      onSave={({
+                        languageCode,
+                        bodyText,
+                        audioMediaId,
+                        illustrationMediaId,
+                      }) =>
+                        onUpsertLocalization({
+                          pageNumber: storyPage.pageNumber,
                           languageCode,
                           bodyText,
                           audioMediaId,
                           illustrationMediaId,
-                        }) =>
-                          onUpsertLocalization({
-                            pageNumber: storyPage.pageNumber,
-                            languageCode,
-                            bodyText,
-                            audioMediaId,
-                            illustrationMediaId,
-                          })
-                        }
-                      />
-                    );
-                  }}
-                />
-              </>
+                        })
+                      }
+                    />
+                  );
+                }}
+              />
             ) : null}
           </DialogBody>
 
@@ -556,20 +534,304 @@ function DeleteStoryPageDialog({
   );
 }
 
+type StorySourceImagesManagerProps = {
+  content: ContentReadViewModel;
+  storyPages: StoryPageReadViewModel[];
+  selectedPageNumber: number | null;
+  isPending: boolean;
+  hasAnySourceImage: boolean;
+  isExportPending: boolean;
+  onSelectPage: (pageNumber: number | null) => void;
+  onExport: () => void;
+  onUpdateStoryPage: (input: {
+    pageNumber: number;
+    textlessIllustrationMediaId: number | null;
+  }) => Promise<AdminStoryPageResponse>;
+};
+
+function StorySourceImagesManager({
+  content,
+  storyPages,
+  selectedPageNumber,
+  isPending,
+  hasAnySourceImage,
+  isExportPending,
+  onSelectPage,
+  onExport,
+  onUpdateStoryPage,
+}: StorySourceImagesManagerProps) {
+  const { locale } = useI18n();
+  const orderedStoryPages = [...storyPages].sort(
+    (firstStoryPage, secondStoryPage) =>
+      firstStoryPage.pageNumber - secondStoryPage.pageNumber,
+  );
+  const selectedStoryPage =
+    orderedStoryPages.find(
+      (storyPage) => storyPage.pageNumber === selectedPageNumber,
+    ) ??
+    orderedStoryPages[0] ??
+    null;
+  const [isSourceImageDirty, setIsSourceImageDirty] = useState(false);
+  const [pendingPageNumber, setPendingPageNumber] = useState<number | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (
+      selectedStoryPage &&
+      selectedStoryPage.pageNumber !== selectedPageNumber &&
+      !isSourceImageDirty
+    ) {
+      onSelectPage(selectedStoryPage.pageNumber);
+    }
+  }, [isSourceImageDirty, onSelectPage, selectedPageNumber, selectedStoryPage]);
+
+  const copy =
+    locale === "tr"
+      ? {
+          title: "Kaynak gorseller",
+          description:
+            "Yazisiz kapak ve sayfa illustrasyonlarini ceviri/cizer handoff paketi icin tek yerde yonetin.",
+          coverTitle: "Yazisiz kapak",
+          coverDescription:
+            "Kapak kaynagi icerik seviyesindedir ve lokalize kapaklari etkilemez.",
+          pagesTitle: "Sayfa kaynaklari",
+          pagesDescription:
+            "Bir sayfa secin, yazisiz kaynak illustrasyonunu baglayin ve gerekirse source paketini indirin.",
+          exportTextless: "Kaynak gorselleri indir",
+          exportLoading: "Kaynak gorseller hazirlaniyor...",
+          sourceLinked: "Bagli",
+          sourceMissing: "Eksik",
+          noPagesTitle: "Henuz hikaye sayfasi yok",
+          noPagesDescription:
+            "Kaynak sayfa gorsellerini yonetmek icin once Pages gorunumunden hikaye sayfasi ekleyin.",
+          discardTitle: "Kaydedilmemis kaynak gorsel degisikligi var",
+          discardDescription:
+            "Baska bir sayfaya gecmeden once mevcut source gorsel degisikligini kaydedin veya vazgecin.",
+          stay: "Bu sayfada kal",
+          discard: "Vazgec ve devam et",
+        }
+      : {
+          title: "Source images",
+          description:
+            "Manage the textless cover and page illustrations in one handoff workspace.",
+          coverTitle: "Textless cover",
+          coverDescription:
+            "The cover source is content-level and does not change localized covers.",
+          pagesTitle: "Page sources",
+          pagesDescription:
+            "Select a page, bind its textless source illustration, and export the source package when needed.",
+          exportTextless: "Export source images",
+          exportLoading: "Preparing source images...",
+          sourceLinked: "Linked",
+          sourceMissing: "Missing",
+          noPagesTitle: "No story pages yet",
+          noPagesDescription:
+            "Add story pages from the Pages view before managing page source images.",
+          discardTitle: "Unsaved source image change",
+          discardDescription:
+            "Save or discard the current source image change before switching pages.",
+          stay: "Stay on page",
+          discard: "Discard changes and continue",
+        };
+
+  function handleSelectPage(pageNumber: number) {
+    if (pageNumber === selectedStoryPage?.pageNumber) {
+      return;
+    }
+
+    if (isSourceImageDirty) {
+      setPendingPageNumber(pageNumber);
+      return;
+    }
+
+    onSelectPage(pageNumber);
+  }
+
+  function handleConfirmPageChange() {
+    if (pendingPageNumber === null) {
+      return;
+    }
+
+    const pageNumber = pendingPageNumber;
+    setPendingPageNumber(null);
+    setIsSourceImageDirty(false);
+    onSelectPage(pageNumber);
+  }
+
+  return (
+    <>
+      <div className="grid gap-4">
+        <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-1">
+              <h2 className="font-heading text-base font-semibold tracking-tight text-foreground">
+                {copy.title}
+              </h2>
+              <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+                {copy.description}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onExport}
+              disabled={!hasAnySourceImage || isExportPending}
+            >
+              <Download className="size-4" />
+              {isExportPending ? copy.exportLoading : copy.exportTextless}
+            </Button>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
+          <div className="mb-4 space-y-1">
+            <h3 className="text-sm font-semibold text-foreground">
+              {copy.coverTitle}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {copy.coverDescription}
+            </p>
+          </div>
+          <ContentTextlessCoverForm content={content} />
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-[minmax(14rem,18rem)_1fr]">
+          <div className="rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm">
+            <div className="mb-4 space-y-1">
+              <h3 className="text-sm font-semibold text-foreground">
+                {copy.pagesTitle}
+              </h3>
+              <p className="text-sm leading-6 text-muted-foreground">
+                {copy.pagesDescription}
+              </p>
+            </div>
+
+            {orderedStoryPages.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-border/70 bg-muted/20 px-4 py-6">
+                <p className="text-sm font-medium text-foreground">
+                  {copy.noPagesTitle}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {copy.noPagesDescription}
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-2" aria-label="Story source pages">
+                {orderedStoryPages.map((storyPage) => {
+                  const isSelected =
+                    storyPage.pageNumber === selectedStoryPage?.pageNumber;
+                  return (
+                    <Button
+                      key={storyPage.pageNumber}
+                      type="button"
+                      variant={isSelected ? "secondary" : "outline"}
+                      className="h-auto justify-between gap-3 px-3 py-2 text-left"
+                      aria-pressed={isSelected}
+                      onClick={() => handleSelectPage(storyPage.pageNumber)}
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-medium">
+                          Page {storyPage.pageNumber}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {storyPage.hasTextlessIllustration
+                            ? `Asset #${storyPage.textlessIllustrationAssetId}`
+                            : copy.sourceMissing}
+                        </span>
+                      </span>
+                      <WorkspaceStatusPill
+                        tone={
+                          storyPage.hasTextlessIllustration
+                            ? "success"
+                            : "warning"
+                        }
+                      >
+                        {storyPage.hasTextlessIllustration
+                          ? copy.sourceLinked
+                          : copy.sourceMissing}
+                      </WorkspaceStatusPill>
+                    </Button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div>
+            {selectedStoryPage ? (
+              <StoryPageTextlessIllustrationForm
+                key={selectedStoryPage.pageNumber}
+                storyPage={selectedStoryPage}
+                isPending={isPending}
+                onDirtyChange={setIsSourceImageDirty}
+                onSave={({ textlessIllustrationMediaId }) =>
+                  onUpdateStoryPage({
+                    pageNumber: selectedStoryPage.pageNumber,
+                    textlessIllustrationMediaId,
+                  })
+                }
+              />
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      <Dialog
+        open={pendingPageNumber !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingPageNumber(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{copy.discardTitle}</DialogTitle>
+            <DialogDescription>{copy.discardDescription}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPendingPageNumber(null)}
+            >
+              {copy.stay}
+            </Button>
+            <Button type="button" onClick={handleConfirmPageChange}>
+              {copy.discard}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+type StoryPagesView = "pages" | "source-images";
+
 type StoryPagesWorkspaceProps = {
   content: ContentReadViewModel;
   preferredLanguageCode?: string | null;
   onPreferredLanguageCodeChange?: (languageCode: string) => void;
+  activeView: StoryPagesView;
+  onActiveViewChange: (view: StoryPagesView) => void;
   initialEditingPageNumber?: number | null;
   onEditingPageNumberChange?: (pageNumber: number | null) => void;
+  selectedSourcePageNumber?: number | null;
+  onSourcePageNumberChange?: (pageNumber: number | null) => void;
 };
 
 function StoryPagesWorkspace({
   content,
   preferredLanguageCode = null,
   onPreferredLanguageCodeChange,
+  activeView,
+  onActiveViewChange,
   initialEditingPageNumber = null,
   onEditingPageNumberChange,
+  selectedSourcePageNumber = null,
+  onSourcePageNumberChange,
 }: StoryPagesWorkspaceProps) {
   const { locale } = useI18n();
   const storyPagesQuery = useStoryPages(content.summary.id);
@@ -628,6 +890,8 @@ function StoryPagesWorkspace({
   const hasAnySourceImage =
     content.summary.hasTextlessCover || textlessIllustrationCount > 0;
   const isMutating = storyPageActions.isPending;
+  const isExportingSourceImages =
+    storyPageActions.exportTextlessIllustrations?.isPending ?? false;
 
   useEffect(() => {
     setEditingPageNumber(initialEditingPageNumber ?? null);
@@ -654,6 +918,13 @@ function StoryPagesWorkspace({
           activeLocale: "Aktif dil",
           activeLocaleControl: "Aktif dili degistir",
           activeLocaleHint: "Yeni sayfalar bu dil editoru ile acilir.",
+          pagesView: "Sayfalar",
+          sourceImagesView: "Kaynak gorseller",
+          viewControl: "Story editor gorunumunu degistir",
+          sourceCoverLinked: "Kaynak kapak bagli",
+          sourceCoverMissing: "Kaynak kapak eksik",
+          sourcePageCount: (linked: number, total: number) =>
+            `${linked} / ${total} sayfa`,
           totalPages: "Toplam sayfa",
           selectedLocaleReady: "Secili dilde hazir",
           fullyReady: "Tam hazir",
@@ -677,6 +948,13 @@ function StoryPagesWorkspace({
           activeLocale: "Active locale",
           activeLocaleControl: "Change active locale",
           activeLocaleHint: "New pages open in this locale editor.",
+          pagesView: "Pages",
+          sourceImagesView: "Source images",
+          viewControl: "Change story editor view",
+          sourceCoverLinked: "Source cover linked",
+          sourceCoverMissing: "Source cover missing",
+          sourcePageCount: (linked: number, total: number) =>
+            `${linked} / ${total} pages`,
           totalPages: "Total pages",
           selectedLocaleReady: "Ready in selected locale",
           fullyReady: "Fully ready pages",
@@ -703,6 +981,10 @@ function StoryPagesWorkspace({
   }
 
   async function handleExportTextlessIllustrations() {
+    if (!storyPageActions.exportTextlessIllustrations) {
+      return;
+    }
+
     await toastMutation(
       storyPageActions.exportTextlessIllustrations.mutateAsync(),
       {
@@ -759,105 +1041,181 @@ function StoryPagesWorkspace({
               type="button"
               variant="outline"
               onClick={() => void handleExportTextlessIllustrations()}
-              disabled={
-                !hasAnySourceImage ||
-                storyPageActions.exportTextlessIllustrations.isPending
-              }
+              disabled={!hasAnySourceImage || isExportingSourceImages}
             >
               <Download className="size-4" />
               {copy.exportTextless}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsPreviewOpen(true)}
-              disabled={storyPagesQuery.isLoading && storyPages.length === 0}
-            >
-              <Play className="size-4" />
-              {copy.previewStory}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => void handleAddStoryPage(null)}
-              disabled={isMutating}
-            >
-              <Plus className="size-4" />
-              {copy.addPage}
-            </Button>
+            {activeView === "pages" ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsPreviewOpen(true)}
+                  disabled={
+                    storyPagesQuery.isLoading && storyPages.length === 0
+                  }
+                >
+                  <Play className="size-4" />
+                  {copy.previewStory}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => void handleAddStoryPage(null)}
+                  disabled={isMutating}
+                >
+                  <Plus className="size-4" />
+                  {copy.addPage}
+                </Button>
+              </>
+            ) : null}
           </>
         }
         toolbar={
-          <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-muted/15 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-2">
-              <WorkspaceStatusPill tone="accent">
-                {copy.activeLocale}
-              </WorkspaceStatusPill>
-              <span className="text-sm text-muted-foreground">
-                {copy.activeLocaleHint}
-              </span>
-            </div>
-            <div className="flex min-w-0 items-center gap-2">
-              <label className="sr-only" htmlFor="story-pages-active-language">
-                {copy.activeLocaleControl}
-              </label>
-              <Select
-                value={resolvedPreferredLanguageCode ?? undefined}
-                onValueChange={(languageCode) =>
-                  onPreferredLanguageCodeChange?.(languageCode)
-                }
-              >
-                <SelectTrigger
-                  id="story-pages-active-language"
-                  className="h-10 w-full min-w-44 bg-background sm:w-56"
-                  aria-label={copy.activeLocaleControl}
-                >
-                  <SelectValue placeholder={preferredLanguageLabel} />
-                </SelectTrigger>
-                <SelectContent>
-                  {content.localizations.map((localization) => (
-                    <SelectItem
-                      key={localization.languageCode}
-                      value={localization.languageCode}
+          <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-muted/15 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+            <Tabs
+              value={activeView}
+              onValueChange={(value) =>
+                onActiveViewChange(value as StoryPagesView)
+              }
+            >
+              <TabsList aria-label={copy.viewControl}>
+                <TabsTrigger value="pages">{copy.pagesView}</TabsTrigger>
+                <TabsTrigger value="source-images">
+                  {copy.sourceImagesView}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {activeView === "pages" ? (
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="flex flex-wrap items-center gap-2">
+                  <WorkspaceStatusPill tone="accent">
+                    {copy.activeLocale}
+                  </WorkspaceStatusPill>
+                  <span className="text-sm text-muted-foreground">
+                    {copy.activeLocaleHint}
+                  </span>
+                </div>
+                <div className="flex min-w-0 items-center gap-2">
+                  <label
+                    className="sr-only"
+                    htmlFor="story-pages-active-language"
+                  >
+                    {copy.activeLocaleControl}
+                  </label>
+                  <Select
+                    value={resolvedPreferredLanguageCode ?? undefined}
+                    onValueChange={(languageCode) =>
+                      onPreferredLanguageCodeChange?.(languageCode)
+                    }
+                  >
+                    <SelectTrigger
+                      id="story-pages-active-language"
+                      className="h-10 w-full min-w-44 bg-background sm:w-56"
+                      aria-label={copy.activeLocaleControl}
                     >
-                      {localization.languageLabel}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                      <SelectValue placeholder={preferredLanguageLabel} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {content.localizations.map((localization) => (
+                        <SelectItem
+                          key={localization.languageCode}
+                          value={localization.languageCode}
+                        >
+                          {localization.languageLabel}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+                aria-live="polite"
+              >
+                <WorkspaceStatusPill
+                  tone={
+                    hasAnySourceImage
+                      ? textlessIllustrationCount === storyPageCount &&
+                        content.summary.hasTextlessCover
+                        ? "success"
+                        : "warning"
+                      : "default"
+                  }
+                >
+                  {copy.sourcePageCount(
+                    textlessIllustrationCount,
+                    storyPageCount,
+                  )}
+                </WorkspaceStatusPill>
+                <span>
+                  {content.summary.hasTextlessCover
+                    ? copy.sourceCoverLinked
+                    : copy.sourceCoverMissing}
+                </span>
+              </div>
+            )}
           </div>
         }
       >
-        <StoryPageTable
-          storyPages={storyPages}
-          availableLocalizations={content.localizations.map((localization) => ({
-            languageCode: localization.languageCode,
-            languageLabel: localization.languageLabel,
-          }))}
-          selectedLanguageCode={resolvedPreferredLanguageCode}
-          selectedLanguageLabel={preferredLanguageLabel}
-          isLoading={storyPagesQuery.isLoading}
-          problem={storyPagesQuery.problem}
-          onRetry={() => void storyPagesQuery.refetch()}
-          onEditStoryPage={(storyPage) =>
-            handleEditingPageNumberChange(storyPage.pageNumber)
-          }
-          onAddAfterStoryPage={(storyPage) =>
-            void handleAddStoryPage(storyPage.pageNumber)
-          }
-          onDeleteStoryPage={setDeletingStoryPage}
-          emptyAction={
-            <Button
-              type="button"
-              onClick={() => void handleAddStoryPage(null)}
-              disabled={isMutating}
-            >
-              <Plus className="size-4" />
-              {copy.addFirstPage}
-            </Button>
-          }
-          isMutationPending={isMutating}
-        />
+        {activeView === "pages" ? (
+          <StoryPageTable
+            storyPages={storyPages}
+            availableLocalizations={content.localizations.map(
+              (localization) => ({
+                languageCode: localization.languageCode,
+                languageLabel: localization.languageLabel,
+              }),
+            )}
+            selectedLanguageCode={resolvedPreferredLanguageCode}
+            selectedLanguageLabel={preferredLanguageLabel}
+            isLoading={storyPagesQuery.isLoading}
+            problem={storyPagesQuery.problem}
+            onRetry={() => void storyPagesQuery.refetch()}
+            onEditStoryPage={(storyPage) =>
+              handleEditingPageNumberChange(storyPage.pageNumber)
+            }
+            onAddAfterStoryPage={(storyPage) =>
+              void handleAddStoryPage(storyPage.pageNumber)
+            }
+            onDeleteStoryPage={setDeletingStoryPage}
+            emptyAction={
+              <Button
+                type="button"
+                onClick={() => void handleAddStoryPage(null)}
+                disabled={isMutating}
+              >
+                <Plus className="size-4" />
+                {copy.addFirstPage}
+              </Button>
+            }
+            isMutationPending={isMutating}
+          />
+        ) : (
+          <StorySourceImagesManager
+            content={content}
+            storyPages={storyPages}
+            selectedPageNumber={selectedSourcePageNumber}
+            isPending={storyPageActions.updateStoryPage.isPending}
+            hasAnySourceImage={hasAnySourceImage}
+            isExportPending={isExportingSourceImages}
+            onSelectPage={(pageNumber) =>
+              onSourcePageNumberChange?.(pageNumber)
+            }
+            onExport={() => void handleExportTextlessIllustrations()}
+            onUpdateStoryPage={(input) =>
+              storyPageActions.updateStoryPage.mutateAsync({
+                pageNumber: input.pageNumber,
+                input: {
+                  textlessIllustrationMediaId:
+                    input.textlessIllustrationMediaId,
+                },
+              })
+            }
+          />
+        )}
       </ContentPageShell>
 
       <StoryContentPreviewDialog
@@ -884,14 +1242,6 @@ function StoryPagesWorkspace({
         isPending={storyPageActions.isPending}
         onClose={() => handleEditingPageNumberChange(null)}
         onNavigatePage={handleEditingPageNumberChange}
-        onUpdateStoryPage={(input) =>
-          storyPageActions.updateStoryPage.mutateAsync({
-            pageNumber: input.pageNumber,
-            input: {
-              textlessIllustrationMediaId: input.textlessIllustrationMediaId,
-            },
-          })
-        }
         onUpsertLocalization={(input) =>
           storyPageActions.upsertStoryPageLocalization.mutateAsync({
             pageNumber: input.pageNumber,
@@ -925,9 +1275,19 @@ export function StoryPagesRoute() {
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
   const preferredLanguageCode = searchParams.get("language");
+  const activeView: StoryPagesView =
+    searchParams.get("view") === "source-images" ? "source-images" : "pages";
   const pageSearchParam = searchParams.get("page");
   const parsedPageNumber = pageSearchParam ? Number(pageSearchParam) : null;
   const initialEditingPageNumber =
+    activeView === "pages" &&
+    typeof parsedPageNumber === "number" &&
+    Number.isInteger(parsedPageNumber) &&
+    parsedPageNumber > 0
+      ? parsedPageNumber
+      : null;
+  const selectedSourcePageNumber =
+    activeView === "source-images" &&
     typeof parsedPageNumber === "number" &&
     Number.isInteger(parsedPageNumber) &&
     parsedPageNumber > 0
@@ -942,6 +1302,29 @@ export function StoryPagesRoute() {
 
   function handleEditingPageNumberChange(pageNumber: number | null) {
     const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.delete("view");
+    if (pageNumber) {
+      nextSearchParams.set("page", `${pageNumber}`);
+    } else {
+      nextSearchParams.delete("page");
+    }
+    setSearchParams(nextSearchParams, { replace: true });
+  }
+
+  function handleActiveViewChange(view: StoryPagesView) {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    if (view === "source-images") {
+      nextSearchParams.set("view", "source-images");
+    } else {
+      nextSearchParams.delete("view");
+    }
+    nextSearchParams.delete("page");
+    setSearchParams(nextSearchParams, { replace: true });
+  }
+
+  function handleSourcePageNumberChange(pageNumber: number | null) {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set("view", "source-images");
     if (pageNumber) {
       nextSearchParams.set("page", `${pageNumber}`);
     } else {
@@ -957,8 +1340,12 @@ export function StoryPagesRoute() {
           content={content}
           preferredLanguageCode={preferredLanguageCode}
           onPreferredLanguageCodeChange={handlePreferredLanguageCodeChange}
+          activeView={activeView}
+          onActiveViewChange={handleActiveViewChange}
           initialEditingPageNumber={initialEditingPageNumber}
           onEditingPageNumberChange={handleEditingPageNumberChange}
+          selectedSourcePageNumber={selectedSourcePageNumber}
+          onSourcePageNumberChange={handleSourcePageNumberChange}
         />
       )}
     </StoryContentGuard>

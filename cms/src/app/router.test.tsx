@@ -490,6 +490,15 @@ describe("CMS router auth flow", () => {
       screen.getByRole("link", { name: /open story pages/i }),
     ).toHaveAttribute("href", "/contents/42/story-pages?language=en");
     expect(
+      screen.getByRole("link", { name: /manage source images/i }),
+    ).toHaveAttribute(
+      "href",
+      "/contents/42/story-pages?view=source-images&language=en",
+    );
+    expect(
+      screen.queryByRole("button", { name: /save source cover/i }),
+    ).not.toBeInTheDocument();
+    expect(
       screen.getByRole("button", { name: /preview story/i }),
     ).toBeEnabled();
     expect(

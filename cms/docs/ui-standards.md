@@ -114,11 +114,13 @@ Detail and workspace routes must follow one shared composition contract.
   - first and last page boundary controls must be disabled
   - dirty form navigation must require an explicit discard confirmation before changing pages
 - Story-page textless/source illustrations are page-level assets, not locale-level payloads.
-  - keep the source image picker above locale tabs in the story page editor
+  - keep source image management out of localized story page editor modals
+  - manage page source images in a dedicated story source-management view
   - source image coverage must not affect publication readiness or locale completeness states
   - handoff/export actions must stay compact in the route toolbar or operational rail
 - Story textless/source covers are content-level assets, not locale-level cover replacements.
-  - keep the source cover picker separate from localized cover fields on story content detail screens
+  - keep the source cover picker in the same story source-management view as page-level source illustrations
+  - content detail screens may show source cover status and link to that management view
   - source cover coverage must not affect publication readiness or locale completeness states
   - source image exports should package the textless cover together with page-level source illustrations
 - Story content preview players must use the currently selected locale as the playback source.
