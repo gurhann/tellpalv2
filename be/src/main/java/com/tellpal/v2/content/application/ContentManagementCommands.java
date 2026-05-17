@@ -30,12 +30,24 @@ public final class ContentManagementCommands {
     /**
      * Command for updating core content metadata.
      */
-    public record UpdateContentCommand(Long contentId, String externalKey, Integer ageRange, boolean active) {
+    public record UpdateContentCommand(
+            Long contentId,
+            String externalKey,
+            Integer ageRange,
+            boolean active,
+            Long textlessCoverMediaId) {
+
+        public UpdateContentCommand(Long contentId, String externalKey, Integer ageRange, boolean active) {
+            this(contentId, externalKey, ageRange, active, null);
+        }
 
         public UpdateContentCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             externalKey = requireText(externalKey, "Content external key must not be blank");
             ageRange = normalizeNonNegative(ageRange, "Content age range must not be negative");
+            textlessCoverMediaId = normalizePositiveId(
+                    textlessCoverMediaId,
+                    "Textless cover media ID must be positive");
         }
     }
 

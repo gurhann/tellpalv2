@@ -11,6 +11,7 @@ public record AdminContentReadResponse(
         boolean active,
         Integer ageRange,
         Integer pageCount,
+        Long textlessCoverMediaId,
         List<AdminContentLocalizationResponse> localizations) {
 
     static AdminContentReadResponse from(AdminContentView view) {
@@ -21,6 +22,7 @@ public record AdminContentReadResponse(
                 view.active(),
                 view.ageRange(),
                 view.pageCount(),
+                view.textlessCoverMediaId(),
                 view.localizations().stream()
                         .map(AdminContentLocalizationResponse::from)
                         .toList());

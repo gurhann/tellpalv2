@@ -123,7 +123,7 @@ export function useStoryPageActions({
       const download =
         await storyPageAdminApi.exportTextlessIllustrations(contentId);
       const fileName =
-        download.fileName ?? `content-${contentId}-textless-story-pages.zip`;
+        download.fileName ?? `content-${contentId}-story-source-images.zip`;
       const objectUrl = URL.createObjectURL(download.blob);
       const anchor = document.createElement("a");
       anchor.href = objectUrl;

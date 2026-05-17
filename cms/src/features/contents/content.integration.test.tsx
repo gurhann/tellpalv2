@@ -180,6 +180,7 @@ describe("Content integration", () => {
             ageRange: body.ageRange,
             active: body.active,
             pageCount: body.type === "STORY" ? 0 : null,
+            textlessCoverMediaId: null,
           };
           createdRecord = {
             ...createdContent,

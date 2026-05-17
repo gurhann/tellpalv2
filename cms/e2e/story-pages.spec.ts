@@ -17,6 +17,7 @@ type ContentReadResponse = {
   active: boolean;
   ageRange: number | null;
   pageCount: number | null;
+  textlessCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -45,6 +46,7 @@ type StoryPageLocalizationResponse = {
 type StoryPageReadResponse = {
   contentId: number;
   pageNumber: number;
+  textlessIllustrationMediaId: number | null;
   localizationCount: number;
   localizations: StoryPageLocalizationResponse[];
 };
@@ -123,6 +125,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     active: true,
     ageRange: 5,
     pageCount: 1,
+    textlessCoverMediaId: null,
     localizations: [
       {
         contentId: 1,
@@ -158,6 +161,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   const storyPage: StoryPageReadResponse = {
     contentId: 1,
     pageNumber: 1,
+    textlessIllustrationMediaId: null,
     localizationCount: 2,
     localizations: [
       {
@@ -360,9 +364,9 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   await page.getByRole("button", { name: /edit page 1/i }).click();
   const editorDialog = page.getByRole("dialog", { name: /page 1 .* english/i });
   await editorDialog
-    .getByTestId("story-page-en-illustration-asset")
     .getByRole("button", { name: /^advanced$/i })
-    .click({ force: true });
+    .nth(1)
+    .click();
   let illustrationField = editorDialog.getByLabel(/illustration asset id/i);
 
   await expect(editorDialog).toBeVisible();
@@ -377,9 +381,9 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
           .includes("/api/admin/contents/1/story-pages/1/localizations/en") &&
         response.request().method() === "PUT",
     ),
-    editorDialog.locator("form").evaluate((form) => {
-      (form as HTMLFormElement).requestSubmit();
-    }),
+    editorDialog
+      .getByRole("button", { name: /save page localization/i })
+      .click(),
   ]);
   await expect(illustrationField).toHaveValue("51");
 
@@ -389,9 +393,9 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
   });
   await expect(turkishEditorDialog).toBeVisible();
   await turkishEditorDialog
-    .getByTestId("story-page-tr-illustration-asset")
     .getByRole("button", { name: /^advanced$/i })
-    .click({ force: true });
+    .nth(1)
+    .click();
   illustrationField = turkishEditorDialog.getByLabel(/illustration asset id/i);
   await expect(illustrationField).toHaveValue("42");
 
@@ -404,17 +408,17 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
           .includes("/api/admin/contents/1/story-pages/1/localizations/tr") &&
         response.request().method() === "PUT",
     ),
-    turkishEditorDialog.locator("form").evaluate((form) => {
-      (form as HTMLFormElement).requestSubmit();
-    }),
+    turkishEditorDialog
+      .getByRole("button", { name: /save page localization/i })
+      .click(),
   ]);
   await expect(illustrationField).toHaveValue("52");
 
   await page.getByRole("tab", { name: /english/i }).click();
   await editorDialog
     .getByRole("button", { name: /advanced/i })
-    .nth(0)
-    .click({ force: true });
+    .nth(1)
+    .click();
   illustrationField = editorDialog.getByLabel(/illustration asset id/i);
   await expect(illustrationField).toHaveValue("51");
 });
@@ -434,6 +438,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
     active: true,
     ageRange: 5,
     pageCount: 1,
+    textlessCoverMediaId: null,
     localizations: [
       {
         contentId: 1,
@@ -469,6 +474,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
     {
       contentId: 1,
       pageNumber: 1,
+      textlessIllustrationMediaId: null,
       localizationCount: 2,
       localizations: [
         {
@@ -518,6 +524,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
       body: JSON.stringify({
         ...contentDetail,
         pageCount: storyPages.length,
+        textlessCoverMediaId: contentDetail.textlessCoverMediaId,
       }),
     });
   });
@@ -542,6 +549,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
       storyPages.push({
         contentId: 1,
         pageNumber: nextPageNumber,
+        textlessIllustrationMediaId: null,
         localizationCount: 0,
         localizations: [],
       });
@@ -552,6 +560,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
         body: JSON.stringify({
           contentId: 1,
           pageNumber: nextPageNumber,
+          textlessIllustrationMediaId: null,
           localizationCount: 0,
         }),
       });
@@ -713,17 +722,19 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
   });
   await expect(turkishCreateEditorDialog).toBeVisible();
   await turkishCreateEditorDialog
-    .getByTestId("story-page-tr-illustration-asset")
     .getByRole("button", { name: /^advanced$/i })
-    .click({ force: true });
+    .nth(1)
+    .click();
   await turkishCreateEditorDialog
-    .getByTestId("story-page-tr-audio-asset")
     .getByRole("button", { name: /^advanced$/i })
-    .click({ force: true });
+    .nth(2)
+    .click();
   await turkishCreateEditorDialog
     .getByLabel(/body text/i)
     .fill("Tilki gece bahcesindeki taslara yavasca yaklasir.");
-  await turkishCreateEditorDialog.getByLabel(/illustration asset id/i).fill("52");
+  await turkishCreateEditorDialog
+    .getByLabel(/illustration asset id/i)
+    .fill("52");
   await turkishCreateEditorDialog.getByLabel(/audio asset id/i).fill("84");
   await Promise.all([
     page.waitForResponse(
@@ -733,9 +744,9 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
           .includes("/api/admin/contents/1/story-pages/2/localizations/tr") &&
         response.request().method() === "PUT",
     ),
-    turkishCreateEditorDialog.locator("form").evaluate((form) => {
-      (form as HTMLFormElement).requestSubmit();
-    }),
+    turkishCreateEditorDialog
+      .getByRole("button", { name: /create page localization/i })
+      .click(),
   ]);
 
   await expect(
@@ -764,6 +775,7 @@ test("story pages can be inserted after an existing row and renumber following p
     active: true,
     ageRange: 5,
     pageCount: 2,
+    textlessCoverMediaId: null,
     localizations: [
       {
         contentId: 1,
@@ -799,6 +811,7 @@ test("story pages can be inserted after an existing row and renumber following p
     {
       contentId: 1,
       pageNumber: 1,
+      textlessIllustrationMediaId: null,
       localizationCount: 1,
       localizations: [
         {
@@ -814,6 +827,7 @@ test("story pages can be inserted after an existing row and renumber following p
     {
       contentId: 1,
       pageNumber: 2,
+      textlessIllustrationMediaId: null,
       localizationCount: 1,
       localizations: [
         {
@@ -858,6 +872,7 @@ test("story pages can be inserted after an existing row and renumber following p
       body: JSON.stringify({
         ...contentDetail,
         pageCount: storyPages.length,
+        textlessCoverMediaId: contentDetail.textlessCoverMediaId,
       }),
     });
   });
@@ -888,6 +903,7 @@ test("story pages can be inserted after an existing row and renumber following p
       storyPages.splice(insertIndex, 0, {
         contentId: 1,
         pageNumber: storyPages.length + 1,
+        textlessIllustrationMediaId: null,
         localizationCount: 0,
         localizations: [],
       });
@@ -899,6 +915,7 @@ test("story pages can be inserted after an existing row and renumber following p
         body: JSON.stringify({
           contentId: 1,
           pageNumber: storyPages[insertIndex]!.pageNumber,
+          textlessIllustrationMediaId: null,
           localizationCount: 0,
         }),
       });
@@ -929,8 +946,12 @@ test("story pages can be inserted after an existing row and renumber following p
   await page.goto("/contents/1/story-pages");
 
   const storyPageTable = page.getByRole("table", { name: /story page table/i });
-  await expect(storyPageTable.getByText("Page 1", { exact: true })).toBeVisible();
-  await expect(storyPageTable.getByText("Page 2", { exact: true })).toBeVisible();
+  await expect(
+    storyPageTable.getByText("Page 1", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    storyPageTable.getByText("Page 2", { exact: true }),
+  ).toBeVisible();
 
   await storyPageTable
     .getByRole("button", { name: /add page after 1/i })

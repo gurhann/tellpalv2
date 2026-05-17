@@ -41,6 +41,8 @@ export type ContentSummaryViewModel = {
   active: boolean;
   ageRange: number | null;
   pageCount: number | null;
+  textlessCoverAssetId: number | null;
+  hasTextlessCover: boolean;
   supportsStoryPages: boolean;
   hasPages: boolean;
 };
@@ -141,6 +143,8 @@ export function mapAdminContent(
     active: content.active,
     ageRange: content.ageRange,
     pageCount: content.pageCount,
+    textlessCoverAssetId: content.textlessCoverMediaId,
+    hasTextlessCover: content.textlessCoverMediaId !== null,
     supportsStoryPages: content.type === "STORY",
     hasPages: (content.pageCount ?? 0) > 0,
   };

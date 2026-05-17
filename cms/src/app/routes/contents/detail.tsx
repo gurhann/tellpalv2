@@ -12,6 +12,7 @@ import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
+import { ContentTextlessCoverForm } from "@/features/contents/components/content-textless-cover-form";
 import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
 import { useContentDetail } from "@/features/contents/queries/use-content-detail";
 import { mapContentReadToFormValues } from "@/features/contents/schema/content-schema";
@@ -111,6 +112,9 @@ export function ContentDetailRoute() {
           metadataTitle: "Metadata",
           metadataDescription:
             "Temel icerik metadata'sini guncelleyin. Icerik turu olusturulduktan sonra sabittir; external key, yas araligi ve aktiflik durumu burada degistirilebilir.",
+          sourceCoverTitle: "Yazisiz Hikaye Kapagi",
+          sourceCoverDescription:
+            "Dil bagimsiz kapak kaynagini lokalize kapaklardan ayri tutun. Bu alan yayin hazirligini etkilemez.",
           contributorsTitle: "Contributor Atamalari",
           contributorsDescription:
             "Paylasilan contributor kayitlarini bu icerige rol, dil, gorunen kredi adi ve siralama metadatasi ile baglayin.",
@@ -174,6 +178,9 @@ export function ContentDetailRoute() {
           metadataTitle: "Metadata",
           metadataDescription:
             "Update the base content metadata. Content type is fixed after creation, while external key, age range, and active state can be changed here.",
+          sourceCoverTitle: "Textless Story Cover",
+          sourceCoverDescription:
+            "Keep the language-independent cover source separate from localized covers. This field does not affect publishing readiness.",
           contributorsTitle: "Contributor assignments",
           contributorsDescription:
             "Assign shared contributor registry entries to this content item with role, language, display credit, and ordering metadata.",
@@ -362,6 +369,15 @@ export function ContentDetailRoute() {
             onActiveLanguageChange={setActiveStoryLanguageCode}
           />
         </FormSection>
+
+        {content.summary.supportsStoryPages ? (
+          <FormSection
+            description={copy.sourceCoverDescription}
+            title={copy.sourceCoverTitle}
+          >
+            <ContentTextlessCoverForm content={content} />
+          </FormSection>
+        ) : null}
 
         <FormSection
           description={copy.metadataDescription}

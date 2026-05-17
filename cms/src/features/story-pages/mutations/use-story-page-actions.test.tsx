@@ -227,7 +227,7 @@ describe("useStoryPageActions", () => {
     });
   });
 
-  it("downloads textless illustration export as a zip file", async () => {
+  it("downloads source image export as a zip file", async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -252,7 +252,7 @@ describe("useStoryPageActions", () => {
     });
     storyPageAdminApiMock.exportTextlessIllustrations.mockResolvedValue({
       blob: new Blob(["zip"], { type: "application/zip" }),
-      fileName: "story-textless-story-pages.zip",
+      fileName: "story-source-images.zip",
     });
 
     const { result } = renderHook(() => useStoryPageActions({ contentId: 1 }), {
@@ -267,7 +267,7 @@ describe("useStoryPageActions", () => {
       storyPageAdminApiMock.exportTextlessIllustrations,
     ).toHaveBeenCalledWith(1);
     expect(append).toHaveBeenCalledWith(anchor);
-    expect(anchor.download).toBe("story-textless-story-pages.zip");
+    expect(anchor.download).toBe("story-source-images.zip");
     expect(click).toHaveBeenCalled();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:story-export");
   });

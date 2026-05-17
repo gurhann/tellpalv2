@@ -625,6 +625,8 @@ function StoryPagesWorkspace({
   const textlessIllustrationCount = storyPages.filter(
     (storyPage) => storyPage.hasTextlessIllustration,
   ).length;
+  const hasAnySourceImage =
+    content.summary.hasTextlessCover || textlessIllustrationCount > 0;
   const isMutating = storyPageActions.isPending;
 
   useEffect(() => {
@@ -655,8 +657,8 @@ function StoryPagesWorkspace({
           totalPages: "Toplam sayfa",
           selectedLocaleReady: "Secili dilde hazir",
           fullyReady: "Tam hazir",
-          exportTextless: "Yazisiz gorselleri indir",
-          exportLoading: "Yazisiz gorseller hazirlaniyor...",
+          exportTextless: "Kaynak gorselleri indir",
+          exportLoading: "Kaynak gorseller hazirlaniyor...",
           exportSuccess: "{fileName} indirildi.",
           addLoading: "Sayfa ekleniyor...",
           addSuccess: "Page {page} created.",
@@ -678,8 +680,8 @@ function StoryPagesWorkspace({
           totalPages: "Total pages",
           selectedLocaleReady: "Ready in selected locale",
           fullyReady: "Fully ready pages",
-          exportTextless: "Export textless images",
-          exportLoading: "Preparing textless images...",
+          exportTextless: "Export source images",
+          exportLoading: "Preparing source images...",
           exportSuccess: "{fileName} downloaded.",
           addLoading: "Creating story page...",
           addSuccess: "Page {page} created.",
@@ -758,7 +760,7 @@ function StoryPagesWorkspace({
               variant="outline"
               onClick={() => void handleExportTextlessIllustrations()}
               disabled={
-                textlessIllustrationCount === 0 ||
+                !hasAnySourceImage ||
                 storyPageActions.exportTextlessIllustrations.isPending
               }
             >

@@ -73,6 +73,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
         externalKey: values.externalKey.trim(),
         ageRange: values.ageRange,
         active: values.active,
+        textlessCoverMediaId: values.textlessCoverMediaId ?? null,
       });
     },
     onSuccess: async (savedContent) => {

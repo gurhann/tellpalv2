@@ -117,6 +117,10 @@ Detail and workspace routes must follow one shared composition contract.
   - keep the source image picker above locale tabs in the story page editor
   - source image coverage must not affect publication readiness or locale completeness states
   - handoff/export actions must stay compact in the route toolbar or operational rail
+- Story textless/source covers are content-level assets, not locale-level cover replacements.
+  - keep the source cover picker separate from localized cover fields on story content detail screens
+  - source cover coverage must not affect publication readiness or locale completeness states
+  - source image exports should package the textless cover together with page-level source illustrations
 - Story content preview players must use the currently selected locale as the playback source.
   - each page preview shows the localized illustration and plays the localized audio for that page
   - audio completion, not a fixed timer, advances to the next page

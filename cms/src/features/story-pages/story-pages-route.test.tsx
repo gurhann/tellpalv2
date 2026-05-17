@@ -341,7 +341,7 @@ describe("StoryPagesRoute", () => {
       screen.getByRole("button", { name: /preview story/i }),
     ).toBeEnabled();
     expect(
-      screen.getByRole("button", { name: /export textless images/i }),
+      screen.getByRole("button", { name: /export source images/i }),
     ).toBeEnabled();
     expect(
       screen.getByRole("button", { name: /add story page/i }),
@@ -413,6 +413,23 @@ describe("StoryPagesRoute", () => {
     expect(
       screen.queryByText(/story page collection/i),
     ).not.toBeInTheDocument();
+  });
+
+  it("enables source export when only the textless story cover is linked", () => {
+    const storyPagesWithoutSourceImages = storyPageViewModels.map(
+      (storyPage) => ({
+        ...storyPage,
+        textlessIllustrationAssetId: null,
+        hasTextlessIllustration: false,
+      }),
+    );
+    mockStoryRouteDependencies({ storyPages: storyPagesWithoutSourceImages });
+
+    renderStoryRoute();
+
+    expect(
+      screen.getByRole("button", { name: /export source images/i }),
+    ).toBeEnabled();
   });
 
   it("opens the page editor with parent language workspaces", () => {

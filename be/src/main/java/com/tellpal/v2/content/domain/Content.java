@@ -48,6 +48,9 @@ public class Content extends BaseJpaEntity {
     @Column(name = "page_count")
     private Integer pageCount;
 
+    @Column(name = "textless_cover_media_id")
+    private Long textlessCoverMediaId;
+
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ContentLocalization> localizations = new LinkedHashSet<>();
 
@@ -96,6 +99,10 @@ public class Content extends BaseJpaEntity {
         return pageCount;
     }
 
+    public Long getTextlessCoverMediaId() {
+        return textlessCoverMediaId;
+    }
+
     public Set<ContentLocalization> getLocalizations() {
         return Collections.unmodifiableSet(localizations);
     }
@@ -128,6 +135,12 @@ public class Content extends BaseJpaEntity {
         this.externalKey = requireText(externalKey, "Content external key must not be blank");
         this.ageRange = normalizeAgeRange(ageRange);
         this.active = active;
+    }
+
+    public void updateTextlessCoverMediaId(Long textlessCoverMediaId) {
+        this.textlessCoverMediaId = normalizePositiveId(
+                textlessCoverMediaId,
+                "Textless cover media ID must be positive");
     }
 
     /**
@@ -420,5 +433,15 @@ public class Content extends BaseJpaEntity {
             throw new IllegalArgumentException("Content age range must not be negative");
         }
         return ageRange;
+    }
+
+    private static Long normalizePositiveId(Long value, String message) {
+        if (value == null) {
+            return null;
+        }
+        if (value <= 0) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
     }
 }

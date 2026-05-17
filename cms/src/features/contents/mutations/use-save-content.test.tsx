@@ -62,6 +62,7 @@ describe("useSaveContent", () => {
       active: true,
       ageRange: 3,
       pageCount: null,
+      textlessCoverMediaId: null,
     };
     const onSuccess = vi.fn();
     const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
@@ -141,6 +142,7 @@ describe("useSaveContent", () => {
       active: false,
       ageRange: 6,
       pageCount: 2,
+      textlessCoverMediaId: 701,
     };
 
     queryClient.setQueryData(queryKeys.contents.list(), [
@@ -170,6 +172,7 @@ describe("useSaveContent", () => {
         externalKey: "story.evening-garden.updated",
         ageRange: 6,
         active: false,
+        textlessCoverMediaId: 701,
       });
     });
 
@@ -189,6 +192,7 @@ describe("useSaveContent", () => {
       externalKey: "story.evening-garden.updated",
       ageRange: 6,
       active: false,
+      textlessCoverMediaId: 701,
     });
     expect(detailCache).toMatchObject({
       summary: {

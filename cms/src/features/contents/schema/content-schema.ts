@@ -50,9 +50,28 @@ export const contentFormSchema = z.object({
       .nullable(),
   ),
   active: z.boolean(),
+  textlessCoverMediaId: z.preprocess(
+    parseAgeRange,
+    z
+      .number({
+        error: "Textless cover asset id must be a valid number.",
+      })
+      .int("Textless cover asset id must be a whole number.")
+      .positive("Textless cover asset id must be positive.")
+      .nullable()
+      .optional(),
+  ),
 });
 
 export type ContentFormValues = z.infer<typeof contentFormSchema>;
+
+export const contentTextlessCoverSchema = z.object({
+  textlessCoverMediaId: contentFormSchema.shape.textlessCoverMediaId,
+});
+
+export type ContentTextlessCoverFormValues = z.infer<
+  typeof contentTextlessCoverSchema
+>;
 
 export function getCreateContentFormDefaults(): ContentFormValues {
   return {
@@ -60,6 +79,7 @@ export function getCreateContentFormDefaults(): ContentFormValues {
     externalKey: "",
     ageRange: null,
     active: true,
+    textlessCoverMediaId: null,
   };
 }
 
@@ -71,6 +91,7 @@ export function mapContentReadToFormValues(
     externalKey: content.summary.externalKey,
     ageRange: content.summary.ageRange,
     active: content.summary.active,
+    textlessCoverMediaId: content.summary.textlessCoverAssetId,
   };
 }
 
@@ -82,5 +103,6 @@ export function mapContentResponseToFormValues(
     externalKey: content.externalKey,
     ageRange: content.ageRange,
     active: content.active,
+    textlessCoverMediaId: content.textlessCoverMediaId,
   };
 }

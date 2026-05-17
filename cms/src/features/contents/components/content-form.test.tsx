@@ -191,6 +191,7 @@ describe("ContentForm", () => {
         externalKey: "story.evening-garden.updated",
         ageRange: 6,
         active: true,
+        textlessCoverMediaId: null,
       });
     });
   });

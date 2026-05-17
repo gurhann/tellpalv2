@@ -14,6 +14,7 @@ const contentRecord = {
   active: true,
   ageRange: 5,
   pageCount: 2,
+  textlessCoverMediaId: 41,
   localizations: [
     {
       contentId: 1,

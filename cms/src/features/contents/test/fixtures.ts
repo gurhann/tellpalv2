@@ -11,6 +11,7 @@ export const storyContentReadResponse: AdminContentReadResponse = {
   active: true,
   ageRange: 5,
   pageCount: 2,
+  textlessCoverMediaId: 701,
   localizations: [
     {
       contentId: 1,
@@ -50,6 +51,7 @@ export const meditationContentReadResponse: AdminContentReadResponse = {
   active: true,
   ageRange: 8,
   pageCount: null,
+  textlessCoverMediaId: null,
   localizations: [
     {
       contentId: 2,
@@ -89,6 +91,7 @@ export const inactiveContentReadResponse: AdminContentReadResponse = {
   active: false,
   ageRange: 3,
   pageCount: null,
+  textlessCoverMediaId: null,
   localizations: [],
 };
 

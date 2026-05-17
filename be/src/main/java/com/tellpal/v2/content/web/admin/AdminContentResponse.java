@@ -8,7 +8,8 @@ public record AdminContentResponse(
         String externalKey,
         boolean active,
         Integer ageRange,
-        Integer pageCount) {
+        Integer pageCount,
+        Long textlessCoverMediaId) {
 
     static AdminContentResponse from(ContentReference reference) {
         return new AdminContentResponse(
@@ -17,6 +18,7 @@ public record AdminContentResponse(
                 reference.externalKey(),
                 reference.active(),
                 reference.ageRange(),
-                reference.pageCount());
+                reference.pageCount(),
+                reference.textlessCoverMediaId());
     }
 }

@@ -24,7 +24,8 @@ final class ContentApiMapper {
                 content.getExternalKey(),
                 content.isActive(),
                 content.getAgeRange(),
-                content.getPageCount());
+                content.getPageCount(),
+                content.getTextlessCoverMediaId());
     }
 
     static ContentLocalizationReference toLocalizationReference(Long contentId, ContentLocalization localization) {

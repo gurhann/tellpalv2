@@ -56,6 +56,9 @@ public class StoryPageTextlessIllustrationExportService {
     @Transactional(readOnly = true)
     public TextlessIllustrationExport prepareExport(Long contentId) {
         Content content = loadStoryContent(contentId);
+        TextlessIllustrationExportCover cover = content.getTextlessCoverMediaId() == null
+                ? null
+                : toExportCover(content.getTextlessCoverMediaId());
         List<StoryPage> orderedPages = content.getStoryPages().stream()
                 .sorted(Comparator.comparingInt(StoryPage::getPageNumber))
                 .toList();
@@ -63,7 +66,7 @@ public class StoryPageTextlessIllustrationExportService {
                 .filter(storyPage -> storyPage.getTextlessIllustrationMediaId() != null)
                 .map(this::toExportPage)
                 .toList();
-        if (includedPages.isEmpty()) {
+        if (cover == null && includedPages.isEmpty()) {
             throw new StoryPageTextlessIllustrationsMissingException(requireContentId(content));
         }
         List<Integer> missingPages = orderedPages.stream()
@@ -75,11 +78,13 @@ public class StoryPageTextlessIllustrationExportService {
                 content.getExternalKey(),
                 Instant.now(clock),
                 orderedPages.size(),
+                cover,
                 includedPages,
                 missingPages);
         return new TextlessIllustrationExport(
                 exportFileName(content.getExternalKey()),
                 manifest,
+                cover,
                 includedPages);
     }
 
@@ -89,6 +94,9 @@ public class StoryPageTextlessIllustrationExportService {
     public void writeZip(TextlessIllustrationExport export, OutputStream outputStream) throws IOException {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             writeManifest(export, zipOutputStream);
+            if (export.cover() != null) {
+                writeCoverFile(export.cover(), zipOutputStream);
+            }
             for (TextlessIllustrationExportPage page : export.pages()) {
                 writePageFile(page, zipOutputStream);
             }
@@ -111,17 +119,30 @@ public class StoryPageTextlessIllustrationExportService {
         }
     }
 
+    private void writeCoverFile(TextlessIllustrationExportCover cover, ZipOutputStream zipOutputStream) throws IOException {
+        AssetContentAccessToken token = assetRegistryApi.issueContentAccessToken(cover.assetId());
+        AssetContent content = assetRegistryApi.openContent(cover.assetId(), token.token(), null);
+        try (InputStream inputStream = content.content()) {
+            zipOutputStream.putNextEntry(new ZipEntry(cover.fileName()));
+            inputStream.transferTo(zipOutputStream);
+            zipOutputStream.closeEntry();
+        }
+    }
+
+    private TextlessIllustrationExportCover toExportCover(Long assetId) {
+        AssetRecord asset = requireTextlessImageAsset("textlessCoverMediaId", assetId);
+        String fileName = "cover/textless%s".formatted(
+                extension(asset.storageLocation().objectPath(), asset.mimeType()));
+        return new TextlessIllustrationExportCover(
+                asset.assetId(),
+                asset.storageLocation().objectPath(),
+                asset.mimeType(),
+                fileName);
+    }
+
     private TextlessIllustrationExportPage toExportPage(StoryPage storyPage) {
         Long assetId = storyPage.getTextlessIllustrationMediaId();
-        AssetRecord asset = assetRegistryApi.findById(assetId)
-                .orElseThrow(() -> new AssetReferenceNotFoundException("textlessIllustrationMediaId", assetId));
-        if (asset.mediaType() != AssetMediaType.IMAGE) {
-            throw new AssetMediaTypeMismatchException(
-                    "textlessIllustrationMediaId",
-                    assetId,
-                    AssetMediaType.IMAGE,
-                    asset.mediaType());
-        }
+        AssetRecord asset = requireTextlessImageAsset("textlessIllustrationMediaId", assetId);
         String fileName = "page-%03d/textless%s".formatted(
                 storyPage.getPageNumber(),
                 extension(asset.storageLocation().objectPath(), asset.mimeType()));
@@ -131,6 +152,19 @@ public class StoryPageTextlessIllustrationExportService {
                 asset.storageLocation().objectPath(),
                 asset.mimeType(),
                 fileName);
+    }
+
+    private AssetRecord requireTextlessImageAsset(String fieldName, Long assetId) {
+        AssetRecord asset = assetRegistryApi.findById(assetId)
+                .orElseThrow(() -> new AssetReferenceNotFoundException(fieldName, assetId));
+        if (asset.mediaType() != AssetMediaType.IMAGE) {
+            throw new AssetMediaTypeMismatchException(
+                    fieldName,
+                    assetId,
+                    AssetMediaType.IMAGE,
+                    asset.mediaType());
+        }
+        return asset;
     }
 
     private Content loadStoryContent(Long contentId) {
@@ -150,7 +184,7 @@ public class StoryPageTextlessIllustrationExportService {
         if (safeExternalKey.isBlank()) {
             safeExternalKey = "story";
         }
-        return safeExternalKey + "-textless-story-pages.zip";
+        return safeExternalKey + "-story-source-images.zip";
     }
 
     private static String extension(String objectPath, String mimeType) {
@@ -187,7 +221,15 @@ public class StoryPageTextlessIllustrationExportService {
     public record TextlessIllustrationExport(
             String fileName,
             TextlessIllustrationManifest manifest,
+            TextlessIllustrationExportCover cover,
             List<TextlessIllustrationExportPage> pages) {
+
+        public TextlessIllustrationExport(
+                String fileName,
+                TextlessIllustrationManifest manifest,
+                List<TextlessIllustrationExportPage> pages) {
+            this(fileName, manifest, null, pages);
+        }
     }
 
     public record TextlessIllustrationManifest(
@@ -195,8 +237,26 @@ public class StoryPageTextlessIllustrationExportService {
             String externalKey,
             Instant exportedAt,
             int totalPageCount,
+            TextlessIllustrationExportCover textlessCover,
             List<TextlessIllustrationExportPage> includedPages,
             List<Integer> missingPageNumbers) {
+
+        public TextlessIllustrationManifest(
+                Long contentId,
+                String externalKey,
+                Instant exportedAt,
+                int totalPageCount,
+                List<TextlessIllustrationExportPage> includedPages,
+                List<Integer> missingPageNumbers) {
+            this(contentId, externalKey, exportedAt, totalPageCount, null, includedPages, missingPageNumbers);
+        }
+    }
+
+    public record TextlessIllustrationExportCover(
+            Long assetId,
+            String objectPath,
+            String mimeType,
+            String fileName) {
     }
 
     public record TextlessIllustrationExportPage(

@@ -61,7 +61,9 @@ public class ContentManagementService {
     public ContentReference updateContent(UpdateContentCommand command) {
         Content content = loadContent(command.contentId());
         ensureExternalKeyAvailable(command.contentId(), command.externalKey());
+        assetReferenceValidator.requireImageAsset(command.textlessCoverMediaId(), "textlessCoverMediaId");
         content.updateDetails(command.externalKey(), command.ageRange(), command.active());
+        content.updateTextlessCoverMediaId(command.textlessCoverMediaId());
         return ContentApiMapper.toReference(contentRepository.save(content));
     }
 

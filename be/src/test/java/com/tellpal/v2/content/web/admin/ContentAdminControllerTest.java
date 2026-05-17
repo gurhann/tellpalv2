@@ -396,6 +396,37 @@ class ContentAdminControllerTest {
     }
 
     @Test
+    void updateContentStoresTextlessCoverReference() throws Exception {
+        when(contentManagementService.updateContent(any())).thenReturn(new ContentReference(
+                51L,
+                ContentApiType.STORY,
+                "moonlight-story",
+                true,
+                5,
+                2,
+                321L));
+
+        mockMvc.perform(put("/api/admin/contents/51")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "moonlight-story",
+                                  "ageRange": 5,
+                                  "active": true,
+                                  "textlessCoverMediaId": 321
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(51))
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(321));
+
+        verify(contentManagementService).updateContent(argThat(command ->
+                command.contentId().equals(51L)
+                        && command.externalKey().equals("moonlight-story")
+                        && command.textlessCoverMediaId().equals(321L)));
+    }
+
+    @Test
     void storyPageStateConflictBecomesConflictProblemDetails() throws Exception {
         when(storyPageManagementService.addStoryPage(any()))
                 .thenThrow(new IllegalStateException("Story pages can only be managed for STORY content"));

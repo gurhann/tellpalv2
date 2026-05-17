@@ -48,12 +48,26 @@ class StoryPageTextlessIllustrationExportServiceTest {
         Content content = storyContent();
         StoryPage firstPage = content.addStoryPage(null);
         StoryPage secondPage = content.addStoryPage(null);
+        content.updateTextlessCoverMediaId(201L);
         firstPage.updateTextlessIllustrationMediaId(101L);
         ReflectionTestUtils.setField(content, "id", 51L);
         when(contentRepository.findByIdForStoryPageAdminRead(51L)).thenReturn(Optional.of(content));
-        when(assetRegistryApi.findById(101L)).thenReturn(Optional.of(assetRecord(101L)));
+        when(assetRegistryApi.findById(201L)).thenReturn(Optional.of(assetRecord(201L, "/source/cover.png", "image/png")));
+        when(assetRegistryApi.findById(101L)).thenReturn(Optional.of(assetRecord(101L, "/source/page-1.jpg", "image/jpeg")));
+        when(assetRegistryApi.issueContentAccessToken(201L))
+                .thenReturn(new AssetContentAccessToken("token-201", NOW.plusSeconds(300)));
         when(assetRegistryApi.issueContentAccessToken(101L))
                 .thenReturn(new AssetContentAccessToken("token-101", NOW.plusSeconds(300)));
+        when(assetRegistryApi.openContent(201L, "token-201", null))
+                .thenReturn(new AssetContent(
+                        201L,
+                        "source-cover.png",
+                        "image/png",
+                        10,
+                        10,
+                        null,
+                        null,
+                        new ByteArrayInputStream("cover-data".getBytes())));
         when(assetRegistryApi.openContent(101L, "token-101", null))
                 .thenReturn(new AssetContent(
                         101L,
@@ -70,16 +84,56 @@ class StoryPageTextlessIllustrationExportServiceTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         service.writeZip(export, outputStream);
 
-        assertThat(export.fileName()).isEqualTo("evening-garden-textless-story-pages.zip");
+        assertThat(export.fileName()).isEqualTo("evening-garden-story-source-images.zip");
         assertThat(export.manifest().missingPageNumbers()).containsExactly(secondPage.getPageNumber());
         try (ZipInputStream zipInputStream = new ZipInputStream(
                 new ByteArrayInputStream(outputStream.toByteArray()))) {
             assertThat(zipInputStream.getNextEntry().getName()).isEqualTo("manifest.json");
             String manifestJson = new String(zipInputStream.readAllBytes());
             assertThat(manifestJson).contains("\"contentId\" : 51");
+            assertThat(manifestJson).contains("\"textlessCover\"");
+            assertThat(manifestJson).contains("\"fileName\" : \"cover/textless.png\"");
             assertThat(manifestJson).contains("\"missingPageNumbers\" : [ 2 ]");
+            assertThat(zipInputStream.getNextEntry().getName()).isEqualTo("cover/textless.png");
+            assertThat(new String(zipInputStream.readAllBytes())).isEqualTo("cover-data");
             assertThat(zipInputStream.getNextEntry().getName()).isEqualTo("page-001/textless.jpg");
             assertThat(new String(zipInputStream.readAllBytes())).isEqualTo("image-data");
+        }
+    }
+
+    @Test
+    void createsZipWhenOnlyTextlessCoverIsAvailable() throws Exception {
+        Content content = storyContent();
+        content.addStoryPage(null);
+        content.updateTextlessCoverMediaId(201L);
+        ReflectionTestUtils.setField(content, "id", 51L);
+        when(contentRepository.findByIdForStoryPageAdminRead(51L)).thenReturn(Optional.of(content));
+        when(assetRegistryApi.findById(201L)).thenReturn(Optional.of(assetRecord(201L, "/source/cover.webp", "image/webp")));
+        when(assetRegistryApi.issueContentAccessToken(201L))
+                .thenReturn(new AssetContentAccessToken("token-201", NOW.plusSeconds(300)));
+        when(assetRegistryApi.openContent(201L, "token-201", null))
+                .thenReturn(new AssetContent(
+                        201L,
+                        "source-cover.webp",
+                        "image/webp",
+                        10,
+                        10,
+                        null,
+                        null,
+                        new ByteArrayInputStream("cover-data".getBytes())));
+
+        StoryPageTextlessIllustrationExportService.TextlessIllustrationExport export =
+                service.prepareExport(51L);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        service.writeZip(export, outputStream);
+
+        assertThat(export.cover()).isNotNull();
+        assertThat(export.pages()).isEmpty();
+        try (ZipInputStream zipInputStream = new ZipInputStream(
+                new ByteArrayInputStream(outputStream.toByteArray()))) {
+            assertThat(zipInputStream.getNextEntry().getName()).isEqualTo("manifest.json");
+            assertThat(zipInputStream.getNextEntry().getName()).isEqualTo("cover/textless.webp");
+            assertThat(new String(zipInputStream.readAllBytes())).isEqualTo("cover-data");
         }
     }
 
@@ -98,13 +152,13 @@ class StoryPageTextlessIllustrationExportServiceTest {
         return Content.create(ContentType.STORY, "evening-garden", 5, true);
     }
 
-    private static AssetRecord assetRecord(Long assetId) {
+    private static AssetRecord assetRecord(Long assetId, String objectPath, String mimeType) {
         return new AssetRecord(
                 assetId,
-                new AssetStorageLocation(AssetStorageProvider.LOCAL_STUB, "/source/page-1.jpg"),
+                new AssetStorageLocation(AssetStorageProvider.LOCAL_STUB, objectPath),
                 AssetMediaType.IMAGE,
                 AssetKind.ORIGINAL_IMAGE,
-                "image/jpeg",
+                mimeType,
                 10L,
                 null,
                 null,

@@ -260,10 +260,12 @@ record UpdateContentRequest(
         @Min(value = 0, message = "ageRange must not be negative")
         Integer ageRange,
         @NotNull(message = "active is required")
-        Boolean active) {
+        Boolean active,
+        @Positive(message = "textlessCoverMediaId must be positive")
+        Long textlessCoverMediaId) {
 
     UpdateContentCommand toCommand(Long contentId) {
-        return new UpdateContentCommand(contentId, externalKey, ageRange, active);
+        return new UpdateContentCommand(contentId, externalKey, ageRange, active, textlessCoverMediaId);
     }
 }
 
