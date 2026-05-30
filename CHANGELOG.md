@@ -1,5 +1,29 @@
 # Changelog
 
+## Week Ending 2026-05-23
+
+### Highlights
+
+- Textless story content support expanded across the backend and CMS: content
+  records gained textless cover export data, the CMS added dedicated textless
+  cover editing flows, and follow-up story page structure changes aligned the
+  content detail and story page experiences. Supported by `bbcd61b`,
+  `631dfaa`, and `67bb717`.
+- Story page admin flows were hardened around incomplete media data by handling
+  missing illustration IDs in the CMS API layer, while backend verification was
+  stabilized by isolating the admin auth rate-limit integration test. Supported
+  by `631dfaa` and `ede0e93`.
+
+### Important Links
+
+- No PR numbers were recorded in the local git history for this period, so the
+  links below point to the supporting commits and merge record.
+- [bbcd61b](https://github.com/gurhann/tellpalv2/commit/bbcd61b056edeae411931b2645b7041bb690b22c) Add textless cover export to story content
+- [67bb717](https://github.com/gurhann/tellpalv2/commit/67bb7176fc96c782968962f178ffae8454c03c31) changed textless images structure
+- [631dfaa](https://github.com/gurhann/tellpalv2/commit/631dfaa826c524bc829cde2171e2d9fb3d0c6624) Handle missing story page illustration IDs
+- [ede0e93](https://github.com/gurhann/tellpalv2/commit/ede0e938d29c0e7329e11e618eb1037a0e313a40) Isolate admin auth rate limit integration test
+- [7579d40](https://github.com/gurhann/tellpalv2/commit/7579d4029438f3b6d41e9a940704d46c014f26e6) Merge branch 'codex/daily-bug-scan'
+
 ## Week Ending 2026-05-16
 
 ### Highlights
