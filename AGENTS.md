@@ -62,12 +62,21 @@ When adding or changing REST controllers, follow the OpenAPI policy in
 ## Build, Test, and Development Commands
 Run commands from `be/`:
 
+- `cd be && docker compose up -d postgres`: start the local PostgreSQL dependency
+- `cd be && ./mvnw spring-boot:run`: run the backend locally with the default `local` profile
 - `cd be && ./mvnw test`: run the full test suite
 - `cd be && ./mvnw verify`: run full verification, including integration checks
 - `cd be && ./mvnw flyway:migrate`: validate migrations against the configured database
 - `cd be && ./mvnw spring-modulith:document`: regenerate Modulith docs if the plugin is configured
 
 Use the Maven wrapper instead of a system Maven install when possible.
+
+Common CMS commands from `cms/`:
+
+- `cd cms && npm run build`: create the production build
+- `cd cms && npm run test`: run unit and integration tests with Vitest
+- `cd cms && npm run test:e2e`: run Playwright end-to-end coverage
+- `cd cms && npm run test:e2e:visual`: run Playwright visual regression coverage
 
 ## Deployment Guidelines
 
@@ -78,6 +87,11 @@ commands, admin bootstrap, and verification steps.
 Pushes to `main` deploy production through `.github/workflows/railway-deploy.yml`
 when backend, CMS, Railway ops, or workflow files change. The workflow requires a
 GitHub Actions `RAILWAY_TOKEN` secret.
+
+Backend pull requests and pushes to `main` also run `.github/workflows/backend-verify.yml`,
+which executes `cd be && ./mvnw verify`.
+
+For manual Railway operations, use `ops/railway/deploy.ps1` from the repository root.
 
 Before production deploys, run the relevant local checks:
 
