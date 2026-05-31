@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 /**
  * Provides shared validation and security error responses for admin REST controllers.
@@ -43,6 +44,16 @@ public class AdminApiExceptionHandler {
                         (first, second) -> first));
         problemDetail.setProperty("fieldErrors", fieldErrors);
         return problemDetail;
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    ProblemDetail handleParameterValidation(HandlerMethodValidationException exception, HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                "Request validation failed",
+                "validation_error",
+                request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

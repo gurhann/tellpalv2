@@ -9,6 +9,12 @@ import { ApiClientError } from "@/lib/http/client";
 import { queryKeys } from "@/lib/query-keys";
 import type { ApiProblemDetail } from "@/types/api";
 
+type UseContributorsOptions = {
+  limit?: number;
+  search?: string;
+  enabled?: boolean;
+};
+
 function getApiProblem(error: unknown, fallbackDetail: string) {
   if (!error) {
     return null;
@@ -26,11 +32,23 @@ function getApiProblem(error: unknown, fallbackDetail: string) {
   } satisfies ApiProblemDetail;
 }
 
-export function useContributors(limit = 12) {
+export function useContributors({
+  limit = 12,
+  search = "",
+  enabled = true,
+}: UseContributorsOptions = {}) {
+  const normalizedSearch = search.trim();
   const query = useQuery({
-    queryKey: queryKeys.contributors.list({ limit }),
+    queryKey: queryKeys.contributors.list({
+      limit,
+      query: normalizedSearch || null,
+    }),
+    enabled,
     queryFn: async () => {
-      const response = await contributorAdminApi.listContributors(limit);
+      const response = await contributorAdminApi.listContributors({
+        limit,
+        query: normalizedSearch || undefined,
+      });
       return mapAdminContributorList(response);
     },
   });
@@ -38,6 +56,7 @@ export function useContributors(limit = 12) {
   return {
     ...query,
     limit,
+    search: normalizedSearch,
     contributors: query.data ?? ([] as ContributorViewModel[]),
     problem: getApiProblem(
       query.error,

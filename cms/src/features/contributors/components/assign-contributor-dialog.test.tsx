@@ -72,6 +72,7 @@ beforeEach(() => {
   contributorQueryMocks.useContributors.mockReturnValue({
     contributors: contributorViewModels,
     limit: 12,
+    search: "",
     isLoading: false,
     isFetching: false,
     problem: null,
@@ -90,6 +91,7 @@ describe("AssignContributorDialog", () => {
     contributorQueryMocks.useContributors.mockReturnValue({
       contributors: [],
       limit: 12,
+      search: "",
       isLoading: false,
       isFetching: false,
       problem: null,
@@ -108,6 +110,35 @@ describe("AssignContributorDialog", () => {
 
     expect(
       screen.getByRole("heading", { name: /no contributors available/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/search contributors/i)).toBeVisible();
+  });
+
+  it("shows a search-specific empty state when no contributor matches", () => {
+    contributorQueryMocks.useContributors.mockReturnValue({
+      contributors: [],
+      limit: 12,
+      search: "lina",
+      isLoading: false,
+      isFetching: false,
+      problem: null,
+      refetch: vi.fn(),
+    });
+
+    render(
+      <AssignContributorDialog
+        content={storyContentViewModel}
+        existingAssignments={[]}
+        open
+        onOpenChange={vi.fn()}
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    expect(
+      screen.getByRole("heading", {
+        name: /no contributors match this search/i,
+      }),
     ).toBeInTheDocument();
   });
 
@@ -140,6 +171,14 @@ describe("AssignContributorDialog", () => {
       { wrapper: createWrapper() },
     );
 
+    expect(contributorQueryMocks.useContributors).toHaveBeenCalledWith({
+      limit: 12,
+      search: "",
+      enabled: true,
+    });
+    fireEvent.change(screen.getByLabelText(/search contributors/i), {
+      target: { value: "Annie" },
+    });
     fireEvent.click(screen.getByLabelText(/^contributor$/i));
     fireEvent.click(
       within(screen.getByRole("listbox")).getByText("Annie Case"),

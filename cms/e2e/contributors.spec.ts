@@ -169,10 +169,19 @@ test("contributor registry and assignment flows support delete and unassign", as
     const request = route.request();
 
     if (request.method() === "GET") {
+      const requestUrl = new URL(request.url());
+      const query = requestUrl.searchParams.get("q")?.trim().toLowerCase();
+      const limit = Number(requestUrl.searchParams.get("limit") ?? "20");
+      const matchingContributors = query
+        ? contributors.filter((contributor) =>
+            contributor.displayName.toLowerCase().includes(query),
+          )
+        : contributors;
+
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(contributors),
+        body: JSON.stringify(matchingContributors.slice(0, limit)),
       });
       return;
     }
@@ -398,6 +407,17 @@ test("contributor registry and assignment flows support delete and unassign", as
     .locator("main")
     .getByRole("button", { name: /^assign contributor$/i })
     .click();
+  await Promise.all([
+    page.waitForResponse((response) => {
+      const responseUrl = new URL(response.url());
+      return (
+        responseUrl.pathname === "/api/admin/contributors" &&
+        responseUrl.searchParams.get("q") === "Lina" &&
+        response.request().method() === "GET"
+      );
+    }),
+    page.getByLabel(/search contributors/i).fill("Lina"),
+  ]);
   await page.getByRole("combobox", { name: /^contributor$/i }).click();
   await page.getByRole("option", { name: "Lina Hart" }).click();
   await page

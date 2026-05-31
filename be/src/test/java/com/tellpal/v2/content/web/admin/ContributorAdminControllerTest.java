@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -67,7 +68,7 @@ class ContributorAdminControllerTest {
 
     @Test
     void listContributorsReturnsArray() throws Exception {
-        when(contributorManagementService.listContributors(2)).thenReturn(List.of(
+        when(contributorManagementService.listContributors(2, null)).thenReturn(List.of(
                 new ContributorRecord(12L, "Baris Kaya"),
                 new ContributorRecord(11L, "Elif Yilmaz")));
 
@@ -76,6 +77,28 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].displayName").value("Baris Kaya"))
                 .andExpect(jsonPath("$[1].displayName").value("Elif Yilmaz"));
+    }
+
+    @Test
+    void listContributorsTrimsSearchQueryBeforeDelegating() throws Exception {
+        when(contributorManagementService.listContributors(2, "eli")).thenReturn(List.of(
+                new ContributorRecord(11L, "Elif Yilmaz")));
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .param("limit", "2")
+                        .param("q", "  eli  "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].displayName").value("Elif Yilmaz"));
+
+        verify(contributorManagementService).listContributors(2, "eli");
+    }
+
+    @Test
+    void listContributorsRejectsNonPositiveLimit() throws Exception {
+        mockMvc.perform(get("/api/admin/contributors").param("limit", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
     }
 
     @Test

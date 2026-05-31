@@ -42,7 +42,7 @@ import {
 } from "@/features/contributors/schema/content-contributor-schema";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemMessage } from "@/lib/http/problem-details";
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 
 type AssignContributorDialogProps = {
   content: ContentReadViewModel;
@@ -61,7 +61,13 @@ export function AssignContributorDialog({
   onOpenChange,
 }: AssignContributorDialogProps) {
   const [problemMessage, setProblemMessage] = useState<string | null>(null);
-  const contributorListQuery = useContributors(RECENT_CONTRIBUTOR_LIMIT);
+  const [contributorSearch, setContributorSearch] = useState("");
+  const deferredContributorSearch = useDeferredValue(contributorSearch);
+  const contributorListQuery = useContributors({
+    limit: RECENT_CONTRIBUTOR_LIMIT,
+    search: deferredContributorSearch,
+    enabled: open,
+  });
   const contributorActions = useContributorActions();
   const languageOptions = content.localizations.map((localization) => ({
     value: localization.languageCode,
@@ -77,6 +83,7 @@ export function AssignContributorDialog({
     if (!nextOpen) {
       form.reset(initialValues);
       form.clearErrors();
+      setContributorSearch("");
       setProblemMessage(null);
     }
 
@@ -140,6 +147,7 @@ export function AssignContributorDialog({
   }
 
   const hasContributors = contributorListQuery.contributors.length > 0;
+  const hasContributorSearch = contributorListQuery.search.length > 0;
   const languageScopeLabel = getContributorLanguageScopeLabel(
     form.watch("languageCode"),
   );
@@ -150,16 +158,32 @@ export function AssignContributorDialog({
         <DialogHeader>
           <DialogTitle>Assign contributor</DialogTitle>
           <DialogDescription>
-            Add a contributor credit for this content item. The picker uses the
-            recent contributor registry because the backend does not offer
-            search yet.
+            Add a contributor credit for this content item. Search the shared
+            registry, then choose the role and credit scope.
           </DialogDescription>
         </DialogHeader>
 
         <DialogBody>
+          <div className="space-y-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="content-contributor-search"
+            >
+              Search contributors
+            </label>
+            <Input
+              id="content-contributor-search"
+              aria-label="Search contributors"
+              placeholder="Search by contributor name"
+              value={contributorSearch}
+              onChange={(event) => setContributorSearch(event.target.value)}
+              disabled={contributorActions.assignContributor.isPending}
+            />
+          </div>
+
           {contributorListQuery.isLoading ? (
             <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
-              Loading recent contributors from the shared registry...
+              Loading contributors from the shared registry...
             </div>
           ) : !hasContributors ? (
             <EmptyState
@@ -172,8 +196,16 @@ export function AssignContributorDialog({
                   Close
                 </Button>
               }
-              description="Create a contributor in the shared registry first, then reopen this dialog."
-              title="No contributors available"
+              description={
+                hasContributorSearch
+                  ? "Try a different contributor name or clear the search to return to recent contributors."
+                  : "Create a contributor in the shared registry first, then reopen this dialog."
+              }
+              title={
+                hasContributorSearch
+                  ? "No contributors match this search"
+                  : "No contributors available"
+              }
             />
           ) : (
             <form

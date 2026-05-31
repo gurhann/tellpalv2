@@ -53,8 +53,20 @@ public class ContributorManagementService {
      */
     @Transactional(readOnly = true)
     public List<ContributorRecord> listContributors(int limit) {
+        return listContributors(limit, null);
+    }
+
+    /**
+     * Lists recent contributors or searches contributors by display name for admin workflows.
+     */
+    @Transactional(readOnly = true)
+    public List<ContributorRecord> listContributors(int limit, String query) {
         int sanitizedLimit = sanitizeLimit(limit);
-        return contributorRepository.findRecent(sanitizedLimit).stream()
+        String sanitizedQuery = sanitizeQuery(query);
+        List<Contributor> contributors = sanitizedQuery == null
+                ? contributorRepository.findRecent(sanitizedLimit)
+                : contributorRepository.searchByDisplayName(sanitizedQuery, sanitizedLimit);
+        return contributors.stream()
                 .map(ContentManagementMapper::toContributorRecord)
                 .toList();
     }
@@ -155,5 +167,13 @@ public class ContributorManagementService {
             throw new IllegalArgumentException("Contributor list limit must be positive");
         }
         return Math.min(limit, 100);
+    }
+
+    private static String sanitizeQuery(String query) {
+        if (query == null) {
+            return null;
+        }
+        String sanitizedQuery = query.trim();
+        return sanitizedQuery.isEmpty() ? null : sanitizedQuery;
     }
 }

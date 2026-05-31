@@ -29,6 +29,11 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     }
 
     @Override
+    public List<Contributor> searchByDisplayName(String query, int limit) {
+        return repository.searchByDisplayName(query, PageRequest.of(0, limit));
+    }
+
+    @Override
     public void delete(Contributor contributor) {
         repository.delete(contributor);
     }

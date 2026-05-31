@@ -271,6 +271,8 @@ stack.
 ### Type and State Rules
 
 - Contributor list `limit` must be positive and is capped at `100`.
+- Contributor list `q` is optional. Blank values fall back to recent contributors, and
+  non-blank values search contributor display names case-insensitively.
 - Contributor display names are trimmed and must not be blank on create or rename.
 - Contributor assignment requires both the content and contributor to already exist.
 - Contributor `languageCode` is optional. `null` or an omitted field creates a global
@@ -317,7 +319,8 @@ stack.
 
 ### Frontend Form and Query Implications
 
-- Contributor picker flows must tolerate a recent-only list with no backend search endpoint.
+- Contributor picker flows may use `q` to search contributor display names and should fall back to
+  the recent list when search is blank.
 - UI must support both global and localized contributor credits:
   - `languageCode = null` means `All languages`
   - localized picks should remain limited to languages already present in the content detail model

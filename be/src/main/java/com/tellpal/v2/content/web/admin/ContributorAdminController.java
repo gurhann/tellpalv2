@@ -70,7 +70,9 @@ public class ContributorAdminController {
     }
 
     @GetMapping("/contributors")
-    @Operation(summary = "List contributors", description = "Returns recent contributor profiles for admin selection flows.")
+    @Operation(
+            summary = "List contributors",
+            description = "Returns recent contributor profiles or searches by display name for admin selection flows.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Contributors returned"),
             @ApiResponse(responseCode = "400", description = "List request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -78,9 +80,10 @@ public class ContributorAdminController {
             @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
     })
     public List<AdminContributorResponse> listContributors(
+            @RequestParam(name = "q", required = false) String query,
             @RequestParam(name = "limit", defaultValue = "20") @Min(value = 1, message = "limit must be positive")
             int limit) {
-        return contributorManagementService.listContributors(limit).stream()
+        return contributorManagementService.listContributors(limit, normalizeOptionalSearchQuery(query)).stream()
                 .map(AdminContributorResponse::from)
                 .toList();
     }
@@ -187,6 +190,14 @@ public class ContributorAdminController {
             throw new IllegalArgumentException("languageCode must not be blank when provided");
         }
         return LanguageCode.from(normalizedLanguageCode);
+    }
+
+    static String normalizeOptionalSearchQuery(String query) {
+        if (query == null) {
+            return null;
+        }
+        String normalizedQuery = query.trim();
+        return normalizedQuery.isEmpty() ? null : normalizedQuery;
     }
 }
 

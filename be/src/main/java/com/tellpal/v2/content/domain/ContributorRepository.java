@@ -19,6 +19,11 @@ public interface ContributorRepository {
     List<Contributor> findRecent(int limit);
 
     /**
+     * Searches contributors by display name for admin selection flows.
+     */
+    List<Contributor> searchByDisplayName(String query, int limit);
+
+    /**
      * Deletes one contributor profile.
      */
     void delete(Contributor contributor);

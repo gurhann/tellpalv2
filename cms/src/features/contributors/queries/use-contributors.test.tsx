@@ -78,7 +78,7 @@ describe("useContributors", () => {
       contributorResponses,
     );
 
-    const { result } = renderHook(() => useContributors(12), {
+    const { result } = renderHook(() => useContributors({ limit: 12 }), {
       wrapper: createWrapper(),
     });
 
@@ -86,8 +86,12 @@ describe("useContributors", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(contributorAdminApiMock.listContributors).toHaveBeenCalledWith(12);
+    expect(contributorAdminApiMock.listContributors).toHaveBeenCalledWith({
+      limit: 12,
+      query: undefined,
+    });
     expect(result.current.limit).toBe(12);
+    expect(result.current.search).toBe("");
     expect(result.current.contributors).toHaveLength(3);
     expect(result.current.contributors[0]?.displayName).toBe("Annie Case");
     expect(result.current.problem).toBeNull();
@@ -96,7 +100,7 @@ describe("useContributors", () => {
   it("returns an empty contributor collection when the backend has no records", async () => {
     contributorAdminApiMock.listContributors.mockResolvedValue([]);
 
-    const { result } = renderHook(() => useContributors(8), {
+    const { result } = renderHook(() => useContributors({ limit: 8 }), {
       wrapper: createWrapper(),
     });
 
@@ -106,6 +110,30 @@ describe("useContributors", () => {
 
     expect(result.current.contributors).toEqual([]);
     expect(result.current.problem).toBeNull();
+  });
+
+  it("loads contributors with a trimmed search query", async () => {
+    contributorAdminApiMock.listContributors.mockResolvedValue([
+      contributorResponses[0],
+    ]);
+
+    const { result } = renderHook(
+      () => useContributors({ limit: 12, search: "  ann  " }),
+      {
+        wrapper: createWrapper(),
+      },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(contributorAdminApiMock.listContributors).toHaveBeenCalledWith({
+      limit: 12,
+      query: "ann",
+    });
+    expect(result.current.search).toBe("ann");
+    expect(result.current.contributors).toHaveLength(1);
   });
 
   it("passes through API problem detail on contributor list failures", async () => {

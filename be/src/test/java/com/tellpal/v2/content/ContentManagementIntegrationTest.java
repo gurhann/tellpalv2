@@ -206,6 +206,20 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
                 .containsExactly(third.contributorId(), second.contributorId(), first.contributorId());
     }
 
+    @Test
+    void listContributorsSearchesDisplayNamesCaseInsensitively() {
+        ContributorRecord zeynep = contributorManagementService.createContributor(
+                new CreateContributorCommand("Zeynep Kaya"));
+        contributorManagementService.createContributor(
+                new CreateContributorCommand("Baris Demir"));
+        ContributorRecord elif = contributorManagementService.createContributor(
+                new CreateContributorCommand("Elif Kaya"));
+
+        assertThat(contributorManagementService.listContributors(10, "kAy"))
+                .extracting(ContributorRecord::contributorId)
+                .containsExactly(elif.contributorId(), zeynep.contributorId());
+    }
+
     private Long registerImageAsset(String objectPath) {
         return assetRegistryApi.register(new RegisterMediaAssetCommand(
                 AssetStorageProvider.LOCAL_STUB,

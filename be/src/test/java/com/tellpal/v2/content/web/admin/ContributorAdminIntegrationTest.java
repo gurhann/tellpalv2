@@ -100,6 +100,22 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void contributorListCanSearchDisplayNamesWithAuthenticatedAdmin() throws Exception {
+        String accessToken = authenticateAdmin();
+        createContributor(accessToken, "Aylin Demir");
+        Long matchingContributorId = createContributor(accessToken, "Elif Kaya");
+        createContributor(accessToken, "Baris Kaya");
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("q", "elif")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contributorId").value(matchingContributorId));
+    }
+
+    @Test
     void contributorValidationReturnsProblemDetails() throws Exception {
         String accessToken = authenticateAdmin();
 

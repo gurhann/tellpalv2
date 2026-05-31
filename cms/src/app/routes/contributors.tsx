@@ -32,7 +32,9 @@ export function ContributorsRoute() {
     useState<ContributorViewModel | null>(null);
   const [deletingContributor, setDeletingContributor] =
     useState<ContributorViewModel | null>(null);
-  const contributorQuery = useContributors(RECENT_CONTRIBUTOR_LIMIT);
+  const contributorQuery = useContributors({
+    limit: RECENT_CONTRIBUTOR_LIMIT,
+  });
   const contributorActions = useContributorActions();
   const deferredSearch = useDeferredValue(search);
   const copy =

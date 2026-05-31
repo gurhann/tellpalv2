@@ -21,6 +21,11 @@ export type RenameContributorInput = {
   displayName: string;
 };
 
+export type ListContributorsInput = {
+  limit?: number;
+  query?: string;
+};
+
 export type AssignContentContributorInput = {
   contributorId: number;
   role: ContributorRole;
@@ -71,8 +76,15 @@ export const contributorAdminApi = {
       responseSchema: adminContributorResponseSchema,
     });
   },
-  listContributors(limit = 20) {
-    const search = new URLSearchParams({ limit: String(limit) });
+  listContributors(input: ListContributorsInput = {}) {
+    const search = new URLSearchParams({
+      limit: String(input.limit ?? 20),
+    });
+
+    if (input.query?.trim()) {
+      search.set("q", input.query.trim());
+    }
+
     return apiClient.get<AdminContributorResponse[]>(
       `/api/admin/contributors?${search}`,
       {
