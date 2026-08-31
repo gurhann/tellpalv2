@@ -1,0 +1,4 @@
+interface:
+  display_name: "TellPal Story Import"
+  short_description: "Import prepared stories into TellPal CMS"
+  default_prompt: "Use $import-tellpal-story to preflight and import this prepared story folder into TellPal CMS."
