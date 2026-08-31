@@ -39,3 +39,4 @@ __pycache__/
 
 cms/yuklenecek_hikayeler/
 ops/content-migration/out/
+be/src/main/resources/application-local.yml
