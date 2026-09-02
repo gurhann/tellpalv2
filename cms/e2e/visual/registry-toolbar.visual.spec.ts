@@ -67,6 +67,26 @@ const contentRecords = [
   },
 ];
 
+const contentRegistryPage = {
+  items: contentRecords.map((content, index) => ({
+    contentId: content.contentId,
+    type: content.type,
+    externalKey: content.externalKey,
+    pageCount: content.pageCount,
+    selectedLanguage: "tr",
+    title: content.localizations[0]?.title ?? null,
+    readiness: index === 0 ? "PUBLISHED" : "ACTION_REQUIRED",
+    blockers:
+      index === 0
+        ? []
+        : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
+    lastEditedAt: "2026-03-17T09:00:00Z",
+  })),
+  page: 0,
+  size: 25,
+  totalItems: contentRecords.length,
+};
+
 const categoryRecords = [
   {
     categoryId: 7,
@@ -105,11 +125,11 @@ for (const viewport of visualViewports) {
       height: viewport.height,
     });
 
-    await page.route("**/api/admin/contents", async (route) => {
+    await page.route("**/api/admin/content-registry**", async (route) => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(contentRecords),
+        body: JSON.stringify(contentRegistryPage),
       });
     });
 

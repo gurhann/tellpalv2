@@ -1,6 +1,6 @@
 import { FileImage, LoaderCircle, Play } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -24,6 +24,8 @@ export function ContentDetailRoute() {
   const { locale, t } = useI18n();
   const { contentId = "" } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedLanguageCode = searchParams.get("language");
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
@@ -378,7 +380,13 @@ export function ContentDetailRoute() {
         >
           <ContentLocalizationTabs
             content={content}
-            onActiveLanguageChange={setActiveStoryLanguageCode}
+            initialLanguageCode={requestedLanguageCode}
+            onActiveLanguageChange={(languageCode) => {
+              setActiveStoryLanguageCode(languageCode);
+              const next = new URLSearchParams(searchParams);
+              next.set("language", languageCode);
+              setSearchParams(next, { replace: true });
+            }}
           />
         </FormSection>
 

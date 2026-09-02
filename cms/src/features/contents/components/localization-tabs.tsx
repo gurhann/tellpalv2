@@ -30,6 +30,7 @@ import type { LanguageBadgeTone } from "@/components/language/language-badge";
 
 type ContentLocalizationTabsProps = {
   content: ContentReadViewModel;
+  initialLanguageCode?: string | null;
   onActiveLanguageChange?: (languageCode: string) => void;
 };
 
@@ -118,10 +119,11 @@ function LocalizationWorkspacePane({
 
 export function ContentLocalizationTabs({
   content,
+  initialLanguageCode,
   onActiveLanguageChange,
 }: ContentLocalizationTabsProps) {
   const [activeLanguage, setActiveLanguage] = useState(
-    content.localizations[0]?.languageCode ?? "",
+    initialLanguageCode ?? content.localizations[0]?.languageCode ?? "",
   );
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const existingLanguageCodes = useMemo(
@@ -151,6 +153,12 @@ export function ContentLocalizationTabs({
     localizationTabs.find((item) => item.code === activeLanguage)?.code ??
     localizationTabs[0]?.code ??
     "";
+
+  useEffect(() => {
+    if (initialLanguageCode) {
+      setActiveLanguage(initialLanguageCode);
+    }
+  }, [initialLanguageCode]);
 
   useEffect(() => {
     if (resolvedActiveLanguage) {

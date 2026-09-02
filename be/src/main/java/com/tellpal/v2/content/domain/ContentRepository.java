@@ -56,6 +56,11 @@ public interface ContentRepository {
     List<Content> findAllForAdminRead();
 
     /**
+     * Loads all aggregate state required to calculate CMS registry readiness.
+     */
+    List<Content> findAllForRegistryRead();
+
+    /**
      * Loads the active aggregates for the provided ids and ignores inactive or missing entries.
      */
     List<Content> findAllActiveByIdIn(Collection<Long> contentIds);

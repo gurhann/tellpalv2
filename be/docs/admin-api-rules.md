@@ -36,6 +36,13 @@ When a new CMS-related backend validation or precondition is discovered:
 
 ## Shared Admin API Behavior
 
+### Registry Query Anti-Pattern
+
+CMS registry endpoints must not load all matching aggregates and then filter, sort, or paginate
+in application memory. Apply row-local predicates and page selection in PostgreSQL; use a dedicated
+projection/read model when a derived aggregate state such as STORY readiness must participate in
+filtering before pagination. See `ADR-0009-registry-read-pagination.md`.
+
 These behaviors apply across all CMS admin controllers because they use the shared admin exception
 stack.
 
@@ -52,6 +59,7 @@ stack.
   - `GET /api/admin/media`
   - `GET /api/admin/media-processing`
 - `GET /api/admin/contents` is not paginated and includes inactive content.
+- `GET /api/admin/content-registry` is paginated, requires `language`, and returns editor-facing readiness rows.
 
 ## Content and Story Pages
 
@@ -85,6 +93,7 @@ stack.
 - `POST /api/admin/contents/{contentId}/localizations/{languageCode}/archive`
 - `GET /api/admin/contents/{contentId}/story-pages`
 - `GET /api/admin/contents/{contentId}/story-pages/{pageNumber}`
+- `GET /api/admin/content-registry`
 - `POST /api/admin/contents/{contentId}/story-pages`
 - `PUT /api/admin/contents/{contentId}/story-pages/{pageNumber}`
 - `DELETE /api/admin/contents/{contentId}/story-pages/{pageNumber}`
@@ -160,6 +169,7 @@ stack.
 - Story publication requires every localized story page to include `bodyText`.
 - Story publication requires every localized story page to include `audioMediaId`.
 - Story publication requires every localized story page to include `illustrationMediaId`.
+- Story publication requires a non-blank content-localization description and a localized cover image.
 - Archive preserves the previous `publishedAt` timestamp instead of clearing it.
 - Processing status updates only replace the workflow flag on the localization. They do not bypass
   publication readiness rules.

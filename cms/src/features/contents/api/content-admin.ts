@@ -3,6 +3,7 @@ import { z } from "zod";
 import { apiClient } from "@/lib/http/client";
 
 const basePath = "/api/admin/contents";
+const registryPath = "/api/admin/content-registry";
 
 const contentTypeValues = [
   "STORY",
@@ -29,6 +30,15 @@ export type ContentLocalizationStatus = z.infer<
 >;
 export type ContentProcessingStatus = z.infer<
   typeof contentProcessingStatusSchema
+>;
+
+export const contentRegistryReadinessSchema = z.enum([
+  "ACTION_REQUIRED",
+  "READY_TO_PUBLISH",
+  "PUBLISHED",
+]);
+export type ContentRegistryReadiness = z.infer<
+  typeof contentRegistryReadinessSchema
 >;
 
 export type CreateContentInput = {
@@ -100,6 +110,28 @@ export const adminContentReadListResponseSchema = z.array(
   adminContentReadResponseSchema,
 );
 
+export const adminContentRegistryBlockerSchema = z.object({
+  code: z.string(),
+  pageNumber: z.number().int().positive().nullable(),
+});
+export const adminContentRegistryItemSchema = z.object({
+  contentId: z.number().int().positive(),
+  type: contentTypeSchema,
+  externalKey: z.string(),
+  pageCount: z.number().int().nonnegative().nullable(),
+  selectedLanguage: z.string().min(1),
+  title: z.string().nullable(),
+  readiness: contentRegistryReadinessSchema,
+  blockers: z.array(adminContentRegistryBlockerSchema),
+  lastEditedAt: z.string(),
+});
+export const adminContentRegistryPageSchema = z.object({
+  items: z.array(adminContentRegistryItemSchema),
+  page: z.number().int().nonnegative(),
+  size: z.number().int().positive(),
+  totalItems: z.number().int().nonnegative(),
+});
+
 export type AdminContentResponse = z.infer<typeof adminContentResponseSchema>;
 export type AdminContentLocalizationResponse = z.infer<
   typeof adminContentLocalizationResponseSchema
@@ -107,6 +139,20 @@ export type AdminContentLocalizationResponse = z.infer<
 export type AdminContentReadResponse = z.infer<
   typeof adminContentReadResponseSchema
 >;
+export type AdminContentRegistryPage = z.infer<
+  typeof adminContentRegistryPageSchema
+>;
+export type AdminContentRegistryItem = z.infer<
+  typeof adminContentRegistryItemSchema
+>;
+export type ContentRegistryQuery = {
+  language: string;
+  type?: ContentType;
+  readiness?: ContentRegistryReadiness;
+  q?: string;
+  page?: number;
+  size?: number;
+};
 
 export const contentAdminBacklogDependencies = {
   listContents: "BG01",
@@ -119,6 +165,18 @@ export const contentAdminApi = {
     return apiClient.get<AdminContentReadResponse[]>(basePath, {
       responseSchema: adminContentReadListResponseSchema,
     });
+  },
+  listRegistry(params: ContentRegistryQuery) {
+    const searchParams = new URLSearchParams({ language: params.language });
+    if (params.type) searchParams.set("type", params.type);
+    if (params.readiness) searchParams.set("readiness", params.readiness);
+    if (params.q?.trim()) searchParams.set("q", params.q.trim());
+    if (params.page !== undefined) searchParams.set("page", `${params.page}`);
+    if (params.size !== undefined) searchParams.set("size", `${params.size}`);
+    return apiClient.get<AdminContentRegistryPage>(
+      `${registryPath}?${searchParams.toString()}`,
+      { responseSchema: adminContentRegistryPageSchema },
+    );
   },
   getContent(contentId: number) {
     return apiClient.get<AdminContentReadResponse>(`${basePath}/${contentId}`, {

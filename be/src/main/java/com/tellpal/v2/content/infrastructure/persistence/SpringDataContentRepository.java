@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.tellpal.v2.content.domain.Content;
 
-interface SpringDataContentRepository extends JpaRepository<Content, Long> {
+interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaSpecificationExecutor<Content> {
 
     @Query("""
             select distinct content
@@ -18,6 +19,15 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long> {
             order by content.id asc
             """)
     List<Content> findAllForAdminRead();
+
+    @Query("""
+            select distinct content
+            from Content content
+            left join fetch content.localizations
+            left join fetch content.storyPages storyPage
+            left join fetch storyPage.localizations
+            """)
+    List<Content> findAllForRegistryRead();
 
     @Query("""
             select distinct content

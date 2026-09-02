@@ -1,351 +1,40 @@
 import { CirclePlus, RefreshCw, Search } from "lucide-react";
-import { useDeferredValue, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDeferredValue, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import {
-  RegistryToolbar,
-  RegistryToolbarGroup,
-} from "@/components/data/registry-toolbar";
+import { RegistryToolbar, RegistryToolbarGroup } from "@/components/data/registry-toolbar";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentListTable } from "@/features/contents/components/content-list-table";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import { useContentList } from "@/features/contents/queries/use-content-list";
-import { getCreateContentFormDefaults } from "@/features/contents/schema/content-schema";
+import { useContentRegistry } from "@/features/contents/queries/use-content-registry";
+import type { ContentRegistryReadiness, ContentType } from "@/features/contents/api/content-admin";
 import { useI18n } from "@/i18n/locale-provider";
-import {
-  buildRegistryFilterSummary,
-  sortRegistryTypeLabels,
-} from "@/lib/registry-filters";
+import { getCreateContentFormDefaults } from "@/features/contents/schema/content-schema";
+
+const types: Array<ContentType | "ALL"> = ["ALL", "STORY", "AUDIO_STORY", "MEDITATION", "LULLABY"];
+const readinesses: Array<ContentRegistryReadiness | "ALL"> = ["ALL", "ACTION_REQUIRED", "READY_TO_PUBLISH", "PUBLISHED"];
 
 export function ContentsIndexRoute() {
   const { locale } = useI18n();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const language = searchParams.get("language") ?? "tr";
+  const type = (searchParams.get("type") ?? "ALL") as ContentType | "ALL";
+  const readiness = (searchParams.get("readiness") ?? "ALL") as ContentRegistryReadiness | "ALL";
+  const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("ALL");
-  const [selectedState, setSelectedState] = useState<
-    "ALL" | "ACTIVE" | "INACTIVE"
-  >("ALL");
-  const contentListQuery = useContentList();
   const deferredSearch = useDeferredValue(search);
-  const copy =
-    locale === "tr"
-      ? {
-          eyebrow: "Editoryal Cekirdek",
-          title: "Icerik Studyosu",
-          description:
-            "Icerik kayitlarini acin, filtreleyin ve gorev odakli detay calisma alanina gecin.",
-          refresh: "Yenile",
-          create: "Icerik olustur",
-          searchLabel: "Icerik kayitlarini ara",
-          filtersAria: "Icerik registry filtreleri",
-          searchGroupLabel: "Arama",
-          typeGroupLabel: "Icerik turu",
-          stateGroupLabel: "Durum",
-          searchPlaceholder:
-            "External key veya yerellestirilmis basliga gore ara",
-          filterTypes: "Tum turler",
-          filterStates: "Tum durumlar",
-          createDialogTitle: "Icerik olustur",
-          createDialogDescription:
-            "Temel metadata ile yeni bir editoryal kayit olusturun. Kaydetme sonrasi CMS yeni detay rotasini acar.",
-          railTitle: "Registry snapshot",
-          railDescription:
-            "Liste hafif kalirken yayin ve story hazirligini sag tarafta koruyun.",
-          activeRecords: "Aktif kayit",
-          storyWorkspaces: "Story workspace",
-          localeCoverage: "Dil kapsami",
-        }
-      : {
-          eyebrow: "Editorial Core",
-          title: "Content Studio",
-          description:
-            "Open, filter, and move directly into each task-focused content workspace.",
-          refresh: "Refresh",
-          create: "Create content",
-          searchLabel: "Search content registry",
-          filtersAria: "Content registry filters",
-          searchGroupLabel: "Search",
-          typeGroupLabel: "Content type",
-          stateGroupLabel: "State",
-          searchPlaceholder: "Search by external key or localized title",
-          filterTypes: "All types",
-          filterStates: "All states",
-          createDialogTitle: "Create content",
-          createDialogDescription:
-            "Create a new editorial record with base metadata. After save, the CMS opens the new detail route.",
-          railTitle: "Registry snapshot",
-          railDescription:
-            "Keep release posture and story readiness visible while the main lane stays quiet.",
-          activeRecords: "Active records",
-          storyWorkspaces: "Story workspaces",
-          localeCoverage: "Locale coverage",
-        };
-
-  const typeOptions = useMemo(() => {
-    const nextOptions = new Set<string>();
-
-    contentListQuery.contents.forEach((content) => {
-      nextOptions.add(content.summary.typeLabel);
-    });
-
-    return ["ALL", ...sortRegistryTypeLabels(Array.from(nextOptions))];
-  }, [contentListQuery.contents]);
-
-  const filteredContents = useMemo(() => {
-    const normalizedSearch = deferredSearch.trim().toLowerCase();
-
-    return contentListQuery.contents.filter((content) => {
-      if (
-        selectedType !== "ALL" &&
-        content.summary.typeLabel !== selectedType
-      ) {
-        return false;
-      }
-
-      if (selectedState === "ACTIVE" && !content.summary.active) {
-        return false;
-      }
-
-      if (selectedState === "INACTIVE" && content.summary.active) {
-        return false;
-      }
-
-      if (normalizedSearch.length === 0) {
-        return true;
-      }
-
-      return (
-        content.summary.externalKey.toLowerCase().includes(normalizedSearch) ||
-        content.localizations.some((localization) =>
-          localization.title.toLowerCase().includes(normalizedSearch),
-        )
-      );
-    });
-  }, [contentListQuery.contents, deferredSearch, selectedState, selectedType]);
-
-  const activeRecordCount = useMemo(
-    () => filteredContents.filter((content) => content.summary.active).length,
-    [filteredContents],
-  );
-  const storyWorkspaceCount = useMemo(
-    () =>
-      filteredContents.filter((content) => content.summary.supportsStoryPages)
-        .length,
-    [filteredContents],
-  );
-  const filteredLocaleCount = useMemo(
-    () =>
-      filteredContents.reduce(
-        (sum, content) => sum + content.localizationCount,
-        0,
-      ),
-    [filteredContents],
-  );
-  const filteredVisibleLocaleCount = useMemo(
-    () =>
-      filteredContents.reduce(
-        (sum, content) => sum + content.visibleToMobileLocalizationCount,
-        0,
-      ),
-    [filteredContents],
-  );
-  const selectedStateLabel =
-    selectedState === "ALL"
-      ? copy.filterStates
-      : selectedState === "ACTIVE"
-        ? locale === "tr"
-          ? "Aktif"
-          : "Active"
-        : locale === "tr"
-          ? "Pasif"
-          : "Inactive";
-  const filterSummaryTitle = buildRegistryFilterSummary({
-    locale,
-    filteredCount: filteredContents.length,
-    totalCount: contentListQuery.contents.length,
-    selectedType,
-    allTypesLabel: copy.filterTypes,
-    selectedStateLabel,
-  });
-  const filterSummaryDescription =
-    locale === "tr"
-      ? "Arama, tur ve durum filtreleri registry gorunumunu aninda daraltir."
-      : "Search, type, and state filters narrow the registry immediately.";
-
-  return (
-    <>
-      <ContentPageShell
-        eyebrow={copy.eyebrow}
-        title={copy.title}
-        description={copy.description}
-        aside={
-          <TaskRail
-            title={copy.railTitle}
-            description={copy.railDescription}
-            stats={[
-              {
-                label: copy.activeRecords,
-                value: `${activeRecordCount} / ${filteredContents.length}`,
-                tone: activeRecordCount > 0 ? "success" : "default",
-              },
-              {
-                label: copy.storyWorkspaces,
-                value: `${storyWorkspaceCount} / ${filteredContents.length}`,
-              },
-              {
-                label: copy.localeCoverage,
-                value: `${filteredVisibleLocaleCount} / ${filteredLocaleCount}`,
-                tone:
-                  filteredVisibleLocaleCount === filteredLocaleCount &&
-                  filteredLocaleCount > 0
-                    ? "success"
-                    : "warning",
-              },
-            ]}
-          />
-        }
-        actions={
-          <>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => void contentListQuery.refetch()}
-            >
-              <RefreshCw
-                className={`size-4 ${
-                  contentListQuery.isFetching ? "animate-spin" : ""
-                }`}
-              />
-              {copy.refresh}
-            </Button>
-            <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
-              <CirclePlus className="size-4" />
-              {copy.create}
-            </Button>
-          </>
-        }
-        toolbar={
-          <RegistryToolbar
-            ariaLabel={copy.filtersAria}
-            search={
-              <RegistryToolbarGroup className="w-full" label={copy.searchGroupLabel}>
-                <div className="relative min-w-[16rem] flex-1">
-                  <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
-                  <Input
-                    aria-label={copy.searchLabel}
-                    className="pl-8"
-                    placeholder={copy.searchPlaceholder}
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                  />
-                </div>
-              </RegistryToolbarGroup>
-            }
-            filters={
-              <>
-                <RegistryToolbarGroup label={copy.typeGroupLabel}>
-                <div className="flex flex-wrap items-center gap-2">
-                  {typeOptions.map((typeOption) => (
-                    <Button
-                      key={typeOption}
-                      type="button"
-                      variant={
-                        selectedType === typeOption ? "secondary" : "outline"
-                      }
-                      size="sm"
-                      aria-pressed={selectedType === typeOption}
-                      onClick={() => setSelectedType(typeOption)}
-                    >
-                      {typeOption === "ALL" ? copy.filterTypes : typeOption}
-                    </Button>
-                  ))}
-                </div>
-                </RegistryToolbarGroup>
-                <RegistryToolbarGroup label={copy.stateGroupLabel}>
-                <div className="flex flex-wrap items-center gap-2">
-                  {[
-                    {
-                      key: "ALL" as const,
-                      label: copy.filterStates,
-                    },
-                    {
-                      key: "ACTIVE" as const,
-                      label: locale === "tr" ? "Aktif" : "Active",
-                    },
-                    {
-                      key: "INACTIVE" as const,
-                      label: locale === "tr" ? "Pasif" : "Inactive",
-                    },
-                  ].map((stateOption) => (
-                    <Button
-                      key={stateOption.key}
-                      type="button"
-                      variant={
-                        selectedState === stateOption.key
-                          ? "secondary"
-                          : "outline"
-                      }
-                      size="sm"
-                      aria-pressed={selectedState === stateOption.key}
-                      onClick={() => setSelectedState(stateOption.key)}
-                    >
-                      {stateOption.label}
-                    </Button>
-                  ))}
-                </div>
-                </RegistryToolbarGroup>
-              </>
-            }
-            summaryTitle={filterSummaryTitle}
-            summaryDescription={filterSummaryDescription}
-          />
-        }
-      >
-        <ContentListTable
-          contents={filteredContents}
-          isLoading={contentListQuery.isLoading}
-          onContentSelect={(content) =>
-            navigate(`/contents/${content.summary.id}`)
-          }
-          onRetry={() => void contentListQuery.refetch()}
-          problem={contentListQuery.problem}
-        />
-      </ContentPageShell>
-
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{copy.createDialogTitle}</DialogTitle>
-            <DialogDescription>
-              {copy.createDialogDescription}
-            </DialogDescription>
-          </DialogHeader>
-
-          <DialogBody>
-            <ContentForm
-              initialValues={getCreateContentFormDefaults()}
-              mode="create"
-              onCancel={() => setIsCreateDialogOpen(false)}
-              onSuccess={(savedContent) => {
-                setIsCreateDialogOpen(false);
-                navigate(`/contents/${savedContent.contentId}`);
-              }}
-            />
-          </DialogBody>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+  const page = Math.max(0, Number(searchParams.get("page") ?? "0") || 0);
+  const registry = useContentRegistry({ language, type: type === "ALL" ? undefined : type, readiness: readiness === "ALL" ? undefined : readiness, q: deferredSearch, page, size: 25 });
+  const update = (changes: Record<string, string | null>) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(changes).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key));
+    if (!("page" in changes)) next.delete("page");
+    setSearchParams(next);
+  };
+  const stateLabel = (state: ContentRegistryReadiness | "ALL") => state === "ALL" ? (locale === "tr" ? "Tüm durumlar" : "All statuses") : state === "ACTION_REQUIRED" ? (locale === "tr" ? "Aksiyon gerekli" : "Action required") : state === "READY_TO_PUBLISH" ? (locale === "tr" ? "Yayına hazır" : "Ready to publish") : (locale === "tr" ? "Yayında" : "Published");
+  return <><ContentPageShell eyebrow={locale === "tr" ? "Editoryal çekirdek" : "Editorial core"} title={locale === "tr" ? "İçerikler" : "Contents"} description={locale === "tr" ? "Seçili dildeki yayın engellerini bulun ve ilgili editöre geçin." : "Find selected-locale blockers and open the relevant editor."} actions={<><Button variant="outline" type="button" onClick={() => void registry.refetch()}><RefreshCw className={registry.isFetching ? "size-4 animate-spin" : "size-4"} />{locale === "tr" ? "Yenile" : "Refresh"}</Button><Button type="button" onClick={() => setIsCreateDialogOpen(true)}><CirclePlus className="size-4" />{locale === "tr" ? "İçerik oluştur" : "Create content"}</Button></>} toolbar={<RegistryToolbar ariaLabel={locale === "tr" ? "İçerik filtreleri" : "Content filters"} search={<RegistryToolbarGroup className="w-full" label={locale === "tr" ? "Arama" : "Search"}><div className="relative min-w-[16rem] flex-1"><Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" /><Input className="pl-8" value={search} placeholder={locale === "tr" ? "Başlık, anahtar veya ID" : "Title, key, or ID"} onChange={(event) => { setSearch(event.target.value); update({ q: event.target.value.trim() || null }); }} /></div></RegistryToolbarGroup>} filters={<><RegistryToolbarGroup label={locale === "tr" ? "Dil" : "Language"}><div className="flex flex-wrap gap-2">{["tr", "en", "de", "es", "pt"].map((value) => <Button key={value} type="button" size="sm" variant={language === value ? "secondary" : "outline"} aria-pressed={language === value} onClick={() => update({ language: value })}>{value.toUpperCase()}</Button>)}</div></RegistryToolbarGroup><RegistryToolbarGroup label={locale === "tr" ? "Tür" : "Type"}><div className="flex flex-wrap gap-2">{types.map((value) => <Button key={value} type="button" size="sm" variant={type === value ? "secondary" : "outline"} aria-pressed={type === value} onClick={() => update({ type: value === "ALL" ? null : value })}>{value === "ALL" ? (locale === "tr" ? "Tümü" : "All") : value}</Button>)}</div></RegistryToolbarGroup><RegistryToolbarGroup label={locale === "tr" ? "Durum" : "Readiness"}><div className="flex flex-wrap gap-2">{readinesses.map((value) => <Button key={value} type="button" size="sm" variant={readiness === value ? "secondary" : "outline"} aria-pressed={readiness === value} onClick={() => update({ readiness: value === "ALL" ? null : value })}>{stateLabel(value)}</Button>)}</div></RegistryToolbarGroup></>} summaryTitle={locale === "tr" ? `${registry.registry?.totalItems ?? 0} sonuç · ${language.toUpperCase()}` : `${registry.registry?.totalItems ?? 0} results · ${language.toUpperCase()}`} summaryDescription={locale === "tr" ? "Son güncellenen içerikler önce gelir." : "Most recently edited content appears first."} /> }><ContentListTable items={registry.registry?.items ?? []} isLoading={registry.isLoading} problem={registry.problem} onRetry={() => void registry.refetch()} onContentSelect={(item) => navigate(`/contents/${item.contentId}?language=${language}`)} /></ContentPageShell><Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}><DialogContent className="sm:max-w-2xl"><DialogHeader><DialogTitle>{locale === "tr" ? "İçerik oluştur" : "Create content"}</DialogTitle><DialogDescription>{locale === "tr" ? "Yeni editoryal kaydı oluşturun." : "Create a new editorial record."}</DialogDescription></DialogHeader><DialogBody><ContentForm initialValues={getCreateContentFormDefaults()} mode="create" onCancel={() => setIsCreateDialogOpen(false)} onSuccess={(content) => { setIsCreateDialogOpen(false); navigate(`/contents/${content.contentId}?language=${language}`); }} /></DialogBody></DialogContent></Dialog></>;
 }

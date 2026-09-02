@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TellPal CMS — İçerikler ilk taslak</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --text: #172033;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --primary: #2563eb;
+        --primary-soft: #eff6ff;
+        --warning: #b45309;
+        --warning-soft: #fffbeb;
+        --ready: #0369a1;
+        --ready-soft: #f0f9ff;
+        --live: #047857;
+        --live-soft: #ecfdf5;
+        --radius: 12px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 14px/1.45 Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      button, input { font: inherit; }
+      .shell { min-height: 100vh; display: grid; grid-template-columns: 232px minmax(0, 1fr); }
+      .nav { background: #0f172a; color: #cbd5e1; padding: 24px 14px; }
+      .brand { color: white; font-weight: 720; font-size: 18px; padding: 0 10px 28px; }
+      .nav a { display: block; color: inherit; text-decoration: none; padding: 10px; border-radius: 8px; margin: 3px 0; }
+      .nav a.active { background: #1e3a8a; color: white; }
+      main { min-width: 0; padding: 40px clamp(20px, 4vw, 64px); }
+      .page-header { display: flex; justify-content: space-between; align-items: start; gap: 20px; margin: 0 auto 24px; max-width: 1320px; }
+      h1 { margin: 0 0 5px; font-size: 28px; line-height: 1.2; letter-spacing: -0.02em; }
+      .lede { color: var(--muted); margin: 0; max-width: 650px; }
+      .button { min-height: 40px; border: 1px solid transparent; border-radius: 8px; padding: 8px 13px; cursor: pointer; font-weight: 600; }
+      .button.primary { background: var(--primary); color: white; }
+      .button.secondary { background: var(--surface); color: var(--text); border-color: var(--line); }
+      .panel { max-width: 1320px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 1px 2px rgb(15 23 42 / 4%); }
+      .toolbar { padding: 20px; border-bottom: 1px solid var(--line); display: grid; gap: 18px; grid-template-columns: minmax(280px, 390px) minmax(0, 1fr); }
+      .field-label, .filter-label { display: block; margin-bottom: 7px; color: #475569; font-size: 11px; font-weight: 720; letter-spacing: .09em; text-transform: uppercase; }
+      .search { position: relative; }
+      .search span { position: absolute; left: 12px; top: 10px; color: var(--muted); }
+      .search input { width: 100%; min-height: 42px; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px 9px 35px; color: var(--text); }
+      .toolbar-main { min-width: 0; }
+      .toolbar-actions { display: flex; justify-content: end; gap: 8px; margin-bottom: 16px; }
+      .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 20px; }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+      .chip { border: 1px solid var(--line); background: white; color: #334155; border-radius: 999px; padding: 6px 10px; cursor: pointer; min-height: 32px; }
+      .chip.selected { background: var(--primary-soft); border-color: #93c5fd; color: #1d4ed8; font-weight: 650; }
+      .language { min-height: 34px; border: 1px solid var(--line); border-radius: 7px; padding: 6px 28px 6px 9px; background: white; color: #334155; }
+      .summary { grid-column: 2; border-top: 1px solid var(--line); padding-top: 13px; color: var(--muted); }
+      .summary strong { color: var(--text); }
+      .table-wrap { overflow: hidden; }
+      table { width: 100%; border-collapse: collapse; }
+      caption { text-align: left; padding: 16px 20px 4px; color: var(--muted); font-size: 13px; }
+      th { color: #64748b; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+      td { padding: 15px 20px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      tbody tr { cursor: pointer; }
+      tbody tr:hover { background: #f8fafc; }
+      .title { font-weight: 700; }
+      .meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
+      .kind { border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; color: #475569; font-size: 12px; white-space: nowrap; }
+      .status { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 5px 9px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+      .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+      .needs-action { color: var(--warning); background: var(--warning-soft); }
+      .ready { color: var(--ready); background: var(--ready-soft); }
+      .published { color: var(--live); background: var(--live-soft); }
+      .blocker-control { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; border: 0; padding: 0; color: #92400e; background: transparent; text-decoration: underline; cursor: pointer; font-size: 12px; }
+      .blocker-preview { margin-top: 9px; max-width: 290px; padding: 10px; border: 1px solid #fcd34d; border-radius: 8px; background: #fffbeb; color: #78350f; font-size: 12px; }
+      .blocker-preview ul { margin: 6px 0 0; padding-left: 17px; }
+      .pages, .updated { color: #475569; white-space: nowrap; }
+      .draft-note { padding: 15px 20px; color: var(--muted); font-size: 12px; background: #fafafa; border-radius: 0 0 var(--radius) var(--radius); }
+      .draft-note strong { color: #475569; }
+
+      @media (max-width: 900px) {
+        .shell { grid-template-columns: 1fr; }
+        .nav { display: none; }
+        main { padding: 24px 16px; }
+        .toolbar { grid-template-columns: 1fr; }
+        .toolbar-actions { justify-content: start; }
+        .summary { grid-column: 1; }
+        th:nth-child(4), td:nth-child(4) { display: none; }
+      }
+      @media (max-width: 620px) {
+        .page-header { display: block; }
+        .page-header .button { margin-top: 16px; width: 100%; }
+        table, tbody, tr, td { display: block; }
+        thead, caption { display: none; }
+        tbody tr { padding: 16px; border-bottom: 1px solid var(--line); }
+        td { padding: 3px 0; border: 0; }
+        td:nth-child(2), td:nth-child(3), td:nth-child(5) { display: inline-block; margin: 10px 8px 0 0; }
+        .blocker-preview { max-width: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <nav class="nav" aria-label="Ana navigasyon">
+        <div class="brand">TellPal CMS</div>
+        <a href="#">Ana sayfa</a>
+        <a class="active" href="#">İçerikler</a>
+        <a href="#">Kategoriler</a>
+        <a href="#">Medya</a>
+      </nav>
+      <main>
+        <header class="page-header">
+          <div>
+            <h1>İçerikler</h1>
+            <p class="lede">İçeriği bul, seçili dildeki yayın engellerini gör ve düzenlemeye devam et.</p>
+          </div>
+          <button class="button primary" type="button">+ Yeni içerik</button>
+        </header>
+
+        <section class="panel" aria-labelledby="registry-heading">
+          <h2 id="registry-heading" style="position:absolute;left:-9999px">İçerik kayıt ekranı</h2>
+          <div class="toolbar">
+            <div>
+              <label class="field-label" for="content-search">Ara</label>
+              <div class="search"><span aria-hidden="true">⌕</span><input id="content-search" placeholder="Başlık, anahtar veya ID ile ara" /></div>
+            </div>
+            <div class="toolbar-main">
+              <div class="toolbar-actions">
+                <button class="button secondary" type="button">Yenile</button>
+              </div>
+              <div class="filters">
+                <div>
+                  <span class="filter-label">Dil</span>
+                  <select class="language" aria-label="İçerik dili"><option>Türkçe</option><option>İngilizce</option></select>
+                </div>
+                <div>
+                  <span class="filter-label">İçerik türü</span>
+                  <div class="chips"><button class="chip selected">Tümü</button><button class="chip">Hikâye</button><button class="chip">Sesli hikâye</button></div>
+                </div>
+                <div>
+                  <span class="filter-label">Yayın durumu</span>
+                  <div class="chips"><button class="chip selected">Tümü</button><button class="chip">Aksiyon gerekli</button><button class="chip">Yayına hazır</button><button class="chip">Yayında</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="summary"><strong>78 içerik</strong> · Türkçe · Son güncellenen önce · 12 içerik aksiyon bekliyor</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>İçerik kayıtları — satırı açmak için tıkla</caption>
+              <thead><tr><th>İçerik</th><th>Tür</th><th>Seçili dilde durum</th><th>Sayfalar</th><th>Son güncelleme</th></tr></thead>
+              <tbody>
+                <tr tabindex="0">
+                  <td><div class="title">Süper Dedektifler 1</div><div class="meta">super-dedektifler-1 · #42</div></td>
+                  <td><span class="kind">Hikâye</span></td>
+                  <td>
+                    <span class="status needs-action">Aksiyon gerekli</span>
+                    <button class="blocker-control" type="button" aria-expanded="true">3 yayın engelini göster</button>
+                    <div class="blocker-preview"><strong>Türkçe için yayın engelleri</strong><ul><li>Kapak görseli eksik</li><li>Sayfa 4 için ses eksik</li><li>Sayfa 9 için metin eksik</li></ul></div>
+                  </td>
+                  <td class="pages">18 sayfa</td><td class="updated">Bugün, 10:42</td>
+                </tr>
+                <tr tabindex="0">
+                  <td><div class="title">Cesur Minik Kirpi</div><div class="meta">cesur-minik-kirpi · #39</div></td>
+                  <td><span class="kind">Hikâye</span></td>
+                  <td><span class="status ready">Yayına hazır</span><div class="meta">Yayınlamayı bekliyor</div></td>
+                  <td class="pages">14 sayfa</td><td class="updated">Dün, 16:08</td>
+                </tr>
+                <tr tabindex="0">
+                  <td><div class="title">Ay Işığındaki Bahçe</div><div class="meta">ay-isigindaki-bahce · #31</div></td>
+                  <td><span class="kind">Hikâye</span></td>
+                  <td><span class="status published">Yayında</span><div class="meta">Türkçe mobilde görünür</div></td>
+                  <td class="pages">22 sayfa</td><td class="updated">28 Ağustos</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="draft-note"><strong>Taslak notu:</strong> Açık engel listesi burada görünür durumda gösterildi. Nihai tasarımda aynı liste hover, klavye odağı ve dokunmatik tap ile açılabilen erişilebilir bir kontrol olacak.</div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -32,6 +32,7 @@ Read order:
 - `ADR-0006`: story-page illustrations are localization-scoped and resolved from `story_page_localizations`, not page roots.
 - `ADR-0007`: category type aligns with curated content type and no longer supports legacy `CONTENT` or `PARENT_GUIDANCE` values.
 - `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and backend-mediated CMS uploads/previews.
+- `ADR-0009`: registry reads must paginate and filter in the database; `Specification` covers row-local predicates while aggregate readiness needs a dedicated projection/read model.
 
 ## Coding and Documentation Defaults
 
@@ -87,4 +88,5 @@ Read order:
 - durable policy changes without ADR or project-memory updates
 - comments that narrate obvious code instead of exposing intent
 - new cross-module dependencies into internal packages
+- registry endpoints that fetch every aggregate and then filter, sort, or paginate in application memory
 - deploy changes that bypass `ops/railway/README.md`, hard-code Railway/Firebase secrets, or leave bootstrap credentials configured after use

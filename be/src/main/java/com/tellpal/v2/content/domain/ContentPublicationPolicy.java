@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.domain;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -11,6 +12,8 @@ import com.tellpal.v2.shared.domain.LanguageCode;
  * language.
  */
 public final class ContentPublicationPolicy {
+
+    private final StoryPublicationReadinessPolicy storyReadinessPolicy = new StoryPublicationReadinessPolicy();
 
     /**
      * Publishes a localization after validating type-specific readiness rules.
@@ -34,30 +37,21 @@ public final class ContentPublicationPolicy {
         if (!content.getType().supportsStoryPages()) {
             return;
         }
-        if (content.getStoryPages().isEmpty()) {
-            throw new IllegalStateException("Story content must include at least one story page before publication");
+        List<StoryPublicationBlocker> blockers = storyReadinessPolicy.evaluate(content, languageCode);
+        if (!blockers.isEmpty()) {
+            StoryPublicationBlocker blocker = blockers.getFirst();
+            throw new IllegalStateException("Story publication requirements are incomplete: "
+                    + publicationMessage(blocker));
         }
-        for (StoryPage storyPage : content.getStoryPages()) {
-            StoryPageLocalization localization = storyPage.findLocalization(languageCode)
-                    .orElseThrow(() -> new IllegalStateException(
-                            "Story page %d must have localization for %s before publication"
-                                    .formatted(storyPage.getPageNumber(), languageCode.value())));
-            if (localization.getBodyText() == null) {
-                throw new IllegalStateException(
-                        "Story page %d must include body text for %s before publication"
-                                .formatted(storyPage.getPageNumber(), languageCode.value()));
-            }
-            if (localization.getAudioMediaId() == null) {
-                throw new IllegalStateException(
-                        "Story page %d must include audio media for %s before publication"
-                                .formatted(storyPage.getPageNumber(), languageCode.value()));
-            }
-            if (localization.getIllustrationMediaId() == null) {
-                throw new IllegalStateException(
-                        "Story page %d must include illustration media for %s before publication"
-                                .formatted(storyPage.getPageNumber(), languageCode.value()));
-            }
-        }
+    }
+
+    private static String publicationMessage(StoryPublicationBlocker blocker) {
+        return switch (blocker.code()) {
+            case PAGE_AUDIO_MISSING -> "audio media is missing";
+            case PAGE_ILLUSTRATION_MISSING -> "illustration media is missing";
+            case PAGE_TEXT_MISSING -> "body text is missing";
+            default -> blocker.code().name();
+        };
     }
 
     private static Content requireContent(Content content) {
