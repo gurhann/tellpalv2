@@ -21,7 +21,7 @@ tellpal:
         path-prefix: local
         project-id: tellpal-ee0dd
         bucket-name: tellpal-ee0dd.appspot.com
-        credentials-path: /Users/gurhankucuk/Documents/keystores/tellpalv2/tellpal-v2-firebase-storage-pk.json
+        credentials-path: ${TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_PATH:}
         signed-upload-ttl: PT15M
         signed-download-ttl: PT1H
   security:

@@ -37,8 +37,17 @@ services:
       TELLPAL_API_DOCS_ENABLED: "true"
       TELLPAL_ADMIN_JWT_SECRET: change-me-change-me-change-me-32-bytes
       TELLPAL_FIREBASE_STUB_TOKENS_ENABLED: "true"
+      TELLPAL_ASSET_STORAGE_FIREBASE_PROJECT_ID: ${TELLPAL_ASSET_STORAGE_FIREBASE_PROJECT_ID:-}
+      TELLPAL_ASSET_STORAGE_FIREBASE_BUCKET_NAME: ${TELLPAL_ASSET_STORAGE_FIREBASE_BUCKET_NAME:-}
+      TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_PATH: ${TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_PATH:-/run/secrets/tellpal-firebase-storage-pk.json}
+      TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX: ${TELLPAL_ASSET_STORAGE_FIREBASE_PATH_PREFIX:-local}
     ports:
       - "8080:8080"
+    volumes:
+      - type: bind
+        source: ${TELLPAL_ASSET_STORAGE_FIREBASE_CREDENTIALS_HOST_PATH:-./var/firebase-storage-credentials.json}
+        target: /run/secrets/tellpal-firebase-storage-pk.json
+        read_only: true
 
 volumes:
   tellpal-v2-postgres-data:
