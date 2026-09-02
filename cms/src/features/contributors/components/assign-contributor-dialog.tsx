@@ -213,190 +213,193 @@ export function AssignContributorDialog({
               noValidate
               onSubmit={form.handleSubmit(handleSubmit)}
             >
-            {problemMessage ? (
-              <ProblemAlert
-                description={problemMessage}
-                title="Contributor assignment failed"
-              />
-            ) : null}
-            <FieldError error={form.formState.errors.root?.serverError} />
+              {problemMessage ? (
+                <ProblemAlert
+                  description={problemMessage}
+                  title="Contributor assignment failed"
+                />
+              ) : null}
+              <FieldError error={form.formState.errors.root?.serverError} />
 
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Contributor
-                </label>
-                <Controller
-                  control={form.control}
-                  name="contributorId"
-                  render={({ field }) => (
-                    <Select
-                      value={field.value > 0 ? field.value.toString() : ""}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                    >
-                      <SelectTrigger
-                        aria-label="Contributor"
-                        aria-invalid={Boolean(
-                          form.formState.errors.contributorId,
-                        )}
-                        className="w-full"
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Contributor
+                  </label>
+                  <Controller
+                    control={form.control}
+                    name="contributorId"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value > 0 ? field.value.toString() : ""}
+                        onValueChange={(value) => field.onChange(Number(value))}
                       >
-                        <SelectValue placeholder="Select contributor" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {contributorListQuery.contributors.map(
-                          (contributor) => (
-                            <SelectItem
-                              key={contributor.id}
-                              value={contributor.id.toString()}
-                            >
-                              {contributor.displayName}
+                        <SelectTrigger
+                          aria-label="Contributor"
+                          aria-invalid={Boolean(
+                            form.formState.errors.contributorId,
+                          )}
+                          className="w-full"
+                        >
+                          <SelectValue placeholder="Select contributor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {contributorListQuery.contributors.map(
+                            (contributor) => (
+                              <SelectItem
+                                key={contributor.id}
+                                value={contributor.id.toString()}
+                              >
+                                {contributor.displayName}
+                              </SelectItem>
+                            ),
+                          )}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <FieldError error={form.formState.errors.contributorId} />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Role
+                  </label>
+                  <Controller
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger
+                          aria-label="Contributor role"
+                          aria-invalid={Boolean(form.formState.errors.role)}
+                          className="w-full"
+                        >
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {contributorRoleOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
                             </SelectItem>
-                          ),
-                        )}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <FieldError error={form.formState.errors.contributorId} />
-              </div>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <FieldError error={form.formState.errors.role} />
+                </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Role
-                </label>
-                <Controller
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger
-                        aria-label="Contributor role"
-                        aria-invalid={Boolean(form.formState.errors.role)}
-                        className="w-full"
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Scope
+                  </label>
+                  <Controller
+                    control={form.control}
+                    name="languageCode"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
+                        onValueChange={(value) =>
+                          field.onChange(
+                            value === GLOBAL_SCOPE_SELECT_VALUE ? null : value,
+                          )
+                        }
                       >
-                        <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {contributorRoleOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        <SelectTrigger
+                          aria-label="Contributor scope"
+                          aria-invalid={Boolean(
+                            form.formState.errors.languageCode,
+                          )}
+                          className="w-full"
+                        >
+                          <SelectValue placeholder="Select scope" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
+                            All languages
                           </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <FieldError error={form.formState.errors.role} />
-              </div>
+                          {languageOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    {languageScopeLabel === GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL
+                      ? "All languages creates one localization-independent credit."
+                      : `${languageScopeLabel} creates a localized contributor credit.`}
+                  </p>
+                  <FieldError error={form.formState.errors.languageCode} />
+                </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Scope
-                </label>
-                <Controller
-                  control={form.control}
-                  name="languageCode"
-                  render={({ field }) => (
-                    <Select
-                      value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
-                      onValueChange={(value) =>
-                        field.onChange(
-                          value === GLOBAL_SCOPE_SELECT_VALUE ? null : value,
-                        )
-                      }
-                    >
-                      <SelectTrigger
-                        aria-label="Contributor scope"
-                        aria-invalid={Boolean(
-                          form.formState.errors.languageCode,
-                        )}
-                        className="w-full"
-                      >
-                        <SelectValue placeholder="Select scope" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
-                          All languages
-                        </SelectItem>
-                        {languageOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <p className="text-sm text-muted-foreground">
-                  {languageScopeLabel === GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL
-                    ? "All languages creates one localization-independent credit."
-                    : `${languageScopeLabel} creates a localized contributor credit.`}
-                </p>
-                <FieldError error={form.formState.errors.languageCode} />
+                <div className="space-y-2">
+                  <label
+                    className="text-sm font-medium text-foreground"
+                    htmlFor="content-contributor-sort-order"
+                  >
+                    Sort order
+                  </label>
+                  <Input
+                    id="content-contributor-sort-order"
+                    inputMode="numeric"
+                    min={0}
+                    type="number"
+                    {...form.register("sortOrder", {
+                      setValueAs: (value) => Number(value),
+                    })}
+                  />
+                  <FieldError error={form.formState.errors.sortOrder} />
+                </div>
               </div>
 
               <div className="space-y-2">
                 <label
                   className="text-sm font-medium text-foreground"
-                  htmlFor="content-contributor-sort-order"
+                  htmlFor="content-contributor-credit-name"
                 >
-                  Sort order
+                  Credit name
                 </label>
                 <Input
-                  id="content-contributor-sort-order"
-                  inputMode="numeric"
-                  min={0}
-                  type="number"
-                  {...form.register("sortOrder", {
-                    setValueAs: (value) => Number(value),
-                  })}
+                  id="content-contributor-credit-name"
+                  placeholder="Optional credit override"
+                  {...form.register("creditName")}
                 />
-                <FieldError error={form.formState.errors.sortOrder} />
+                <p className="text-sm text-muted-foreground">
+                  Leave blank to use the contributor display name. Blank values
+                  are trimmed to `null` before submit.
+                </p>
+                <FieldError error={form.formState.errors.creditName} />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-foreground"
-                htmlFor="content-contributor-credit-name"
-              >
-                Credit name
-              </label>
-              <Input
-                id="content-contributor-credit-name"
-                placeholder="Optional credit override"
-                {...form.register("creditName")}
-              />
-              <p className="text-sm text-muted-foreground">
-                Leave blank to use the contributor display name. Blank values
-                are trimmed to `null` before submit.
-              </p>
-              <FieldError error={form.formState.errors.creditName} />
-            </div>
+              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4 text-sm text-muted-foreground">
+                Global credits are available even when this content has no
+                localizations. Localized credits remain limited to the languages
+                shown in the content detail view.
+              </div>
 
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4 text-sm text-muted-foreground">
-              Global credits are available even when this content has no
-              localizations. Localized credits remain limited to the languages
-              shown in the content detail view.
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleOpenChange(false)}
-                disabled={contributorActions.assignContributor.isPending}
-              >
-                Cancel
-              </Button>
-              <SubmitButton
-                isPending={contributorActions.assignContributor.isPending}
-                pendingLabel="Assigning contributor..."
-              >
-                Assign contributor
-              </SubmitButton>
-            </DialogFooter>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleOpenChange(false)}
+                  disabled={contributorActions.assignContributor.isPending}
+                >
+                  Cancel
+                </Button>
+                <SubmitButton
+                  isPending={contributorActions.assignContributor.isPending}
+                  pendingLabel="Assigning contributor..."
+                >
+                  Assign contributor
+                </SubmitButton>
+              </DialogFooter>
             </form>
           )}
         </DialogBody>

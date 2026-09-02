@@ -77,9 +77,7 @@ const contentRegistryPage = {
     title: content.localizations[0]?.title ?? null,
     readiness: index === 0 ? "PUBLISHED" : "ACTION_REQUIRED",
     blockers:
-      index === 0
-        ? []
-        : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
+      index === 0 ? [] : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
     lastEditedAt: "2026-03-17T09:00:00Z",
   })),
   page: 0,
@@ -136,7 +134,9 @@ for (const viewport of visualViewports) {
     await page.goto("/contents");
     await installVisualStyles(page);
 
-    const toolbar = page.locator('section[aria-label="Content registry filters"]');
+    const toolbar = page.locator(
+      'section[aria-label="Content registry filters"]',
+    );
 
     await expect(toolbar).toBeVisible();
     await expect(toolbar).toHaveScreenshot(

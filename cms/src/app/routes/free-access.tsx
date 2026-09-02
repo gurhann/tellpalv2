@@ -67,7 +67,10 @@ export function FreeAccessRoute() {
   const contentLookup = useMemo(
     () =>
       new Map(
-        contentListQuery.contents.map((content) => [content.summary.id, content]),
+        contentListQuery.contents.map((content) => [
+          content.summary.id,
+          content,
+        ]),
       ),
     [contentListQuery.contents],
   );
@@ -156,7 +159,11 @@ export function FreeAccessRoute() {
               </div>
             </FilterBarGroup>
             <FilterBarActions>
-              <Button type="button" variant="outline" onClick={() => setAppliedFilter(filterInput)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setAppliedFilter(filterInput)}
+              >
                 {copy.apply}
               </Button>
               <Button

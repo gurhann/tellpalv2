@@ -36,7 +36,9 @@ describe("workspace primitives", () => {
     expect(screen.getByText("Ready")).toBeVisible();
     expect(screen.getByText("Selected locale")).toBeVisible();
     expect(screen.getByText("English")).toBeVisible();
-    expect(screen.getByRole("heading", { name: /readiness rail/i })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: /readiness rail/i }),
+    ).toBeVisible();
     expect(screen.getByText("Visibility")).toBeVisible();
     expect(screen.getByText("2 / 3")).toBeVisible();
     expect(screen.getByText("Processing")).toBeVisible();

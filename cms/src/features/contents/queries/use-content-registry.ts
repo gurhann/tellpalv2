@@ -13,10 +13,16 @@ export function useContentRegistry(params: ContentRegistryQuery) {
     queryKey: queryKeys.contents.list(params),
     queryFn: () => contentAdminApi.listRegistry(params),
   });
-  const problem: ApiProblemDetail | null = query.error instanceof ApiClientError
-    ? query.error.problem
-    : query.error
-      ? { type: "about:blank", title: "Request failed", status: 500, detail: "The content registry could not be loaded." }
-      : null;
+  const problem: ApiProblemDetail | null =
+    query.error instanceof ApiClientError
+      ? query.error.problem
+      : query.error
+        ? {
+            type: "about:blank",
+            title: "Request failed",
+            status: 500,
+            detail: "The content registry could not be loaded.",
+          }
+        : null;
   return { ...query, registry: query.data, problem };
 }

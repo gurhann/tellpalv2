@@ -548,7 +548,9 @@ export function ContentLocalizationForm({
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger
-                      aria-invalid={Boolean(form.formState.errors.processingStatus)}
+                      aria-invalid={Boolean(
+                        form.formState.errors.processingStatus,
+                      )}
                       aria-label={copy.processingStatus}
                       className="w-full"
                     >

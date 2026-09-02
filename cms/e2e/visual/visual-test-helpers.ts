@@ -30,28 +30,34 @@ export function makeVisualSession(): SessionPayload {
 }
 
 export async function stabilizeVisualPage(page: Page) {
-  await page.addInitScript(({ fixedTime }) => {
-    const RealDate = Date;
+  await page.addInitScript(
+    ({ fixedTime }) => {
+      const RealDate = Date;
 
-    class FixedDate extends RealDate {
-      constructor(...args: ConstructorParameters<typeof Date>) {
-        if (args.length === 0) {
-          super(fixedTime);
-          return;
+      class FixedDate extends RealDate {
+        constructor(...args: ConstructorParameters<typeof Date>) {
+          if (args.length === 0) {
+            super(fixedTime);
+            return;
+          }
+
+          super(...args);
         }
 
-        super(...args);
+        static now() {
+          return fixedTime;
+        }
       }
 
-      static now() {
-        return fixedTime;
-      }
-    }
-
-    // @ts-expect-error test harness override
-    window.Date = FixedDate;
-    window.localStorage.setItem("tellpal.cms.refresh-token", "visual-refresh");
-  }, { fixedTime: new Date("2026-04-18T10:00:00Z").valueOf() });
+      // @ts-expect-error test harness override
+      window.Date = FixedDate;
+      window.localStorage.setItem(
+        "tellpal.cms.refresh-token",
+        "visual-refresh",
+      );
+    },
+    { fixedTime: new Date("2026-04-18T10:00:00Z").valueOf() },
+  );
 
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
 }

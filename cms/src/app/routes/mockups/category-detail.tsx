@@ -17,7 +17,10 @@ import { LanguageTabs } from "@/components/language/language-tabs";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { mockupDemoCategory } from "@/features/mockups/fixtures";
-import { getMockupLanguageLabel, getReadinessTone } from "@/features/mockups/lib";
+import {
+  getMockupLanguageLabel,
+  getReadinessTone,
+} from "@/features/mockups/lib";
 import {
   MockupInfoCard,
   MockupKeyValueGrid,
@@ -31,7 +34,8 @@ export function MockupCategoryDetailRoute() {
   const [selectedLanguageCode, setSelectedLanguageCode] = useState(
     mockupDemoCategory.locales[0]?.languageCode ?? "en",
   );
-  const [isCreateLocalizationOpen, setIsCreateLocalizationOpen] = useState(false);
+  const [isCreateLocalizationOpen, setIsCreateLocalizationOpen] =
+    useState(false);
   const selectedLocalization =
     mockupDemoCategory.locales.find(
       (localization) => localization.languageCode === selectedLanguageCode,
@@ -110,7 +114,11 @@ export function MockupCategoryDetailRoute() {
             <Button asChild type="button" variant="outline">
               <Link to="/labs/mockups/categories">{copy.backToRegistry}</Link>
             </Button>
-            <Button type="button" variant="outline" onClick={() => setIsCreateLocalizationOpen(true)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateLocalizationOpen(true)}
+            >
               {copy.createLocalization}
             </Button>
             <Button type="button" variant="outline">
@@ -136,12 +144,11 @@ export function MockupCategoryDetailRoute() {
                 value: mockupDemoCategory.locales
                   .filter((localization) => localization.hasIllustration)
                   .length.toString(),
-                tone:
-                  mockupDemoCategory.locales.every(
-                    (localization) => localization.hasIllustration,
-                  )
-                    ? "success"
-                    : "warning",
+                tone: mockupDemoCategory.locales.every(
+                  (localization) => localization.hasIllustration,
+                )
+                  ? "success"
+                  : "warning",
               },
               {
                 label: copy.curationItems,
@@ -175,7 +182,10 @@ export function MockupCategoryDetailRoute() {
               detail="The selected locale drives the visible curation note set."
               label="Locale focus"
               tone="accent"
-              value={getMockupLanguageLabel(selectedLocalization.languageCode, locale)}
+              value={getMockupLanguageLabel(
+                selectedLocalization.languageCode,
+                locale,
+              )}
             />
           </div>
         }
@@ -186,8 +196,16 @@ export function MockupCategoryDetailRoute() {
         >
           <MockupKeyValueGrid
             items={[
-              { label: "Slug", value: mockupDemoCategory.slug, tone: "default" },
-              { label: "Type", value: mockupDemoCategory.typeLabel, tone: "accent" },
+              {
+                label: "Slug",
+                value: mockupDemoCategory.slug,
+                tone: "default",
+              },
+              {
+                label: "Type",
+                value: mockupDemoCategory.typeLabel,
+                tone: "accent",
+              },
               {
                 label: "Access",
                 value: mockupDemoCategory.premium ? "Premium" : "Standard",
@@ -204,7 +222,11 @@ export function MockupCategoryDetailRoute() {
 
         <FormSection
           actions={
-            <Button type="button" variant="outline" onClick={() => setIsCreateLocalizationOpen(true)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateLocalizationOpen(true)}
+            >
               <ArrowRight className="size-4" />
               {copy.createLocalization}
             </Button>
@@ -244,13 +266,19 @@ export function MockupCategoryDetailRoute() {
                         },
                         {
                           label: copy.published,
-                          tone: localization.isPublished ? "success" : "warning",
+                          tone: localization.isPublished
+                            ? "success"
+                            : "warning",
                           value: localization.isPublished ? "Yes" : "No",
                         },
                         {
                           label: copy.imageReady,
-                          tone: localization.hasIllustration ? "success" : "warning",
-                          value: localization.hasIllustration ? "Ready" : "Missing",
+                          tone: localization.hasIllustration
+                            ? "success"
+                            : "warning",
+                          value: localization.hasIllustration
+                            ? "Ready"
+                            : "Missing",
                         },
                       ]}
                     />
@@ -279,13 +307,17 @@ export function MockupCategoryDetailRoute() {
                   title={item.contentTitle}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <MockupStatusPill tone="default">{item.contentType}</MockupStatusPill>
+                    <MockupStatusPill tone="default">
+                      {item.contentType}
+                    </MockupStatusPill>
                     <MockupStatusPill tone="accent">
                       {getMockupLanguageLabel(item.languageCode, locale)}
                     </MockupStatusPill>
                   </div>
                   <div className="rounded-[1.2rem] border border-border/70 bg-background px-4 py-3 text-sm leading-6 text-muted-foreground">
-                    <p className="font-medium text-foreground">{item.statusLabel}</p>
+                    <p className="font-medium text-foreground">
+                      {item.statusLabel}
+                    </p>
                     <p className="mt-1">
                       {copy.displayOrder}: {item.displayOrder}
                     </p>
@@ -303,7 +335,9 @@ export function MockupCategoryDetailRoute() {
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>{copy.createLocalizationTitle}</DialogTitle>
-            <DialogDescription>{copy.createLocalizationDescription}</DialogDescription>
+            <DialogDescription>
+              {copy.createLocalizationDescription}
+            </DialogDescription>
           </DialogHeader>
           <DialogBody className="grid gap-4">
             <MockupInfoCard
@@ -313,14 +347,26 @@ export function MockupCategoryDetailRoute() {
               <MockupKeyValueGrid
                 items={[
                   { label: "Step 1", value: "Choose language", tone: "accent" },
-                  { label: "Step 2", value: "Add image + copy", tone: "default" },
-                  { label: "Step 3", value: "Continue curation", tone: "success" },
+                  {
+                    label: "Step 2",
+                    value: "Add image + copy",
+                    tone: "default",
+                  },
+                  {
+                    label: "Step 3",
+                    value: "Continue curation",
+                    tone: "success",
+                  },
                 ]}
               />
             </MockupInfoCard>
           </DialogBody>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsCreateLocalizationOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateLocalizationOpen(false)}
+            >
               {copy.close}
             </Button>
           </DialogFooter>

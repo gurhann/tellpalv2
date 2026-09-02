@@ -78,7 +78,9 @@ describe("FreeAccessRoute", () => {
     expect(screen.getByDisplayValue("")).toBeInTheDocument();
     expect(screen.getAllByText(/^default$/i).length).toBeGreaterThan(0);
     expect(screen.getByText("partner-spring")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /grant free access/i })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: /grant free access/i }),
+    ).toBeEnabled();
   });
 
   it("renders the explicit unknown key empty state without falling back", () => {

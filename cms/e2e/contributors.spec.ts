@@ -381,9 +381,7 @@ test("contributor registry and assignment flows support delete and unassign", as
   await expect(page.getByText("Annie Case Updated")).toBeVisible();
 
   const miloRow = page.locator("tr").filter({ hasText: "Milo Rivers" });
-  await miloRow
-    .getByRole("button", { name: /^delete milo rivers$/i })
-    .click();
+  await miloRow.getByRole("button", { name: /^delete milo rivers$/i }).click();
   await page
     .getByRole("dialog")
     .getByRole("button", { name: /^delete contributor$/i })

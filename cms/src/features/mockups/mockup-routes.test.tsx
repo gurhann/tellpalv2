@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
@@ -57,7 +63,9 @@ describe("Variant A mockup routes", () => {
     });
     expect(dialog).toBeInTheDocument();
 
-    fireEvent.click(within(dialog).getAllByRole("button", { name: /^close$/i })[0]);
+    fireEvent.click(
+      within(dialog).getAllByRole("button", { name: /^close$/i })[0],
+    );
 
     await waitFor(() => {
       expect(
@@ -104,15 +112,23 @@ describe("Variant A mockup routes", () => {
         "active",
       );
     });
-    expect(screen.getByRole("heading", { name: /sakin liman seckileri/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /sakin liman seckileri/i }),
+    ).toBeInTheDocument();
   });
 
   it("opens the story page editor modal and switches locale tabs inside the modal", async () => {
-    renderMockupRoute("/labs/mockups/contents/demo-content/story-pages?language=tr");
+    renderMockupRoute(
+      "/labs/mockups/contents/demo-content/story-pages?language=tr",
+    );
 
-    fireEvent.click((await screen.findAllByRole("button", { name: /edit page/i }))[0]);
+    fireEvent.click(
+      (await screen.findAllByRole("button", { name: /edit page/i }))[0],
+    );
 
-    const dialog = await screen.findByRole("dialog", { name: /edit story page #1/i });
+    const dialog = await screen.findByRole("dialog", {
+      name: /edit story page #1/i,
+    });
     const turkishTab = within(dialog).getByRole("tab", { name: /turkish/i });
 
     expect(turkishTab).toHaveAttribute("data-state", "active");

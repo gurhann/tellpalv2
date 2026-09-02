@@ -78,20 +78,17 @@ describe("useContentContributorAssignments", () => {
       contentContributorResponses,
     );
 
-    const { result } = renderHook(
-      () => useContentContributorAssignments(1),
-      {
-        wrapper: createWrapper(),
-      },
-    );
+    const { result } = renderHook(() => useContentContributorAssignments(1), {
+      wrapper: createWrapper(),
+    });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(contributorAdminApiMock.listContentContributors).toHaveBeenCalledWith(
-      1,
-    );
+    expect(
+      contributorAdminApiMock.listContentContributors,
+    ).toHaveBeenCalledWith(1);
     expect(result.current.assignments[0]?.languageLabel).toBe("English");
     expect(result.current.problem).toBeNull();
   });
@@ -106,12 +103,9 @@ describe("useContentContributorAssignments", () => {
       ),
     );
 
-    const { result } = renderHook(
-      () => useContentContributorAssignments(1),
-      {
-        wrapper: createWrapper(),
-      },
-    );
+    const { result } = renderHook(() => useContentContributorAssignments(1), {
+      wrapper: createWrapper(),
+    });
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);

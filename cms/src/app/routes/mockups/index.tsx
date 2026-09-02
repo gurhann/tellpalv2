@@ -1,8 +1,18 @@
-import { ArrowRight, BookOpenText, FolderKanban, PanelsTopLeft } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenText,
+  FolderKanban,
+  PanelsTopLeft,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import { useI18n } from "@/i18n/locale-provider";
@@ -27,9 +37,12 @@ export function MockupLabsIndexRoute() {
           railTitle: "Scope",
           railDescription:
             "These routes stay authenticated and hidden from navigation, but remain deep-linkable for review and implementation alignment.",
-          railOne: "Content Studio registry + detail + locale-preserving story handoff",
-          railTwo: "Category Studio registry + detail with localization and curation",
-          railThree: "Story Page Editor with table-first layout and large modal editing",
+          railOne:
+            "Content Studio registry + detail + locale-preserving story handoff",
+          railTwo:
+            "Category Studio registry + detail with localization and curation",
+          railThree:
+            "Story Page Editor with table-first layout and large modal editing",
           open: "Open mockup",
         }
       : {
@@ -40,9 +53,12 @@ export function MockupLabsIndexRoute() {
           railTitle: "Scope",
           railDescription:
             "These routes stay authenticated and hidden from navigation, but remain deep-linkable for review and implementation alignment.",
-          railOne: "Content Studio registry + detail + locale-preserving story handoff",
-          railTwo: "Category Studio registry + detail with localization and curation",
-          railThree: "Story Page Editor with table-first layout and large modal editing",
+          railOne:
+            "Content Studio registry + detail + locale-preserving story handoff",
+          railTwo:
+            "Category Studio registry + detail with localization and curation",
+          railThree:
+            "Story Page Editor with table-first layout and large modal editing",
           open: "Open mockup",
         };
 
@@ -117,7 +133,12 @@ export function MockupLabsIndexRoute() {
                     </span>
                   ))}
                 </div>
-                <Button asChild className="justify-between" type="button" variant="outline">
+                <Button
+                  asChild
+                  className="justify-between"
+                  type="button"
+                  variant="outline"
+                >
                   <Link to={entry.href}>
                     {copy.open}
                     <ArrowRight className="size-4" />

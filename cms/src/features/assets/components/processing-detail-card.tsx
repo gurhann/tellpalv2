@@ -60,9 +60,7 @@ export function ProcessingDetailCard({
                 ? "Bir content id ve dil secerek lookup calistirin ya da tablodan bir kayit secin."
                 : "Run a lookup with content id and language, or select a row from the table."
             }
-            title={
-              locale === "tr" ? "Henuz sorgu yok" : "No lookup yet"
-            }
+            title={locale === "tr" ? "Henuz sorgu yok" : "No lookup yet"}
           />
         ) : isLoading ? (
           <EmptyState
@@ -87,9 +85,7 @@ export function ProcessingDetailCard({
                 : "No asset processing record exists yet for this localization. Use the schedule dialog to create one."
             }
             title={
-              locale === "tr"
-                ? "Henuz schedule edilmedi"
-                : "Not scheduled yet"
+              locale === "tr" ? "Henuz schedule edilmedi" : "Not scheduled yet"
             }
           />
         ) : problem ? (

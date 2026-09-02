@@ -72,12 +72,9 @@ describe("useFreeAccessList", () => {
       freeAccessResponses[1],
     ]);
 
-    const { result } = renderHook(
-      () => useFreeAccessList(" partner-spring "),
-      {
-        wrapper: createWrapper(),
-      },
-    );
+    const { result } = renderHook(() => useFreeAccessList(" partner-spring "), {
+      wrapper: createWrapper(),
+    });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);

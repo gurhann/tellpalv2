@@ -25,8 +25,9 @@ export function MediaRoute() {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedMediaType, setSelectedMediaType] =
-    useState<"ALL" | "IMAGE" | "AUDIO" | "ARCHIVE">("ALL");
+  const [selectedMediaType, setSelectedMediaType] = useState<
+    "ALL" | "IMAGE" | "AUDIO" | "ARCHIVE"
+  >("ALL");
   const recentAssetsQuery = useRecentAssets(RECENT_ASSET_LIMIT);
   const deferredSearch = useDeferredValue(search);
   const copy =
@@ -98,7 +99,8 @@ export function MediaRoute() {
     [filteredAssets],
   );
   const archiveCount = useMemo(
-    () => filteredAssets.filter((asset) => asset.mediaType === "ARCHIVE").length,
+    () =>
+      filteredAssets.filter((asset) => asset.mediaType === "ARCHIVE").length,
     [filteredAssets],
   );
   const filterSummaryTitle =

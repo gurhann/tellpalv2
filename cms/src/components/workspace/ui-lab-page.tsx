@@ -1,7 +1,12 @@
 import { CheckCircle2, Layers3, LayoutPanelLeft, Rows4 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ActionBar } from "@/components/workspace/action-bar";
 import { TaskRail } from "@/components/workspace/task-rail";
@@ -44,7 +49,10 @@ function getVariantIcon(id: string) {
   }
 }
 
-function scoreTotal(rowKey: "variantA" | "variantB" | "variantC", rows: ScoreRow[]) {
+function scoreTotal(
+  rowKey: "variantA" | "variantB" | "variantC",
+  rows: ScoreRow[],
+) {
   return rows.reduce((sum, row) => sum + row[rowKey], 0);
 }
 
@@ -74,17 +82,20 @@ export function UiLabPage({
             {
               label: "Variant A",
               value: `${totalA} pts`,
-              tone: totalA >= totalB && totalA >= totalC ? "success" : "default",
+              tone:
+                totalA >= totalB && totalA >= totalC ? "success" : "default",
             },
             {
               label: "Variant B",
               value: `${totalB} pts`,
-              tone: totalB >= totalA && totalB >= totalC ? "success" : "default",
+              tone:
+                totalB >= totalA && totalB >= totalC ? "success" : "default",
             },
             {
               label: "Variant C",
               value: `${totalC} pts`,
-              tone: totalC >= totalA && totalC >= totalB ? "success" : "default",
+              tone:
+                totalC >= totalA && totalC >= totalB ? "success" : "default",
             },
           ]}
         >
@@ -171,7 +182,8 @@ export function UiLabPage({
             Scoring matrix
           </h2>
           <CardDescription>
-            Higher is better. The same matrix is used to choose the final production direction.
+            Higher is better. The same matrix is used to choose the final
+            production direction.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-5">
@@ -188,14 +200,18 @@ export function UiLabPage({
               <tbody>
                 {scoreRows.map((row) => (
                   <tr key={row.criterion} className="border-b border-border/40">
-                    <td className="py-3 pr-4 text-foreground">{row.criterion}</td>
+                    <td className="py-3 pr-4 text-foreground">
+                      {row.criterion}
+                    </td>
                     <td className="py-3 pr-4 text-muted-foreground">
                       {row.variantA}
                     </td>
                     <td className="py-3 pr-4 text-muted-foreground">
                       {row.variantB}
                     </td>
-                    <td className="py-3 text-muted-foreground">{row.variantC}</td>
+                    <td className="py-3 text-muted-foreground">
+                      {row.variantC}
+                    </td>
                   </tr>
                 ))}
               </tbody>

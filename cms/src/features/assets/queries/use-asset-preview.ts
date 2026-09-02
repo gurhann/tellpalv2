@@ -54,7 +54,10 @@ function canCreateObjectUrl() {
   );
 }
 
-async function createAudioObjectUrl(previewUrl: string, mimeType: string | null) {
+async function createAudioObjectUrl(
+  previewUrl: string,
+  mimeType: string | null,
+) {
   if (!canCreateObjectUrl()) {
     return { previewUrl, objectUrl: false };
   }
@@ -107,7 +110,10 @@ export function useAssetPreview(
       );
       const previewSource =
         targetAsset.previewKind === "audio"
-          ? await createAudioObjectUrl(normalizedPreviewUrl, targetAsset.mimeType)
+          ? await createAudioObjectUrl(
+              normalizedPreviewUrl,
+              targetAsset.mimeType,
+            )
           : { previewUrl: normalizedPreviewUrl, objectUrl: false };
 
       return {

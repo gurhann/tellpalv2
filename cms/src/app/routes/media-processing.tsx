@@ -49,8 +49,7 @@ export function MediaProcessingRoute() {
           latestTitle: "Canli konsol",
           latestDescription:
             "Recent queue, retry ve lookup aksiyonlari tek yerde tutulur.",
-          invalidLookup:
-            "Lookup icin gecerli bir content id ve dil secin.",
+          invalidLookup: "Lookup icin gecerli bir content id ve dil secin.",
           filterAll: "Tum durumlar",
           filterFailed: "Failed",
           filterActive: "Active",
@@ -103,7 +102,9 @@ export function MediaProcessingRoute() {
   });
   const deferredSearch = useDeferredValue(search);
   const stats = useMemo(() => {
-    const failedCount = recentJobsQuery.jobs.filter((job) => job.hasFailure).length;
+    const failedCount = recentJobsQuery.jobs.filter(
+      (job) => job.hasFailure,
+    ).length;
     const activeCount = recentJobsQuery.jobs.filter(
       (job) => job.status === "PENDING" || job.status === "PROCESSING",
     ).length;
@@ -164,7 +165,10 @@ export function MediaProcessingRoute() {
   function handleLookupSubmit() {
     const parsedContentId = Number.parseInt(lookupContentId.trim(), 10);
 
-    if (!Number.isFinite(parsedContentId) || lookupLanguageCode.trim().length === 0) {
+    if (
+      !Number.isFinite(parsedContentId) ||
+      lookupLanguageCode.trim().length === 0
+    ) {
       setLookupError(copy.invalidLookup);
       return;
     }

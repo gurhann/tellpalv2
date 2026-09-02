@@ -75,14 +75,16 @@ describe("useProcessingActions", () => {
       });
     });
 
-    expect(assetProcessingAdminApiMock.scheduleProcessing).toHaveBeenCalledWith({
-      contentId: 2,
-      languageCode: "de",
-      contentType: "MEDITATION",
-      externalKey: "meditation.rain-room",
-      coverSourceAssetId: 12,
-      audioSourceAssetId: 11,
-    });
+    expect(assetProcessingAdminApiMock.scheduleProcessing).toHaveBeenCalledWith(
+      {
+        contentId: 2,
+        languageCode: "de",
+        contentType: "MEDITATION",
+        externalKey: "meditation.rain-room",
+        coverSourceAssetId: 12,
+        audioSourceAssetId: 11,
+      },
+    );
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: queryKeys.assets.processingRecentRoot(),
     });

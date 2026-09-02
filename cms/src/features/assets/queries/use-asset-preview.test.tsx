@@ -251,9 +251,12 @@ describe("useAssetPreview", () => {
       createObjectURL: vi.fn(),
       revokeObjectURL: vi.fn(),
     });
-    vi.stubGlobal("fetch", vi.fn(async () => {
-      throw new TypeError("Failed to fetch");
-    }));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("Failed to fetch");
+      }),
+    );
     assetAdminApiMock.issueAssetContentToken.mockResolvedValue({
       previewUrl:
         "https://api.tellpal.test/api/admin/media/1/content?token=preview-token",

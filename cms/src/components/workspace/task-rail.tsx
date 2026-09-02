@@ -71,12 +71,16 @@ export function TaskRail({
           {title}
         </h2>
         {description ? (
-          <CardDescription className={cn(isDetail ? "text-xs leading-5" : "text-sm leading-6")}>
+          <CardDescription
+            className={cn(isDetail ? "text-xs leading-5" : "text-sm leading-6")}
+          >
             {description}
           </CardDescription>
         ) : null}
       </CardHeader>
-      <CardContent className={cn("grid pt-5", isDetail ? "gap-3 px-4 pb-4" : "gap-4")}>
+      <CardContent
+        className={cn("grid pt-5", isDetail ? "gap-3 px-4 pb-4" : "gap-4")}
+      >
         {visibleStats.length > 0 ? (
           <div className="grid gap-3">
             {visibleStats.map((stat) => (

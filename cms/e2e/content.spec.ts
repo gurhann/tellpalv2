@@ -451,9 +451,9 @@ test("create, edit, and publish flows work in the browser", async ({
   ).toBeVisible();
 
   const metadataRegion = page.getByRole("region", { name: /^metadata$/i });
-  await metadataRegion.getByLabel(/external key/i).fill(
-    "lullaby.smoke-harbor.v2",
-  );
+  await metadataRegion
+    .getByLabel(/external key/i)
+    .fill("lullaby.smoke-harbor.v2");
   await Promise.all([
     page.waitForResponse(
       (response) =>

@@ -35,7 +35,8 @@ export function countVisibleLocales(locales: MockupLocaleState[]) {
 }
 
 export function countProcessingComplete(locales: MockupLocaleState[]) {
-  return locales.filter((localeState) => localeState.isProcessingComplete).length;
+  return locales.filter((localeState) => localeState.isProcessingComplete)
+    .length;
 }
 
 export function countIllustrationReady(locales: MockupLocaleState[]) {

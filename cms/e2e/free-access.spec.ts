@@ -207,9 +207,9 @@ test("free access supports grant, filtered listing, and revoke flows", async ({
     .getByRole("button", { name: /^grant free access$/i })
     .click();
 
-  await page.getByPlaceholder(/enter default or any custom access key/i).fill(
-    "partner-spring",
-  );
+  await page
+    .getByPlaceholder(/enter default or any custom access key/i)
+    .fill("partner-spring");
   await page.getByRole("button", { name: /apply filter/i }).click();
   await expect(page.getByText("partner-spring").first()).toBeVisible();
   await expect(page.getByText("Regenraum Pause")).toBeVisible();

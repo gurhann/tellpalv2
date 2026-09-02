@@ -44,9 +44,9 @@ describe("Overlay primitives", () => {
     const body = screen
       .getByText("Scrollable body")
       .closest("[data-slot='dialog-body']");
-    const footer = screen.getByRole("button", { name: /save/i }).closest(
-      "[data-slot='dialog-footer']",
-    );
+    const footer = screen
+      .getByRole("button", { name: /save/i })
+      .closest("[data-slot='dialog-footer']");
 
     expect(dialog).toHaveClass(
       "max-h-[calc(100dvh-1.5rem)]",
@@ -115,12 +115,16 @@ describe("Overlay primitives", () => {
     );
 
     const drawer = screen.getByRole("dialog", { name: /drawer title/i });
-    const body = screen.getByText("Drawer body").closest("[data-slot='sheet-body']");
-    const footer = screen.getByRole("button", { name: /apply/i }).closest(
-      "[data-slot='sheet-footer']",
-    );
+    const body = screen
+      .getByText("Drawer body")
+      .closest("[data-slot='sheet-body']");
+    const footer = screen
+      .getByRole("button", { name: /apply/i })
+      .closest("[data-slot='sheet-footer']");
 
-    expect(drawer).toHaveClass("data-[side=right]:grid-rows-[auto_minmax(0,1fr)_auto]");
+    expect(drawer).toHaveClass(
+      "data-[side=right]:grid-rows-[auto_minmax(0,1fr)_auto]",
+    );
     expect(body).toHaveClass("min-h-0", "overflow-y-auto", "px-5", "pb-5");
     expect(footer).toHaveClass("shrink-0", "border-t", "bg-muted/45");
   });

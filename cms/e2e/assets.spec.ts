@@ -352,9 +352,7 @@ test("media utility supports detail edit and cached URL refresh in the browser",
   await expect(
     page.getByRole("heading", { name: /^media utility$/i, level: 1 }),
   ).toBeVisible();
-  await page
-    .getByRole("row", { name: /asset #11/i })
-    .click();
+  await page.getByRole("row", { name: /asset #11/i }).click();
   await expect(page.getByLabel(/mime type/i)).toHaveValue("audio/wav");
   await expect(page.getByText(/^available$/i)).toBeVisible();
   await expect(page.getByLabel(/audio preview for asset #11/i)).toBeVisible();

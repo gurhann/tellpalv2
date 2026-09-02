@@ -23,8 +23,14 @@ import { Input } from "@/components/ui/input";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { mockupContentRegistry } from "@/features/mockups/fixtures";
-import { countProcessingComplete, countVisibleLocales } from "@/features/mockups/lib";
-import { MockupInfoCard, MockupStatusPill } from "@/features/mockups/components/mockup-ui";
+import {
+  countProcessingComplete,
+  countVisibleLocales,
+} from "@/features/mockups/lib";
+import {
+  MockupInfoCard,
+  MockupStatusPill,
+} from "@/features/mockups/components/mockup-ui";
 import type { MockupContentSummary } from "@/features/mockups/types";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -36,9 +42,9 @@ export function MockupContentsRoute() {
   const { locale } = useI18n();
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<string>("ALL");
-  const [selectedState, setSelectedState] = useState<"ALL" | "ACTIVE" | "INACTIVE">(
-    "ALL",
-  );
+  const [selectedState, setSelectedState] = useState<
+    "ALL" | "ACTIVE" | "INACTIVE"
+  >("ALL");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const copy =
@@ -216,7 +222,8 @@ export function MockupContentsRoute() {
       cell: (content) => (
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {countVisibleLocales(content.locales)} / {content.locales.length} {copy.visible}
+            {countVisibleLocales(content.locales)} / {content.locales.length}{" "}
+            {copy.visible}
           </p>
           <p className="text-xs text-muted-foreground">{content.note}</p>
         </div>
@@ -308,7 +315,9 @@ export function MockupContentsRoute() {
                   key={typeOption}
                   size="sm"
                   type="button"
-                  variant={selectedType === typeOption ? "secondary" : "outline"}
+                  variant={
+                    selectedType === typeOption ? "secondary" : "outline"
+                  }
                   onClick={() => setSelectedType(typeOption)}
                 >
                   {typeOption === "ALL" ? copy.filterTypes : typeOption}
@@ -359,14 +368,24 @@ export function MockupContentsRoute() {
               description={copy.createOutcomeBody}
             >
               <div className="grid gap-3 sm:grid-cols-3">
-                <MockupStatusPill tone="accent">Metadata first</MockupStatusPill>
-                <MockupStatusPill tone="success">Locale tabs after save</MockupStatusPill>
-                <MockupStatusPill tone="default">Readiness stays in the rail</MockupStatusPill>
+                <MockupStatusPill tone="accent">
+                  Metadata first
+                </MockupStatusPill>
+                <MockupStatusPill tone="success">
+                  Locale tabs after save
+                </MockupStatusPill>
+                <MockupStatusPill tone="default">
+                  Readiness stays in the rail
+                </MockupStatusPill>
               </div>
             </MockupInfoCard>
           </DialogBody>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(false)}
+            >
               {copy.close}
             </Button>
           </DialogFooter>

@@ -112,7 +112,9 @@ export function WorkspaceInfoCard({
         </h3>
         {description ? <CardDescription>{description}</CardDescription> : null}
       </CardHeader>
-      {children ? <CardContent className="grid gap-3 pt-4">{children}</CardContent> : null}
+      {children ? (
+        <CardContent className="grid gap-3 pt-4">{children}</CardContent>
+      ) : null}
     </Card>
   );
 }
@@ -135,7 +137,9 @@ export function WorkspaceKeyValueGrid({
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {item.label}
           </p>
-          <p className="mt-2 text-sm font-medium leading-6 text-foreground">{item.value}</p>
+          <p className="mt-2 text-sm font-medium leading-6 text-foreground">
+            {item.value}
+          </p>
         </div>
       ))}
     </div>

@@ -68,9 +68,9 @@ describe("ContentContributorPanel", () => {
     expect(screen.getByText("Author")).toBeVisible();
     expect(screen.getByText("Turkish")).toBeVisible();
     expect(screen.getByText("All languages")).toBeVisible();
-    expect(
-      screen.getAllByRole("button", { name: /unassign/i }),
-    ).toHaveLength(3);
+    expect(screen.getAllByRole("button", { name: /unassign/i })).toHaveLength(
+      3,
+    );
   });
 
   it("keeps assignment enabled when the content has no localizations", () => {

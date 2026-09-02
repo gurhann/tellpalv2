@@ -67,7 +67,10 @@ export function normalizeBackendPreviewUrl(
     const preview = new URL(previewUrl);
     const apiBase = new URL(apiBaseUrl);
 
-    if (preview.host !== apiBase.host || preview.protocol === apiBase.protocol) {
+    if (
+      preview.host !== apiBase.host ||
+      preview.protocol === apiBase.protocol
+    ) {
       return previewUrl;
     }
 

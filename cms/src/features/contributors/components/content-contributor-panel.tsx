@@ -62,10 +62,7 @@ export function ContentContributorPanel({
         ) : assignments.length === 0 ? (
           <EmptyState
             action={
-              <Button
-                type="button"
-                onClick={() => setIsAssignDialogOpen(true)}
-              >
+              <Button type="button" onClick={() => setIsAssignDialogOpen(true)}>
                 <CirclePlus className="size-4" />
                 Assign first contributor
               </Button>

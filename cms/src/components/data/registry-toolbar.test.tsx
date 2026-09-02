@@ -30,7 +30,9 @@ describe("RegistryToolbar", () => {
     const region = screen.getByRole("region", {
       name: /content registry filters/i,
     });
-    const searchSlot = region.querySelector('[data-slot="registry-toolbar-search"]');
+    const searchSlot = region.querySelector(
+      '[data-slot="registry-toolbar-search"]',
+    );
     const filtersSlot = region.querySelector(
       '[data-slot="registry-toolbar-filters"]',
     );
@@ -46,8 +48,8 @@ describe("RegistryToolbar", () => {
     expect(searchSlot).not.toBeNull();
     expect(filtersSlot).not.toBeNull();
     expect(summarySlot).not.toBeNull();
-    expect(
-      filtersSlot?.compareDocumentPosition(summarySlot as Node),
-    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(filtersSlot?.compareDocumentPosition(summarySlot as Node)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
   });
 });

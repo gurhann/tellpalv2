@@ -32,7 +32,9 @@ export function MockupContentDetailRoute() {
       (localeState) => localeState.languageCode === selectedLanguageCode,
     ) ?? mockupDemoContent.locales[0];
   const visibleLocaleCount = countVisibleLocales(mockupDemoContent.locales);
-  const processingCompleteCount = countProcessingComplete(mockupDemoContent.locales);
+  const processingCompleteCount = countProcessingComplete(
+    mockupDemoContent.locales,
+  );
   const copy =
     locale === "tr"
       ? {
@@ -60,8 +62,10 @@ export function MockupContentDetailRoute() {
           processing: "Processing complete",
           pages: "Story pages",
           whyItWorks: "Why it works",
-          whyOne: "Editors can review release state without leaving the detail route.",
-          whyTwo: "Locale tabs carry all high-context decisions on one surface.",
+          whyOne:
+            "Editors can review release state without leaving the detail route.",
+          whyTwo:
+            "Locale tabs carry all high-context decisions on one surface.",
           whyThree:
             "Story page handoff preserves the selected language instead of forcing re-selection.",
           nextAction: "Selected locale handoff",
@@ -101,8 +105,10 @@ export function MockupContentDetailRoute() {
           processing: "Processing complete",
           pages: "Story pages",
           whyItWorks: "Why it works",
-          whyOne: "Editors can review release state without leaving the detail route.",
-          whyTwo: "Locale tabs carry all high-context decisions on one surface.",
+          whyOne:
+            "Editors can review release state without leaving the detail route.",
+          whyTwo:
+            "Locale tabs carry all high-context decisions on one surface.",
           whyThree:
             "Story page handoff preserves the selected language instead of forcing re-selection.",
           nextAction: "Selected locale handoff",
@@ -132,8 +138,12 @@ export function MockupContentDetailRoute() {
             <MockupStatusPill tone="accent">
               {selectedLocale.statusLabel}
             </MockupStatusPill>
-            <MockupStatusPill tone={selectedLocale.isPublished ? "success" : "warning"}>
-              {selectedLocale.isPublished ? copy.mobileVisible : copy.localeStatus}
+            <MockupStatusPill
+              tone={selectedLocale.isPublished ? "success" : "warning"}
+            >
+              {selectedLocale.isPublished
+                ? copy.mobileVisible
+                : copy.localeStatus}
             </MockupStatusPill>
           </div>
         </div>
@@ -153,7 +163,18 @@ export function MockupContentDetailRoute() {
         </MockupInfoCard>
       </div>
     ),
-    [copy.nextAction, copy.nextActionBody, copy.openStoryPages, copy.toolbarDescription, copy.toolbarTitle, copy.localeStatus, copy.mobileVisible, selectedLocale.isPublished, selectedLocale.languageCode, selectedLocale.statusLabel],
+    [
+      copy.nextAction,
+      copy.nextActionBody,
+      copy.openStoryPages,
+      copy.toolbarDescription,
+      copy.toolbarTitle,
+      copy.localeStatus,
+      copy.mobileVisible,
+      selectedLocale.isPublished,
+      selectedLocale.languageCode,
+      selectedLocale.statusLabel,
+    ],
   );
 
   return (
@@ -261,13 +282,16 @@ export function MockupContentDetailRoute() {
                     items={[
                       {
                         label: copy.mobileVisible,
-                        tone: localeState.isVisibleToMobile ? "success" : "warning",
+                        tone: localeState.isVisibleToMobile
+                          ? "success"
+                          : "warning",
                         value: localeState.isVisibleToMobile ? "Yes" : "No",
                       },
                       {
                         label: copy.processing,
-                        tone:
-                          localeState.isProcessingComplete ? "success" : "warning",
+                        tone: localeState.isProcessingComplete
+                          ? "success"
+                          : "warning",
                         value: localeState.isProcessingComplete
                           ? "Complete"
                           : "In progress",
@@ -292,7 +316,11 @@ export function MockupContentDetailRoute() {
       >
         <MockupKeyValueGrid
           items={[
-            { label: "Type", value: mockupDemoContent.typeLabel, tone: "default" },
+            {
+              label: "Type",
+              value: mockupDemoContent.typeLabel,
+              tone: "default",
+            },
             {
               label: copy.fixedField,
               value: "Type, initial content shape",
@@ -334,7 +362,9 @@ export function MockupContentDetailRoute() {
               title={assignment.creditName}
             >
               <div className="flex flex-wrap items-center gap-2">
-                <MockupStatusPill tone="default">{assignment.role}</MockupStatusPill>
+                <MockupStatusPill tone="default">
+                  {assignment.role}
+                </MockupStatusPill>
                 <MockupStatusPill tone="accent">
                   {getMockupLanguageLabel(assignment.languageCode, locale)}
                 </MockupStatusPill>

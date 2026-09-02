@@ -23,9 +23,7 @@ type RevokeFreeAccessButtonProps = {
   entry: FreeAccessGrantViewModel;
 };
 
-export function RevokeFreeAccessButton({
-  entry,
-}: RevokeFreeAccessButtonProps) {
+export function RevokeFreeAccessButton({ entry }: RevokeFreeAccessButtonProps) {
   const { locale } = useI18n();
   const copy =
     locale === "tr"
@@ -92,7 +90,12 @@ export function RevokeFreeAccessButton({
 
   return (
     <>
-      <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(true)}>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => setOpen(true)}
+      >
         {copy.trigger}
       </Button>
 

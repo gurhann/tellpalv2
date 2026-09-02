@@ -142,8 +142,7 @@ function createColumns(
       cell: (job) => (
         <div className="space-y-1">
           <p className="text-sm text-foreground">
-            {job.lastErrorCode ??
-              (locale === "tr" ? "Yok" : "None recorded")}
+            {job.lastErrorCode ?? (locale === "tr" ? "Yok" : "None recorded")}
           </p>
           <p className="line-clamp-2 text-xs text-muted-foreground">
             {job.lastErrorMessage ??
@@ -212,9 +211,7 @@ export function ProcessingJobTable({
           ? "Henuz isleme kaydi yok. Yeni bir localization schedule ederek ilk isi baslatin."
           : "No processing jobs exist yet. Schedule a localization to create the first job."
       }
-      emptyTitle={
-        locale === "tr" ? "Isleme kaydi yok" : "No processing jobs"
-      }
+      emptyTitle={locale === "tr" ? "Isleme kaydi yok" : "No processing jobs"}
       getRowId={(job) => job.id.toString()}
       isLoading={isLoading}
       loadingDescription={

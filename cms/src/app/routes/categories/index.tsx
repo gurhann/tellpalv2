@@ -243,7 +243,10 @@ export function CategoriesIndexRoute() {
           <RegistryToolbar
             ariaLabel={copy.filtersAria}
             search={
-              <RegistryToolbarGroup className="w-full" label={copy.searchGroupLabel}>
+              <RegistryToolbarGroup
+                className="w-full"
+                label={copy.searchGroupLabel}
+              >
                 <div className="relative min-w-[16rem] flex-1">
                   <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
                   <Input
@@ -259,88 +262,88 @@ export function CategoriesIndexRoute() {
             filters={
               <>
                 <RegistryToolbarGroup label={copy.typeGroupLabel}>
-                <div className="flex flex-wrap items-center gap-2">
-                  {typeOptions.map((typeOption) => (
-                    <Button
-                      key={typeOption}
-                      type="button"
-                      variant={
-                        selectedType === typeOption ? "secondary" : "outline"
-                      }
-                      size="sm"
-                      aria-pressed={selectedType === typeOption}
-                      onClick={() => setSelectedType(typeOption)}
-                    >
-                      {typeOption === "ALL" ? copy.filterTypes : typeOption}
-                    </Button>
-                  ))}
-                </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {typeOptions.map((typeOption) => (
+                      <Button
+                        key={typeOption}
+                        type="button"
+                        variant={
+                          selectedType === typeOption ? "secondary" : "outline"
+                        }
+                        size="sm"
+                        aria-pressed={selectedType === typeOption}
+                        onClick={() => setSelectedType(typeOption)}
+                      >
+                        {typeOption === "ALL" ? copy.filterTypes : typeOption}
+                      </Button>
+                    ))}
+                  </div>
                 </RegistryToolbarGroup>
                 <RegistryToolbarGroup label={copy.accessGroupLabel}>
-                <div className="flex flex-wrap items-center gap-2">
-                  {[
-                    {
-                      key: "ALL" as const,
-                      label: copy.filterAccess,
-                    },
-                    {
-                      key: "PREMIUM" as const,
-                      label: "Premium",
-                    },
-                    {
-                      key: "STANDARD" as const,
-                      label: locale === "tr" ? "Standart" : "Standard",
-                    },
-                  ].map((accessOption) => (
-                    <Button
-                      key={accessOption.key}
-                      type="button"
-                      variant={
-                        selectedAccess === accessOption.key
-                          ? "secondary"
-                          : "outline"
-                      }
-                      size="sm"
-                      aria-pressed={selectedAccess === accessOption.key}
-                      onClick={() => setSelectedAccess(accessOption.key)}
-                    >
-                      {accessOption.label}
-                    </Button>
-                  ))}
-                </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[
+                      {
+                        key: "ALL" as const,
+                        label: copy.filterAccess,
+                      },
+                      {
+                        key: "PREMIUM" as const,
+                        label: "Premium",
+                      },
+                      {
+                        key: "STANDARD" as const,
+                        label: locale === "tr" ? "Standart" : "Standard",
+                      },
+                    ].map((accessOption) => (
+                      <Button
+                        key={accessOption.key}
+                        type="button"
+                        variant={
+                          selectedAccess === accessOption.key
+                            ? "secondary"
+                            : "outline"
+                        }
+                        size="sm"
+                        aria-pressed={selectedAccess === accessOption.key}
+                        onClick={() => setSelectedAccess(accessOption.key)}
+                      >
+                        {accessOption.label}
+                      </Button>
+                    ))}
+                  </div>
                 </RegistryToolbarGroup>
                 <RegistryToolbarGroup label={copy.stateGroupLabel}>
-                <div className="flex flex-wrap items-center gap-2">
-                  {[
-                    {
-                      key: "ALL" as const,
-                      label: copy.filterState,
-                    },
-                    {
-                      key: "ACTIVE" as const,
-                      label: locale === "tr" ? "Aktif" : "Active",
-                    },
-                    {
-                      key: "INACTIVE" as const,
-                      label: locale === "tr" ? "Pasif" : "Inactive",
-                    },
-                  ].map((stateOption) => (
-                    <Button
-                      key={stateOption.key}
-                      type="button"
-                      variant={
-                        selectedState === stateOption.key
-                          ? "secondary"
-                          : "outline"
-                      }
-                      size="sm"
-                      aria-pressed={selectedState === stateOption.key}
-                      onClick={() => setSelectedState(stateOption.key)}
-                    >
-                      {stateOption.label}
-                    </Button>
-                  ))}
-                </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[
+                      {
+                        key: "ALL" as const,
+                        label: copy.filterState,
+                      },
+                      {
+                        key: "ACTIVE" as const,
+                        label: locale === "tr" ? "Aktif" : "Active",
+                      },
+                      {
+                        key: "INACTIVE" as const,
+                        label: locale === "tr" ? "Pasif" : "Inactive",
+                      },
+                    ].map((stateOption) => (
+                      <Button
+                        key={stateOption.key}
+                        type="button"
+                        variant={
+                          selectedState === stateOption.key
+                            ? "secondary"
+                            : "outline"
+                        }
+                        size="sm"
+                        aria-pressed={selectedState === stateOption.key}
+                        onClick={() => setSelectedState(stateOption.key)}
+                      >
+                        {stateOption.label}
+                      </Button>
+                    ))}
+                  </div>
                 </RegistryToolbarGroup>
               </>
             }
@@ -352,7 +355,9 @@ export function CategoriesIndexRoute() {
         <CategoryListTable
           categories={filteredCategories}
           isLoading={categoryListQuery.isLoading}
-          onCategorySelect={(category) => navigate(`/categories/${category.id}`)}
+          onCategorySelect={(category) =>
+            navigate(`/categories/${category.id}`)
+          }
           onRetry={() => void categoryListQuery.refetch()}
           problem={categoryListQuery.problem}
         />

@@ -431,7 +431,11 @@ export function CategoryDetailRoute() {
           <WorkspaceKeyValueGrid
             items={[
               { label: "Slug", value: category.slug },
-              { label: copy.typeFixed, value: category.typeLabel, tone: "accent" },
+              {
+                label: copy.typeFixed,
+                value: category.typeLabel,
+                tone: "accent",
+              },
               {
                 label: copy.stateEditable,
                 value:

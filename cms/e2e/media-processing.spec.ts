@@ -227,69 +227,75 @@ test("media processing supports lookup, retry, and schedule flows", async ({
     });
   });
 
-  await page.route("**/api/admin/media-processing/*/localizations/*", async (route) => {
-    const request = route.request();
-    const url = new URL(request.url());
+  await page.route(
+    "**/api/admin/media-processing/*/localizations/*",
+    async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
 
-    if (request.method() !== "GET") {
-      await route.fallback();
-      return;
-    }
+      if (request.method() !== "GET") {
+        await route.fallback();
+        return;
+      }
 
-    const parts = url.pathname.split("/");
-    const contentId = Number(parts[4]);
-    const languageCode = parts[6];
-    const record = statusRegistry.get(`${contentId}:${languageCode}`);
+      const parts = url.pathname.split("/");
+      const contentId = Number(parts[4]);
+      const languageCode = parts[6];
+      const record = statusRegistry.get(`${contentId}:${languageCode}`);
 
-    if (!record) {
-      await route.fulfill({
-        status: 404,
-        contentType: "application/problem+json",
-        body: JSON.stringify({
-          type: "about:blank",
-          title: "Processing not found",
+      if (!record) {
+        await route.fulfill({
           status: 404,
-          detail: "No processing record exists yet.",
-          errorCode: "asset_processing_not_found",
-          path: url.pathname,
-        }),
+          contentType: "application/problem+json",
+          body: JSON.stringify({
+            type: "about:blank",
+            title: "Processing not found",
+            status: 404,
+            detail: "No processing record exists yet.",
+            errorCode: "asset_processing_not_found",
+            path: url.pathname,
+          }),
+        });
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(record),
       });
-      return;
-    }
+    },
+  );
 
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(record),
-    });
-  });
+  await page.route(
+    "**/api/admin/media-processing/*/localizations/*/retry",
+    async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.fallback();
+        return;
+      }
 
-  await page.route("**/api/admin/media-processing/*/localizations/*/retry", async (route) => {
-    if (route.request().method() !== "POST") {
-      await route.fallback();
-      return;
-    }
+      const nextRetry: ProcessingResponse = {
+        ...recentJobs[0],
+        status: "PENDING",
+        attemptCount: recentJobs[0].attemptCount + 1,
+        failedAt: null,
+        lastErrorCode: null,
+        lastErrorMessage: null,
+        updatedAt: "2026-04-17T09:32:00Z",
+        nextAttemptAt: "2026-04-17T09:35:00Z",
+      };
 
-    const nextRetry: ProcessingResponse = {
-      ...recentJobs[0],
-      status: "PENDING",
-      attemptCount: recentJobs[0].attemptCount + 1,
-      failedAt: null,
-      lastErrorCode: null,
-      lastErrorMessage: null,
-      updatedAt: "2026-04-17T09:32:00Z",
-      nextAttemptAt: "2026-04-17T09:35:00Z",
-    };
+      recentJobs[0] = nextRetry;
+      statusRegistry.set("1:en", nextRetry);
 
-    recentJobs[0] = nextRetry;
-    statusRegistry.set("1:en", nextRetry);
-
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(nextRetry),
-    });
-  });
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(nextRetry),
+      });
+    },
+  );
 
   await page.route("**/api/admin/media-processing", async (route) => {
     if (route.request().method() !== "POST") {
@@ -342,9 +348,14 @@ test("media processing supports lookup, retry, and schedule flows", async ({
     .click();
 
   await expect(page.getByText(/zip_generation_failed/i).first()).toBeVisible();
-  await expect(page.getByRole("button", { name: /^retry$/i }).first()).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /^retry$/i }).first(),
+  ).toBeVisible();
 
-  await page.getByRole("button", { name: /schedule processing/i }).first().click();
+  await page
+    .getByRole("button", { name: /schedule processing/i })
+    .first()
+    .click();
   const scheduleDialog = page.getByRole("dialog");
   await expect(
     scheduleDialog.getByRole("heading", { name: /^schedule processing$/i }),

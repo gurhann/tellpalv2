@@ -257,7 +257,10 @@ export function GrantFreeAccessDialog({
                       }
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
-                      <SelectTrigger className="w-full" aria-label={copy.content}>
+                      <SelectTrigger
+                        className="w-full"
+                        aria-label={copy.content}
+                      >
                         <SelectValue placeholder={copy.contentPlaceholder} />
                       </SelectTrigger>
                       <SelectContent>
@@ -293,7 +296,10 @@ export function GrantFreeAccessDialog({
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full" aria-label={copy.language}>
+                      <SelectTrigger
+                        className="w-full"
+                        aria-label={copy.language}
+                      >
                         <SelectValue placeholder={copy.languagePlaceholder} />
                       </SelectTrigger>
                       <SelectContent>

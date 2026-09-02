@@ -51,7 +51,10 @@ export function RoutePlaceholder({
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {t("placeholder.responsibilitiesDescription")}
             </p>
-            <ul className="mt-4 grid gap-3" aria-label={t("placeholder.responsibilitiesTitle")}>
+            <ul
+              className="mt-4 grid gap-3"
+              aria-label={t("placeholder.responsibilitiesTitle")}
+            >
               {highlights.map((highlight) => (
                 <li
                   key={highlight}

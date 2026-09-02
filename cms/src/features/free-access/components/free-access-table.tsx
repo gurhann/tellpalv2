@@ -79,7 +79,9 @@ export function FreeAccessTable({
   return (
     <DataTable
       caption={
-        locale === "tr" ? "Free access grant tablosu" : "Free access grant table"
+        locale === "tr"
+          ? "Free access grant tablosu"
+          : "Free access grant table"
       }
       columns={columns}
       emptyDescription={

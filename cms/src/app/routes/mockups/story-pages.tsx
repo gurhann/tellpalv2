@@ -16,7 +16,10 @@ import {
 import { LanguageTabs } from "@/components/language/language-tabs";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import { mockupDemoContent, mockupStoryPages } from "@/features/mockups/fixtures";
+import {
+  mockupDemoContent,
+  mockupStoryPages,
+} from "@/features/mockups/fixtures";
 import {
   countIllustrationReady,
   getMockupLanguageLabel,
@@ -43,7 +46,9 @@ function EditStoryPageDialog({
   onClose,
 }: EditStoryPageDialogProps) {
   const { locale } = useI18n();
-  const [activeLanguageCode, setActiveLanguageCode] = useState(preferredLanguageCode);
+  const [activeLanguageCode, setActiveLanguageCode] = useState(
+    preferredLanguageCode,
+  );
   const copy =
     locale === "tr"
       ? {
@@ -72,8 +77,11 @@ function EditStoryPageDialog({
   }
 
   const resolvedLanguageCode =
-    page.localizations.find((localization) => localization.languageCode === activeLanguageCode)
-      ?.languageCode ?? page.localizations[0]?.languageCode ?? "en";
+    page.localizations.find(
+      (localization) => localization.languageCode === activeLanguageCode,
+    )?.languageCode ??
+    page.localizations[0]?.languageCode ??
+    "en";
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
@@ -138,7 +146,9 @@ function EditStoryPageDialog({
                         },
                         {
                           label: copy.copyBody,
-                          tone: localization.hasBodyText ? "success" : "warning",
+                          tone: localization.hasBodyText
+                            ? "success"
+                            : "warning",
                           value: localization.hasBodyText ? "Ready" : "Missing",
                         },
                         {
@@ -148,8 +158,12 @@ function EditStoryPageDialog({
                         },
                         {
                           label: copy.illustration,
-                          tone: localization.hasIllustration ? "success" : "warning",
-                          value: localization.hasIllustration ? "Ready" : "Missing",
+                          tone: localization.hasIllustration
+                            ? "success"
+                            : "warning",
+                          value: localization.hasIllustration
+                            ? "Ready"
+                            : "Missing",
                         },
                       ]}
                     />
@@ -175,12 +189,16 @@ export function MockupStoryPagesRoute() {
   const preferredLanguageCode = searchParams.get("language") ?? "en";
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingPage, setEditingPage] = useState<MockupStoryPage | null>(null);
-  const preferredLanguageLabel = getMockupLanguageLabel(preferredLanguageCode, locale);
+  const preferredLanguageLabel = getMockupLanguageLabel(
+    preferredLanguageCode,
+    locale,
+  );
   const localizedPageCount = mockupStoryPages.filter((page) =>
     page.localizations.some((localization) => localization.hasBodyText),
   ).length;
   const completeIllustrationCoverageCount = mockupStoryPages.filter(
-    (page) => countIllustrationReady(page.localizations) === page.localizations.length,
+    (page) =>
+      countIllustrationReady(page.localizations) === page.localizations.length,
   ).length;
   const copy =
     locale === "tr"
@@ -258,8 +276,12 @@ export function MockupStoryPagesRoute() {
       cell: (page) => (
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {page.localizations.filter((localization) => localization.hasBodyText).length} /{" "}
-            {page.localizations.length} ready
+            {
+              page.localizations.filter(
+                (localization) => localization.hasBodyText,
+              ).length
+            }{" "}
+            / {page.localizations.length} ready
           </p>
           <p className="text-xs text-muted-foreground">
             {page.localizations
@@ -275,7 +297,8 @@ export function MockupStoryPagesRoute() {
       cell: (page) => (
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {countIllustrationReady(page.localizations)} / {page.localizations.length} ready
+            {countIllustrationReady(page.localizations)} /{" "}
+            {page.localizations.length} ready
           </p>
           <p className="text-xs text-muted-foreground">{page.note}</p>
         </div>
@@ -287,7 +310,12 @@ export function MockupStoryPagesRoute() {
       align: "right",
       cellClassName: "w-[1%]",
       cell: (page) => (
-        <Button size="sm" type="button" variant="outline" onClick={() => setEditingPage(page)}>
+        <Button
+          size="sm"
+          type="button"
+          variant="outline"
+          onClick={() => setEditingPage(page)}
+        >
           <Pencil className="size-4" />
           {copy.openEditor}
         </Button>
@@ -343,20 +371,28 @@ export function MockupStoryPagesRoute() {
             ]}
           >
             <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-              <p className="font-medium text-foreground">{copy.preferredLocale}</p>
+              <p className="font-medium text-foreground">
+                {copy.preferredLocale}
+              </p>
               <p>{preferredLanguageLabel}</p>
               <p>
-                The editor route was opened from {mockupDemoContent.externalKey} with
-                locale focus preserved.
+                The editor route was opened from {mockupDemoContent.externalKey}{" "}
+                with locale focus preserved.
               </p>
             </div>
           </TaskRail>
         }
         toolbar={
           <div className="flex flex-wrap items-center gap-2 rounded-[1.7rem] border border-border/70 bg-muted/15 px-4 py-4">
-            <MockupStatusPill tone="accent">{copy.preferredLocale}</MockupStatusPill>
-            <MockupStatusPill tone="default">{preferredLanguageLabel}</MockupStatusPill>
-            <span className="text-sm text-muted-foreground">{copy.toolbarDescription}</span>
+            <MockupStatusPill tone="accent">
+              {copy.preferredLocale}
+            </MockupStatusPill>
+            <MockupStatusPill tone="default">
+              {preferredLanguageLabel}
+            </MockupStatusPill>
+            <span className="text-sm text-muted-foreground">
+              {copy.toolbarDescription}
+            </span>
           </div>
         }
       >
@@ -382,14 +418,26 @@ export function MockupStoryPagesRoute() {
               <MockupKeyValueGrid
                 items={[
                   { label: "Next page number", value: "5", tone: "accent" },
-                  { label: "Inherited locales", value: "English, Turkish", tone: "default" },
-                  { label: "Open in modal", value: "Immediately after create", tone: "success" },
+                  {
+                    label: "Inherited locales",
+                    value: "English, Turkish",
+                    tone: "default",
+                  },
+                  {
+                    label: "Open in modal",
+                    value: "Immediately after create",
+                    tone: "success",
+                  },
                 ]}
               />
             </MockupInfoCard>
           </DialogBody>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(false)}
+            >
               {copy.createClose}
             </Button>
           </DialogFooter>
@@ -397,7 +445,11 @@ export function MockupStoryPagesRoute() {
       </Dialog>
 
       <EditStoryPageDialog
-        key={editingPage?.id ? `${editingPage.id}-${preferredLanguageCode}` : "story-page-editor-closed"}
+        key={
+          editingPage?.id
+            ? `${editingPage.id}-${preferredLanguageCode}`
+            : "story-page-editor-closed"
+        }
         page={editingPage}
         preferredLanguageCode={preferredLanguageCode}
         onClose={() => setEditingPage(null)}

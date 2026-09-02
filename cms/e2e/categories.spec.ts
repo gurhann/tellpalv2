@@ -410,12 +410,8 @@ test("category create, edit, and localize use content-aligned types", async ({
   await expect(
     page.getByRole("heading", { name: /^categories$/i, level: 1 }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /^story$/i }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /^premium$/i }),
-  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /^story$/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^premium$/i })).toBeVisible();
   await page.getByRole("button", { name: /^meditation$/i }).click();
   await page.getByRole("button", { name: /^premium$/i }).click();
   await expect(page.getByText("bedtime-meditations")).toBeVisible();
@@ -452,9 +448,7 @@ test("category create, edit, and localize use content-aligned types", async ({
   await expect(
     page.getByText(/review metadata, locale workspaces, and curation/i),
   ).toBeVisible();
-  await expect(
-    page.getByText(/slug, premium, active state/i),
-  ).toBeVisible();
+  await expect(page.getByText(/slug, premium, active state/i)).toBeVisible();
 
   await page.getByLabel(/slug/i).fill("calm-lullabies-v2");
   await page.getByRole("button", { name: /save metadata/i }).click();

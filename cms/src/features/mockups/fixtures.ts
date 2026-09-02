@@ -178,7 +178,8 @@ export const mockupDemoCategory: MockupCategory = {
       languageCode: "tr",
       displayOrder: 1,
       statusLabel: "Draft locale",
-      reason: "Visible as a working draft even though release prerequisites are not met yet.",
+      reason:
+        "Visible as a working draft even though release prerequisites are not met yet.",
     },
   ],
   locales: [
@@ -321,7 +322,8 @@ export const mockupStoryPages: MockupStoryPage[] = [
       {
         languageCode: "en",
         title: "Boat rhythm",
-        description: "Mid-story page with rhythmic copy and a longer audio beat.",
+        description:
+          "Mid-story page with rhythmic copy and a longer audio beat.",
         statusLabel: "Ready",
         isPublished: true,
         hasBodyText: true,

@@ -30,7 +30,8 @@ export function useRecentProcessingJobs(limit = 20) {
   const query = useQuery({
     queryKey: queryKeys.assets.processingRecent({ limit }),
     queryFn: async () => {
-      const response = await assetProcessingAdminApi.listRecentProcessing(limit);
+      const response =
+        await assetProcessingAdminApi.listRecentProcessing(limit);
       return mapAdminAssetProcessingList(response);
     },
   });

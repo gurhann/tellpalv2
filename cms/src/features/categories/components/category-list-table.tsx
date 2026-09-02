@@ -109,14 +109,18 @@ export function CategoryListTable({
 
   return (
     <DataTable
-      caption={locale === "tr" ? "Kategori kayit tablosu" : "Category registry table"}
+      caption={
+        locale === "tr" ? "Kategori kayit tablosu" : "Category registry table"
+      }
       columns={columns}
       emptyDescription={
         locale === "tr"
           ? "Henuz kategori yok. Icerikleri gruplamaya baslamak icin ilk kategoriyi olusturun."
           : "No categories exist yet. Create the first category to start grouping content."
       }
-      emptyTitle={locale === "tr" ? "Kategori kaydi yok" : "No category records"}
+      emptyTitle={
+        locale === "tr" ? "Kategori kaydi yok" : "No category records"
+      }
       getRowId={(category) => category.id.toString()}
       isLoading={isLoading}
       loadingDescription={
@@ -125,7 +129,9 @@ export function CategoryListTable({
           : "The CMS is requesting category metadata from the admin API."
       }
       loadingTitle={
-        locale === "tr" ? "Kategori kaydi yukleniyor" : "Loading category registry"
+        locale === "tr"
+          ? "Kategori kaydi yukleniyor"
+          : "Loading category registry"
       }
       onRetry={onRetry}
       onRowClick={onCategorySelect}

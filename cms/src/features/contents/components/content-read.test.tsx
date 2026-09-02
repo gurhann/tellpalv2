@@ -32,13 +32,17 @@ describe("content read components", () => {
       screen.getByRole("columnheader", { name: /content/i }),
     ).toBeVisible();
     expect(screen.getByRole("columnheader", { name: /type/i })).toBeVisible();
-    expect(screen.getByRole("columnheader", { name: /readiness/i })).toBeVisible();
+    expect(
+      screen.getByRole("columnheader", { name: /readiness/i }),
+    ).toBeVisible();
     expect(screen.getByText("Evening Garden")).toBeVisible();
     expect(screen.getByText(/story\.evening-garden/)).toBeVisible();
 
     fireEvent.click(screen.getByText("Evening Garden"));
 
-    expect(onContentSelect).toHaveBeenCalledWith(expect.objectContaining({ contentId: storyContentViewModel.summary.id }));
+    expect(onContentSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ contentId: storyContentViewModel.summary.id }),
+    );
   });
 
   it("renders summary metadata for the live detail shell", () => {

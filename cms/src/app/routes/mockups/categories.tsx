@@ -23,7 +23,10 @@ import { Input } from "@/components/ui/input";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { mockupCategoryRegistry } from "@/features/mockups/fixtures";
-import { MockupInfoCard, MockupStatusPill } from "@/features/mockups/components/mockup-ui";
+import {
+  MockupInfoCard,
+  MockupStatusPill,
+} from "@/features/mockups/components/mockup-ui";
 import type { MockupCategorySummary } from "@/features/mockups/types";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -31,12 +34,12 @@ export function MockupCategoriesRoute() {
   const { locale } = useI18n();
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<string>("ALL");
-  const [selectedAccess, setSelectedAccess] = useState<"ALL" | "PREMIUM" | "STANDARD">(
-    "ALL",
-  );
-  const [selectedState, setSelectedState] = useState<"ALL" | "ACTIVE" | "INACTIVE">(
-    "ALL",
-  );
+  const [selectedAccess, setSelectedAccess] = useState<
+    "ALL" | "PREMIUM" | "STANDARD"
+  >("ALL");
+  const [selectedState, setSelectedState] = useState<
+    "ALL" | "ACTIVE" | "INACTIVE"
+  >("ALL");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const copy =
@@ -69,7 +72,8 @@ export function MockupCategoriesRoute() {
           railTitle: "Curation posture",
           railDescription:
             "Prerequisites and curation readiness stay visible without crowding the registry table.",
-          noteOne: "Category metadata and curation share the same learning model as content detail.",
+          noteOne:
+            "Category metadata and curation share the same learning model as content detail.",
           noteTwo:
             "Published locale prerequisites can remain in the rail instead of becoming an extra flow step.",
         }
@@ -101,7 +105,8 @@ export function MockupCategoriesRoute() {
           railTitle: "Curation posture",
           railDescription:
             "Prerequisites and curation readiness stay visible without crowding the registry table.",
-          noteOne: "Category metadata and curation share the same learning model as content detail.",
+          noteOne:
+            "Category metadata and curation share the same learning model as content detail.",
           noteTwo:
             "Published locale prerequisites can remain in the rail instead of becoming an extra flow step.",
         };
@@ -269,7 +274,9 @@ export function MockupCategoriesRoute() {
                   key={typeOption}
                   size="sm"
                   type="button"
-                  variant={selectedType === typeOption ? "secondary" : "outline"}
+                  variant={
+                    selectedType === typeOption ? "secondary" : "outline"
+                  }
                   onClick={() => setSelectedType(typeOption)}
                 >
                   {typeOption === "ALL" ? copy.filterTypes : typeOption}
@@ -285,7 +292,9 @@ export function MockupCategoriesRoute() {
                   size="sm"
                   type="button"
                   variant={
-                    selectedAccess === accessOption.key ? "secondary" : "outline"
+                    selectedAccess === accessOption.key
+                      ? "secondary"
+                      : "outline"
                   }
                   onClick={() => setSelectedAccess(accessOption.key)}
                 >
@@ -338,13 +347,21 @@ export function MockupCategoriesRoute() {
             >
               <div className="grid gap-3 sm:grid-cols-3">
                 <MockupStatusPill tone="accent">Slug + type</MockupStatusPill>
-                <MockupStatusPill tone="success">Locale workspaces</MockupStatusPill>
-                <MockupStatusPill tone="default">Curation in detail</MockupStatusPill>
+                <MockupStatusPill tone="success">
+                  Locale workspaces
+                </MockupStatusPill>
+                <MockupStatusPill tone="default">
+                  Curation in detail
+                </MockupStatusPill>
               </div>
             </MockupInfoCard>
           </DialogBody>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(false)}
+            >
               {copy.createClose}
             </Button>
           </DialogFooter>

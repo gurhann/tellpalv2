@@ -110,138 +110,134 @@ afterEach(async () => {
 });
 
 describe("Contributor integration", () => {
-  it(
-    "creates, renames, and deletes contributors from the live registry route",
-    async () => {
-      const session = makeSession();
-      const contributors = cloneJson(contributorResponses);
-      const fetchMock = vi
-        .fn<typeof fetch>()
-        .mockImplementation(async (input, init) => {
-          const url = new URL(typeof input === "string" ? input : input.url);
-          const method = init?.method ?? "GET";
+  it("creates, renames, and deletes contributors from the live registry route", async () => {
+    const session = makeSession();
+    const contributors = cloneJson(contributorResponses);
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockImplementation(async (input, init) => {
+        const url = new URL(typeof input === "string" ? input : input.url);
+        const method = init?.method ?? "GET";
 
-          if (url.pathname === "/api/admin/auth/refresh" && method === "POST") {
-            return jsonResponse(session);
+        if (url.pathname === "/api/admin/auth/refresh" && method === "POST") {
+          return jsonResponse(session);
+        }
+
+        if (url.pathname === "/api/admin/contributors" && method === "GET") {
+          return jsonResponse(contributors);
+        }
+
+        if (url.pathname === "/api/admin/contributors" && method === "POST") {
+          const body = (await readRequestJson(init)) as {
+            displayName: string;
+          };
+          const createdContributor: AdminContributorResponse = {
+            contributorId: 99,
+            displayName: body.displayName,
+          };
+          contributors.unshift(createdContributor);
+          return jsonResponse(createdContributor, 201);
+        }
+
+        if (
+          url.pathname.startsWith("/api/admin/contributors/") &&
+          method === "PUT"
+        ) {
+          const contributorId = Number(url.pathname.split("/").at(-1));
+          const body = (await readRequestJson(init)) as {
+            displayName: string;
+          };
+          const contributor = contributors.find(
+            (candidate) => candidate.contributorId === contributorId,
+          );
+
+          if (!contributor) {
+            throw new Error(`Missing contributor ${contributorId}`);
           }
 
-          if (url.pathname === "/api/admin/contributors" && method === "GET") {
-            return jsonResponse(contributors);
-          }
+          contributor.displayName = body.displayName;
+          return jsonResponse(contributor);
+        }
 
-          if (url.pathname === "/api/admin/contributors" && method === "POST") {
-            const body = (await readRequestJson(init)) as {
-              displayName: string;
-            };
-            const createdContributor: AdminContributorResponse = {
-              contributorId: 99,
-              displayName: body.displayName,
-            };
-            contributors.unshift(createdContributor);
-            return jsonResponse(createdContributor, 201);
-          }
+        if (
+          url.pathname.startsWith("/api/admin/contributors/") &&
+          method === "DELETE"
+        ) {
+          const contributorId = Number(url.pathname.split("/").at(-1));
+          const contributorIndex = contributors.findIndex(
+            (candidate) => candidate.contributorId === contributorId,
+          );
 
-          if (
-            url.pathname.startsWith("/api/admin/contributors/") &&
-            method === "PUT"
-          ) {
-            const contributorId = Number(url.pathname.split("/").at(-1));
-            const body = (await readRequestJson(init)) as {
-              displayName: string;
-            };
-            const contributor = contributors.find(
-              (candidate) => candidate.contributorId === contributorId,
-            );
+          contributors.splice(contributorIndex, 1);
+          return new Response(null, { status: 204 });
+        }
 
-            if (!contributor) {
-              throw new Error(`Missing contributor ${contributorId}`);
-            }
-
-            contributor.displayName = body.displayName;
-            return jsonResponse(contributor);
-          }
-
-          if (
-            url.pathname.startsWith("/api/admin/contributors/") &&
-            method === "DELETE"
-          ) {
-            const contributorId = Number(url.pathname.split("/").at(-1));
-            const contributorIndex = contributors.findIndex(
-              (candidate) => candidate.contributorId === contributorId,
-            );
-
-            contributors.splice(contributorIndex, 1);
-            return new Response(null, { status: 204 });
-          }
-
-          throw new Error(`Unexpected request to ${method} ${url.pathname}`);
-        });
-
-      window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
-
-      await renderFreshApp({
-        initialPath: "/contributors",
-        fetchImplementation: fetchMock as typeof fetch,
+        throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
-      await screen.findByRole("heading", { name: /^contributors$/i, level: 1 });
+    window.localStorage.setItem("tellpal.cms.refresh-token", "seed-refresh");
 
-      fireEvent.click(
-        screen.getByRole("button", { name: /^create contributor$/i }),
-      );
+    await renderFreshApp({
+      initialPath: "/contributors",
+      fetchImplementation: fetchMock as typeof fetch,
+    });
 
-      const createDialog = await screen.findByRole("dialog");
-      fireEvent.change(within(createDialog).getByLabelText(/display name/i), {
-        target: { value: " Lina Hart " },
-      });
-      fireEvent.click(
-        within(createDialog).getByRole("button", {
-          name: /^create contributor$/i,
-        }),
-      );
+    await screen.findByRole("heading", { name: /^contributors$/i, level: 1 });
 
-      expect(await screen.findByText("Lina Hart")).toBeVisible();
+    fireEvent.click(
+      screen.getByRole("button", { name: /^create contributor$/i }),
+    );
 
-      const contributorRow = screen.getByText("Annie Case").closest("tr");
-      expect(contributorRow).not.toBeNull();
+    const createDialog = await screen.findByRole("dialog");
+    fireEvent.change(within(createDialog).getByLabelText(/display name/i), {
+      target: { value: " Lina Hart " },
+    });
+    fireEvent.click(
+      within(createDialog).getByRole("button", {
+        name: /^create contributor$/i,
+      }),
+    );
 
-      fireEvent.click(
-        within(contributorRow as HTMLTableRowElement).getByRole("button", {
-          name: /rename/i,
-        }),
-      );
+    expect(await screen.findByText("Lina Hart")).toBeVisible();
 
-      const renameDialog = await screen.findByRole("dialog");
-      fireEvent.change(within(renameDialog).getByLabelText(/display name/i), {
-        target: { value: " Annie Case Updated " },
-      });
-      fireEvent.click(
-        within(renameDialog).getByRole("button", { name: /^save rename$/i }),
-      );
+    const contributorRow = screen.getByText("Annie Case").closest("tr");
+    expect(contributorRow).not.toBeNull();
 
-      expect(await screen.findByText("Annie Case Updated")).toBeVisible();
+    fireEvent.click(
+      within(contributorRow as HTMLTableRowElement).getByRole("button", {
+        name: /rename/i,
+      }),
+    );
 
-      const deleteRow = screen.getByText("Milo Rivers").closest("tr");
-      expect(deleteRow).not.toBeNull();
+    const renameDialog = await screen.findByRole("dialog");
+    fireEvent.change(within(renameDialog).getByLabelText(/display name/i), {
+      target: { value: " Annie Case Updated " },
+    });
+    fireEvent.click(
+      within(renameDialog).getByRole("button", { name: /^save rename$/i }),
+    );
 
-      fireEvent.click(
-        within(deleteRow as HTMLTableRowElement).getByRole("button", {
-          name: /^delete milo rivers$/i,
-        }),
-      );
+    expect(await screen.findByText("Annie Case Updated")).toBeVisible();
 
-      const deleteDialog = await screen.findByRole("dialog");
-      fireEvent.click(
-        within(deleteDialog).getByRole("button", {
-          name: /^delete contributor$/i,
-        }),
-      );
+    const deleteRow = screen.getByText("Milo Rivers").closest("tr");
+    expect(deleteRow).not.toBeNull();
 
-      expect(await screen.findByText("Annie Case Updated")).toBeVisible();
-      expect(screen.queryByText("Milo Rivers")).not.toBeInTheDocument();
-    },
-    15_000,
-  );
+    fireEvent.click(
+      within(deleteRow as HTMLTableRowElement).getByRole("button", {
+        name: /^delete milo rivers$/i,
+      }),
+    );
+
+    const deleteDialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      within(deleteDialog).getByRole("button", {
+        name: /^delete contributor$/i,
+      }),
+    );
+
+    expect(await screen.findByText("Annie Case Updated")).toBeVisible();
+    expect(screen.queryByText("Milo Rivers")).not.toBeInTheDocument();
+  }, 15_000);
 
   it("loads persisted assignments, assigns a contributor, and unassigns a contributor from content detail", async () => {
     const session = makeSession();

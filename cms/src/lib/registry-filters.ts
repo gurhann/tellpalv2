@@ -1,9 +1,4 @@
-const preferredTypeOrder = [
-  "Story",
-  "Audio Story",
-  "Meditation",
-  "Lullaby",
-];
+const preferredTypeOrder = ["Story", "Audio Story", "Meditation", "Lullaby"];
 
 type RegistryFilterSummaryOptions = {
   locale: "en" | "tr";

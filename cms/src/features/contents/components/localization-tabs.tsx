@@ -177,10 +177,7 @@ export function ContentLocalizationTabs({
         <EmptyState
           action={
             availableLanguages.length > 0 ? (
-              <Button
-                type="button"
-                onClick={() => setIsCreateDialogOpen(true)}
-              >
+              <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
                 <CirclePlus className="size-4" />
                 Create first localization
               </Button>

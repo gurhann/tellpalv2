@@ -93,10 +93,9 @@ describe("useProcessingStatus", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(assetProcessingAdminApiMock.getProcessingStatus).toHaveBeenCalledWith(
-      2,
-      "de",
-    );
+    expect(
+      assetProcessingAdminApiMock.getProcessingStatus,
+    ).toHaveBeenCalledWith(2, "de");
     expect(result.current.job).toMatchObject({
       contentId: 2,
       externalKey: "meditation.rain-room",
