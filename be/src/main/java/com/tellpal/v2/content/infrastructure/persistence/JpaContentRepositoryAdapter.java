@@ -64,11 +64,6 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
-    public List<Content> findAllForRegistryRead() {
-        return repository.findAllForRegistryRead();
-    }
-
-    @Override
     public List<Content> findAllActiveByIdIn(Collection<Long> contentIds) {
         return repository.findAllByActiveTrueAndIdIn(contentIds);
     }

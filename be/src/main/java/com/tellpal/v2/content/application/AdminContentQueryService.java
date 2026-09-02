@@ -1,9 +1,10 @@
 package com.tellpal.v2.content.application;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.stereotype.Service;
@@ -19,11 +20,8 @@ import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.api.EligibleContentQueryApi;
 import com.tellpal.v2.content.api.EligibleContentView;
 import com.tellpal.v2.content.domain.Content;
-import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
-import com.tellpal.v2.content.domain.StoryPublicationBlocker;
-import com.tellpal.v2.content.domain.StoryPublicationReadinessPolicy;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -38,10 +36,13 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 public class AdminContentQueryService implements AdminContentQueryApi, EligibleContentQueryApi {
 
     private final ContentRepository contentRepository;
-    private final StoryPublicationReadinessPolicy storyReadinessPolicy = new StoryPublicationReadinessPolicy();
+    private final ContentRegistryReadRepository contentRegistryReadRepository;
 
-    public AdminContentQueryService(ContentRepository contentRepository) {
+    public AdminContentQueryService(
+            ContentRepository contentRepository,
+            ContentRegistryReadRepository contentRegistryReadRepository) {
         this.contentRepository = contentRepository;
+        this.contentRegistryReadRepository = contentRegistryReadRepository;
     }
 
     /**
@@ -75,85 +76,117 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
         if (page < 0 || size < 1 || size > 100) {
             throw new IllegalArgumentException("Registry page must be non-negative and size must be between 1 and 100");
         }
-        String normalizedQuery = query == null ? "" : query.trim().toLowerCase();
-        List<AdminContentRegistryItem> allItems = contentRepository.findAllForRegistryRead().stream()
-                .map(content -> toRegistryItem(content, requiredLanguage))
-                .filter(item -> type == null || item.type() == type)
-                .filter(item -> readiness == null || item.readiness() == readiness)
-                .filter(item -> matchesRegistryQuery(item, normalizedQuery))
-                .sorted(Comparator.comparing(AdminContentRegistryItem::lastEditedAt).reversed()
-                        .thenComparing(AdminContentRegistryItem::contentId, Comparator.reverseOrder()))
+        ContentRegistryReadRepository.RegistryPage registryPage = contentRegistryReadRepository.findPage(
+                new ContentRegistryReadRepository.RegistryQuery(
+                        requiredLanguage,
+                        type,
+                        readiness,
+                        normalizeRegistryQuery(query),
+                        page,
+                        size));
+        Map<Long, List<ContentRegistryReadRepository.RegistrySnapshotRow>> rowsByContentId =
+                contentRegistryReadRepository.findSnapshots(
+                                registryPage.candidates().stream()
+                                        .map(ContentRegistryReadRepository.RegistryCandidate::contentId)
+                                        .toList(),
+                                requiredLanguage)
+                        .stream()
+                        .collect(java.util.stream.Collectors.groupingBy(
+                                ContentRegistryReadRepository.RegistrySnapshotRow::contentId));
+        List<AdminContentRegistryItem> items = registryPage.candidates().stream()
+                .map(candidate -> toRegistryItem(
+                        candidate,
+                        requiredLanguage,
+                        rowsByContentId.get(candidate.contentId())))
                 .toList();
-        int fromIndex = Math.min(page * size, allItems.size());
-        int toIndex = Math.min(fromIndex + size, allItems.size());
-        return new AdminContentRegistryPage(allItems.subList(fromIndex, toIndex), page, size, allItems.size());
+        return new AdminContentRegistryPage(items, page, size, registryPage.totalItems());
     }
 
-    private AdminContentRegistryItem toRegistryItem(Content content, LanguageCode languageCode) {
-        List<AdminContentRegistryBlocker> blockers = content.getType().supportsStoryPages()
-                ? storyReadinessPolicy.evaluate(content, languageCode).stream()
-                        .map(this::toRegistryBlocker)
-                        .collect(java.util.stream.Collectors.toCollection(ArrayList::new))
-                : nonStoryBlockers(content, languageCode);
-        ContentLocalization localization = content.findLocalization(languageCode).orElse(null);
-        if (content.getType().supportsStoryPages()
-                && localization != null
-                && localization.getProcessingStatus() != ProcessingStatus.COMPLETED) {
-            blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
+    private AdminContentRegistryItem toRegistryItem(
+            ContentRegistryReadRepository.RegistryCandidate candidate,
+            LanguageCode languageCode,
+            List<ContentRegistryReadRepository.RegistrySnapshotRow> snapshotRows) {
+        if (snapshotRows == null || snapshotRows.isEmpty()) {
+            throw new IllegalStateException("Registry candidate must have a selected-page snapshot");
         }
-        AdminContentRegistryReadiness readiness = !blockers.isEmpty()
-                ? AdminContentRegistryReadiness.ACTION_REQUIRED
-                : localization != null && localization.isVisibleToMobile()
-                        ? AdminContentRegistryReadiness.PUBLISHED
-                        : AdminContentRegistryReadiness.READY_TO_PUBLISH;
+        ContentRegistryReadRepository.RegistrySnapshotRow content = snapshotRows.getFirst();
+        List<AdminContentRegistryBlocker> blockers = content.type() == ContentApiType.STORY
+                ? storyBlockers(content, snapshotRows)
+                : nonStoryBlockers(content);
         return new AdminContentRegistryItem(
-                content.getId(),
-                ContentApiType.valueOf(content.getType().name()),
-                content.getExternalKey(),
-                content.getPageCount(),
+                candidate.contentId(),
+                content.type(),
+                content.externalKey(),
+                content.pageCount(),
                 languageCode,
-                localization == null ? null : localization.getTitle(),
-                readiness,
+                content.title(),
+                candidate.readiness(),
                 blockers,
-                lastEditedAt(content, languageCode));
+                candidate.lastEditedAt());
     }
 
-    private List<AdminContentRegistryBlocker> nonStoryBlockers(Content content, LanguageCode languageCode) {
+    private static List<AdminContentRegistryBlocker> storyBlockers(
+            ContentRegistryReadRepository.RegistrySnapshotRow content,
+            List<ContentRegistryReadRepository.RegistrySnapshotRow> snapshotRows) {
         List<AdminContentRegistryBlocker> blockers = new ArrayList<>();
-        if (!content.isActive()) {
+        if (!content.active()) {
             blockers.add(new AdminContentRegistryBlocker("CONTENT_INACTIVE", null));
         }
-        ContentLocalization localization = content.findLocalization(languageCode).orElse(null);
-        if (localization == null) {
-            blockers.add(new AdminContentRegistryBlocker("LOCALIZATION_MISSING", null));
-        } else if (localization.getProcessingStatus() != ProcessingStatus.COMPLETED) {
+        if (content.title() == null) {
+            return List.of(new AdminContentRegistryBlocker("LOCALIZATION_MISSING", null));
+        }
+        if (content.description() == null) {
+            blockers.add(new AdminContentRegistryBlocker("DESCRIPTION_MISSING", null));
+        }
+        if (content.coverMediaId() == null) {
+            blockers.add(new AdminContentRegistryBlocker("COVER_MISSING", null));
+        }
+        if (content.pageCount() == null || content.pageCount() == 0) {
+            blockers.add(new AdminContentRegistryBlocker("STORY_PAGES_MISSING", null));
+        }
+        snapshotRows.stream()
+                .filter(row -> row.storyPageNumber() != null)
+                .forEach(row -> addStoryPageBlockers(blockers, row));
+        if (!ProcessingStatus.COMPLETED.name().equals(content.processingStatus())) {
             blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
         }
         return List.copyOf(blockers);
     }
 
-    private AdminContentRegistryBlocker toRegistryBlocker(StoryPublicationBlocker blocker) {
-        return new AdminContentRegistryBlocker(blocker.code().name(), blocker.pageNumber());
+    private static void addStoryPageBlockers(
+            List<AdminContentRegistryBlocker> blockers,
+            ContentRegistryReadRepository.RegistrySnapshotRow page) {
+        if (page.storyPageLocalizationId() == null) {
+            blockers.add(new AdminContentRegistryBlocker("PAGE_LOCALIZATION_MISSING", page.storyPageNumber()));
+            return;
+        }
+        if (page.storyPageBodyText() == null) {
+            blockers.add(new AdminContentRegistryBlocker("PAGE_TEXT_MISSING", page.storyPageNumber()));
+        }
+        if (page.storyPageAudioMediaId() == null) {
+            blockers.add(new AdminContentRegistryBlocker("PAGE_AUDIO_MISSING", page.storyPageNumber()));
+        }
+        if (page.storyPageIllustrationMediaId() == null) {
+            blockers.add(new AdminContentRegistryBlocker("PAGE_ILLUSTRATION_MISSING", page.storyPageNumber()));
+        }
     }
 
-    private static boolean matchesRegistryQuery(AdminContentRegistryItem item, String normalizedQuery) {
-        return normalizedQuery.isEmpty()
-                || item.contentId().toString().contains(normalizedQuery)
-                || item.externalKey().toLowerCase().contains(normalizedQuery)
-                || item.title() != null && item.title().toLowerCase().contains(normalizedQuery);
+    private static List<AdminContentRegistryBlocker> nonStoryBlockers(
+            ContentRegistryReadRepository.RegistrySnapshotRow content) {
+        List<AdminContentRegistryBlocker> blockers = new ArrayList<>();
+        if (!content.active()) {
+            blockers.add(new AdminContentRegistryBlocker("CONTENT_INACTIVE", null));
+        }
+        if (content.title() == null) {
+            blockers.add(new AdminContentRegistryBlocker("LOCALIZATION_MISSING", null));
+        } else if (!ProcessingStatus.COMPLETED.name().equals(content.processingStatus())) {
+            blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
+        }
+        return List.copyOf(blockers);
     }
 
-    private static java.time.Instant lastEditedAt(Content content, LanguageCode languageCode) {
-        return java.util.stream.Stream.concat(
-                        java.util.stream.Stream.of(content.getUpdatedAt()),
-                        java.util.stream.Stream.concat(
-                                content.findLocalization(languageCode).stream().map(ContentLocalization::getUpdatedAt),
-                                content.getStoryPages().stream().flatMap(page -> java.util.stream.Stream.concat(
-                                        java.util.stream.Stream.of(page.getUpdatedAt()),
-                                        page.findLocalization(languageCode).stream().map(localization -> localization.getUpdatedAt())))))
-                .filter(java.util.Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElseThrow(() -> new IllegalStateException("Persisted content must have an updated timestamp"));
+    private static String normalizeRegistryQuery(String query) {
+        return query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
     }
 
     /**

@@ -24,15 +24,6 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             select distinct content
             from Content content
             left join fetch content.localizations
-            left join fetch content.storyPages storyPage
-            left join fetch storyPage.localizations
-            """)
-    List<Content> findAllForRegistryRead();
-
-    @Query("""
-            select distinct content
-            from Content content
-            left join fetch content.localizations
             where content.id = :id
             """)
     Optional<Content> findByIdForAdminRead(Long id);
