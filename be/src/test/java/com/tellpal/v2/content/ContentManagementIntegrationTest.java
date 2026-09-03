@@ -4,12 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
+
+import jakarta.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
@@ -29,6 +33,8 @@ import com.tellpal.v2.content.application.ContributorManagementCommands.CreateCo
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.application.StoryPageManagementService;
+import com.tellpal.v2.content.domain.Contributor;
+import com.tellpal.v2.content.domain.ContributorRepository;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.content.domain.LocalizationStatus;
@@ -60,11 +66,18 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private ContributorRepository contributorRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
     @BeforeEach
     void cleanDatabase() {
         jdbcTemplate.execute("""
                 truncate table
                     content_contributors,
+                    contributor_roles,
                     contributors,
                     story_page_localizations,
                     story_pages,
@@ -185,6 +198,39 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(row.get("language_code")).isEqualTo(LanguageCode.TR.value());
         assertThat(row.get("credit_name")).isEqualTo("E. Yilmaz");
         assertThat(row.get("sort_order")).isEqualTo(0);
+        assertThat(jdbcTemplate.queryForObject(
+                "select normalized_display_name from contributors where id = ?",
+                String.class,
+                author.contributorId())).isEqualTo("elif yilmaz");
+        assertThat(jdbcTemplate.queryForList(
+                "select role from contributor_roles where contributor_id = ?",
+                String.class,
+                author.contributorId())).containsExactly("AUTHOR");
+    }
+
+    @Test
+    @Transactional
+    void contributorRolesAndGeneratedNameRoundTripThroughJpa() {
+        Contributor contributor = contributorRepository.save(Contributor.create(
+                "  Ada Lovelace  ",
+                Set.of(ContributorRole.AUTHOR, ContributorRole.MUSICIAN)));
+        entityManager.flush();
+
+        assertThat(contributor.getNormalizedDisplayName()).isEqualTo("ada lovelace");
+
+        contributor.rename("  Grace Hopper  ");
+        entityManager.flush();
+
+        assertThat(contributor.getNormalizedDisplayName()).isEqualTo("grace hopper");
+
+        Long contributorId = contributor.getId();
+        entityManager.clear();
+        Contributor reloaded = contributorRepository.findById(contributorId).orElseThrow();
+
+        assertThat(reloaded.getDisplayName()).isEqualTo("Grace Hopper");
+        assertThat(reloaded.getNormalizedDisplayName()).isEqualTo("grace hopper");
+        assertThat(reloaded.getRoles())
+                .containsExactlyInAnyOrder(ContributorRole.AUTHOR, ContributorRole.MUSICIAN);
     }
 
     @Test

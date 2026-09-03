@@ -1,0 +1,76 @@
+- id: "1"
+  title: Contributor rol modelini ve güvenli migrationı oluştur
+  description: >-
+    CAP-1, CAP-6 ve CAP-8 için V20 migrationını, çoklu rol profil modelini,
+    normalize ad benzersizliğini ve tarihsel backfill kurallarını uygula.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Duplicate preflight şema değişikliğinden önce çalışmalı; çakışmaları ID ve
+    adlarıyla raporlayıp transactionı durdurmalı. Atamasız kayıtlar AUTHOR almalı.
+
+- id: "2"
+  title: Contributor profil komutlarını ve rol bütünlüğünü tamamla
+  description: >-
+    CAP-1, CAP-6 ve CAP-7 için profil oluşturma/güncelleme sözleşmelerini,
+    zorunlu rolleri, mükerrer ad yönlendirmesini ve kullanılan rol korumasını ekle.
+  spec_checkpoint: false
+  done_checkpoint: false
+  invoke_dev_with: >-
+    Kullanılan rol kaldırma conflict yanıtı kullanım sayısı ve etkilenen içerik
+    referanslarını taşımalı; otomatik identity merge yapma.
+
+- id: "3"
+  title: Sayfalı contributor registry read API oluştur
+  description: >-
+    CAP-3 ve CAP-9 için ada ve role göre filtrelenen, deterministic sıralı,
+    veritabanı destekli sayfalı contributor registry read modelini sun.
+  spec_checkpoint: false
+  done_checkpoint: false
+  invoke_dev_with: >-
+    ADR-0009'a uy; tüm contributorları uygulama belleğine yükleme ve mevcut
+    GET /api/admin/contributors sözleşmesini ilk teslimde koru.
+
+- id: "4"
+  title: Contributor atama ve sıralama kontratını güçlendir
+  description: >-
+    CAP-2 ve CAP-5 için profil rolü doğrulamasını, otomatik grup sonu sırasını
+    ve aynı rol/dil grubu içinde atomik reorder komutunu uygula.
+  spec_checkpoint: false
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Eşzamanlı eklemelerde duplicate sıra bırakma; reorder eksik, tekrarlı veya
+    grup dışı assignment kimliği içerirse mevcut sırayı değiştirmeden reddet.
+
+- id: "5"
+  title: CMS contributor registry ekranını yenile
+  description: >-
+    CAP-9 için shared registry toolbar ve pagination kullanarak rol etiketleri,
+    ad/rol URL filtreleri, gerçek toplam ve profil create/edit akışlarını ekle.
+  spec_checkpoint: false
+  done_checkpoint: false
+  invoke_dev_with: >-
+    Client-side son 12 kayıt filtresini kaldır; Türkçe ve İngilizce metinleri
+    i18n katmanından sağla ve desktop görsel regression kapsamı ekle.
+
+- id: "6"
+  title: Role göre contributor picker ve inline create geliştir
+  description: >-
+    CAP-3 ve CAP-4 için role göre açılan, sonuç satırından doğrudan seçim yapan
+    ve aranan kişi yoksa oluşturup otomatik atayan contributor picker geliştir.
+  spec_checkpoint: true
+  done_checkpoint: false
+  invoke_dev_with: >-
+    Başlatan rol inline create içinde seçili kalsın; create başarılı fakat
+    assignment başarısızsa oluşturulan profili koruyup yeniden deneme sun.
+
+- id: "7"
+  title: İçerik detayında contributor çalışma alanını tamamla
+  description: >-
+    CAP-5 için contributorları rol ve dil kapsamına göre grupla, varsayılan dil
+    kurallarını uygula, erişilebilir reorder ekle ve bölümü locale sonrasına taşı.
+  spec_checkpoint: false
+  done_checkpoint: true
+  invoke_dev_with: >-
+    AUTHOR, ILLUSTRATOR ve MUSICIAN tüm dillere; NARRATOR seçili dile varsayılan
+    olsun. Sayısal sortOrder gösterme; klavye reorder alternatifi bırak.
