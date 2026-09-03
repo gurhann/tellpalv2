@@ -58,7 +58,7 @@ final class ContentManagementMapper {
         if (contributorId == null || contributorId <= 0) {
             throw new IllegalStateException("Contributor must be persisted before mapping");
         }
-        return new ContributorRecord(contributorId, contributor.getDisplayName());
+        return new ContributorRecord(contributorId, contributor.getDisplayName(), contributor.getRoles());
     }
 
     static ContentContributorRecord toContentContributorRecord(Long contentId, ContentContributor assignment) {

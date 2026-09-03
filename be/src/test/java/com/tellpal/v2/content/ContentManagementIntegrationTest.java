@@ -175,7 +175,7 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "forest-walk", 4, true));
         ContributorRecord author = contributorManagementService.createContributor(
-                new CreateContributorCommand("Elif Yilmaz"));
+                new CreateContributorCommand("Elif Yilmaz", Set.of(ContributorRole.AUTHOR)));
 
         contributorManagementService.assignContentContributor(new AssignContentContributorCommand(
                 content.contentId(),
@@ -236,13 +236,13 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
     @Test
     void listContributorsReturnsNewestFirstAndHonorsLimit() throws Exception {
         ContributorRecord first = contributorManagementService.createContributor(
-                new CreateContributorCommand("Aylin"));
+                new CreateContributorCommand("Aylin", Set.of(ContributorRole.AUTHOR)));
         Thread.sleep(10L);
         ContributorRecord second = contributorManagementService.createContributor(
-                new CreateContributorCommand("Baris"));
+                new CreateContributorCommand("Baris", Set.of(ContributorRole.AUTHOR)));
         Thread.sleep(10L);
         ContributorRecord third = contributorManagementService.createContributor(
-                new CreateContributorCommand("Cem"));
+                new CreateContributorCommand("Cem", Set.of(ContributorRole.AUTHOR)));
 
         assertThat(contributorManagementService.listContributors(2))
                 .extracting(ContributorRecord::contributorId)
@@ -255,11 +255,11 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
     @Test
     void listContributorsSearchesDisplayNamesCaseInsensitively() {
         ContributorRecord zeynep = contributorManagementService.createContributor(
-                new CreateContributorCommand("Zeynep Kaya"));
+                new CreateContributorCommand("Zeynep Kaya", Set.of(ContributorRole.AUTHOR)));
         contributorManagementService.createContributor(
-                new CreateContributorCommand("Baris Demir"));
+                new CreateContributorCommand("Baris Demir", Set.of(ContributorRole.AUTHOR)));
         ContributorRecord elif = contributorManagementService.createContributor(
-                new CreateContributorCommand("Elif Kaya"));
+                new CreateContributorCommand("Elif Kaya", Set.of(ContributorRole.AUTHOR)));
 
         assertThat(contributorManagementService.listContributors(10, "kAy"))
                 .extracting(ContributorRecord::contributorId)

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 class ContributorTest {
 
     @Test
-    void legacyCreateTrimsDisplayNameAndAssignsAuthorRole() {
-        Contributor contributor = Contributor.create("  Ada Lovelace  ");
+    void createTrimsDisplayNameAndKeepsProvidedRole() {
+        Contributor contributor = Contributor.create("  Ada Lovelace  ", Set.of(ContributorRole.AUTHOR));
 
         assertThat(contributor.getDisplayName()).isEqualTo("Ada Lovelace");
         assertThat(contributor.getRoles()).containsExactly(ContributorRole.AUTHOR);
@@ -54,6 +54,16 @@ class ContributorTest {
         assertThatThrownBy(() -> contributor.getRoles().add(ContributorRole.NARRATOR))
                 .isInstanceOf(UnsupportedOperationException.class);
         assertThat(contributor.getRoles()).containsExactly(ContributorRole.AUTHOR);
+    }
+
+    @Test
+    void updateProfileChangesNameAndRolesAtomically() {
+        Contributor contributor = Contributor.create("Ada", Set.of(ContributorRole.AUTHOR, ContributorRole.MUSICIAN));
+
+        contributor.updateProfile("Ada Byron", Set.of(ContributorRole.ILLUSTRATOR));
+
+        assertThat(contributor.getDisplayName()).isEqualTo("Ada Byron");
+        assertThat(contributor.getRoles()).containsExactly(ContributorRole.ILLUSTRATOR);
     }
 
     @Test

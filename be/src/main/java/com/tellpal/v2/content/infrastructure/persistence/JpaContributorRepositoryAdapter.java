@@ -24,6 +24,11 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     }
 
     @Override
+    public Optional<Contributor> findByNormalizedDisplayName(String normalizedDisplayName) {
+        return repository.findByNormalizedDisplayName(normalizedDisplayName);
+    }
+
+    @Override
     public List<Contributor> findRecent(int limit) {
         return repository.findAllByOrderByCreatedAtDesc(PageRequest.of(0, limit));
     }
@@ -41,5 +46,10 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     @Override
     public Contributor save(Contributor contributor) {
         return repository.save(contributor);
+    }
+
+    @Override
+    public Contributor saveAndFlush(Contributor contributor) {
+        return repository.saveAndFlush(contributor);
     }
 }

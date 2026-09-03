@@ -1,5 +1,9 @@
 package com.tellpal.v2.content.application;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -14,22 +18,26 @@ public final class ContributorManagementCommands {
     /**
      * Command for creating a contributor.
      */
-    public record CreateContributorCommand(String displayName) {
+    public record CreateContributorCommand(String displayName, Set<ContributorRole> roles) {
 
         public CreateContributorCommand {
             displayName = requireText(displayName, "Contributor display name must not be blank");
+            roles = requireRoles(roles);
         }
+
     }
 
     /**
      * Command for renaming a contributor.
      */
-    public record RenameContributorCommand(Long contributorId, String displayName) {
+    public record RenameContributorCommand(Long contributorId, String displayName, Set<ContributorRole> roles) {
 
         public RenameContributorCommand {
             contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
             displayName = requireText(displayName, "Contributor display name must not be blank");
+            roles = requireRoles(roles);
         }
+
     }
 
     /**
@@ -104,5 +112,20 @@ public final class ContributorManagementCommands {
             throw new IllegalArgumentException(message);
         }
         return value.trim();
+    }
+
+    public static Set<ContributorRole> requireRoles(List<ContributorRole> roles) {
+        if (roles == null || roles.isEmpty() || roles.stream().anyMatch(java.util.Objects::isNull)
+                || new LinkedHashSet<>(roles).size() != roles.size()) {
+            throw new IllegalArgumentException("Contributor roles must contain at least one unique role");
+        }
+        return Set.copyOf(roles);
+    }
+
+    private static Set<ContributorRole> requireRoles(Set<ContributorRole> roles) {
+        if (roles == null || roles.isEmpty() || roles.stream().anyMatch(java.util.Objects::isNull)) {
+            throw new IllegalArgumentException("Contributor roles must contain at least one unique role");
+        }
+        return Set.copyOf(roles);
     }
 }

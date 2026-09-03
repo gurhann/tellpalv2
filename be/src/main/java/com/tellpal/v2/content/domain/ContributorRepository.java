@@ -13,6 +13,8 @@ public interface ContributorRepository {
      */
     Optional<Contributor> findById(Long id);
 
+    Optional<Contributor> findByNormalizedDisplayName(String normalizedDisplayName);
+
     /**
      * Returns the most recently created or updated contributors for admin selection flows.
      */
@@ -32,4 +34,6 @@ public interface ContributorRepository {
      * Persists contributor profile changes.
      */
     Contributor save(Contributor contributor);
+
+    Contributor saveAndFlush(Contributor contributor);
 }

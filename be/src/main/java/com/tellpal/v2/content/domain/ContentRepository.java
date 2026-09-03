@@ -65,6 +65,13 @@ public interface ContentRepository {
      */
     boolean existsContributorAssignment(Long contributorId);
 
+    List<ContributorRoleUsage> findContributorRoleUsage(Long contributorId, ContributorRole role);
+
+    long countContributorRoleUsage(Long contributorId, ContributorRole role);
+
+    /** A content reference that explains why a contributor role cannot be removed. */
+    record ContributorRoleUsage(Long contentId, String externalKey) { }
+
     /**
      * Persists the current aggregate state, including nested localizations and story pages.
      */

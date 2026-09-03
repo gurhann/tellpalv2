@@ -1,5 +1,7 @@
 package com.tellpal.v2.content.application;
 
+import java.util.Set;
+
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -14,11 +16,16 @@ public final class ContributorManagementResults {
     /**
      * Snapshot of one contributor after a management operation.
      */
-    public record ContributorRecord(Long contributorId, String displayName) {
+    public record ContributorRecord(Long contributorId, String displayName, Set<ContributorRole> roles) {
 
         public ContributorRecord {
             contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
             displayName = requireText(displayName, "Contributor display name must not be blank");
+            roles = Set.copyOf(roles);
+        }
+
+        public ContributorRecord(Long contributorId, String displayName) {
+            this(contributorId, displayName, Set.of(ContributorRole.AUTHOR));
         }
     }
 

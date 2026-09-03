@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -51,19 +52,22 @@ class ContributorAdminControllerTest {
 
     @Test
     void createContributorReturnsCreatedResponse() throws Exception {
-        when(contributorManagementService.createContributor(any())).thenReturn(new ContributorRecord(11L, "Elif Yilmaz"));
+        when(contributorManagementService.createContributor(any())).thenReturn(
+                new ContributorRecord(11L, "Elif Yilmaz", Set.of(ContributorRole.AUTHOR, ContributorRole.MUSICIAN)));
 
         mockMvc.perform(post("/api/admin/contributors")
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": "Elif Yilmaz"
+                                  "displayName": "Elif Yilmaz",
+                                  "roles": ["AUTHOR", "MUSICIAN"]
                                 }
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/admin/contributors/11"))
                 .andExpect(jsonPath("$.contributorId").value(11))
-                .andExpect(jsonPath("$.displayName").value("Elif Yilmaz"));
+                .andExpect(jsonPath("$.displayName").value("Elif Yilmaz"))
+                .andExpect(jsonPath("$.roles", Matchers.containsInAnyOrder("AUTHOR", "MUSICIAN")));
     }
 
     @Test
@@ -109,7 +113,8 @@ class ContributorAdminControllerTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": "Elif Kaya"
+                                  "displayName": "Elif Kaya",
+                                  "roles": ["AUTHOR"]
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -217,7 +222,8 @@ class ContributorAdminControllerTest {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": "Missing"
+                                  "displayName": "Missing",
+                                  "roles": ["AUTHOR"]
                                 }
                                 """))
                 .andExpect(status().isNotFound())
@@ -235,6 +241,17 @@ class ContributorAdminControllerTest {
         mockMvc.perform(delete("/api/admin/contributors/11"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("contributor_in_use"));
+    }
+
+    @Test
+    void duplicateContributorNameReturnsExistingContributorId() throws Exception {
+        doThrow(new com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorDisplayNameException(12L))
+                .when(contributorManagementService).createContributor(any());
+
+        mockMvc.perform(post("/api/admin/contributors").contentType("application/json")
+                        .content("{\"displayName\":\"Elif\",\"roles\":[\"AUTHOR\"]}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.existingContributorId").value(12));
     }
 
     @Test

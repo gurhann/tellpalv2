@@ -20,6 +20,8 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.Duplicate
 import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPageTextlessIllustrationsMissingException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorDisplayNameException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleInUseException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @RestControllerAdvice(basePackageClasses = {
@@ -134,6 +136,25 @@ public class ContentAdminExceptionHandler {
                 exception.getMessage(),
                 "contributor_in_use",
                 request);
+    }
+
+    @ExceptionHandler(DuplicateContributorDisplayNameException.class)
+    ProblemDetail handleDuplicateContributorDisplayName(
+            DuplicateContributorDisplayNameException exception, HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(HttpStatus.CONFLICT, "Duplicate contributor display name",
+                exception.getMessage(), "duplicate_contributor_display_name", request);
+        problem.setProperty("existingContributorId", exception.getExistingContributorId());
+        return problem;
+    }
+
+    @ExceptionHandler(ContributorRoleInUseException.class)
+    ProblemDetail handleContributorRoleInUse(ContributorRoleInUseException exception, HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(HttpStatus.CONFLICT, "Contributor role is in use",
+                exception.getMessage(), "contributor_role_in_use", request);
+        problem.setProperty("role", exception.getRole());
+        problem.setProperty("usageCount", exception.getUsageCount());
+        problem.setProperty("affectedContents", exception.getAffectedContents());
+        return problem;
     }
 
     @ExceptionHandler(ContentFreeAccessAlreadyExistsException.class)

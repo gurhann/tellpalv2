@@ -3,6 +3,8 @@ package com.tellpal.v2.content.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -100,7 +102,7 @@ class ContentTest {
     }
 
     private static Contributor persistedContributor(Long contributorId, String displayName) {
-        Contributor contributor = Contributor.create(displayName);
+        Contributor contributor = Contributor.create(displayName, Set.of(ContributorRole.AUTHOR));
         ReflectionTestUtils.setField(contributor, "id", contributorId);
         return contributor;
     }

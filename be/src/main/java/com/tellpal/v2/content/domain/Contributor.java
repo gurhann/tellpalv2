@@ -47,13 +47,6 @@ public class Contributor extends BaseJpaEntity {
     }
 
     /**
-     * Creates a contributor with a stable display name.
-     */
-    public static Contributor create(String displayName) {
-        return new Contributor(displayName, Set.of(ContributorRole.AUTHOR));
-    }
-
-    /**
      * Creates a contributor with one or more discovery roles.
      */
     public static Contributor create(String displayName, Set<ContributorRole> roles) {
@@ -80,6 +73,12 @@ public class Contributor extends BaseJpaEntity {
      */
     public void rename(String displayName) {
         this.displayName = requireText(displayName, "Contributor display name must not be blank");
+    }
+
+    /** Updates the profile as one aggregate operation after application-level usage checks. */
+    public void updateProfile(String displayName, Set<ContributorRole> roles) {
+        this.displayName = requireText(displayName, "Contributor display name must not be blank");
+        this.roles = requireRoles(roles);
     }
 
     private static String requireText(String value, String message) {

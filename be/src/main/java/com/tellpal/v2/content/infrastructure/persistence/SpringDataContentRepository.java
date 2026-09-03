@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.tellpal.v2.content.domain.Content;
+import com.tellpal.v2.content.domain.ContributorRole;
+import com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage;
 
 interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaSpecificationExecutor<Content> {
 
@@ -70,4 +72,19 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             where assignment.contributor.id = :contributorId
             """)
     boolean existsContributorAssignment(Long contributorId);
+
+    @Query("""
+            select distinct new com.tellpal.v2.content.domain.ContentRepository$ContributorRoleUsage(content.id, content.externalKey)
+            from Content content join content.contributors assignment
+            where assignment.contributor.id = :contributorId and assignment.role = :role
+            order by content.id asc
+            """)
+    List<ContributorRoleUsage> findContributorRoleUsage(Long contributorId, ContributorRole role);
+
+    @Query("""
+            select count(assignment)
+            from Content content join content.contributors assignment
+            where assignment.contributor.id = :contributorId and assignment.role = :role
+            """)
+    long countContributorRoleUsage(Long contributorId, ContributorRole role);
 }

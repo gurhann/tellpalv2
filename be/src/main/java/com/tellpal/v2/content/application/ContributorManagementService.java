@@ -2,6 +2,10 @@ package com.tellpal.v2.content.application;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.springframework.dao.DataIntegrityViolationException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +14,8 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNo
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorDisplayNameException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleInUseException;
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
@@ -31,12 +37,15 @@ public class ContributorManagementService {
 
     private final ContributorRepository contributorRepository;
     private final ContentRepository contentRepository;
+    private final ContributorDuplicateNameResolver duplicateNameResolver;
 
     public ContributorManagementService(
             ContributorRepository contributorRepository,
-            ContentRepository contentRepository) {
+            ContentRepository contentRepository,
+            ContributorDuplicateNameResolver duplicateNameResolver) {
         this.contributorRepository = contributorRepository;
         this.contentRepository = contentRepository;
+        this.duplicateNameResolver = duplicateNameResolver;
     }
 
     /**
@@ -44,8 +53,13 @@ public class ContributorManagementService {
      */
     @Transactional
     public ContributorRecord createContributor(CreateContributorCommand command) {
-        return ContentManagementMapper.toContributorRecord(
-                contributorRepository.save(Contributor.create(command.displayName())));
+        rejectDuplicateName(command.displayName(), null);
+        try {
+            return ContentManagementMapper.toContributorRecord(contributorRepository.saveAndFlush(
+                    Contributor.create(command.displayName(), command.roles())));
+        } catch (DataIntegrityViolationException exception) {
+            throw duplicateName(command.displayName(), exception);
+        }
     }
 
     /**
@@ -77,8 +91,26 @@ public class ContributorManagementService {
     @Transactional
     public ContributorRecord renameContributor(RenameContributorCommand command) {
         Contributor contributor = loadContributor(command.contributorId());
-        contributor.rename(command.displayName());
-        return ContentManagementMapper.toContributorRecord(contributorRepository.save(contributor));
+        rejectDuplicateName(command.displayName(), contributor.getId());
+        Set<com.tellpal.v2.content.domain.ContributorRole> removedRoles = contributor.getRoles().stream()
+                .filter(role -> !command.roles().contains(role))
+                .collect(java.util.stream.Collectors.toSet());
+        for (com.tellpal.v2.content.domain.ContributorRole role : removedRoles) {
+            List<com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage> usage =
+                    contentRepository.findContributorRoleUsage(command.contributorId(), role);
+            if (!usage.isEmpty()) {
+                throw new ContributorRoleInUseException(
+                        role,
+                        contentRepository.countContributorRoleUsage(command.contributorId(), role),
+                        usage);
+            }
+        }
+        contributor.updateProfile(command.displayName(), command.roles());
+        try {
+            return ContentManagementMapper.toContributorRecord(contributorRepository.saveAndFlush(contributor));
+        } catch (DataIntegrityViolationException exception) {
+            throw duplicateName(command.displayName(), exception);
+        }
     }
 
     /**
@@ -150,6 +182,23 @@ public class ContributorManagementService {
     private Contributor loadContributor(Long contributorId) {
         return contributorRepository.findById(contributorId)
                 .orElseThrow(() -> new ContributorNotFoundException(contributorId));
+    }
+
+    private void rejectDuplicateName(String displayName, Long ownId) {
+        contributorRepository.findByNormalizedDisplayName(normalizeDisplayName(displayName))
+                .filter(existing -> !existing.getId().equals(ownId))
+                .ifPresent(existing -> { throw new DuplicateContributorDisplayNameException(existing.getId()); });
+    }
+
+    private DuplicateContributorDisplayNameException duplicateName(
+            String displayName, DataIntegrityViolationException cause) {
+        return duplicateNameResolver.findExistingContributorId(normalizeDisplayName(displayName))
+                .map(DuplicateContributorDisplayNameException::new)
+                .orElseThrow(() -> cause);
+    }
+
+    private static String normalizeDisplayName(String displayName) {
+        return displayName.trim().toLowerCase(Locale.ROOT);
     }
 
     private Content loadContent(Long contentId) {

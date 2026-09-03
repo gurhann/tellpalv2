@@ -102,6 +102,35 @@ public final class ContentApplicationExceptions {
         }
     }
 
+    public static final class DuplicateContributorDisplayNameException extends RuntimeException {
+        private final Long existingContributorId;
+
+        public DuplicateContributorDisplayNameException(Long existingContributorId) {
+            super("Contributor display name already belongs to contributor: " + existingContributorId);
+            this.existingContributorId = existingContributorId;
+        }
+
+        public Long getExistingContributorId() { return existingContributorId; }
+    }
+
+    public static final class ContributorRoleInUseException extends RuntimeException {
+        private final ContributorRole role;
+        private final long usageCount;
+        private final java.util.List<com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage> affectedContents;
+
+        public ContributorRoleInUseException(ContributorRole role, long usageCount,
+                java.util.List<com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage> affectedContents) {
+            super("Contributor role is still assigned to content: " + role);
+            this.role = role;
+            this.usageCount = usageCount;
+            this.affectedContents = java.util.List.copyOf(affectedContents);
+        }
+
+        public ContributorRole getRole() { return role; }
+        public long getUsageCount() { return usageCount; }
+        public java.util.List<com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage> getAffectedContents() { return affectedContents; }
+    }
+
     public static final class ContentFreeAccessAlreadyExistsException extends RuntimeException {
 
         public ContentFreeAccessAlreadyExistsException(String accessKey, Long contentId, LanguageCode languageCode) {

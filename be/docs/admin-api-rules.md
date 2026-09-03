@@ -259,8 +259,9 @@ stack.
 
 ### Required Fields
 
-- Contributor create and rename:
+- Contributor create and update:
   - `displayName`
+  - `roles` (en az bir benzersiz `AUTHOR`, `ILLUSTRATOR`, `NARRATOR` veya `MUSICIAN` değeri)
 - Contributor assignment:
   - `contributorId`
   - `role`
@@ -283,7 +284,12 @@ stack.
 - Contributor list `limit` must be positive and is capped at `100`.
 - Contributor list `q` is optional. Blank values fall back to recent contributors, and
   non-blank values search contributor display names case-insensitively.
-- Contributor display names are trimmed and must not be blank on create or rename.
+- Contributor display names are trimmed and must not be blank on create or update. Trim/case
+  normalize edilmiş ad başka bir profile aitse istek `409 duplicate_contributor_display_name`
+  döner ve `existingContributorId` taşır.
+- Update, profil adını ve rol setini tek transaction içinde değiştirir. Kullanılan bir rol
+  kaldırılamaz; `409 contributor_role_in_use`, `role`, `usageCount` ve `affectedContents`
+  (content ID ve external key) taşır. Bu conflict profilin hiçbir alanını değiştirmez.
 - Contributor assignment requires both the content and contributor to already exist.
 - Contributor `languageCode` is optional. `null` or an omitted field creates a global
   localization-independent credit.
@@ -315,6 +321,8 @@ stack.
 - `content_localization_not_found`
 - `content_free_access_exists`
 - `content_free_access_not_found`
+- `duplicate_contributor_display_name`
+- `contributor_role_in_use`
 - `validation_error`
 - `invalid_body`
 - `invalid_request`

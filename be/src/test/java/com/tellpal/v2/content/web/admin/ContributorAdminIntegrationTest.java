@@ -36,6 +36,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                     admin_user_roles,
                     admin_users,
                     content_contributors,
+                    contributor_roles,
                     contributors,
                     content_localizations,
                     story_page_localizations,
@@ -57,7 +58,8 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": "Elif Yilmaz"
+                                  "displayName": "Elif Yilmaz",
+                                  "roles": ["AUTHOR", "MUSICIAN"]
                                 }
                                 """))
                 .andExpect(status().isCreated())
@@ -76,7 +78,8 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": "Elif Kaya"
+                                  "displayName": "Elif Kaya",
+                                  "roles": ["AUTHOR"]
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -124,12 +127,130 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "displayName": ""
+                                  "displayName": "",
+                                  "roles": ["AUTHOR"]
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("validation_error"))
                 .andExpect(jsonPath("$.fieldErrors.displayName").value("displayName is required"));
+    }
+
+    @Test
+    void contributorRolesAreRequiredNonEmptyAndUniqueWithoutWritingAProfile() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(post("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"Missing roles\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+        mockMvc.perform(post("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"Empty roles\",\"roles\":[]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+        mockMvc.perform(post("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"Duplicate roles\",\"roles\":[\"AUTHOR\",\"AUTHOR\"]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void normalizedDuplicateNameReturnsExistingIdAndOwnRenameIsAllowed() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long contributorId = createContributor(accessToken, "Ada Lovelace");
+        Long secondContributorId = createContributor(accessToken, "Grace Hopper", "MUSICIAN");
+
+        mockMvc.perform(post("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"  ada lovelace  \",\"roles\":[\"MUSICIAN\"]}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("duplicate_contributor_display_name"))
+                .andExpect(jsonPath("$.existingContributorId").value(contributorId));
+
+        mockMvc.perform(put("/api/admin/contributors/{contributorId}", contributorId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"  ADA LOVELACE  \",\"roles\":[\"AUTHOR\"]}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.displayName").value("ADA LOVELACE"));
+
+        mockMvc.perform(put("/api/admin/contributors/{contributorId}", secondContributorId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"ada lovelace\",\"roles\":[\"AUTHOR\"]}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.existingContributorId").value(contributorId));
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("q", "grace hopper")
+                        .param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].contributorId").value(secondContributorId))
+                .andExpect(jsonPath("$[0].displayName").value("Grace Hopper"))
+                .andExpect(jsonPath("$[0].roles", Matchers.contains("MUSICIAN")));
+    }
+
+    @Test
+    void usedRoleCannotBeRemovedAndUnusedRoleCanBeRemoved() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "role-use-story", 4, true));
+        Long contributorId = createContributor(accessToken, "Role Protected", "AUTHOR", "MUSICIAN");
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {"contributorId": %d, "role": "MUSICIAN", "sortOrder": 0}
+                                """.formatted(contributorId)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {"contributorId": %d, "role": "MUSICIAN", "languageCode": "tr", "sortOrder": 0}
+                                """.formatted(contributorId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/admin/contributors/{contributorId}", contributorId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"Changed\",\"roles\":[\"AUTHOR\"]}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("contributor_role_in_use"))
+                .andExpect(jsonPath("$.role").value("MUSICIAN"))
+                .andExpect(jsonPath("$.usageCount").value(2))
+                .andExpect(jsonPath("$.affectedContents.length()").value(1))
+                .andExpect(jsonPath("$.affectedContents[0].contentId").value(content.contentId()))
+                .andExpect(jsonPath("$.affectedContents[0].externalKey").value("role-use-story"));
+
+        mockMvc.perform(get("/api/admin/contributors")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("limit", "10"))
+                .andExpect(jsonPath("$[0].displayName").value("Role Protected"))
+                .andExpect(jsonPath("$[0].roles", Matchers.containsInAnyOrder("AUTHOR", "MUSICIAN")));
+
+        mockMvc.perform(put("/api/admin/contributors/{contributorId}", contributorId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"displayName\":\"Role Protected\",\"roles\":[\"MUSICIAN\"]}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.roles", Matchers.contains("MUSICIAN")));
     }
 
     @Test
@@ -367,14 +488,19 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     private Long createContributor(String accessToken, String displayName) throws Exception {
+        return createContributor(accessToken, displayName, "AUTHOR");
+    }
+
+    private Long createContributor(String accessToken, String displayName, String... roles) throws Exception {
+        String rolesJson = java.util.Arrays.stream(roles)
+                .map(role -> "\"" + role + "\"")
+                .collect(java.util.stream.Collectors.joining(","));
         MvcResult createResult = mockMvc.perform(post("/api/admin/contributors")
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
-                                {
-                                  "displayName": "%s"
-                                }
-                                """.formatted(displayName)))
+                                {"displayName": "%s", "roles": [%s]}
+                                """.formatted(displayName, rolesJson)))
                 .andExpect(status().isCreated())
                 .andReturn();
 

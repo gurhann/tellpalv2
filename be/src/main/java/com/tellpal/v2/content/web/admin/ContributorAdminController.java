@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
@@ -57,6 +58,7 @@ public class ContributorAdminController {
             @ApiResponse(responseCode = "400", description = "Contributor request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+            ,@ApiResponse(responseCode = "409", description = "Normalized display name already exists", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
     })
     public ResponseEntity<AdminContributorResponse> createContributor(
             @Valid @RequestBody CreateContributorRequest request) {
@@ -89,13 +91,14 @@ public class ContributorAdminController {
     }
 
     @PutMapping("/contributors/{contributorId}")
-    @Operation(summary = "Rename a contributor", description = "Updates the display name of an existing contributor.")
+    @Operation(summary = "Update a contributor", description = "Updates the display name and required role set of an existing contributor.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Contributor renamed"),
             @ApiResponse(responseCode = "400", description = "Rename request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "404", description = "Contributor was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+            ,@ApiResponse(responseCode = "409", description = "Normalized name exists or a removed role is in use", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
     })
     public AdminContributorResponse renameContributor(
             @PathVariable Long contributorId,
@@ -203,19 +206,27 @@ public class ContributorAdminController {
 
 record CreateContributorRequest(
         @NotBlank(message = "displayName is required")
-        String displayName) {
+        String displayName,
+        @NotNull(message = "roles is required")
+        @jakarta.validation.constraints.NotEmpty(message = "roles must not be empty")
+        @org.hibernate.validator.constraints.UniqueElements(message = "roles must be unique")
+        List<ContributorRole> roles) {
 
     CreateContributorCommand toCommand() {
-        return new CreateContributorCommand(displayName);
+        return new CreateContributorCommand(displayName, ContributorManagementCommands.requireRoles(roles));
     }
 }
 
 record RenameContributorRequest(
         @NotBlank(message = "displayName is required")
-        String displayName) {
+        String displayName,
+        @NotNull(message = "roles is required")
+        @jakarta.validation.constraints.NotEmpty(message = "roles must not be empty")
+        @org.hibernate.validator.constraints.UniqueElements(message = "roles must be unique")
+        List<ContributorRole> roles) {
 
     RenameContributorCommand toCommand(Long contributorId) {
-        return new RenameContributorCommand(contributorId, displayName);
+        return new RenameContributorCommand(contributorId, displayName, ContributorManagementCommands.requireRoles(roles));
     }
 }
 

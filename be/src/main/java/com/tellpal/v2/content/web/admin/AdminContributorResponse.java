@@ -1,10 +1,13 @@
 package com.tellpal.v2.content.web.admin;
 
-import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
+import java.util.Set;
 
-public record AdminContributorResponse(Long contributorId, String displayName) {
+import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
+import com.tellpal.v2.content.domain.ContributorRole;
+
+public record AdminContributorResponse(Long contributorId, String displayName, Set<ContributorRole> roles) {
 
     static AdminContributorResponse from(ContributorRecord record) {
-        return new AdminContributorResponse(record.contributorId(), record.displayName());
+        return new AdminContributorResponse(record.contributorId(), record.displayName(), record.roles());
     }
 }
