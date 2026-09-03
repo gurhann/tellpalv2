@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.ContentRepository.ContributorRoleUsage;
+import com.tellpal.v2.content.domain.ContentRepository.ContributorUsage;
 import com.tellpal.v2.content.domain.ContributorRole;
 
 @Repository
@@ -83,6 +84,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     @Override
     public long countContributorRoleUsage(Long contributorId, ContributorRole role) {
         return repository.countContributorRoleUsage(contributorId, role);
+    }
+
+    @Override
+    public List<ContributorUsage> findContributorUsage(Collection<Long> contributorIds) {
+        return repository.findContributorUsage(contributorIds);
     }
 
     @Override

@@ -60,6 +60,8 @@ stack.
   - `GET /api/admin/media-processing`
 - `GET /api/admin/contents` is not paginated and includes inactive content.
 - `GET /api/admin/content-registry` is paginated, requires `language`, and returns editor-facing readiness rows.
+- `GET /api/admin/contributor-registry` is a separate paginated read endpoint; it does not change the
+  legacy array response from `GET /api/admin/contributors`.
 
 ## Content and Story Pages
 
@@ -284,6 +286,12 @@ stack.
 - Contributor list `limit` must be positive and is capped at `100`.
 - Contributor list `q` is optional. Blank values fall back to recent contributors, and
   non-blank values search contributor display names case-insensitively.
+- Contributor registry accepts optional `q` and `role` (`AUTHOR`, `ILLUSTRATOR`, `NARRATOR`, or
+  `MUSICIAN`), plus zero-based `page` (default `0`) and `size` (default `25`, maximum `100`).
+  Filtering, deterministic `updatedAt DESC, contributorId DESC` ordering, counting, and page
+  selection happen in PostgreSQL. The response envelope contains `items`, `page`, `size`,
+  `totalItems`, and `totalPages`; each item includes roles, `totalUsageCount`, `usageByRole`, and
+  `updatedAt`.
 - Contributor display names are trimmed and must not be blank on create or update. Trim/case
   normalize edilmiş ad başka bir profile aitse istek `409 duplicate_contributor_display_name`
   döner ve `existingContributorId` taşır.

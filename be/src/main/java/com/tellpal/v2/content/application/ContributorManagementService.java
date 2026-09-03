@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -23,10 +25,13 @@ import com.tellpal.v2.content.application.ContributorManagementCommands.RenameCo
 import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
+import com.tellpal.v2.content.application.ContributorRegistryReadResults.Item;
+import com.tellpal.v2.content.application.ContributorRegistryReadResults.Page;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentContributor;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.Contributor;
+import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.content.domain.ContributorRepository;
 
 /**
@@ -83,6 +88,37 @@ public class ContributorManagementService {
         return contributors.stream()
                 .map(ContentManagementMapper::toContributorRecord)
                 .toList();
+    }
+
+    /** Returns a paged contributor registry with usage projections calculated by the database. */
+    @Transactional(readOnly = true)
+    public Page listContributorRegistry(String query, ContributorRole role, int page, int size) {
+        if (page < 0 || size < 1 || size > 100) {
+            throw new IllegalArgumentException("Registry page must be non-negative and size must be between 1 and 100");
+        }
+        String normalizedQuery = escapeLikeQuery(query == null ? "" : query.trim());
+        com.tellpal.v2.content.domain.ContributorRepository.ContributorRegistryPage result =
+                contributorRepository.findRegistryPage(normalizedQuery, role, page, size);
+        List<Long> ids = result.contributors().stream().map(Contributor::getId).toList();
+        Map<Long, Map<ContributorRole, Long>> usage = new LinkedHashMap<>();
+        if (!ids.isEmpty()) {
+            contentRepository.findContributorUsage(ids).forEach(row -> usage
+                    .computeIfAbsent(row.contributorId(), ignored -> new LinkedHashMap<>())
+                    .put(row.role(), row.usageCount()));
+        }
+        List<Item> items = result.contributors().stream().map(contributor -> {
+            Map<ContributorRole, Long> byRole = new LinkedHashMap<>();
+            contributor.getRoles().forEach(contributorRole -> byRole.put(contributorRole, 0L));
+            byRole.putAll(usage.getOrDefault(contributor.getId(), Map.of()));
+            return new Item(contributor.getId(), contributor.getDisplayName(), contributor.getRoles(),
+                    byRole.values().stream().mapToLong(Long::longValue).sum(), byRole,
+                    contributor.getUpdatedAt());
+        }).toList();
+        return new Page(items, page, size, result.totalItems());
+    }
+
+    private static String escapeLikeQuery(String query) {
+        return query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
     }
 
     /**

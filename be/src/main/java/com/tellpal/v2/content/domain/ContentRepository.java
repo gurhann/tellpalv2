@@ -69,6 +69,11 @@ public interface ContentRepository {
 
     long countContributorRoleUsage(Long contributorId, ContributorRole role);
 
+    /** Returns assignment counts grouped by contributor and assignment role for a registry page. */
+    List<ContributorUsage> findContributorUsage(Collection<Long> contributorIds);
+
+    record ContributorUsage(Long contributorId, ContributorRole role, long usageCount) { }
+
     /** A content reference that explains why a contributor role cannot be removed. */
     record ContributorRoleUsage(Long contentId, String externalKey) { }
 

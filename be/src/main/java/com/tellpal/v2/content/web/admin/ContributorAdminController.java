@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Max;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,6 +89,25 @@ public class ContributorAdminController {
         return contributorManagementService.listContributors(limit, normalizeOptionalSearchQuery(query)).stream()
                 .map(AdminContributorResponse::from)
                 .toList();
+    }
+
+    @GetMapping("/contributor-registry")
+    @Operation(summary = "List the contributor registry",
+            description = "Returns a database-filtered and deterministically paged contributor registry with assignment usage summaries.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributor registry page returned"),
+            @ApiResponse(responseCode = "400", description = "Registry query is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminContributorRegistryResponse.Page listContributorRegistry(
+            @RequestParam(name = "q", required = false) String query,
+            @RequestParam(name = "role", required = false) ContributorRole role,
+            @RequestParam(name = "page", defaultValue = "0") @Min(value = 0, message = "page must not be negative") int page,
+            @RequestParam(name = "size", defaultValue = "25") @Min(value = 1, message = "size must be positive")
+            @Max(value = 100, message = "size must not exceed 100") int size) {
+        return AdminContributorRegistryResponse.Page.from(contributorManagementService.listContributorRegistry(
+                normalizeOptionalSearchQuery(query), role, page, size));
     }
 
     @PutMapping("/contributors/{contributorId}")

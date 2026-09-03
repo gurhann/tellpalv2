@@ -14,6 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.Set;
+import java.time.Instant;
+import java.util.Map;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.Contribut
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
+import com.tellpal.v2.content.application.ContributorRegistryReadResults;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -81,6 +84,42 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].displayName").value("Baris Kaya"))
                 .andExpect(jsonPath("$[1].displayName").value("Elif Yilmaz"));
+    }
+
+    @Test
+    void contributorRegistryReturnsEnvelopeAndDelegatesFilters() throws Exception {
+        when(contributorManagementService.listContributorRegistry("Ada", ContributorRole.AUTHOR, 1, 10))
+                .thenReturn(new ContributorRegistryReadResults.Page(List.of(
+                        new ContributorRegistryReadResults.Item(8L, "Ada Lovelace",
+                                Set.of(ContributorRole.AUTHOR), 3,
+                                Map.of(ContributorRole.AUTHOR, 3L), Instant.parse("2026-09-03T10:00:00Z"))),
+                        1, 10, 11));
+
+        mockMvc.perform(get("/api/admin/contributor-registry")
+                        .param("q", "  Ada ").param("role", "AUTHOR").param("page", "1").param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.size").value(10))
+                .andExpect(jsonPath("$.totalItems").value(11))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.items[0].totalUsageCount").value(3))
+                .andExpect(jsonPath("$.items[0].usageByRole.AUTHOR").value(3));
+    }
+
+    @Test
+    void contributorRegistryRejectsInvalidPagination() throws Exception {
+        mockMvc.perform(get("/api/admin/contributor-registry").param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+        mockMvc.perform(get("/api/admin/contributor-registry").param("size", "101"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+        mockMvc.perform(get("/api/admin/contributor-registry").param("size", "0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+        mockMvc.perform(get("/api/admin/contributor-registry").param("role", "UNKNOWN"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
     }
 
     @Test

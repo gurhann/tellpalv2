@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * Provides shared validation and security error responses for admin REST controllers.
@@ -52,6 +53,17 @@ public class AdminApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Validation failed",
                 "Request validation failed",
+                "validation_error",
+                request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ProblemDetail handleParameterTypeMismatch(MethodArgumentTypeMismatchException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                "Request parameter has an invalid value",
                 "validation_error",
                 request);
     }

@@ -103,6 +103,111 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void contributorRegistryFiltersPaginatesAndReportsUsage() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long adaId = createContributor(accessToken, "Ada Lovelace", "AUTHOR", "MUSICIAN");
+        Long graceId = createContributor(accessToken, "Grace Hopper", "AUTHOR");
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "registry-story", 1, true));
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"AUTHOR\",\"sortOrder\":0}".formatted(adaId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/admin/contributor-registry")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .param("q", " ada ").param("role", "MUSICIAN").param("page", "0").param("size", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(1))
+                .andExpect(jsonPath("$.items[0].contributorId").value(adaId))
+                .andExpect(jsonPath("$.items[0].totalUsageCount").value(1))
+                .andExpect(jsonPath("$.totalItems").value(1));
+
+        mockMvc.perform(get("/api/admin/contributor-registry")
+                        .header("Authorization", "Bearer " + accessToken).param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+    }
+
+    @Test
+    void contributorRegistryUsesDefaultMetadataEmptyTotalsAndIdTieBreak() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long firstId = createContributor(accessToken, "Tie First");
+        Long secondId = createContributor(accessToken, "Tie Second");
+        jdbcTemplate.update("update contributors set updated_at = ? where id in (?, ?)",
+                java.sql.Timestamp.valueOf("2026-09-03 12:00:00"), firstId, secondId);
+
+        mockMvc.perform(get("/api/admin/contributor-registry")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(25))
+                .andExpect(jsonPath("$.totalItems").value(2))
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.items[0].contributorId").value(secondId))
+                .andExpect(jsonPath("$.items[1].contributorId").value(firstId));
+
+        mockMvc.perform(get("/api/admin/contributor-registry")
+                        .header("Authorization", "Bearer " + accessToken).param("q", "does-not-exist"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(0))
+                .andExpect(jsonPath("$.totalItems").value(0))
+                .andExpect(jsonPath("$.totalPages").value(0));
+    }
+
+    @Test
+    void contributorRegistryPagesAllMatchesAndAppliesRoleFilter() throws Exception {
+        String token = authenticateAdmin();
+        Long one = createContributor(token, "Page Ada One", "AUTHOR");
+        Long two = createContributor(token, "Page Ada Two", "AUTHOR");
+        Long three = createContributor(token, "Page Ada Three", "MUSICIAN");
+        Long other = createContributor(token, "Page Ada Other", "NARRATOR");
+
+        mockMvc.perform(get("/api/admin/contributor-registry").header("Authorization", "Bearer " + token)
+                        .param("q", "page ada").param("size", "2").param("page", "0"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.items.length()").value(2))
+                .andExpect(jsonPath("$.totalItems").value(4)).andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.items[0].contributorId").value(other))
+                .andExpect(jsonPath("$.items[1].contributorId").value(three));
+        mockMvc.perform(get("/api/admin/contributor-registry").header("Authorization", "Bearer " + token)
+                        .param("q", "page ada").param("size", "2").param("page", "1"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.items.length()").value(2))
+                .andExpect(jsonPath("$.totalItems").value(4))
+                .andExpect(jsonPath("$.items[0].contributorId").value(two))
+                .andExpect(jsonPath("$.items[1].contributorId").value(one));
+        mockMvc.perform(get("/api/admin/contributor-registry").header("Authorization", "Bearer " + token)
+                        .param("role", "MUSICIAN"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.items[0].contributorId").value(three));
+    }
+
+    @Test
+    void contributorRegistryReportsUsageForEveryProfileRole() throws Exception {
+        String token = authenticateAdmin();
+        Long contributorId = createContributor(token, "Usage Both Roles", "AUTHOR", "MUSICIAN");
+        ContentReference first = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "usage-author", 1, true));
+        ContentReference second = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "usage-musician", 1, true));
+        assign(token, first.contentId(), contributorId, "AUTHOR");
+        assign(token, second.contentId(), contributorId, "MUSICIAN");
+
+        mockMvc.perform(get("/api/admin/contributor-registry").header("Authorization", "Bearer " + token)
+                        .param("q", "Usage Both Roles"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.items[0].totalUsageCount").value(2))
+                .andExpect(jsonPath("$.items[0].usageByRole.AUTHOR").value(1))
+                .andExpect(jsonPath("$.items[0].usageByRole.MUSICIAN").value(1));
+    }
+
+    private void assign(String token, Long contentId, Long contributorId, String role) throws Exception {
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", contentId)
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"%s\",\"sortOrder\":0}"
+                                .formatted(contributorId, role)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void contributorListCanSearchDisplayNamesWithAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
         createContributor(accessToken, "Aylin Demir");
