@@ -67,6 +67,7 @@ final class ContentManagementMapper {
             throw new IllegalStateException("Contributor must be persisted before mapping");
         }
         return new ContentContributorRecord(
+                assignment.getId(),
                 contentId,
                 contributorId,
                 assignment.getContributor().getDisplayName(),

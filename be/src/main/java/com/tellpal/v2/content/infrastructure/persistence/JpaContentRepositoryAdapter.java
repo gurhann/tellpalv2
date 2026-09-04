@@ -47,6 +47,14 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
+    public Optional<Content> findByIdForContributorWrite(Long id) {
+        if (repository.findByIdForContributorWrite(id).isEmpty()) {
+            return Optional.empty();
+        }
+        return repository.findByIdForContributorAdminRead(id);
+    }
+
+    @Override
     public Optional<Content> findByExternalKey(String externalKey) {
         return repository.findByExternalKey(externalKey);
     }

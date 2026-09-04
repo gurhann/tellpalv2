@@ -1,5 +1,6 @@
 package com.tellpal.v2.content.web.admin;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -18,7 +19,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
+import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContentType;
+import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.support.AdminApiIntegrationTestSupport;
 
 @SpringBootTest
@@ -27,6 +31,9 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
 
     @Autowired
     private ContentManagementService contentManagementService;
+
+    @Autowired
+    private ContributorManagementService contributorManagementService;
 
     @BeforeEach
     void cleanDatabase() {
@@ -444,7 +451,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
-    void duplicateGlobalScopeAssignmentAndSortOrderStillFail() throws Exception {
+    void duplicateAssignmentsFailButLegacyClientSortOrderIsIgnored() throws Exception {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "duplicate-global-story", 4, true));
@@ -489,8 +496,147 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                   "sortOrder": 0
                                 }
                                 """.formatted(illustratorId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.sortOrder").value(1))
+                .andExpect(jsonPath("$.assignmentId").isNumber());
+    }
+
+    @Test
+    void reorderRequiresAnExactGroupPermutationAndLeavesTheStoredOrderUntouchedWhenInvalid() throws Exception {
+        String token = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "reorder-contributors", 1, true));
+        Long first = createContributor(token, "Reorder First");
+        Long second = createContributor(token, "Reorder Second");
+        Long narrator = createContributor(token, "Reorder Narrator", "NARRATOR");
+        assign(token, content.contentId(), first, "AUTHOR");
+        assign(token, content.contentId(), second, "AUTHOR");
+        assign(token, content.contentId(), narrator, "NARRATOR");
+        java.util.List<Long> assignmentIds = jdbcTemplate.queryForList(
+                "select id from content_contributors where content_id = ? and role = 'AUTHOR' order by sort_order",
+                Long.class, content.contentId());
+        Long foreignAssignmentId = jdbcTemplate.queryForObject(
+                "select id from content_contributors where content_id = ? and role = 'NARRATOR'",
+                Long.class, content.contentId());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/reorder", content.contentId())
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[%d,%d]}"
+                                .formatted(assignmentIds.get(1), assignmentIds.get(0))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].assignmentId").value(assignmentIds.get(1)))
+                .andExpect(jsonPath("$[0].sortOrder").value(0));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/reorder", content.contentId())
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[%d,%d]}"
+                                .formatted(assignmentIds.get(1), assignmentIds.get(1))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/reorder", content.contentId())
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[%d]}"
+                                .formatted(assignmentIds.get(1))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/reorder", content.contentId())
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[%d,%d]}"
+                                .formatted(assignmentIds.get(1), foreignAssignmentId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+
+        assertThat(jdbcTemplate.queryForList(
+                "select id from content_contributors where content_id = ? and role = 'AUTHOR' order by sort_order",
+                Long.class, content.contentId()))
+                .containsExactly(assignmentIds.get(1), assignmentIds.get(0));
+    }
+
+    @Test
+    void assignmentRejectsAProfileRoleMismatchWithoutWritingAnAssignment() throws Exception {
+        String token = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "role-mismatch", 1, true));
+        Long contributorId = createContributor(token, "Author Only", "AUTHOR");
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"NARRATOR\"}".formatted(contributorId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from content_contributors where content_id = ?", Integer.class, content.contentId()))
+                .isZero();
+    }
+
+    @Test
+    void concurrentAssignmentsSerializeAtTheContentAggregateAndProduceConsecutiveOrders() throws Exception {
+        String token = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "concurrent-contributors", 1, true));
+        Long first = createContributor(token, "Concurrent First");
+        Long second = createContributor(token, "Concurrent Second");
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(2);
+        java.util.concurrent.CountDownLatch ready = new java.util.concurrent.CountDownLatch(2);
+        java.util.concurrent.CountDownLatch start = new java.util.concurrent.CountDownLatch(1);
+        try {
+            java.util.concurrent.Future<?> firstWrite = executor.submit(() -> assignAfterConcurrentStart(
+                    ready, start, content.contentId(), first));
+            java.util.concurrent.Future<?> secondWrite = executor.submit(() -> assignAfterConcurrentStart(
+                    ready, start, content.contentId(), second));
+            assertThat(ready.await(5, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            start.countDown();
+            firstWrite.get();
+            secondWrite.get();
+        } finally {
+            executor.shutdownNow();
+        }
+        assertThat(jdbcTemplate.queryForList(
+                "select sort_order from content_contributors where content_id = ? order by sort_order",
+                Integer.class, content.contentId())).containsExactly(0, 1);
+    }
+
+    private void assignAfterConcurrentStart(
+            java.util.concurrent.CountDownLatch ready,
+            java.util.concurrent.CountDownLatch start,
+            Long contentId,
+            Long contributorId) {
+        ready.countDown();
+        try {
+            if (!start.await(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Concurrent assignment start timed out");
+            }
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Concurrent assignment was interrupted", exception);
+        }
+        contributorManagementService.assignContentContributor(
+                new AssignContentContributorCommand(contentId, contributorId, ContributorRole.AUTHOR, null, null, 0));
+    }
+
+    @Test
+    void contributorSortOrderMigrationNormalizesExistingGapsPerRoleAndLanguageGroup() throws Exception {
+        String token = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "migration-contributors", 1, true));
+        Long first = createContributor(token, "Migration First");
+        Long second = createContributor(token, "Migration Second");
+        assign(token, content.contentId(), first, "AUTHOR");
+        assign(token, content.contentId(), second, "AUTHOR");
+        jdbcTemplate.update("update content_contributors set sort_order = 2147483647 where content_id = ? and contributor_id = ?",
+                content.contentId(), first);
+        jdbcTemplate.update("update content_contributors set sort_order = 14 where content_id = ? and contributor_id = ?",
+                content.contentId(), second);
+
+        String migration = new org.springframework.core.io.ClassPathResource(
+                "db/migration/V21__normalize_content_contributor_sort_orders.sql").getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
+        jdbcTemplate.execute(migration);
+
+        assertThat(jdbcTemplate.queryForList(
+                "select sort_order from content_contributors where content_id = ? and role = 'AUTHOR' order by sort_order",
+                Integer.class, content.contentId())).containsExactly(0, 1);
     }
 
     @Test

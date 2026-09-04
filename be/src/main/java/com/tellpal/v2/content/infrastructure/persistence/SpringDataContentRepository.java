@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Lock;
+import jakarta.persistence.LockModeType;
 
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContributorRole;
@@ -57,6 +59,14 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             where content.id = :id
             """)
     Optional<Content> findByIdForContributorAdminRead(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select content
+            from Content content
+            where content.id = :id
+            """)
+    Optional<Content> findByIdForContributorWrite(Long id);
 
     Optional<Content> findByExternalKey(String externalKey);
 

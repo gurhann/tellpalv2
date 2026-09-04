@@ -35,6 +35,8 @@ public interface ContentRepository {
      */
     Optional<Content> findByIdForContributorAdminRead(Long id);
 
+    Optional<Content> findByIdForContributorWrite(Long id);
+
     /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */

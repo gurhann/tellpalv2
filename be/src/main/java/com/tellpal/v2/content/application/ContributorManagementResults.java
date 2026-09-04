@@ -33,6 +33,7 @@ public final class ContributorManagementResults {
      * Snapshot of one contributor assignment to content.
      */
     public record ContentContributorRecord(
+            Long assignmentId,
             Long contentId,
             Long contributorId,
             String contributorDisplayName,
@@ -42,6 +43,7 @@ public final class ContributorManagementResults {
             int sortOrder) {
 
         public ContentContributorRecord {
+            assignmentId = requirePositiveId(assignmentId, "Contributor assignment ID must be positive");
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
             contributorDisplayName = requireText(
@@ -52,6 +54,7 @@ public final class ContributorManagementResults {
                 throw new IllegalArgumentException("Contributor sort order must not be negative");
             }
         }
+
     }
 
     private static Long requirePositiveId(Long value, String message) {

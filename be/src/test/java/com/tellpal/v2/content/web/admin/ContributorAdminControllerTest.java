@@ -171,6 +171,7 @@ class ContributorAdminControllerTest {
     void listContentContributorsReturnsAssignments() throws Exception {
         when(contributorManagementService.listContentContributors(51L)).thenReturn(List.of(
                 new ContentContributorRecord(
+                        101L,
                         51L,
                         11L,
                         "Elif Yilmaz",
@@ -189,6 +190,7 @@ class ContributorAdminControllerTest {
     @Test
     void assignContributorReturnsCreatedResponse() throws Exception {
         when(contributorManagementService.assignContentContributor(any())).thenReturn(new ContentContributorRecord(
+                101L,
                 51L,
                 11L,
                 "Elif Yilmaz",
@@ -218,6 +220,7 @@ class ContributorAdminControllerTest {
     @Test
     void assignContributorAllowsGlobalScopeWhenLanguageCodeIsNull() throws Exception {
         when(contributorManagementService.assignContentContributor(any())).thenReturn(new ContentContributorRecord(
+                101L,
                 51L,
                 11L,
                 "Elif Yilmaz",
@@ -242,6 +245,33 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.contributorId").value(11))
                 .andExpect(jsonPath("$.role").value("ILLUSTRATOR"))
                 .andExpect(jsonPath("$.languageCode").value(Matchers.nullValue()));
+    }
+
+    @Test
+    void reorderContributorValidationRejectsMissingOrInvalidGroupInput() throws Exception {
+        mockMvc.perform(put("/api/admin/contents/51/contributors/reorder")
+                        .contentType("application/json")
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+
+        mockMvc.perform(put("/api/admin/contents/51/contributors/reorder")
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[null]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+
+        mockMvc.perform(put("/api/admin/contents/51/contributors/reorder")
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"assignmentIds\":[0]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+
+        mockMvc.perform(put("/api/admin/contents/51/contributors/reorder")
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"languageCode\":\" \",\"assignmentIds\":[1]}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
     }
 
     @Test

@@ -26,6 +26,11 @@ public class JpaContributorRepositoryAdapter implements ContributorRepository {
     }
 
     @Override
+    public Optional<Contributor> findByIdForWrite(Long id) {
+        return repository.findByIdForWrite(id);
+    }
+
+    @Override
     public Optional<Contributor> findByNormalizedDisplayName(String normalizedDisplayName) {
         return repository.findByNormalizedDisplayName(normalizedDisplayName);
     }

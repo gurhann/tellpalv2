@@ -13,21 +13,17 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 class ContentTest {
 
     @Test
-    void assignContributorRejectsDuplicateSortOrderWithinSameRoleAndLanguage() {
+    void assignContributorAppendsAtTheServerOwnedEndOfItsRoleAndLanguageGroup() {
         Content content = Content.create(ContentType.STORY, "story-contributors", 6, true);
         Contributor firstContributor = persistedContributor(1L, "Alice");
         Contributor secondContributor = persistedContributor(2L, "Bob");
 
-        content.assignContributor(firstContributor, ContributorRole.AUTHOR, LanguageCode.TR, null, 0);
+        content.assignContributor(firstContributor, ContributorRole.AUTHOR, LanguageCode.TR, null, 98);
+        content.assignContributor(secondContributor, ContributorRole.AUTHOR, LanguageCode.TR, null, 0);
 
-        assertThatThrownBy(() -> content.assignContributor(
-                secondContributor,
-                ContributorRole.AUTHOR,
-                LanguageCode.TR,
-                null,
-                0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("sort order");
+        assertThat(content.getContributors())
+                .extracting(ContentContributor::getSortOrder)
+                .containsExactlyInAnyOrder(0, 1);
     }
 
     @Test
@@ -40,6 +36,18 @@ class ContentTest {
         content.assignContributor(secondContributor, ContributorRole.AUTHOR, LanguageCode.EN, null, 0);
 
         assertThat(content.getContributors()).hasSize(2);
+    }
+
+    @Test
+    void assignContributorRejectsARoleThatTheContributorProfileDoesNotContain() {
+        Content content = Content.create(ContentType.STORY, "story-role-check", 6, true);
+        Contributor contributor = persistedContributor(1L, "Alice");
+
+        assertThatThrownBy(() -> content.assignContributor(
+                contributor, ContributorRole.NARRATOR, LanguageCode.TR, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("requested role");
+        assertThat(content.getContributors()).isEmpty();
     }
 
     @Test
@@ -66,6 +74,21 @@ class ContentTest {
         assertThatThrownBy(() -> content.unassignContributor(1L, ContributorRole.AUTHOR, LanguageCode.TR))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("not found");
+    }
+
+    @Test
+    void unassignContributorCompactsTheRemainingRoleAndLanguageGroup() {
+        Content content = Content.create(ContentType.STORY, "story-unassign-compact", 6, true);
+        Contributor firstContributor = persistedContributor(1L, "Alice");
+        Contributor secondContributor = persistedContributor(2L, "Bob");
+
+        content.assignContributor(firstContributor, ContributorRole.AUTHOR, null, null, 0);
+        content.assignContributor(secondContributor, ContributorRole.AUTHOR, null, null, 0);
+        content.unassignContributor(1L, ContributorRole.AUTHOR, null);
+
+        assertThat(content.getContributors()).singleElement()
+                .extracting(ContentContributor::getSortOrder)
+                .isEqualTo(0);
     }
 
     @Test

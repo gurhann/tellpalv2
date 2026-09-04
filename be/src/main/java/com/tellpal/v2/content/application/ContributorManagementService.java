@@ -22,6 +22,7 @@ import com.tellpal.v2.content.application.ContributorManagementCommands.AssignCo
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.ReorderContentContributorsCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
@@ -172,14 +173,31 @@ public class ContributorManagementService {
                 contributor,
                 command.role(),
                 command.languageCode(),
-                command.creditName(),
-                command.sortOrder());
+                command.creditName());
+        Content saved = contentRepository.saveAndFlush(content);
         return ContentManagementMapper.toContentContributorRecord(
                 command.contentId(),
-                contentRepository.save(content).getContributors().stream()
-                        .filter(candidate -> candidate == assignment)
-                .findFirst()
-                .orElse(assignment));
+                saved.getContributors().stream()
+                        .filter(candidate -> candidate.matchesAssignment(
+                                command.contributorId(), command.role(), command.languageCode()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("Saved contributor assignment was not found")));
+    }
+
+    /** Replaces the order of one role/language group while preserving database uniqueness during swaps. */
+    @Transactional
+    public List<ContentContributorRecord> reorderContentContributors(ReorderContentContributorsCommand command) {
+        Content content = loadContentForContributorWrite(command.contentId());
+        content.stageContributorReorder(command.role(), command.languageCode(), command.assignmentIds());
+        contentRepository.saveAndFlush(content);
+        content.completeContributorReorder(command.role(), command.languageCode(), command.assignmentIds());
+        Content saved = contentRepository.saveAndFlush(content);
+        return saved.getContributors().stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(command.role(), command.languageCode()))
+                .map(assignment -> ContentManagementMapper.toContentContributorRecord(command.contentId(), assignment))
+                .sorted(Comparator.comparingInt(ContentContributorRecord::sortOrder)
+                        .thenComparing(ContentContributorRecord::assignmentId))
+                .toList();
     }
 
     /**
@@ -212,11 +230,18 @@ public class ContributorManagementService {
                     command.role(),
                     command.languageCode());
         }
+        List<Long> remainingAssignmentIds = content.getContributors().stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(command.role(), command.languageCode()))
+                .map(ContentContributor::getId)
+                .toList();
+        content.stageContributorReorder(command.role(), command.languageCode(), remainingAssignmentIds);
+        contentRepository.saveAndFlush(content);
+        content.completeContributorReorder(command.role(), command.languageCode(), remainingAssignmentIds);
         contentRepository.save(content);
     }
 
     private Contributor loadContributor(Long contributorId) {
-        return contributorRepository.findById(contributorId)
+        return contributorRepository.findByIdForWrite(contributorId)
                 .orElseThrow(() -> new ContributorNotFoundException(contributorId));
     }
 
@@ -238,7 +263,11 @@ public class ContributorManagementService {
     }
 
     private Content loadContent(Long contentId) {
-        return contentRepository.findById(contentId)
+        return loadContentForContributorWrite(contentId);
+    }
+
+    private Content loadContentForContributorWrite(Long contentId) {
+        return contentRepository.findByIdForContributorWrite(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }
 

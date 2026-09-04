@@ -269,23 +269,73 @@ public class Content extends BaseJpaEntity {
             Contributor contributor,
             ContributorRole role,
             LanguageCode languageCode,
-            String creditName,
-            int sortOrder) {
+            String creditName) {
         Long contributorId = requireContributorId(contributor);
+        requireRole(role);
+        if (!contributor.getRoles().contains(role)) {
+            throw new IllegalArgumentException("Contributor does not have the requested role");
+        }
         if (contributors.stream()
                 .anyMatch(assignment -> assignment.matchesAssignment(contributorId, role, languageCode))) {
             throw new IllegalArgumentException("Contributor assignment already exists for role and language");
         }
-        requireContributorSortOrderAvailability(role, languageCode, sortOrder);
         ContentContributor assignment = new ContentContributor(
                 this,
                 contributor,
                 role,
                 languageCode,
                 creditName,
-                sortOrder);
+                nextContributorSortOrder(role, languageCode));
         contributors.add(assignment);
         return assignment;
+    }
+
+    /**
+     * Compatibility overload for callers that still send a client-owned sort value.
+     * The aggregate always appends at the server-calculated end of the group.
+     */
+    public ContentContributor assignContributor(
+            Contributor contributor,
+            ContributorRole role,
+            LanguageCode languageCode,
+            String creditName,
+            int ignoredSortOrder) {
+        return assignContributor(contributor, role, languageCode, creditName);
+    }
+
+    /**
+     * Validates and stages a complete contributor-order permutation for one role/language group.
+     * Callers must flush the temporary order before applying the final order to avoid unique-index swaps.
+     */
+    public void stageContributorReorder(
+            ContributorRole role, LanguageCode languageCode, List<Long> assignmentIds) {
+        requireRole(role);
+        if (assignmentIds == null) {
+            throw new IllegalArgumentException("Contributor assignment IDs must not be null");
+        }
+        List<ContentContributor> group = contributors.stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(role, languageCode))
+                .toList();
+        Set<Long> expectedIds = group.stream().map(ContentContributor::getId).collect(java.util.stream.Collectors.toSet());
+        Set<Long> providedIds = new java.util.HashSet<>(assignmentIds);
+        if (assignmentIds.size() != providedIds.size() || !providedIds.equals(expectedIds)) {
+            throw new IllegalArgumentException("Contributor reorder must contain every group assignment exactly once");
+        }
+        int temporaryOrder = group.size();
+        for (ContentContributor assignment : group) {
+            assignment.updateSortOrder(++temporaryOrder);
+        }
+    }
+
+    /** Applies the final zero-based order after the temporary stage has been flushed. */
+    public void completeContributorReorder(
+            ContributorRole role, LanguageCode languageCode, List<Long> assignmentIds) {
+        java.util.Map<Long, ContentContributor> assignmentsById = contributors.stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(role, languageCode))
+                .collect(java.util.stream.Collectors.toMap(ContentContributor::getId, assignment -> assignment));
+        for (int index = 0; index < assignmentIds.size(); index += 1) {
+            assignmentsById.get(assignmentIds.get(index)).updateSortOrder(index);
+        }
     }
 
     /**
@@ -299,6 +349,7 @@ public class Content extends BaseJpaEntity {
         if (!removed) {
             throw new IllegalArgumentException("Contributor assignment not found for role and language");
         }
+        renumberContributorGroup(role, languageCode);
     }
 
     private ContentLocalization createLocalization(
@@ -369,19 +420,22 @@ public class Content extends BaseJpaEntity {
         }
     }
 
-    private void requireContributorSortOrderAvailability(
-            ContributorRole role,
-            LanguageCode languageCode,
-            int sortOrder) {
-        requireRole(role);
-        if (sortOrder < 0) {
-            throw new IllegalArgumentException("Contributor sort order must not be negative");
-        }
-        boolean alreadyUsed = contributors.stream()
-                .anyMatch(assignment -> assignment.matchesRoleAndLanguage(role, languageCode)
-                        && assignment.getSortOrder() == sortOrder);
-        if (alreadyUsed) {
-            throw new IllegalArgumentException("Contributor sort order must be unique per role and language");
+    private int nextContributorSortOrder(ContributorRole role, LanguageCode languageCode) {
+        return contributors.stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(role, languageCode))
+                .mapToInt(ContentContributor::getSortOrder)
+                .max()
+                .orElse(-1) + 1;
+    }
+
+    private void renumberContributorGroup(ContributorRole role, LanguageCode languageCode) {
+        List<ContentContributor> group = contributors.stream()
+                .filter(assignment -> assignment.matchesRoleAndLanguage(role, languageCode))
+                .sorted(Comparator.comparingInt(ContentContributor::getSortOrder)
+                        .thenComparing(ContentContributor::getId, Comparator.nullsLast(Long::compareTo)))
+                .toList();
+        for (int index = 0; index < group.size(); index += 1) {
+            group.get(index).updateSortOrder(index);
         }
     }
 

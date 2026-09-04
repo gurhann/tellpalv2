@@ -255,6 +255,9 @@ stack.
 - `GET /api/admin/contributors`
 - `PUT /api/admin/contributors/{contributorId}`
 - `POST /api/admin/contents/{contentId}/contributors`
+- `GET /api/admin/contents/{contentId}/contributors`
+- `PUT /api/admin/contents/{contentId}/contributors/reorder`
+- `DELETE /api/admin/contents/{contentId}/contributors`
 - `POST /api/admin/free-access`
 - `GET /api/admin/free-access`
 - `DELETE /api/admin/free-access/{accessKey}/languages/{languageCode}/contents/{contentId}`
@@ -267,7 +270,10 @@ stack.
 - Contributor assignment:
   - `contributorId`
   - `role`
-  - `sortOrder` defaults to required integer semantics and must be non-negative
+  - `sortOrder` is accepted for legacy CMS compatibility but ignored; the server appends to the group end
+- Contributor reorder:
+  - `role`
+  - `assignmentIds`, the complete unique assignment-ID permutation for one optional language scope
 - Free-access grant:
   - `accessKey`
   - `contentId`
@@ -299,13 +305,16 @@ stack.
   kaldırılamaz; `409 contributor_role_in_use`, `role`, `usageCount` ve `affectedContents`
   (content ID ve external key) taşır. Bu conflict profilin hiçbir alanını değiştirmez.
 - Contributor assignment requires both the content and contributor to already exist.
+- Contributor assignment role must belong to the contributor profile; otherwise it returns `400 invalid_request`
 - Contributor `languageCode` is optional. `null` or an omitted field creates a global
   localization-independent credit.
 - A provided contributor `languageCode` must not be blank and must resolve to a supported
   `LanguageCode`.
 - Contributor `creditName` is optional and trimmed to `null` when blank.
-- Duplicate contributor assignments and duplicate contributor sort orders currently surface as
-  `400 invalid_request`, not as a module-specific conflict code.
+- Duplicate contributor assignments surface as `400 invalid_request`. Sort order is owned by the
+  server per `content + role + nullable languageCode` group and is assigned as consecutive values.
+- Assignment and reorder responses include `assignmentId`. Reorder accepts only a complete, unique
+  permutation of the selected group and writes no partial order when validation fails.
 - Free-access grant requires the target content to exist.
 - Free-access grant requires the target localization for the requested language to exist.
 - Admin free-access listing treats a missing or blank `accessKey` query parameter as `default`.
@@ -352,16 +361,16 @@ stack.
   - localized picks should remain limited to languages already present in the content detail model
 - UI must prevent duplicate contributor role/language-scope combinations and duplicate sort orders
   before submit when enough local state is available.
-- CMS should not promise contributor deletion or content-assignment removal yet.
+- CMS may use content-contributor list and unassign routes, and should use the reorder route rather
+  than calculating sort values client-side.
 - Free-access screens should treat blank key input as the `default` set on admin list requests.
 - Free-access screens must not assume that requesting an unknown non-default key will return the
   effective default set.
 
 ### Open Gaps and Unverified Items
 
-- There is no contributor delete endpoint.
-- There is no content-contributor unassign endpoint.
-- There is no admin read endpoint that returns contributor assignments for a content item.
+- Concurrent contributor writes are serialized with a content aggregate write lock; integration
+  coverage for sustained concurrent requests remains a follow-up.
 
 ## Categories and Curation
 

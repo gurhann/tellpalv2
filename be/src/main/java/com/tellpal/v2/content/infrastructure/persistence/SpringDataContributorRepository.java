@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.query.Param;
+import jakarta.persistence.LockModeType;
 
 import com.tellpal.v2.content.domain.Contributor;
 import com.tellpal.v2.content.domain.ContributorRole;
@@ -15,6 +17,10 @@ import com.tellpal.v2.content.domain.ContributorRole;
 interface SpringDataContributorRepository extends JpaRepository<Contributor, Long> {
 
     Optional<Contributor> findByNormalizedDisplayName(String normalizedDisplayName);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select contributor from Contributor contributor where contributor.id = :id")
+    Optional<Contributor> findByIdForWrite(Long id);
 
     List<Contributor> findAllByOrderByCreatedAtDesc(Pageable pageable);
 

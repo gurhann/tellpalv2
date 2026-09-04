@@ -78,6 +78,10 @@ public class ContentContributor extends BaseJpaEntity {
         return sortOrder;
     }
 
+    void updateSortOrder(int sortOrder) {
+        this.sortOrder = requireNonNegative(sortOrder);
+    }
+
     public boolean matchesRoleAndLanguage(ContributorRole role, LanguageCode languageCode) {
         return this.role == role && this.languageCode == languageCode;
     }
@@ -89,14 +93,6 @@ public class ContentContributor extends BaseJpaEntity {
     public boolean hasContributor(Long contributorId) {
         Long id = contributor.getId();
         return id != null && id.equals(contributorId);
-    }
-
-    /**
-     * Updates presentation-specific credit fields for the assignment.
-     */
-    public void updateCredit(String creditName, int sortOrder) {
-        this.creditName = normalizeOptionalText(creditName);
-        this.sortOrder = requireNonNegative(sortOrder);
     }
 
     private static Content requireContent(Content content) {

@@ -14,6 +14,9 @@ public interface ContributorRepository {
      */
     Optional<Contributor> findById(Long id);
 
+    /** Locks one profile while a role-sensitive mutation is in progress. */
+    Optional<Contributor> findByIdForWrite(Long id);
+
     Optional<Contributor> findByNormalizedDisplayName(String normalizedDisplayName);
 
     /**

@@ -26,6 +26,7 @@ import com.tellpal.v2.content.application.ContributorManagementCommands;
 import com.tellpal.v2.content.application.ContributorManagementCommands.CreateContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.ReorderContentContributorsCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContributorRole;
@@ -179,6 +180,23 @@ public class ContributorAdminController {
                 .toList();
     }
 
+    @PutMapping("/contents/{contentId}/contributors/reorder")
+    @Operation(summary = "Reorder content contributors", description = "Replaces one role and optional language group's complete, unique assignment-ID permutation.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributor group reordered"),
+            @ApiResponse(responseCode = "400", description = "Reorder request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminContentContributorResponse> reorderContributors(
+            @PathVariable Long contentId,
+            @Valid @RequestBody ReorderContentContributorsRequest request) {
+        return contributorManagementService.reorderContentContributors(request.toCommand(contentId)).stream()
+                .map(AdminContentContributorResponse::from)
+                .toList();
+    }
+
     @DeleteMapping("/contents/{contentId}/contributors")
     @Operation(
             summary = "Unassign a contributor from content",
@@ -258,8 +276,7 @@ record AssignContentContributorRequest(
         ContributorRole role,
         String languageCode,
         String creditName,
-        @Min(value = 0, message = "sortOrder must not be negative")
-        int sortOrder) {
+        Integer sortOrder) {
 
     AssignContentContributorCommand toCommand(Long contentId) {
         return new AssignContentContributorCommand(
@@ -269,5 +286,18 @@ record AssignContentContributorRequest(
                 ContributorAdminController.resolveOptionalLanguageCode(languageCode),
                 creditName,
                 sortOrder);
+    }
+}
+
+record ReorderContentContributorsRequest(
+        @NotNull(message = "role is required") ContributorRole role,
+        String languageCode,
+        @NotNull(message = "assignmentIds is required")
+        @jakarta.validation.constraints.NotEmpty(message = "assignmentIds must not be empty")
+        List<@NotNull(message = "assignmentId must not be null") @Positive(message = "assignmentId must be positive") Long> assignmentIds) {
+
+    ReorderContentContributorsCommand toCommand(Long contentId) {
+        return new ReorderContentContributorsCommand(
+                contentId, role, ContributorAdminController.resolveOptionalLanguageCode(languageCode), assignmentIds);
     }
 }

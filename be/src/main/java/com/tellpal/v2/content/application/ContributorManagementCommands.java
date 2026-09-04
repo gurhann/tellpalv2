@@ -59,21 +59,35 @@ public final class ContributorManagementCommands {
             ContributorRole role,
             LanguageCode languageCode,
             String creditName,
-            int sortOrder) {
+            Integer ignoredSortOrder) {
 
         public AssignContentContributorCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
             role = requireRole(role);
-            if (sortOrder < 0) {
-                throw new IllegalArgumentException("Contributor sort order must not be negative");
-            }
             if (creditName != null) {
                 creditName = creditName.trim();
                 if (creditName.isEmpty()) {
                     creditName = null;
                 }
             }
+        }
+    }
+
+    /** Command for replacing the complete order of one contributor role/language group. */
+    public record ReorderContentContributorsCommand(
+            Long contentId,
+            ContributorRole role,
+            LanguageCode languageCode,
+            List<Long> assignmentIds) {
+
+        public ReorderContentContributorsCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            role = requireRole(role);
+            if (assignmentIds == null || assignmentIds.stream().anyMatch(id -> id == null || id <= 0)) {
+                throw new IllegalArgumentException("Contributor assignment IDs must be positive");
+            }
+            assignmentIds = List.copyOf(assignmentIds);
         }
     }
 
