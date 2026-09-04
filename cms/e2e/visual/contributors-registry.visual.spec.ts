@@ -48,7 +48,10 @@ for (const viewport of visualViewports) {
       }),
     );
     await page.goto("/contributors");
-    await page.getByRole("heading", { name: /^contributors$/i }).waitFor();
+    await page
+      .getByRole("main")
+      .getByRole("heading", { name: /^contributors$/i })
+      .waitFor();
     await installVisualStyles(page);
     await expect(page).toHaveScreenshot(
       `contributors-registry-${viewport.name}.png`,
