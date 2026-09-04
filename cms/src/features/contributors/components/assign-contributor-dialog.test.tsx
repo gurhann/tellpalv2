@@ -237,6 +237,15 @@ describe("AssignContributorDialog", () => {
     );
   });
 
+  it("uses the active content language for narrator assignments", () => {
+    renderDialog({ role: "NARRATOR", initialLanguageCode: "tr" });
+    fireEvent.click(screen.getByRole("option", { name: /Annie Case/ }));
+
+    expect(screen.getByRole("combobox", { name: /scope/i })).toHaveTextContent(
+      "Turkish",
+    );
+  });
+
   it("still blocks duplicate role and language assignments", async () => {
     const assignMutation = makeMutation();
     contributorActionMocks.useContributorActions.mockReturnValue({

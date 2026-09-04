@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -18,6 +18,9 @@ import { ContentContributorPanel } from "./content-contributor-panel";
 const contributorHookMocks = vi.hoisted(() => ({
   useContentContributorAssignments: vi.fn(),
 }));
+const contributorActionMocks = vi.hoisted(() => ({
+  useContributorActions: vi.fn(),
+}));
 
 vi.mock(
   "@/features/contributors/queries/use-content-contributor-assignments",
@@ -26,6 +29,9 @@ vi.mock(
       contributorHookMocks.useContentContributorAssignments,
   }),
 );
+vi.mock("@/features/contributors/mutations/use-contributor-actions", () => ({
+  useContributorActions: contributorActionMocks.useContributorActions,
+}));
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -46,6 +52,14 @@ function createWrapper() {
 }
 
 describe("ContentContributorPanel", () => {
+  beforeEach(() => {
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      reorderContributors: { mutateAsync: vi.fn().mockResolvedValue([]) },
+      unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+  });
+
   it("renders contributor assignments loaded from the backend query", () => {
     contributorHookMocks.useContentContributorAssignments.mockReturnValue({
       assignments: [
@@ -84,13 +98,98 @@ describe("ContentContributorPanel", () => {
       wrapper: createWrapper(),
     });
 
-    expect(
-      screen.getByRole("button", { name: /assign contributor/i }),
-    ).toBeEnabled();
-    expect(
-      screen.getByText(
-        /global or localized author, illustrator, narrator, or musician credits/i,
+    expect(screen.getByRole("heading", { name: "Author" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Illustrator" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Narrator" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Musician" })).toBeVisible();
+    expect(screen.getAllByRole("button", { name: /add$/i })).toHaveLength(4);
+  });
+
+  it("groups assignments by role and reorders only within the matching scope", async () => {
+    const reorder = vi.fn().mockResolvedValue([
+      { ...contentContributorViewModels[1], sortOrder: 0 },
+      { ...contentContributorViewModels[0], sortOrder: 1 },
+    ]);
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      reorderContributors: { mutateAsync: reorder },
+      unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    const groupedAssignments = [
+      contentContributorViewModels[0]!,
+      {
+        ...contentContributorViewModels[0]!,
+        assignmentId: 999,
+        contributorId: 99,
+        displayName: "Second Author",
+        effectiveCreditName: "Second Author",
+      },
+      ...contentContributorViewModels.slice(1),
+    ];
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: groupedAssignments,
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+
+    expect(screen.getByRole("heading", { name: "Author" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Narrator" })).toBeVisible();
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /move assignment down/i })[0]!,
+    );
+
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith(
+        expect.objectContaining({
+          role: "AUTHOR",
+          languageCode: "en",
+          assignmentIds: [999, 101],
+        }),
       ),
-    ).toBeVisible();
+    );
+  });
+
+  it("restores the previous order and reports failed reorder", async () => {
+    const reorder = vi.fn().mockRejectedValue(new Error("network"));
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      reorderContributors: { mutateAsync: reorder, isPending: false },
+      unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      isPending: false,
+    });
+    const groupedAssignments = [
+      contentContributorViewModels[0]!,
+      {
+        ...contentContributorViewModels[0]!,
+        assignmentId: 999,
+        contributorId: 99,
+        displayName: "Second Author",
+        effectiveCreditName: "Second Author",
+      },
+    ];
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: groupedAssignments,
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /move assignment down/i })[0]!,
+    );
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /previous order was restored/i,
+    );
+    const authorSection = screen.getByRole("region", { name: "Author" });
+    const sectionText = authorSection.textContent ?? "";
+    expect(sectionText.indexOf("Annie Case")).toBeLessThan(
+      sectionText.indexOf("Second Author"),
+    );
   });
 });

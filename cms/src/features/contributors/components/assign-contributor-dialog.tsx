@@ -36,6 +36,7 @@ import {
 } from "@/features/contributors/schema/content-contributor-schema";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemMessage } from "@/lib/http/problem-details";
+import { resolveLanguageLabel } from "@/lib/languages";
 import { useI18n } from "@/i18n/locale-provider";
 
 type Props = {
@@ -44,6 +45,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   role?: ContributorRole;
+  initialLanguageCode?: string;
 };
 
 const GLOBAL_SCOPE_SELECT_VALUE = "__global__";
@@ -54,8 +56,9 @@ export function AssignContributorDialog({
   open,
   onOpenChange,
   role = "AUTHOR",
+  initialLanguageCode,
 }: Props) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const roleLabel = t(`contributors.role.${role.toLowerCase()}` as never);
   const [search, setSearch] = useState("");
   const [problemMessage, setProblemMessage] = useState<string | null>(null);
@@ -76,18 +79,24 @@ export function AssignContributorDialog({
     enabled: open,
   });
   const actions = useContributorActions();
-  const languageOptions = content.localizations.map((l) => ({
-    value: l.languageCode,
-    label: l.languageLabel,
-  }));
+  const languageOptions = useMemo(
+    () =>
+      content.localizations.map((l) => ({
+        value: l.languageCode,
+        label: resolveLanguageLabel(l.languageCode, locale),
+      })),
+    [content.localizations, locale],
+  );
   const initialValues = useMemo(
     () => ({
       ...getAssignContributorFormDefaults(),
       role,
       languageCode:
-        role === "NARRATOR" ? (languageOptions[0]?.value ?? null) : null,
+        role === "NARRATOR"
+          ? (initialLanguageCode ?? languageOptions[0]?.value ?? null)
+          : null,
     }),
-    [role, content.localizations],
+    [role, languageOptions, initialLanguageCode],
   );
   const form = useZodForm<ContentContributorFormValues>({
     schema: contentContributorFormSchema,

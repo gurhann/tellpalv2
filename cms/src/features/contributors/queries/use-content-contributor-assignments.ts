@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { contributorAdminApi } from "@/features/contributors/api/contributor-admin";
@@ -68,9 +69,14 @@ export function useContentContributorAssignments(contentId: number | null) {
           } satisfies ApiProblemDetail)
         : null;
 
+  const assignments = useMemo(
+    () => sortAssignments(query.data ?? []),
+    [query.data],
+  );
+
   return {
     ...query,
-    assignments: sortAssignments(query.data ?? []),
+    assignments,
     problem,
   };
 }

@@ -1,122 +1,240 @@
-import { CirclePlus, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { ArrowDown, ArrowUp, CirclePlus, ExternalLink } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-
-import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
 import { AssignContributorDialog } from "@/features/contributors/components/assign-contributor-dialog";
 import { UnassignContributorButton } from "@/features/contributors/components/unassign-contributor-button";
+import type { ContributorRole } from "@/features/contributors/api/contributor-admin";
+import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
+import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import { useContentContributorAssignments } from "@/features/contributors/queries/use-content-contributor-assignments";
+import { ApiClientError } from "@/lib/http/client";
+import { getProblemMessage } from "@/lib/http/problem-details";
+import { resolveLanguageLabel } from "@/lib/languages";
+import { useI18n } from "@/i18n/locale-provider";
 
-type ContentContributorPanelProps = {
-  content: ContentReadViewModel;
-};
+const ROLES: ContributorRole[] = [
+  "AUTHOR",
+  "ILLUSTRATOR",
+  "NARRATOR",
+  "MUSICIAN",
+];
+type Props = { content: ContentReadViewModel; activeLanguageCode?: string };
 
 export function ContentContributorPanel({
   content,
-}: ContentContributorPanelProps) {
-  const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
-  const assignmentQuery = useContentContributorAssignments(content.summary.id);
-  const assignments = assignmentQuery.assignments;
-  const assignmentCountLabel =
-    assignments.length === 1
-      ? "1 assignment"
-      : `${assignments.length} assignments`;
-
+  activeLanguageCode,
+}: Props) {
+  const { locale, t } = useI18n();
+  const query = useContentContributorAssignments(content.summary.id);
+  const actions = useContributorActions();
+  const [assignRole, setAssignRole] = useState<ContributorRole | null>(null);
+  const [optimisticAssignments, setOptimisticAssignments] = useState<
+    ContentContributorViewModel[] | null
+  >(null);
+  const [reorderError, setReorderError] = useState<string | null>(null);
+  const visible = optimisticAssignments ?? query.assignments;
+  const grouped = useMemo(() => {
+    const result = new Map<
+      ContributorRole,
+      Map<string, ContentContributorViewModel[]>
+    >();
+    ROLES.forEach((role) => result.set(role, new Map()));
+    visible.forEach((item) => {
+      const scopes = result.get(item.role)!;
+      const key = item.languageCode ?? "global";
+      scopes.set(key, [...(scopes.get(key) ?? []), item]);
+    });
+    return result;
+  }, [visible]);
+  async function move(
+    item: ContentContributorViewModel,
+    delta: -1 | 1,
+    group: ContentContributorViewModel[],
+  ) {
+    const index = group.indexOf(item);
+    const target = index + delta;
+    if (index < 0 || target < 0 || target >= group.length) return;
+    const nextGroup = [...group];
+    [nextGroup[index], nextGroup[target]] = [
+      nextGroup[target],
+      nextGroup[index],
+    ];
+    const previous = visible;
+    setReorderError(null);
+    setOptimisticAssignments(
+      visible.map((entry) => {
+        const i = group.indexOf(entry);
+        return i >= 0 ? nextGroup[i] : entry;
+      }),
+    );
+    try {
+      await actions.reorderContributors.mutateAsync({
+        contentId: content.summary.id,
+        role: item.role,
+        languageCode: item.languageCode,
+        assignmentIds: nextGroup.map((entry) => entry.assignmentId),
+      });
+      setOptimisticAssignments(null);
+    } catch (error) {
+      setOptimisticAssignments(previous);
+      setReorderError(
+        error instanceof ApiClientError
+          ? getProblemMessage(error.problem)
+          : t("contributors.panel.reorderError"),
+      );
+    }
+  }
   return (
-    <>
-      <div className="grid gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-muted/15 px-4 py-3">
-          <div>
-            <p className="text-sm font-medium text-foreground">
-              Contributor credits
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {assignments.length > 0
-                ? assignmentCountLabel
-                : "Add registry contributors to this content record."}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Button type="button" onClick={() => setIsAssignDialogOpen(true)}>
-              <CirclePlus className="size-4" />
-              Assign contributor
-            </Button>
-            <Button asChild type="button" variant="outline">
-              <Link to="/contributors">
-                <ExternalLink className="size-4" />
-                Open registry
-              </Link>
-            </Button>
-          </div>
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-muted/15 px-4 py-3">
+        <div>
+          <p className="text-sm font-medium">{t("contributors.panel.title")}</p>
+          <p className="text-sm text-muted-foreground">
+            {visible.length === 1
+              ? t("contributors.panel.summaryOne")
+              : t("contributors.panel.summary", { count: visible.length })}
+          </p>
         </div>
-
-        {assignmentQuery.problem ? (
-          <ProblemAlert problem={assignmentQuery.problem} />
-        ) : assignmentQuery.isLoading ? (
-          <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
-            Loading contributor assignments from the admin API...
-          </div>
-        ) : assignments.length === 0 ? (
-          <EmptyState
-            action={
-              <Button type="button" onClick={() => setIsAssignDialogOpen(true)}>
-                <CirclePlus className="size-4" />
-                Assign first contributor
-              </Button>
-            }
-            description="Use the assignment dialog to add global or localized author, illustrator, narrator, or musician credits."
-            title="No contributor assignments yet"
-          />
-        ) : (
-          <div className="grid gap-3">
-            {assignments.map((assignment) => (
-              <div
-                key={`${assignment.contributorId}-${assignment.role}-${assignment.languageCode ?? "global"}`}
-                className="rounded-2xl border border-border/70 bg-background px-4 py-4"
-              >
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-6 text-foreground">
-                      {assignment.effectiveCreditName}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {assignment.displayName}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-3 lg:items-end">
-                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      <span className="inline-flex items-center rounded-full border border-border/70 bg-muted/15 px-3 py-1">
-                        {assignment.roleLabel}
-                      </span>
-                      <span className="inline-flex items-center rounded-full border border-border/70 bg-muted/15 px-3 py-1">
-                        {assignment.languageLabel}
-                      </span>
-                      <span className="inline-flex items-center rounded-full border border-border/70 bg-muted/15 px-3 py-1">
-                        Sort {assignment.sortOrder}
-                      </span>
-                    </div>
-                    <div>
-                      <UnassignContributorButton assignment={assignment} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <Button asChild type="button" variant="outline">
+          <Link to="/contributors">
+            <ExternalLink className="size-4" />
+            {t("contributors.panel.openRegistry")}
+          </Link>
+        </Button>
       </div>
-
-      {isAssignDialogOpen ? (
+      {query.problem ? <ProblemAlert problem={query.problem} /> : null}
+      {reorderError ? (
+        <p
+          role="alert"
+          className="rounded-lg border border-destructive/40 px-3 py-2 text-sm text-destructive"
+        >
+          {reorderError}
+        </p>
+      ) : null}
+      {query.isLoading ? (
+        <div className="rounded-2xl border px-4 py-8 text-sm text-muted-foreground">
+          {t("contributors.panel.loading")}
+        </div>
+      ) : query.problem ? null : (
+        <div className="grid gap-4">
+          {ROLES.map((role) => {
+            const scopes = grouped.get(role)!;
+            return (
+              <section
+                key={role}
+                aria-labelledby={`contributors-role-${role}`}
+                className="rounded-2xl border border-border/70 bg-background p-4"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <h3
+                    id={`contributors-role-${role}`}
+                    className="font-semibold"
+                  >
+                    {t(`contributors.role.${role.toLowerCase()}` as never)}
+                  </h3>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setAssignRole(role)}
+                  >
+                    <CirclePlus className="size-4" />
+                    {t("contributors.panel.addSuffix")}
+                  </Button>
+                </div>
+                {scopes.size === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {t("contributors.panel.noAssignments")}
+                  </p>
+                ) : (
+                  [...scopes.values()].map((entries) => (
+                    <div
+                      key={entries[0]?.languageCode ?? "global"}
+                      className="mb-3 last:mb-0"
+                    >
+                      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {entries[0]?.languageCode
+                          ? resolveLanguageLabel(
+                              entries[0].languageCode,
+                              locale,
+                            )
+                          : t("contributors.picker.allLanguages")}
+                      </p>
+                      <div className="grid gap-2">
+                        {entries.map((assignment, index) => (
+                          <div
+                            key={assignment.assignmentId}
+                            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-3"
+                          >
+                            <div>
+                              <p className="font-medium">
+                                {assignment.effectiveCreditName}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {assignment.displayName}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                aria-label={t("contributors.panel.moveUp")}
+                                disabled={
+                                  actions.reorderContributors.isPending ||
+                                  index === 0
+                                }
+                                onClick={() =>
+                                  void move(assignment, -1, entries)
+                                }
+                              >
+                                <ArrowUp className="size-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                aria-label={t("contributors.panel.moveDown")}
+                                disabled={
+                                  actions.reorderContributors.isPending ||
+                                  index === entries.length - 1
+                                }
+                                onClick={() =>
+                                  void move(assignment, 1, entries)
+                                }
+                              >
+                                <ArrowDown className="size-4" />
+                              </Button>
+                              <UnassignContributorButton
+                                assignment={assignment}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </section>
+            );
+          })}
+        </div>
+      )}
+      {assignRole ? (
         <AssignContributorDialog
           content={content}
-          existingAssignments={assignments}
-          open={isAssignDialogOpen}
-          onOpenChange={setIsAssignDialogOpen}
+          existingAssignments={visible}
+          role={assignRole}
+          initialLanguageCode={activeLanguageCode}
+          open
+          onOpenChange={(open) => {
+            if (!open) setAssignRole(null);
+          }}
         />
       ) : null}
-    </>
+    </div>
   );
 }

@@ -395,6 +395,18 @@ export function ContentDetailRoute() {
           />
         </FormSection>
 
+        <FormSection
+          description={copy.contributorsDescription}
+          title={copy.contributorsTitle}
+        >
+          <ContentContributorPanel
+            content={content}
+            activeLanguageCode={
+              storyPageLanguageCode ?? requestedLanguageCode ?? undefined
+            }
+          />
+        </FormSection>
+
         {content.summary.supportsStoryPages ? (
           <FormSection
             description={copy.sourceCoverDescription}
@@ -435,13 +447,6 @@ export function ContentDetailRoute() {
             initialValues={mapContentReadToFormValues(content)}
             mode="update"
           />
-        </FormSection>
-
-        <FormSection
-          description={copy.contributorsDescription}
-          title={copy.contributorsTitle}
-        >
-          <ContentContributorPanel content={content} />
         </FormSection>
       </>
     );

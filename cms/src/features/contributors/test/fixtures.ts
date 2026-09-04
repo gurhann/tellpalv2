@@ -32,6 +32,7 @@ export const contributorViewModels: ContributorViewModel[] =
 
 export const contentContributorResponses: AdminContentContributorResponse[] = [
   {
+    assignmentId: 101,
     contentId: 1,
     contributorId: 11,
     contributorDisplayName: "Annie Case",
@@ -41,6 +42,7 @@ export const contentContributorResponses: AdminContentContributorResponse[] = [
     sortOrder: 0,
   },
   {
+    assignmentId: 102,
     contentId: 1,
     contributorId: 12,
     contributorDisplayName: "Milo Rivers",
@@ -56,6 +58,7 @@ export const contentContributorViewModels: ContentContributorViewModel[] =
 
 export const globalContentContributorResponse: AdminContentContributorResponse =
   {
+    assignmentId: 103,
     contentId: 1,
     contributorId: 13,
     contributorDisplayName: "Sena Yildiz",

@@ -340,13 +340,18 @@ describe("Contributor integration", () => {
           }
 
           const assignment: AdminContentContributorResponse = {
+            assignmentId: assignments.length + 100,
             contentId: 1,
             contributorId: contributor.contributorId,
             contributorDisplayName: contributor.displayName,
             role: body.role,
             languageCode: body.languageCode ?? null,
             creditName: body.creditName ?? null,
-            sortOrder: body.sortOrder,
+            sortOrder: assignments.filter(
+              (candidate) =>
+                candidate.role === body.role &&
+                candidate.languageCode === (body.languageCode ?? null),
+            ).length,
           };
           assignments.push(assignment);
 
@@ -387,7 +392,10 @@ describe("Contributor integration", () => {
     expect(await screen.findByText("M. Rivers")).toBeVisible();
 
     fireEvent.click(
-      screen.getByRole("button", { name: /^assign contributor$/i }),
+      within(screen.getByRole("region", { name: "Author" })).getByRole(
+        "button",
+        { name: /^add$/i },
+      ),
     );
 
     const dialog = await screen.findByRole("dialog");

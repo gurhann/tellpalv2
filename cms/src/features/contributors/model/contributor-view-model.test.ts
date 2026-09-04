@@ -23,6 +23,7 @@ describe("contributor view model mappers", () => {
 
   it("maps content contributor relations into display-friendly data", () => {
     const dto: AdminContentContributorResponse = {
+      assignmentId: 105,
       contentId: 14,
       contributorId: 22,
       contributorDisplayName: "Annie Case",
@@ -33,6 +34,7 @@ describe("contributor view model mappers", () => {
     };
 
     expect(mapAdminContentContributor(dto)).toEqual({
+      assignmentId: 105,
       contentId: 14,
       contributorId: 22,
       displayName: "Annie Case",
@@ -49,6 +51,7 @@ describe("contributor view model mappers", () => {
 
   it("maps null languageCode as a global contributor scope", () => {
     const dto: AdminContentContributorResponse = {
+      assignmentId: 106,
       contentId: 14,
       contributorId: 23,
       contributorDisplayName: "Sena Yildiz",
@@ -59,6 +62,7 @@ describe("contributor view model mappers", () => {
     };
 
     expect(mapAdminContentContributor(dto)).toEqual({
+      assignmentId: 106,
       contentId: 14,
       contributorId: 23,
       displayName: "Sena Yildiz",

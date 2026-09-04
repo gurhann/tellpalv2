@@ -49,6 +49,12 @@ export type UnassignContentContributorInput = {
   languageCode?: string | null;
 };
 
+export type ReorderContentContributorsInput = {
+  role: ContributorRole;
+  languageCode?: string | null;
+  assignmentIds: number[];
+};
+
 export const adminContributorResponseSchema = z.object({
   contributorId: z.number().int().positive(),
   displayName: z.string().min(1),
@@ -79,6 +85,7 @@ export type AdminContributorRegistryPage = z.infer<
 >;
 
 export const adminContentContributorResponseSchema = z.object({
+  assignmentId: z.number().int().positive(),
   contentId: z.number().int().positive(),
   contributorId: z.number().int().positive(),
   contributorDisplayName: z.string().min(1),
@@ -158,6 +165,18 @@ export const contributorAdminApi = {
       {
         body: input,
         responseSchema: adminContentContributorResponseSchema,
+      },
+    );
+  },
+  reorderContentContributors(
+    contentId: number,
+    input: ReorderContentContributorsInput,
+  ) {
+    return apiClient.put<AdminContentContributorResponse[]>(
+      `/api/admin/contents/${contentId}/contributors/reorder`,
+      {
+        body: input,
+        responseSchema: adminContentContributorListResponseSchema,
       },
     );
   },

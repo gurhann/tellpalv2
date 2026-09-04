@@ -17,6 +17,7 @@ type ContributorRecord = {
 };
 
 type ContentContributorRecord = {
+  assignmentId: number;
   contentId: number;
   contributorId: number;
   contributorDisplayName: string;
@@ -80,6 +81,7 @@ test("contributor registry and assignment flows support delete and unassign", as
   ];
   const assignments: ContentContributorRecord[] = [
     {
+      assignmentId: 101,
       contentId: 1,
       contributorId: 11,
       contributorDisplayName: "Annie Case",
@@ -89,6 +91,7 @@ test("contributor registry and assignment flows support delete and unassign", as
       sortOrder: 0,
     },
     {
+      assignmentId: 102,
       contentId: 1,
       contributorId: 12,
       contributorDisplayName: "Milo Rivers",
@@ -326,6 +329,7 @@ test("contributor registry and assignment flows support delete and unassign", as
       }
 
       const assignment: ContentContributorRecord = {
+        assignmentId: assignments.length + 100,
         contentId: 1,
         contributorId: contributor.contributorId,
         contributorDisplayName: contributor.displayName,

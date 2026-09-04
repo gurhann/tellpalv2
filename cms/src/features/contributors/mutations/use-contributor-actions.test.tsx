@@ -9,6 +9,7 @@ import type {
   AdminContributorResponse,
 } from "@/features/contributors/api/contributor-admin";
 import {
+  contentContributorResponses,
   contentContributorViewModels,
   contributorViewModels,
 } from "@/features/contributors/test/fixtures";
@@ -22,6 +23,7 @@ const contributorAdminApiMock = vi.hoisted(() => ({
   deleteContributor: vi.fn(),
   assignContributor: vi.fn(),
   unassignContributor: vi.fn(),
+  reorderContentContributors: vi.fn(),
 }));
 
 vi.mock("@/features/contributors/api/contributor-admin", async () => {
@@ -38,6 +40,8 @@ vi.mock("@/features/contributors/api/contributor-admin", async () => {
       deleteContributor: contributorAdminApiMock.deleteContributor,
       assignContributor: contributorAdminApiMock.assignContributor,
       unassignContributor: contributorAdminApiMock.unassignContributor,
+      reorderContentContributors:
+        contributorAdminApiMock.reorderContentContributors,
     },
   };
 });
@@ -56,6 +60,7 @@ beforeEach(() => {
   contributorAdminApiMock.deleteContributor.mockReset();
   contributorAdminApiMock.assignContributor.mockReset();
   contributorAdminApiMock.unassignContributor.mockReset();
+  contributorAdminApiMock.reorderContentContributors.mockReset();
 });
 
 describe("useContributorActions", () => {
@@ -251,6 +256,7 @@ describe("useContributorActions", () => {
       },
     });
     const assignment: AdminContentContributorResponse = {
+      assignmentId: 104,
       contentId: 1,
       contributorId: 12,
       contributorDisplayName: "Milo Rivers",
@@ -349,5 +355,39 @@ describe("useContributorActions", () => {
       queryKey: queryKeys.contributors.assignments(1),
     });
     expect(onUnassignSuccess).toHaveBeenCalledWith(1);
+  });
+
+  it("reorders a role and language scope and invalidates assignments", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+    contributorAdminApiMock.reorderContentContributors.mockResolvedValue([
+      contentContributorResponses[0],
+    ]);
+
+    const { result } = renderHook(() => useContributorActions(), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await act(async () => {
+      await result.current.reorderContributors.mutateAsync({
+        contentId: 1,
+        role: "AUTHOR",
+        languageCode: "en",
+        assignmentIds: [102, 101],
+      });
+    });
+
+    expect(
+      contributorAdminApiMock.reorderContentContributors,
+    ).toHaveBeenCalledWith(1, {
+      role: "AUTHOR",
+      languageCode: "en",
+      assignmentIds: [102, 101],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.assignments(1),
+    });
   });
 });

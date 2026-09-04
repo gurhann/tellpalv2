@@ -49,6 +49,7 @@ const contentRecord = {
 
 const contributorAssignments = [
   {
+    assignmentId: 101,
     contentId: 1,
     contributorId: 11,
     contributorDisplayName: "Annie Case",
@@ -58,6 +59,7 @@ const contributorAssignments = [
     sortOrder: 0,
   },
   {
+    assignmentId: 102,
     contentId: 1,
     contributorId: 12,
     contributorDisplayName: "Milo Rivers",

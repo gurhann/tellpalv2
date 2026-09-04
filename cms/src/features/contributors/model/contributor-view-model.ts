@@ -63,6 +63,7 @@ export type ContributorViewModel = {
 };
 
 export type ContentContributorViewModel = {
+  assignmentId: number;
   contentId: number;
   contributorId: number;
   displayName: string;
@@ -129,6 +130,7 @@ export function mapAdminContentContributor(
   const language = mapContributorLanguageScope(contributor.languageCode);
 
   return {
+    assignmentId: contributor.assignmentId,
     contentId: contributor.contentId,
     contributorId: contributor.contributorId,
     displayName: contributor.contributorDisplayName,

@@ -17,6 +17,8 @@ import type { ContentContributorViewModel } from "@/features/contributors/model/
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import { ApiClientError } from "@/lib/http/client";
 import type { ApiProblemDetail } from "@/types/api";
+import { useI18n } from "@/i18n/locale-provider";
+import { resolveLanguageLabel } from "@/lib/languages";
 
 type UnassignContributorButtonProps = {
   assignment: ContentContributorViewModel;
@@ -28,6 +30,7 @@ export function UnassignContributorButton({
   const [open, setOpen] = useState(false);
   const [problem, setProblem] = useState<ApiProblemDetail | null>(null);
   const contributorActions = useContributorActions();
+  const { locale, t } = useI18n();
 
   async function handleUnassign() {
     setProblem(null);
@@ -43,8 +46,8 @@ export function UnassignContributorButton({
           },
         }),
         {
-          loading: "Removing contributor assignment...",
-          success: "Contributor assignment removed.",
+          loading: t("contributors.unassign.loading"),
+          success: t("contributors.unassign.success"),
         },
       );
 
@@ -62,7 +65,7 @@ export function UnassignContributorButton({
         detail:
           error instanceof Error
             ? error.message
-            : "The contributor assignment could not be removed.",
+            : t("contributors.unassign.error"),
       });
     }
   }
@@ -70,13 +73,15 @@ export function UnassignContributorButton({
   return (
     <>
       <Button
-        aria-label={`Unassign ${assignment.effectiveCreditName}`}
+        aria-label={t("contributors.unassign.aria", {
+          name: assignment.effectiveCreditName,
+        })}
         type="button"
         variant="ghost"
         size="sm"
         onClick={() => setOpen(true)}
       >
-        Unassign
+        {t("contributors.unassign.action")}
       </Button>
 
       <Dialog
@@ -90,10 +95,9 @@ export function UnassignContributorButton({
       >
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Unassign contributor</DialogTitle>
+            <DialogTitle>{t("contributors.unassign.title")}</DialogTitle>
             <DialogDescription>
-              This removes only the selected role and language scope from the
-              current content item.
+              {t("contributors.unassign.description")}
             </DialogDescription>
           </DialogHeader>
 
@@ -108,7 +112,15 @@ export function UnassignContributorButton({
                 {assignment.displayName}
               </p>
               <p className="mt-3 text-muted-foreground">
-                {`${assignment.roleLabel} / ${assignment.languageLabel} / Sort ${assignment.sortOrder}`}
+                {t("contributors.unassign.scope", {
+                  role: t(
+                    `contributors.role.${assignment.role.toLowerCase()}` as never,
+                  ),
+                  language: assignment.languageCode
+                    ? resolveLanguageLabel(assignment.languageCode, locale)
+                    : t("contributors.picker.allLanguages"),
+                  sort: assignment.sortOrder,
+                })}
               </p>
             </div>
           </DialogBody>
@@ -120,16 +132,16 @@ export function UnassignContributorButton({
               onClick={() => setOpen(false)}
               disabled={contributorActions.unassignContributor.isPending}
             >
-              Cancel
+              {t("contributors.unassign.cancel")}
             </Button>
             <SubmitButton
               type="button"
               variant="destructive"
               isPending={contributorActions.unassignContributor.isPending}
-              pendingLabel="Removing..."
+              pendingLabel={t("contributors.unassign.pending")}
               onClick={() => void handleUnassign()}
             >
-              Unassign contributor
+              {t("contributors.unassign.confirm")}
             </SubmitButton>
           </DialogFooter>
         </DialogContent>

@@ -177,17 +177,48 @@ export function useContributorActions({
     },
   });
 
+  const reorderContributors = useMutation({
+    mutationFn: async ({
+      contentId,
+      role,
+      languageCode,
+      assignmentIds,
+    }: {
+      contentId: number;
+      role: Parameters<
+        typeof contributorAdminApi.reorderContentContributors
+      >[1]["role"];
+      languageCode?: string | null;
+      assignmentIds: number[];
+    }) =>
+      contributorAdminApi.reorderContentContributors(contentId, {
+        role,
+        languageCode,
+        assignmentIds,
+      }),
+    onSuccess: async (assignments) => {
+      const contentId = assignments[0]?.contentId;
+      if (contentId) {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.contributors.assignments(contentId),
+        });
+      }
+    },
+  });
+
   return {
     createContributor,
     renameContributor,
     deleteContributor,
     assignContributor,
     unassignContributor,
+    reorderContributors,
     isPending:
       createContributor.isPending ||
       renameContributor.isPending ||
       deleteContributor.isPending ||
       assignContributor.isPending ||
-      unassignContributor.isPending,
+      unassignContributor.isPending ||
+      reorderContributors.isPending,
   };
 }
