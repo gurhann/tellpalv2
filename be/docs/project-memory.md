@@ -44,6 +44,22 @@ Read order:
 - REST controllers use OpenAPI annotations for summaries, auth requirements, and core `ProblemDetail` responses.
 - API docs are disabled by default and enabled only in local or explicitly configured environments.
 
+## Agent Model Selection Defaults
+
+- Use `gpt-5.6-luna` as the default model for BMad planning, implementation, testing, and review
+  workflows in this repository.
+- Before starting a BMad implementation, state the selected model and reassess the choice when the
+  work's risk or scope changes materially.
+- Alert the user and obtain explicit confirmation before switching to `gpt-5.6-terra` for a
+  production-impacting migration, proven concurrency/transactional defect, cross-module
+  architectural change, broad refactor, or a persistent test/debugging failure that Luna cannot
+  resolve safely.
+- Alert the user and obtain explicit confirmation before switching to `gpt-5.6-sol` for a
+  security-sensitive or irreversible production decision, a high-stakes recovery/data-integrity
+  incident, or a complex architecture decision that remains unresolved after Terra-level work.
+- Model escalation does not weaken the BMad workflow: the same approval, verification, review, and
+  local-commit gates remain in force.
+
 ## Module Interaction Defaults
 
 - Cross-module interaction happens through `api` packages, events, or identifiers.
