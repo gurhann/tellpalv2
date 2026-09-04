@@ -48,6 +48,18 @@ export type ContentContributorFormValues = z.infer<
   typeof contentContributorFormSchema
 >;
 
+export const editContentContributorFormSchema = z.object({
+  role: contributorRoleSchema,
+  languageCode: z.string().nullable(),
+  creditName: z
+    .string()
+    .max(120, "Credit name must be 120 characters or fewer."),
+});
+
+export type EditContentContributorFormValues = z.infer<
+  typeof editContentContributorFormSchema
+>;
+
 export function getAssignContributorFormDefaults(): ContentContributorFormValues {
   return {
     contributorId: 0,

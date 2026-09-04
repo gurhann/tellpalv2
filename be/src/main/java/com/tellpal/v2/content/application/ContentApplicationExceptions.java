@@ -95,6 +95,13 @@ public final class ContentApplicationExceptions {
         }
     }
 
+    public static final class ContentContributorAssignmentNotFoundException extends RuntimeException {
+
+        public ContentContributorAssignmentNotFoundException(Long contentId, Long assignmentId) {
+            super("Content contributor assignment not found for content " + contentId + " and assignment " + assignmentId);
+        }
+    }
+
     public static final class ContributorInUseException extends RuntimeException {
 
         public ContributorInUseException(Long contributorId) {

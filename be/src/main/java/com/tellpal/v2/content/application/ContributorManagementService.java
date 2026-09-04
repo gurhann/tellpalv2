@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorAssignmentNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorDisplayNameException;
@@ -24,6 +25,7 @@ import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteCo
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.ReorderContentContributorsCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.UpdateContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
 import com.tellpal.v2.content.application.ContributorRegistryReadResults.Item;
@@ -182,6 +184,24 @@ public class ContributorManagementService {
                                 command.contributorId(), command.role(), command.languageCode()))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("Saved contributor assignment was not found")));
+    }
+
+    /** Updates one assignment while preserving the contributor identity and assignment ID. */
+    @Transactional
+    public ContentContributorRecord updateContentContributor(UpdateContentContributorCommand command) {
+        Content content = loadContentForContributorWrite(command.contentId());
+        if (content.getContributors().stream()
+                .noneMatch(candidate -> java.util.Objects.equals(candidate.getId(), command.assignmentId()))) {
+            throw new ContentContributorAssignmentNotFoundException(
+                    command.contentId(), command.assignmentId());
+        }
+        ContentContributor assignment = content.updateContributor(
+                command.assignmentId(),
+                command.role(),
+                command.languageCode(),
+                command.creditName());
+        contentRepository.saveAndFlush(content);
+        return ContentManagementMapper.toContentContributorRecord(command.contentId(), assignment);
     }
 
     /** Replaces the order of one role/language group while preserving database uniqueness during swaps. */

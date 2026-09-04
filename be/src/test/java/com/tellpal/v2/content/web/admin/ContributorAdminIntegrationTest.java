@@ -18,11 +18,15 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContributorManagementCommands.AssignContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.ContributorRole;
+import com.tellpal.v2.content.domain.LocalizationStatus;
+import com.tellpal.v2.content.domain.ProcessingStatus;
+import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.support.AdminApiIntegrationTestSupport;
 
 @SpringBootTest
@@ -678,6 +682,110 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void updateContentContributorPreservesAssignmentIdAndAppendsToTheTargetRoleGroup() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "edit-contributor-story", 4, true));
+        Long firstContributor = createContributor(accessToken, "Edit First", "AUTHOR", "MUSICIAN");
+        Long secondContributor = createContributor(accessToken, "Edit Second", "MUSICIAN");
+
+        MvcResult firstAssignmentResult = mockMvc.perform(
+                post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"AUTHOR\"}"
+                                .formatted(firstContributor)))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long assignmentId = readPayload(firstAssignmentResult).get("assignmentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"MUSICIAN\"}"
+                                .formatted(secondContributor)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/{assignmentId}",
+                        content.contentId(), assignmentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"role\":\"MUSICIAN\",\"creditName\":\"Edited First\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignmentId").value(assignmentId))
+                .andExpect(jsonPath("$.contributorId").value(firstContributor))
+                .andExpect(jsonPath("$.role").value("MUSICIAN"))
+                .andExpect(jsonPath("$.creditName").value("Edited First"))
+                .andExpect(jsonPath("$.sortOrder").value(1));
+
+        assertThat(jdbcTemplate.queryForList(
+                "select contributor_id from content_contributors where content_id = ? and role = 'MUSICIAN' order by sort_order",
+                Long.class, content.contentId()))
+                .containsExactly(secondContributor, firstContributor);
+    }
+
+    @Test
+    void updateContentContributorPersistsExistingLocalizedScopeAndRejectsUnknownLanguage() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "edit-localized-contributor", 4, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null));
+        Long contributorId = createContributor(accessToken, "Localized Author", "AUTHOR");
+
+        MvcResult assignmentResult = mockMvc.perform(
+                post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"contributorId\":%d,\"role\":\"AUTHOR\"}"
+                                .formatted(contributorId)))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long assignmentId = readPayload(assignmentResult).get("assignmentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/{assignmentId}",
+                        content.contentId(), assignmentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"languageCode\":\"tr\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignmentId").value(assignmentId))
+                .andExpect(jsonPath("$.languageCode").value("tr"));
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select language_code from content_contributors where id = ?",
+                String.class, assignmentId)).isEqualTo("tr");
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/{assignmentId}",
+                        content.contentId(), assignmentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\",\"languageCode\":\"de\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select language_code from content_contributors where id = ?",
+                String.class, assignmentId)).isEqualTo("tr");
+    }
+
+    @Test
+    void updateMissingContentContributorAssignmentReturnsNotFoundProblemDetail() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "missing-edit-contributor", 4, true));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/contributors/{assignmentId}",
+                        content.contentId(), 999L)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_assignment_not_found"));
     }
 
     @Test

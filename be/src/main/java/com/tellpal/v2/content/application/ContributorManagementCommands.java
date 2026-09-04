@@ -74,6 +74,27 @@ public final class ContributorManagementCommands {
         }
     }
 
+    /** Command for editing one existing contributor assignment without changing its identity. */
+    public record UpdateContentContributorCommand(
+            Long contentId,
+            Long assignmentId,
+            ContributorRole role,
+            LanguageCode languageCode,
+            String creditName) {
+
+        public UpdateContentContributorCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            assignmentId = requirePositiveId(assignmentId, "Contributor assignment ID must be positive");
+            role = requireRole(role);
+            if (creditName != null) {
+                creditName = creditName.trim();
+                if (creditName.isEmpty()) {
+                    creditName = null;
+                }
+            }
+        }
+    }
+
     /** Command for replacing the complete order of one contributor role/language group. */
     public record ReorderContentContributorsCommand(
             Long contentId,

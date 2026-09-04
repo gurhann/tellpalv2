@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Objects;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -352,6 +353,46 @@ public class Content extends BaseJpaEntity {
         renumberContributorGroup(role, languageCode);
     }
 
+    /**
+     * Edits one existing assignment while preserving its contributor identity.
+     * Role or language changes move the assignment to the end of the target group.
+     */
+    public ContentContributor updateContributor(
+            Long assignmentId,
+            ContributorRole newRole,
+            LanguageCode newLanguageCode,
+            String creditName) {
+        requirePositiveAssignmentId(assignmentId);
+        requireRole(newRole);
+        ContentContributor assignment = contributors.stream()
+                .filter(candidate -> Objects.equals(candidate.getId(), assignmentId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Contributor assignment not found: " + assignmentId));
+        Contributor contributor = assignment.getContributor();
+        Long contributorId = requireContributorId(contributor);
+        if (!contributor.getRoles().contains(newRole)) {
+            throw new IllegalArgumentException("Contributor does not have the requested role");
+        }
+        if (newLanguageCode != null && findLocalization(newLanguageCode).isEmpty()) {
+            throw new IllegalArgumentException("Contributor assignment language must exist on content");
+        }
+        if (contributors.stream().anyMatch(candidate ->
+                !Objects.equals(candidate.getId(), assignmentId)
+                        && candidate.matchesAssignment(contributorId, newRole, newLanguageCode))) {
+            throw new IllegalArgumentException("Contributor assignment already exists for role and language");
+        }
+
+        ContributorRole oldRole = assignment.getRole();
+        LanguageCode oldLanguageCode = assignment.getLanguageCode();
+        boolean groupChanged = !assignment.matchesRoleAndLanguage(newRole, newLanguageCode);
+        assignment.updateDetails(newRole, newLanguageCode, creditName);
+        if (groupChanged) {
+            assignment.updateSortOrder(nextContributorSortOrder(newRole, newLanguageCode));
+            renumberContributorGroup(oldRole, oldLanguageCode);
+        }
+        return assignment;
+    }
+
     private ContentLocalization createLocalization(
             LanguageCode languageCode,
             String title,
@@ -436,6 +477,12 @@ public class Content extends BaseJpaEntity {
                 .toList();
         for (int index = 0; index < group.size(); index += 1) {
             group.get(index).updateSortOrder(index);
+        }
+    }
+
+    private static void requirePositiveAssignmentId(Long assignmentId) {
+        if (assignmentId == null || assignmentId <= 0) {
+            throw new IllegalArgumentException("Contributor assignment ID must be positive");
         }
     }
 

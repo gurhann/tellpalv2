@@ -1,10 +1,17 @@
-import { ArrowDown, ArrowUp, CirclePlus, ExternalLink } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  CirclePlus,
+  ExternalLink,
+  Pencil,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { Button } from "@/components/ui/button";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
 import { AssignContributorDialog } from "@/features/contributors/components/assign-contributor-dialog";
+import { EditContentContributorDialog } from "@/features/contributors/components/edit-content-contributor-dialog";
 import { UnassignContributorButton } from "@/features/contributors/components/unassign-contributor-button";
 import type { ContributorRole } from "@/features/contributors/api/contributor-admin";
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
@@ -31,6 +38,8 @@ export function ContentContributorPanel({
   const query = useContentContributorAssignments(content.summary.id);
   const actions = useContributorActions();
   const [assignRole, setAssignRole] = useState<ContributorRole | null>(null);
+  const [editingAssignment, setEditingAssignment] =
+    useState<ContentContributorViewModel | null>(null);
   const [optimisticAssignments, setOptimisticAssignments] = useState<
     ContentContributorViewModel[] | null
   >(null);
@@ -182,6 +191,15 @@ export function ContentContributorPanel({
                                 type="button"
                                 size="icon"
                                 variant="ghost"
+                                aria-label={t("contributors.panel.edit")}
+                                onClick={() => setEditingAssignment(assignment)}
+                              >
+                                <Pencil className="size-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
                                 aria-label={t("contributors.panel.moveUp")}
                                 disabled={
                                   actions.reorderContributors.isPending ||
@@ -232,6 +250,17 @@ export function ContentContributorPanel({
           open
           onOpenChange={(open) => {
             if (!open) setAssignRole(null);
+          }}
+        />
+      ) : null}
+      {editingAssignment ? (
+        <EditContentContributorDialog
+          key={editingAssignment.assignmentId}
+          assignment={editingAssignment}
+          content={content}
+          open
+          onOpenChange={(open) => {
+            if (!open) setEditingAssignment(null);
           }}
         />
       ) : null}

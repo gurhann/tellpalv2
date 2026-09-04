@@ -16,6 +16,7 @@ type UseContributorActionsOptions = {
   onRenameSuccess?: (contributor: AdminContributorResponse) => void;
   onDeleteSuccess?: (contributorId: number) => void;
   onAssignSuccess?: (contentId: number) => void;
+  onUpdateSuccess?: (contentId: number) => void;
   onUnassignSuccess?: (contentId: number) => void;
 };
 
@@ -35,6 +36,7 @@ export function useContributorActions({
   onRenameSuccess,
   onDeleteSuccess,
   onAssignSuccess,
+  onUpdateSuccess,
   onUnassignSuccess,
 }: UseContributorActionsOptions = {}) {
   const queryClient = useQueryClient();
@@ -177,6 +179,25 @@ export function useContributorActions({
     },
   });
 
+  const updateContributor = useMutation({
+    mutationFn: async ({
+      contentId,
+      assignmentId,
+      values,
+    }: {
+      contentId: number;
+      assignmentId: number;
+      values: Parameters<typeof contributorAdminApi.updateContributor>[2];
+    }) =>
+      contributorAdminApi.updateContributor(contentId, assignmentId, values),
+    onSuccess: async (assignment) => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.contributors.assignments(assignment.contentId),
+      });
+      onUpdateSuccess?.(assignment.contentId);
+    },
+  });
+
   const reorderContributors = useMutation({
     mutationFn: async ({
       contentId,
@@ -212,6 +233,7 @@ export function useContributorActions({
     deleteContributor,
     assignContributor,
     unassignContributor,
+    updateContributor,
     reorderContributors,
     isPending:
       createContributor.isPending ||
@@ -219,6 +241,7 @@ export function useContributorActions({
       deleteContributor.isPending ||
       assignContributor.isPending ||
       unassignContributor.isPending ||
+      updateContributor.isPending ||
       reorderContributors.isPending,
   };
 }

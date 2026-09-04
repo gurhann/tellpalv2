@@ -49,6 +49,12 @@ export type UnassignContentContributorInput = {
   languageCode?: string | null;
 };
 
+export type UpdateContentContributorInput = {
+  role: ContributorRole;
+  languageCode?: string | null;
+  creditName?: string | null;
+};
+
 export type ReorderContentContributorsInput = {
   role: ContributorRole;
   languageCode?: string | null;
@@ -162,6 +168,19 @@ export const contributorAdminApi = {
   assignContributor(contentId: number, input: AssignContentContributorInput) {
     return apiClient.post<AdminContentContributorResponse>(
       `/api/admin/contents/${contentId}/contributors`,
+      {
+        body: input,
+        responseSchema: adminContentContributorResponseSchema,
+      },
+    );
+  },
+  updateContributor(
+    contentId: number,
+    assignmentId: number,
+    input: UpdateContentContributorInput,
+  ) {
+    return apiClient.put<AdminContentContributorResponse>(
+      `/api/admin/contents/${contentId}/contributors/${assignmentId}`,
       {
         body: input,
         responseSchema: adminContentContributorResponseSchema,

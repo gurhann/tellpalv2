@@ -27,6 +27,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorAssignmentNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
@@ -248,6 +249,38 @@ class ContributorAdminControllerTest {
     }
 
     @Test
+    void updateContributorAssignmentReturnsUpdatedResponse() throws Exception {
+        when(contributorManagementService.updateContentContributor(any())).thenReturn(new ContentContributorRecord(
+                101L, 51L, 11L, "Elif Yilmaz", ContributorRole.MUSICIAN,
+                LanguageCode.EN, "E. Yilmaz", 2));
+
+        mockMvc.perform(put("/api/admin/contents/51/contributors/101")
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "role": "MUSICIAN",
+                                  "languageCode": "en",
+                                  "creditName": " E. Yilmaz "
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.assignmentId").value(101))
+                .andExpect(jsonPath("$.contributorId").value(11))
+                .andExpect(jsonPath("$.role").value("MUSICIAN"))
+                .andExpect(jsonPath("$.languageCode").value("en"))
+                .andExpect(jsonPath("$.sortOrder").value(2));
+    }
+
+    @Test
+    void updateContributorAssignmentRequiresRole() throws Exception {
+        mockMvc.perform(put("/api/admin/contents/51/contributors/101")
+                        .contentType("application/json")
+                        .content("{\"languageCode\":\"en\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("validation_error"));
+    }
+
+    @Test
     void reorderContributorValidationRejectsMissingOrInvalidGroupInput() throws Exception {
         mockMvc.perform(put("/api/admin/contents/51/contributors/reorder")
                         .contentType("application/json")
@@ -335,5 +368,18 @@ class ContributorAdminControllerTest {
                         .param("languageCode", "tr"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("content_contributor_not_found"));
+    }
+
+    @Test
+    void missingAssignmentBecomesNotFoundProblemDetails() throws Exception {
+        doThrow(new ContentContributorAssignmentNotFoundException(51L, 101L))
+                .when(contributorManagementService)
+                .updateContentContributor(any());
+
+        mockMvc.perform(put("/api/admin/contents/51/contributors/101")
+                        .contentType("application/json")
+                        .content("{\"role\":\"AUTHOR\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_assignment_not_found"));
     }
 }

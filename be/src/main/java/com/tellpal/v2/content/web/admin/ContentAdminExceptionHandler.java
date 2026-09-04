@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetMediaTypeMismatchException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetReferenceNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorAssignmentNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessAlreadyExistsException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentFreeAccessNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentLocalizationAlreadyExistsException;
@@ -125,6 +126,18 @@ public class ContentAdminExceptionHandler {
                 "Content contributor not found",
                 exception.getMessage(),
                 "content_contributor_not_found",
+                request);
+    }
+
+    @ExceptionHandler(ContentContributorAssignmentNotFoundException.class)
+    ProblemDetail handleContentContributorAssignmentNotFound(
+            ContentContributorAssignmentNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Content contributor assignment not found",
+                exception.getMessage(),
+                "content_contributor_assignment_not_found",
                 request);
     }
 

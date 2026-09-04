@@ -82,6 +82,12 @@ public class ContentContributor extends BaseJpaEntity {
         this.sortOrder = requireNonNegative(sortOrder);
     }
 
+    void updateDetails(ContributorRole role, LanguageCode languageCode, String creditName) {
+        this.role = requireRole(role);
+        this.languageCode = languageCode;
+        this.creditName = normalizeOptionalText(creditName);
+    }
+
     public boolean matchesRoleAndLanguage(ContributorRole role, LanguageCode languageCode) {
         return this.role == role && this.languageCode == languageCode;
     }

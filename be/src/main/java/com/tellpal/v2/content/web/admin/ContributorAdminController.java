@@ -28,6 +28,7 @@ import com.tellpal.v2.content.application.ContributorManagementCommands.DeleteCo
 import com.tellpal.v2.content.application.ContributorManagementCommands.RenameContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.ReorderContentContributorsCommand;
 import com.tellpal.v2.content.application.ContributorManagementCommands.UnassignContentContributorCommand;
+import com.tellpal.v2.content.application.ContributorManagementCommands.UpdateContentContributorCommand;
 import com.tellpal.v2.content.application.ContributorManagementService;
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -163,6 +164,26 @@ public class ContributorAdminController {
                         contributorManagementService.assignContentContributor(request.toCommand(contentId))));
     }
 
+    @PutMapping("/contents/{contentId}/contributors/{assignmentId}")
+    @Operation(
+            summary = "Update a content contributor assignment",
+            description = "Updates role, optional language scope, and credit name while preserving contributor identity and assignment ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Contributor assignment updated"),
+            @ApiResponse(responseCode = "400", description = "Assignment request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content or assignment was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Assignment conflicts with existing content state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminContentContributorResponse updateContributor(
+            @PathVariable Long contentId,
+            @PathVariable Long assignmentId,
+            @Valid @RequestBody UpdateContentContributorRequest request) {
+        return AdminContentContributorResponse.from(
+                contributorManagementService.updateContentContributor(request.toCommand(contentId, assignmentId)));
+    }
+
     @GetMapping("/contents/{contentId}/contributors")
     @Operation(
             summary = "List content contributors",
@@ -286,6 +307,21 @@ record AssignContentContributorRequest(
                 ContributorAdminController.resolveOptionalLanguageCode(languageCode),
                 creditName,
                 sortOrder);
+    }
+}
+
+record UpdateContentContributorRequest(
+        @NotNull(message = "role is required") ContributorRole role,
+        String languageCode,
+        String creditName) {
+
+    UpdateContentContributorCommand toCommand(Long contentId, Long assignmentId) {
+        return new UpdateContentContributorCommand(
+                contentId,
+                assignmentId,
+                role,
+                ContributorAdminController.resolveOptionalLanguageCode(languageCode),
+                creditName);
     }
 }
 

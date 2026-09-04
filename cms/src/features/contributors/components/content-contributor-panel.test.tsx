@@ -56,6 +56,10 @@ describe("ContentContributorPanel", () => {
     contributorActionMocks.useContributorActions.mockReturnValue({
       reorderContributors: { mutateAsync: vi.fn().mockResolvedValue([]) },
       unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      updateContributor: {
+        isPending: false,
+        mutateAsync: vi.fn().mockResolvedValue(contentContributorViewModels[0]),
+      },
       isPending: false,
     });
   });
@@ -113,6 +117,7 @@ describe("ContentContributorPanel", () => {
     contributorActionMocks.useContributorActions.mockReturnValue({
       reorderContributors: { mutateAsync: reorder },
       unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      updateContributor: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
     const groupedAssignments = [
@@ -158,6 +163,7 @@ describe("ContentContributorPanel", () => {
     contributorActionMocks.useContributorActions.mockReturnValue({
       reorderContributors: { mutateAsync: reorder, isPending: false },
       unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      updateContributor: { isPending: false, mutateAsync: vi.fn() },
       isPending: false,
     });
     const groupedAssignments = [
@@ -191,5 +197,86 @@ describe("ContentContributorPanel", () => {
     expect(sectionText.indexOf("Annie Case")).toBeLessThan(
       sectionText.indexOf("Second Author"),
     );
+  });
+
+  it("opens the assignment editor with the existing credit values", async () => {
+    const update = vi.fn().mockResolvedValue(contentContributorViewModels[1]);
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      reorderContributors: { mutateAsync: vi.fn().mockResolvedValue([]) },
+      unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      updateContributor: { isPending: false, mutateAsync: update },
+      isPending: false,
+    });
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: [
+        ...contentContributorViewModels,
+        globalContentContributorViewModel,
+      ],
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: /edit contributor assignment/i,
+      })[2]!,
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        name: /edit contributor assignment/i,
+      }),
+    ).toBeVisible();
+    expect(screen.getByDisplayValue("M. Rivers")).toBeVisible();
+    expect(screen.getAllByText("Milo Rivers").length).toBeGreaterThanOrEqual(2);
+
+    fireEvent.change(screen.getByDisplayValue("M. Rivers"), {
+      target: { value: "Milo Updated" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /save assignment/i }));
+
+    await waitFor(() =>
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          contentId: 1,
+          assignmentId: 102,
+          values: expect.objectContaining({ creditName: "Milo Updated" }),
+        }),
+      ),
+    );
+  });
+
+  it("keeps the assignment editor open when the update fails", async () => {
+    const update = vi.fn().mockRejectedValue(new Error("network"));
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      reorderContributors: { mutateAsync: vi.fn().mockResolvedValue([]) },
+      unassignContributor: { isPending: false, mutateAsync: vi.fn() },
+      updateContributor: { isPending: false, mutateAsync: update },
+      isPending: false,
+    });
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: contentContributorViewModels,
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: /edit contributor assignment/i,
+      })[1]!,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /save assignment/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/network/i);
+    expect(
+      screen.getByRole("heading", { name: /edit contributor assignment/i }),
+    ).toBeVisible();
   });
 });

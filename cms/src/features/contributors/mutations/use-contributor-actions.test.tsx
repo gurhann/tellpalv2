@@ -23,6 +23,7 @@ const contributorAdminApiMock = vi.hoisted(() => ({
   deleteContributor: vi.fn(),
   assignContributor: vi.fn(),
   unassignContributor: vi.fn(),
+  updateContributor: vi.fn(),
   reorderContentContributors: vi.fn(),
 }));
 
@@ -40,6 +41,7 @@ vi.mock("@/features/contributors/api/contributor-admin", async () => {
       deleteContributor: contributorAdminApiMock.deleteContributor,
       assignContributor: contributorAdminApiMock.assignContributor,
       unassignContributor: contributorAdminApiMock.unassignContributor,
+      updateContributor: contributorAdminApiMock.updateContributor,
       reorderContentContributors:
         contributorAdminApiMock.reorderContentContributors,
     },
@@ -60,6 +62,7 @@ beforeEach(() => {
   contributorAdminApiMock.deleteContributor.mockReset();
   contributorAdminApiMock.assignContributor.mockReset();
   contributorAdminApiMock.unassignContributor.mockReset();
+  contributorAdminApiMock.updateContributor.mockReset();
   contributorAdminApiMock.reorderContentContributors.mockReset();
 });
 
@@ -355,6 +358,53 @@ describe("useContributorActions", () => {
       queryKey: queryKeys.contributors.assignments(1),
     });
     expect(onUnassignSuccess).toHaveBeenCalledWith(1);
+  });
+
+  it("updates an assignment by ID and invalidates its content assignments", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
+    const updated: AdminContentContributorResponse = {
+      ...contentContributorResponses[0]!,
+      creditName: "Annie Updated",
+      role: "MUSICIAN",
+      languageCode: "tr",
+      sortOrder: 2,
+    };
+    const onUpdateSuccess = vi.fn();
+    contributorAdminApiMock.updateContributor.mockResolvedValue(updated);
+
+    const { result } = renderHook(
+      () => useContributorActions({ onUpdateSuccess }),
+      { wrapper: createWrapper(queryClient) },
+    );
+
+    await act(async () => {
+      await result.current.updateContributor.mutateAsync({
+        contentId: 1,
+        assignmentId: 101,
+        values: {
+          role: "MUSICIAN",
+          languageCode: "tr",
+          creditName: " Annie Updated ",
+        },
+      });
+    });
+
+    expect(contributorAdminApiMock.updateContributor).toHaveBeenCalledWith(
+      1,
+      101,
+      {
+        role: "MUSICIAN",
+        languageCode: "tr",
+        creditName: " Annie Updated ",
+      },
+    );
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contributors.assignments(1),
+    });
+    expect(onUpdateSuccess).toHaveBeenCalledWith(1);
   });
 
   it("reorders a role and language scope and invalidates assignments", async () => {
