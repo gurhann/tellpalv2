@@ -13,14 +13,17 @@ export const contributorResponses: AdminContributorResponse[] = [
   {
     contributorId: 11,
     displayName: "Annie Case",
+    roles: ["AUTHOR"],
   },
   {
     contributorId: 12,
     displayName: "Milo Rivers",
+    roles: ["NARRATOR"],
   },
   {
     contributorId: 13,
     displayName: "Sena Yildiz",
+    roles: ["ILLUSTRATOR"],
   },
 ];
 

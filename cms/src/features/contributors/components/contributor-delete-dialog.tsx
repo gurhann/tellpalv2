@@ -17,6 +17,7 @@ import type { ContributorViewModel } from "@/features/contributors/model/contrib
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import { ApiClientError } from "@/lib/http/client";
 import type { ApiProblemDetail } from "@/types/api";
+import { useI18n } from "@/i18n/locale-provider";
 
 type ContributorDeleteDialogProps = {
   contributor: ContributorViewModel | null;
@@ -29,6 +30,7 @@ export function ContributorDeleteDialog({
   open,
   onOpenChange,
 }: ContributorDeleteDialogProps) {
+  const { t } = useI18n();
   const [problem, setProblem] = useState<ApiProblemDetail | null>(null);
   const contributorActions = useContributorActions();
 
@@ -45,17 +47,17 @@ export function ContributorDeleteDialog({
           contributorId: contributor.id,
         }),
         {
-          loading: "Deleting contributor...",
-          success: "Contributor deleted.",
+          loading: t("contributors.delete.loading"),
+          success: t("contributors.delete.success"),
           error: (error) => {
             if (
               error instanceof ApiClientError &&
               error.problem.errorCode === "contributor_in_use"
             ) {
-              return "Remove the contributor from content assignments first.";
+              return t("contributors.delete.inUse");
             }
 
-            return "The contributor could not be deleted.";
+            return t("contributors.delete.error");
           },
         },
       );
@@ -74,7 +76,7 @@ export function ContributorDeleteDialog({
         detail:
           error instanceof Error
             ? error.message
-            : "The contributor could not be deleted.",
+            : t("contributors.delete.error"),
       });
     }
   }
@@ -91,10 +93,9 @@ export function ContributorDeleteDialog({
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Delete contributor</DialogTitle>
+          <DialogTitle>{t("contributors.delete.title")}</DialogTitle>
           <DialogDescription>
-            This removes the shared contributor record. Content assignments must
-            be cleared first.
+            {t("contributors.delete.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -107,7 +108,7 @@ export function ContributorDeleteDialog({
                 {contributor.displayName}
               </p>
               <p className="mt-1 text-muted-foreground">
-                Contributor #{contributor.id}
+                {t("contributors.idLabel", { id: contributor.id })}
               </p>
             </div>
           ) : null}
@@ -120,16 +121,16 @@ export function ContributorDeleteDialog({
             onClick={() => onOpenChange(false)}
             disabled={contributorActions.deleteContributor.isPending}
           >
-            Cancel
+            {t("contributors.form.cancel")}
           </Button>
           <SubmitButton
             type="button"
             variant="destructive"
             isPending={contributorActions.deleteContributor.isPending}
-            pendingLabel="Deleting..."
+            pendingLabel={t("contributors.delete.pending")}
             onClick={() => void handleDelete()}
           >
-            Delete contributor
+            {t("contributors.delete.title")}
           </SubmitButton>
         </DialogFooter>
       </DialogContent>

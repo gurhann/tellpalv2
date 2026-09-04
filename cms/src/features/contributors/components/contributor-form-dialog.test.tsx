@@ -118,9 +118,34 @@ describe("ContributorFormDialog", () => {
         contributorId: 11,
         values: {
           displayName: "Annie Case Updated",
+          roles: ["AUTHOR"],
         },
       });
     });
+  });
+
+  it("requires at least one contributor role", async () => {
+    const createMutation = makeMutationState();
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      createContributor: createMutation,
+      renameContributor: makeMutationState(),
+      isPending: false,
+    });
+
+    render(<ContributorFormDialog mode="create" open onOpenChange={vi.fn()} />);
+
+    fireEvent.change(screen.getByLabelText(/display name/i), {
+      target: { value: "Annie Case" },
+    });
+    fireEvent.click(screen.getByLabelText("Author"));
+    fireEvent.click(
+      screen.getByRole("button", { name: /create contributor/i }),
+    );
+
+    expect(
+      await screen.findByText("Select at least one role."),
+    ).toBeInTheDocument();
+    expect(createMutation.mutateAsync).not.toHaveBeenCalled();
   });
 
   it("shows a 404 contributor problem inline during rename", async () => {

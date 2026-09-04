@@ -19,29 +19,15 @@ type UseContributorActionsOptions = {
   onUnassignSuccess?: (contentId: number) => void;
 };
 
-function updateContributorListCache(
+function updateLegacyList(
   records: ContributorViewModel[] | undefined,
-  savedContributor: AdminContributorResponse,
+  saved: AdminContributorResponse,
 ) {
-  const nextContributor = mapAdminContributor(savedContributor);
-
-  if (!records) {
-    return [nextContributor];
-  }
-
-  const existingIndex = records.findIndex(
-    (contributor) => contributor.id === savedContributor.contributorId,
-  );
-
-  if (existingIndex === -1) {
-    return [nextContributor, ...records].slice(0, Math.max(records.length, 1));
-  }
-
-  return records.map((contributor) =>
-    contributor.id === savedContributor.contributorId
-      ? nextContributor
-      : contributor,
-  );
+  const next = mapAdminContributor(saved);
+  if (!records) return [next];
+  const index = records.findIndex((item) => item.id === saved.contributorId);
+  if (index < 0) return [next, ...records];
+  return records.map((item, itemIndex) => (itemIndex === index ? next : item));
 }
 
 export function useContributorActions({
@@ -72,11 +58,15 @@ export function useContributorActions({
     mutationFn: async (values: ContributorFormValues) =>
       contributorAdminApi.createContributor({
         displayName: values.displayName.trim(),
+        roles: values.roles,
       }),
     onSuccess: async (contributor) => {
-      queryClient.setQueriesData<ContributorViewModel[]>(
+      queryClient.setQueriesData(
         { queryKey: queryKeys.contributors.lists() },
-        (records) => updateContributorListCache(records, contributor),
+        (current: unknown) =>
+          Array.isArray(current)
+            ? updateLegacyList(current as ContributorViewModel[], contributor)
+            : current,
       );
       queryClient.setQueryData<ContributorViewModel>(
         queryKeys.contributors.detail(contributor.contributorId),
@@ -98,11 +88,15 @@ export function useContributorActions({
     }) =>
       contributorAdminApi.renameContributor(contributorId, {
         displayName: values.displayName.trim(),
+        roles: values.roles,
       }),
     onSuccess: async (contributor) => {
-      queryClient.setQueriesData<ContributorViewModel[]>(
+      queryClient.setQueriesData(
         { queryKey: queryKeys.contributors.lists() },
-        (records) => updateContributorListCache(records, contributor),
+        (current: unknown) =>
+          Array.isArray(current)
+            ? updateLegacyList(current as ContributorViewModel[], contributor)
+            : current,
       );
       queryClient.setQueryData<ContributorViewModel>(
         queryKeys.contributors.detail(contributor.contributorId),
@@ -123,6 +117,9 @@ export function useContributorActions({
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: queryKeys.contributors.lists(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contributors.list(),
         }),
         queryClient.removeQueries({
           queryKey: queryKeys.contributors.detail(contributorId),

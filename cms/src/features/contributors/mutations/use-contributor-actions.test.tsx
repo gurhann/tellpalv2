@@ -70,6 +70,7 @@ describe("useContributorActions", () => {
     const createdContributor: AdminContributorResponse = {
       contributorId: 99,
       displayName: "Lina Hart",
+      roles: ["AUTHOR"],
     };
     const onCreateSuccess = vi.fn();
     const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
@@ -95,11 +96,13 @@ describe("useContributorActions", () => {
     await act(async () => {
       await result.current.createContributor.mutateAsync({
         displayName: "  Lina Hart  ",
+        roles: ["AUTHOR"],
       });
     });
 
     expect(contributorAdminApiMock.createContributor).toHaveBeenCalledWith({
       displayName: "Lina Hart",
+      roles: ["AUTHOR"],
     });
     expect(
       queryClient.getQueryData(queryKeys.contributors.detail(99)),
@@ -139,6 +142,7 @@ describe("useContributorActions", () => {
     const renamedContributor: AdminContributorResponse = {
       contributorId: 11,
       displayName: "Annie Case Updated",
+      roles: ["AUTHOR"],
     };
 
     queryClient.setQueryData(queryKeys.contributors.list({ limit: 12 }), [
@@ -162,12 +166,14 @@ describe("useContributorActions", () => {
         contributorId: 11,
         values: {
           displayName: " Annie Case Updated ",
+          roles: ["AUTHOR"],
         },
       });
     });
 
     expect(contributorAdminApiMock.renameContributor).toHaveBeenCalledWith(11, {
       displayName: "Annie Case Updated",
+      roles: ["AUTHOR"],
     });
     expect(
       queryClient.getQueryData<{ id: number; displayName: string }>(

@@ -13,6 +13,7 @@ type SessionPayload = {
 type ContributorRecord = {
   contributorId: number;
   displayName: string;
+  roles: Array<"AUTHOR" | "ILLUSTRATOR" | "NARRATOR" | "MUSICIAN">;
 };
 
 type ContentContributorRecord = {
@@ -69,10 +70,12 @@ test("contributor registry and assignment flows support delete and unassign", as
     {
       contributorId: 11,
       displayName: "Annie Case",
+      roles: ["AUTHOR"],
     },
     {
       contributorId: 12,
       displayName: "Milo Rivers",
+      roles: ["NARRATOR"],
     },
   ];
   const assignments: ContentContributorRecord[] = [
@@ -165,6 +168,36 @@ test("contributor registry and assignment flows support delete and unassign", as
     });
   });
 
+  await page.route("**/api/admin/contributor-registry**", async (route) => {
+    const requestUrl = new URL(route.request().url());
+    const query = requestUrl.searchParams.get("q")?.trim().toLowerCase();
+    const role = requestUrl.searchParams.get("role");
+    const filtered = contributors.filter(
+      (contributor) =>
+        (!query || contributor.displayName.toLowerCase().includes(query)) &&
+        (!role ||
+          contributor.roles.includes(
+            role as ContributorRecord["roles"][number],
+          )),
+    );
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        items: filtered.map((contributor) => ({
+          ...contributor,
+          totalUsageCount: 0,
+          usageByRole: {},
+          updatedAt: "2026-03-28T10:00:00Z",
+        })),
+        page: 0,
+        size: 25,
+        totalItems: filtered.length,
+        totalPages: 1,
+      }),
+    });
+  });
+
   await page.route("**/api/admin/contributors*", async (route) => {
     const request = route.request();
 
@@ -187,10 +220,14 @@ test("contributor registry and assignment flows support delete and unassign", as
     }
 
     if (request.method() === "POST") {
-      const body = request.postDataJSON() as { displayName: string };
+      const body = request.postDataJSON() as {
+        displayName: string;
+        roles: ContributorRecord["roles"];
+      };
       const createdContributor = {
         contributorId: 99,
         displayName: body.displayName,
+        roles: body.roles,
       };
       contributors.unshift(createdContributor);
 
@@ -221,8 +258,12 @@ test("contributor registry and assignment flows support delete and unassign", as
         return;
       }
 
-      const body = request.postDataJSON() as { displayName: string };
+      const body = request.postDataJSON() as {
+        displayName: string;
+        roles: ContributorRecord["roles"];
+      };
       contributor.displayName = body.displayName;
+      contributor.roles = body.roles;
 
       await route.fulfill({
         status: 200,
@@ -346,7 +387,7 @@ test("contributor registry and assignment flows support delete and unassign", as
   await Promise.all([
     page.waitForResponse(
       (response) =>
-        response.url().includes("/api/admin/contributors") &&
+        response.url().includes("/api/admin/contributor-registry") &&
         response.request().method() === "GET",
     ),
     page.getByRole("link", { name: /^contributors/i }).click(),
@@ -363,6 +404,7 @@ test("contributor registry and assignment flows support delete and unassign", as
   await page.waitForTimeout(250);
   await createContributorButton.click({ force: true });
   await page.getByLabel(/display name/i).fill("Lina Hart");
+  await page.getByLabel(/^author$/i).check();
   await page
     .getByRole("dialog")
     .getByRole("button", { name: /^create contributor$/i })

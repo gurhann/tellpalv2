@@ -15,15 +15,24 @@ export type ContributorRole = z.infer<typeof contributorRoleSchema>;
 
 export type CreateContributorInput = {
   displayName: string;
+  roles: ContributorRole[];
 };
 
 export type RenameContributorInput = {
   displayName: string;
+  roles: ContributorRole[];
 };
 
 export type ListContributorsInput = {
-  limit?: number;
   query?: string;
+  limit?: number;
+};
+
+export type ContributorRegistryQuery = {
+  page?: number;
+  size?: number;
+  query?: string;
+  role?: ContributorRole;
 };
 
 export type AssignContentContributorInput = {
@@ -43,11 +52,31 @@ export type UnassignContentContributorInput = {
 export const adminContributorResponseSchema = z.object({
   contributorId: z.number().int().positive(),
   displayName: z.string().min(1),
+  roles: z.array(contributorRoleSchema).default([]),
 });
 
 export const adminContributorListResponseSchema = z.array(
   adminContributorResponseSchema,
 );
+
+export const adminContributorRegistryItemSchema = z.object({
+  contributorId: z.number().int().positive(),
+  displayName: z.string().min(1),
+  roles: z.array(contributorRoleSchema),
+  totalUsageCount: z.number().int().nonnegative(),
+  usageByRole: z.record(z.string(), z.number().int().nonnegative()),
+  updatedAt: z.string().datetime({ offset: true }),
+});
+export const adminContributorRegistryPageSchema = z.object({
+  items: z.array(adminContributorRegistryItemSchema),
+  page: z.number().int().nonnegative(),
+  size: z.number().int().positive(),
+  totalItems: z.number().int().nonnegative(),
+  totalPages: z.number().int().nonnegative(),
+});
+export type AdminContributorRegistryPage = z.infer<
+  typeof adminContributorRegistryPageSchema
+>;
 
 export const adminContentContributorResponseSchema = z.object({
   contentId: z.number().int().positive(),
@@ -84,12 +113,23 @@ export const contributorAdminApi = {
     if (input.query?.trim()) {
       search.set("q", input.query.trim());
     }
-
     return apiClient.get<AdminContributorResponse[]>(
       `/api/admin/contributors?${search}`,
       {
         responseSchema: adminContributorListResponseSchema,
       },
+    );
+  },
+  listContributorRegistry(input: ContributorRegistryQuery = {}) {
+    const search = new URLSearchParams({
+      page: String(input.page ?? 0),
+      size: String(input.size ?? 25),
+    });
+    if (input.query?.trim()) search.set("q", input.query.trim());
+    if (input.role) search.set("role", input.role);
+    return apiClient.get<AdminContributorRegistryPage>(
+      `/api/admin/contributor-registry?${search.toString()}`,
+      { responseSchema: adminContributorRegistryPageSchema },
     );
   },
   renameContributor(contributorId: number, input: RenameContributorInput) {

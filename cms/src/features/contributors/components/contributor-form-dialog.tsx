@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
@@ -26,6 +27,7 @@ import {
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemFieldErrors } from "@/lib/http/problem-details";
 import type { ApiProblemDetail } from "@/types/api";
+import { useI18n } from "@/i18n/locale-provider";
 
 type ContributorFormDialogProps =
   | {
@@ -40,32 +42,50 @@ type ContributorFormDialogProps =
       contributor: ContributorViewModel;
     };
 
-function getDialogCopy(mode: "create" | "rename") {
+function getDialogCopy(
+  mode: "create" | "rename",
+  translate: (key: string) => string,
+) {
   if (mode === "create") {
     return {
-      title: "Create contributor",
-      description:
-        "Register a new contributor in the shared editorial registry. The same record becomes available anywhere content credits are assigned.",
-      submitLabel: "Create contributor",
-      pendingLabel: "Creating contributor...",
-      loading: "Creating contributor...",
-      success: "Contributor created.",
+      title: translate("contributors.form.createTitle"),
+      description: translate("contributors.form.createDescription"),
+      submitLabel: translate("contributors.form.createSubmit"),
+      pendingLabel: translate("contributors.form.createPending"),
+      loading: translate("contributors.form.createPending"),
+      success: translate("contributors.form.createSuccess"),
     };
   }
 
   return {
-    title: "Rename contributor",
-    description:
-      "Update the shared display name shown across contributor pickers and future credit assignment workflows.",
-    submitLabel: "Save rename",
-    pendingLabel: "Saving rename...",
-    loading: "Saving contributor rename...",
-    success: "Contributor renamed.",
+    title: translate("contributors.form.editTitle"),
+    description: translate("contributors.form.editDescription"),
+    submitLabel: translate("contributors.form.editSubmit"),
+    pendingLabel: translate("contributors.form.editPending"),
+    loading: translate("contributors.form.editPending"),
+    success: translate("contributors.form.editSuccess"),
   };
 }
 
+function translateValidationError(
+  message: string | undefined,
+  translate: (key: string) => string,
+) {
+  switch (message) {
+    case "Display name is required.":
+      return translate("contributors.form.validation.displayNameRequired");
+    case "Display name must be 120 characters or fewer.":
+      return translate("contributors.form.validation.displayNameTooLong");
+    case "Select at least one role.":
+      return translate("contributors.form.validation.rolesRequired");
+    default:
+      return message;
+  }
+}
+
 export function ContributorFormDialog(props: ContributorFormDialogProps) {
-  const copy = getDialogCopy(props.mode);
+  const { t } = useI18n();
+  const copy = getDialogCopy(props.mode, (key) => t(key as never));
   const [problem, setProblem] = useState<ApiProblemDetail | null>(null);
   const form = useZodForm<ContributorFormValues>({
     schema: contributorFormSchema,
@@ -136,7 +156,7 @@ export function ContributorFormDialog(props: ContributorFormDialogProps) {
 
       form.setError("root.serverError", {
         type: "server",
-        message: "Contributor changes could not be saved. Try again.",
+        message: t("contributors.form.genericError"),
       });
     }
   }
@@ -163,20 +183,65 @@ export function ContributorFormDialog(props: ContributorFormDialogProps) {
                 className="text-sm font-medium text-foreground"
                 htmlFor="contributor-display-name"
               >
-                Display name
+                {t("contributors.form.displayName")}
               </label>
               <Input
                 id="contributor-display-name"
-                placeholder="Annie Case"
+                placeholder={t("contributors.form.displayNamePlaceholder")}
                 {...form.register("displayName")}
                 disabled={contributorActions.isPending}
               />
               <p className="text-sm text-muted-foreground">
-                Names are trimmed before submit and appear in the shared
-                contributor registry immediately after save.
+                {t("contributors.form.displayNameHint")}
               </p>
-              <FieldError error={form.formState.errors.displayName} />
+              <FieldError
+                error={translateValidationError(
+                  form.formState.errors.displayName?.message,
+                  (key) => t(key as never),
+                )}
+              />
             </div>
+
+            <fieldset className="space-y-3">
+              <legend className="text-sm font-medium text-foreground">
+                {t("contributors.form.roles")}
+              </legend>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {(
+                  ["AUTHOR", "ILLUSTRATOR", "NARRATOR", "MUSICIAN"] as const
+                ).map((role) => (
+                  <Controller
+                    key={role}
+                    name="roles"
+                    control={form.control}
+                    render={({ field }) => (
+                      <label className="flex min-h-11 items-center gap-2 rounded-md border border-border/70 px-3 text-sm">
+                        <input
+                          type="checkbox"
+                          className="size-4 accent-primary"
+                          checked={field.value.includes(role)}
+                          disabled={contributorActions.isPending}
+                          onChange={(event) =>
+                            field.onChange(
+                              event.target.checked
+                                ? [...field.value, role]
+                                : field.value.filter((item) => item !== role),
+                            )
+                          }
+                        />
+                        {t(`contributors.role.${role.toLowerCase()}` as never)}
+                      </label>
+                    )}
+                  />
+                ))}
+              </div>
+              <FieldError
+                error={translateValidationError(
+                  form.formState.errors.roles?.message,
+                  (key) => t(key as never),
+                )}
+              />
+            </fieldset>
 
             <DialogFooter>
               <Button
@@ -185,7 +250,7 @@ export function ContributorFormDialog(props: ContributorFormDialogProps) {
                 onClick={() => handleOpenChange(false)}
                 disabled={contributorActions.isPending}
               >
-                Cancel
+                {t("contributors.form.cancel")}
               </Button>
               <SubmitButton
                 isPending={contributorActions.isPending}

@@ -1,5 +1,12 @@
 import { QueryClient } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type {
@@ -127,13 +134,33 @@ describe("Contributor integration", () => {
           return jsonResponse(contributors);
         }
 
+        if (
+          url.pathname === "/api/admin/contributor-registry" &&
+          method === "GET"
+        ) {
+          return jsonResponse({
+            items: contributors.map((item) => ({
+              ...item,
+              totalUsageCount: 0,
+              usageByRole: {},
+              updatedAt: "2026-03-28T10:00:00Z",
+            })),
+            page: 0,
+            size: 25,
+            totalItems: contributors.length,
+            totalPages: 1,
+          });
+        }
+
         if (url.pathname === "/api/admin/contributors" && method === "POST") {
           const body = (await readRequestJson(init)) as {
             displayName: string;
+            roles: AdminContributorResponse["roles"];
           };
           const createdContributor: AdminContributorResponse = {
             contributorId: 99,
             displayName: body.displayName,
+            roles: body.roles,
           };
           contributors.unshift(createdContributor);
           return jsonResponse(createdContributor, 201);
@@ -146,6 +173,7 @@ describe("Contributor integration", () => {
           const contributorId = Number(url.pathname.split("/").at(-1));
           const body = (await readRequestJson(init)) as {
             displayName: string;
+            roles: AdminContributorResponse["roles"];
           };
           const contributor = contributors.find(
             (candidate) => candidate.contributorId === contributorId,
@@ -156,6 +184,7 @@ describe("Contributor integration", () => {
           }
 
           contributor.displayName = body.displayName;
+          contributor.roles = body.roles;
           return jsonResponse(contributor);
         }
 
@@ -198,6 +227,13 @@ describe("Contributor integration", () => {
       }),
     );
 
+    await waitFor(() =>
+      expect(
+        fetchMock.mock.calls.some(([input]) =>
+          String(input).includes("/api/admin/contributors"),
+        ),
+      ).toBe(true),
+    );
     expect(await screen.findByText("Lina Hart")).toBeVisible();
 
     const contributorRow = screen.getByText("Annie Case").closest("tr");
