@@ -42,10 +42,6 @@ export const contentContributorFormSchema = z.object({
   creditName: z
     .string()
     .max(120, "Credit name must be 120 characters or fewer."),
-  sortOrder: z
-    .number({ error: "Sort order is required." })
-    .int("Sort order must be a whole number.")
-    .min(0, "Sort order must be zero or greater."),
 });
 
 export type ContentContributorFormValues = z.infer<
@@ -58,7 +54,6 @@ export function getAssignContributorFormDefaults(): ContentContributorFormValues
     role: "AUTHOR",
     languageCode: null,
     creditName: "",
-    sortOrder: 0,
   };
 }
 
@@ -115,23 +110,6 @@ export function validateLocalContentContributorAssignment(
     return {
       field: "contributorId" as const,
       message: `${duplicateCredit.displayName} already has a ${roleLabel} credit in ${languageLabel}.`,
-    };
-  }
-
-  const duplicateSortOrder = existingAssignments.find(
-    (assignment) =>
-      assignment.role === values.role &&
-      assignment.languageCode === normalizedLanguageCode &&
-      assignment.sortOrder === values.sortOrder,
-  );
-
-  if (duplicateSortOrder) {
-    const roleLabel = getContributorRoleLabel(values.role);
-    const languageLabel = getContributorLanguageScopeLabel(values.languageCode);
-
-    return {
-      field: "sortOrder" as const,
-      message: `Sort order ${values.sortOrder} is already used for ${roleLabel} credits in ${languageLabel}.`,
     };
   }
 

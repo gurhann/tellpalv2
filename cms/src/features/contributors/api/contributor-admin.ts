@@ -33,6 +33,7 @@ export type ContributorRegistryQuery = {
   size?: number;
   query?: string;
   role?: ContributorRole;
+  enabled?: boolean;
 };
 
 export type AssignContentContributorInput = {
@@ -40,7 +41,6 @@ export type AssignContentContributorInput = {
   role: ContributorRole;
   languageCode?: string | null;
   creditName?: string | null;
-  sortOrder: number;
 };
 
 export type UnassignContentContributorInput = {

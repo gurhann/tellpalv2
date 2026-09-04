@@ -142,7 +142,6 @@ export function useContributorActions({
         >[1]["role"];
         languageCode?: string | null;
         creditName: string | null;
-        sortOrder: number;
       };
     }) => contributorAdminApi.assignContributor(contentId, values),
     onSuccess: async (assignment) => {

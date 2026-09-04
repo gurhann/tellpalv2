@@ -30,6 +30,12 @@ type UseContributorsOptions = {
   enabled?: boolean;
 };
 
+type UseContributorPickerOptions = {
+  role: ContributorRegistryQuery["role"];
+  query?: string;
+  enabled?: boolean;
+};
+
 /** Legacy unpaged picker query; assignment flows still use this contract. */
 export function useContributors({
   limit = 12,
@@ -73,6 +79,7 @@ export function useContributorRegistry(params: ContributorRegistryQuery = {}) {
       query: params.query || null,
       role: params.role || null,
     }),
+    enabled: params.enabled ?? true,
     queryFn: async () => {
       const response = await contributorAdminApi.listContributorRegistry({
         ...params,
@@ -97,4 +104,13 @@ export function useContributorRegistry(params: ContributorRegistryQuery = {}) {
       "The contributor registry could not be loaded from the admin API.",
     ),
   };
+}
+
+/** Database-backed, role-scoped query used by content assignment pickers. */
+export function useContributorPicker({
+  role,
+  query = "",
+  enabled = true,
+}: UseContributorPickerOptions) {
+  return useContributorRegistry({ role, query, page: 0, size: 25, enabled });
 }

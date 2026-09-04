@@ -81,6 +81,35 @@ export const enMessages = {
   "contributors.form.validation.displayNameTooLong":
     "Display name must be 120 characters or fewer.",
   "contributors.form.validation.rolesRequired": "Select at least one role.",
+  "contributors.picker.title": "Assign contributor",
+  "contributors.picker.description":
+    "Choose an existing {role} or create one without leaving this content.",
+  "contributors.picker.searchLabel": "Search {role}s",
+  "contributors.picker.searchPlaceholder": "Search by display name",
+  "contributors.picker.resultsLabel": "Matching contributors",
+  "contributors.picker.loading": "Loading role-scoped contributors...",
+  "contributors.picker.emptyTitle": "No matching contributors",
+  "contributors.picker.emptyDescription":
+    "No {role} matches “{name}”. You can create this contributor and assign them now.",
+  "contributors.picker.createAndAssign": "Create and assign",
+  "contributors.picker.assign": "Assign contributor",
+  "contributors.picker.assignPending": "Assigning contributor...",
+  "contributors.picker.assignSuccess": "Contributor assigned.",
+  "contributors.picker.assignError": "Assignment failed. Try again.",
+  "contributors.picker.createError":
+    "Contributor could not be created. Try again.",
+  "contributors.picker.duplicateUseExisting":
+    "This name already exists. Select the existing contributor from the results.",
+  "contributors.picker.nameRequired": "Enter a contributor name.",
+  "contributors.picker.creditName": "Credit name",
+  "contributors.picker.scope": "Credit scope",
+  "contributors.picker.allLanguages": "All languages",
+  "contributors.picker.creditNamePlaceholder": "Optional credit override",
+  "contributors.picker.scopeHint":
+    "The default scope is applied for this role.",
+  "contributors.picker.cancel": "Cancel",
+  "contributors.picker.retry": "Retry assignment",
+  "contributors.picker.errorTitle": "Contributor assignment failed",
   "contributors.delete.title": "Delete contributor",
   "contributors.delete.description":
     "This removes the shared contributor record. Content assignments must be cleared first.",
@@ -335,6 +364,34 @@ export const trMessages = {
   "contributors.form.validation.displayNameTooLong":
     "Görünen ad en fazla 120 karakter olabilir.",
   "contributors.form.validation.rolesRequired": "En az bir rol seçin.",
+  "contributors.picker.title": "Katkıda bulunan ata",
+  "contributors.picker.description":
+    "Bu içerikten ayrılmadan mevcut bir {role} seçin veya oluşturun.",
+  "contributors.picker.searchLabel": "{role} ara",
+  "contributors.picker.searchPlaceholder": "Görünen ada göre ara",
+  "contributors.picker.resultsLabel": "Eşleşen katkıda bulunanlar",
+  "contributors.picker.loading": "Role göre katkıda bulunanlar yükleniyor...",
+  "contributors.picker.emptyTitle": "Eşleşen katkıda bulunan yok",
+  "contributors.picker.emptyDescription":
+    "“{name}” adlı {role} bulunamadı. Şimdi oluşturup atayabilirsiniz.",
+  "contributors.picker.createAndAssign": "Oluştur ve ata",
+  "contributors.picker.assign": "Katkıda bulunanı ata",
+  "contributors.picker.assignPending": "Katkıda bulunan atanıyor...",
+  "contributors.picker.assignSuccess": "Katkıda bulunan atandı.",
+  "contributors.picker.assignError": "Atama başarısız oldu. Tekrar deneyin.",
+  "contributors.picker.createError":
+    "Katkıda bulunan oluşturulamadı. Tekrar deneyin.",
+  "contributors.picker.duplicateUseExisting":
+    "Bu ad zaten mevcut. Sonuçlardan mevcut katkıda bulunanı seçin.",
+  "contributors.picker.nameRequired": "Katkıda bulunan adı girin.",
+  "contributors.picker.creditName": "Kredi adı",
+  "contributors.picker.scope": "Kredi kapsamı",
+  "contributors.picker.allLanguages": "Tüm diller",
+  "contributors.picker.creditNamePlaceholder": "İsteğe bağlı kredi adı",
+  "contributors.picker.scopeHint": "Bu rol için varsayılan kapsam uygulanır.",
+  "contributors.picker.cancel": "İptal",
+  "contributors.picker.retry": "Atamayı tekrar dene",
+  "contributors.picker.errorTitle": "Katkıda bulunan ataması başarısız",
   "contributors.delete.title": "Katkıda bulunanı sil",
   "contributors.delete.description":
     "Bu işlem paylaşılan katkıda bulunan kaydını siler. Önce içerik atamaları temizlenmelidir.",

@@ -1,35 +1,25 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { PropsWithChildren } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   contentContributorViewModels,
   contributorViewModels,
-  globalContentContributorViewModel,
 } from "@/features/contributors/test/fixtures";
-import {
-  inactiveContentViewModel,
-  storyContentViewModel,
-} from "@/features/contents/test/fixtures";
+import { storyContentViewModel } from "@/features/contents/test/fixtures";
 
 import { AssignContributorDialog } from "./assign-contributor-dialog";
 
 const contributorQueryMocks = vi.hoisted(() => ({
-  useContributors: vi.fn(),
+  useContributorPicker: vi.fn(),
 }));
 const contributorActionMocks = vi.hoisted(() => ({
   useContributorActions: vi.fn(),
 }));
 
 vi.mock("@/features/contributors/queries/use-contributors", () => ({
-  useContributors: contributorQueryMocks.useContributors,
+  useContributorPicker: contributorQueryMocks.useContributorPicker,
 }));
 
 vi.mock("@/features/contributors/mutations/use-contributor-actions", () => ({
@@ -38,14 +28,7 @@ vi.mock("@/features/contributors/mutations/use-contributor-actions", () => ({
 
 function createWrapper() {
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-      mutations: {
-        retry: false,
-      },
-    },
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
 
   return function Wrapper({ children }: PropsWithChildren) {
@@ -55,7 +38,7 @@ function createWrapper() {
   };
 }
 
-function makeAssignMutation(overrides: Record<string, unknown> = {}) {
+function makeMutation(overrides: Record<string, unknown> = {}) {
   return {
     mutateAsync: vi.fn(),
     reset: vi.fn(),
@@ -65,129 +48,70 @@ function makeAssignMutation(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function renderDialog(
+  overrides: Partial<React.ComponentProps<typeof AssignContributorDialog>> = {},
+) {
+  return render(
+    <AssignContributorDialog
+      content={storyContentViewModel}
+      existingAssignments={[]}
+      open
+      onOpenChange={vi.fn()}
+      {...overrides}
+    />,
+    { wrapper: createWrapper() },
+  );
+}
+
 beforeEach(() => {
   HTMLElement.prototype.scrollIntoView = vi.fn();
-  contributorQueryMocks.useContributors.mockReset();
+  contributorQueryMocks.useContributorPicker.mockReset();
   contributorActionMocks.useContributorActions.mockReset();
-  contributorQueryMocks.useContributors.mockReturnValue({
+  contributorQueryMocks.useContributorPicker.mockReturnValue({
     contributors: contributorViewModels,
-    limit: 12,
-    search: "",
     isLoading: false,
     isFetching: false,
     problem: null,
     refetch: vi.fn(),
   });
   contributorActionMocks.useContributorActions.mockReturnValue({
-    createContributor: makeAssignMutation(),
-    renameContributor: makeAssignMutation(),
-    assignContributor: makeAssignMutation(),
+    createContributor: makeMutation(),
+    renameContributor: makeMutation(),
+    assignContributor: makeMutation(),
     isPending: false,
   });
 });
 
 describe("AssignContributorDialog", () => {
-  it("shows an empty state when the recent contributor registry is empty", () => {
-    contributorQueryMocks.useContributors.mockReturnValue({
-      contributors: [],
-      limit: 12,
-      search: "",
-      isLoading: false,
-      isFetching: false,
-      problem: null,
-      refetch: vi.fn(),
+  it("opens a role-scoped database-backed picker", () => {
+    renderDialog({ role: "ILLUSTRATOR" });
+
+    expect(contributorQueryMocks.useContributorPicker).toHaveBeenCalledWith({
+      role: "ILLUSTRATOR",
+      query: "",
+      enabled: true,
     });
-
-    render(
-      <AssignContributorDialog
-        content={storyContentViewModel}
-        existingAssignments={[]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
-
     expect(
-      screen.getByRole("heading", { name: /no contributors available/i }),
+      screen.getByRole("heading", { name: /assign contributor/i }),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText(/search contributors/i)).toBeVisible();
-  });
-
-  it("shows a search-specific empty state when no contributor matches", () => {
-    contributorQueryMocks.useContributors.mockReturnValue({
-      contributors: [],
-      limit: 12,
-      search: "lina",
-      isLoading: false,
-      isFetching: false,
-      problem: null,
-      refetch: vi.fn(),
-    });
-
-    render(
-      <AssignContributorDialog
-        content={storyContentViewModel}
-        existingAssignments={[]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
-
     expect(
-      screen.getByRole("heading", {
-        name: /no contributors match this search/i,
-      }),
+      screen.getByText(/Choose an existing Illustrator/i),
     ).toBeInTheDocument();
   });
 
-  it("submits a content contributor assignment with role, language, credit name, and sort order", async () => {
-    const assignMutation = makeAssignMutation({
-      mutateAsync: vi.fn().mockResolvedValue({
-        contentId: 1,
-        contributorId: 11,
-        contributorDisplayName: "Annie Case",
-        role: "AUTHOR",
-        languageCode: "en",
-        creditName: "A. Case",
-        sortOrder: 2,
-      }),
+  it("selects a result row directly and lets the backend assign its order", async () => {
+    const assignMutation = makeMutation({
+      mutateAsync: vi.fn().mockResolvedValue({}),
     });
     contributorActionMocks.useContributorActions.mockReturnValue({
-      createContributor: makeAssignMutation(),
-      renameContributor: makeAssignMutation(),
+      createContributor: makeMutation(),
+      renameContributor: makeMutation(),
       assignContributor: assignMutation,
       isPending: false,
     });
 
-    render(
-      <AssignContributorDialog
-        content={storyContentViewModel}
-        existingAssignments={[]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    expect(contributorQueryMocks.useContributors).toHaveBeenCalledWith({
-      limit: 12,
-      search: "",
-      enabled: true,
-    });
-    fireEvent.change(screen.getByLabelText(/search contributors/i), {
-      target: { value: "Annie" },
-    });
-    fireEvent.click(screen.getByLabelText(/^contributor$/i));
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Annie Case"),
-    );
-    fireEvent.click(screen.getByLabelText(/contributor scope/i));
-    fireEvent.click(within(screen.getByRole("listbox")).getByText("English"));
-    fireEvent.change(screen.getByLabelText(/sort order/i), {
-      target: { value: "2" },
-    });
+    renderDialog();
+    fireEvent.click(screen.getByRole("option", { name: /annie case/i }));
     fireEvent.change(screen.getByLabelText(/credit name/i), {
       target: { value: " A. Case " },
     });
@@ -195,147 +119,143 @@ describe("AssignContributorDialog", () => {
       screen.getByRole("button", { name: /assign contributor/i }),
     );
 
-    await waitFor(() => {
+    await waitFor(() =>
       expect(assignMutation.mutateAsync).toHaveBeenCalledWith({
         contentId: 1,
         values: {
           contributorId: 11,
           role: "AUTHOR",
-          languageCode: "en",
+          languageCode: null,
           creditName: "A. Case",
-          sortOrder: 2,
         },
-      });
-    });
+      }),
+    );
   });
 
-  it("submits a global assignment with languageCode null", async () => {
-    const assignMutation = makeAssignMutation({
+  it("offers inline create and automatically assigns the new contributor", async () => {
+    const createMutation = makeMutation({
       mutateAsync: vi.fn().mockResolvedValue({
-        contentId: 4,
-        contributorId: 13,
-        contributorDisplayName: "Sena Yildiz",
-        role: "ILLUSTRATOR",
-        languageCode: null,
-        creditName: null,
-        sortOrder: 0,
+        contributorId: 99,
+        displayName: "Lina Hart",
+        roles: ["AUTHOR"],
       }),
     });
+    const assignMutation = makeMutation({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    });
+    contributorQueryMocks.useContributorPicker.mockReturnValue({
+      contributors: [],
+      isLoading: false,
+      isFetching: false,
+      problem: null,
+      refetch: vi.fn(),
+    });
     contributorActionMocks.useContributorActions.mockReturnValue({
-      createContributor: makeAssignMutation(),
-      renameContributor: makeAssignMutation(),
+      createContributor: createMutation,
+      renameContributor: makeMutation(),
       assignContributor: assignMutation,
       isPending: false,
     });
 
-    render(
-      <AssignContributorDialog
-        content={inactiveContentViewModel}
-        existingAssignments={[]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
+    renderDialog();
+    fireEvent.change(screen.getByLabelText(/search authors/i), {
+      target: { value: " Lina Hart " },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /create and assign/i }));
 
-    expect(
-      screen.getByText(
-        /all languages creates one localization-independent credit/i,
-      ),
-    ).toBeVisible();
-
-    fireEvent.click(screen.getByLabelText(/^contributor$/i));
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Sena Yildiz"),
+    await waitFor(() =>
+      expect(createMutation.mutateAsync).toHaveBeenCalledWith({
+        displayName: "Lina Hart",
+        roles: ["AUTHOR"],
+      }),
     );
-    fireEvent.click(
-      screen.getByRole("button", { name: /assign contributor/i }),
-    );
-
-    await waitFor(() => {
-      expect(assignMutation.mutateAsync).toHaveBeenCalledWith({
-        contentId: 4,
-        values: {
-          contributorId: 13,
-          role: "AUTHOR",
-          languageCode: null,
-          creditName: null,
-          sortOrder: 0,
-        },
-      });
+    expect(assignMutation.mutateAsync).toHaveBeenCalledWith({
+      contentId: 1,
+      values: {
+        contributorId: 99,
+        role: "AUTHOR",
+        languageCode: null,
+        creditName: null,
+      },
     });
   });
 
-  it("blocks duplicate role/language credits using current-session assignments", async () => {
-    const assignMutation = makeAssignMutation();
+  it("keeps the created contributor context and exposes retry after assignment failure", async () => {
+    const assignMutation = makeMutation({
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValueOnce(new Error("temporary failure"))
+        .mockResolvedValueOnce({}),
+    });
+    const createMutation = makeMutation({
+      mutateAsync: vi.fn().mockResolvedValue({
+        contributorId: 99,
+        displayName: "Lina Hart",
+        roles: ["AUTHOR"],
+      }),
+    });
+    contributorQueryMocks.useContributorPicker.mockReturnValue({
+      contributors: [],
+      isLoading: false,
+      isFetching: false,
+      problem: null,
+      refetch: vi.fn(),
+    });
     contributorActionMocks.useContributorActions.mockReturnValue({
-      createContributor: makeAssignMutation(),
-      renameContributor: makeAssignMutation(),
+      createContributor: createMutation,
+      renameContributor: makeMutation(),
       assignContributor: assignMutation,
       isPending: false,
     });
 
-    render(
-      <AssignContributorDialog
-        content={storyContentViewModel}
-        existingAssignments={[contentContributorViewModels[0]!]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
+    renderDialog();
+    fireEvent.change(screen.getByLabelText(/search authors/i), {
+      target: { value: "Lina Hart" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /create and assign/i }));
 
-    fireEvent.click(screen.getByLabelText(/^contributor$/i));
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Annie Case"),
-    );
-    fireEvent.click(screen.getByLabelText(/contributor scope/i));
-    fireEvent.click(within(screen.getByRole("listbox")).getByText("English"));
-    fireEvent.click(
-      screen.getByRole("button", { name: /assign contributor/i }),
-    );
+    expect(await screen.findByRole("button", { name: /retry/i })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: /retry/i }));
 
-    expect(
-      await screen.findByText(/already has a author credit in english/i),
-    ).toBeVisible();
-    expect(assignMutation.mutateAsync).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(assignMutation.mutateAsync).toHaveBeenCalledTimes(2),
+    );
   });
 
-  it("blocks duplicate global credits using the all languages scope", async () => {
-    const assignMutation = makeAssignMutation();
+  it("defaults narrator assignments to the first content language", () => {
+    renderDialog({ role: "NARRATOR" });
+
+    expect(contributorQueryMocks.useContributorPicker).toHaveBeenCalledWith({
+      role: "NARRATOR",
+      query: "",
+      enabled: true,
+    });
+    fireEvent.click(screen.getByRole("option", { name: /Annie Case/ }));
+
+    expect(screen.getByRole("combobox", { name: /scope/i })).toHaveTextContent(
+      "English",
+    );
+  });
+
+  it("still blocks duplicate role and language assignments", async () => {
+    const assignMutation = makeMutation();
     contributorActionMocks.useContributorActions.mockReturnValue({
-      createContributor: makeAssignMutation(),
-      renameContributor: makeAssignMutation(),
+      createContributor: makeMutation(),
+      renameContributor: makeMutation(),
       assignContributor: assignMutation,
       isPending: false,
     });
 
-    render(
-      <AssignContributorDialog
-        content={inactiveContentViewModel}
-        existingAssignments={[globalContentContributorViewModel]}
-        open
-        onOpenChange={vi.fn()}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    fireEvent.click(screen.getByLabelText(/^contributor$/i));
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Sena Yildiz"),
-    );
-    fireEvent.click(screen.getByLabelText(/contributor role/i));
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Illustrator"),
-    );
+    renderDialog({ existingAssignments: [contentContributorViewModels[0]!] });
+    fireEvent.click(screen.getByRole("option", { name: /annie case/i }));
+    fireEvent.click(screen.getByLabelText(/credit scope/i));
+    fireEvent.click(screen.getByRole("option", { name: "English" }));
     fireEvent.click(
       screen.getByRole("button", { name: /assign contributor/i }),
     );
 
     expect(
-      await screen.findByText(
-        /already has a illustrator credit in all languages/i,
-      ),
+      await screen.findByText(/already has a author credit/i),
     ).toBeVisible();
     expect(assignMutation.mutateAsync).not.toHaveBeenCalled();
   });

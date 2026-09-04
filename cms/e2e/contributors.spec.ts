@@ -315,7 +315,6 @@ test("contributor registry and assignment flows support delete and unassign", as
         role: ContentContributorRecord["role"];
         languageCode?: string | null;
         creditName?: string | null;
-        sortOrder: number;
       };
       const contributor = contributors.find(
         (candidate) => candidate.contributorId === body.contributorId,
@@ -333,7 +332,7 @@ test("contributor registry and assignment flows support delete and unassign", as
         role: body.role,
         languageCode: body.languageCode ?? null,
         creditName: body.creditName ?? null,
-        sortOrder: body.sortOrder,
+        sortOrder: assignments.length,
       };
       assignments.push(assignment);
 
@@ -451,15 +450,14 @@ test("contributor registry and assignment flows support delete and unassign", as
     page.waitForResponse((response) => {
       const responseUrl = new URL(response.url());
       return (
-        responseUrl.pathname === "/api/admin/contributors" &&
+        responseUrl.pathname === "/api/admin/contributor-registry" &&
         responseUrl.searchParams.get("q") === "Lina" &&
         response.request().method() === "GET"
       );
     }),
-    page.getByLabel(/search contributors/i).fill("Lina"),
+    page.getByLabel(/search authors/i).fill("Lina"),
   ]);
-  await page.getByRole("combobox", { name: /^contributor$/i }).click();
-  await page.getByRole("option", { name: "Lina Hart" }).click();
+  await page.getByRole("option", { name: /Lina Hart/ }).click();
   await page
     .getByRole("dialog")
     .getByRole("button", { name: /^assign contributor$/i })

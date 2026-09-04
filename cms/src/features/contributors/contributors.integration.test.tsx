@@ -130,10 +130,6 @@ describe("Contributor integration", () => {
           return jsonResponse(session);
         }
 
-        if (url.pathname === "/api/admin/contributors" && method === "GET") {
-          return jsonResponse(contributors);
-        }
-
         if (
           url.pathname === "/api/admin/contributor-registry" &&
           method === "GET"
@@ -279,6 +275,11 @@ describe("Contributor integration", () => {
     const session = makeSession();
     const content = cloneJson(storyContentReadResponse);
     const contributors = cloneJson(contributorResponses);
+    contributors.push({
+      contributorId: 99,
+      displayName: "Lina Hart",
+      roles: ["AUTHOR"],
+    });
     const assignments = cloneJson(contentContributorResponses);
     const fetchMock = vi
       .fn<typeof fetch>()
@@ -294,8 +295,23 @@ describe("Contributor integration", () => {
           return jsonResponse(content);
         }
 
-        if (url.pathname === "/api/admin/contributors" && method === "GET") {
-          return jsonResponse(contributors);
+        if (
+          url.pathname === "/api/admin/contributor-registry" &&
+          method === "GET"
+        ) {
+          expect(url.searchParams.get("role")).toBe("AUTHOR");
+          return jsonResponse({
+            items: contributors.map((item) => ({
+              ...item,
+              totalUsageCount: 0,
+              usageByRole: {},
+              updatedAt: "2026-03-28T10:00:00Z",
+            })),
+            page: 0,
+            size: 25,
+            totalItems: contributors.length,
+            totalPages: 1,
+          });
         }
 
         if (
@@ -314,7 +330,6 @@ describe("Contributor integration", () => {
             role: AdminContentContributorResponse["role"];
             languageCode?: string | null;
             creditName?: string | null;
-            sortOrder: number;
           };
           const contributor = contributors.find(
             (candidate) => candidate.contributorId === body.contributorId,
@@ -376,20 +391,12 @@ describe("Contributor integration", () => {
     );
 
     const dialog = await screen.findByRole("dialog");
-    const contributorSelect = await within(dialog).findByRole("combobox", {
-      name: /^contributor$/i,
-    });
-    fireEvent.click(contributorSelect);
-    fireEvent.click(
-      within(screen.getByRole("listbox")).getByText("Sena Yildiz"),
-    );
+    fireEvent.click(within(dialog).getByRole("option", { name: /Lina Hart/ }));
     fireEvent.click(
       within(dialog).getByRole("button", { name: /^assign contributor$/i }),
     );
 
-    expect((await screen.findAllByText("Sena Yildiz")).length).toBeGreaterThan(
-      0,
-    );
+    expect((await screen.findAllByText("Lina Hart")).length).toBeGreaterThan(0);
 
     const unassignButtons = screen.getAllByRole("button", {
       name: /^unassign m\. rivers$/i,
@@ -403,9 +410,7 @@ describe("Contributor integration", () => {
       }),
     );
 
-    expect((await screen.findAllByText("Sena Yildiz")).length).toBeGreaterThan(
-      0,
-    );
+    expect((await screen.findAllByText("Lina Hart")).length).toBeGreaterThan(0);
     expect(
       assignments.some((assignment) => assignment.creditName === "M. Rivers"),
     ).toBe(false);

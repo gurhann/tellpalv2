@@ -1,14 +1,10 @@
+import { useDeferredValue, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
-
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
 import { FieldError } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
-import {
-  applyProblemDetailToForm,
-  toastMutation,
-  useZodForm,
-} from "@/components/forms/form-utils";
+import { toastMutation, useZodForm } from "@/components/forms/form-utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,29 +25,27 @@ import {
 } from "@/components/ui/select";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
-import { GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL } from "@/features/contributors/model/contributor-view-model";
+import type { ContributorRole } from "@/features/contributors/api/contributor-admin";
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
-import { useContributors } from "@/features/contributors/queries/use-contributors";
+import { useContributorPicker } from "@/features/contributors/queries/use-contributors";
 import {
   contentContributorFormSchema,
-  contributorRoleOptions,
   getAssignContributorFormDefaults,
-  getContributorLanguageScopeLabel,
   validateLocalContentContributorAssignment,
   type ContentContributorFormValues,
 } from "@/features/contributors/schema/content-contributor-schema";
 import { ApiClientError } from "@/lib/http/client";
 import { getProblemMessage } from "@/lib/http/problem-details";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useI18n } from "@/i18n/locale-provider";
 
-type AssignContributorDialogProps = {
+type Props = {
   content: ContentReadViewModel;
   existingAssignments: ContentContributorViewModel[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  role?: ContributorRole;
 };
 
-const RECENT_CONTRIBUTOR_LIMIT = 12;
 const GLOBAL_SCOPE_SELECT_VALUE = "__global__";
 
 export function AssignContributorDialog({
@@ -59,349 +53,344 @@ export function AssignContributorDialog({
   existingAssignments,
   open,
   onOpenChange,
-}: AssignContributorDialogProps) {
+  role = "AUTHOR",
+}: Props) {
+  const { t } = useI18n();
+  const roleLabel = t(`contributors.role.${role.toLowerCase()}` as never);
+  const [search, setSearch] = useState("");
   const [problemMessage, setProblemMessage] = useState<string | null>(null);
-  const [contributorSearch, setContributorSearch] = useState("");
-  const deferredContributorSearch = useDeferredValue(contributorSearch);
-  const contributorListQuery = useContributors({
-    limit: RECENT_CONTRIBUTOR_LIMIT,
-    search: deferredContributorSearch,
+  const [created, setCreated] = useState<{
+    id: number;
+    displayName: string;
+  } | null>(null);
+  const [selectedContributor, setSelectedContributor] = useState<{
+    id: number;
+    displayName: string;
+  } | null>(null);
+  const [retryValues, setRetryValues] =
+    useState<ContentContributorFormValues | null>(null);
+  const deferredSearch = useDeferredValue(search);
+  const query = useContributorPicker({
+    role,
+    query: deferredSearch,
     enabled: open,
   });
-  const contributorActions = useContributorActions();
-  const languageOptions = content.localizations.map((localization) => ({
-    value: localization.languageCode,
-    label: localization.languageLabel,
+  const actions = useContributorActions();
+  const languageOptions = content.localizations.map((l) => ({
+    value: l.languageCode,
+    label: l.languageLabel,
   }));
-  const initialValues = useMemo(() => getAssignContributorFormDefaults(), []);
+  const initialValues = useMemo(
+    () => ({
+      ...getAssignContributorFormDefaults(),
+      role,
+      languageCode:
+        role === "NARRATOR" ? (languageOptions[0]?.value ?? null) : null,
+    }),
+    [role, content.localizations],
+  );
   const form = useZodForm<ContentContributorFormValues>({
     schema: contentContributorFormSchema,
     defaultValues: initialValues,
   });
-
-  function handleOpenChange(nextOpen: boolean) {
-    if (!nextOpen) {
+  const values = form.watch();
+  const selected =
+    query.contributors.find((c) => c.id === values.contributorId) ??
+    selectedContributor ??
+    created;
+  function close(next: boolean) {
+    if (!next) {
       form.reset(initialValues);
-      form.clearErrors();
-      setContributorSearch("");
+      setSearch("");
       setProblemMessage(null);
+      setCreated(null);
+      setSelectedContributor(null);
+      setRetryValues(null);
     }
-
-    onOpenChange(nextOpen);
+    onOpenChange(next);
   }
-
-  async function handleSubmit(values: ContentContributorFormValues) {
-    form.clearErrors();
+  async function assign(v: ContentContributorFormValues) {
     setProblemMessage(null);
-
-    const localValidationError = validateLocalContentContributorAssignment(
-      values,
-      existingAssignments,
-    );
-
-    if (localValidationError) {
-      form.setError(localValidationError.field, {
-        type: "manual",
-        message: localValidationError.message,
-      });
-      return;
-    }
-
     try {
       await toastMutation(
-        contributorActions.assignContributor.mutateAsync({
+        actions.assignContributor.mutateAsync({
           contentId: content.summary.id,
           values: {
-            contributorId: values.contributorId,
-            role: values.role,
-            languageCode: values.languageCode,
-            creditName: values.creditName.trim() || null,
-            sortOrder: values.sortOrder,
+            contributorId: v.contributorId,
+            role: v.role,
+            languageCode: v.languageCode,
+            creditName: v.creditName.trim() || null,
           },
         }),
         {
-          loading: "Assigning contributor...",
-          success: "Contributor assigned.",
+          loading: t("contributors.picker.assignPending"),
+          success: t("contributors.picker.assignSuccess"),
         },
       );
-
-      handleOpenChange(false);
-    } catch (error) {
-      if (error instanceof ApiClientError) {
-        const mappedFieldError = applyProblemDetailToForm(
-          form.setError,
-          error.problem,
-        );
-
-        if (!mappedFieldError) {
-          setProblemMessage(getProblemMessage(error.problem));
-        }
-        return;
-      }
-
-      form.setError("root.serverError", {
-        type: "server",
-        message: "Contributor assignment could not be saved. Try again.",
-      });
+      setRetryValues(null);
+      close(false);
+    } catch (e) {
+      setRetryValues(v);
+      setProblemMessage(
+        e instanceof ApiClientError
+          ? getProblemMessage(e.problem)
+          : t("contributors.picker.assignError"),
+      );
     }
   }
-
-  const hasContributors = contributorListQuery.contributors.length > 0;
-  const hasContributorSearch = contributorListQuery.search.length > 0;
-  const languageScopeLabel = getContributorLanguageScopeLabel(
-    form.watch("languageCode"),
-  );
-
+  async function submit(v: ContentContributorFormValues) {
+    form.clearErrors();
+    const local = validateLocalContentContributorAssignment(
+      v,
+      existingAssignments,
+    );
+    if (local) {
+      form.setError(local.field, { type: "manual", message: local.message });
+      return;
+    }
+    await assign(v);
+  }
+  async function createAndAssign() {
+    const displayName = search.trim();
+    if (!displayName) {
+      form.setError("contributorId", {
+        type: "manual",
+        message: t("contributors.picker.nameRequired"),
+      });
+      return;
+    }
+    try {
+      const contributor = await actions.createContributor.mutateAsync({
+        displayName,
+        roles: [role],
+      });
+      const next = {
+        ...values,
+        contributorId: contributor.contributorId,
+        role,
+      };
+      setCreated({
+        id: contributor.contributorId,
+        displayName: contributor.displayName,
+      });
+      form.setValue("contributorId", contributor.contributorId);
+      await assign(next);
+    } catch (e) {
+      if (e instanceof ApiClientError && e.problem.status === 409) {
+        const id = Number(e.problem.existingContributorId);
+        if (id > 0) {
+          form.setValue("contributorId", id);
+          setCreated({ id, displayName });
+          setSelectedContributor({ id, displayName });
+          setProblemMessage(t("contributors.picker.duplicateUseExisting"));
+          return;
+        }
+      }
+      setProblemMessage(
+        e instanceof ApiClientError
+          ? getProblemMessage(e.problem)
+          : t("contributors.picker.createError"),
+      );
+    }
+  }
+  const hasResults = query.contributors.length > 0;
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={close}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Assign contributor</DialogTitle>
+          <DialogTitle>{t("contributors.picker.title")}</DialogTitle>
           <DialogDescription>
-            Add a contributor credit for this content item. Search the shared
-            registry, then choose the role and credit scope.
+            {t("contributors.picker.description", {
+              role: roleLabel,
+            })}
           </DialogDescription>
         </DialogHeader>
-
         <DialogBody>
-          <div className="space-y-2">
-            <label
-              className="text-sm font-medium text-foreground"
-              htmlFor="content-contributor-search"
-            >
-              Search contributors
-            </label>
-            <Input
-              id="content-contributor-search"
-              aria-label="Search contributors"
-              placeholder="Search by contributor name"
-              value={contributorSearch}
-              onChange={(event) => setContributorSearch(event.target.value)}
-              disabled={contributorActions.assignContributor.isPending}
-            />
-          </div>
-
-          {contributorListQuery.isLoading ? (
-            <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-8 text-sm text-muted-foreground">
-              Loading contributors from the shared registry...
+          <div className="grid gap-5">
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium"
+                htmlFor="content-contributor-search"
+              >
+                {t("contributors.picker.searchLabel", { role: roleLabel })}
+              </label>
+              <Input
+                id="content-contributor-search"
+                aria-label={t("contributors.picker.searchLabel", {
+                  role: roleLabel,
+                })}
+                placeholder={t("contributors.picker.searchPlaceholder")}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                disabled={actions.isPending}
+              />
             </div>
-          ) : !hasContributors ? (
-            <EmptyState
-              action={
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleOpenChange(false)}
+            {query.problem ? (
+              <ProblemAlert problem={query.problem} />
+            ) : query.isLoading ? (
+              <div className="rounded-2xl border px-4 py-8 text-sm text-muted-foreground">
+                {t("contributors.picker.loading")}
+              </div>
+            ) : !hasResults ? (
+              <EmptyState
+                title={t("contributors.picker.emptyTitle")}
+                description={t("contributors.picker.emptyDescription", {
+                  name: search.trim(),
+                  role: roleLabel,
+                })}
+                action={
+                  search.trim() ? (
+                    <Button
+                      type="button"
+                      onClick={createAndAssign}
+                      disabled={actions.isPending}
+                    >
+                      {t("contributors.picker.createAndAssign")}
+                    </Button>
+                  ) : undefined
+                }
+              />
+            ) : (
+              <>
+                <div
+                  className="grid gap-2"
+                  role="listbox"
+                  aria-label={t("contributors.picker.resultsLabel")}
                 >
-                  Close
-                </Button>
-              }
-              description={
-                hasContributorSearch
-                  ? "Try a different contributor name or clear the search to return to recent contributors."
-                  : "Create a contributor in the shared registry first, then reopen this dialog."
-              }
-              title={
-                hasContributorSearch
-                  ? "No contributors match this search"
-                  : "No contributors available"
-              }
-            />
-          ) : (
-            <form
-              className="grid gap-5"
-              noValidate
-              onSubmit={form.handleSubmit(handleSubmit)}
-            >
-              {problemMessage ? (
-                <ProblemAlert
-                  description={problemMessage}
-                  title="Contributor assignment failed"
-                />
-              ) : null}
-              <FieldError error={form.formState.errors.root?.serverError} />
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Contributor
-                  </label>
-                  <Controller
-                    control={form.control}
-                    name="contributorId"
-                    render={({ field }) => (
-                      <Select
-                        value={field.value > 0 ? field.value.toString() : ""}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      >
-                        <SelectTrigger
-                          aria-label="Contributor"
-                          aria-invalid={Boolean(
-                            form.formState.errors.contributorId,
-                          )}
-                          className="w-full"
-                        >
-                          <SelectValue placeholder="Select contributor" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contributorListQuery.contributors.map(
-                            (contributor) => (
-                              <SelectItem
-                                key={contributor.id}
-                                value={contributor.id.toString()}
-                              >
-                                {contributor.displayName}
-                              </SelectItem>
-                            ),
-                          )}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  <FieldError error={form.formState.errors.contributorId} />
+                  {query.contributors.map((c) => (
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={values.contributorId === c.id}
+                      key={c.id}
+                      onClick={() => {
+                        form.setValue("contributorId", c.id);
+                        setSelectedContributor({
+                          id: c.id,
+                          displayName: c.displayName,
+                        });
+                      }}
+                      className="flex min-h-11 items-center justify-between rounded-lg border border-border/70 px-3 text-left"
+                    >
+                      <span className="font-medium">{c.displayName}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {roleLabel}
+                      </span>
+                    </button>
+                  ))}
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Role
-                  </label>
-                  <Controller
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger
-                          aria-label="Contributor role"
-                          aria-invalid={Boolean(form.formState.errors.role)}
-                          className="w-full"
-                        >
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contributorRoleOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  <FieldError error={form.formState.errors.role} />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Scope
-                  </label>
-                  <Controller
-                    control={form.control}
-                    name="languageCode"
-                    render={({ field }) => (
-                      <Select
-                        value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
-                        onValueChange={(value) =>
-                          field.onChange(
-                            value === GLOBAL_SCOPE_SELECT_VALUE ? null : value,
-                          )
-                        }
-                      >
-                        <SelectTrigger
-                          aria-label="Contributor scope"
-                          aria-invalid={Boolean(
-                            form.formState.errors.languageCode,
-                          )}
-                          className="w-full"
-                        >
-                          <SelectValue placeholder="Select scope" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
-                            All languages
-                          </SelectItem>
-                          {languageOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  <p className="text-sm text-muted-foreground">
-                    {languageScopeLabel === GLOBAL_CONTRIBUTOR_LANGUAGE_LABEL
-                      ? "All languages creates one localization-independent credit."
-                      : `${languageScopeLabel} creates a localized contributor credit.`}
-                  </p>
-                  <FieldError error={form.formState.errors.languageCode} />
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    className="text-sm font-medium text-foreground"
-                    htmlFor="content-contributor-sort-order"
+                {selected ? (
+                  <form
+                    className="grid gap-4"
+                    onSubmit={form.handleSubmit(submit)}
+                    noValidate
                   >
-                    Sort order
-                  </label>
-                  <Input
-                    id="content-contributor-sort-order"
-                    inputMode="numeric"
-                    min={0}
-                    type="number"
-                    {...form.register("sortOrder", {
-                      setValueAs: (value) => Number(value),
-                    })}
-                  />
-                  <FieldError error={form.formState.errors.sortOrder} />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-medium text-foreground"
-                  htmlFor="content-contributor-credit-name"
-                >
-                  Credit name
-                </label>
-                <Input
-                  id="content-contributor-credit-name"
-                  placeholder="Optional credit override"
-                  {...form.register("creditName")}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Leave blank to use the contributor display name. Blank values
-                  are trimmed to `null` before submit.
-                </p>
-                <FieldError error={form.formState.errors.creditName} />
-              </div>
-
-              <div className="rounded-2xl border border-border/70 bg-muted/25 px-4 py-4 text-sm text-muted-foreground">
-                Global credits are available even when this content has no
-                localizations. Localized credits remain limited to the languages
-                shown in the content detail view.
-              </div>
-
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleOpenChange(false)}
-                  disabled={contributorActions.assignContributor.isPending}
-                >
-                  Cancel
-                </Button>
-                <SubmitButton
-                  isPending={contributorActions.assignContributor.isPending}
-                  pendingLabel="Assigning contributor..."
-                >
-                  Assign contributor
-                </SubmitButton>
-              </DialogFooter>
-            </form>
-          )}
+                    <p className="text-sm text-muted-foreground">
+                      {selected.displayName}
+                    </p>
+                    <FieldError error={form.formState.errors.contributorId} />
+                    <div className="space-y-2">
+                      <label
+                        className="text-sm font-medium"
+                        htmlFor="content-contributor-scope"
+                      >
+                        {t("contributors.picker.scope")}
+                      </label>
+                      <Controller
+                        control={form.control}
+                        name="languageCode"
+                        render={({ field }) => (
+                          <Select
+                            value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
+                            onValueChange={(value) =>
+                              field.onChange(
+                                value === GLOBAL_SCOPE_SELECT_VALUE
+                                  ? null
+                                  : value,
+                              )
+                            }
+                          >
+                            <SelectTrigger
+                              id="content-contributor-scope"
+                              aria-label={t("contributors.picker.scope")}
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
+                                {t("contributors.picker.allLanguages")}
+                              </SelectItem>
+                              {languageOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    </div>
+                    <label
+                      className="text-sm font-medium"
+                      htmlFor="content-contributor-credit-name"
+                    >
+                      {t("contributors.picker.creditName")}
+                    </label>
+                    <Input
+                      id="content-contributor-credit-name"
+                      placeholder={t(
+                        "contributors.picker.creditNamePlaceholder",
+                      )}
+                      {...form.register("creditName")}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      {(values.languageCode
+                        ? languageOptions.find(
+                            (option) => option.value === values.languageCode,
+                          )?.label
+                        : t("contributors.picker.allLanguages")) ??
+                        t("contributors.picker.allLanguages")}{" "}
+                      · {t("contributors.picker.scopeHint")}
+                    </p>
+                    <DialogFooter>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => close(false)}
+                      >
+                        {t("contributors.picker.cancel")}
+                      </Button>
+                      <SubmitButton
+                        isPending={actions.assignContributor.isPending}
+                        pendingLabel={t("contributors.picker.assignPending")}
+                      >
+                        {t("contributors.picker.assign")}
+                      </SubmitButton>
+                    </DialogFooter>
+                  </form>
+                ) : null}
+              </>
+            )}
+            {problemMessage ? (
+              <ProblemAlert
+                description={problemMessage}
+                title={t("contributors.picker.errorTitle")}
+              />
+            ) : null}
+            {retryValues ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => assign(retryValues)}
+                disabled={actions.assignContributor.isPending}
+              >
+                {t("contributors.picker.retry")}
+              </Button>
+            ) : null}
+          </div>
         </DialogBody>
       </DialogContent>
     </Dialog>
