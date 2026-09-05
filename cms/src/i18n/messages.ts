@@ -100,6 +100,16 @@ export const enMessages = {
     "Contributor could not be created. Try again.",
   "contributors.picker.duplicateUseExisting":
     "This name already exists. Select the existing contributor from the results.",
+  "contributors.picker.missingRoleDescription":
+    "{name} is already in the registry, but does not have the {role} role.",
+  "contributors.picker.addRoleAndAssign": "Add role and assign",
+  "contributors.picker.useExistingAndAssign": "Use existing and assign",
+  "contributors.picker.duplicateLookupTitle": "Existing contributor lookup",
+  "contributors.picker.duplicateLookupPending":
+    "Loading the existing contributor profile...",
+  "contributors.picker.duplicateLookupFailed":
+    "The existing contributor could not be loaded. Try again.",
+  "contributors.picker.retryDuplicateLookup": "Retry profile lookup",
   "contributors.picker.nameRequired": "Enter a contributor name.",
   "contributors.picker.creditName": "Credit name",
   "contributors.picker.scope": "Credit scope",
@@ -110,6 +120,18 @@ export const enMessages = {
   "contributors.picker.cancel": "Cancel",
   "contributors.picker.retry": "Retry assignment",
   "contributors.picker.errorTitle": "Contributor assignment failed",
+  "contributors.errors.roleNotSupportedTitle": "Role unavailable",
+  "contributors.errors.roleNotSupported":
+    "This contributor profile does not support the selected role.",
+  "contributors.errors.languageNotFoundTitle": "Language unavailable",
+  "contributors.errors.languageNotFound":
+    "This content does not have the selected language scope.",
+  "contributors.errors.assignmentExistsTitle": "Assignment already exists",
+  "contributors.errors.assignmentExists":
+    "This contributor already has an assignment for the selected role and scope.",
+  "contributors.errors.duplicateNameTitle": "Contributor already exists",
+  "contributors.errors.duplicateName":
+    "A contributor with this name already exists in the registry.",
   "contributors.panel.title": "Contributor credits",
   "contributors.panel.summary": "{count} assignments",
   "contributors.panel.summaryOne": "1 assignment",
@@ -425,6 +447,16 @@ export const trMessages = {
     "Katkıda bulunan oluşturulamadı. Tekrar deneyin.",
   "contributors.picker.duplicateUseExisting":
     "Bu ad zaten mevcut. Sonuçlardan mevcut katkıda bulunanı seçin.",
+  "contributors.picker.missingRoleDescription":
+    "{name} kayıt defterinde mevcut, ancak {role} rolüne sahip değil.",
+  "contributors.picker.addRoleAndAssign": "Rolü ekle ve ata",
+  "contributors.picker.useExistingAndAssign": "Mevcudu kullan ve ata",
+  "contributors.picker.duplicateLookupTitle": "Mevcut katkıda bulunan aranıyor",
+  "contributors.picker.duplicateLookupPending":
+    "Mevcut katkıda bulunan profili yükleniyor...",
+  "contributors.picker.duplicateLookupFailed":
+    "Mevcut katkıda bulunan yüklenemedi. Tekrar deneyin.",
+  "contributors.picker.retryDuplicateLookup": "Profil aramayı tekrar dene",
   "contributors.picker.nameRequired": "Katkıda bulunan adı girin.",
   "contributors.picker.creditName": "Kredi adı",
   "contributors.picker.scope": "Kredi kapsamı",
@@ -434,6 +466,18 @@ export const trMessages = {
   "contributors.picker.cancel": "İptal",
   "contributors.picker.retry": "Atamayı tekrar dene",
   "contributors.picker.errorTitle": "Katkıda bulunan ataması başarısız",
+  "contributors.errors.roleNotSupportedTitle": "Rol kullanılamıyor",
+  "contributors.errors.roleNotSupported":
+    "Bu katkıda bulunan profili seçilen rolü desteklemiyor.",
+  "contributors.errors.languageNotFoundTitle": "Dil kullanılamıyor",
+  "contributors.errors.languageNotFound":
+    "Bu içerikte seçilen dil kapsamı bulunmuyor.",
+  "contributors.errors.assignmentExistsTitle": "Atama zaten mevcut",
+  "contributors.errors.assignmentExists":
+    "Bu katkıda bulunan için seçilen rol ve kapsamda zaten bir atama var.",
+  "contributors.errors.duplicateNameTitle": "Katkıda bulunan zaten mevcut",
+  "contributors.errors.duplicateName":
+    "Bu ada sahip bir katkıda bulunan kayıt defterinde zaten mevcut.",
   "contributors.panel.title": "Katkıda bulunan kredileri",
   "contributors.panel.summary": "{count} atama",
   "contributors.panel.summaryOne": "1 atama",

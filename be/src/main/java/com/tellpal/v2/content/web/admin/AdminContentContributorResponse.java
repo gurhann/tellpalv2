@@ -1,12 +1,16 @@
 package com.tellpal.v2.content.web.admin;
 
+import java.util.Set;
+
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
+import com.tellpal.v2.content.domain.ContributorRole;
 
 public record AdminContentContributorResponse(
         Long assignmentId,
         Long contentId,
         Long contributorId,
         String contributorDisplayName,
+        Set<ContributorRole> contributorRoles,
         String role,
         String languageCode,
         String creditName,
@@ -18,6 +22,7 @@ public record AdminContentContributorResponse(
                 record.contentId(),
                 record.contributorId(),
                 record.contributorDisplayName(),
+                record.contributorRoles(),
                 record.role().name(),
                 record.languageCode() == null ? null : record.languageCode().value(),
                 record.creditName(),

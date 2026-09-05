@@ -27,6 +27,7 @@ import type { ContentReadViewModel } from "@/features/contents/model/content-vie
 import type { ContributorRole } from "@/features/contributors/api/contributor-admin";
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
+import { localizeContributorProblem } from "@/features/contributors/lib/contributor-problems";
 import {
   contributorRoleOptions,
   editContentContributorFormSchema,
@@ -72,6 +73,11 @@ export function EditContentContributorDialog({
     },
   });
   const languageValue = form.watch("languageCode");
+  const supportedRoles = assignment.contributorRoles ?? [assignment.role];
+  const roleOptions = contributorRoleOptions.filter((option) =>
+    supportedRoles.includes(option.value),
+  );
+  const currentRoleIsSupported = supportedRoles.includes(assignment.role);
 
   function close(nextOpen: boolean) {
     if (!nextOpen) {
@@ -107,7 +113,7 @@ export function EditContentContributorDialog({
     } catch (error) {
       setProblem(
         error instanceof ApiClientError
-          ? error.problem
+          ? localizeContributorProblem(error.problem, t)
           : {
               type: "about:blank",
               title: t("contributors.edit.errorTitle"),
@@ -155,31 +161,43 @@ export function EditContentContributorDialog({
               >
                 {t("contributors.edit.role")}
               </label>
-              <Controller
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) =>
-                      field.onChange(value as ContributorRole)
-                    }
-                  >
-                    <SelectTrigger id="edit-contributor-role">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {contributorRoleOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {t(
-                            `contributors.role.${option.value.toLowerCase()}` as never,
-                          )}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+              {currentRoleIsSupported ? (
+                <Controller
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) =>
+                        field.onChange(value as ContributorRole)
+                      }
+                    >
+                      <SelectTrigger id="edit-contributor-role">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roleOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {t(
+                              `contributors.role.${option.value.toLowerCase()}` as never,
+                            )}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              ) : (
+                <output
+                  id="edit-contributor-role"
+                  className="rounded-xl border border-border/70 bg-muted/20 px-3 py-2 text-sm text-muted-foreground"
+                  aria-readonly="true"
+                >
+                  {t(
+                    `contributors.role.${assignment.role.toLowerCase()}` as never,
+                  )}
+                </output>
+              )}
               <FieldError error={form.formState.errors.role} />
             </div>
 

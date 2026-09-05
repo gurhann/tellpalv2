@@ -274,11 +274,14 @@ public class Content extends BaseJpaEntity {
         Long contributorId = requireContributorId(contributor);
         requireRole(role);
         if (!contributor.getRoles().contains(role)) {
-            throw new IllegalArgumentException("Contributor does not have the requested role");
+            throw new UnsupportedContributorRoleException(role);
+        }
+        if (languageCode != null && findLocalization(languageCode).isEmpty()) {
+            throw new ContributorAssignmentLanguageNotFoundException(languageCode);
         }
         if (contributors.stream()
                 .anyMatch(assignment -> assignment.matchesAssignment(contributorId, role, languageCode))) {
-            throw new IllegalArgumentException("Contributor assignment already exists for role and language");
+            throw new DuplicateContributorAssignmentException(role, languageCode);
         }
         ContentContributor assignment = new ContentContributor(
                 this,
@@ -371,15 +374,15 @@ public class Content extends BaseJpaEntity {
         Contributor contributor = assignment.getContributor();
         Long contributorId = requireContributorId(contributor);
         if (!contributor.getRoles().contains(newRole)) {
-            throw new IllegalArgumentException("Contributor does not have the requested role");
+            throw new UnsupportedContributorRoleException(newRole);
         }
         if (newLanguageCode != null && findLocalization(newLanguageCode).isEmpty()) {
-            throw new IllegalArgumentException("Contributor assignment language must exist on content");
+            throw new ContributorAssignmentLanguageNotFoundException(newLanguageCode);
         }
         if (contributors.stream().anyMatch(candidate ->
                 !Objects.equals(candidate.getId(), assignmentId)
                         && candidate.matchesAssignment(contributorId, newRole, newLanguageCode))) {
-            throw new IllegalArgumentException("Contributor assignment already exists for role and language");
+            throw new DuplicateContributorAssignmentException(newRole, newLanguageCode);
         }
 
         ContributorRole oldRole = assignment.getRole();
@@ -544,5 +547,54 @@ public class Content extends BaseJpaEntity {
             throw new IllegalArgumentException(message);
         }
         return value;
+    }
+
+    /** Raised when a contributor profile does not support the requested assignment role. */
+    public static final class UnsupportedContributorRoleException extends IllegalArgumentException {
+        private final ContributorRole role;
+
+        public UnsupportedContributorRoleException(ContributorRole role) {
+            super("Contributor does not have the requested role: " + role);
+            this.role = role;
+        }
+
+        public ContributorRole getRole() {
+            return role;
+        }
+    }
+
+    /** Raised when a localized assignment targets a language absent from this content. */
+    public static final class ContributorAssignmentLanguageNotFoundException extends IllegalArgumentException {
+        private final LanguageCode languageCode;
+
+        public ContributorAssignmentLanguageNotFoundException(LanguageCode languageCode) {
+            super("Contributor assignment language must exist on content: " + languageCode);
+            this.languageCode = languageCode;
+        }
+
+        public LanguageCode getLanguageCode() {
+            return languageCode;
+        }
+    }
+
+    /** Raised when an assignment would duplicate a contributor role and language scope. */
+    public static final class DuplicateContributorAssignmentException extends IllegalArgumentException {
+        private final ContributorRole role;
+        private final LanguageCode languageCode;
+
+        public DuplicateContributorAssignmentException(ContributorRole role, LanguageCode languageCode) {
+            super("Contributor assignment already exists for role " + role + " and language "
+                    + (languageCode == null ? "global" : languageCode.value()));
+            this.role = role;
+            this.languageCode = languageCode;
+        }
+
+        public ContributorRole getRole() {
+            return role;
+        }
+
+        public LanguageCode getLanguageCode() {
+            return languageCode;
+        }
     }
 }

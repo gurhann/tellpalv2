@@ -46,6 +46,9 @@ Read order:
 
 ## Agent Model Selection Defaults
 
+- For all planning, implementation, verification, and review work, use the appropriate BMad skill;
+  small isolated fixes are the only exception.
+
 - Use `gpt-5.6-luna` as the default model for BMad planning, implementation, testing, and review
   workflows in this repository.
 - Before starting a BMad implementation, state the selected model and reassess the choice when the

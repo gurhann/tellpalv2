@@ -195,6 +195,7 @@ describe("ContributorFormDialog", () => {
             status: 409,
             title: "Contributor conflict",
             detail: "Contributor display name already exists.",
+            errorCode: "duplicate_contributor_display_name",
           }),
         ),
       ),
@@ -215,7 +216,7 @@ describe("ContributorFormDialog", () => {
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Contributor display name already exists.",
+      "A contributor with this name already exists in the registry.",
     );
   });
 });

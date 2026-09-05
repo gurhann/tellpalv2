@@ -56,6 +56,7 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             from Content content
             left join fetch content.contributors assignment
             left join fetch assignment.contributor
+            left join fetch assignment.contributor.roles
             where content.id = :id
             """)
     Optional<Content> findByIdForContributorAdminRead(Long id);

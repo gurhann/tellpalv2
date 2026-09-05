@@ -17,8 +17,11 @@ import type { ContributorRole } from "@/features/contributors/api/contributor-ad
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import { useContentContributorAssignments } from "@/features/contributors/queries/use-content-contributor-assignments";
+import {
+  getLocalizedContributorProblemMessage,
+  localizeContributorProblem,
+} from "@/features/contributors/lib/contributor-problems";
 import { ApiClientError } from "@/lib/http/client";
-import { getProblemMessage } from "@/lib/http/problem-details";
 import { resolveLanguageLabel } from "@/lib/languages";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -91,7 +94,7 @@ export function ContentContributorPanel({
       setOptimisticAssignments(previous);
       setReorderError(
         error instanceof ApiClientError
-          ? getProblemMessage(error.problem)
+          ? getLocalizedContributorProblemMessage(error.problem, t)
           : t("contributors.panel.reorderError"),
       );
     }
@@ -114,7 +117,9 @@ export function ContentContributorPanel({
           </Link>
         </Button>
       </div>
-      {query.problem ? <ProblemAlert problem={query.problem} /> : null}
+      {query.problem ? (
+        <ProblemAlert problem={localizeContributorProblem(query.problem, t)} />
+      ) : null}
       {reorderError ? (
         <p
           role="alert"

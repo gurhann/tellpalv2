@@ -71,6 +71,7 @@ final class ContentManagementMapper {
                 contentId,
                 contributorId,
                 assignment.getContributor().getDisplayName(),
+                assignment.getContributor().getRoles(),
                 assignment.getRole(),
                 assignment.getLanguageCode(),
                 assignment.getCreditName(),

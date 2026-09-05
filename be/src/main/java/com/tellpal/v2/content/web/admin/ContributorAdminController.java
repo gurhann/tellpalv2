@@ -93,6 +93,12 @@ public class ContributorAdminController {
                 .toList();
     }
 
+    @GetMapping("/contributors/{contributorId}")
+    @Operation(summary = "Get a contributor", description = "Returns one contributor profile by its stable identifier.")
+    public AdminContributorResponse getContributor(@PathVariable Long contributorId) {
+        return AdminContributorResponse.from(contributorManagementService.getContributor(contributorId));
+    }
+
     @GetMapping("/contributor-registry")
     @Operation(summary = "List the contributor registry",
             description = "Returns a database-filtered and deterministically paged contributor registry with assignment usage summaries.")

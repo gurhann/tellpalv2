@@ -279,4 +279,31 @@ describe("ContentContributorPanel", () => {
       screen.getByRole("heading", { name: /edit contributor assignment/i }),
     ).toBeVisible();
   });
+
+  it("only offers roles from the contributor profile snapshot", async () => {
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: [
+        {
+          ...contentContributorViewModels[0]!,
+          contributorRoles: ["AUTHOR"],
+        },
+      ],
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={storyContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /edit contributor assignment/i }),
+    );
+    fireEvent.click(screen.getByRole("combobox", { name: /role/i }));
+
+    expect(screen.getByRole("option", { name: "Author" })).toBeVisible();
+    expect(
+      screen.queryByRole("option", { name: "Musician" }),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -95,6 +95,7 @@ export const adminContentContributorResponseSchema = z.object({
   contentId: z.number().int().positive(),
   contributorId: z.number().int().positive(),
   contributorDisplayName: z.string().min(1),
+  contributorRoles: z.array(contributorRoleSchema).default([]),
   role: contributorRoleSchema,
   languageCode: z.string().min(1).nullable(),
   creditName: z.string().nullable(),
@@ -104,9 +105,13 @@ export const adminContentContributorResponseSchema = z.object({
 export type AdminContributorResponse = z.infer<
   typeof adminContributorResponseSchema
 >;
-export type AdminContentContributorResponse = z.infer<
-  typeof adminContentContributorResponseSchema
->;
+export type AdminContentContributorResponse = Omit<
+  z.infer<typeof adminContentContributorResponseSchema>,
+  "contributorRoles"
+> & {
+  /** Optional for compatibility with cached responses from before the snapshot field. */
+  contributorRoles?: ContributorRole[];
+};
 export const adminContentContributorListResponseSchema = z.array(
   adminContentContributorResponseSchema,
 );
@@ -131,6 +136,12 @@ export const contributorAdminApi = {
       {
         responseSchema: adminContributorListResponseSchema,
       },
+    );
+  },
+  getContributor(contributorId: number) {
+    return apiClient.get<AdminContributorResponse>(
+      `/api/admin/contributors/${contributorId}`,
+      { responseSchema: adminContributorResponseSchema },
     );
   },
   listContributorRegistry(input: ContributorRegistryQuery = {}) {

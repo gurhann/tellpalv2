@@ -49,6 +49,24 @@ describe("contributor view model mappers", () => {
     });
   });
 
+  it("preserves the contributor profile role snapshot for assignment editors", () => {
+    const dto: AdminContentContributorResponse = {
+      assignmentId: 107,
+      contentId: 14,
+      contributorId: 22,
+      contributorDisplayName: "Annie Case",
+      contributorRoles: ["AUTHOR"],
+      role: "AUTHOR",
+      languageCode: "EN",
+      creditName: null,
+      sortOrder: 0,
+    };
+
+    expect(mapAdminContentContributor(dto).contributorRoles).toEqual([
+      "AUTHOR",
+    ]);
+  });
+
   it("maps null languageCode as a global contributor scope", () => {
     const dto: AdminContentContributorResponse = {
       assignmentId: 106,

@@ -15,6 +15,8 @@ class ContentTest {
     @Test
     void assignContributorAppendsAtTheServerOwnedEndOfItsRoleAndLanguageGroup() {
         Content content = Content.create(ContentType.STORY, "story-contributors", 6, true);
+        content.upsertLocalization(LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
         Contributor firstContributor = persistedContributor(1L, "Alice");
         Contributor secondContributor = persistedContributor(2L, "Bob");
 
@@ -29,6 +31,10 @@ class ContentTest {
     @Test
     void assignContributorAllowsSameSortOrderAcrossDifferentLanguages() {
         Content content = Content.create(ContentType.STORY, "story-language-scoped", 6, true);
+        content.upsertLocalization(LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+        content.upsertLocalization(LanguageCode.EN, "Story", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
         Contributor firstContributor = persistedContributor(1L, "Alice");
         Contributor secondContributor = persistedContributor(2L, "Bob");
 
@@ -53,6 +59,8 @@ class ContentTest {
     @Test
     void unassignContributorRemovesOnlyTheExactLanguageScopedAssignment() {
         Content content = Content.create(ContentType.STORY, "story-unassign-language", 6, true);
+        content.upsertLocalization(LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
         Contributor contributor = persistedContributor(1L, "Alice");
 
         content.assignContributor(contributor, ContributorRole.AUTHOR, null, null, 0);

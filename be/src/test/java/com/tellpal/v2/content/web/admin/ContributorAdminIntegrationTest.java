@@ -63,6 +63,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "forest-story", 5, true));
+        addLocalization(content, LanguageCode.TR);
 
         MvcResult createResult = mockMvc.perform(post("/api/admin/contributors")
                         .header("Authorization", "Bearer " + accessToken)
@@ -110,7 +111,8 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """.formatted(contributorId)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.contributorId").value(contributorId))
-                .andExpect(jsonPath("$.role").value("AUTHOR"));
+                .andExpect(jsonPath("$.role").value("AUTHOR"))
+                .andExpect(jsonPath("$.contributorRoles", Matchers.contains("AUTHOR")));
     }
 
     @Test
@@ -326,6 +328,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "role-use-story", 4, true));
+        addLocalization(content, LanguageCode.TR);
         Long contributorId = createContributor(accessToken, "Role Protected", "AUTHOR", "MUSICIAN");
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
@@ -398,6 +401,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "mixed-credit-story", 4, true));
+        addLocalization(content, LanguageCode.EN);
         Long contributorId = createContributor(accessToken, "Mixed Scope Author");
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
@@ -486,8 +490,8 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                   "sortOrder": 0
                                 }
                                 """.formatted(authorId)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_assignment_exists"));
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
                         .header("Authorization", "Bearer " + accessToken)
@@ -502,6 +506,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """.formatted(illustratorId)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.sortOrder").value(1))
+                .andExpect(jsonPath("$.contributorRoles", Matchers.contains("AUTHOR")))
                 .andExpect(jsonPath("$.assignmentId").isNumber());
     }
 
@@ -566,10 +571,10 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         Long contributorId = createContributor(token, "Author Only", "AUTHOR");
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
-                        .header("Authorization", "Bearer " + token).contentType("application/json")
+                .header("Authorization", "Bearer " + token).contentType("application/json")
                         .content("{\"contributorId\":%d,\"role\":\"NARRATOR\"}".formatted(contributorId)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+                .andExpect(jsonPath("$.errorCode").value("contributor_role_not_supported"));
         assertThat(jdbcTemplate.queryForObject(
                 "select count(*) from content_contributors where content_id = ?", Integer.class, content.contentId()))
                 .isZero();
@@ -620,6 +625,12 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 new AssignContentContributorCommand(contentId, contributorId, ContributorRole.AUTHOR, null, null, 0));
     }
 
+    private void addLocalization(ContentReference content, LanguageCode languageCode) {
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), languageCode, "Test title", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null));
+    }
+
     @Test
     void contributorSortOrderMigrationNormalizesExistingGapsPerRoleAndLanguageGroup() throws Exception {
         String token = authenticateAdmin();
@@ -648,6 +659,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.STORY, "list-contributor-story", 4, true));
+        addLocalization(content, LanguageCode.TR);
         Long contributorId = createContributor(accessToken, "List Author");
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
@@ -669,6 +681,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].contributorId").value(contributorId))
+                .andExpect(jsonPath("$[0].contributorRoles", Matchers.contains("AUTHOR")))
                 .andExpect(jsonPath("$[0].languageCode").value("tr"));
 
         mockMvc.perform(delete("/api/admin/contents/{contentId}/contributors", content.contentId())
@@ -766,7 +779,7 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("{\"role\":\"AUTHOR\",\"languageCode\":\"de\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_language_not_found"));
 
         assertThat(jdbcTemplate.queryForObject(
                 "select language_code from content_contributors where id = ?",

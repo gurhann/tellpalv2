@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -24,10 +24,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ContentReadViewModel } from "@/features/contents/model/content-view-model";
+import {
+  contributorAdminApi,
+  type ContributorRole,
+} from "@/features/contributors/api/contributor-admin";
 import type { ContentContributorViewModel } from "@/features/contributors/model/contributor-view-model";
-import type { ContributorRole } from "@/features/contributors/api/contributor-admin";
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import { useContributorPicker } from "@/features/contributors/queries/use-contributors";
+import {
+  getLocalizedContributorProblemMessage,
+  localizeContributorProblem,
+} from "@/features/contributors/lib/contributor-problems";
 import {
   contentContributorFormSchema,
   getAssignContributorFormDefaults,
@@ -35,7 +42,6 @@ import {
   type ContentContributorFormValues,
 } from "@/features/contributors/schema/content-contributor-schema";
 import { ApiClientError } from "@/lib/http/client";
-import { getProblemMessage } from "@/lib/http/problem-details";
 import { resolveLanguageLabel } from "@/lib/languages";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -72,6 +78,17 @@ export function AssignContributorDialog({
   } | null>(null);
   const [retryValues, setRetryValues] =
     useState<ContentContributorFormValues | null>(null);
+  const [duplicateContributor, setDuplicateContributor] = useState<{
+    id: number;
+    displayName: string;
+    roles: ContributorRole[];
+  } | null>(null);
+  const [duplicateLookup, setDuplicateLookup] = useState<{
+    id: number;
+    displayName: string;
+    failed: boolean;
+  } | null>(null);
+  const duplicateLookupRequest = useRef(0);
   const deferredSearch = useDeferredValue(search);
   const query = useContributorPicker({
     role,
@@ -109,14 +126,46 @@ export function AssignContributorDialog({
     created;
   function close(next: boolean) {
     if (!next) {
+      duplicateLookupRequest.current += 1;
       form.reset(initialValues);
       setSearch("");
       setProblemMessage(null);
       setCreated(null);
       setSelectedContributor(null);
       setRetryValues(null);
+      setDuplicateContributor(null);
+      setDuplicateLookup(null);
     }
     onOpenChange(next);
+  }
+  async function resolveDuplicateContributor(
+    id: number,
+    displayName: string,
+    requestId = ++duplicateLookupRequest.current,
+  ) {
+    setDuplicateLookup({ id, displayName, failed: false });
+    try {
+      const existing = await contributorAdminApi.getContributor(id);
+      if (requestId !== duplicateLookupRequest.current) return;
+      setDuplicateLookup(null);
+      setDuplicateContributor({
+        id: existing.contributorId,
+        displayName: existing.displayName,
+        roles: existing.roles,
+      });
+      setProblemMessage(
+        existing.roles.includes(role)
+          ? t("contributors.picker.duplicateUseExisting")
+          : t("contributors.picker.missingRoleDescription", {
+              name: existing.displayName,
+              role: roleLabel,
+            }),
+      );
+    } catch {
+      if (requestId !== duplicateLookupRequest.current) return;
+      setDuplicateLookup({ id, displayName, failed: true });
+      setProblemMessage(t("contributors.picker.duplicateLookupFailed"));
+    }
   }
   async function assign(v: ContentContributorFormValues) {
     setProblemMessage(null);
@@ -138,13 +187,15 @@ export function AssignContributorDialog({
       );
       setRetryValues(null);
       close(false);
+      return true;
     } catch (e) {
       setRetryValues(v);
       setProblemMessage(
         e instanceof ApiClientError
-          ? getProblemMessage(e.problem)
+          ? getLocalizedContributorProblemMessage(e.problem, t)
           : t("contributors.picker.assignError"),
       );
+      return false;
     }
   }
   async function submit(v: ContentContributorFormValues) {
@@ -185,20 +236,72 @@ export function AssignContributorDialog({
       form.setValue("contributorId", contributor.contributorId);
       await assign(next);
     } catch (e) {
-      if (e instanceof ApiClientError && e.problem.status === 409) {
+      if (
+        e instanceof ApiClientError &&
+        e.problem.status === 409 &&
+        e.problem.errorCode === "duplicate_contributor_display_name"
+      ) {
         const id = Number(e.problem.existingContributorId);
         if (id > 0) {
-          form.setValue("contributorId", id);
-          setCreated({ id, displayName });
-          setSelectedContributor({ id, displayName });
-          setProblemMessage(t("contributors.picker.duplicateUseExisting"));
+          await resolveDuplicateContributor(id, displayName);
           return;
         }
       }
       setProblemMessage(
         e instanceof ApiClientError
-          ? getProblemMessage(e.problem)
+          ? getLocalizedContributorProblemMessage(e.problem, t)
           : t("contributors.picker.createError"),
+      );
+    }
+  }
+  async function retryDuplicateLookup() {
+    if (duplicateLookup) {
+      await resolveDuplicateContributor(
+        duplicateLookup.id,
+        duplicateLookup.displayName,
+      );
+    }
+  }
+  async function addRoleAndAssign() {
+    if (!duplicateContributor) return;
+    setProblemMessage(null);
+    const nextRoles = Array.from(
+      new Set([...duplicateContributor.roles, role]),
+    );
+    const next = {
+      ...values,
+      contributorId: duplicateContributor.id,
+      role,
+    };
+    try {
+      if (!duplicateContributor.roles.includes(role)) {
+        await actions.renameContributor.mutateAsync({
+          contributorId: duplicateContributor.id,
+          values: {
+            displayName: duplicateContributor.displayName,
+            roles: nextRoles,
+          },
+        });
+      }
+      form.setValue("contributorId", duplicateContributor.id);
+      const assigned = await assign(next);
+      if (assigned) {
+        setSelectedContributor({
+          id: duplicateContributor.id,
+          displayName: duplicateContributor.displayName,
+        });
+        setDuplicateContributor(null);
+      } else {
+        form.reset({ ...values, contributorId: 0 });
+        setSelectedContributor(null);
+      }
+    } catch (error) {
+      form.reset({ ...values, contributorId: 0 });
+      setSelectedContributor(null);
+      setProblemMessage(
+        error instanceof ApiClientError
+          ? getLocalizedContributorProblemMessage(error.problem, t)
+          : t("contributors.picker.assignError"),
       );
     }
   }
@@ -230,12 +333,20 @@ export function AssignContributorDialog({
                 })}
                 placeholder={t("contributors.picker.searchPlaceholder")}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  duplicateLookupRequest.current += 1;
+                  setDuplicateLookup(null);
+                  setSearch(e.target.value);
+                  setDuplicateContributor(null);
+                  setProblemMessage(null);
+                }}
                 disabled={actions.isPending}
               />
             </div>
             {query.problem ? (
-              <ProblemAlert problem={query.problem} />
+              <ProblemAlert
+                problem={localizeContributorProblem(query.problem, t)}
+              />
             ) : query.isLoading ? (
               <div className="rounded-2xl border px-4 py-8 text-sm text-muted-foreground">
                 {t("contributors.picker.loading")}
@@ -262,9 +373,10 @@ export function AssignContributorDialog({
             ) : (
               <>
                 <div
-                  className="grid gap-2"
+                  className="grid min-w-0 max-h-56 gap-2 overflow-y-auto overscroll-contain pr-1"
                   role="listbox"
                   aria-label={t("contributors.picker.resultsLabel")}
+                  data-testid="contributor-picker-results"
                 >
                   {query.contributors.map((c) => (
                     <button
@@ -279,10 +391,12 @@ export function AssignContributorDialog({
                           displayName: c.displayName,
                         });
                       }}
-                      className="flex min-h-11 items-center justify-between rounded-lg border border-border/70 px-3 text-left"
+                      className="flex min-h-11 min-w-0 items-center justify-between gap-3 rounded-lg border border-border/70 px-3 text-left"
                     >
-                      <span className="font-medium">{c.displayName}</span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="min-w-0 break-words [overflow-wrap:anywhere] font-medium">
+                        {c.displayName}
+                      </span>
+                      <span className="shrink-0 text-xs text-muted-foreground">
                         {roleLabel}
                       </span>
                     </button>
@@ -383,6 +497,53 @@ export function AssignContributorDialog({
                 ) : null}
               </>
             )}
+            {duplicateContributor ? (
+              <div
+                className="grid min-w-0 gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4"
+                role="status"
+              >
+                <div className="min-w-0">
+                  <p className="break-words [overflow-wrap:anywhere] font-medium">
+                    {duplicateContributor.displayName}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {duplicateContributor.roles
+                      .map((value) =>
+                        t(`contributors.role.${value.toLowerCase()}` as never),
+                      )
+                      .join(", ")}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  onClick={() => void addRoleAndAssign()}
+                  disabled={actions.isPending}
+                >
+                  {duplicateContributor.roles.includes(role)
+                    ? t("contributors.picker.useExistingAndAssign")
+                    : t("contributors.picker.addRoleAndAssign")}
+                </Button>
+              </div>
+            ) : null}
+            {duplicateLookup ? (
+              <div className="grid gap-2" role="status">
+                <p className="text-sm text-muted-foreground">
+                  {duplicateLookup.failed
+                    ? t("contributors.picker.duplicateLookupFailed")
+                    : t("contributors.picker.duplicateLookupPending")}
+                </p>
+                {duplicateLookup.failed ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void retryDuplicateLookup()}
+                    disabled={actions.isPending}
+                  >
+                    {t("contributors.picker.retryDuplicateLookup")}
+                  </Button>
+                ) : null}
+              </div>
+            ) : null}
             {problemMessage ? (
               <ProblemAlert
                 description={problemMessage}

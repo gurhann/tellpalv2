@@ -32,6 +32,9 @@ import com.tellpal.v2.content.application.ContributorRegistryReadResults.Item;
 import com.tellpal.v2.content.application.ContributorRegistryReadResults.Page;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentContributor;
+import com.tellpal.v2.content.domain.Content.UnsupportedContributorRoleException;
+import com.tellpal.v2.content.domain.Content.ContributorAssignmentLanguageNotFoundException;
+import com.tellpal.v2.content.domain.Content.DuplicateContributorAssignmentException;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.Contributor;
 import com.tellpal.v2.content.domain.ContributorRole;
@@ -91,6 +94,14 @@ public class ContributorManagementService {
         return contributors.stream()
                 .map(ContentManagementMapper::toContributorRecord)
                 .toList();
+    }
+
+    /** Returns one contributor profile for an explicit admin identity lookup. */
+    @Transactional(readOnly = true)
+    public ContributorRecord getContributor(Long contributorId) {
+        return ContentManagementMapper.toContributorRecord(
+                contributorRepository.findById(contributorId)
+                        .orElseThrow(() -> new ContributorNotFoundException(contributorId)));
     }
 
     /** Returns a paged contributor registry with usage projections calculated by the database. */
@@ -171,11 +182,22 @@ public class ContributorManagementService {
     public ContentContributorRecord assignContentContributor(AssignContentContributorCommand command) {
         Content content = loadContent(command.contentId());
         Contributor contributor = loadContributor(command.contributorId());
-        ContentContributor assignment = content.assignContributor(
-                contributor,
-                command.role(),
-                command.languageCode(),
-                command.creditName());
+        ContentContributor assignment;
+        try {
+            assignment = content.assignContributor(
+                    contributor,
+                    command.role(),
+                    command.languageCode(),
+                    command.creditName());
+        } catch (UnsupportedContributorRoleException exception) {
+            throw new ContentApplicationExceptions.ContributorRoleNotSupportedException(exception.getRole());
+        } catch (ContributorAssignmentLanguageNotFoundException exception) {
+            throw new ContentApplicationExceptions.ContributorAssignmentLanguageNotFoundException(
+                    exception.getLanguageCode());
+        } catch (DuplicateContributorAssignmentException exception) {
+            throw new ContentApplicationExceptions.DuplicateContributorAssignmentException(
+                    exception.getRole(), exception.getLanguageCode());
+        }
         Content saved = contentRepository.saveAndFlush(content);
         return ContentManagementMapper.toContentContributorRecord(
                 command.contentId(),
@@ -195,11 +217,22 @@ public class ContributorManagementService {
             throw new ContentContributorAssignmentNotFoundException(
                     command.contentId(), command.assignmentId());
         }
-        ContentContributor assignment = content.updateContributor(
-                command.assignmentId(),
-                command.role(),
-                command.languageCode(),
-                command.creditName());
+        ContentContributor assignment;
+        try {
+            assignment = content.updateContributor(
+                    command.assignmentId(),
+                    command.role(),
+                    command.languageCode(),
+                    command.creditName());
+        } catch (UnsupportedContributorRoleException exception) {
+            throw new ContentApplicationExceptions.ContributorRoleNotSupportedException(exception.getRole());
+        } catch (ContributorAssignmentLanguageNotFoundException exception) {
+            throw new ContentApplicationExceptions.ContributorAssignmentLanguageNotFoundException(
+                    exception.getLanguageCode());
+        } catch (DuplicateContributorAssignmentException exception) {
+            throw new ContentApplicationExceptions.DuplicateContributorAssignmentException(
+                    exception.getRole(), exception.getLanguageCode());
+        }
         contentRepository.saveAndFlush(content);
         return ContentManagementMapper.toContentContributorRecord(command.contentId(), assignment);
     }

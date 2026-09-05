@@ -23,6 +23,9 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.StoryPage
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorDisplayNameException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleInUseException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleNotSupportedException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorAssignmentLanguageNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorAssignmentException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @RestControllerAdvice(basePackageClasses = {
@@ -139,6 +142,49 @@ public class ContentAdminExceptionHandler {
                 exception.getMessage(),
                 "content_contributor_assignment_not_found",
                 request);
+    }
+
+    @ExceptionHandler(ContributorRoleNotSupportedException.class)
+    ProblemDetail handleContributorRoleNotSupported(
+            ContributorRoleNotSupportedException exception,
+            HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Contributor role is not supported",
+                exception.getMessage(),
+                "contributor_role_not_supported",
+                request);
+        problem.setProperty("role", exception.getRole());
+        return problem;
+    }
+
+    @ExceptionHandler(ContributorAssignmentLanguageNotFoundException.class)
+    ProblemDetail handleContributorAssignmentLanguageNotFound(
+            ContributorAssignmentLanguageNotFoundException exception,
+            HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Contributor assignment language is not available",
+                exception.getMessage(),
+                "content_contributor_language_not_found",
+                request);
+        problem.setProperty("languageCode", exception.getLanguageCode());
+        return problem;
+    }
+
+    @ExceptionHandler(DuplicateContributorAssignmentException.class)
+    ProblemDetail handleDuplicateContributorAssignment(
+            DuplicateContributorAssignmentException exception,
+            HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Contributor assignment already exists",
+                exception.getMessage(),
+                "content_contributor_assignment_exists",
+                request);
+        problem.setProperty("role", exception.getRole());
+        problem.setProperty("languageCode", exception.getLanguageCode());
+        return problem;
     }
 
     @ExceptionHandler(ContributorInUseException.class)

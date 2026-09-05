@@ -102,6 +102,43 @@ public final class ContentApplicationExceptions {
         }
     }
 
+    public static final class ContributorRoleNotSupportedException extends RuntimeException {
+        private final ContributorRole role;
+
+        public ContributorRoleNotSupportedException(ContributorRole role) {
+            super("Contributor does not have the requested role: " + role);
+            this.role = role;
+        }
+
+        public ContributorRole getRole() { return role; }
+    }
+
+    public static final class ContributorAssignmentLanguageNotFoundException extends RuntimeException {
+        private final LanguageCode languageCode;
+
+        public ContributorAssignmentLanguageNotFoundException(LanguageCode languageCode) {
+            super("Contributor assignment language must exist on content: " + languageCode);
+            this.languageCode = languageCode;
+        }
+
+        public LanguageCode getLanguageCode() { return languageCode; }
+    }
+
+    public static final class DuplicateContributorAssignmentException extends RuntimeException {
+        private final ContributorRole role;
+        private final LanguageCode languageCode;
+
+        public DuplicateContributorAssignmentException(ContributorRole role, LanguageCode languageCode) {
+            super("Contributor assignment already exists for role " + role + " and language "
+                    + (languageCode == null ? "global" : languageCode.value()));
+            this.role = role;
+            this.languageCode = languageCode;
+        }
+
+        public ContributorRole getRole() { return role; }
+        public LanguageCode getLanguageCode() { return languageCode; }
+    }
+
     public static final class ContributorInUseException extends RuntimeException {
 
         public ContributorInUseException(Long contributorId) {

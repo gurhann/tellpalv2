@@ -68,6 +68,7 @@ export type ContentContributorViewModel = {
   contributorId: number;
   displayName: string;
   initials: string;
+  contributorRoles?: ContributorRole[];
   role: ContributorRole;
   roleLabel: string;
   languageCode: string | null;
@@ -135,6 +136,9 @@ export function mapAdminContentContributor(
     contributorId: contributor.contributorId,
     displayName: contributor.contributorDisplayName,
     initials: buildInitials(contributor.contributorDisplayName),
+    ...(contributor.contributorRoles?.length
+      ? { contributorRoles: contributor.contributorRoles }
+      : {}),
     role: contributor.role,
     roleLabel: contributorRoleLabels[contributor.role],
     languageCode: language.code,

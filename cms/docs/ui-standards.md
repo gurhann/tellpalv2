@@ -135,6 +135,10 @@ Detail and workspace routes must follow one shared composition contract.
   - id-only labels such as `Content #123` are allowed only as a final fallback when no richer identity is available
   - content management and ordering must live in one dominant list surface; the same curated row must not be repeated in a separate order editor panel
   - when reorder is a direct manipulation workflow, prefer in-list drag handles over a second reorder section or jump link
+- Contributor assignment pickers with potentially long result sets must keep results inside a bounded, vertically scrollable region.
+  - the selected contributor form and primary save/assign action must remain reachable below the results
+  - keyboard focus, listbox semantics, and selected state must remain available while the results region scrolls
+  - picker dialogs must not create horizontal overflow at `390`, `768`, `1280`, or `1440` widths
 
 ## 7. Accessibility and Interaction Rules
 

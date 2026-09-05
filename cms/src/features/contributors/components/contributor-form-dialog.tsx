@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { ContributorViewModel } from "@/features/contributors/model/contributor-view-model";
+import { localizeContributorProblem } from "@/features/contributors/lib/contributor-problems";
 import { useContributorActions } from "@/features/contributors/mutations/use-contributor-actions";
 import {
   contributorFormSchema,
@@ -149,7 +150,7 @@ export function ContributorFormDialog(props: ContributorFormDialogProps) {
             });
           }
         } else {
-          setProblem(error.problem);
+          setProblem(localizeContributorProblem(error.problem, t));
         }
         return;
       }

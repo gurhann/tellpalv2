@@ -1,6 +1,8 @@
 package com.tellpal.v2.content.application;
 
 import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
 import com.tellpal.v2.content.domain.ContributorRole;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -21,7 +23,7 @@ public final class ContributorManagementResults {
         public ContributorRecord {
             contributorId = requirePositiveId(contributorId, "Contributor ID must be positive");
             displayName = requireText(displayName, "Contributor display name must not be blank");
-            roles = Set.copyOf(roles);
+            roles = orderedRoles(roles);
         }
 
         public ContributorRecord(Long contributorId, String displayName) {
@@ -37,6 +39,7 @@ public final class ContributorManagementResults {
             Long contentId,
             Long contributorId,
             String contributorDisplayName,
+            Set<ContributorRole> contributorRoles,
             ContributorRole role,
             LanguageCode languageCode,
             String creditName,
@@ -49,10 +52,25 @@ public final class ContributorManagementResults {
             contributorDisplayName = requireText(
                     contributorDisplayName,
                     "Contributor display name must not be blank");
+            contributorRoles = orderedRoles(contributorRoles);
             role = requireRole(role);
             if (sortOrder < 0) {
                 throw new IllegalArgumentException("Contributor sort order must not be negative");
             }
+        }
+
+        /** Compatibility constructor for callers that predate the contributor role snapshot. */
+        public ContentContributorRecord(
+                Long assignmentId,
+                Long contentId,
+                Long contributorId,
+                String contributorDisplayName,
+                ContributorRole role,
+                LanguageCode languageCode,
+                String creditName,
+                int sortOrder) {
+            this(assignmentId, contentId, contributorId, contributorDisplayName,
+                    role == null ? Set.of() : Set.of(role), role, languageCode, creditName, sortOrder);
         }
 
     }
@@ -69,6 +87,15 @@ public final class ContributorManagementResults {
             throw new IllegalArgumentException("Contributor role must not be null");
         }
         return role;
+    }
+
+    private static Set<ContributorRole> orderedRoles(Set<ContributorRole> roles) {
+        if (roles == null) {
+            throw new IllegalArgumentException("Contributor roles must not be null");
+        }
+        return roles.stream()
+                .sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private static String requireText(String value, String message) {

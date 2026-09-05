@@ -28,6 +28,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContentContributorAssignmentNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleNotSupportedException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorAssignmentLanguageNotFoundException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorAssignmentException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorInUseException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorNotFoundException;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
@@ -185,6 +188,7 @@ class ContributorAdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].contributorId").value(11))
+                .andExpect(jsonPath("$[0].contributorRoles", Matchers.contains("AUTHOR")))
                 .andExpect(jsonPath("$[0].languageCode").value("tr"));
     }
 
@@ -195,6 +199,7 @@ class ContributorAdminControllerTest {
                 51L,
                 11L,
                 "Elif Yilmaz",
+                Set.of(ContributorRole.AUTHOR, ContributorRole.MUSICIAN),
                 ContributorRole.AUTHOR,
                 LanguageCode.TR,
                 "E. Yilmaz",
@@ -215,6 +220,7 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.contentId").value(51))
                 .andExpect(jsonPath("$.contributorId").value(11))
                 .andExpect(jsonPath("$.role").value("AUTHOR"))
+                .andExpect(jsonPath("$.contributorRoles", Matchers.containsInAnyOrder("AUTHOR", "MUSICIAN")))
                 .andExpect(jsonPath("$.languageCode").value("tr"));
     }
 
@@ -268,6 +274,7 @@ class ContributorAdminControllerTest {
                 .andExpect(jsonPath("$.contributorId").value(11))
                 .andExpect(jsonPath("$.role").value("MUSICIAN"))
                 .andExpect(jsonPath("$.languageCode").value("en"))
+                .andExpect(jsonPath("$.contributorRoles", Matchers.contains("MUSICIAN")))
                 .andExpect(jsonPath("$.sortOrder").value(2));
     }
 
@@ -381,5 +388,32 @@ class ContributorAdminControllerTest {
                         .content("{\"role\":\"AUTHOR\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("content_contributor_assignment_not_found"));
+    }
+
+    @Test
+    void assignmentRuleFailuresExposeStableStatusAndErrorCodes() throws Exception {
+        doThrow(new ContributorRoleNotSupportedException(ContributorRole.MUSICIAN))
+                .when(contributorManagementService).assignContentContributor(any());
+        mockMvc.perform(post("/api/admin/contents/51/contributors")
+                        .contentType("application/json")
+                        .content("{\"contributorId\":11,\"role\":\"MUSICIAN\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("contributor_role_not_supported"));
+
+        doThrow(new ContributorAssignmentLanguageNotFoundException(LanguageCode.DE))
+                .when(contributorManagementService).assignContentContributor(any());
+        mockMvc.perform(post("/api/admin/contents/51/contributors")
+                        .contentType("application/json")
+                        .content("{\"contributorId\":11,\"role\":\"AUTHOR\",\"languageCode\":\"de\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_language_not_found"));
+
+        doThrow(new DuplicateContributorAssignmentException(ContributorRole.AUTHOR, null))
+                .when(contributorManagementService).assignContentContributor(any());
+        mockMvc.perform(post("/api/admin/contents/51/contributors")
+                        .contentType("application/json")
+                        .content("{\"contributorId\":11,\"role\":\"AUTHOR\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("content_contributor_assignment_exists"));
     }
 }
