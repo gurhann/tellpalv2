@@ -176,6 +176,19 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
                 new CreateContentCommand(ContentType.STORY, "forest-walk", 4, true));
         ContributorRecord author = contributorManagementService.createContributor(
                 new CreateContributorCommand("Elif Yilmaz", Set.of(ContributorRole.AUTHOR)));
+        contentManagementService.createLocalization(
+                new CreateContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.TR,
+                        "Orman Yürüyüşü",
+                        "",
+                        "",
+                        null,
+                        null,
+                        null,
+                        LocalizationStatus.DRAFT,
+                        ProcessingStatus.PENDING,
+                        null));
 
         contributorManagementService.assignContentContributor(new AssignContentContributorCommand(
                 content.contentId(),
