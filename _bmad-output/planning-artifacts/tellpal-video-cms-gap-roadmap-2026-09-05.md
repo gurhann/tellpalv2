@@ -3,6 +3,100 @@
 Tarih: 5 Eylül 2026  
 Hedef: Kullanıcının teyidiyle, önce videolardaki deneyimi yeni CMS/backend ile eksiksiz karşılamak. Yeni ürün özellikleri bu planın dışında.
 
+## Kullanıcıyla netleşen kapsam ve teslimat sırası
+
+### Güncel öncelik — 6 Eylül 2026
+
+#### Kalan ses içerikleri: kullanıcı teyidi ve kod kontrolü
+
+- Ninni, sesli hikâye ve meditasyon başına tek kapak ve tek ses dosyası var.
+- Sesli hikâyeler mevcut resimli hikâyelerin bölünmemiş ses kayıtlarıdır. Kapakları farklıdır ve çizer kredisi içermezler. Aynı eser oldukları doğrulandı; bu bilgi otomatik bir dönüştürme/ilişkilendirme özelliği talebi değildir.
+- Kullanıcı henüz bu üç türü CMS'ye eklemeyi denemedi; bildirilmiş bir yükleme hatası yok. Dil kapsamı henüz cevaplanmadı.
+- Kaynak kodda üç tür de CMS oluşturma seçeneklerinde mevcut. Dile özel tek ses, kapak, başlık, açıklama ve süre alanları destekleniyor; hikâye sayfaları gerekmiyor.
+- Mevcut CMS/backend **sesli hikâye ve meditasyon için ayrıca gövde metni zorunlu tutuyor**. Ninnide gövde metni isteğe bağlı. Üç türde de dil kaydı oluştururken ses zorunlu. Bu kuralların elindeki malzemeye uygunluğu netleştirilmeli; henüz değiştirilmedi.
+- Sesli hikâye mevcut durumda ayrı `AUDIO_STORY` kaydı olarak girilir; resimli hikâyenin sayfa seslerinden otomatik üretilmez. Çizer ataması zorunlu değil; sesli sürüme eklenmez.
+- Kod desteği uçtan uca çalışma garantisi değildir. Gerçek örnekle dosya yükleme, ses işleme, yayın, kategori ve mobil medya yanıtı doğrulanmalı. Mobil backend geçişi ayrıca ele alınır.
+
+Kanıt: [içerik türü seçenekleri](C:/github/tellpalv2/cms/src/features/contents/schema/content-schema.ts), [dil kaydı doğrulamaları](C:/github/tellpalv2/cms/src/features/contents/schema/content-localization-schema.ts), [backend tür kuralları](C:/github/tellpalv2/be/src/main/java/com/tellpal/v2/content/domain/Content.java:440).
+
+Bu güncelleme aşağıdaki önceki faz/öncelik önerilerinin önüne geçer.
+
+- Kullanıcı tüm mevcut resimli hikâyeleri sisteme girdiğini belirtti. Bu, kullanıcı durum bildirimidir; içeriklerin yayın/medya hazırlığı bu görüşmede ayrıca doğrulanmadı.
+- Sıradaki iş: kalan **ninnileri, sesli hikâyeleri ve meditasyonları** CMS'ye girmek ve mobil kullanım için hazır hale getirmek.
+- Bu içeriklerin mevcut giriş/yayın akışını engelleyen eksikler önceliklidir. Hikâye giriş akışı iyileştirmeleri, metinle taslak hazırlama (CMS-01) dahil, sonraya ertelendi.
+- Word import için şimdi ek efor harcanmayacak; ileride değerlendirilecek.
+- Hazırlık takibinde eksik malzemelerin görülmesi yeterli. Seslendirmene gönderildi/çizer bekleniyor gibi görev ve üretim aşamaları gerekmiyor.
+- Şimdilik tek admin bütün işlemleri ve yayına almayı yönetecek. Ayrı onaylayan kişi veya çok aşamalı onay akışı gerekmiyor.
+- “Mobil için hazır” kabulü; kalan üç türün dosya/metadata yapısı, kategori ve dil ilişkileri, yayın ve medya teslimi üzerinden netleştirilecek. Mevcut mobil uygulamanın V2 backend'e bağlandığı henüz doğrulanmış değil.
+
+**Sıradaki keşif:** Kalan içeriklerin dosya paketleri, dil kapsamı, sayıları ve mevcut CMS'ye yüklerken karşılaşılan somut engeller. Önce bunlar netleştirilir; ertelenen hikâye iyileştirmeleri için uygulama çalışması başlatılmaz.
+
+Bu bölüm, aşağıdaki ilk analizde önerilen fazların kapsam yorumuna göre önceliklidir.
+
+- Videolar mevcut TellPal mobil uygulamasını gösteriyor. Bu sürümün CMS'si yok; içerikler DB/Firebase'e manuel yükleniyor.
+- İlk hedef, mevcut uygulamanın temel içerik ihtiyaçlarını karşılayabilen bir CMS hazırlamak ve manuel içerik yönetimini yönetilebilir bir iş akışına dönüştürmek.
+- İkinci hedef, teknik olarak mümkünse mevcut mobil uygulamanın kullandığı backend'i V2 backend ile değiştirmek. Bu geçiş ilk CMS teslimatının ön koşulu değildir; mevcut veri/erişim sözleşmeleri incelenerek ayrıca değerlendirilmelidir.
+- Üçüncü hedef, mobil uygulamayı yeniden yazmak. Yeni ürün fonksiyonları bu sonraki aşamada ele alınacak.
+- Kullanıcıya göre videodaki ekranlar ürünün ana dayanaklarıdır; bunların dışında önemli başka bir ürün alanı bulunmuyor. Bu teyit, kaydedilmemiş etkileşimlerin ayrıntılarının doğrulandığı anlamına gelmez.
+
+### İlk analizdeki yol haritasına düzeltme
+
+- G01–G16 mevcut kod/gözlem envanteri olarak korunur. “Mobil API'de eksik” ile “CMS'nin ilk teslimatında eksik” aynı şey değildir.
+- PAR-01 ve PAR-08–PAR-10 gibi mobil veri sunumu/arama işleri, mevcut uygulamanın veri tüketimi anlaşıldıktan sonra backend geçişi aşamasında konumlandırılmalıdır. CMS için gereken veri alanları bu incelemeden ayrı netleştirilebilir.
+- PAR-04–PAR-07 ekran yerleşimi/banner/dil yönetimi ve PAR-11 editoryal benzer içerik seçimi, henüz kesinleşmiş CMS gereksinimleri değildir. Mevcut uygulamadaki veri kaynağı ve editörün yönetme ihtiyacı doğrulanmalıdır.
+- PAR-12 gerçek mobil kabul turu backend geçişinin kabulüdür. İlk CMS kabulü; içerik oluşturma, medya bağlama, dil yönetimi, kategoriye yerleştirme, önizleme ve yayın durumunu yönetme akışı üzerinden tanımlanacaktır.
+- Aşağıdaki Faz 0–4 sırası ilk teknik öneridir; geliştirmeye hazır/onaylanmış sprint planı olarak kullanılmamalıdır.
+
+### Güncel keşif sırası
+
+1. Mevcut içerik üretim/yükleme iş akışı ve her içerik türünün veri paketi.
+2. CMS'nin yönetmesi gereken içerik, kategori, dil ve yayın kuralları; mevcut CMS'nin bu akışlarla karşılaştırılması.
+3. İlk CMS teslimatı için somut kabul senaryoları ve eksik iş listesi.
+4. Eski mobil istemcinin DB/Firebase/backend erişim biçimi ve V2'ye geçiş yapılabilirliği.
+5. Sonraki mobil yeniden yazım ve yeni işlevler; ilk teslimat dışında.
+
+### Sıradaki açık sorular
+
+- Resimli hikâyenin üretim paketi aşağıda doğrulandı. Metnin mevcut uygulamada ayrıca tutulması, diller arasında sayfa yapısının değişmesi ve CMS'nin üretim sürecine ne zaman dahil olması açık.
+- Ninni, meditasyon ve sesli hikâyenin içerik paketleri/alanları nasıl farklılaşıyor?
+- Kategori üyeliği, kategori sırası ve Kitaplık/Uyku yerleşimi bugün hangi veriden veya uygulama kuralından geliyor?
+- CMS'de kayıt, önizleme ve yayına alma adımlarını kim yönetecek; birden çok editör/onay adımı gerekiyor mu?
+- Eski uygulama DB/Firebase'i doğrudan mı okuyor, yoksa arada bir API var mı? Bu bilgi geçiş kapsamını belirler; henüz cevaplanmadı.
+
+## Hikâye üretimi — 6 Eylül 2026 kullanıcı teyitleri
+
+1. Yazardan sayfa numaralarıyla düzenlenmiş bir Word dosyası gelir. Kaynak dil genellikle Türkçedir; yabancı yazarlardan başka dilde gelen hikâyeler de vardır. Türkçe zorunlu kaynak dil olarak kabul edilmemelidir.
+2. Metin seslendirmen ve çizere gönderilir. Ses sayfa başına dosya veya tek dosya olarak gelebilir. Tek dosya mevcut süreçte elle sayfalara bölünür. CMS içinde ses bölme talebi henüz verilmedi.
+3. Çizer her sayfa için metnin görsele işlendiği dosyaları ve ayrıca yazısız çizimleri teslim eder. Yazısız çizimler sonraki çevirilerin görsel kaynağıdır.
+4. Hikâye metni çevrilir; çeviri seslendirmen ve çizere gönderilir. Çevrilmiş metinler mevcut yazısız çizimler üzerine yerleştirilerek o dilin sayfa görselleri hazırlanır.
+5. İlk dilin dosyaları hazır olduğunda hikâye sisteme eklenir. Diğer diller çeviri/ses/görsel hazırlıkları tamamlandıkça aynı hikâyeye tek tek eklenip yayınlanır. Bütün dillerin tamamlanması beklenmez.
+6. Kullanıcı, önceki soruda sayılan başlık, açıklama, yaş, süre, yazar/seslendiren, kategori ve ücretsiz olma durumu dışında elle girdiği ek bir metadata alanı olmadığını belirtti. Bu cevap, mevcut diğer model alanlarının silinmesi kararı değildir.
+
+### CMS açısından anlamı
+
+- Hazırlık malzemesi (Word, yazısız çizim, bölünmemiş ses) ile yayın için hazırlanan dil bazlı sayfa malzemesi birbirinden ayrılmalıdır. Bunların tamamının CMS'de saklanmasının istenip istenmediği henüz kesinleşmedi.
+- Mevcut kodda sayfa kökünde yazısız görsel ve sayfa yerelleştirmesinde dile özel görsel/ses/metin desteği var. Yazısız görsel yeni bir eksik olarak yazılmamalı: [StoryPage alanları ve CMS şeması](C:/github/tellpalv2/cms/src/features/story-pages/schema/story-page-schema.ts), [yazısız görsel formu](C:/github/tellpalv2/cms/src/features/story-pages/components/story-page-textless-illustration-form.tsx).
+- Dil bazlı yayın mevcut modelle uyumlu. Kabul senaryosu: Türkçe yayındayken İngilizce taslak hazırlanabilmeli; İngilizce yayına alındığında Türkçe yayını etkilenmemeli.
+- Word içe aktarma, çeviri otomasyonu, görsele metin yerleştirme, ses bölme veya dış üreticilerle görev paylaşımı bu anlatımdan otomatik gereksinim olarak çıkarılmamalı.
+- Diller arasında sayfa sayısı/sırası aynı mı, Word metni uygulamada ayrıca tutuluyor mu ve CMS'ye hikâyenin hangi aşamada girilmesi isteniyor: sonraki netleştirme soruları.
+
+### Devam teyitleri — metinle başlayan hazırlık
+
+- Kullanıcı metin/çeviri metni geldiğinde hikâyenin veya ilgili dil kaydının CMS'de açılmasını, ses ve görseller geldikçe eklenmesini istiyor. CMS yalnızca bitmiş içerik yükleme aracı değil, hikâye hazırlığının takip edildiği yer olmalı.
+- Tüm dillerde sayfa sayısı aynıdır. Mevcut ortak sayfa yapısı korunabilir; çeviri için ayrı sayfa sayısı modeli gerekmiyor.
+- Mevcut veritabanında her sayfanın metni ayrıca tutuluyor. V2'de de dil bazlı sayfa metni saklanmaya ve düzenlenmeye devam edecek; metin içeren görsel bunun yerine geçmez.
+- İlk özgün metnin de çeviri öncesinde CMS'ye girilip girilmeyeceği ve dosya aktarma yöntemi sonraki iş akışı ayrıntılarıdır; Word otomasyonu henüz kararlaştırılmadı.
+
+### Yeni doğrulanmış açık — metinle taslak sayfa kaydetme
+
+Mevcut CMS sayfa şeması `illustrationMediaId` alanını zorunlu tutuyor; backend `StoryPageLocalization.update` da pozitif görsel ID'si istiyor ve entity alanı `nullable = false`. Bu nedenle yalnızca metni gelen bir sayfa yerelleştirmesini kaydetmek mevcut kurallarla mümkün değil. Kaynaklar: [CMS sayfa şeması](C:/github/tellpalv2/cms/src/features/story-pages/schema/story-page-schema.ts:48), [sayfa yerelleştirme modeli](C:/github/tellpalv2/be/src/main/java/com/tellpal/v2/content/domain/StoryPageLocalization.java:37).
+
+**CMS-01 — Kısmi hazırlık kaydı:** İlk CMS teslimatında metinle taslak sayfa oluşturabilme ele alınmalı. Uygulama öncesinde API, veritabanı kısıtları ve yayın politikası birlikte incelenmeli; taslak kaydetme koşulları ile yayınlama koşulları ayrılmalı. Bu bulgu yalnızca plan kaydıdır, uygulama değişikliği yapılmadı.
+
+Kabul senaryosu: 14 sayfalık bir dil kaydı yalnızca metinlerle kaydedilir ve tekrar açıldığında metinler korunur. Ses/görseller daha sonra sayfa bazında eklenir; eksikler görülebilir. Eksik dilin taslak olması başka bir dildeki mevcut yayını etkilemez. Yayın için gereken tamamlanma/onay kuralı ayrıca netleştirilecek.
+
+Sıradaki keşif: dosya giriş yöntemi (Word, toplu veya tekil dosyalar), eksik iş takibinin kapsamı ve yayına alma yetkisi/onayı.
+
 ## Sonuç
 
 Mevcut CMS içerik üretiminin önemli bölümünü karşılıyor: dört içerik türü, yerelleştirmeler, hikâye sayfaları, sayfa sesleri/görselleri, katkıda bulunanlar, kategori kürasyonu, ücretsiz içerikler ve hikâye önizleyicisi var. Yeniden bir temel içerik editörü yapmak gerekmiyor.
@@ -31,7 +125,7 @@ Bu belge uygulama değişikliği veya onaylanmış yeni mimari kararı değildir
 | 00:13–00:44 | Tam ekran resimli sayfalar, yatay sayfa geçişleri; 00:37 civarı Çıkış/Ses kontrolleri, noktalı sayfa göstergesi ve Sayfa: 6/14 | Sıralı, dile bağlı sayfa görselleri ve sesleri; etkileşim mobil istemcide |
 | 00:46–00:48 | Hikâyeyi Bitirdin, dönüş düğmesi ve Benzer Hikâyeler şeridi | Bitiş akışı ve ilgili içerik listesi |
 
-Sayfa yazıları resimle bütünleşmiş görünüyor. Görüntü tek başına bunların dosyaya gömülü metin mi yoksa uygulama katmanı mı olduğunu kanıtlamaz. Mevcut locale bazlı illüstrasyon modeli bu kullanım için uygundur; görüntüden yola çıkarak ayrı metin alanını kaldırmak doğru olmaz.
+Sayfa yazılarının görsele işlendiği 6 Eylül kullanıcı açıklamasıyla doğrulandı. Metnin mevcut uygulamada ayrıca tutulup tutulmadığı henüz bilinmiyor. Mevcut locale bazlı illüstrasyon modeli bu kullanım için uygundur; ayrı metin alanını kaldırma kararı verilmedi.
 
 ### Video 2 — kategori ve arama
 
