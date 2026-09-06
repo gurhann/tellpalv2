@@ -11,9 +11,11 @@ import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
+import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 
 /**
- * Aggregate root that tracks the asset processing lifecycle for one content localization.
+ * Aggregate root that tracks the asset processing lifecycle for one typed target.
  *
  * <p>The aggregate owns source asset context, retry timing, worker lease state, and the transition
  * history needed to move between pending, processing, failed, and completed states.
@@ -25,7 +27,11 @@ public class AssetProcessing extends BaseJpaEntity {
     @Column(name = "content_id", nullable = false)
     private Long contentId;
 
-    @Column(name = "language_code", nullable = false, length = 8)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_scope", nullable = false, length = 20)
+    private AssetProcessingTargetScope targetScope;
+
+    @Column(name = "language_code", length = 8)
     private LanguageCode languageCode;
 
     @Enumerated(EnumType.STRING)
@@ -76,20 +82,38 @@ public class AssetProcessing extends BaseJpaEntity {
     }
 
     private AssetProcessing(
-            Long contentId,
-            LanguageCode languageCode,
+            AssetProcessingTarget target,
             ProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount,
             Instant nextAttemptAt) {
-        this.contentId = requirePositiveId(contentId, "Content ID must be positive");
-        this.languageCode = requireLanguageCode(languageCode);
+        this.targetScope = requireTarget(target).scope();
+        this.contentId = target.contentId();
+        this.languageCode = target.languageCode();
         refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
         this.status = AssetProcessingStatus.PENDING;
         this.attemptCount = 0;
         this.nextAttemptAt = requireInstant(nextAttemptAt, "Next attempt time must not be null");
+    }
+
+    public static AssetProcessing schedule(
+            AssetProcessingTarget target,
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            Instant nextAttemptAt) {
+        return new AssetProcessing(
+                target,
+                contentType,
+                externalKey,
+                coverSourceAssetId,
+                audioSourceAssetId,
+                pageCount,
+                nextAttemptAt);
     }
 
     public static AssetProcessing schedule(
@@ -102,8 +126,7 @@ public class AssetProcessing extends BaseJpaEntity {
             Integer pageCount,
             Instant nextAttemptAt) {
         return new AssetProcessing(
-                contentId,
-                languageCode,
+                AssetProcessingTarget.localization(contentId, languageCode),
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -118,6 +141,14 @@ public class AssetProcessing extends BaseJpaEntity {
 
     public LanguageCode getLanguageCode() {
         return languageCode;
+    }
+
+    public AssetProcessingTargetScope getTargetScope() {
+        return targetScope;
+    }
+
+    public AssetProcessingTarget getTarget() {
+        return new AssetProcessingTarget(targetScope, contentId, languageCode);
     }
 
     public ProcessingContentType getContentType() {
@@ -325,11 +356,11 @@ public class AssetProcessing extends BaseJpaEntity {
         return contentType;
     }
 
-    private static LanguageCode requireLanguageCode(LanguageCode languageCode) {
-        if (languageCode == null) {
-            throw new IllegalArgumentException("Language code must not be null");
+    private static AssetProcessingTarget requireTarget(AssetProcessingTarget target) {
+        if (target == null) {
+            throw new IllegalArgumentException("Asset processing target must not be null");
         }
-        return languageCode;
+        return target;
     }
 
     private static Instant requireInstant(Instant value, String message) {

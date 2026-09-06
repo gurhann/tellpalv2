@@ -11,6 +11,8 @@ import com.tellpal.v2.asset.domain.AssetProcessing;
 import com.tellpal.v2.asset.domain.AssetProcessingRepository;
 import com.tellpal.v2.asset.domain.AssetProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
+import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 
 @Repository
 public class JpaAssetProcessingRepositoryAdapter implements AssetProcessingRepository {
@@ -28,7 +30,21 @@ public class JpaAssetProcessingRepositoryAdapter implements AssetProcessingRepos
 
     @Override
     public Optional<AssetProcessing> findByContentIdAndLanguageCode(Long contentId, LanguageCode languageCode) {
-        return repository.findByContentIdAndLanguageCode(contentId, languageCode);
+        return repository.findByTargetScopeAndContentIdAndLanguageCode(
+                AssetProcessingTargetScope.LOCALIZATION, contentId, languageCode);
+    }
+
+    @Override
+    public Optional<AssetProcessing> findByTarget(AssetProcessingTarget target) {
+        if (target.isContent()) {
+            return findByContent(target.contentId());
+        }
+        return findByContentIdAndLanguageCode(target.contentId(), target.languageCode());
+    }
+
+    @Override
+    public Optional<AssetProcessing> findByContent(Long contentId) {
+        return repository.findByTargetScopeAndContentId(AssetProcessingTargetScope.CONTENT, contentId);
     }
 
     @Override

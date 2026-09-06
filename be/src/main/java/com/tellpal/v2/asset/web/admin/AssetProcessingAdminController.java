@@ -20,6 +20,8 @@ import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
+import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingNotFoundException;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.web.admin.AdminApiController;
@@ -45,7 +47,7 @@ public class AssetProcessingAdminController {
     }
 
     @PostMapping
-    @Operation(summary = "Schedule asset processing", description = "Queues asset processing for one localized content item.")
+    @Operation(summary = "Schedule asset processing", description = "Queues asset processing for a localized or content-scoped target.")
     @ApiResponses({
             @ApiResponse(responseCode = "202", description = "Asset processing scheduled"),
             @ApiResponse(responseCode = "400", description = "Schedule request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -78,6 +80,16 @@ public class AssetProcessingAdminController {
                         request.toCommand(contentId, languageCode))));
     }
 
+    @PostMapping("/{contentId}/content/retry")
+    @Operation(summary = "Retry content-scoped asset processing", description = "Reschedules one shared content processing job.")
+    public ResponseEntity<AdminAssetProcessingResponse> retryContentProcessing(
+            @PathVariable Long contentId,
+            @Valid @RequestBody RetryAssetProcessingRequest request) {
+        return ResponseEntity.accepted()
+                .body(AdminAssetProcessingResponse.from(assetProcessingApi.retry(
+                        request.toContentCommand(contentId))));
+    }
+
     @GetMapping("/{contentId}/localizations/{languageCode}")
     @Operation(summary = "Get processing status", description = "Returns the current asset processing state for one localized content item.")
     @ApiResponses({
@@ -92,6 +104,14 @@ public class AssetProcessingAdminController {
         return assetProcessingApi.findByLocalization(contentId, LanguageCode.from(languageCode))
                 .map(AdminAssetProcessingResponse::from)
                 .orElseThrow(() -> new AssetProcessingNotFoundException(contentId, LanguageCode.from(languageCode)));
+    }
+
+    @GetMapping("/{contentId}/content")
+    @Operation(summary = "Get content-scoped processing status", description = "Returns the shared processing state for content.")
+    public AdminAssetProcessingResponse getContentProcessingStatus(@PathVariable Long contentId) {
+        return assetProcessingApi.findByContent(contentId)
+                .map(AdminAssetProcessingResponse::from)
+                .orElseThrow(() -> new AssetProcessingNotFoundException(AssetProcessingTarget.content(contentId)));
     }
 
     @GetMapping
@@ -114,8 +134,8 @@ public class AssetProcessingAdminController {
 record ScheduleAssetProcessingRequest(
         @Positive(message = "contentId must be positive")
         Long contentId,
-        @NotBlank(message = "languageCode is required")
         String languageCode,
+        AssetProcessingTargetScope targetScope,
         @NotNull(message = "contentType is required")
         AssetProcessingContentType contentType,
         @NotBlank(message = "externalKey is required")
@@ -125,12 +145,27 @@ record ScheduleAssetProcessingRequest(
         @Positive(message = "audioSourceAssetId must be positive")
         Long audioSourceAssetId,
         @Min(value = 0, message = "pageCount must not be negative")
-        Integer pageCount) {
+    Integer pageCount) {
 
     ScheduleAssetProcessingCommand toCommand() {
+        AssetProcessingTargetScope resolvedScope = targetScope == null
+                ? AssetProcessingTargetScope.LOCALIZATION
+                : targetScope;
+        if (resolvedScope == AssetProcessingTargetScope.CONTENT) {
+            if (languageCode != null && !languageCode.isBlank()) {
+                throw new IllegalArgumentException(
+                        "Content processing target must not include a language code");
+            }
+        } else if (languageCode == null || languageCode.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Localization processing target requires a language code");
+        }
+
+        AssetProcessingTarget target = resolvedScope == AssetProcessingTargetScope.CONTENT
+                ? AssetProcessingTarget.content(contentId)
+                : AssetProcessingTarget.localization(contentId, LanguageCode.from(languageCode));
         return new ScheduleAssetProcessingCommand(
-                contentId,
-                LanguageCode.from(languageCode),
+                target,
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -155,6 +190,16 @@ record RetryAssetProcessingRequest(
         return new RetryAssetProcessingCommand(
                 contentId,
                 LanguageCode.from(languageCode),
+                contentType,
+                externalKey,
+                coverSourceAssetId,
+                audioSourceAssetId,
+                pageCount);
+    }
+
+    RetryAssetProcessingCommand toContentCommand(Long contentId) {
+        return new RetryAssetProcessingCommand(
+                AssetProcessingTarget.content(contentId),
                 contentType,
                 externalKey,
                 coverSourceAssetId,

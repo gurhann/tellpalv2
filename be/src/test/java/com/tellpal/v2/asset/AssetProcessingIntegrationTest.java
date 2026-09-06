@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,9 +16,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
+import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
@@ -185,9 +188,76 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 .hasValueSatisfying(record -> assertThat(record.status().name()).isEqualTo("COMPLETED"));
     }
 
+    @Test
+    void contentTargetIsIndependentFromLocalizationTargetsAndDoesNotChangeLocalizationStatus() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.MEDITATION, "shared-meditation", 8, true));
+        Long coverSourceAssetId = registerImageAsset("/content/meditation/shared-meditation/shared/original/cover.jpg");
+        Long audioSourceAssetId = registerAudioAsset("/content/meditation/shared-meditation/shared/original/audio.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Shared", "Description", "Body", coverSourceAssetId,
+                audioSourceAssetId, 10, LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        AssetProcessingRecord shared = scheduleAndStart(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.content(content.contentId()), AssetProcessingContentType.MEDITATION,
+                content.externalKey(), coverSourceAssetId, audioSourceAssetId, null));
+        assertThat(shared.target().isContent()).isTrue();
+        assertThat(assetProcessingApi.findByContent(content.contentId())).hasValueSatisfying(record ->
+                assertThat(record.target()).isEqualTo(AssetProcessingTarget.content(content.contentId())));
+
+        assetProcessingApi.fail(new com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand(
+                AssetProcessingTarget.content(content.contentId()), "FAILED", "shared failure"));
+        assertThat(jdbcTemplate.queryForObject(
+                "select processing_status from content_localizations where content_id = ? and language_code = ?",
+                String.class, content.contentId(), LanguageCode.TR.value())).isEqualTo("PENDING");
+
+        AssetProcessingRecord retried = assetProcessingApi.retry(new RetryAssetProcessingCommand(
+                AssetProcessingTarget.content(content.contentId()), AssetProcessingContentType.MEDITATION,
+                content.externalKey(), coverSourceAssetId, audioSourceAssetId, null));
+        AssetProcessingRecord restarted = assetProcessingApi.start(new StartAssetProcessingCommand(retried.target()));
+        assertThat(restarted.status().name()).isEqualTo("PROCESSING");
+        assetProcessingJobExecutor.process(restarted);
+        assertThat(assetProcessingApi.findByContent(content.contentId()))
+                .hasValueSatisfying(record -> assertThat(record.status().name()).isEqualTo("COMPLETED"));
+        assertThat(jdbcTemplate.queryForList(
+                "select kind from media_assets where object_path like ?", String.class,
+                "/test/content/meditation/shared-meditation/shared/%"))
+                .contains("THUMBNAIL_PHONE", "THUMBNAIL_TABLET", "DETAIL_PHONE", "DETAIL_TABLET",
+                        "OPTIMIZED_AUDIO", "CONTENT_ZIP");
+    }
+
+    @Test
+    void databaseRejectsInvalidTargetCombinationAndCascadesLocalizationProcessing() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "target-constraints", 5, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Target constraints", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into asset_processing (content_id, target_scope, language_code) values (?, 'CONTENT', 'tr')",
+                content.contentId()))
+                .isInstanceOf(RuntimeException.class);
+
+        AssetProcessingRecord localization = scheduleAndStart(new ScheduleAssetProcessingCommand(
+                content.contentId(), LanguageCode.TR, AssetProcessingContentType.STORY,
+                content.externalKey(), null, null, 0));
+        assertThat(localization.target().isLocalization()).isTrue();
+
+        jdbcTemplate.update("update content_localizations set language_code = 'en' where content_id = ? and language_code = ?",
+                content.contentId(), LanguageCode.TR.value());
+        assertThat(assetProcessingApi.findByLocalization(content.contentId(), LanguageCode.EN)).isPresent();
+
+        jdbcTemplate.update("delete from content_localizations where content_id = ? and language_code = ?",
+                content.contentId(), LanguageCode.EN.value());
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from asset_processing where content_id = ? and target_scope = 'LOCALIZATION'",
+                Integer.class, content.contentId())).isZero();
+    }
+
     private AssetProcessingRecord scheduleAndStart(ScheduleAssetProcessingCommand command) {
         assetProcessingApi.schedule(command);
-        return assetProcessingApi.start(new StartAssetProcessingCommand(command.contentId(), command.languageCode()));
+        return assetProcessingApi.start(new StartAssetProcessingCommand(command.target()));
     }
 
     private Long registerImageAsset(String objectPath) {

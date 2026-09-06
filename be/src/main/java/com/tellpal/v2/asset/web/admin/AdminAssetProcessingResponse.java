@@ -5,11 +5,13 @@ import java.time.Instant;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingState;
+import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 record AdminAssetProcessingResponse(
         Long processingId,
         Long contentId,
+        AssetProcessingTargetScope targetScope,
         LanguageCode languageCode,
         AssetProcessingContentType contentType,
         String externalKey,
@@ -32,6 +34,7 @@ record AdminAssetProcessingResponse(
         return new AdminAssetProcessingResponse(
                 assetProcessingRecord.processingId(),
                 assetProcessingRecord.contentId(),
+                assetProcessingRecord.targetScope(),
                 assetProcessingRecord.languageCode(),
                 assetProcessingRecord.contentType(),
                 assetProcessingRecord.externalKey(),

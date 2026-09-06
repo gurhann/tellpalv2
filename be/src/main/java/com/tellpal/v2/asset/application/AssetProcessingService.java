@@ -22,6 +22,7 @@ import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingC
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingStatusChangedEvent;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.asset.domain.AssetProcessing;
 import com.tellpal.v2.asset.domain.AssetProcessingRepository;
 import com.tellpal.v2.asset.domain.AssetProcessingStatus;
@@ -34,6 +35,7 @@ import static com.tellpal.v2.asset.application.AssetProcessingApplicationExcepti
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingNotFoundException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
 import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingLocalizationNotFoundException;
+import static com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingContentNotFoundException;
 
 /**
  * Application service that orchestrates the asset processing state machine.
@@ -67,15 +69,12 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord schedule(ScheduleAssetProcessingCommand command) {
-        Optional<AssetProcessing> existingProcessing = assetProcessingRepository.findByContentIdAndLanguageCode(
-                command.contentId(),
-                command.languageCode());
+        Optional<AssetProcessing> existingProcessing = assetProcessingRepository.findByTarget(command.target());
         if (existingProcessing.isPresent()) {
             return handleExistingSchedule(existingProcessing.get(), command);
         }
         AssetProcessing created = AssetProcessing.schedule(
-                command.contentId(),
-                command.languageCode(),
+                command.target(),
                 ProcessingContentType.valueOf(command.contentType().name()),
                 command.externalKey(),
                 command.coverSourceAssetId(),
@@ -93,7 +92,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord start(StartAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        AssetProcessing assetProcessing = loadProcessing(command.target());
         ensureStartable(assetProcessing);
         assetProcessing.start(Instant.now(clock), DEFAULT_LEASE_DURATION);
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
@@ -107,7 +106,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        AssetProcessing assetProcessing = loadProcessing(command.target());
         ensureRetryable(assetProcessing);
         assetProcessing.refreshContext(
                 ProcessingContentType.valueOf(command.contentType().name()),
@@ -127,7 +126,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord recoverExpiredLease(RecoverExpiredAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        AssetProcessing assetProcessing = loadProcessing(command.target());
         assetProcessing.recoverExpiredLease(
                 Instant.now(clock),
                 "LEASE_EXPIRED",
@@ -143,7 +142,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord complete(CompleteAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        AssetProcessing assetProcessing = loadProcessing(command.target());
         assetProcessing.complete(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -156,7 +155,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord fail(FailAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.contentId(), command.languageCode());
+        AssetProcessing assetProcessing = loadProcessing(command.target());
         assetProcessing.fail(command.errorCode(), command.errorMessage(), Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -169,7 +168,19 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional(readOnly = true)
     public Optional<AssetProcessingRecord> findByLocalization(Long contentId, LanguageCode languageCode) {
-        return assetProcessingRepository.findByContentIdAndLanguageCode(requireContentId(contentId), requireLanguageCode(languageCode))
+        return findByTarget(AssetProcessingTarget.localization(requireContentId(contentId), requireLanguageCode(languageCode)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AssetProcessingRecord> findByContent(Long contentId) {
+        return findByTarget(AssetProcessingTarget.content(requireContentId(contentId)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target) {
+        return assetProcessingRepository.findByTarget(requireTarget(target))
                 .map(AssetProcessingMapper::toRecord);
     }
 
@@ -198,35 +209,39 @@ public class AssetProcessingService implements AssetProcessingApi {
             return AssetProcessingMapper.toRecord(assetProcessingRepository.save(assetProcessing));
         }
         if (status == AssetProcessingStatus.PROCESSING) {
-            throw new AssetProcessingAlreadyRunningException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.COMPLETED) {
-            throw new AssetProcessingAlreadyCompletedException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
         }
-        throw new AssetProcessingRetryRequiredException(
-                assetProcessing.getContentId(),
-                assetProcessing.getLanguageCode());
+        throw new AssetProcessingRetryRequiredException(assetProcessing.getTarget());
     }
 
-    private AssetProcessing loadProcessing(Long contentId, LanguageCode languageCode) {
-        Long requiredContentId = requireContentId(contentId);
-        LanguageCode requiredLanguageCode = requireLanguageCode(languageCode);
-        return assetProcessingRepository.findByContentIdAndLanguageCode(requiredContentId, requiredLanguageCode)
-                .orElseThrow(() -> new AssetProcessingNotFoundException(requiredContentId, requiredLanguageCode));
+    private AssetProcessing loadProcessing(AssetProcessingTarget target) {
+        AssetProcessingTarget requiredTarget = requireTarget(target);
+        return assetProcessingRepository.findByTarget(requiredTarget)
+                .orElseThrow(() -> new AssetProcessingNotFoundException(requiredTarget));
     }
 
     private AssetProcessing saveNewProcessing(AssetProcessing assetProcessing) {
         try {
             return assetProcessingRepository.save(assetProcessing);
         } catch (DataIntegrityViolationException exception) {
-            throw new AssetProcessingLocalizationNotFoundException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            if (isUniqueTargetViolation(exception)) {
+                throw new AssetProcessingAlreadyPendingException(assetProcessing.getTarget());
+            }
+            if (assetProcessing.getTarget().isContent()) {
+                throw new AssetProcessingContentNotFoundException(assetProcessing.getTarget());
+            }
+            throw new AssetProcessingLocalizationNotFoundException(assetProcessing.getTarget());
         }
+    }
+
+    private static boolean isUniqueTargetViolation(DataIntegrityViolationException exception) {
+        String message = exception.getMostSpecificCause().getMessage();
+        return message != null && (message.contains("duplicate key")
+                || message.contains("uk_asset_processing_localization_target")
+                || message.contains("uk_asset_processing_content_target"));
     }
 
     private void ensureStartable(AssetProcessing assetProcessing) {
@@ -235,18 +250,12 @@ public class AssetProcessingService implements AssetProcessingApi {
             return;
         }
         if (status == AssetProcessingStatus.PROCESSING) {
-            throw new AssetProcessingAlreadyRunningException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.COMPLETED) {
-            throw new AssetProcessingAlreadyCompletedException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
         }
-        throw new AssetProcessingRetryRequiredException(
-                assetProcessing.getContentId(),
-                assetProcessing.getLanguageCode());
+        throw new AssetProcessingRetryRequiredException(assetProcessing.getTarget());
     }
 
     private void ensureRetryable(AssetProcessing assetProcessing) {
@@ -255,25 +264,19 @@ public class AssetProcessingService implements AssetProcessingApi {
             return;
         }
         if (status == AssetProcessingStatus.PENDING) {
-            throw new AssetProcessingAlreadyPendingException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyPendingException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.PROCESSING) {
-            throw new AssetProcessingAlreadyRunningException(
-                    assetProcessing.getContentId(),
-                    assetProcessing.getLanguageCode());
+            throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
-        throw new AssetProcessingAlreadyCompletedException(
-                assetProcessing.getContentId(),
-                assetProcessing.getLanguageCode());
+        throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
     }
 
     private void publishStatusChanged(AssetProcessing assetProcessing) {
         log.info(
                 "asset_processing_transition contentId={} languageCode={} status={} contentType={} externalKey={} attemptCount={} errorCode={} leaseExpiresAt={}",
                 assetProcessing.getContentId(),
-                assetProcessing.getLanguageCode().value(),
+                assetProcessing.getLanguageCode() == null ? null : assetProcessing.getLanguageCode().value(),
                 assetProcessing.getStatus(),
                 assetProcessing.getContentType(),
                 assetProcessing.getExternalKey(),
@@ -281,8 +284,7 @@ public class AssetProcessingService implements AssetProcessingApi {
                 assetProcessing.getLastErrorCode(),
                 assetProcessing.getLeaseExpiresAt());
         eventPublisher.publishEvent(new AssetProcessingStatusChangedEvent(
-                assetProcessing.getContentId(),
-                assetProcessing.getLanguageCode(),
+                assetProcessing.getTarget(),
                 com.tellpal.v2.asset.api.AssetProcessingState.valueOf(assetProcessing.getStatus().name())));
     }
 
@@ -298,6 +300,13 @@ public class AssetProcessingService implements AssetProcessingApi {
             throw new IllegalArgumentException("Language code must not be null");
         }
         return languageCode;
+    }
+
+    private static AssetProcessingTarget requireTarget(AssetProcessingTarget target) {
+        if (target == null) {
+            throw new IllegalArgumentException("Asset processing target must not be null");
+        }
+        return target;
     }
 
     private static int sanitizeLimit(int limit) {

@@ -12,8 +12,7 @@ import com.tellpal.v2.shared.domain.LanguageCode;
  */
 public record AssetProcessingRecord(
         Long processingId,
-        Long contentId,
-        LanguageCode languageCode,
+        AssetProcessingTarget target,
         AssetProcessingContentType contentType,
         String externalKey,
         Long coverSourceAssetId,
@@ -31,15 +30,37 @@ public record AssetProcessingRecord(
         Instant createdAt,
         Instant updatedAt) {
 
+    public AssetProcessingRecord(
+            Long processingId,
+            Long contentId,
+            LanguageCode languageCode,
+            AssetProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            AssetProcessingState status,
+            int attemptCount,
+            Instant nextAttemptAt,
+            Instant leaseExpiresAt,
+            Instant startedAt,
+            Instant completedAt,
+            Instant failedAt,
+            String lastErrorCode,
+            String lastErrorMessage,
+            Instant createdAt,
+            Instant updatedAt) {
+        this(processingId, AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+                coverSourceAssetId, audioSourceAssetId, pageCount, status, attemptCount, nextAttemptAt,
+                leaseExpiresAt, startedAt, completedAt, failedAt, lastErrorCode, lastErrorMessage, createdAt, updatedAt);
+    }
+
     public AssetProcessingRecord {
         if (processingId == null || processingId <= 0) {
             throw new IllegalArgumentException("Processing ID must be positive");
         }
-        if (contentId == null || contentId <= 0) {
-            throw new IllegalArgumentException("Content ID must be positive");
-        }
-        if (languageCode == null) {
-            throw new IllegalArgumentException("Language code must not be null");
+        if (target == null) {
+            throw new IllegalArgumentException("Asset processing target must not be null");
         }
         if (contentType == null) {
             throw new IllegalArgumentException("Processing content type must not be null");
@@ -63,4 +84,10 @@ public record AssetProcessingRecord(
             throw new IllegalArgumentException("Audit timestamps must not be null");
         }
     }
+
+    public Long contentId() { return target.contentId(); }
+
+    public LanguageCode languageCode() { return target.languageCode(); }
+
+    public AssetProcessingTargetScope targetScope() { return target.scope(); }
 }

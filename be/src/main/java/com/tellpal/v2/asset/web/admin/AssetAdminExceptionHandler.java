@@ -11,6 +11,7 @@ import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.Ass
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyPendingException;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingAlreadyRunningException;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingLocalizationNotFoundException;
+import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingContentNotFoundException;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingNotFoundException;
 import com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions.AssetProcessingRetryRequiredException;
 import com.tellpal.v2.asset.application.MediaAssetAlreadyExistsException;
@@ -156,6 +157,18 @@ public class AssetAdminExceptionHandler {
                 "Content localization not found",
                 exception.getMessage(),
                 "asset_processing_localization_not_found",
+                request);
+    }
+
+    @ExceptionHandler(AssetProcessingContentNotFoundException.class)
+    ProblemDetail handleContentNotFound(
+            AssetProcessingContentNotFoundException exception,
+            HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.NOT_FOUND,
+                "Content not found",
+                exception.getMessage(),
+                "asset_processing_content_not_found",
                 request);
     }
 

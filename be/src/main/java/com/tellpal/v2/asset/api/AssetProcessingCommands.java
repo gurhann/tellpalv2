@@ -15,17 +15,27 @@ public final class AssetProcessingCommands {
      * derived outputs.
      */
     public record ScheduleAssetProcessingCommand(
-            Long contentId,
-            LanguageCode languageCode,
+            AssetProcessingTarget target,
             AssetProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount) {
 
+        public ScheduleAssetProcessingCommand(
+                Long contentId,
+                LanguageCode languageCode,
+                AssetProcessingContentType contentType,
+                String externalKey,
+                Long coverSourceAssetId,
+                Long audioSourceAssetId,
+                Integer pageCount) {
+            this(AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+                    coverSourceAssetId, audioSourceAssetId, pageCount);
+        }
+
         public ScheduleAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
             contentType = requireContentType(contentType);
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
@@ -35,34 +45,55 @@ public final class AssetProcessingCommands {
                 throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
             }
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
     /**
      * Requests lease acquisition for a pending processing entry.
      */
-    public record StartAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+    public record StartAssetProcessingCommand(AssetProcessingTarget target) {
+
+        public StartAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+            this(AssetProcessingTarget.localization(contentId, languageCode));
+        }
 
         public StartAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
     /**
      * Requests a retry for a failed processing entry and refreshes its source context.
      */
     public record RetryAssetProcessingCommand(
-            Long contentId,
-            LanguageCode languageCode,
+            AssetProcessingTarget target,
             AssetProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount) {
 
+        public RetryAssetProcessingCommand(
+                Long contentId,
+                LanguageCode languageCode,
+                AssetProcessingContentType contentType,
+                String externalKey,
+                Long coverSourceAssetId,
+                Long audioSourceAssetId,
+                Integer pageCount) {
+            this(AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+                    coverSourceAssetId, audioSourceAssetId, pageCount);
+        }
+
         public RetryAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
             contentType = requireContentType(contentType);
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
@@ -72,62 +103,83 @@ public final class AssetProcessingCommands {
                 throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
             }
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
     /**
      * Requests recovery for an in-flight processing entry whose worker lease expired.
      */
-    public record RecoverExpiredAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+    public record RecoverExpiredAssetProcessingCommand(AssetProcessingTarget target) {
+
+        public RecoverExpiredAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+            this(AssetProcessingTarget.localization(contentId, languageCode));
+        }
 
         public RecoverExpiredAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
     /**
      * Requests completion of an in-flight processing entry.
      */
-    public record CompleteAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+    public record CompleteAssetProcessingCommand(AssetProcessingTarget target) {
+
+        public CompleteAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
+            this(AssetProcessingTarget.localization(contentId, languageCode));
+        }
 
         public CompleteAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
     /**
      * Requests failure of an in-flight processing entry with worker-provided diagnostics.
      */
     public record FailAssetProcessingCommand(
-            Long contentId,
-            LanguageCode languageCode,
+            AssetProcessingTarget target,
             String errorCode,
             String errorMessage) {
 
+        public FailAssetProcessingCommand(
+                Long contentId,
+                LanguageCode languageCode,
+                String errorCode,
+                String errorMessage) {
+            this(AssetProcessingTarget.localization(contentId, languageCode), errorCode, errorMessage);
+        }
+
         public FailAssetProcessingCommand {
-            contentId = requirePositiveId(contentId, "Content ID must be positive");
-            languageCode = requireLanguageCode(languageCode);
+            target = requireTarget(target);
             errorCode = normalizeOptionalText(errorCode);
             errorMessage = normalizeOptionalText(errorMessage);
             if (errorCode == null && errorMessage == null) {
                 throw new IllegalArgumentException("Failure details must include an error code or message");
             }
         }
+
+        public Long contentId() { return target.contentId(); }
+
+        public LanguageCode languageCode() { return target.languageCode(); }
     }
 
-    private static Long requirePositiveId(Long value, String message) {
-        if (value == null || value <= 0) {
-            throw new IllegalArgumentException(message);
+    private static AssetProcessingTarget requireTarget(AssetProcessingTarget target) {
+        if (target == null) {
+            throw new IllegalArgumentException("Asset processing target must not be null");
         }
-        return value;
-    }
-
-    private static LanguageCode requireLanguageCode(LanguageCode languageCode) {
-        if (languageCode == null) {
-            throw new IllegalArgumentException("Language code must not be null");
-        }
-        return languageCode;
+        return target;
     }
 
     private static AssetProcessingContentType requireContentType(AssetProcessingContentType contentType) {

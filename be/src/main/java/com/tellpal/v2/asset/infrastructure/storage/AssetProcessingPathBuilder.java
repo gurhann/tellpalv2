@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 @Component
@@ -29,11 +30,23 @@ public class AssetProcessingPathBuilder {
         return buildRoot(contentType, externalKey, languageCode, "packages");
     }
 
+    public String originalRoot(String contentType, String externalKey, AssetProcessingTarget target) {
+        return buildRoot(contentType, externalKey, target, "original");
+    }
+
+    public String processedRoot(String contentType, String externalKey, AssetProcessingTarget target) {
+        return buildRoot(contentType, externalKey, target, "processed");
+    }
+
+    public String packagesRoot(String contentType, String externalKey, AssetProcessingTarget target) {
+        return buildRoot(contentType, externalKey, target, "packages");
+    }
+
     public String coverVariantPath(AssetProcessingRecord assetProcessingRecord, AssetKind assetKind) {
         String root = processedRoot(
                 assetProcessingRecord.contentType().name(),
                 assetProcessingRecord.externalKey(),
-                assetProcessingRecord.languageCode());
+                assetProcessingRecord.target());
         return switch (assetKind) {
             case THUMBNAIL_PHONE -> root + "cover-thumbnail-phone.webp";
             case THUMBNAIL_TABLET -> root + "cover-thumbnail-tablet.webp";
@@ -47,14 +60,14 @@ public class AssetProcessingPathBuilder {
         return processedRoot(
                 assetProcessingRecord.contentType().name(),
                 assetProcessingRecord.externalKey(),
-                assetProcessingRecord.languageCode()) + "audio-optimized.m4a";
+                assetProcessingRecord.target()) + "audio-optimized.m4a";
     }
 
     public String packagePath(AssetProcessingRecord assetProcessingRecord, AssetKind assetKind) {
         String root = packagesRoot(
                 assetProcessingRecord.contentType().name(),
                 assetProcessingRecord.externalKey(),
-                assetProcessingRecord.languageCode());
+                assetProcessingRecord.target());
         return switch (assetKind) {
             case CONTENT_ZIP -> root + assetProcessingRecord.externalKey() + ".zip";
             case CONTENT_ZIP_PART1 -> root + assetProcessingRecord.externalKey() + "_part1.zip";
@@ -64,10 +77,18 @@ public class AssetProcessingPathBuilder {
     }
 
     private String buildRoot(String contentType, String externalKey, LanguageCode languageCode, String folder) {
+        return buildRoot(contentType, externalKey, AssetProcessingTarget.localization(1L, languageCode), folder);
+    }
+
+    private String buildRoot(String contentType, String externalKey, AssetProcessingTarget target, String folder) {
+        if (target == null) {
+            throw new IllegalArgumentException("Asset processing target must not be null");
+        }
+        String targetSegment = target.isContent() ? "shared" : requireLanguageCode(target.languageCode()).value();
         return assetStorageObjectPathBuilder.prefixPath("content/%s/%s/%s/%s/".formatted(
                 normalizeContentType(contentType),
                 normalizeExternalKey(externalKey),
-                requireLanguageCode(languageCode).value(),
+                targetSegment,
                 folder));
     }
 

@@ -20,6 +20,7 @@ import com.tellpal.v2.asset.api.AssetStorageProvider;
 import com.tellpal.v2.asset.api.RefreshMediaAssetDownloadUrlCommand;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
 import com.tellpal.v2.asset.infrastructure.storage.AssetProcessingPathBuilder;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
 @SpringBootTest
@@ -180,5 +181,7 @@ class AssetRegistryIntegrationTest extends PostgresIntegrationTestBase {
                 .isEqualTo("/test/content/story/moonlight-story/tr/original/");
         assertThat(pathBuilder.processedRoot("MEDITATION", "calm-mind", com.tellpal.v2.shared.domain.LanguageCode.EN))
                 .isEqualTo("/test/content/meditation/calm-mind/en/processed/");
+        assertThat(pathBuilder.processedRoot("MEDITATION", "calm-mind", AssetProcessingTarget.content(42L)))
+                .isEqualTo("/test/content/meditation/calm-mind/shared/processed/");
     }
 }

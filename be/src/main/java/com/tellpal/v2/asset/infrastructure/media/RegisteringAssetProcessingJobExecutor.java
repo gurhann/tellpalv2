@@ -56,12 +56,10 @@ class RegisteringAssetProcessingJobExecutor implements AssetProcessingJobExecuto
             }
 
             assetProcessingApi.complete(new CompleteAssetProcessingCommand(
-                    assetProcessingRecord.contentId(),
-                    assetProcessingRecord.languageCode()));
+                    assetProcessingRecord.target()));
         } catch (RuntimeException exception) {
             assetProcessingApi.fail(new FailAssetProcessingCommand(
-                    assetProcessingRecord.contentId(),
-                    assetProcessingRecord.languageCode(),
+                    assetProcessingRecord.target(),
                     "PROCESSING_FAILED",
                     exception.getMessage()));
         }

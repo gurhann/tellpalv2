@@ -18,6 +18,9 @@ class AssetProcessingStatusListener {
 
     @EventListener
     void on(AssetProcessingStatusChangedEvent event) {
+        if (!event.target().isLocalization()) {
+            return;
+        }
         contentManagementService.markLocalizationProcessingStatus(new MarkContentLocalizationProcessingCommand(
                 event.contentId(),
                 event.languageCode(),
