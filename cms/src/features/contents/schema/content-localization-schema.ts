@@ -98,6 +98,8 @@ export type ContentLocalizationFormValues = {
   status: ContentLocalizationStatus;
   processingStatus: ContentProcessingStatus;
   publishedAt: string | null;
+  narrationAudioMediaId?: number | null;
+  narrationDurationMinutes?: number | null;
 };
 
 export function createContentLocalizationSchema(contentType: ContentType) {
@@ -149,6 +151,14 @@ export function createContentLocalizationSchema(contentType: ContentType) {
         "FAILED",
       ]),
       publishedAt: z.preprocess(parsePublishedAt, z.string().nullable()),
+      narrationAudioMediaId: z.preprocess(
+        parseNullableInteger,
+        z.number().int().positive().nullable(),
+      ).optional(),
+      narrationDurationMinutes: z.preprocess(
+        parseNullableInteger,
+        z.number().int().nonnegative().nullable(),
+      ).optional(),
     })
     .superRefine((values, ctx) => {
       if (values.publishedAt) {
@@ -172,6 +182,11 @@ export function createContentLocalizationSchema(contentType: ContentType) {
       }
 
       if (contentType === "STORY") {
+        const narrationAudio = values.narrationAudioMediaId ?? null;
+        const narrationDuration = values.narrationDurationMinutes ?? null;
+        if ((narrationAudio === null) !== (narrationDuration === null)) {
+          ctx.addIssue({ code: "custom", message: "Narration audio and duration must be provided together.", path: [narrationAudio === null ? "narrationAudioMediaId" : "narrationDurationMinutes"] });
+        }
         if (values.bodyText) {
           ctx.addIssue({
             code: "custom",
@@ -189,6 +204,9 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           });
         }
       } else {
+        if (values.narrationAudioMediaId != null || values.narrationDurationMinutes != null) {
+          ctx.addIssue({ code: "custom", message: "Narration is only supported for stories.", path: ["narrationAudioMediaId"] });
+        }
         if (
           (contentType === "AUDIO_STORY" || contentType === "MEDITATION") &&
           !values.bodyText
@@ -225,6 +243,8 @@ export function getCreateLocalizationFormDefaults(
     status: "DRAFT",
     processingStatus: "PENDING",
     publishedAt: null,
+    narrationAudioMediaId: null,
+    narrationDurationMinutes: null,
   };
 }
 
@@ -242,6 +262,8 @@ export function mapLocalizationToFormValues(
     status: localization.status,
     processingStatus: localization.processingStatus,
     publishedAt: formatDateTimeLocalValue(localization.publishedAt),
+    narrationAudioMediaId: localization.narration?.audioAssetId ?? null,
+    narrationDurationMinutes: localization.narration?.durationMinutes ?? null,
   };
 }
 

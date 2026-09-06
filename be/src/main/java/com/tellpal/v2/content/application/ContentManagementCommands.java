@@ -15,6 +15,16 @@ public final class ContentManagementCommands {
     private ContentManagementCommands() {
     }
 
+    /** Optional full narration supplied with a story localization write. */
+    public record StoryNarrationCommand(Long audioMediaId, Integer durationMinutes) {
+        public StoryNarrationCommand {
+            requirePositiveId(audioMediaId, "Narration audio media ID must be positive");
+            if (durationMinutes == null || durationMinutes < 0) {
+                throw new IllegalArgumentException("Narration duration minutes must be non-negative");
+            }
+        }
+    }
+
     /**
      * Command for creating a content aggregate.
      */
@@ -75,7 +85,15 @@ public final class ContentManagementCommands {
             Integer durationMinutes,
             LocalizationStatus status,
             ProcessingStatus processingStatus,
-            Instant publishedAt) {
+            Instant publishedAt,
+            StoryNarrationCommand narration) {
+
+        public CreateContentLocalizationCommand(Long contentId, LanguageCode languageCode, String title,
+                String description, String bodyText, Long coverMediaId, Long audioMediaId, Integer durationMinutes,
+                LocalizationStatus status, ProcessingStatus processingStatus, Instant publishedAt) {
+            this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId, durationMinutes,
+                    status, processingStatus, publishedAt, null);
+        }
 
         public CreateContentLocalizationCommand {
             validateLocalizationCommand(
@@ -105,7 +123,15 @@ public final class ContentManagementCommands {
             Integer durationMinutes,
             LocalizationStatus status,
             ProcessingStatus processingStatus,
-            Instant publishedAt) {
+            Instant publishedAt,
+            StoryNarrationCommand narration) {
+
+        public UpdateContentLocalizationCommand(Long contentId, LanguageCode languageCode, String title,
+                String description, String bodyText, Long coverMediaId, Long audioMediaId, Integer durationMinutes,
+                LocalizationStatus status, ProcessingStatus processingStatus, Instant publishedAt) {
+            this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId, durationMinutes,
+                    status, processingStatus, publishedAt, null);
+        }
 
         public UpdateContentLocalizationCommand {
             validateLocalizationCommand(

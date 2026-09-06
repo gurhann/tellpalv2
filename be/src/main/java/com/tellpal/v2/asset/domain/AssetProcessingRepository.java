@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 
 public interface AssetProcessingRepository {
 
@@ -14,6 +15,8 @@ public interface AssetProcessingRepository {
     Optional<AssetProcessing> findByContentIdAndLanguageCode(Long contentId, LanguageCode languageCode);
 
     Optional<AssetProcessing> findByTarget(AssetProcessingTarget target);
+
+    Optional<AssetProcessing> findByTargetAndKind(AssetProcessingTarget target, AssetProcessingKind kind);
 
     Optional<AssetProcessing> findByContent(Long contentId);
 

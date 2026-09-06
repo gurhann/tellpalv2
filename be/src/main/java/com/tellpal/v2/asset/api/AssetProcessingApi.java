@@ -48,11 +48,19 @@ public interface AssetProcessingApi {
      */
     Optional<AssetProcessingRecord> findByLocalization(Long contentId, com.tellpal.v2.shared.domain.LanguageCode languageCode);
 
+    default Optional<AssetProcessingRecord> findNarrationByLocalization(
+            Long contentId, com.tellpal.v2.shared.domain.LanguageCode languageCode) {
+        return findByTarget(new AssetProcessingTarget(
+                AssetProcessingTargetScope.LOCALIZATION, contentId, languageCode), AssetProcessingKind.STORY_NARRATION);
+    }
+
     /** Looks up the single content-scoped processing entry. */
     Optional<AssetProcessingRecord> findByContent(Long contentId);
 
     /** Looks up processing using its explicit target. */
     Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target);
+
+    Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target, AssetProcessingKind kind);
 
     /**
      * Lists recent processing entries, capped by the implementation for operational safety.

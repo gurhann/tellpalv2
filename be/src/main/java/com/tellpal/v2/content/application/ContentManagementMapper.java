@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.StoryNarrationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
@@ -29,7 +30,10 @@ final class ContentManagementMapper {
                 localization.getStatus(),
                 localization.getProcessingStatus(),
                 localization.getPublishedAt(),
-                localization.isVisibleToMobile());
+                localization.isVisibleToMobile(),
+                localization.getNarration() == null ? null : new StoryNarrationRecord(
+                        localization.getNarration().getAudioMediaId(),
+                        localization.getNarration().getDurationMinutes()));
     }
 
     static StoryPageRecord toStoryPageRecord(Long contentId, StoryPage storyPage) {

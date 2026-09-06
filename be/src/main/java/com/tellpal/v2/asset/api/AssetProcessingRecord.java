@@ -13,6 +13,7 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 public record AssetProcessingRecord(
         Long processingId,
         AssetProcessingTarget target,
+        AssetProcessingKind kind,
         AssetProcessingContentType contentType,
         String externalKey,
         Long coverSourceAssetId,
@@ -50,7 +51,7 @@ public record AssetProcessingRecord(
             String lastErrorMessage,
             Instant createdAt,
             Instant updatedAt) {
-        this(processingId, AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+        this(processingId, AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
                 coverSourceAssetId, audioSourceAssetId, pageCount, status, attemptCount, nextAttemptAt,
                 leaseExpiresAt, startedAt, completedAt, failedAt, lastErrorCode, lastErrorMessage, createdAt, updatedAt);
     }
@@ -61,6 +62,9 @@ public record AssetProcessingRecord(
         }
         if (target == null) {
             throw new IllegalArgumentException("Asset processing target must not be null");
+        }
+        if (kind == null) {
+            throw new IllegalArgumentException("Processing kind must not be null");
         }
         if (contentType == null) {
             throw new IllegalArgumentException("Processing content type must not be null");

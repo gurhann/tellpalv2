@@ -65,6 +65,7 @@ export type UpsertContentLocalizationInput = {
   status: ContentLocalizationStatus;
   processingStatus: ContentProcessingStatus;
   publishedAt?: string | null;
+  narration?: { audioMediaId: number; durationMinutes: number } | null;
 };
 
 export type UpdateContentLocalizationProcessingInput = {
@@ -98,6 +99,12 @@ export const adminContentLocalizationResponseSchema = z.object({
   processingStatus: contentProcessingStatusSchema,
   publishedAt: z.string().nullable(),
   visibleToMobile: z.boolean(),
+  narration: z.object({
+    audioMediaId: z.number().int().positive(),
+    durationMinutes: z.number().int().nonnegative(),
+    processingStatus: contentProcessingStatusSchema.nullable(),
+    processingError: z.string().nullable(),
+  }).nullable().optional(),
 });
 
 export const adminContentReadResponseSchema = adminContentResponseSchema.extend(

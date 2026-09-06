@@ -11,6 +11,7 @@ import com.tellpal.v2.asset.domain.AssetProcessing;
 import com.tellpal.v2.asset.domain.AssetProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 
 interface SpringDataAssetProcessingRepository extends JpaRepository<AssetProcessing, Long> {
 
@@ -18,8 +19,14 @@ interface SpringDataAssetProcessingRepository extends JpaRepository<AssetProcess
 
     Optional<AssetProcessing> findByTargetScopeAndContentId(AssetProcessingTargetScope targetScope, Long contentId);
 
+    Optional<AssetProcessing> findByTargetScopeAndContentIdAndKind(
+            AssetProcessingTargetScope targetScope, Long contentId, AssetProcessingKind kind);
+
     Optional<AssetProcessing> findByTargetScopeAndContentIdAndLanguageCode(
             AssetProcessingTargetScope targetScope, Long contentId, LanguageCode languageCode);
+
+    Optional<AssetProcessing> findByTargetScopeAndContentIdAndLanguageCodeAndKind(
+            AssetProcessingTargetScope targetScope, Long contentId, LanguageCode languageCode, AssetProcessingKind kind);
 
     List<AssetProcessing> findByStatusAndNextAttemptAtLessThanEqualOrderByNextAttemptAtAscCreatedAtAsc(
             AssetProcessingStatus status,

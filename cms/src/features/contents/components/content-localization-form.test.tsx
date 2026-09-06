@@ -101,7 +101,7 @@ beforeEach(() => {
 });
 
 describe("ContentLocalizationForm", () => {
-  it("hides story-only body and audio inputs", () => {
+  it("hides story page body input but shows optional full narration input", () => {
     render(
       <ContentLocalizationForm
         content={storyContentViewModel}
@@ -114,7 +114,8 @@ describe("ContentLocalizationForm", () => {
     );
 
     expect(screen.queryByLabelText(/body text/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/audio asset/i)).not.toBeInTheDocument();
+    expect(screen.getByTestId("content-localization-narration-row")).toBeVisible();
+    expect(screen.getByText("Full narration audio asset")).toBeVisible();
   });
 
   it("shows non-story body and audio inputs for meditation locales", () => {

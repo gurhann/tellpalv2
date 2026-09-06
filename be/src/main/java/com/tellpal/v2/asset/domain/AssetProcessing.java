@@ -13,6 +13,7 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 
 /**
  * Aggregate root that tracks the asset processing lifecycle for one typed target.
@@ -26,6 +27,10 @@ public class AssetProcessing extends BaseJpaEntity {
 
     @Column(name = "content_id", nullable = false)
     private Long contentId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "processing_kind", nullable = false, length = 30)
+    private AssetProcessingKind kind;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "target_scope", nullable = false, length = 20)
@@ -83,6 +88,7 @@ public class AssetProcessing extends BaseJpaEntity {
 
     private AssetProcessing(
             AssetProcessingTarget target,
+            AssetProcessingKind kind,
             ProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
@@ -90,6 +96,8 @@ public class AssetProcessing extends BaseJpaEntity {
             Integer pageCount,
             Instant nextAttemptAt) {
         this.targetScope = requireTarget(target).scope();
+        this.kind = requireKind(kind);
+        validateKindTarget(this.kind, target, contentType);
         this.contentId = target.contentId();
         this.languageCode = target.languageCode();
         refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
@@ -100,6 +108,7 @@ public class AssetProcessing extends BaseJpaEntity {
 
     public static AssetProcessing schedule(
             AssetProcessingTarget target,
+            AssetProcessingKind kind,
             ProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
@@ -108,6 +117,7 @@ public class AssetProcessing extends BaseJpaEntity {
             Instant nextAttemptAt) {
         return new AssetProcessing(
                 target,
+                kind,
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -127,6 +137,7 @@ public class AssetProcessing extends BaseJpaEntity {
             Instant nextAttemptAt) {
         return new AssetProcessing(
                 AssetProcessingTarget.localization(contentId, languageCode),
+                AssetProcessingKind.DELIVERY,
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -137,6 +148,10 @@ public class AssetProcessing extends BaseJpaEntity {
 
     public Long getContentId() {
         return contentId;
+    }
+
+    public AssetProcessingKind getKind() {
+        return kind;
     }
 
     public LanguageCode getLanguageCode() {
@@ -316,6 +331,19 @@ public class AssetProcessing extends BaseJpaEntity {
         this.failedAt = null;
     }
 
+    /** Re-queues terminal work after a source asset was replaced. */
+    public void reschedule(Instant nextAttemptAt) {
+        if (!isTerminal()) {
+            throw new IllegalStateException("Only terminal asset processing can be rescheduled");
+        }
+        this.status = AssetProcessingStatus.PENDING;
+        this.nextAttemptAt = requireInstant(nextAttemptAt, "Next attempt time must not be null");
+        this.leaseExpiresAt = null;
+        this.completedAt = null;
+        this.failedAt = null;
+        clearFailureDetails();
+    }
+
     /**
      * Releases an expired worker lease and returns the entry to pending.
      */
@@ -361,6 +389,21 @@ public class AssetProcessing extends BaseJpaEntity {
             throw new IllegalArgumentException("Asset processing target must not be null");
         }
         return target;
+    }
+
+    private static AssetProcessingKind requireKind(AssetProcessingKind kind) {
+        if (kind == null) {
+            throw new IllegalArgumentException("Processing kind must not be null");
+        }
+        return kind;
+    }
+
+    private static void validateKindTarget(AssetProcessingKind kind, AssetProcessingTarget target,
+            ProcessingContentType contentType) {
+        if (kind == AssetProcessingKind.STORY_NARRATION
+                && (!target.isLocalization() || contentType != ProcessingContentType.STORY)) {
+            throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
+        }
     }
 
     private static Instant requireInstant(Instant value, String message) {

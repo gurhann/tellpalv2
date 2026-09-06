@@ -10,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToOne;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
@@ -58,6 +60,9 @@ public class ContentLocalization extends BaseJpaEntity {
 
     @Column(name = "published_at")
     private Instant publishedAt;
+
+    @OneToOne(mappedBy = "localization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StoryNarration narration;
 
     protected ContentLocalization() {
     }
@@ -113,6 +118,20 @@ public class ContentLocalization extends BaseJpaEntity {
 
     public Instant getPublishedAt() {
         return publishedAt;
+    }
+
+    public StoryNarration getNarration() { return narration; }
+
+    /** Creates or replaces the optional full-length narration for this localization. */
+    public void upsertNarration(Long audioMediaId, Integer durationMinutes) {
+        if (content.getType() != ContentType.STORY) {
+            throw new IllegalStateException("Narration is only supported for STORY content");
+        }
+        if (narration == null) {
+            narration = new StoryNarration(this, audioMediaId, durationMinutes);
+        } else {
+            narration.update(audioMediaId, durationMinutes);
+        }
     }
 
     /**

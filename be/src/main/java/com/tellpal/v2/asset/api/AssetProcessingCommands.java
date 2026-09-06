@@ -16,11 +16,23 @@ public final class AssetProcessingCommands {
      */
     public record ScheduleAssetProcessingCommand(
             AssetProcessingTarget target,
+            AssetProcessingKind kind,
             AssetProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount) {
+
+        public ScheduleAssetProcessingCommand(
+                AssetProcessingTarget target,
+                AssetProcessingContentType contentType,
+                String externalKey,
+                Long coverSourceAssetId,
+                Long audioSourceAssetId,
+                Integer pageCount) {
+            this(target, AssetProcessingKind.DELIVERY, contentType, externalKey, coverSourceAssetId,
+                    audioSourceAssetId, pageCount);
+        }
 
         public ScheduleAssetProcessingCommand(
                 Long contentId,
@@ -30,13 +42,17 @@ public final class AssetProcessingCommands {
                 Long coverSourceAssetId,
                 Long audioSourceAssetId,
                 Integer pageCount) {
-            this(AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
                     coverSourceAssetId, audioSourceAssetId, pageCount);
         }
 
         public ScheduleAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) {
+                throw new IllegalArgumentException("Processing kind must not be null");
+            }
             contentType = requireContentType(contentType);
+            validateKindTarget(kind, target, contentType);
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
@@ -54,14 +70,19 @@ public final class AssetProcessingCommands {
     /**
      * Requests lease acquisition for a pending processing entry.
      */
-    public record StartAssetProcessingCommand(AssetProcessingTarget target) {
+    public record StartAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind) {
+
+        public StartAssetProcessingCommand(AssetProcessingTarget target) {
+            this(target, AssetProcessingKind.DELIVERY);
+        }
 
         public StartAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
-            this(AssetProcessingTarget.localization(contentId, languageCode));
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY);
         }
 
         public StartAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
         }
 
         public Long contentId() { return target.contentId(); }
@@ -74,6 +95,7 @@ public final class AssetProcessingCommands {
      */
     public record RetryAssetProcessingCommand(
             AssetProcessingTarget target,
+            AssetProcessingKind kind,
             AssetProcessingContentType contentType,
             String externalKey,
             Long coverSourceAssetId,
@@ -88,13 +110,20 @@ public final class AssetProcessingCommands {
                 Long coverSourceAssetId,
                 Long audioSourceAssetId,
                 Integer pageCount) {
-            this(AssetProcessingTarget.localization(contentId, languageCode), contentType, externalKey,
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
                     coverSourceAssetId, audioSourceAssetId, pageCount);
+        }
+
+        public RetryAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingContentType contentType,
+                String externalKey, Long coverSourceAssetId, Long audioSourceAssetId, Integer pageCount) {
+            this(target, AssetProcessingKind.DELIVERY, contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
         }
 
         public RetryAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
             contentType = requireContentType(contentType);
+            validateKindTarget(kind, target, contentType);
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
@@ -112,14 +141,19 @@ public final class AssetProcessingCommands {
     /**
      * Requests recovery for an in-flight processing entry whose worker lease expired.
      */
-    public record RecoverExpiredAssetProcessingCommand(AssetProcessingTarget target) {
+    public record RecoverExpiredAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind) {
+
+        public RecoverExpiredAssetProcessingCommand(AssetProcessingTarget target) {
+            this(target, AssetProcessingKind.DELIVERY);
+        }
 
         public RecoverExpiredAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
-            this(AssetProcessingTarget.localization(contentId, languageCode));
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY);
         }
 
         public RecoverExpiredAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
         }
 
         public Long contentId() { return target.contentId(); }
@@ -130,14 +164,19 @@ public final class AssetProcessingCommands {
     /**
      * Requests completion of an in-flight processing entry.
      */
-    public record CompleteAssetProcessingCommand(AssetProcessingTarget target) {
+    public record CompleteAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind) {
+
+        public CompleteAssetProcessingCommand(AssetProcessingTarget target) {
+            this(target, AssetProcessingKind.DELIVERY);
+        }
 
         public CompleteAssetProcessingCommand(Long contentId, LanguageCode languageCode) {
-            this(AssetProcessingTarget.localization(contentId, languageCode));
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY);
         }
 
         public CompleteAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
         }
 
         public Long contentId() { return target.contentId(); }
@@ -150,6 +189,7 @@ public final class AssetProcessingCommands {
      */
     public record FailAssetProcessingCommand(
             AssetProcessingTarget target,
+            AssetProcessingKind kind,
             String errorCode,
             String errorMessage) {
 
@@ -158,11 +198,16 @@ public final class AssetProcessingCommands {
                 LanguageCode languageCode,
                 String errorCode,
                 String errorMessage) {
-            this(AssetProcessingTarget.localization(contentId, languageCode), errorCode, errorMessage);
+            this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, errorCode, errorMessage);
+        }
+
+        public FailAssetProcessingCommand(AssetProcessingTarget target, String errorCode, String errorMessage) {
+            this(target, AssetProcessingKind.DELIVERY, errorCode, errorMessage);
         }
 
         public FailAssetProcessingCommand {
             target = requireTarget(target);
+            if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
             errorCode = normalizeOptionalText(errorCode);
             errorMessage = normalizeOptionalText(errorMessage);
             if (errorCode == null && errorMessage == null) {
@@ -232,5 +277,13 @@ public final class AssetProcessingCommands {
         }
         String normalized = value.trim();
         return normalized.isEmpty() ? null : normalized;
+    }
+
+    private static void validateKindTarget(AssetProcessingKind kind, AssetProcessingTarget target,
+            AssetProcessingContentType contentType) {
+        if (kind == AssetProcessingKind.STORY_NARRATION
+                && (!target.isLocalization() || contentType != AssetProcessingContentType.STORY)) {
+            throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
+        }
     }
 }

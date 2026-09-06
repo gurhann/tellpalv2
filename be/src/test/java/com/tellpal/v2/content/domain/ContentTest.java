@@ -196,6 +196,45 @@ class ContentTest {
                 .hasMessageContaining("audio media");
     }
 
+    @Test
+    void storyLocalizationOwnsOneReplaceableFullNarrationWithoutUsingPageAudioField() {
+        Content content = Content.create(ContentType.STORY, "story-narration", 5, true);
+        ContentLocalization localization = content.upsertLocalization(
+                LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+
+        content.upsertStoryNarration(LanguageCode.TR, 41L, 9);
+        StoryNarration first = localization.getNarration();
+        content.upsertStoryNarration(LanguageCode.TR, 42L, 10);
+
+        assertThat(localization.getNarration()).isSameAs(first);
+        assertThat(localization.getNarration().getAudioMediaId()).isEqualTo(42L);
+        assertThat(localization.getNarration().getDurationMinutes()).isEqualTo(10);
+        assertThat(localization.getAudioMediaId()).isNull();
+    }
+
+    @Test
+    void narrationIsOnlyAllowedForStoryAndValidatesSourceAndDuration() {
+        Content meditation = Content.create(ContentType.MEDITATION, "meditation", 5, true);
+        meditation.upsertLocalization(LanguageCode.TR, "Meditasyon", null, "metin", null, 8L, 5,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+
+        assertThatThrownBy(() -> meditation.upsertStoryNarration(LanguageCode.TR, 41L, 9))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("STORY content");
+
+        Content story = Content.create(ContentType.STORY, "story-narration-validation", 5, true);
+        story.upsertLocalization(LanguageCode.TR, "Masal", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+
+        assertThatThrownBy(() -> story.upsertStoryNarration(LanguageCode.TR, 0L, 1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("positive");
+        assertThatThrownBy(() -> story.upsertStoryNarration(LanguageCode.TR, 41L, -1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("non-negative");
+    }
+
     private static Contributor persistedContributor(Long contributorId, String displayName) {
         Contributor contributor = Contributor.create(displayName, Set.of(ContributorRole.AUTHOR));
         ReflectionTestUtils.setField(contributor, "id", contributorId);

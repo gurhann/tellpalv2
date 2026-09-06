@@ -18,6 +18,7 @@ final class AssetProcessingMapper {
         return new AssetProcessingRecord(
                 processingId,
                 assetProcessing.getTarget(),
+                assetProcessing.getKind(),
                 AssetProcessingContentType.valueOf(assetProcessing.getContentType().name()),
                 assetProcessing.getExternalKey(),
                 assetProcessing.getCoverSourceAssetId(),

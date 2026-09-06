@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.tellpal.v2.asset.api.AssetKind;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.infrastructure.storage.AssetProcessingPathBuilder;
@@ -20,7 +21,8 @@ class DefaultAudioOptimizationAdapter implements AudioOptimizationAdapter {
 
     @Override
     public Optional<GeneratedAssetPlan> generateOptimizedAudio(AssetProcessingRecord assetProcessingRecord) {
-        if (assetProcessingRecord.contentType() == AssetProcessingContentType.STORY) {
+        if (assetProcessingRecord.kind() != AssetProcessingKind.STORY_NARRATION
+                && assetProcessingRecord.contentType() == AssetProcessingContentType.STORY) {
             return Optional.empty();
         }
         return Optional.of(new GeneratedAssetPlan(

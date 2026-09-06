@@ -123,6 +123,15 @@ public class Content extends BaseJpaEntity {
                 .findFirst();
     }
 
+    public void upsertStoryNarration(LanguageCode languageCode, Long audioMediaId, Integer durationMinutes) {
+        if (type != ContentType.STORY) {
+            throw new IllegalStateException("Narration is only supported for STORY content");
+        }
+        findLocalization(languageCode)
+                .orElseThrow(() -> new IllegalArgumentException("Story narration localization not found: " + languageCode))
+                .upsertNarration(audioMediaId, durationMinutes);
+    }
+
     public Optional<StoryPage> findStoryPage(int pageNumber) {
         if (pageNumber <= 0) {
             throw new IllegalArgumentException("Story page number must be positive");

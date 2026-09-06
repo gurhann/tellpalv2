@@ -24,6 +24,7 @@ import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.shared.domain.LanguageCode;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
 
 /**
  * Read-only application service for admin content queries.
@@ -37,12 +38,15 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
 
     private final ContentRepository contentRepository;
     private final ContentRegistryReadRepository contentRegistryReadRepository;
+    private final ContentAdminQueryMapper contentAdminQueryMapper;
 
     public AdminContentQueryService(
             ContentRepository contentRepository,
-            ContentRegistryReadRepository contentRegistryReadRepository) {
+            ContentRegistryReadRepository contentRegistryReadRepository,
+            AssetProcessingApi assetProcessingApi) {
         this.contentRepository = contentRepository;
         this.contentRegistryReadRepository = contentRegistryReadRepository;
+        this.contentAdminQueryMapper = new ContentAdminQueryMapper(assetProcessingApi);
     }
 
     /**
@@ -51,7 +55,7 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
     @Override
     public List<AdminContentView> listContents() {
         return contentRepository.findAllForAdminRead().stream()
-                .map(ContentAdminQueryMapper::toView)
+                .map(contentAdminQueryMapper::toView)
                 .toList();
     }
 
@@ -61,7 +65,7 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
     @Override
     public Optional<AdminContentView> findContent(Long contentId) {
         return contentRepository.findByIdForAdminRead(requireContentId(contentId))
-                .map(ContentAdminQueryMapper::toView);
+                .map(contentAdminQueryMapper::toView);
     }
 
     @Override

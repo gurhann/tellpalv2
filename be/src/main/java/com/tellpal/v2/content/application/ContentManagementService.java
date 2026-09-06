@@ -20,6 +20,11 @@ import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
+import com.tellpal.v2.asset.api.AssetProcessingContentType;
+import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
 
 /**
  * Application service for creating and updating content aggregates and their localizations.
@@ -32,12 +37,15 @@ public class ContentManagementService {
 
     private final ContentRepository contentRepository;
     private final ContentAssetReferenceValidator assetReferenceValidator;
+    private final AssetProcessingApi assetProcessingApi;
 
     public ContentManagementService(
             ContentRepository contentRepository,
-            ContentAssetReferenceValidator assetReferenceValidator) {
+            ContentAssetReferenceValidator assetReferenceValidator,
+            AssetProcessingApi assetProcessingApi) {
         this.contentRepository = contentRepository;
         this.assetReferenceValidator = assetReferenceValidator;
+        this.assetProcessingApi = assetProcessingApi;
     }
 
     /**
@@ -98,9 +106,12 @@ public class ContentManagementService {
                 command.status(),
                 command.processingStatus(),
                 command.publishedAt());
+        upsertNarration(content, command.languageCode(), command.narration());
+        Content savedContent = contentRepository.save(content);
+        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration());
         return ContentManagementMapper.toLocalizationRecord(
                 command.contentId(),
-                contentRepository.save(content).findLocalization(command.languageCode())
+                savedContent.findLocalization(command.languageCode())
                         .orElse(localization));
     }
 
@@ -123,9 +134,12 @@ public class ContentManagementService {
                 command.status(),
                 command.processingStatus(),
                 command.publishedAt());
+        upsertNarration(content, command.languageCode(), command.narration());
+        Content savedContent = contentRepository.save(content);
+        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration());
         return ContentManagementMapper.toLocalizationRecord(
                 command.contentId(),
-                contentRepository.save(content).findLocalization(command.languageCode())
+                savedContent.findLocalization(command.languageCode())
                         .orElse(localization));
     }
 
@@ -159,6 +173,29 @@ public class ContentManagementService {
         assetReferenceValidator.requireImageAsset(coverMediaId, "coverMediaId");
         assetReferenceValidator.requireAudioAsset(audioMediaId, "audioMediaId");
     }
+
+    private void upsertNarration(Content content, LanguageCode languageCode,
+            ContentManagementCommands.StoryNarrationCommand narration) {
+        if (narration == null) {
+            return;
+        }
+        if (content.getType() != com.tellpal.v2.content.domain.ContentType.STORY) {
+            throw new IllegalArgumentException("Narration is only supported for STORY content");
+        }
+        assetReferenceValidator.requireAudioAsset(narration.audioMediaId(), "narration.audioMediaId");
+        content.upsertStoryNarration(languageCode, narration.audioMediaId(), narration.durationMinutes());
+    }
+
+    private void scheduleNarrationProcessing(Content content, LanguageCode languageCode,
+            ContentManagementCommands.StoryNarrationCommand narration) {
+        if (narration == null) return;
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.localization(requireContentId(content), languageCode),
+                AssetProcessingKind.STORY_NARRATION,
+                AssetProcessingContentType.STORY,
+                content.getExternalKey(), null, narration.audioMediaId(), 0));
+    }
+
 
     private Content loadContent(Long contentId) {
         return contentRepository.findById(contentId)

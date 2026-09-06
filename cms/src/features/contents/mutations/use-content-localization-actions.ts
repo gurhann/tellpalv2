@@ -74,6 +74,9 @@ function toLocalizationPayload(values: ContentLocalizationFormValues) {
     status: values.status,
     processingStatus: values.processingStatus,
     publishedAt: toPublishedAtPayload(values.publishedAt),
+    ...(values.narrationAudioMediaId != null && values.narrationDurationMinutes != null
+      ? { narration: { audioMediaId: values.narrationAudioMediaId, durationMinutes: values.narrationDurationMinutes } }
+      : {}),
   };
 }
 

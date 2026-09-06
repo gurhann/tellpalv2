@@ -63,6 +63,12 @@ export type ContentLocalizationViewModel = {
   processingStatusLabel: string;
   publishedAt: string | null;
   visibleToMobile: boolean;
+  narration?: {
+    audioAssetId: number;
+    durationMinutes: number;
+    processingStatus: ContentProcessingStatus | null;
+    processingError: string | null;
+  } | null;
   hasCoverAsset: boolean;
   hasAudioAsset: boolean;
   isPublished: boolean;
@@ -199,6 +205,12 @@ export function mapAdminContentLocalization(
       processingStatusLabels[localization.processingStatus],
     publishedAt: localization.publishedAt,
     visibleToMobile: localization.visibleToMobile,
+    ...(localization.narration ? { narration: {
+      audioAssetId: localization.narration.audioMediaId,
+      durationMinutes: localization.narration.durationMinutes,
+      processingStatus: localization.narration.processingStatus,
+      processingError: localization.narration.processingError,
+    } } : {}),
     hasCoverAsset: localization.coverMediaId !== null,
     hasAudioAsset: localization.audioMediaId !== null,
     isPublished: localization.status === "PUBLISHED",

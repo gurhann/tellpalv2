@@ -29,6 +29,7 @@ import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentL
 import com.tellpal.v2.content.application.ContentPublicationCommands.PublishContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContentPublicationCommands.ArchiveContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentPublicationService;
@@ -284,7 +285,15 @@ record UpsertContentLocalizationRequest(
         LocalizationStatus status,
         @NotNull(message = "processingStatus is required")
         ProcessingStatus processingStatus,
-        java.time.Instant publishedAt) {
+        java.time.Instant publishedAt,
+        @Valid StoryNarrationRequest narration) {
+
+    UpsertContentLocalizationRequest(String title, String description, String bodyText, Long coverMediaId,
+            Long audioMediaId, Integer durationMinutes, LocalizationStatus status,
+            ProcessingStatus processingStatus, java.time.Instant publishedAt) {
+        this(title, description, bodyText, coverMediaId, audioMediaId, durationMinutes, status,
+                processingStatus, publishedAt, null);
+    }
 
     CreateContentLocalizationCommand toCreateCommand(Long contentId, String languageCode) {
         return new CreateContentLocalizationCommand(
@@ -298,7 +307,8 @@ record UpsertContentLocalizationRequest(
                 durationMinutes,
                 status,
                 processingStatus,
-                publishedAt);
+                publishedAt,
+                narration == null ? null : narration.toCommand());
     }
 
     UpdateContentLocalizationCommand toUpdateCommand(Long contentId, String languageCode) {
@@ -313,7 +323,16 @@ record UpsertContentLocalizationRequest(
                 durationMinutes,
                 status,
                 processingStatus,
-                publishedAt);
+                publishedAt,
+                narration == null ? null : narration.toCommand());
+    }
+}
+
+record StoryNarrationRequest(
+        @NotNull(message = "audioMediaId is required") @Positive(message = "audioMediaId must be positive") Long audioMediaId,
+        @NotNull(message = "durationMinutes is required") @Min(value = 0, message = "durationMinutes must not be negative") Integer durationMinutes) {
+    ContentManagementCommands.StoryNarrationCommand toCommand() {
+        return new ContentManagementCommands.StoryNarrationCommand(audioMediaId, durationMinutes);
     }
 }
 

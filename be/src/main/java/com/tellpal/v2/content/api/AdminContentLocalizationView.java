@@ -19,7 +19,16 @@ public record AdminContentLocalizationView(
         String status,
         String processingStatus,
         Instant publishedAt,
-        boolean visibleToMobile) {
+        boolean visibleToMobile,
+        AdminStoryNarrationView narration) {
+
+    public AdminContentLocalizationView(Long contentId, LanguageCode languageCode, String title,
+            String description, String bodyText, Long coverMediaId, Long audioMediaId,
+            Integer durationMinutes, String status, String processingStatus, Instant publishedAt,
+            boolean visibleToMobile) {
+        this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId,
+                durationMinutes, status, processingStatus, publishedAt, visibleToMobile, null);
+    }
 
     public AdminContentLocalizationView {
         if (contentId == null || contentId <= 0) {

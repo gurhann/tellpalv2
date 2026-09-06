@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RecoverExpiredAssetProcessingCommand;
@@ -69,12 +70,13 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord schedule(ScheduleAssetProcessingCommand command) {
-        Optional<AssetProcessing> existingProcessing = assetProcessingRepository.findByTarget(command.target());
+        Optional<AssetProcessing> existingProcessing = assetProcessingRepository.findByTargetAndKind(command.target(), command.kind());
         if (existingProcessing.isPresent()) {
             return handleExistingSchedule(existingProcessing.get(), command);
         }
         AssetProcessing created = AssetProcessing.schedule(
                 command.target(),
+                command.kind(),
                 ProcessingContentType.valueOf(command.contentType().name()),
                 command.externalKey(),
                 command.coverSourceAssetId(),
@@ -92,7 +94,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord start(StartAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.target());
+        AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         ensureStartable(assetProcessing);
         assetProcessing.start(Instant.now(clock), DEFAULT_LEASE_DURATION);
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
@@ -106,7 +108,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord retry(RetryAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.target());
+        AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         ensureRetryable(assetProcessing);
         assetProcessing.refreshContext(
                 ProcessingContentType.valueOf(command.contentType().name()),
@@ -126,7 +128,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord recoverExpiredLease(RecoverExpiredAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.target());
+        AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         assetProcessing.recoverExpiredLease(
                 Instant.now(clock),
                 "LEASE_EXPIRED",
@@ -142,7 +144,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord complete(CompleteAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.target());
+        AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         assetProcessing.complete(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -155,7 +157,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord fail(FailAssetProcessingCommand command) {
-        AssetProcessing assetProcessing = loadProcessing(command.target());
+        AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         assetProcessing.fail(command.errorCode(), command.errorMessage(), Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -180,7 +182,13 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional(readOnly = true)
     public Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target) {
-        return assetProcessingRepository.findByTarget(requireTarget(target))
+        return findByTarget(target, AssetProcessingKind.DELIVERY);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target, AssetProcessingKind kind) {
+        return assetProcessingRepository.findByTargetAndKind(requireTarget(target), requireKind(kind))
                 .map(AssetProcessingMapper::toRecord);
     }
 
@@ -212,14 +220,32 @@ public class AssetProcessingService implements AssetProcessingApi {
             throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.COMPLETED) {
+            if (command.kind() == AssetProcessingKind.STORY_NARRATION) {
+                assetProcessing.refreshContext(
+                        ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
+                        command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
+                assetProcessing.reschedule(Instant.now(clock));
+                AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
+                publishStatusChanged(saved);
+                return AssetProcessingMapper.toRecord(saved);
+            }
             throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
+        }
+        if (command.kind() == AssetProcessingKind.STORY_NARRATION) {
+            assetProcessing.refreshContext(
+                    ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
+                    command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
+            assetProcessing.reschedule(Instant.now(clock));
+            AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
+            publishStatusChanged(saved);
+            return AssetProcessingMapper.toRecord(saved);
         }
         throw new AssetProcessingRetryRequiredException(assetProcessing.getTarget());
     }
 
-    private AssetProcessing loadProcessing(AssetProcessingTarget target) {
+    private AssetProcessing loadProcessing(AssetProcessingTarget target, AssetProcessingKind kind) {
         AssetProcessingTarget requiredTarget = requireTarget(target);
-        return assetProcessingRepository.findByTarget(requiredTarget)
+        return assetProcessingRepository.findByTargetAndKind(requiredTarget, requireKind(kind))
                 .orElseThrow(() -> new AssetProcessingNotFoundException(requiredTarget));
     }
 
@@ -285,6 +311,7 @@ public class AssetProcessingService implements AssetProcessingApi {
                 assetProcessing.getLeaseExpiresAt());
         eventPublisher.publishEvent(new AssetProcessingStatusChangedEvent(
                 assetProcessing.getTarget(),
+                assetProcessing.getKind(),
                 com.tellpal.v2.asset.api.AssetProcessingState.valueOf(assetProcessing.getStatus().name())));
     }
 
@@ -307,6 +334,11 @@ public class AssetProcessingService implements AssetProcessingApi {
             throw new IllegalArgumentException("Asset processing target must not be null");
         }
         return target;
+    }
+
+    private static AssetProcessingKind requireKind(AssetProcessingKind kind) {
+        if (kind == null) throw new IllegalArgumentException("Processing kind must not be null");
+        return kind;
     }
 
     private static int sanitizeLimit(int limit) {

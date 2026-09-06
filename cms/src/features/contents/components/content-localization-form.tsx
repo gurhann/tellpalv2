@@ -120,6 +120,10 @@ export function ContentLocalizationForm({
             "Yerelleştirilmiş kapak için son görsel asset'lerinden birini seçin. Bu alandan upload desteği sürer; manuel asset id girişi ise Advanced altında kalır.",
           coverPickerTitle: "Yerelleştirme kapak asset'i seç",
           durationMinutes: "Süre (dakika)",
+          narrationLabel: "Tam anlatım (opsiyonel)",
+          narrationDescription: "Hikâyenin bu dildeki tek parça seslendirmesi.",
+          narrationAudioLabel: "Tam anlatım ses asset'i",
+          narrationDuration: "Tam anlatım süresi (dakika)",
           status: "Durum",
           selectStatus: "Durum seçin",
           processingStatus: "İşleme durumu",
@@ -165,6 +169,10 @@ export function ContentLocalizationForm({
             "Select a recent image asset for the localized cover. Uploading from this field stays available, and manual asset ids remain under Advanced.",
           coverPickerTitle: "Pick localization cover asset",
           durationMinutes: "Duration minutes",
+          narrationLabel: "Full narration (optional)",
+          narrationDescription: "The single full-length narration for this story locale.",
+          narrationAudioLabel: "Full narration audio asset",
+          narrationDuration: "Full narration duration (minutes)",
           status: "Status",
           selectStatus: "Select status",
           processingStatus: "Processing status",
@@ -211,6 +219,10 @@ export function ContentLocalizationForm({
         "Yerellestirilmis kapak icin son gorsel asset'lerinden birini secin. Bu alandan upload destegi surer; manuel asset id girisi ise Advanced altinda kalir.",
       coverPickerTitle: "Yerellestirme kapak asset'i sec",
       durationMinutes: "Sure (dakika)",
+      narrationLabel: "Tam anlati (opsiyonel)",
+      narrationDescription: "Hikayenin bu dildeki tek parca seslendirmesi.",
+      narrationAudioLabel: "Tam anlati ses asset'i",
+      narrationDuration: "Tam anlati suresi (dakika)",
       status: "Durum",
       selectStatus: "Durum secin",
       processingStatus: "Isleme durumu",
@@ -440,6 +452,56 @@ export function ContentLocalizationForm({
             </div>
           </>
         )}
+
+        {content.summary.supportsStoryPages ? (
+          <div className="space-y-4 rounded-2xl border border-border/70 bg-muted/10 p-4 md:col-span-2" data-testid="content-localization-narration-row">
+            <div>
+              <p className="text-sm font-medium text-foreground">{copy.narrationLabel}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{copy.narrationDescription}</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Controller
+                control={form.control}
+                name="narrationAudioMediaId"
+                render={({ field }) => (
+                  <AssetPickerField
+                    advancedLabel="Advanced narration audio options"
+                    description={copy.narrationDescription}
+                    disabled={saveLocalization.isPending}
+                    error={form.formState.errors.narrationAudioMediaId}
+                    id="narrationAudioMediaId"
+                    label={copy.narrationAudioLabel}
+                    manualInputLabel={`${copy.narrationAudioLabel} id`}
+                    mediaType="AUDIO"
+                    pickerDescription={copy.narrationDescription}
+                    pickerTitle={copy.narrationAudioLabel}
+                    placeholder={copy.optional}
+                    testId="content-localization-narration-audio-asset"
+                    value={field.value ?? null}
+                    variant="editor"
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground" htmlFor="narrationDurationMinutes">
+                  {copy.narrationDuration}
+                </label>
+                <Input
+                  id="narrationDurationMinutes"
+                  inputMode="numeric"
+                  placeholder={copy.optional}
+                  type="number"
+                  {...form.register("narrationDurationMinutes", {
+                    setValueAs: (value) => value === "" || value == null ? null : Number(value),
+                  })}
+                  disabled={saveLocalization.isPending}
+                />
+                <FieldError error={form.formState.errors.narrationDurationMinutes} />
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div
           className="grid gap-5 md:col-span-2 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]"

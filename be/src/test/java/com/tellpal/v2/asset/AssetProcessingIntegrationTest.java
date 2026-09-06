@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
@@ -28,6 +29,7 @@ import com.tellpal.v2.asset.infrastructure.processing.AssetProcessingJobExecutor
 import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.StoryNarrationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.StoryPageManagementService;
@@ -253,6 +255,42 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(jdbcTemplate.queryForObject(
                 "select count(*) from asset_processing where content_id = ? and target_scope = 'LOCALIZATION'",
                 Integer.class, content.contentId())).isZero();
+    }
+
+    @Test
+    void storyNarrationHasIndependentProcessingAndProducesOnlyOptimizedAudio() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "narrated-story", 5, true));
+        Long cover = registerImageAsset("/content/story/narrated-story/tr/original/cover.jpg");
+        Long narrationAudio = registerAudioAsset("/content/story/narrated-story/tr/original/narration.mp3");
+
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Anlatılan hikâye", "Açıklama", null, cover, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(narrationAudio, 11)));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.EN, "Narrated story", "Description", null, cover, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        AssetProcessingRecord narration = assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_NARRATION)
+                .orElseThrow();
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.DELIVERY)).isEmpty();
+
+        AssetProcessingRecord started = assetProcessingApi.start(
+                new StartAssetProcessingCommand(target, AssetProcessingKind.STORY_NARRATION));
+        assetProcessingJobExecutor.process(started);
+
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_NARRATION))
+                .hasValueSatisfying(record -> assertThat(record.status().name()).isEqualTo("COMPLETED"));
+        assertThat(jdbcTemplate.queryForList(
+                "select kind from media_assets where object_path like ?", String.class,
+                "/test/content/story/narrated-story/tr/processed/%"))
+                .containsExactly("OPTIMIZED_AUDIO");
+        assertThat(jdbcTemplate.queryForObject(
+                "select processing_status from content_localizations where content_id = ? and language_code = ?",
+                String.class, content.contentId(), LanguageCode.TR.value())).isEqualTo("PENDING");
+        assertThat(narration.audioSourceAssetId()).isEqualTo(narrationAudio);
     }
 
     private AssetProcessingRecord scheduleAndStart(ScheduleAssetProcessingCommand command) {

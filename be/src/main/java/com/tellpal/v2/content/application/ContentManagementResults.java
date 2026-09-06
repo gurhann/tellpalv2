@@ -29,7 +29,25 @@ public final class ContentManagementResults {
             LocalizationStatus status,
             ProcessingStatus processingStatus,
             Instant publishedAt,
-            boolean visibleToMobile) {
+            boolean visibleToMobile,
+            StoryNarrationRecord narration) {
+
+        public ContentLocalizationRecord(
+                Long contentId,
+                LanguageCode languageCode,
+                String title,
+                String description,
+                String bodyText,
+                Long coverMediaId,
+                Long audioMediaId,
+                Integer durationMinutes,
+                LocalizationStatus status,
+                ProcessingStatus processingStatus,
+                Instant publishedAt,
+                boolean visibleToMobile) {
+            this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId,
+                    durationMinutes, status, processingStatus, publishedAt, visibleToMobile, null);
+        }
 
         public ContentLocalizationRecord {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
@@ -37,6 +55,18 @@ public final class ContentManagementResults {
             title = requireText(title, "Content localization title must not be blank");
             status = requireLocalizationStatus(status);
             processingStatus = requireProcessingStatus(processingStatus);
+        }
+    }
+
+    /** Source snapshot of a story localization's optional full narration. */
+    public record StoryNarrationRecord(Long audioMediaId, Integer durationMinutes) {
+        public StoryNarrationRecord {
+            if (audioMediaId == null || audioMediaId <= 0) {
+                throw new IllegalArgumentException("Narration audio media ID must be positive");
+            }
+            if (durationMinutes == null || durationMinutes < 0) {
+                throw new IllegalArgumentException("Narration duration minutes must be non-negative");
+            }
         }
     }
 

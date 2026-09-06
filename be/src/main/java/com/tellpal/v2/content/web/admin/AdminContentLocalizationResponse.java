@@ -17,7 +17,16 @@ public record AdminContentLocalizationResponse(
         String status,
         String processingStatus,
         Instant publishedAt,
-        boolean visibleToMobile) {
+        boolean visibleToMobile,
+        AdminStoryNarrationResponse narration) {
+
+    public AdminContentLocalizationResponse(Long contentId, String languageCode, String title,
+            String description, String bodyText, Long coverMediaId, Long audioMediaId,
+            Integer durationMinutes, String status, String processingStatus, Instant publishedAt,
+            boolean visibleToMobile) {
+        this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId,
+                durationMinutes, status, processingStatus, publishedAt, visibleToMobile, null);
+    }
 
     static AdminContentLocalizationResponse from(ContentLocalizationRecord record) {
         return new AdminContentLocalizationResponse(
@@ -32,7 +41,8 @@ public record AdminContentLocalizationResponse(
                 record.status().name(),
                 record.processingStatus().name(),
                 record.publishedAt(),
-                record.visibleToMobile());
+                record.visibleToMobile(), record.narration() == null ? null : new AdminStoryNarrationResponse(
+                        record.narration().audioMediaId(), record.narration().durationMinutes(), null, null));
     }
 
     static AdminContentLocalizationResponse from(AdminContentLocalizationView view) {
@@ -48,6 +58,11 @@ public record AdminContentLocalizationResponse(
                 view.status(),
                 view.processingStatus(),
                 view.publishedAt(),
-                view.visibleToMobile());
+                view.visibleToMobile(), view.narration() == null ? null : new AdminStoryNarrationResponse(
+                        view.narration().audioMediaId(), view.narration().durationMinutes(),
+                        view.narration().processingStatus(), view.narration().processingError()));
     }
 }
+
+record AdminStoryNarrationResponse(Long audioMediaId, Integer durationMinutes, String processingStatus,
+        String processingError) { }

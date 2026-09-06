@@ -54,7 +54,7 @@ public class AssetProcessingPoller {
         for (AssetProcessing expired : assetProcessingRepository.findExpiredLeases(now, batchSize)) {
             try {
                 assetProcessingApi.recoverExpiredLease(new RecoverExpiredAssetProcessingCommand(
-                        expired.getTarget()));
+                        expired.getTarget(), expired.getKind()));
             } catch (RuntimeException ignored) {
                 // Another worker may already have advanced the job; polling should continue.
             }
@@ -65,7 +65,7 @@ public class AssetProcessingPoller {
         for (AssetProcessing pending : assetProcessingRepository.findPendingBefore(now, batchSize)) {
             try {
                 jobExecutor.process(assetProcessingApi.start(new StartAssetProcessingCommand(
-                        pending.getTarget())));
+                        pending.getTarget(), pending.getKind())));
             } catch (RuntimeException ignored) {
                 // Skip conflicted jobs and continue polling the remaining batch.
             }

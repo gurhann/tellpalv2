@@ -12,6 +12,7 @@ import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingC
 import com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetRecord;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageLocation;
@@ -47,25 +48,34 @@ class RegisteringAssetProcessingJobExecutor implements AssetProcessingJobExecuto
             AssetStorageProvider targetProvider = resolveTargetProvider(assetProcessingRecord);
             validateSourceAssets(assetProcessingRecord);
 
-            List<GeneratedAssetPlan> plans = new ArrayList<>(imageOptimizationAdapter.generateCoverVariants(assetProcessingRecord));
+            List<GeneratedAssetPlan> plans = new ArrayList<>();
+            if (assetProcessingRecord.kind() != AssetProcessingKind.STORY_NARRATION) {
+                plans.addAll(imageOptimizationAdapter.generateCoverVariants(assetProcessingRecord));
+            }
             audioOptimizationAdapter.generateOptimizedAudio(assetProcessingRecord).ifPresent(plans::add);
-            plans.addAll(zipPackagingAdapter.generatePackages(assetProcessingRecord));
+            if (assetProcessingRecord.kind() != AssetProcessingKind.STORY_NARRATION) {
+                plans.addAll(zipPackagingAdapter.generatePackages(assetProcessingRecord));
+            }
 
             for (GeneratedAssetPlan plan : plans) {
                 registerOrReuse(targetProvider, plan);
             }
 
             assetProcessingApi.complete(new CompleteAssetProcessingCommand(
-                    assetProcessingRecord.target()));
+                    assetProcessingRecord.target(), assetProcessingRecord.kind()));
         } catch (RuntimeException exception) {
             assetProcessingApi.fail(new FailAssetProcessingCommand(
-                    assetProcessingRecord.target(),
+                    assetProcessingRecord.target(), assetProcessingRecord.kind(),
                     "PROCESSING_FAILED",
                     exception.getMessage()));
         }
     }
 
     private void validateSourceAssets(AssetProcessingRecord assetProcessingRecord) {
+        if (assetProcessingRecord.kind() == AssetProcessingKind.STORY_NARRATION) {
+            requireSourceAsset(assetProcessingRecord.audioSourceAssetId(), AssetMediaType.AUDIO, "audioSourceAssetId");
+            return;
+        }
         requireSourceAsset(assetProcessingRecord.coverSourceAssetId(), AssetMediaType.IMAGE, "coverSourceAssetId");
         if (assetProcessingRecord.contentType() != AssetProcessingContentType.STORY) {
             requireSourceAsset(assetProcessingRecord.audioSourceAssetId(), AssetMediaType.AUDIO, "audioSourceAssetId");

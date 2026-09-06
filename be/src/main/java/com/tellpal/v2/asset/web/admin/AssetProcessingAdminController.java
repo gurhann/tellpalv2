@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
@@ -100,10 +101,12 @@ public class AssetProcessingAdminController {
     })
     public AdminAssetProcessingResponse getProcessingStatus(
             @PathVariable Long contentId,
-            @PathVariable String languageCode) {
-        return assetProcessingApi.findByLocalization(contentId, LanguageCode.from(languageCode))
+            @PathVariable String languageCode,
+            @RequestParam(name = "kind", defaultValue = "DELIVERY") AssetProcessingKind kind) {
+        LanguageCode language = LanguageCode.from(languageCode);
+        return assetProcessingApi.findByTarget(AssetProcessingTarget.localization(contentId, language), kind)
                 .map(AdminAssetProcessingResponse::from)
-                .orElseThrow(() -> new AssetProcessingNotFoundException(contentId, LanguageCode.from(languageCode)));
+                .orElseThrow(() -> new AssetProcessingNotFoundException(contentId, language));
     }
 
     @GetMapping("/{contentId}/content")
@@ -145,7 +148,8 @@ record ScheduleAssetProcessingRequest(
         @Positive(message = "audioSourceAssetId must be positive")
         Long audioSourceAssetId,
         @Min(value = 0, message = "pageCount must not be negative")
-    Integer pageCount) {
+    Integer pageCount,
+        AssetProcessingKind kind) {
 
     ScheduleAssetProcessingCommand toCommand() {
         AssetProcessingTargetScope resolvedScope = targetScope == null
@@ -166,6 +170,7 @@ record ScheduleAssetProcessingRequest(
                 : AssetProcessingTarget.localization(contentId, LanguageCode.from(languageCode));
         return new ScheduleAssetProcessingCommand(
                 target,
+                kind == null ? AssetProcessingKind.DELIVERY : kind,
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -184,12 +189,13 @@ record RetryAssetProcessingRequest(
         @Positive(message = "audioSourceAssetId must be positive")
         Long audioSourceAssetId,
         @Min(value = 0, message = "pageCount must not be negative")
-        Integer pageCount) {
+        Integer pageCount,
+        AssetProcessingKind kind) {
 
     RetryAssetProcessingCommand toCommand(Long contentId, String languageCode) {
         return new RetryAssetProcessingCommand(
-                contentId,
-                LanguageCode.from(languageCode),
+                AssetProcessingTarget.localization(contentId, LanguageCode.from(languageCode)),
+                kind == null ? AssetProcessingKind.DELIVERY : kind,
                 contentType,
                 externalKey,
                 coverSourceAssetId,
@@ -200,6 +206,7 @@ record RetryAssetProcessingRequest(
     RetryAssetProcessingCommand toContentCommand(Long contentId) {
         return new RetryAssetProcessingCommand(
                 AssetProcessingTarget.content(contentId),
+                kind == null ? AssetProcessingKind.DELIVERY : kind,
                 contentType,
                 externalKey,
                 coverSourceAssetId,

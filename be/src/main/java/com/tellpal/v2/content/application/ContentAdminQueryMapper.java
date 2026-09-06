@@ -4,16 +4,22 @@ import java.util.Comparator;
 
 import com.tellpal.v2.content.api.AdminContentLocalizationView;
 import com.tellpal.v2.content.api.AdminContentView;
+import com.tellpal.v2.content.api.AdminStoryNarrationView;
 import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 
 final class ContentAdminQueryMapper {
 
-    private ContentAdminQueryMapper() {
+    private final AssetProcessingApi assetProcessingApi;
+
+    ContentAdminQueryMapper(AssetProcessingApi assetProcessingApi) {
+        this.assetProcessingApi = assetProcessingApi;
     }
 
-    static AdminContentView toView(Content content) {
+    AdminContentView toView(Content content) {
         Long contentId = requireContentId(content);
         return new AdminContentView(
                 contentId,
@@ -29,7 +35,11 @@ final class ContentAdminQueryMapper {
                         .toList());
     }
 
-    private static AdminContentLocalizationView toLocalizationView(Long contentId, ContentLocalization localization) {
+    private AdminContentLocalizationView toLocalizationView(Long contentId, ContentLocalization localization) {
+        var narration = localization.getNarration();
+        var processing = narration == null ? null : assetProcessingApi.findByTarget(
+                com.tellpal.v2.asset.api.AssetProcessingTarget.localization(contentId, localization.getLanguageCode()),
+                AssetProcessingKind.STORY_NARRATION).orElse(null);
         return new AdminContentLocalizationView(
                 contentId,
                 localization.getLanguageCode(),
@@ -42,7 +52,12 @@ final class ContentAdminQueryMapper {
                 localization.getStatus().name(),
                 localization.getProcessingStatus().name(),
                 localization.getPublishedAt(),
-                localization.isVisibleToMobile());
+                localization.isVisibleToMobile(),
+                narration == null ? null : new AdminStoryNarrationView(
+                        narration.getAudioMediaId(), narration.getDurationMinutes(),
+                        processing == null ? null : processing.status().name(),
+                        processing == null ? null : processing.lastErrorMessage() != null
+                                ? processing.lastErrorMessage() : processing.lastErrorCode()));
     }
 
     private static Long requireContentId(Content content) {

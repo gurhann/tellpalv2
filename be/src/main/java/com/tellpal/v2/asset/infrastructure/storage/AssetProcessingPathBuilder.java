@@ -57,10 +57,18 @@ public class AssetProcessingPathBuilder {
     }
 
     public String optimizedAudioPath(AssetProcessingRecord assetProcessingRecord) {
-        return processedRoot(
+        String root = processedRoot(
                 assetProcessingRecord.contentType().name(),
                 assetProcessingRecord.externalKey(),
-                assetProcessingRecord.target()) + "audio-optimized.m4a";
+                assetProcessingRecord.target());
+        if (assetProcessingRecord.kind() == com.tellpal.v2.asset.api.AssetProcessingKind.STORY_NARRATION) {
+            Long sourceAssetId = assetProcessingRecord.audioSourceAssetId();
+            if (sourceAssetId == null || sourceAssetId <= 0) {
+                throw new IllegalArgumentException("Story narration audio source asset ID must be positive");
+            }
+            return root + "audio-" + sourceAssetId + "-optimized.m4a";
+        }
+        return root + "audio-optimized.m4a";
     }
 
     public String packagePath(AssetProcessingRecord assetProcessingRecord, AssetKind assetKind) {

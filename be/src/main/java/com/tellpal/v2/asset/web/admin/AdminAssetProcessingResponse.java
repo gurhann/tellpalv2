@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingState;
 import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -13,6 +14,7 @@ record AdminAssetProcessingResponse(
         Long contentId,
         AssetProcessingTargetScope targetScope,
         LanguageCode languageCode,
+        AssetProcessingKind kind,
         AssetProcessingContentType contentType,
         String externalKey,
         Long coverSourceAssetId,
@@ -36,6 +38,7 @@ record AdminAssetProcessingResponse(
                 assetProcessingRecord.contentId(),
                 assetProcessingRecord.targetScope(),
                 assetProcessingRecord.languageCode(),
+                assetProcessingRecord.kind(),
                 assetProcessingRecord.contentType(),
                 assetProcessingRecord.externalKey(),
                 assetProcessingRecord.coverSourceAssetId(),
