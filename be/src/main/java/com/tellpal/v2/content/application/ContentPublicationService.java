@@ -12,6 +12,8 @@ import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentPublicationPolicy;
 import com.tellpal.v2.content.domain.ContentRepository;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingRecord;
 
 /**
  * Application service for publishing and archiving content localizations.
@@ -23,10 +25,12 @@ import com.tellpal.v2.content.domain.ContentRepository;
 public class ContentPublicationService {
 
     private final ContentRepository contentRepository;
+    private final AssetProcessingApi assetProcessingApi;
     private final ContentPublicationPolicy publicationPolicy = new ContentPublicationPolicy();
 
-    public ContentPublicationService(ContentRepository contentRepository) {
+    public ContentPublicationService(ContentRepository contentRepository, AssetProcessingApi assetProcessingApi) {
         this.contentRepository = contentRepository;
+        this.assetProcessingApi = assetProcessingApi;
     }
 
     /**
@@ -37,10 +41,8 @@ public class ContentPublicationService {
         Content content = loadContent(command.contentId());
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         publicationPolicy.publish(content, localization, command.publishedAt());
-        return ContentManagementMapper.toLocalizationRecord(
-                command.contentId(),
-                contentRepository.save(content).findLocalization(command.languageCode())
-                        .orElse(localization));
+        Content savedContent = contentRepository.save(content);
+        return toLocalizationRecord(savedContent, command.languageCode());
     }
 
     /**
@@ -51,10 +53,19 @@ public class ContentPublicationService {
         Content content = loadContent(command.contentId());
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         publicationPolicy.archive(localization);
-        return ContentManagementMapper.toLocalizationRecord(
-                command.contentId(),
-                contentRepository.save(content).findLocalization(command.languageCode())
-                        .orElse(localization));
+        Content savedContent = contentRepository.save(content);
+        return toLocalizationRecord(savedContent, command.languageCode());
+    }
+
+    private ContentLocalizationRecord toLocalizationRecord(Content content,
+            com.tellpal.v2.shared.domain.LanguageCode languageCode) {
+        Long contentId = requireContentId(content);
+        ContentLocalization localization = content.findLocalization(languageCode)
+                .orElseThrow(() -> new ContentLocalizationNotFoundException(contentId, languageCode));
+        AssetProcessingRecord narrationProcessing = localization.getNarration() == null
+                ? null
+                : assetProcessingApi.findNarrationByLocalization(contentId, languageCode).orElse(null);
+        return ContentManagementMapper.toLocalizationRecord(contentId, localization, narrationProcessing);
     }
 
     private Content loadContent(Long contentId) {

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tellpal.v2.asset.api.AssetKind;
@@ -32,6 +33,8 @@ import com.tellpal.v2.content.application.ContentManagementCommands.CreateConten
 import com.tellpal.v2.content.application.ContentManagementCommands.StoryNarrationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetMediaTypeMismatchException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetReferenceNotFoundException;
 import com.tellpal.v2.content.application.StoryPageManagementService;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.LocalizationStatus;
@@ -241,6 +244,12 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 content.contentId()))
                 .isInstanceOf(RuntimeException.class);
 
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into asset_processing (content_id, target_scope, language_code, processing_kind, content_type) "
+                        + "values (?, 'CONTENT', null, 'STORY_NARRATION', 'STORY')",
+                content.contentId()))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
         AssetProcessingRecord localization = scheduleAndStart(new ScheduleAssetProcessingCommand(
                 content.contentId(), LanguageCode.TR, AssetProcessingContentType.STORY,
                 content.externalKey(), null, null, 0));
@@ -255,6 +264,113 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(jdbcTemplate.queryForObject(
                 "select count(*) from asset_processing where content_id = ? and target_scope = 'LOCALIZATION'",
                 Integer.class, content.contentId())).isZero();
+    }
+
+    @Test
+    void missingLocalizationParentIsRejectedWithoutPersistingProcessingRow() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "missing-localization", 5, true));
+
+        assertThatThrownBy(() -> assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR),
+                AssetProcessingContentType.STORY,
+                content.externalKey(),
+                null,
+                null,
+                0)))
+                .isInstanceOf(com.tellpal.v2.asset.application.AssetProcessingApplicationExceptions
+                        .AssetProcessingLocalizationNotFoundException.class);
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from asset_processing where content_id = ?",
+                Integer.class,
+                content.contentId())).isZero();
+    }
+
+    @Test
+    void targetUniqueIndexesRejectDuplicateLocalizationAndContentRows() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "duplicate-target", 5, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Duplicate", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR),
+                AssetProcessingContentType.STORY,
+                content.externalKey(),
+                null,
+                null,
+                0));
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into asset_processing (content_id, target_scope, language_code, status, attempt_count, next_attempt_at) "
+                        + "values (?, 'LOCALIZATION', 'tr', 'PENDING', 0, now())",
+                content.contentId()))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.content(content.contentId()),
+                AssetProcessingContentType.STORY,
+                content.externalKey(),
+                null,
+                null,
+                0));
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into asset_processing (content_id, target_scope, language_code, status, attempt_count, next_attempt_at) "
+                        + "values (?, 'CONTENT', null, 'PENDING', 0, now())",
+                content.contentId()))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void expiredContentLeaseRecoversWithContentTargetAndLeavesLocalizationStatusUntouched() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "expired-shared", 5, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Expired", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        AssetProcessingTarget target = AssetProcessingTarget.content(content.contentId());
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                target, AssetProcessingContentType.STORY, content.externalKey(), null, null, 0));
+        assetProcessingApi.start(new StartAssetProcessingCommand(target));
+        jdbcTemplate.update(
+                "update asset_processing set lease_expires_at = now() - interval '1 minute' "
+                        + "where content_id = ? and target_scope = 'CONTENT'",
+                content.contentId());
+
+        AssetProcessingRecord recovered = assetProcessingApi.recoverExpiredLease(
+                new com.tellpal.v2.asset.api.AssetProcessingCommands.RecoverExpiredAssetProcessingCommand(target));
+
+        assertThat(recovered.target()).isEqualTo(target);
+        assertThat(recovered.status().name()).isEqualTo("PENDING");
+        assertThat(jdbcTemplate.queryForObject(
+                "select processing_status from content_localizations where content_id = ? and language_code = 'tr'",
+                String.class,
+                content.contentId())).isEqualTo("PENDING");
+    }
+
+    @Test
+    void legacyProcessingInsertDefaultsToLocalizationScope() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "legacy-default", 5, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Legacy", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+
+        jdbcTemplate.update(
+                "insert into asset_processing (content_id, language_code, status, attempt_count, next_attempt_at) "
+                        + "values (?, 'tr', 'PENDING', 0, now())",
+                content.contentId());
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select target_scope from asset_processing where content_id = ? and language_code = 'tr'",
+                String.class,
+                content.contentId())).isEqualTo("LOCALIZATION");
+        assertThat(jdbcTemplate.queryForObject(
+                "select processing_kind from asset_processing where content_id = ? and language_code = 'tr'",
+                String.class,
+                content.contentId())).isEqualTo("DELIVERY");
     }
 
     @Test
@@ -291,6 +407,148 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 "select processing_status from content_localizations where content_id = ? and language_code = ?",
                 String.class, content.contentId(), LanguageCode.TR.value())).isEqualTo("PENDING");
         assertThat(narration.audioSourceAssetId()).isEqualTo(narrationAudio);
+    }
+
+    @Test
+    void narrationRejectsNonAudioOrMissingSourceWithoutPersistingRows() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "invalid-narration-source", 5, true));
+        Long imageAsset = registerImageAsset("/content/story/invalid-narration-source/tr/original/image.jpg");
+
+        assertThatThrownBy(() -> contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Invalid", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(imageAsset, 5))))
+                .isInstanceOf(AssetMediaTypeMismatchException.class);
+
+        assertThatThrownBy(() -> contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.EN, "Missing", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(999_999L, 5))))
+                .isInstanceOf(AssetReferenceNotFoundException.class);
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from story_narrations", Integer.class)).isZero();
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from asset_processing", Integer.class)).isZero();
+    }
+
+    @Test
+    void narrationCanBeRescheduledAfterCompletionWhenItsSourceChanges() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "rescheduled-narration", 5, true));
+        Long firstAudio = registerAudioAsset("/content/story/rescheduled-narration/tr/original/first.mp3");
+        Long secondAudio = registerAudioAsset("/content/story/rescheduled-narration/tr/original/second.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Narration", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(firstAudio, 5)));
+
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        AssetProcessingRecord started = assetProcessingApi.start(
+                new StartAssetProcessingCommand(target, AssetProcessingKind.STORY_NARRATION));
+        assetProcessingJobExecutor.process(started);
+
+        contentManagementService.updateLocalization(new com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Narration updated", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(secondAudio, 6)));
+
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_NARRATION))
+                .hasValueSatisfying(record -> {
+                    assertThat(record.status().name()).isEqualTo("PENDING");
+                    assertThat(record.audioSourceAssetId()).isEqualTo(secondAudio);
+                });
+    }
+
+    @Test
+    void updatingUnchangedNarrationDoesNotConflictWithRunningJob() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "unchanged-narration", 5, true));
+        Long audio = registerAudioAsset("/content/story/unchanged-narration/tr/original/narration.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Narration", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(audio, 5)));
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        assetProcessingApi.start(new StartAssetProcessingCommand(target, AssetProcessingKind.STORY_NARRATION));
+
+        contentManagementService.updateLocalization(
+                new com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand(
+                        content.contentId(), LanguageCode.TR, "Title only", null, null, null, null, null,
+                        LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                        new StoryNarrationCommand(audio, 5)));
+
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_NARRATION))
+                .hasValueSatisfying(record -> assertThat(record.status().name()).isEqualTo("PROCESSING"));
+    }
+
+    @Test
+    void narrationsRemainIsolatedAcrossLanguages() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "multilingual-narration", 5, true));
+        Long trAudio = registerAudioAsset("/content/story/multilingual-narration/tr/original/narration.mp3");
+        Long enAudio = registerAudioAsset("/content/story/multilingual-narration/en/original/narration.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "TR", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(trAudio, 5)));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.EN, "EN", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(enAudio, 6)));
+
+        contentManagementService.updateLocalization(new com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "TR updated", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z"),
+                new StoryNarrationCommand(trAudio, 7)));
+
+        assertThat(assetProcessingApi.findByTarget(
+                AssetProcessingTarget.localization(content.contentId(), LanguageCode.EN),
+                AssetProcessingKind.STORY_NARRATION)).hasValueSatisfying(record -> {
+                    assertThat(record.audioSourceAssetId()).isEqualTo(enAudio);
+                    assertThat(record.pageCount()).isZero();
+                });
+    }
+
+    @Test
+    void narrationSchemaEnforcesStoryParentUniquenessAndLocalizationCascade() {
+        ContentReference meditation = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.MEDITATION, "narration-parent-check", 5, true));
+        Long audio = registerAudioAsset("/content/meditation/narration-parent-check/tr/original/audio.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                meditation.contentId(), LanguageCode.TR, "Meditation", null, "Body", null, audio, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+        Long meditationLocalizationId = jdbcTemplate.queryForObject(
+                "select id from content_localizations where content_id = ? and language_code = 'tr'",
+                Long.class, meditation.contentId());
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into story_narrations (content_localization_id, audio_media_id, duration_minutes) "
+                        + "values (?, ?, 3)", meditationLocalizationId, audio))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
+        ContentReference story = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, "narration-schema", 5, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                story.contentId(), LanguageCode.TR, "Story", null, null, null, null, null,
+                LocalizationStatus.PUBLISHED, ProcessingStatus.PENDING, Instant.parse("2026-01-01T00:00:00Z")));
+        Long storyLocalizationId = jdbcTemplate.queryForObject(
+                "select id from content_localizations where content_id = ? and language_code = 'tr'",
+                Long.class, story.contentId());
+        jdbcTemplate.update(
+                "insert into story_narrations (content_localization_id, audio_media_id, duration_minutes, created_at, updated_at) "
+                        + "values (?, ?, 3, now(), now())",
+                storyLocalizationId, audio);
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "insert into story_narrations (content_localization_id, audio_media_id, duration_minutes, created_at, updated_at) "
+                        + "values (?, ?, 3, now(), now())",
+                storyLocalizationId, audio))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
+        jdbcTemplate.update("delete from content_localizations where id = ?", storyLocalizationId);
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from story_narrations where content_localization_id = ?",
+                Integer.class, storyLocalizationId)).isZero();
     }
 
     private AssetProcessingRecord scheduleAndStart(ScheduleAssetProcessingCommand command) {

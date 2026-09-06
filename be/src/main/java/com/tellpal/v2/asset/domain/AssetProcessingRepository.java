@@ -27,4 +27,6 @@ public interface AssetProcessingRepository {
     List<AssetProcessing> findRecent(int limit);
 
     AssetProcessing save(AssetProcessing assetProcessing);
+
+    AssetProcessing saveAndFlush(AssetProcessing assetProcessing);
 }

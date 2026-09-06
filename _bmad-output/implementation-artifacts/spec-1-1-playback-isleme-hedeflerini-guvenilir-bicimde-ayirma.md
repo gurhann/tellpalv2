@@ -30,7 +30,7 @@ context:
 
 | Scenario | Input / State | Expected Output / Behavior | Error Handling |
 |----------|---------------|----------------------------|----------------|
-| Locale işi | `LOCALIZATION(42, tr)` ile planlama | Kayıt ve generated dosyalar `tr` hedefinde kalır; sadece `tr` localization durumu olaydan etkilenir | Aynı hedef `PENDING`/`PROCESSING`/`COMPLETED` ise mevcut iş kuralı hatası döner |
+| Locale işi | `LOCALIZATION(42, tr)` ile planlama | Kayıt ve generated dosyalar `tr` hedefinde kalır; sadece `tr` localization durumu olaydan etkilenir | Aynı hedef `PENDING` ise mevcut kaydın context'i yenilenir; `PROCESSING`/`COMPLETED` ise mevcut iş kuralı hatası döner |
 | Ortak iş | `CONTENT(42)` ile planlama | Dil olmadan tek kayıt, ortak deterministic storage yolu ve `findByContent(42)` sonucu oluşur | Aynı content hedefinin yinelenmesi reddedilir |
 | Geçersiz eşleşme | `LOCALIZATION` + boş dil veya `CONTENT` + dil | Persistans ve API hedefi reddeder | Anlaşılır validation/constraint hatası; kayıt oluşmaz |
 | Hedef izolasyonu | Aynı content için `CONTENT`, `LOCALIZATION(tr)` ve `LOCALIZATION(en)`; biri fail | Sadece fail olan kaydın durumu değişir | CONTENT olayı hiçbir `content_localizations.processing_status` alanını güncellemez |
@@ -119,3 +119,14 @@ PostgreSQL koşullu foreign key sağlamadığından yalnız bir `CHECK (scope, l
 
 - Admin schedule/status/retry ve invalid target kontratlarını doğrular.
   [`AssetProcessingAdminIntegrationTest.java:140`](../../be/src/test/java/com/tellpal/v2/asset/web/admin/AssetProcessingAdminIntegrationTest.java#L140)
+
+### Review Findings
+
+- [x] [Review][Decision] Pending hedef yeniden planlama davranışı — Mevcut context yenileme davranışı korunuyor; spec matrisi bu karara göre güncellendi (`be/src/main/java/com/tellpal/v2/asset/application/AssetProcessingService.java:198-209`).
+- [x] [Review][Patch] Localization parent kontrolü yarış koşuluna açık [be/src/main/resources/db/migration/V22__scope_asset_processing_targets.sql:28-85] — parent satırı `FOR KEY SHARE` ile doğrulama sırasında korunuyor.
+- [x] [Review][Patch] Parent/unique constraint hataları transaction commit sonrasına taşınabildiği için kontrollü API hatası garanti edilmiyor [be/src/main/java/com/tellpal/v2/asset/application/AssetProcessingService.java:226-237] — kayıt `saveAndFlush` ile constraint kontrolü tamamlandıktan sonra sınıflandırılıyor.
+- [x] [Review][Patch] Data-integrity hatalarının tümünü parent bulunamadı olarak sınıflandırmak yanlış 404 üretebilir [be/src/main/java/com/tellpal/v2/asset/application/AssetProcessingService.java:229-237] — yalnızca ilgili PostgreSQL foreign-key SQL state'i parent hatası olarak ele alınıyor.
+- [x] [Review][Patch] Yeni content-scope endpoint'lerinde core OpenAPI hata cevapları eksik [be/src/main/java/com/tellpal/v2/asset/web/admin/AssetProcessingAdminController.java:83-115] — 400/401/403/404/409 cevapları tanımlandı.
+- [x] [Review][Patch] Admin API kuralları yeni target scope ve content-scope endpoint'lerini belgelemiyor [be/docs/admin-api-rules.md:546-580] — scope alanları, varsayılanlar ve endpoint kuralları eklendi.
+- [x] [Review][Patch] Migration backfill, geçersiz localization parent, scope başına unique index ve expired-lease recovery için gerekli negatif/entegrasyon testleri eksik [be/src/test/java/com/tellpal/v2/asset/AssetProcessingIntegrationTest.java:229-255] — ilgili entegrasyon senaryoları eklendi.
+- [x] [Review][Defer] `externalKey` path segment'i separator/traversal karakterlerini normalize etmiyor [be/src/main/java/com/tellpal/v2/asset/infrastructure/storage/AssetProcessingPathBuilder.java:91-115] — deferred, pre-existing

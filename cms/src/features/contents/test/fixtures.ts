@@ -26,6 +26,12 @@ export const storyContentReadResponse: AdminContentReadResponse = {
       processingStatus: "COMPLETED",
       publishedAt: "2026-03-17T09:00:00Z",
       visibleToMobile: true,
+      narration: {
+        audioMediaId: 901,
+        durationMinutes: 8,
+        processingStatus: "COMPLETED",
+        processingError: null,
+      },
     },
     {
       contentId: 1,

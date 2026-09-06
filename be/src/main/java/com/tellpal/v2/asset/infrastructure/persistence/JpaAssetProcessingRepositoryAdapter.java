@@ -81,6 +81,11 @@ public class JpaAssetProcessingRepositoryAdapter implements AssetProcessingRepos
         return repository.save(assetProcessing);
     }
 
+    @Override
+    public AssetProcessing saveAndFlush(AssetProcessing assetProcessing) {
+        return repository.saveAndFlush(assetProcessing);
+    }
+
     private static int sanitizeLimit(int limit) {
         if (limit <= 0) {
             throw new IllegalArgumentException("Limit must be positive");

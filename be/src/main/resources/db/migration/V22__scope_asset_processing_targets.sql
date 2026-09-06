@@ -33,6 +33,7 @@ begin
         if not exists (
             select 1 from content_localizations
             where content_id = new.content_id and language_code = new.language_code
+            for key share
         ) then
             raise exception 'Content localization not found for asset processing: content %, language %',
                 new.content_id, new.language_code using errcode = '23503';

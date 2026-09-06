@@ -42,7 +42,8 @@ public record AdminContentLocalizationResponse(
                 record.processingStatus().name(),
                 record.publishedAt(),
                 record.visibleToMobile(), record.narration() == null ? null : new AdminStoryNarrationResponse(
-                        record.narration().audioMediaId(), record.narration().durationMinutes(), null, null));
+                        record.narration().audioMediaId(), record.narration().durationMinutes(),
+                        record.narration().processingStatus(), record.narration().processingError()));
     }
 
     static AdminContentLocalizationResponse from(AdminContentLocalizationView view) {

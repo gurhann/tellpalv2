@@ -19,6 +19,13 @@ alter table asset_processing
     add constraint chk_asset_processing_processing_kind
         check (processing_kind in ('DELIVERY', 'STORY_NARRATION'));
 
+alter table asset_processing
+    add constraint chk_asset_processing_story_narration_target
+        check (
+            processing_kind <> 'STORY_NARRATION'
+            or (target_scope = 'LOCALIZATION' and language_code is not null and content_type = 'STORY')
+        );
+
 drop index if exists uk_asset_processing_localization_target;
 drop index if exists uk_asset_processing_content_target;
 

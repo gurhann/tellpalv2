@@ -6,6 +6,7 @@ import com.tellpal.v2.content.application.ContentManagementResults.StoryPageLoca
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContentContributorRecord;
 import com.tellpal.v2.content.application.ContributorManagementResults.ContributorRecord;
+import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.content.domain.ContentContributor;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.Contributor;
@@ -18,6 +19,11 @@ final class ContentManagementMapper {
     }
 
     static ContentLocalizationRecord toLocalizationRecord(Long contentId, ContentLocalization localization) {
+        return toLocalizationRecord(contentId, localization, null);
+    }
+
+    static ContentLocalizationRecord toLocalizationRecord(
+            Long contentId, ContentLocalization localization, AssetProcessingRecord narrationProcessing) {
         return new ContentLocalizationRecord(
                 contentId,
                 localization.getLanguageCode(),
@@ -33,7 +39,10 @@ final class ContentManagementMapper {
                 localization.isVisibleToMobile(),
                 localization.getNarration() == null ? null : new StoryNarrationRecord(
                         localization.getNarration().getAudioMediaId(),
-                        localization.getNarration().getDurationMinutes()));
+                        localization.getNarration().getDurationMinutes(),
+                        narrationProcessing == null ? null : narrationProcessing.status().name(),
+                        narrationProcessing == null ? null : narrationProcessing.lastErrorMessage() != null
+                                ? narrationProcessing.lastErrorMessage() : narrationProcessing.lastErrorCode()));
     }
 
     static StoryPageRecord toStoryPageRecord(Long contentId, StoryPage storyPage) {

@@ -56,7 +56,10 @@ public final class AssetProcessingCommands {
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
-            pageCount = normalizePageCount(contentType, pageCount);
+            pageCount = normalizePageCount(kind, contentType, pageCount);
+            if (kind == AssetProcessingKind.STORY_NARRATION && audioSourceAssetId == null) {
+                throw new IllegalArgumentException("Narration audio source asset ID is required");
+            }
             if (requiresSingleAudioAsset(contentType) && audioSourceAssetId == null) {
                 throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
             }
@@ -127,7 +130,10 @@ public final class AssetProcessingCommands {
             externalKey = requireText(externalKey, "External key must not be blank");
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
-            pageCount = normalizePageCount(contentType, pageCount);
+            pageCount = normalizePageCount(kind, contentType, pageCount);
+            if (kind == AssetProcessingKind.STORY_NARRATION && audioSourceAssetId == null) {
+                throw new IllegalArgumentException("Narration audio source asset ID is required");
+            }
             if (requiresSingleAudioAsset(contentType) && audioSourceAssetId == null) {
                 throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
             }
@@ -252,7 +258,14 @@ public final class AssetProcessingCommands {
         return value;
     }
 
-    private static Integer normalizePageCount(AssetProcessingContentType contentType, Integer pageCount) {
+    private static Integer normalizePageCount(AssetProcessingKind kind,
+            AssetProcessingContentType contentType, Integer pageCount) {
+        if (kind == AssetProcessingKind.STORY_NARRATION) {
+            if (pageCount != null && pageCount != 0) {
+                throw new IllegalArgumentException("Page count is not supported for story narration processing");
+            }
+            return 0;
+        }
         if (contentType == AssetProcessingContentType.STORY) {
             if (pageCount == null || pageCount < 0) {
                 throw new IllegalArgumentException("Story processing requires a non-negative page count");

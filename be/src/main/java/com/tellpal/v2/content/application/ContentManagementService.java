@@ -23,6 +23,7 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
+import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
 
@@ -108,11 +109,8 @@ public class ContentManagementService {
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
-        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration());
-        return ContentManagementMapper.toLocalizationRecord(
-                command.contentId(),
-                savedContent.findLocalization(command.languageCode())
-                        .orElse(localization));
+        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration(), true);
+        return toLocalizationRecord(savedContent, command.languageCode());
     }
 
     /**
@@ -121,7 +119,8 @@ public class ContentManagementService {
     @Transactional
     public ContentLocalizationRecord updateLocalization(UpdateContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
-        loadLocalization(content, command.languageCode());
+        ContentLocalization existingLocalization = loadLocalization(content, command.languageCode());
+        boolean narrationChanged = narrationChanged(existingLocalization, command.narration());
         validateLocalizationAssets(command.coverMediaId(), command.audioMediaId());
         ContentLocalization localization = content.upsertLocalization(
                 command.languageCode(),
@@ -136,11 +135,8 @@ public class ContentManagementService {
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
-        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration());
-        return ContentManagementMapper.toLocalizationRecord(
-                command.contentId(),
-                savedContent.findLocalization(command.languageCode())
-                        .orElse(localization));
+        scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration(), narrationChanged);
+        return toLocalizationRecord(savedContent, command.languageCode());
     }
 
     /**
@@ -152,10 +148,8 @@ public class ContentManagementService {
         Content content = loadContent(command.contentId());
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         localization.markProcessingStatus(command.processingStatus());
-        return ContentManagementMapper.toLocalizationRecord(
-                command.contentId(),
-                contentRepository.save(content).findLocalization(command.languageCode())
-                        .orElse(localization));
+        Content savedContent = contentRepository.save(content);
+        return toLocalizationRecord(savedContent, command.languageCode());
     }
 
     /**
@@ -187,13 +181,31 @@ public class ContentManagementService {
     }
 
     private void scheduleNarrationProcessing(Content content, LanguageCode languageCode,
-            ContentManagementCommands.StoryNarrationCommand narration) {
-        if (narration == null) return;
+            ContentManagementCommands.StoryNarrationCommand narration, boolean narrationChanged) {
+        if (narration == null || !narrationChanged) return;
         assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
                 AssetProcessingTarget.localization(requireContentId(content), languageCode),
                 AssetProcessingKind.STORY_NARRATION,
                 AssetProcessingContentType.STORY,
                 content.getExternalKey(), null, narration.audioMediaId(), 0));
+    }
+
+    private ContentLocalizationRecord toLocalizationRecord(Content content, LanguageCode languageCode) {
+        ContentLocalization localization = content.findLocalization(languageCode)
+                .orElseThrow(() -> new ContentLocalizationNotFoundException(requireContentId(content), languageCode));
+        AssetProcessingRecord narrationProcessing = localization.getNarration() == null
+                ? null
+                : assetProcessingApi.findNarrationByLocalization(requireContentId(content), languageCode).orElse(null);
+        return ContentManagementMapper.toLocalizationRecord(requireContentId(content), localization, narrationProcessing);
+    }
+
+    private static boolean narrationChanged(ContentLocalization localization,
+            ContentManagementCommands.StoryNarrationCommand narration) {
+        if (narration == null || localization.getNarration() == null) {
+            return narration != null && localization.getNarration() == null;
+        }
+        return !narration.audioMediaId().equals(localization.getNarration().getAudioMediaId())
+                || !narration.durationMinutes().equals(localization.getNarration().getDurationMinutes());
     }
 
 

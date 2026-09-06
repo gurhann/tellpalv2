@@ -63,7 +63,7 @@ function updateContentListRecords(
   );
 }
 
-function toLocalizationPayload(values: ContentLocalizationFormValues) {
+export function toLocalizationPayload(values: ContentLocalizationFormValues) {
   return {
     title: values.title.trim(),
     description: values.description,

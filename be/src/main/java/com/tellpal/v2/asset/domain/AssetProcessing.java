@@ -258,8 +258,11 @@ public class AssetProcessing extends BaseJpaEntity {
         String requiredExternalKey = requireText(externalKey, "External key must not be blank");
         Long normalizedCoverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
         Long normalizedAudioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
-        Integer normalizedPageCount = normalizePageCount(requiredContentType, pageCount);
+        Integer normalizedPageCount = normalizePageCount(kind, requiredContentType, pageCount);
 
+        if (kind == AssetProcessingKind.STORY_NARRATION && normalizedAudioSourceAssetId == null) {
+            throw new IllegalArgumentException("Narration audio source asset ID is required");
+        }
         if (requiredContentType.requiresSingleAudioAsset() && normalizedAudioSourceAssetId == null) {
             throw new IllegalArgumentException("Audio source asset ID is required for non-story processing");
         }
@@ -446,7 +449,14 @@ public class AssetProcessing extends BaseJpaEntity {
         return value;
     }
 
-    private static Integer normalizePageCount(ProcessingContentType contentType, Integer pageCount) {
+    private static Integer normalizePageCount(AssetProcessingKind kind,
+            ProcessingContentType contentType, Integer pageCount) {
+        if (kind == AssetProcessingKind.STORY_NARRATION) {
+            if (pageCount != null && pageCount != 0) {
+                throw new IllegalArgumentException("Page count is not supported for story narration processing");
+            }
+            return 0;
+        }
         if (contentType.supportsStoryPackages()) {
             if (pageCount == null || pageCount < 0) {
                 throw new IllegalArgumentException("Story processing requires a non-negative page count");

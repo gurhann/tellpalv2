@@ -59,7 +59,16 @@ public final class ContentManagementResults {
     }
 
     /** Source snapshot of a story localization's optional full narration. */
-    public record StoryNarrationRecord(Long audioMediaId, Integer durationMinutes) {
+    public record StoryNarrationRecord(
+            Long audioMediaId,
+            Integer durationMinutes,
+            String processingStatus,
+            String processingError) {
+
+        public StoryNarrationRecord(Long audioMediaId, Integer durationMinutes) {
+            this(audioMediaId, durationMinutes, null, null);
+        }
+
         public StoryNarrationRecord {
             if (audioMediaId == null || audioMediaId <= 0) {
                 throw new IllegalArgumentException("Narration audio media ID must be positive");

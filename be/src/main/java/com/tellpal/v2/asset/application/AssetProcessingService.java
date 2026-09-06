@@ -1,5 +1,6 @@
 package com.tellpal.v2.asset.application;
 
+import java.sql.SQLException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -251,10 +252,13 @@ public class AssetProcessingService implements AssetProcessingApi {
 
     private AssetProcessing saveNewProcessing(AssetProcessing assetProcessing) {
         try {
-            return assetProcessingRepository.save(assetProcessing);
+            return assetProcessingRepository.saveAndFlush(assetProcessing);
         } catch (DataIntegrityViolationException exception) {
             if (isUniqueTargetViolation(exception)) {
                 throw new AssetProcessingAlreadyPendingException(assetProcessing.getTarget());
+            }
+            if (!isForeignKeyViolation(exception)) {
+                throw exception;
             }
             if (assetProcessing.getTarget().isContent()) {
                 throw new AssetProcessingContentNotFoundException(assetProcessing.getTarget());
@@ -268,6 +272,17 @@ public class AssetProcessingService implements AssetProcessingApi {
         return message != null && (message.contains("duplicate key")
                 || message.contains("uk_asset_processing_localization_target")
                 || message.contains("uk_asset_processing_content_target"));
+    }
+
+    private static boolean isForeignKeyViolation(DataIntegrityViolationException exception) {
+        Throwable cause = exception;
+        while (cause != null) {
+            if (cause instanceof SQLException sqlException && "23503".equals(sqlException.getSQLState())) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
     }
 
     private void ensureStartable(AssetProcessing assetProcessing) {

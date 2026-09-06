@@ -6,6 +6,7 @@ import {
   storyContentViewModel,
 } from "@/features/contents/test/fixtures";
 import {
+  createContentLocalizationSchema,
   getCreateLocalizationFormDefaults,
   mapLocalizationToFormValues,
 } from "@/features/contents/schema/content-localization-schema";
@@ -101,6 +102,17 @@ beforeEach(() => {
 });
 
 describe("ContentLocalizationForm", () => {
+  it("requires narration audio and duration to be supplied together", () => {
+    const result = createContentLocalizationSchema("STORY").safeParse({
+      ...getCreateLocalizationFormDefaults("en"),
+      title: "Evening Garden",
+      narrationAudioMediaId: 901,
+      narrationDurationMinutes: null,
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("hides story page body input but shows optional full narration input", () => {
     render(
       <ContentLocalizationForm
@@ -116,6 +128,9 @@ describe("ContentLocalizationForm", () => {
     expect(screen.queryByLabelText(/body text/i)).not.toBeInTheDocument();
     expect(screen.getByTestId("content-localization-narration-row")).toBeVisible();
     expect(screen.getByText("Full narration audio asset")).toBeVisible();
+    fireEvent.click(screen.getByTestId("content-localization-narration-audio-asset-advanced"));
+    expect(String(screen.getByLabelText(/full narration audio asset id/i).value)).toBe("901");
+    expect(screen.getByLabelText(/full narration duration/i)).toHaveValue(8);
   });
 
   it("shows non-story body and audio inputs for meditation locales", () => {

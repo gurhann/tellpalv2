@@ -547,6 +547,8 @@ stack.
 - `GET /api/admin/media-processing`
 - `GET /api/admin/media-processing/{contentId}/localizations/{languageCode}`
 - `POST /api/admin/media-processing/{contentId}/localizations/{languageCode}/retry`
+- `GET /api/admin/media-processing/{contentId}/content`
+- `POST /api/admin/media-processing/{contentId}/content/retry`
 
 ### Required Fields
 
@@ -571,12 +573,32 @@ stack.
   - all fields optional, but validated when present
 - Processing schedule:
   - `contentId`
-  - `languageCode`
+  - `targetScope` is optional and defaults to `LOCALIZATION`
+  - `languageCode` when `targetScope=LOCALIZATION`; omitted for `CONTENT`
   - `contentType`
   - `externalKey`
+  - `kind` is optional and defaults to `DELIVERY`; `STORY_NARRATION` requires a STORY localization and an audio source
 - Processing retry:
   - `contentType`
   - `externalKey`
+  - `kind` is optional and defaults to `DELIVERY`; `STORY_NARRATION` retries the independent narration job
+
+### Story Narration Rules
+
+- A localization request may include an optional nested `narration` object with `audioMediaId` and
+  non-negative `durationMinutes`; it is accepted only for `STORY` content.
+- The narration audio asset must be an `AUDIO` asset. The narration job is stored separately from
+  the normal localization delivery job using `kind=STORY_NARRATION` and the same localization target.
+- Narration processing status and error are exposed under the response's `narration` object. They do
+  not change the localization's normal `processingStatus` or mobile visibility.
+- Omitting `narration` on an update preserves an existing narration; removal requires a separate
+  explicitly supported operation.
+
+### Processing Target Rules
+
+- `LOCALIZATION` processing requires a non-blank `languageCode`.
+- `CONTENT` processing must omit `languageCode` and identifies one shared job for the content.
+- A content-scoped processing record is read and retried through the `/content` endpoints above.
 
 ### Forbidden Combinations
 
@@ -589,6 +611,7 @@ stack.
 - Deprecated direct upload initiation supports only `ORIGINAL_IMAGE` and `ORIGINAL_AUDIO`.
 - Deprecated direct upload `mimeType` must match the selected original upload kind.
 - Story processing requires `pageCount` and forbids omitting it.
+- Story narration processing does not use `pageCount`; clients may omit it.
 - Non-story processing forbids `pageCount`.
 - Non-story processing requires `audioSourceAssetId`.
 
@@ -634,6 +657,7 @@ stack.
 - Cover source asset is optional at the processing aggregate level, but it must be positive when
   present.
 - Audio source asset is optional for `STORY` processing and required for non-story processing.
+- Audio source asset is required for `STORY_NARRATION` processing.
 - Story processing may carry a non-negative `pageCount`.
 - The admin processing API does not expose worker-only lifecycle transitions such as `start`,
   `complete`, `fail`, or lease recovery.

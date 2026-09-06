@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     void createUpdateLocalizationProcessingAndStoryPagesWorkWithAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
         Long coverMediaId = registerImageAsset("/content/story/moonlight/cover.jpg");
+        Long narrationAudioMediaId = registerAudioAsset("/content/story/moonlight/narration.mp3");
         Long illustrationMediaId = registerImageAsset("/content/story/moonlight/page-1.jpg");
 
         MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
@@ -122,13 +124,21 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                   "title": "Ay Isigi",
                                   "description": "Gece masali",
                                   "coverMediaId": %d,
+                                  "narration": {
+                                    "audioMediaId": %d,
+                                    "durationMinutes": 11
+                                  },
                                   "status": "PUBLISHED",
                                   "processingStatus": "PENDING",
                                   "publishedAt": "2026-03-17T09:00:00Z"
                                 }
-                                """.formatted(coverMediaId)))
+                                """.formatted(coverMediaId, narrationAudioMediaId)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.languageCode").value("tr"));
+                .andExpect(jsonPath("$.languageCode").value("tr"))
+                .andExpect(jsonPath("$.narration.audioMediaId").value(narrationAudioMediaId))
+                .andExpect(jsonPath("$.narration.durationMinutes").value(11))
+                .andExpect(jsonPath("$.narration.processingStatus").value("PENDING"))
+                .andExpect(jsonPath("$.narration.processingError").value(nullValue()));
 
         mockMvc.perform(patch("/api/admin/contents/{contentId}/localizations/tr/processing-status", contentId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -140,7 +150,8 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.processingStatus").value("COMPLETED"))
-                .andExpect(jsonPath("$.visibleToMobile").value(true));
+                .andExpect(jsonPath("$.visibleToMobile").value(true))
+                .andExpect(jsonPath("$.narration.processingStatus").value("PENDING"));
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/story-pages", contentId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -198,6 +209,44 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("duplicate_external_key"));
+    }
+
+    @Test
+    void narrationIsRejectedForNonStoryContent() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long audioMediaId = registerAudioAsset("/content/meditation/not-a-story/audio.mp3");
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "MEDITATION",
+                                  "externalKey": "not-a-story",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Meditation",
+                                  "bodyText": "Breathe.",
+                                  "audioMediaId": %d,
+                                  "status": "DRAFT",
+                                  "processingStatus": "PENDING",
+                                  "narration": {
+                                    "audioMediaId": %d,
+                                    "durationMinutes": 4
+                                  }
+                                }
+                                """.formatted(audioMediaId, audioMediaId)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

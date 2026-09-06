@@ -83,6 +83,14 @@ public class AssetProcessingAdminController {
 
     @PostMapping("/{contentId}/content/retry")
     @Operation(summary = "Retry content-scoped asset processing", description = "Reschedules one shared content processing job.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Asset processing retry accepted"),
+            @ApiResponse(responseCode = "400", description = "Retry request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Processing record or content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Asset processing is already pending, running, or completed", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public ResponseEntity<AdminAssetProcessingResponse> retryContentProcessing(
             @PathVariable Long contentId,
             @Valid @RequestBody RetryAssetProcessingRequest request) {
@@ -111,6 +119,12 @@ public class AssetProcessingAdminController {
 
     @GetMapping("/{contentId}/content")
     @Operation(summary = "Get content-scoped processing status", description = "Returns the shared processing state for content.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Asset processing status returned"),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Processing record or content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
     public AdminAssetProcessingResponse getContentProcessingStatus(@PathVariable Long contentId) {
         return assetProcessingApi.findByContent(contentId)
                 .map(AdminAssetProcessingResponse::from)
