@@ -69,7 +69,8 @@ Current content localization validation rules to remember:
 - Story narrative text belongs in `story_page_localizations`, not in
   `content_localizations`.
 - `MEDITATION` localizations require `bodyText`.
-- `MEDITATION` and `LULLABY` localizations require an `audioMediaId`.
+- `MEDITATION` localizations require an `audioMediaId`.
+- `LULLABY` localizations accept title and publication state only.
 - Story-page illustrations also belong in `story_page_localizations`.
 - Story-page localization save requires `illustrationMediaId`; there is no page-level fallback.
 - Local development can satisfy `audioMediaId` with `LOCAL_STUB`

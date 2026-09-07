@@ -48,3 +48,11 @@
 - source_spec: `spec-1-6-canonical-audio-story-turunu-guvenle-kaldirma.md`
   summary: Public/mobile `experienceType: AUDIO_STORY` projection regression coverage sonraki endpoint/projection yol haritası çalışmasına bırakıldı.
   evidence: Story 1.6 documented projection label’ı koruyor ancak public/mobile projection endpoint’lerini yeniden tasarlamıyor veya eklemiyor; bu story’de böyle bir implementation surface değişmedi.
+
+## Deferred from: code review of spec-1-6-canonical-audio-story-turunu-guvenle-kaldirma (2026-09-07)
+
+- CMS asset-processing request/response şemasında content-scoped job için nullable `languageCode` ve `targetScope/kind` alanlarının desteklenmemesi ayrı processing-contract çalışmasına bırakıldı; bu davranış Story 1.6 öncesinden geliyor.
+- V13 `page_count` ve V22 parent/trigger invariant’larının migration regression kapsamının genişletilmesi ayrı schema-hardening çalışmasına bırakıldı; V28 bunları değiştirmiyor.
+- `ops/content-migration` çıktısındaki legacy `AUDIO_STORY` category map davranışı import-pipeline çalışmasına bırakıldı; Story 1.6 legacy importu kapsam dışı tutuyor.
+- Public/mobile `experienceType: AUDIO_STORY` projection regression coverage sonraki endpoint/projection yol haritasına bırakıldı; bu story public/mobile endpoint yüzeyi eklemiyor.
+- V28’in ilk blocker sınıfında durup diğer sınıfları sonraki çalıştırmaya bırakması fail-fast tasarım tercihi olarak korundu.

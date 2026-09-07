@@ -74,7 +74,8 @@ class CanonicalAudioStoryTypeRemovalMigrationIntegrationTest {
                 .hasMessageContaining("asset_processing")
                 .hasMessageContaining("AUDIO_STORY")
                 .hasMessageContaining(Long.toString(processingId))
-                .hasMessageContaining(Long.toString(contentId));
+                .hasMessageContaining(Long.toString(contentId))
+                .hasMessageContaining("legacy-processing");
 
         assertMigrationStoppedAt27();
         assertThat(count("asset_processing", processingId)).isEqualTo(1);
@@ -86,7 +87,11 @@ class CanonicalAudioStoryTypeRemovalMigrationIntegrationTest {
         migrateTo("27");
         long contentId = insertContent("STORY", "existing-story");
         long categoryId = insertCategory("existing-category", "STORY");
+        long meditationId = insertContent("MEDITATION", "existing-meditation");
+        long lullabyId = insertContent("LULLABY", "existing-lullaby");
         insertLocalization(contentId);
+        long meditationProcessingId = insertProcessing(
+                meditationId, "MEDITATION", "existing-meditation-processing", "CONTENT", null, "DELIVERY");
         long processingId = insertProcessing(
                 contentId, "STORY", "existing-processing", "LOCALIZATION", "tr", "STORY_NARRATION");
 
@@ -94,7 +99,10 @@ class CanonicalAudioStoryTypeRemovalMigrationIntegrationTest {
 
         assertThat(schemaVersion()).isEqualTo("28");
         assertThat(count("contents", contentId)).isEqualTo(1);
+        assertThat(count("contents", meditationId)).isEqualTo(1);
+        assertThat(count("contents", lullabyId)).isEqualTo(1);
         assertThat(count("categories", categoryId)).isEqualTo(1);
+        assertThat(count("asset_processing", meditationProcessingId)).isEqualTo(1);
         assertThat(count("asset_processing", processingId)).isEqualTo(1);
     }
 

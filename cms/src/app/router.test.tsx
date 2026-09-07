@@ -621,6 +621,10 @@ describe("CMS router auth flow", () => {
 
     await screen.findByRole("heading", { name: /content studio/i });
 
+    expect(
+      screen.queryByRole("button", { name: /^audio story$/i }),
+    ).not.toBeInTheDocument();
+
     fireEvent.click(screen.getByRole("button", { name: /^meditation$/i }));
 
     expect(screen.getByText("Regenraum Pause")).toBeInTheDocument();

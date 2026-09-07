@@ -32,7 +32,7 @@ begin
             blocking_category.slug;
     end if;
 
-    select id, content_id, language_code, target_scope
+    select id, content_id, language_code, target_scope, external_key
       into blocking_processing
       from asset_processing
      where content_type = 'AUDIO_STORY'
@@ -42,11 +42,12 @@ begin
     if found then
         raise exception
             'V28 blocked: asset_processing row still uses canonical AUDIO_STORY '
-            '(processing_id=%, content_id=%, language_code=%, target_scope=%)',
+            '(processing_id=%, content_id=%, language_code=%, target_scope=%, external_key=%)',
             blocking_processing.id,
             blocking_processing.content_id,
             blocking_processing.language_code,
-            blocking_processing.target_scope;
+            blocking_processing.target_scope,
+            blocking_processing.external_key;
     end if;
 end;
 $$;

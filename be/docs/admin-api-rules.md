@@ -218,16 +218,16 @@ stack.
   not in the content localization body fields.
 - Story seed data must also place page illustrations in `story_page_localizations`. Existing page
   rows no longer own a shared illustration field.
-- Non-story content seed data should use a valid audio asset because `MEDITATION` and `LULLABY`
-  localizations require `audioMediaId`.
+- Non-story content seed data should use a valid audio asset because `MEDITATION` localizations
+  require `audioMediaId`; LULLABY localizations only support title and publication state.
 - `LOCAL_STUB` assets are valid for local sample content and processing tests.
 
 ### Frontend Form and Query Implications
 
 - Content type selection must drive field visibility before submit:
   - `STORY` hides content-level body and single-audio inputs
-  - `MEDITATION` requires body text
-  - `MEDITATION` and `LULLABY` require audio asset selection
+  - `MEDITATION` requires body text and audio asset selection
+  - `LULLABY` exposes title and publication state only
 - Content list screens must not assume only active rows are returned.
 - Content detail screens can render localization snapshots from `GET /api/admin/contents/{id}`,
   including `visibleToMobile`, without extra localization-read endpoints.

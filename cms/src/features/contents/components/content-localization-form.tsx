@@ -170,7 +170,8 @@ export function ContentLocalizationForm({
           coverPickerTitle: "Pick localization cover asset",
           durationMinutes: "Duration minutes",
           narrationLabel: "Full narration (optional)",
-          narrationDescription: "The single full-length narration for this story locale.",
+          narrationDescription:
+            "The single full-length narration for this story locale.",
           narrationAudioLabel: "Full narration audio asset",
           narrationDuration: "Full narration duration (minutes)",
           status: "Status",
@@ -255,6 +256,7 @@ export function ContentLocalizationForm({
   const alertProblem =
     saveProblem && !isProblemMappedToField(saveProblem) ? saveProblem : null;
   const requiresBodyText = content.summary.type === "MEDITATION";
+  const supportsLocalizationDetails = content.summary.type !== "LULLABY";
   const selectedLanguageCode = form.watch("languageCode");
   const selectedLanguageLabel = getLanguageLabel(
     selectedLanguageCode,
@@ -383,23 +385,26 @@ export function ContentLocalizationForm({
           <FieldError error={form.formState.errors.title} />
         </div>
 
-        <div className="space-y-2 md:col-span-2">
-          <label
-            className="text-sm font-medium text-foreground"
-            htmlFor="description"
-          >
-            {copy.description}
-          </label>
-          <Textarea
-            id="description"
-            placeholder={copy.localizedDescription}
-            {...form.register("description")}
-            disabled={saveLocalization.isPending}
-          />
-          <FieldError error={form.formState.errors.description} />
-        </div>
+        {supportsLocalizationDetails ? (
+          <div className="space-y-2 md:col-span-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="description"
+            >
+              {copy.description}
+            </label>
+            <Textarea
+              id="description"
+              placeholder={copy.localizedDescription}
+              {...form.register("description")}
+              disabled={saveLocalization.isPending}
+            />
+            <FieldError error={form.formState.errors.description} />
+          </div>
+        ) : null}
 
-        {content.summary.supportsStoryPages ? null : (
+        {content.summary.supportsStoryPages ||
+        !supportsLocalizationDetails ? null : (
           <>
             <div className="space-y-2 md:col-span-2">
               <label
@@ -452,10 +457,17 @@ export function ContentLocalizationForm({
         )}
 
         {content.summary.supportsStoryPages ? (
-          <div className="space-y-4 rounded-2xl border border-border/70 bg-muted/10 p-4 md:col-span-2" data-testid="content-localization-narration-row">
+          <div
+            className="space-y-4 rounded-2xl border border-border/70 bg-muted/10 p-4 md:col-span-2"
+            data-testid="content-localization-narration-row"
+          >
             <div>
-              <p className="text-sm font-medium text-foreground">{copy.narrationLabel}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{copy.narrationDescription}</p>
+              <p className="text-sm font-medium text-foreground">
+                {copy.narrationLabel}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {copy.narrationDescription}
+              </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <Controller
@@ -482,7 +494,10 @@ export function ContentLocalizationForm({
                 )}
               />
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground" htmlFor="narrationDurationMinutes">
+                <label
+                  className="text-sm font-medium text-foreground"
+                  htmlFor="narrationDurationMinutes"
+                >
                   {copy.narrationDuration}
                 </label>
                 <Input
@@ -491,11 +506,14 @@ export function ContentLocalizationForm({
                   placeholder={copy.optional}
                   type="number"
                   {...form.register("narrationDurationMinutes", {
-                    setValueAs: (value) => value === "" || value == null ? null : Number(value),
+                    setValueAs: (value) =>
+                      value === "" || value == null ? null : Number(value),
                   })}
                   disabled={saveLocalization.isPending}
                 />
-                <FieldError error={form.formState.errors.narrationDurationMinutes} />
+                <FieldError
+                  error={form.formState.errors.narrationDurationMinutes}
+                />
               </div>
             </div>
           </div>

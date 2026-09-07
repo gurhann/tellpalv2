@@ -151,14 +151,18 @@ export function createContentLocalizationSchema(contentType: ContentType) {
         "FAILED",
       ]),
       publishedAt: z.preprocess(parsePublishedAt, z.string().nullable()),
-      narrationAudioMediaId: z.preprocess(
-        parseNullableInteger,
-        z.number().int().positive().nullable(),
-      ).optional(),
-      narrationDurationMinutes: z.preprocess(
-        parseNullableInteger,
-        z.number().int().nonnegative().nullable(),
-      ).optional(),
+      narrationAudioMediaId: z
+        .preprocess(
+          parseNullableInteger,
+          z.number().int().positive().nullable(),
+        )
+        .optional(),
+      narrationDurationMinutes: z
+        .preprocess(
+          parseNullableInteger,
+          z.number().int().nonnegative().nullable(),
+        )
+        .optional(),
     })
     .superRefine((values, ctx) => {
       if (values.publishedAt) {
@@ -185,7 +189,15 @@ export function createContentLocalizationSchema(contentType: ContentType) {
         const narrationAudio = values.narrationAudioMediaId ?? null;
         const narrationDuration = values.narrationDurationMinutes ?? null;
         if ((narrationAudio === null) !== (narrationDuration === null)) {
-          ctx.addIssue({ code: "custom", message: "Narration audio and duration must be provided together.", path: [narrationAudio === null ? "narrationAudioMediaId" : "narrationDurationMinutes"] });
+          ctx.addIssue({
+            code: "custom",
+            message: "Narration audio and duration must be provided together.",
+            path: [
+              narrationAudio === null
+                ? "narrationAudioMediaId"
+                : "narrationDurationMinutes",
+            ],
+          });
         }
         if (values.bodyText) {
           ctx.addIssue({
@@ -204,13 +216,32 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           });
         }
       } else {
-        if (values.narrationAudioMediaId != null || values.narrationDurationMinutes != null) {
-          ctx.addIssue({ code: "custom", message: "Narration is only supported for stories.", path: ["narrationAudioMediaId"] });
-        }
         if (
-          contentType === "MEDITATION" &&
-          !values.bodyText
+          values.narrationAudioMediaId != null ||
+          values.narrationDurationMinutes != null
         ) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Narration is only supported for stories.",
+            path: ["narrationAudioMediaId"],
+          });
+        }
+        if (contentType === "LULLABY") {
+          if (
+            values.description ||
+            values.bodyText ||
+            values.audioMediaId !== null
+          ) {
+            ctx.addIssue({
+              code: "custom",
+              message:
+                "Lullaby localizations only support title and publication state.",
+              path: ["title"],
+            });
+          }
+          return;
+        }
+        if (contentType === "MEDITATION" && !values.bodyText) {
           ctx.addIssue({
             code: "custom",
             message: "Body text is required for this content type.",
@@ -218,7 +249,7 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           });
         }
 
-        if (values.audioMediaId === null) {
+        if (contentType === "MEDITATION" && values.audioMediaId === null) {
           ctx.addIssue({
             code: "custom",
             message: "Audio asset id is required for this content type.",
