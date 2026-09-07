@@ -38,6 +38,13 @@ public interface ContentRepository {
     Optional<Content> findByIdForContributorWrite(Long id);
 
     /**
+     * Loads one aggregate with a write lock for mutations of its shared playback source.
+     *
+     * <p>The lock serializes the first-write path for the content-scoped playback unique key.
+     */
+    Optional<Content> findByIdForPlaybackWrite(Long id);
+
+    /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */
     Optional<Content> findByExternalKey(String externalKey);

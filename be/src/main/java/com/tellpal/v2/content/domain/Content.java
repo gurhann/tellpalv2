@@ -236,6 +236,9 @@ public class Content extends BaseJpaEntity {
             LocalizationStatus status,
             ProcessingStatus processingStatus,
             java.time.Instant publishedAt) {
+        if (type == ContentType.LULLABY && processingStatus != ProcessingStatus.PENDING) {
+            throw new IllegalArgumentException("LULLABY processing status is owned by shared playback");
+        }
         validateLocalizationFieldsForType(description, bodyText, coverMediaId, audioMediaId, durationMinutes);
         ContentLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode, title, status, processingStatus));

@@ -265,6 +265,17 @@ class ContentTest {
     }
 
     @Test
+    void lullabyLocalizationProcessingStatusIsOwnedBySharedPlayback() {
+        Content content = Content.create(ContentType.LULLABY, "lullaby-processing-owner", 2, true);
+
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR, "Ninni", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.COMPLETED, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("owned by shared playback");
+    }
+
+    @Test
     void lullabyMusicianAssignmentMustBeGlobal() {
         Content content = Content.create(ContentType.LULLABY, "lullaby-musician-scope", 2, true);
         Contributor musician = Contributor.create("Ninni Muzisyeni", Set.of(ContributorRole.MUSICIAN));

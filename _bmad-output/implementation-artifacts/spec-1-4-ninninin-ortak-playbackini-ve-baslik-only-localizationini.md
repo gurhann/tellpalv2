@@ -3,7 +3,7 @@ title: 'Story 1.4: Ninninin ortak playback ve başlık-only localization modeli'
 type: 'feature'
 created: '2026-09-07'
 status: 'done'
-review_loop_iteration: 0
+review_loop_iteration: 1
 baseline_commit: '72b33c8a7911f848e974accac9831232c63bb587'
 context:
   - 'AGENTS.md'
@@ -92,6 +92,10 @@ Story 1.3’te kararlaştırılan `listeningCoverMediaId` playback’in ortak ka
 - [x] [Review][Patch] Playback endpoint’inde auth ve processing-conflict response dokümantasyonu/409 eşlemesi tamamlandı.
 - [x] [Review][Defer] Public/mobile registry ve asset-bundle tüketicilerinin content-scope processing’e geçirilmesi bu story’nin açık sınırı dışında; mobil/public endpoint çalışması sonraki yol haritasına bırakıldı.
 - [x] [Review][Defer] Listening cover’ın opsiyonel kalması ile mevcut non-STORY worker’ın cover zorunluluğu ayrı bir asset-processing kararı gerektiriyor; playback modelini değiştirmeden sonraki processing çalışmasına bırakıldı.
+- [x] [Review][Patch] Aggregate dışı localization yazımlarında LULLABY processing status’ı client-owned kalabiliyor [be/src/main/java/com/tellpal/v2/content/domain/Content.java:228]
+- [x] [Review][Patch] Legacy LULLABY CONTENT processing kaydı backfill edilen playback source’u ile çelişirse migration sessizce eski kaydı koruyor [be/src/main/resources/db/migration/V25__add_lullaby_playback.sql:139]
+- [x] [Review][Patch] Eşzamanlı ilk playback yazımları unique content_id ihlalini 500 olarak yüzeye çıkarabiliyor [be/src/main/java/com/tellpal/v2/content/application/ContentManagementService.java:193]
+- [x] [Review][Patch] LULLABY global MUSICIAN kapsamı için admin API seviyesinde hata sözleşmesi ve başarılı readback testi eksik [be/src/test/java/com/tellpal/v2/content/web/admin/ContributorAdminIntegrationTest.java:329]
 
 ## Suggested Review Order
 

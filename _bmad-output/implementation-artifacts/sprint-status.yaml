@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 09-06-2026 18:02
-last_updated: 07-09-2026 14:55
+last_updated: 07-09-2026 17:00
 project: TellPal V2
 project_key: NOKEY
 tracking_system: file-system
@@ -39,7 +39,7 @@ development_status:
   1-1-playback-işleme-hedeflerini-güvenilir-biçimde-ayırma: done
   1-2-hikâyeye-dil-bazlı-tam-anlatım-ekleme: done
   1-3-ortak-textless-kapak-sahipliğini-uygulama: done
-  1-4-ninninin-ortak-playback-ini-ve-başlık-only-localization-ını: review
+  1-4-ninninin-ortak-playback-ini-ve-başlık-only-localization-ını: done
   1-5-ninni-için-katalogdan-sıralı-enstrüman-seçme: backlog
   1-6-canonical-audio_story-türünü-güvenle-kaldırma: backlog
   1-7-cms-te-playback-ve-localization-editörlerini-ayrıştırma: backlog

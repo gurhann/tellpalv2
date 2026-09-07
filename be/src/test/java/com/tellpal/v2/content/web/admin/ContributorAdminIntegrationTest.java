@@ -397,6 +397,53 @@ class ContributorAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void lullabyMusicianAssignmentsMustBeGlobalAndReadBackAsOneCredit() throws Exception {
+        String accessToken = authenticateAdmin();
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "lullaby-musician-scope", 2, true));
+        Long contributorId = createContributor(accessToken, "Lullaby Musician", "MUSICIAN");
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contributorId": %d,
+                                  "role": "MUSICIAN",
+                                  "languageCode": "tr",
+                                  "sortOrder": 0
+                                }
+                                """.formatted(contributorId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("lullaby_musician_must_be_global"))
+                .andExpect(jsonPath("$.fieldErrors.languageCode").exists());
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from content_contributors where content_id = ?", Integer.class,
+                content.contentId())).isZero();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contributorId": %d,
+                                  "role": "MUSICIAN",
+                                  "sortOrder": 0
+                                }
+                                """.formatted(contributorId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.languageCode").value(Matchers.nullValue()));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/contributors", content.contentId())
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].role").value("MUSICIAN"))
+                .andExpect(jsonPath("$[0].languageCode").value(Matchers.nullValue()));
+    }
+
+    @Test
     void sameContributorCanHaveGlobalAndLocalizedCreditsForTheSameRole() throws Exception {
         String accessToken = authenticateAdmin();
         ContentReference content = contentManagementService.createContent(

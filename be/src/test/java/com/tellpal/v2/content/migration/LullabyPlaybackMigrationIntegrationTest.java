@@ -117,12 +117,45 @@ class LullabyPlaybackMigrationIntegrationTest {
     }
 
     @Test
+    void blocksStaleExistingContentProcessingContext() throws Exception {
+        migrateTo("24");
+        long firstAudioId = insertAudioAsset();
+        long secondAudioId = insertAudioAsset();
+        long contentId = insertLullaby();
+        insertLocalization(contentId, "tr", firstAudioId, 11, null);
+        execute("""
+                insert into asset_processing (
+                    content_id, language_code, status, content_type, external_key,
+                    cover_source_asset_id, audio_source_asset_id, target_scope)
+                values (%d, null, 'PENDING', 'LULLABY',
+                        (select external_key from contents where id = %d),
+                        null, %d, 'CONTENT')
+                """.formatted(contentId, contentId, secondAudioId));
+
+        assertThatThrownBy(this::migrateLatest)
+                .hasMessageContaining("V25 blocked")
+                .hasMessageContaining(Long.toString(contentId))
+                .hasMessageContaining("do not match backfilled playback");
+    }
+
+    @Test
     void postMigrationRulesKeepLullabyFieldsAndMusicianGlobal() throws Exception {
         migrateTo("24");
         long contentId = insertLullaby();
         long audioId = insertAudioAsset();
         long imageId = insertImageAsset();
         migrateLatest();
+
+        execute("""
+                insert into content_localizations (content_id, language_code, title)
+                values (%d, 'tr', 'Ninni')
+                """.formatted(contentId));
+        assertThatThrownBy(() -> execute("""
+                update content_localizations
+                   set processing_status = 'COMPLETED'
+                 where content_id = %d and language_code = 'tr'
+                """.formatted(contentId)))
+                .hasMessageContaining("owned by shared playback");
 
         assertThatThrownBy(() -> execute("""
                 insert into content_localizations (content_id, language_code, title, audio_media_id)

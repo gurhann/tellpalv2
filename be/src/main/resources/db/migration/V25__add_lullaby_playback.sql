@@ -117,8 +117,34 @@ SELECT localization.content_id,
    AND localization.duration_minutes IS NOT NULL
  GROUP BY localization.content_id;
 
+DO $$
+DECLARE
+    stale_processing_ids text;
+BEGIN
+    SELECT string_agg(processing.id::text, ', ' ORDER BY processing.id)
+      INTO stale_processing_ids
+      FROM asset_processing processing
+      JOIN lullaby_playbacks playback ON playback.content_id = processing.content_id
+      JOIN contents content ON content.id = processing.content_id
+     WHERE processing.target_scope = 'CONTENT'
+       AND processing.processing_kind = 'DELIVERY'
+       AND content.type = 'LULLABY'
+       AND (
+            processing.content_type IS DISTINCT FROM 'LULLABY'
+            OR processing.external_key IS DISTINCT FROM content.external_key
+            OR processing.cover_source_asset_id IS DISTINCT FROM content.listening_cover_media_id
+            OR processing.audio_source_asset_id IS DISTINCT FROM playback.audio_media_id
+       );
+
+    IF stale_processing_ids IS NOT NULL THEN
+        RAISE EXCEPTION
+            'V25 blocked: existing LULLABY CONTENT processing rows [%] do not match backfilled playback',
+            stale_processing_ids;
+    END IF;
+END $$;
+
 DELETE FROM asset_processing processing
- USING contents content
+USING contents content
  WHERE processing.target_scope = 'LOCALIZATION'
    AND processing.processing_kind = 'DELIVERY'
    AND processing.content_id = content.id
@@ -229,6 +255,15 @@ BEGIN
             RAISE EXCEPTION 'Content % cannot become LULLABY with localized MUSICIAN assignments', NEW.id
                 USING errcode = '23514';
         END IF;
+        IF EXISTS (
+            SELECT 1
+              FROM content_localizations
+             WHERE content_id = NEW.id
+               AND processing_status <> 'PENDING'
+        ) THEN
+            RAISE EXCEPTION 'Content % cannot become LULLABY with non-pending localization processing', NEW.id
+                USING errcode = '23514';
+        END IF;
     END IF;
     RETURN NEW;
 END;
@@ -269,6 +304,31 @@ CREATE TRIGGER trg_lullaby_localizations_title_only
         audio_media_id, duration_minutes ON content_localizations
     FOR EACH ROW
 EXECUTE FUNCTION ensure_lullaby_localization_title_only();
+
+CREATE OR REPLACE FUNCTION ensure_lullaby_localization_processing_pending() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.processing_status <> 'PENDING'
+       AND EXISTS (
+           SELECT 1
+             FROM contents
+            WHERE id = NEW.content_id
+              AND type = 'LULLABY'
+       ) THEN
+        RAISE EXCEPTION
+            'LULLABY processing status is owned by shared playback: content %, language %',
+            NEW.content_id, NEW.language_code
+            USING errcode = '23514';
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_lullaby_localizations_processing_pending
+    BEFORE INSERT OR UPDATE OF content_id, processing_status ON content_localizations
+    FOR EACH ROW
+EXECUTE FUNCTION ensure_lullaby_localization_processing_pending();
 
 CREATE OR REPLACE FUNCTION ensure_lullaby_musician_global() RETURNS trigger
 LANGUAGE plpgsql

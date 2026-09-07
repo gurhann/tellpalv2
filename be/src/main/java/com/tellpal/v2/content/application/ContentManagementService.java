@@ -191,7 +191,8 @@ public class ContentManagementService {
     /** Creates or updates the shared playback source and schedules one content-scoped delivery job. */
     @Transactional
     public LullabyPlaybackRecord upsertLullabyPlayback(Long contentId, LullabyPlaybackCommand command) {
-        Content content = loadContent(contentId);
+        Content content = contentRepository.findByIdForPlaybackWrite(contentId)
+                .orElseThrow(() -> new ContentNotFoundException(contentId));
         if (content.getType() != ContentType.LULLABY) {
             throw new IllegalStateException("Lullaby playback is only supported for LULLABY content");
         }

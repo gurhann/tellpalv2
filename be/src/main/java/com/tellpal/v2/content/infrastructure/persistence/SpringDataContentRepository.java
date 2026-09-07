@@ -69,6 +69,14 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             """)
     Optional<Content> findByIdForContributorWrite(Long id);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select content
+            from Content content
+            where content.id = :id
+            """)
+    Optional<Content> findByIdForPlaybackWrite(Long id);
+
     Optional<Content> findByExternalKey(String externalKey);
 
     boolean existsByExternalKey(String externalKey);
