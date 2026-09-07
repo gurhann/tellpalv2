@@ -254,9 +254,7 @@ export function ContentLocalizationForm({
       : null;
   const alertProblem =
     saveProblem && !isProblemMappedToField(saveProblem) ? saveProblem : null;
-  const requiresBodyText =
-    content.summary.type === "AUDIO_STORY" ||
-    content.summary.type === "MEDITATION";
+  const requiresBodyText = content.summary.type === "MEDITATION";
   const selectedLanguageCode = form.watch("languageCode");
   const selectedLanguageLabel = getLanguageLabel(
     selectedLanguageCode,

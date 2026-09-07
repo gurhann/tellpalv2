@@ -1,7 +1,6 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.tellpal.v2.asset.api.AssetKind;
@@ -82,6 +80,33 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
 
         mockMvc.perform(delete("/api/admin/contents/1"))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void canonicalAudioStoryCreateIsRejected() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "AUDIO_STORY",
+                                  "externalKey": "legacy-audio-story",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void canonicalAudioStoryRegistryFilterIsRejected() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(get("/api/admin/content-registry")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .queryParam("type", "AUDIO_STORY"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -419,7 +444,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
-    void listeningCoverOwnershipIsEnforcedForLullabyAndAudioStory() throws Exception {
+    void listeningCoverOwnershipIsEnforcedForLullabyAndMeditation() throws Exception {
         String accessToken = authenticateAdmin();
         Long listeningCoverMediaId = registerImageAsset("/content/shared/listening-cover.jpg");
 
@@ -437,19 +462,19 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andReturn();
         Long lullabyId = readPayload(lullabyResult).get("contentId").asLong();
 
-        MvcResult audioStoryResult = mockMvc.perform(post("/api/admin/contents")
+        MvcResult meditationResult = mockMvc.perform(post("/api/admin/contents")
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "type": "AUDIO_STORY",
-                                  "externalKey": "shared-cover-audio-story",
+                                  "type": "MEDITATION",
+                                  "externalKey": "shared-cover-meditation",
                                   "active": true
                                 }
                                 """))
                 .andExpect(status().isCreated())
                 .andReturn();
-        Long audioStoryId = readPayload(audioStoryResult).get("contentId").asLong();
+        Long meditationId = readPayload(meditationResult).get("contentId").asLong();
 
         mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -464,31 +489,25 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listeningCoverMediaId").value(listeningCoverMediaId));
 
-        mockMvc.perform(put("/api/admin/contents/{contentId}", audioStoryId)
+        mockMvc.perform(put("/api/admin/contents/{contentId}", meditationId)
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "externalKey": "shared-cover-audio-story",
+                                  "externalKey": "shared-cover-meditation",
                                   "active": true,
                                   "listeningCoverMediaId": %d
                                 }
                                 """.formatted(listeningCoverMediaId)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(listeningCoverMediaId));
 
         assertThat(jdbcTemplate.queryForObject(
                 "select listening_cover_media_id from contents where id = ?", Long.class, lullabyId))
                 .isEqualTo(listeningCoverMediaId);
         assertThat(jdbcTemplate.queryForObject(
-                "select listening_cover_media_id from contents where id = ?", Long.class, audioStoryId))
-                .isNull();
-
-        assertThatThrownBy(() -> jdbcTemplate.update(
-                "update contents set listening_cover_media_id = ? where id = ?",
-                listeningCoverMediaId,
-                audioStoryId))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                "select listening_cover_media_id from contents where id = ?", Long.class, meditationId))
+                .isEqualTo(listeningCoverMediaId);
     }
 
     @Test
@@ -512,7 +531,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "type": "AUDIO_STORY",
+                                  "type": "MEDITATION",
                                   "externalKey": "duplicate-key",
                                   "active": true
                                 }
@@ -599,7 +618,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "type": "AUDIO_STORY",
+                                  "type": "MEDITATION",
                                   "externalKey": "quiet-audio",
                                   "ageRange": 7,
                                   "active": false

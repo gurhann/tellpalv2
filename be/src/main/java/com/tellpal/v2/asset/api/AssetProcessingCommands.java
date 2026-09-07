@@ -279,8 +279,7 @@ public final class AssetProcessingCommands {
     }
 
     private static boolean requiresSingleAudioAsset(AssetProcessingContentType contentType) {
-        return contentType == AssetProcessingContentType.AUDIO_STORY
-                || contentType == AssetProcessingContentType.MEDITATION
+        return contentType == AssetProcessingContentType.MEDITATION
                 || contentType == AssetProcessingContentType.LULLABY;
     }
 

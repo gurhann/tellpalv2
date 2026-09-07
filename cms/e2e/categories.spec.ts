@@ -12,7 +12,7 @@ type SessionPayload = {
 
 type CategoryReadResponse = {
   categoryId: number;
-  type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  type: "STORY" | "MEDITATION" | "LULLABY";
   slug: string;
   premium: boolean;
   active: boolean;
@@ -38,7 +38,7 @@ type CategoryCurationResponse = {
 
 type ContentReadResponse = {
   contentId: number;
-  type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  type: "STORY" | "MEDITATION" | "LULLABY";
   externalKey: string;
   active: boolean;
   ageRange: number;
@@ -428,7 +428,7 @@ test("category create, edit, and localize use content-aligned types", async ({
   await expect(page.getByRole("option", { name: /^Story$/ })).toBeVisible();
   await expect(
     page.getByRole("option", { name: /^Audio Story$/ }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(
     page.getByRole("option", { name: /^Meditation$/ }),
   ).toBeVisible();

@@ -208,7 +208,7 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           ctx.addIssue({ code: "custom", message: "Narration is only supported for stories.", path: ["narrationAudioMediaId"] });
         }
         if (
-          (contentType === "AUDIO_STORY" || contentType === "MEDITATION") &&
+          contentType === "MEDITATION" &&
           !values.bodyText
         ) {
           ctx.addIssue({

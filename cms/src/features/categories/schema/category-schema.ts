@@ -11,7 +11,6 @@ export const categoryTypeOptions: Array<{
   label: string;
 }> = [
   { value: "STORY", label: "Story" },
-  { value: "AUDIO_STORY", label: "Audio Story" },
   { value: "MEDITATION", label: "Meditation" },
   { value: "LULLABY", label: "Lullaby" },
 ];

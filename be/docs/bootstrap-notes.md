@@ -68,8 +68,8 @@ Current content localization validation rules to remember:
 - `STORY` localizations must not include `bodyText`.
 - Story narrative text belongs in `story_page_localizations`, not in
   `content_localizations`.
-- `AUDIO_STORY` and `MEDITATION` localizations require `bodyText`.
-- Non-story localizations require an `audioMediaId`.
+- `MEDITATION` localizations require `bodyText`.
+- `MEDITATION` and `LULLABY` localizations require an `audioMediaId`.
 - Story-page illustrations also belong in `story_page_localizations`.
 - Story-page localization save requires `illustrationMediaId`; there is no page-level fallback.
 - Local development can satisfy `audioMediaId` with `LOCAL_STUB`
@@ -109,6 +109,25 @@ order by c.id;
 
 `V17__align_category_types_with_content_types.sql` fails intentionally when this query returns any
 rows.
+
+### AUDIO_STORY removal preflight
+
+`V28__remove_audio_story_canonical_type.sql` is deliberately fail-fast. Before a production
+deployment, inspect all three blocker classes and stop for an approved data-mapping plan if any row
+is returned:
+
+```sql
+select id, external_key from contents where type = 'AUDIO_STORY';
+select id, slug from categories where type = 'AUDIO_STORY';
+select id, content_id, language_code, target_scope
+from asset_processing
+where content_type = 'AUDIO_STORY';
+```
+
+Do not delete or silently convert these rows. The new application binaries and V28 migration must
+be released together; a failed preflight is an intentional rollout blocker until the separately
+approved legacy import/cleanup plan is completed. Local and CI migration tests cover both the
+blocking and clean paths.
 
 ## Manual Bootstrap Expectations
 

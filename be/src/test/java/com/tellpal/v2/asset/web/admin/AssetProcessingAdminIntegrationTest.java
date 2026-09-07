@@ -159,6 +159,35 @@ class AssetProcessingAdminIntegrationTest extends AdminApiIntegrationTestSupport
     }
 
     @Test
+    void canonicalAudioStoryProcessingIsRejected() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(post("/api/admin/media-processing")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentId": 1,
+                                  "languageCode": "tr",
+                                  "contentType": "AUDIO_STORY",
+                                  "externalKey": "legacy-audio-processing"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/admin/media-processing/{contentId}/content/retry", 1)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "contentType": "AUDIO_STORY",
+                                  "externalKey": "legacy-audio-processing"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void localizationScheduleRequiresLanguageCode() throws Exception {
         String accessToken = authenticateAdmin();
 

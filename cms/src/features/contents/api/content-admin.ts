@@ -7,7 +7,6 @@ const registryPath = "/api/admin/content-registry";
 
 const contentTypeValues = [
   "STORY",
-  "AUDIO_STORY",
   "MEDITATION",
   "LULLABY",
 ] as const;

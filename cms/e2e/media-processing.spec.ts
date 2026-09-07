@@ -12,7 +12,7 @@ type SessionPayload = {
 
 type ContentReadResponse = {
   contentId: number;
-  type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  type: "STORY" | "MEDITATION" | "LULLABY";
   externalKey: string;
   active: boolean;
   ageRange: number | null;
@@ -39,7 +39,7 @@ type ProcessingResponse = {
   processingId: number;
   contentId: number;
   languageCode: string;
-  contentType: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  contentType: "STORY" | "MEDITATION" | "LULLABY";
   externalKey: string;
   coverSourceAssetId: number | null;
   audioSourceAssetId: number | null;

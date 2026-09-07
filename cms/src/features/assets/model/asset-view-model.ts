@@ -43,7 +43,6 @@ const assetMediaTypeLabels: Record<AssetMediaType, string> = {
 const processingContentTypeLabels: Record<AssetProcessingContentType, string> =
   {
     STORY: "Story",
-    AUDIO_STORY: "Audio Story",
     MEDITATION: "Meditation",
     LULLABY: "Lullaby",
   };

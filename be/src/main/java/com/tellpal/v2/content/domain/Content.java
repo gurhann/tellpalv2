@@ -589,10 +589,10 @@ public class Content extends BaseJpaEntity {
             }
             return;
         }
-        if ((type == ContentType.AUDIO_STORY || type == ContentType.MEDITATION) && !hasBodyText) {
-            throw new IllegalArgumentException("Body text is required for audio stories and meditations");
+        if (type == ContentType.MEDITATION && !hasBodyText) {
+            throw new IllegalArgumentException("Body text is required for meditations");
         }
-        if ((type == ContentType.AUDIO_STORY || type == ContentType.MEDITATION || type == ContentType.LULLABY)
+        if ((type == ContentType.MEDITATION || type == ContentType.LULLABY)
                 && !hasAudioMedia) {
             throw new IllegalArgumentException("Audio media is required for non-story content localizations");
         }

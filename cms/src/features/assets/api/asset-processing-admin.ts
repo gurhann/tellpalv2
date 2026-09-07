@@ -6,7 +6,6 @@ const basePath = "/api/admin/media-processing";
 
 const assetProcessingContentTypeValues = [
   "STORY",
-  "AUDIO_STORY",
   "MEDITATION",
   "LULLABY",
 ] as const;

@@ -15,7 +15,6 @@ import { mapLanguage } from "@/lib/languages";
 
 const contentTypeLabels: Record<ContentType, string> = {
   STORY: "Story",
-  AUDIO_STORY: "Audio Story",
   MEDITATION: "Meditation",
   LULLABY: "Lullaby",
 };

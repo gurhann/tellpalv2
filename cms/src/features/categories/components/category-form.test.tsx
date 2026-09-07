@@ -71,7 +71,9 @@ describe("CategoryForm", () => {
     fireEvent.click(screen.getByRole("combobox", { name: /category type/i }));
 
     expect(await screen.findByRole("option", { name: "Story" })).toBeVisible();
-    expect(screen.getByRole("option", { name: "Audio Story" })).toBeVisible();
+    expect(
+      screen.queryByRole("option", { name: "Audio Story" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Meditation" })).toBeVisible();
     expect(screen.getByRole("option", { name: "Lullaby" })).toBeVisible();
     expect(

@@ -47,7 +47,7 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
         long readyPageId = insertStoryPage(readyToPublishId, 1);
         insertStoryPageLocalization(readyPageId, "Hazir sayfa", 101L, 102L);
 
-        long publishedId = insertContent("AUDIO_STORY", "registry-published", true);
+        long publishedId = insertContent("MEDITATION", "registry-published", true);
         insertLocalization(publishedId, "PUBLISHED", "COMPLETED", "Yayindaki ses", "Aciklama", 200L);
 
         ContentRegistryReadRepository.RegistryPage actionRequiredPage = contentRegistryReadRepository.findPage(
@@ -101,7 +101,7 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
         ContentRegistryReadRepository.RegistryPage publishedPage = contentRegistryReadRepository.findPage(
                 new RegistryQuery(
                         LanguageCode.TR,
-                        ContentApiType.AUDIO_STORY,
+                        ContentApiType.MEDITATION,
                         AdminContentRegistryReadiness.PUBLISHED,
                         "published",
                         0,

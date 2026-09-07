@@ -44,3 +44,7 @@
 - source_spec: `spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
   summary: Admin content read içindeki çoklu collection fetch-join performans optimizasyonu ayrı read-model çalışmasına bırakıldı.
   evidence: Yeni enstrüman collection’ı mevcut localization fetch-join’ine eklendi; davranışsal doğruluk korunuyor, ancak yüksek localization/enstrüman sayılarında Cartesian sonuç üretme riski performans çalışması gerektiriyor.
+
+- source_spec: `spec-1-6-canonical-audio-story-turunu-guvenle-kaldirma.md`
+  summary: Public/mobile `experienceType: AUDIO_STORY` projection regression coverage sonraki endpoint/projection yol haritası çalışmasına bırakıldı.
+  evidence: Story 1.6 documented projection label’ı koruyor ancak public/mobile projection endpoint’lerini yeniden tasarlamıyor veya eklemiyor; bu story’de böyle bir implementation surface değişmedi.

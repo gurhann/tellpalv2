@@ -179,7 +179,8 @@ Kurallar:
 
 - `Content` ana aggregate root'tur.
 - `STORY` tipinde `page_count`, sayfa kümesiyle tutarlı olmak zorundadır.
-- `AUDIO_STORY`, `MEDITATION`, `LULLABY` için sayfa yönetimi kapalıdır.
+- `MEDITATION` ve `LULLABY` için sayfa yönetimi kapalıdır; bir `STORY` localization'ının sesli
+  deneyimi canonical içerik türü değildir.
 - Ninni enstrüman seçimi `Content` altında, dil bağımsız katalog kodlarıyla ve sıfırdan başlayan sıralı bağlantılarla tutulur; görünen adlar katalog localization satırlarından çözülür.
 - `MUSICIAN` contributor ilişkisi enstrüman kataloğundan ayrıdır ve enstrüman seçimi localization satırlarına kopyalanmaz.
 - Mobil görünürlük için yalnızca `status = PUBLISHED` yeterli değildir; ilgili localization ayrıca `processing_status = COMPLETED` olmalıdır.
@@ -197,7 +198,9 @@ Kurallar:
 - Kategori görünürlüğü dil bazlıdır.
 - Kürasyon kayıtları da dil bazlıdır.
 - Listeleme sırası dil ve kategori bağlamında sahiplenilir.
-- Category type is content-aligned: `STORY`, `AUDIO_STORY`, `MEDITATION`, `LULLABY`.
+- Category type is content-aligned: `STORY`, `MEDITATION`, `LULLABY`. `AUDIO_STORY` yalnızca
+  `STORY` narration'ından türeyen bir discovery/presentation deneyimi olabilir; canonical category
+  veya content type değildir.
 - Bir kategori yalnizca kendi type degeri ile ayni content type kayitlarini curate edebilir.
 
 ### 8.3 `asset` modülü

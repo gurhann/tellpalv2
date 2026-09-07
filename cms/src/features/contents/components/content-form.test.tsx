@@ -85,6 +85,30 @@ beforeEach(() => {
 });
 
 describe("ContentForm", () => {
+  it("shows only canonical content type options", async () => {
+    render(
+      <ContentForm
+        initialValues={{
+          type: "STORY",
+          externalKey: "",
+          ageRange: null,
+          active: true,
+          listeningCoverMediaId: null,
+        }}
+        mode="create"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("combobox", { name: /content type/i }));
+
+    expect(await screen.findByRole("option", { name: "Story" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Meditation" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Lullaby" })).toBeVisible();
+    expect(
+      screen.queryByRole("option", { name: "Audio Story" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("validates the external key before submit", async () => {
     const mutationState = makeSaveMutationState();
     saveContentHookMock.useSaveContent.mockReturnValue(mutationState);
@@ -186,9 +210,7 @@ describe("ContentForm", () => {
   });
 
   it("shows the listening cover selector only for supported content types", () => {
-    const renderUpdateForm = (
-      type: "STORY" | "MEDITATION" | "LULLABY" | "AUDIO_STORY",
-    ) =>
+    const renderUpdateForm = (type: "STORY" | "MEDITATION" | "LULLABY") =>
       render(
         <ContentForm
           contentId={1}
@@ -217,9 +239,6 @@ describe("ContentForm", () => {
     expect(screen.getByText("Listening cover")).toBeVisible();
 
     lullabyRender.unmount();
-    renderUpdateForm("AUDIO_STORY");
-
-    expect(screen.queryByText("Listening cover")).not.toBeInTheDocument();
   });
 
   it("submits editable metadata and the selected listening cover in update mode", async () => {

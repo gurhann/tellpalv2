@@ -6,7 +6,6 @@ const basePath = "/api/admin/categories";
 
 const categoryTypeValues = [
   "STORY",
-  "AUDIO_STORY",
   "MEDITATION",
   "LULLABY",
 ] as const;

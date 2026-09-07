@@ -29,7 +29,7 @@ type ContentContributorRecord = {
 
 type ContentReadResponse = {
   contentId: number;
-  type: "STORY" | "AUDIO_STORY" | "MEDITATION" | "LULLABY";
+  type: "STORY" | "MEDITATION" | "LULLABY";
   externalKey: string;
   active: boolean;
   ageRange: number | null;

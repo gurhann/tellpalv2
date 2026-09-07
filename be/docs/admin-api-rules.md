@@ -127,8 +127,8 @@ stack.
 
 - `STORY` content localization must not store `bodyText`.
 - `STORY` content localization must not store a single `audioMediaId`.
-- `AUDIO_STORY` and `MEDITATION` content localization require `bodyText`.
-- `AUDIO_STORY`, `MEDITATION`, and `LULLABY` content localization require `audioMediaId`.
+- `MEDITATION` content localization requires `bodyText`.
+- `MEDITATION` and `LULLABY` content localization require `audioMediaId`.
 - `publishedAt` is mandatory whenever a content localization is created or updated with
   `status=PUBLISHED`.
 
@@ -160,7 +160,7 @@ stack.
   Sending `null` explicitly also clears the reference. Cover clearing does not alter publication
   visibility, localization processing status, or create an asset-processing job.
 - Database constraints additionally prevent a non-`STORY` row from storing
-  `textlessCoverMediaId`, and prevent `AUDIO_STORY` rows from storing `listeningCoverMediaId`.
+  `textlessCoverMediaId`.
 - Story page illustration ownership is localization-scoped. There is no page-level illustration
   fallback at runtime.
 - Story page localization `audioMediaId` must reference an asset with media type `AUDIO`.
@@ -209,7 +209,7 @@ stack.
 - The backend does not auto-seed CMS content.
 - For local verification, prepare at least:
   - one active `STORY` item with one or more story pages
-  - one active non-story item such as `MEDITATION` or `AUDIO_STORY`
+  - one active non-story item such as `MEDITATION` or `LULLABY`
   - one inactive content item to verify admin-only visibility
 - If story-page illustration editing is in scope, register at least one `IMAGE`
   asset as local sample data. Audio-only sample assets are not enough for story
@@ -218,16 +218,16 @@ stack.
   not in the content localization body fields.
 - Story seed data must also place page illustrations in `story_page_localizations`. Existing page
   rows no longer own a shared illustration field.
-- Non-story content seed data should use a valid audio asset because `AUDIO_STORY`,
-  `MEDITATION`, and `LULLABY` localizations require `audioMediaId`.
+- Non-story content seed data should use a valid audio asset because `MEDITATION` and `LULLABY`
+  localizations require `audioMediaId`.
 - `LOCAL_STUB` assets are valid for local sample content and processing tests.
 
 ### Frontend Form and Query Implications
 
 - Content type selection must drive field visibility before submit:
   - `STORY` hides content-level body and single-audio inputs
-  - `AUDIO_STORY` and `MEDITATION` require body text
-  - `AUDIO_STORY`, `MEDITATION`, and `LULLABY` require audio asset selection
+  - `MEDITATION` requires body text
+  - `MEDITATION` and `LULLABY` require audio asset selection
 - Content list screens must not assume only active rows are returned.
 - Content detail screens can render localization snapshots from `GET /api/admin/contents/{id}`,
   including `visibleToMobile`, without extra localization-read endpoints.
@@ -446,8 +446,7 @@ stack.
 ### Type and State Rules
 
 - Category slug is trimmed and must not be blank.
-- Category `type` is content-aligned. The allowed values are `STORY`, `AUDIO_STORY`, `MEDITATION`,
-  and `LULLABY`.
+- Category `type` is content-aligned. The allowed values are `STORY`, `MEDITATION`, and `LULLABY`.
 - Category delete is a soft-delete/state transition that sets `active=false` and preserves
   localizations plus curated content history for admin reads.
 - Category localization `name` is trimmed and must not be blank.
@@ -503,7 +502,7 @@ stack.
 ### Local Sample Seed Notes
 
 - Seed at least one category with a published localization before testing curation.
-- Category seed data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`.
+- Category seed data must use one of `STORY`, `MEDITATION`, or `LULLABY`.
 - Seed at least one active content item with a published localization in the same language before
   adding it to category curation.
 - If local category tests use story content, a published content localization is enough for curation.

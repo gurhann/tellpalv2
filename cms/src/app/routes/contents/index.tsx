@@ -21,9 +21,10 @@ import { ContentForm } from "@/features/contents/components/content-form";
 import { ContentListTable } from "@/features/contents/components/content-list-table";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { useContentRegistry } from "@/features/contents/queries/use-content-registry";
-import type {
-  ContentRegistryReadiness,
-  ContentType,
+import {
+  contentTypeSchema,
+  type ContentRegistryReadiness,
+  type ContentType,
 } from "@/features/contents/api/content-admin";
 import { useI18n } from "@/i18n/locale-provider";
 import { getCreateContentFormDefaults } from "@/features/contents/schema/content-schema";
@@ -31,7 +32,6 @@ import { getCreateContentFormDefaults } from "@/features/contents/schema/content
 const types: Array<ContentType | "ALL"> = [
   "ALL",
   "STORY",
-  "AUDIO_STORY",
   "MEDITATION",
   "LULLABY",
 ];
@@ -47,7 +47,10 @@ export function ContentsIndexRoute() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const language = searchParams.get("language") ?? "tr";
-  const type = (searchParams.get("type") ?? "ALL") as ContentType | "ALL";
+  const requestedType = searchParams.get("type");
+  const type: ContentType | "ALL" = contentTypeSchema.safeParse(requestedType).success
+    ? (requestedType as ContentType)
+    : "ALL";
   const readiness = (searchParams.get("readiness") ?? "ALL") as
     | ContentRegistryReadiness
     | "ALL";

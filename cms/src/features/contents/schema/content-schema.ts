@@ -31,7 +31,6 @@ function parseAgeRange(value: unknown) {
 export const contentTypeOptions: Array<{ value: ContentType; label: string }> =
   [
     { value: "STORY", label: "Story" },
-    { value: "AUDIO_STORY", label: "Audio Story" },
     { value: "MEDITATION", label: "Meditation" },
     { value: "LULLABY", label: "Lullaby" },
   ];

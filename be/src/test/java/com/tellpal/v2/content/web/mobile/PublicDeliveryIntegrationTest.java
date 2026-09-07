@@ -159,6 +159,19 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
     }
 
     @Test
+    void canonicalAudioStoryFiltersAreRejected() throws Exception {
+        mockMvc.perform(get("/api/contents")
+                        .queryParam("lang", "tr")
+                        .queryParam("type", "AUDIO_STORY"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/api/categories")
+                        .queryParam("lang", "tr")
+                        .queryParam("type", "AUDIO_STORY"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void categoryEndpointsReturnPublishedCategoriesAndPreserveCuratedOrder() throws Exception {
         ContentSeed second = createReadyStory("forest-story", LanguageCode.TR, "Orman");
         ContentSeed first = createReadyStory("moonlight-story", LanguageCode.TR, "Ay Isigi");

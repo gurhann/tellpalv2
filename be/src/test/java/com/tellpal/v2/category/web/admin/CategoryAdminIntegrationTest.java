@@ -90,6 +90,58 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void canonicalAudioStoryCreateIsRejected() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "legacy-audio-category",
+                                  "type": "AUDIO_STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void canonicalAudioStoryUpdateIsRejected() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/categories")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "editable-category",
+                                  "type": "STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long categoryId = readPayload(createResult).get("categoryId").asLong();
+
+        mockMvc.perform(put("/api/admin/categories/{categoryId}", categoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "slug": "editable-category",
+                                  "type": "AUDIO_STORY",
+                                  "premium": false,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void categoryListReturnsActiveAndInactiveRecordsForAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
 
@@ -590,7 +642,7 @@ class CategoryAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 languageCode,
                 "Story " + externalKey,
                 null,
-                contentType == ContentType.MEDITATION || contentType == ContentType.AUDIO_STORY
+                contentType == ContentType.MEDITATION
                         ? "Body " + externalKey
                         : null,
                 null,

@@ -12,7 +12,6 @@ import { mapLanguage, supportedCmsLanguageOptions } from "@/lib/languages";
 
 const categoryTypeLabels: Record<CategoryType, string> = {
   STORY: "Story",
-  AUDIO_STORY: "Audio Story",
   MEDITATION: "Meditation",
   LULLABY: "Lullaby",
 };

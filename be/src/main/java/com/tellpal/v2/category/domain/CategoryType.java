@@ -10,7 +10,6 @@ import com.tellpal.v2.content.api.ContentApiType;
 public enum CategoryType {
 
     STORY,
-    AUDIO_STORY,
     MEDITATION,
     LULLABY;
 

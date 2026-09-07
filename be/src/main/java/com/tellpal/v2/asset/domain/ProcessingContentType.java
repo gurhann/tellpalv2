@@ -3,7 +3,6 @@ package com.tellpal.v2.asset.domain;
 public enum ProcessingContentType {
 
     STORY,
-    AUDIO_STORY,
     MEDITATION,
     LULLABY;
 
@@ -12,6 +11,6 @@ public enum ProcessingContentType {
     }
 
     public boolean requiresSingleAudioAsset() {
-        return this == AUDIO_STORY || this == MEDITATION || this == LULLABY;
+        return this == MEDITATION || this == LULLABY;
     }
 }

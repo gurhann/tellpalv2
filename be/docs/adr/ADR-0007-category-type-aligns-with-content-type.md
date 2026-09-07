@@ -2,13 +2,13 @@
 
 ## Status
 
-Accepted
+Superseded by ADR-0012
 
 ## Context
 
 The first category model exposed `CONTENT` and `PARENT_GUIDANCE` as category types. That split
-does not match the editorial workflows used by the CMS because story, audio story, meditation, and
-lullaby content each need their own curated category families. The old model also allowed one
+does not match the editorial workflows used by the CMS because story, meditation, and lullaby
+content need their own curated category families. The old model also allowed one
 category to mix incompatible content types because curation validated only language publication and
 active state.
 
@@ -19,7 +19,6 @@ Category type now aligns directly with content type.
 The category aggregate and its external contracts use these values:
 
 - `STORY`
-- `AUDIO_STORY`
 - `MEDITATION`
 - `LULLABY`
 
@@ -33,7 +32,9 @@ The project adopts these defaults:
   migration can succeed
 - empty or mixed-type legacy `CONTENT` categories also block the migration
 
-No backward-compatible alias is kept in admin or mobile APIs.
+No backward-compatible canonical type alias is kept in admin or mobile APIs. A later discovery
+projection may still label a STORY localization's narration experience separately; that label is
+not a category or content type alias.
 
 ## Consequences
 
@@ -63,4 +64,4 @@ No backward-compatible alias is kept in admin or mobile APIs.
 
 ## Supersedes / Superseded By
 
-- None
+- `ADR-0012-remove-audio-story-canonical-type.md`
