@@ -32,3 +32,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
   summary: Katalog kaydının pasifleştirilmesinin mevcut seçimlere etkisi ve veritabanı seviyesinde aktif katalog zorlaması ayrı emeklilik politikasıyla ele alınacak.
   evidence: Selection write aktif olmayan kodu reddediyor; ancak emeklilik/silme davranışı frozen scope içinde deferred-work’e taşındı.
+
+## Deferred from: code review of spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme (2026-09-07)
+
+- source_spec: `spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: LULLABY yayınlama readiness akışında en az bir enstrüman zorunluluğu ayrı yayınlama çalışmasına bırakıldı.
+  evidence: `ContentPublicationPolicy` non-STORY akışını mevcut haliyle kabul ediyor; Story 1.5 frozen scope’u selection ve admin sözleşmesiyle sınırlı, public/mobile yayın kapsamı dışarıda.
+- source_spec: `spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: Pasif katalog kaydının mevcut linklere ve doğrudan SQL yazımlarına etkisi ayrı katalog emeklilik politikasıyla ele alınacak.
+  evidence: Uygulama yeni seçimlerde inactive kodu reddediyor, fakat retire/delete davranışı bu story’de açıkça deferred-work’e taşındı.
+- source_spec: `spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: Admin content read içindeki çoklu collection fetch-join performans optimizasyonu ayrı read-model çalışmasına bırakıldı.
+  evidence: Yeni enstrüman collection’ı mevcut localization fetch-join’ine eklendi; davranışsal doğruluk korunuyor, ancak yüksek localization/enstrüman sayılarında Cartesian sonuç üretme riski performans çalışması gerektiriyor.

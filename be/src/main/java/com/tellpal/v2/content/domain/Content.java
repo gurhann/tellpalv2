@@ -179,6 +179,9 @@ public class Content extends BaseJpaEntity {
             if (catalog == null) {
                 throw new IllegalArgumentException("Instrument catalog must not be null");
             }
+            if (catalog.getId() == null || catalog.getId() <= 0) {
+                throw new IllegalArgumentException("Instrument catalog must be persisted before selection");
+            }
             if (!catalog.isActive()) {
                 throw new IllegalArgumentException("Instrument catalog is retired: " + catalog.getCode());
             }

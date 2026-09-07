@@ -108,3 +108,16 @@ Seçim ilişkilerini `Content` aggregate’ine bağlamak Story 1.4’teki ortak 
 
 - Integration tests cover reorder, invalid-update preservation, locale-label failures, and playback projection.
   [`ContentAdminIntegrationTest.java:1009`](../../be/src/test/java/com/tellpal/v2/content/web/admin/ContentAdminIntegrationTest.java#L1009)
+
+### Review Findings
+
+- [x] [Review][Dismiss] Primary admin projection locale davranışı — karar: ana content projection locale’siz kalır; `displayName` yalnız locale parametreli instrument endpointinde çözülür.
+- [x] [Review][Dismiss] Playback öncesi enstrüman seçimi — karar: playback öncesi seçim desteklenir; playback yoksa ana projection’da playback alanının görünmemesi kabul edilir.
+- [x] [Review][Patch] Veritabanı display order değerlerini sıfırdan başlayan contiguous sıra olarak doğrula [be/src/main/resources/db/migration/V27__harden_lullaby_instrument_invariants.sql:17]
+- [x] [Review][Patch] Content type trigger’larında yarış durumunu row lock ile kapat [be/src/main/resources/db/migration/V27__harden_lullaby_instrument_invariants.sql:1]
+- [x] [Review][Patch] Aggregate’a unsaved/detached instrument catalog bağlanmasını reddet [be/src/main/java/com/tellpal/v2/content/domain/Content.java:172]
+- [x] [Review][Patch] Catalog listeleme endpointinin ContentAdminController içindeki yinelenen yüzeyini kaldır [be/src/main/java/com/tellpal/v2/content/web/admin/ContentAdminController.java:173]
+- [x] [Review][Patch] HTTP sınırında duplicate/non-LULLABY rejection, MUSICIAN ayrımı, tüm katalog sırası ve locale’ler arası ortak seçim için regression testleri ekle [be/src/test/java/com/tellpal/v2/content/web/admin/ContentAdminIntegrationTest.java:1009]
+- [x] [Review][Defer] LULLABY yayınlama readiness’inde en az bir enstrüman zorunluluğu [be/src/main/java/com/tellpal/v2/content/domain/ContentPublicationPolicy.java:21] — deferred, pre-existing
+- [x] [Review][Defer] Pasif katalog kaydının mevcut linkler ve doğrudan SQL yazımları üzerindeki emeklilik politikası [be/src/main/resources/db/migration/V26__add_lullaby_instrument_catalog.sql:28] — deferred, pre-existing
+- [x] [Review][Defer] Çoklu collection fetch-join kaynaklı admin read Cartesian/performance optimizasyonu [be/src/main/java/com/tellpal/v2/content/infrastructure/persistence/SpringDataContentRepository.java:20] — deferred, pre-existing

@@ -87,6 +87,22 @@ class InstrumentCatalogMigrationIntegrationTest {
                 """))
                 .hasMessageContaining("chk_instrument_catalogs_code_normalized");
 
+        long nonContiguousLullabyId = insertContent("LULLABY", "non-contiguous-instrument-order");
+        assertThatThrownBy(() -> execute("""
+                insert into lullaby_instruments (content_id, instrument_catalog_id, display_order)
+                values (%d, %d, 1)
+                """.formatted(nonContiguousLullabyId, firstCatalogId)))
+                .hasMessageContaining("zero-based and contiguous");
+
+        long duplicateCatalogLullabyId = insertContent("LULLABY", "duplicate-instrument-catalog");
+        execute("insert into lullaby_instruments (content_id, instrument_catalog_id, display_order) values (%d, %d, 0)"
+                .formatted(duplicateCatalogLullabyId, firstCatalogId));
+        assertThatThrownBy(() -> execute("""
+                insert into lullaby_instruments (content_id, instrument_catalog_id, display_order)
+                values (%d, %d, 1)
+                """.formatted(duplicateCatalogLullabyId, firstCatalogId)))
+                .hasMessageContaining("uk_lullaby_instruments_content_catalog");
+
         assertThatThrownBy(() -> execute("update contents set type = 'STORY' where id = " + lullabyId))
                 .hasMessageContaining("cannot leave LULLABY");
     }

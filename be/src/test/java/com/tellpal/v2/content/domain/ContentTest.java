@@ -290,6 +290,15 @@ class ContentTest {
         content.assignContributor(musician, ContributorRole.MUSICIAN, null, null);
         assertThat(content.getContributors()).hasSize(1);
         assertThat(content.getContributors().iterator().next().getLanguageCode()).isNull();
+
+        InstrumentCatalog celesta = persistedInstrument(1L, "CELESTA");
+        content.replaceLullabyInstruments(List.of(celesta));
+        assertThat(content.getContributors()).extracting(ContentContributor::getContributor)
+                .extracting(Contributor::getDisplayName)
+                .containsExactly("Ninni Muzisyeni");
+        assertThat(content.getOrderedLullabyInstruments())
+                .extracting(instrument -> instrument.getInstrumentCatalog().getCode())
+                .containsExactly("CELESTA");
     }
 
     @Test
@@ -312,6 +321,10 @@ class ContentTest {
         assertThat(content.getOrderedLullabyInstruments())
                 .extracting(instrument -> instrument.getInstrumentCatalog().getCode())
                 .containsExactly("CELESTA", "BELL");
+
+        assertThatThrownBy(() -> content.replaceLullabyInstruments(List.of(InstrumentCatalog.create("RHODES"))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must be persisted");
     }
 
     @Test
