@@ -149,6 +149,26 @@ public class ContentAdminController {
         return AdminContentResponse.from(contentManagementService.updateContent(request.toCommand(contentId)));
     }
 
+    @PutMapping({"/{contentId}/playback", "/{contentId}/lullaby-playback"})
+    @Operation(
+            summary = "Update lullaby playback",
+            description = "Creates or updates the single shared audio source for LULLABY content.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lullaby playback updated"),
+            @ApiResponse(responseCode = "400", description = "Playback request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Playback processing conflicts with the current job state", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public AdminLullabyPlaybackResponse updateLullabyPlayback(
+            @PathVariable Long contentId,
+            @Valid @RequestBody UpdateLullabyPlaybackRequest request) {
+        return AdminLullabyPlaybackResponse.from(contentManagementService.upsertLullabyPlayback(
+                contentId,
+                request.toCommand()));
+    }
+
     @PostMapping("/{contentId}/localizations/{languageCode}")
     @Operation(summary = "Create content localization", description = "Creates one localized content representation for a language.")
     @ApiResponses({
@@ -286,7 +306,6 @@ record UpsertContentLocalizationRequest(
         Integer durationMinutes,
         @NotNull(message = "status is required")
         LocalizationStatus status,
-        @NotNull(message = "processingStatus is required")
         ProcessingStatus processingStatus,
         java.time.Instant publishedAt,
         @Valid StoryNarrationRequest narration) {
@@ -328,6 +347,19 @@ record UpsertContentLocalizationRequest(
                 processingStatus,
                 publishedAt,
                 narration == null ? null : narration.toCommand());
+    }
+}
+
+record UpdateLullabyPlaybackRequest(
+        @NotNull(message = "audioMediaId is required")
+        @Positive(message = "audioMediaId must be positive")
+        Long audioMediaId,
+        @NotNull(message = "durationMinutes is required")
+        @Min(value = 0, message = "durationMinutes must not be negative")
+        Integer durationMinutes) {
+
+    ContentManagementCommands.LullabyPlaybackCommand toCommand() {
+        return new ContentManagementCommands.LullabyPlaybackCommand(audioMediaId, durationMinutes);
     }
 }
 

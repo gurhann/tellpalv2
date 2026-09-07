@@ -28,6 +28,8 @@ import com.tellpal.v2.content.application.ContentApplicationExceptions.Contribut
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorRoleNotSupportedException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.ContributorAssignmentLanguageNotFoundException;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.DuplicateContributorAssignmentException;
+import com.tellpal.v2.content.application.ContentApplicationExceptions.GlobalMusicianLanguageNotAllowedException;
+import com.tellpal.v2.asset.api.AssetProcessingConflictException;
 import com.tellpal.v2.shared.web.admin.AdminProblemDetailsFactory;
 
 @RestControllerAdvice(basePackageClasses = {
@@ -256,6 +258,20 @@ public class ContentAdminExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(GlobalMusicianLanguageNotAllowedException.class)
+    ProblemDetail handleGlobalMusicianLanguageNotAllowed(
+            GlobalMusicianLanguageNotAllowedException exception,
+            HttpServletRequest request) {
+        ProblemDetail problem = problemDetailsFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Lullaby musician must be global",
+                exception.getMessage(),
+                "lullaby_musician_must_be_global",
+                request);
+        problem.setProperty("fieldErrors", Map.of("languageCode", exception.getMessage()));
+        return problem;
+    }
+
     @ExceptionHandler(AssetMediaTypeMismatchException.class)
     ProblemDetail handleAssetMediaTypeMismatch(
             AssetMediaTypeMismatchException exception,
@@ -277,6 +293,16 @@ public class ContentAdminExceptionHandler {
                 "Content state conflict",
                 exception.getMessage(),
                 "content_state_conflict",
+                request);
+    }
+
+    @ExceptionHandler(AssetProcessingConflictException.class)
+    ProblemDetail handleProcessingConflict(AssetProcessingConflictException exception, HttpServletRequest request) {
+        return problemDetailsFactory.create(
+                HttpStatus.CONFLICT,
+                "Asset processing conflict",
+                exception.getMessage(),
+                "asset_processing_conflict",
                 request);
     }
 }

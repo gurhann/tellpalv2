@@ -141,6 +141,14 @@ public class ContentLocalization extends BaseJpaEntity {
         return status == LocalizationStatus.PUBLISHED && processingStatus == ProcessingStatus.COMPLETED;
     }
 
+    /** Returns visibility using an externally owned processing status for shared playback types. */
+    public boolean isVisibleToMobile(ProcessingStatus effectiveProcessingStatus) {
+        if (effectiveProcessingStatus == null) {
+            throw new IllegalArgumentException("Effective processing status must not be null");
+        }
+        return status == LocalizationStatus.PUBLISHED && effectiveProcessingStatus == ProcessingStatus.COMPLETED;
+    }
+
     /**
      * Updates localized text and asset references without changing workflow state.
      */
@@ -151,6 +159,15 @@ public class ContentLocalization extends BaseJpaEntity {
             Long coverMediaId,
             Long audioMediaId,
             Integer durationMinutes) {
+        if (content.getType() == ContentType.LULLABY
+                && (description != null
+                        || bodyText != null
+                        || coverMediaId != null
+                        || audioMediaId != null
+                        || durationMinutes != null)) {
+            throw new IllegalArgumentException(
+                    "Lullaby localizations only support title and publication state");
+        }
         this.title = requireText(title, "Content localization title must not be blank");
         this.description = normalizeOptionalText(description);
         this.bodyText = normalizeOptionalText(bodyText);

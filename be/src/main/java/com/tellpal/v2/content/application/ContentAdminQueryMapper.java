@@ -5,9 +5,11 @@ import java.util.Comparator;
 import com.tellpal.v2.content.api.AdminContentLocalizationView;
 import com.tellpal.v2.content.api.AdminContentView;
 import com.tellpal.v2.content.api.AdminStoryNarrationView;
+import com.tellpal.v2.content.api.AdminLullabyPlaybackView;
 import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
+import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
 
@@ -21,6 +23,8 @@ final class ContentAdminQueryMapper {
 
     AdminContentView toView(Content content) {
         Long contentId = requireContentId(content);
+        var playback = content.getLullabyPlayback();
+        var processing = playback == null ? null : assetProcessingApi.findByContent(contentId).orElse(null);
         return new AdminContentView(
                 contentId,
                 ContentApiType.valueOf(content.getType().name()),
@@ -30,17 +34,34 @@ final class ContentAdminQueryMapper {
                 content.getPageCount(),
                 content.getTextlessCoverMediaId(),
                 content.getListeningCoverMediaId(),
+                playback == null ? null : new AdminLullabyPlaybackView(
+                        playback.getAudioMediaId(),
+                        playback.getDurationMinutes(),
+                        processing == null ? null : processing.status().name(),
+                        processing == null ? null : processing.lastErrorMessage() != null
+                                ? processing.lastErrorMessage() : processing.lastErrorCode()),
                 content.getLocalizations().stream()
                         .sorted(Comparator.comparing(localization -> localization.getLanguageCode().value()))
-                        .map(localization -> toLocalizationView(contentId, localization))
+                        .map(localization -> toLocalizationView(content, contentId, localization, processing))
                         .toList());
     }
 
-    private AdminContentLocalizationView toLocalizationView(Long contentId, ContentLocalization localization) {
+    private AdminContentLocalizationView toLocalizationView(
+            Content content,
+            Long contentId,
+            ContentLocalization localization,
+            com.tellpal.v2.asset.api.AssetProcessingRecord sharedProcessing) {
         var narration = localization.getNarration();
         var processing = narration == null ? null : assetProcessingApi.findByTarget(
                 com.tellpal.v2.asset.api.AssetProcessingTarget.localization(contentId, localization.getLanguageCode()),
                 AssetProcessingKind.STORY_NARRATION).orElse(null);
+        var effectiveProcessing = content.getType() == ContentType.LULLABY && sharedProcessing != null
+                ? sharedProcessing.status().name()
+                : localization.getProcessingStatus().name();
+        var visibleToMobile = content.getType() == ContentType.LULLABY && sharedProcessing != null
+                ? localization.isVisibleToMobile(
+                        com.tellpal.v2.content.domain.ProcessingStatus.valueOf(effectiveProcessing))
+                : localization.isVisibleToMobile();
         return new AdminContentLocalizationView(
                 contentId,
                 localization.getLanguageCode(),
@@ -51,9 +72,9 @@ final class ContentAdminQueryMapper {
                 localization.getAudioMediaId(),
                 localization.getDurationMinutes(),
                 localization.getStatus().name(),
-                localization.getProcessingStatus().name(),
+                effectiveProcessing,
                 localization.getPublishedAt(),
-                localization.isVisibleToMobile(),
+                visibleToMobile,
                 narration == null ? null : new AdminStoryNarrationView(
                         narration.getAudioMediaId(), narration.getDurationMinutes(),
                         processing == null ? null : processing.status().name(),

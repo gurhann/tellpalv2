@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.application;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
+import com.tellpal.v2.asset.api.AssetProcessingConflictException;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
 
 public final class AssetProcessingApplicationExceptions {
@@ -19,7 +20,7 @@ public final class AssetProcessingApplicationExceptions {
         }
     }
 
-    public static final class AssetProcessingAlreadyRunningException extends RuntimeException {
+    public static final class AssetProcessingAlreadyRunningException extends AssetProcessingConflictException {
 
         public AssetProcessingAlreadyRunningException(AssetProcessingTarget target) {
             super("Asset processing is already running for " + describe(target));
@@ -30,7 +31,7 @@ public final class AssetProcessingApplicationExceptions {
         }
     }
 
-    public static final class AssetProcessingAlreadyPendingException extends RuntimeException {
+    public static final class AssetProcessingAlreadyPendingException extends AssetProcessingConflictException {
 
         public AssetProcessingAlreadyPendingException(AssetProcessingTarget target) {
             super("Asset processing is already pending for " + describe(target));
@@ -41,7 +42,7 @@ public final class AssetProcessingApplicationExceptions {
         }
     }
 
-    public static final class AssetProcessingAlreadyCompletedException extends RuntimeException {
+    public static final class AssetProcessingAlreadyCompletedException extends AssetProcessingConflictException {
 
         public AssetProcessingAlreadyCompletedException(AssetProcessingTarget target) {
             super("Asset processing is already completed for " + describe(target));
@@ -52,7 +53,7 @@ public final class AssetProcessingApplicationExceptions {
         }
     }
 
-    public static final class AssetProcessingRetryRequiredException extends RuntimeException {
+    public static final class AssetProcessingRetryRequiredException extends AssetProcessingConflictException {
 
         public AssetProcessingRetryRequiredException(AssetProcessingTarget target) {
             super("Asset processing must be retried before it can be scheduled again for " + describe(target));

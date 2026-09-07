@@ -13,6 +13,7 @@ public record AdminContentReadResponse(
         Integer pageCount,
         Long textlessCoverMediaId,
         Long listeningCoverMediaId,
+        com.tellpal.v2.content.api.AdminLullabyPlaybackView playback,
         List<AdminContentLocalizationResponse> localizations) {
 
     static AdminContentReadResponse from(AdminContentView view) {
@@ -25,6 +26,7 @@ public record AdminContentReadResponse(
                 view.pageCount(),
                 view.textlessCoverMediaId(),
                 view.listeningCoverMediaId(),
+                view.playback(),
                 view.localizations().stream()
                         .map(AdminContentLocalizationResponse::from)
                         .toList());

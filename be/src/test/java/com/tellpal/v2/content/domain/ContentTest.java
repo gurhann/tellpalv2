@@ -235,6 +235,51 @@ class ContentTest {
                 .hasMessageContaining("non-negative");
     }
 
+    @Test
+    void lullabyLocalizationOwnsOnlyTitleAndPlaybackIsSharedAtContentLevel() {
+        Content content = Content.create(ContentType.LULLABY, "shared-lullaby", 2, true);
+
+        ContentLocalization localization = content.upsertLocalization(
+                LanguageCode.TR, "Gece Ninnisi", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+        content.upsertLocalization(
+                LanguageCode.EN, "Night Lullaby", null, null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null);
+
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR, "Gece Ninnisi", "aciklama", null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("title and publication state");
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR, "Gece Ninnisi", " ", null, null, null, null,
+                LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("title and publication state");
+
+        content.upsertLullabyPlayback(41L, 10);
+
+        assertThat(content.getLullabyPlayback().getAudioMediaId()).isEqualTo(41L);
+        assertThat(localization.getAudioMediaId()).isNull();
+        assertThat(localization.getDurationMinutes()).isNull();
+    }
+
+    @Test
+    void lullabyMusicianAssignmentMustBeGlobal() {
+        Content content = Content.create(ContentType.LULLABY, "lullaby-musician-scope", 2, true);
+        Contributor musician = Contributor.create("Ninni Muzisyeni", Set.of(ContributorRole.MUSICIAN));
+        ReflectionTestUtils.setField(musician, "id", 1L);
+
+        assertThatThrownBy(() -> content.assignContributor(
+                musician, ContributorRole.MUSICIAN, LanguageCode.TR, null))
+                .isInstanceOf(Content.GlobalMusicianLanguageNotAllowedException.class)
+                .hasMessageContaining("must be global");
+
+        content.assignContributor(musician, ContributorRole.MUSICIAN, null, null);
+        assertThat(content.getContributors()).hasSize(1);
+        assertThat(content.getContributors().iterator().next().getLanguageCode()).isNull();
+    }
+
     private static Contributor persistedContributor(Long contributorId, String displayName) {
         Contributor contributor = Contributor.create(displayName, Set.of(ContributorRole.AUTHOR));
         ReflectionTestUtils.setField(contributor, "id", contributorId);

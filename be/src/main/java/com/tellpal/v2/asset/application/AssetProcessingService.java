@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand;
@@ -221,7 +222,7 @@ public class AssetProcessingService implements AssetProcessingApi {
             throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.COMPLETED) {
-            if (command.kind() == AssetProcessingKind.STORY_NARRATION) {
+            if (isReschedulableSourceChange(command)) {
                 assetProcessing.refreshContext(
                         ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
                         command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
@@ -232,7 +233,7 @@ public class AssetProcessingService implements AssetProcessingApi {
             }
             throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
         }
-        if (command.kind() == AssetProcessingKind.STORY_NARRATION) {
+        if (isReschedulableSourceChange(command)) {
             assetProcessing.refreshContext(
                     ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
                     command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
@@ -242,6 +243,13 @@ public class AssetProcessingService implements AssetProcessingApi {
             return AssetProcessingMapper.toRecord(saved);
         }
         throw new AssetProcessingRetryRequiredException(assetProcessing.getTarget());
+    }
+
+    private static boolean isReschedulableSourceChange(ScheduleAssetProcessingCommand command) {
+        return command.kind() == AssetProcessingKind.STORY_NARRATION
+                || (command.kind() == AssetProcessingKind.DELIVERY
+                        && command.target().isContent()
+                        && command.contentType() == AssetProcessingContentType.LULLABY);
     }
 
     private AssetProcessing loadProcessing(AssetProcessingTarget target, AssetProcessingKind kind) {

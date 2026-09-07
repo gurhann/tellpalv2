@@ -1,5 +1,7 @@
 package com.tellpal.v2.content.application;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +16,14 @@ import com.tellpal.v2.content.application.ContentManagementCommands.DeleteConten
 import com.tellpal.v2.content.application.ContentManagementCommands.MarkContentLocalizationProcessingCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.LullabyPlaybackRecord;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.ProcessingStatus;
+import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
@@ -72,9 +77,18 @@ public class ContentManagementService {
         ensureExternalKeyAvailable(command.contentId(), command.externalKey());
         assetReferenceValidator.requireImageAsset(command.textlessCoverMediaId(), "textlessCoverMediaId");
         assetReferenceValidator.requireImageAsset(command.listeningCoverMediaId(), "listeningCoverMediaId");
+        boolean externalKeyChanged = !Objects.equals(content.getExternalKey(), command.externalKey());
+        boolean listeningCoverChanged = !Objects.equals(
+                content.getListeningCoverMediaId(), command.listeningCoverMediaId());
         content.updateDetails(command.externalKey(), command.ageRange(), command.active());
         content.updateCoverMediaIds(command.textlessCoverMediaId(), command.listeningCoverMediaId());
-        return ContentApiMapper.toReference(contentRepository.save(content));
+        Content savedContent = contentRepository.save(content);
+        if (savedContent.getType() == ContentType.LULLABY
+                && savedContent.getLullabyPlayback() != null
+                && (externalKeyChanged || listeningCoverChanged)) {
+            scheduleLullabyProcessing(savedContent, true);
+        }
+        return ContentApiMapper.toReference(savedContent);
     }
 
     /**
@@ -96,6 +110,7 @@ public class ContentManagementService {
         if (content.findLocalization(command.languageCode()).isPresent()) {
             throw new ContentLocalizationAlreadyExistsException(command.contentId(), command.languageCode());
         }
+        ProcessingStatus processingStatus = resolveLocalizationProcessingStatus(content, command.processingStatus());
         validateLocalizationAssets(command.coverMediaId(), command.audioMediaId());
         ContentLocalization localization = content.upsertLocalization(
                 command.languageCode(),
@@ -106,7 +121,7 @@ public class ContentManagementService {
                 command.audioMediaId(),
                 command.durationMinutes(),
                 command.status(),
-                command.processingStatus(),
+                processingStatus,
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
@@ -121,6 +136,7 @@ public class ContentManagementService {
     public ContentLocalizationRecord updateLocalization(UpdateContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
         ContentLocalization existingLocalization = loadLocalization(content, command.languageCode());
+        ProcessingStatus processingStatus = resolveLocalizationProcessingStatus(content, command.processingStatus());
         boolean narrationChanged = narrationChanged(existingLocalization, command.narration());
         validateLocalizationAssets(command.coverMediaId(), command.audioMediaId());
         ContentLocalization localization = content.upsertLocalization(
@@ -132,7 +148,7 @@ public class ContentManagementService {
                 command.audioMediaId(),
                 command.durationMinutes(),
                 command.status(),
-                command.processingStatus(),
+                processingStatus,
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
@@ -147,6 +163,9 @@ public class ContentManagementService {
     public ContentLocalizationRecord markLocalizationProcessingStatus(
             MarkContentLocalizationProcessingCommand command) {
         Content content = loadContent(command.contentId());
+        if (content.getType() == ContentType.LULLABY) {
+            throw new IllegalArgumentException("LULLABY processing status is owned by shared playback");
+        }
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         localization.markProcessingStatus(command.processingStatus());
         Content savedContent = contentRepository.save(content);
@@ -167,6 +186,25 @@ public class ContentManagementService {
     private void validateLocalizationAssets(Long coverMediaId, Long audioMediaId) {
         assetReferenceValidator.requireImageAsset(coverMediaId, "coverMediaId");
         assetReferenceValidator.requireAudioAsset(audioMediaId, "audioMediaId");
+    }
+
+    /** Creates or updates the shared playback source and schedules one content-scoped delivery job. */
+    @Transactional
+    public LullabyPlaybackRecord upsertLullabyPlayback(Long contentId, LullabyPlaybackCommand command) {
+        Content content = loadContent(contentId);
+        if (content.getType() != ContentType.LULLABY) {
+            throw new IllegalStateException("Lullaby playback is only supported for LULLABY content");
+        }
+        assetReferenceValidator.requireAudioAsset(command.audioMediaId(), "audioMediaId");
+        boolean processingMissing = assetProcessingApi.findByContent(contentId).isEmpty();
+        boolean changed = processingMissing || content.getLullabyPlayback() == null
+                || !command.audioMediaId().equals(content.getLullabyPlayback().getAudioMediaId())
+                || !command.durationMinutes().equals(content.getLullabyPlayback().getDurationMinutes());
+        content.upsertLullabyPlayback(command.audioMediaId(), command.durationMinutes());
+        Content savedContent = contentRepository.save(content);
+        AssetProcessingRecord processing = scheduleLullabyProcessing(savedContent, changed);
+        return ContentManagementMapper.toLullabyPlaybackRecord(requireContentId(savedContent),
+                savedContent.getLullabyPlayback(), processing);
     }
 
     private void upsertNarration(Content content, LanguageCode languageCode,
@@ -191,13 +229,45 @@ public class ContentManagementService {
                 content.getExternalKey(), null, narration.audioMediaId(), 0));
     }
 
+    private AssetProcessingRecord scheduleLullabyProcessing(Content content, boolean playbackChanged) {
+        if (!playbackChanged) {
+            return assetProcessingApi.findByContent(requireContentId(content)).orElse(null);
+        }
+        return assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.content(requireContentId(content)),
+                AssetProcessingKind.DELIVERY,
+                AssetProcessingContentType.LULLABY,
+                content.getExternalKey(),
+                content.getListeningCoverMediaId(),
+                content.getLullabyPlayback().getAudioMediaId(),
+                null));
+    }
+
     private ContentLocalizationRecord toLocalizationRecord(Content content, LanguageCode languageCode) {
         ContentLocalization localization = content.findLocalization(languageCode)
                 .orElseThrow(() -> new ContentLocalizationNotFoundException(requireContentId(content), languageCode));
         AssetProcessingRecord narrationProcessing = localization.getNarration() == null
                 ? null
                 : assetProcessingApi.findNarrationByLocalization(requireContentId(content), languageCode).orElse(null);
-        return ContentManagementMapper.toLocalizationRecord(requireContentId(content), localization, narrationProcessing);
+        AssetProcessingRecord sharedProcessing = content.getType() == ContentType.LULLABY
+                ? assetProcessingApi.findByContent(requireContentId(content)).orElse(null)
+                : null;
+        return ContentManagementMapper.toLocalizationRecord(
+                requireContentId(content), localization, narrationProcessing,
+                sharedProcessing == null ? null : ProcessingStatus.valueOf(sharedProcessing.status().name()));
+    }
+
+    private static ProcessingStatus resolveLocalizationProcessingStatus(Content content, ProcessingStatus requested) {
+        if (content.getType() == ContentType.LULLABY) {
+            if (requested != null) {
+                throw new IllegalArgumentException("LULLABY processing status is owned by shared playback");
+            }
+            return ProcessingStatus.PENDING;
+        }
+        if (requested == null) {
+            throw new IllegalArgumentException("Processing status is required for non-LULLABY localization");
+        }
+        return requested;
     }
 
     private static boolean narrationChanged(ContentLocalization localization,

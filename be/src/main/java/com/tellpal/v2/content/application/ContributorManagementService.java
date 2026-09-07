@@ -35,6 +35,7 @@ import com.tellpal.v2.content.domain.ContentContributor;
 import com.tellpal.v2.content.domain.Content.UnsupportedContributorRoleException;
 import com.tellpal.v2.content.domain.Content.ContributorAssignmentLanguageNotFoundException;
 import com.tellpal.v2.content.domain.Content.DuplicateContributorAssignmentException;
+import com.tellpal.v2.content.domain.Content.GlobalMusicianLanguageNotAllowedException;
 import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.Contributor;
 import com.tellpal.v2.content.domain.ContributorRole;
@@ -197,6 +198,9 @@ public class ContributorManagementService {
         } catch (DuplicateContributorAssignmentException exception) {
             throw new ContentApplicationExceptions.DuplicateContributorAssignmentException(
                     exception.getRole(), exception.getLanguageCode());
+        } catch (GlobalMusicianLanguageNotAllowedException exception) {
+            throw new ContentApplicationExceptions.GlobalMusicianLanguageNotAllowedException(
+                    exception.getLanguageCode());
         }
         Content saved = contentRepository.saveAndFlush(content);
         return ContentManagementMapper.toContentContributorRecord(
@@ -232,6 +236,9 @@ public class ContributorManagementService {
         } catch (DuplicateContributorAssignmentException exception) {
             throw new ContentApplicationExceptions.DuplicateContributorAssignmentException(
                     exception.getRole(), exception.getLanguageCode());
+        } catch (GlobalMusicianLanguageNotAllowedException exception) {
+            throw new ContentApplicationExceptions.GlobalMusicianLanguageNotAllowedException(
+                    exception.getLanguageCode());
         }
         contentRepository.saveAndFlush(content);
         return ContentManagementMapper.toContentContributorRecord(command.contentId(), assignment);

@@ -14,6 +14,7 @@ public record AdminContentView(
         Integer pageCount,
         Long textlessCoverMediaId,
         Long listeningCoverMediaId,
+        AdminLullabyPlaybackView playback,
         List<AdminContentLocalizationView> localizations) {
 
     public AdminContentView(
@@ -24,7 +25,7 @@ public record AdminContentView(
             Integer ageRange,
             Integer pageCount,
             List<AdminContentLocalizationView> localizations) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, null, null, localizations);
+        this(contentId, type, externalKey, active, ageRange, pageCount, null, null, null, localizations);
     }
 
     public AdminContentView(
@@ -36,7 +37,7 @@ public record AdminContentView(
             Integer pageCount,
             Long textlessCoverMediaId,
             List<AdminContentLocalizationView> localizations) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null, localizations);
+        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null, null, localizations);
     }
 
     public AdminContentView {

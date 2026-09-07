@@ -58,6 +58,22 @@ public final class ContentManagementResults {
         }
     }
 
+    /** Snapshot of the shared lullaby playback and its content-scoped processing state. */
+    public record LullabyPlaybackRecord(
+            Long contentId,
+            Long audioMediaId,
+            Integer durationMinutes,
+            ProcessingStatus processingStatus,
+            String processingError) {
+        public LullabyPlaybackRecord {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            audioMediaId = requirePositiveId(audioMediaId, "Lullaby audio media ID must be positive");
+            if (durationMinutes == null || durationMinutes < 0) {
+                throw new IllegalArgumentException("Lullaby duration minutes must be non-negative");
+            }
+        }
+    }
+
     /** Source snapshot of a story localization's optional full narration. */
     public record StoryNarrationRecord(
             Long audioMediaId,

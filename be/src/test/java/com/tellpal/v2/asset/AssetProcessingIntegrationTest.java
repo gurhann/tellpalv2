@@ -20,6 +20,7 @@ import com.tellpal.v2.asset.api.AssetProcessingKind;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
+import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
@@ -31,6 +32,7 @@ import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.StoryNarrationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContentApplicationExceptions.AssetMediaTypeMismatchException;
@@ -455,6 +457,29 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                 new StoryNarrationCommand(secondAudio, 6)));
 
         assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_NARRATION))
+                .hasValueSatisfying(record -> {
+                    assertThat(record.status().name()).isEqualTo("PENDING");
+                    assertThat(record.audioSourceAssetId()).isEqualTo(secondAudio);
+                });
+    }
+
+    @Test
+    void lullabyPlaybackCanBeRescheduledAfterCompletionWhenItsSourceChanges() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "rescheduled-lullaby", 2, true));
+        Long firstAudio = registerAudioAsset("/content/lullaby/rescheduled-lullaby/original/first.mp3");
+        Long secondAudio = registerAudioAsset("/content/lullaby/rescheduled-lullaby/original/second.mp3");
+
+        contentManagementService.upsertLullabyPlayback(
+                content.contentId(), new LullabyPlaybackCommand(firstAudio, 10));
+        AssetProcessingTarget target = AssetProcessingTarget.content(content.contentId());
+        assetProcessingApi.start(new StartAssetProcessingCommand(target, AssetProcessingKind.DELIVERY));
+        assetProcessingApi.complete(new CompleteAssetProcessingCommand(target, AssetProcessingKind.DELIVERY));
+
+        contentManagementService.upsertLullabyPlayback(
+                content.contentId(), new LullabyPlaybackCommand(secondAudio, 11));
+
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.DELIVERY))
                 .hasValueSatisfying(record -> {
                     assertThat(record.status().name()).isEqualTo("PENDING");
                     assertThat(record.audioSourceAssetId()).isEqualTo(secondAudio);

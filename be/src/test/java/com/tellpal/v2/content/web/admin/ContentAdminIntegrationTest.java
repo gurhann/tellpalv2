@@ -46,6 +46,8 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                     contributors,
                     story_page_localizations,
                     story_pages,
+                    lullaby_playbacks,
+                    asset_processing,
                     content_localizations,
                     contents,
                     media_assets
@@ -880,6 +882,126 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("validation_error"))
                 .andExpect(jsonPath("$.fieldErrors.illustrationMediaId").value("illustrationMediaId is required"));
+    }
+
+    @Test
+    void lullabyUsesOneSharedPlaybackAcrossTitleOnlyLocalizations() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long audioMediaId = registerAudioAsset("/content/lullaby/night-sky/audio.mp3");
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "LULLABY",
+                                  "externalKey": "night-sky-lullaby",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        for (String languageCode : new String[] {"tr", "en"}) {
+            mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/{languageCode}", contentId, languageCode)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType("application/json")
+                            .content("""
+                                    {
+                                      "title": "Gece Ninnisi",
+                                      "status": "DRAFT"
+                                    }
+                                    """))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.processingStatus").value("PENDING"))
+                    .andExpect(jsonPath("$.audioMediaId").value(nullValue()))
+                    .andExpect(jsonPath("$.coverMediaId").value(nullValue()));
+        }
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/playback", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "audioMediaId": %d,
+                                  "durationMinutes": 10
+                                }
+                                """.formatted(audioMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contentId").value(contentId))
+                .andExpect(jsonPath("$.audioMediaId").value(audioMediaId))
+                .andExpect(jsonPath("$.durationMinutes").value(10))
+                .andExpect(jsonPath("$.processingStatus").value("PENDING"));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.playback.audioMediaId").value(audioMediaId))
+                .andExpect(jsonPath("$.playback.durationMinutes").value(10))
+                .andExpect(jsonPath("$.localizations[0].audioMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.localizations[1].audioMediaId").value(nullValue()));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Gece Ninnisi",
+                                  "bodyText": "Bu alan desteklenmez",
+                                  "status": "DRAFT"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void lullabyPlaybackRejectsMissingAndNonAudioAssetsWithoutPersisting() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long imageMediaId = registerImageAsset("/content/lullaby/night-sky/not-audio.jpg");
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "LULLABY",
+                                  "externalKey": "invalid-lullaby-playback",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/playback", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "audioMediaId": %d,
+                                  "durationMinutes": 10
+                                }
+                                """.formatted(imageMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("asset_media_type_mismatch"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/playback", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "audioMediaId": 99999,
+                                  "durationMinutes": 10
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("asset_not_found"));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.playback").value(nullValue()));
     }
 
     private Long registerImageAsset(String objectPath) {

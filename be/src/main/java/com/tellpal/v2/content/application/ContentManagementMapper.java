@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.application;
 
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.LullabyPlaybackRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryNarrationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
@@ -12,6 +13,8 @@ import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.Contributor;
 import com.tellpal.v2.content.domain.StoryPage;
 import com.tellpal.v2.content.domain.StoryPageLocalization;
+import com.tellpal.v2.content.domain.LullabyPlayback;
+import com.tellpal.v2.content.domain.ProcessingStatus;
 
 final class ContentManagementMapper {
 
@@ -24,6 +27,17 @@ final class ContentManagementMapper {
 
     static ContentLocalizationRecord toLocalizationRecord(
             Long contentId, ContentLocalization localization, AssetProcessingRecord narrationProcessing) {
+        return toLocalizationRecord(contentId, localization, narrationProcessing, null);
+    }
+
+    static ContentLocalizationRecord toLocalizationRecord(
+            Long contentId,
+            ContentLocalization localization,
+            AssetProcessingRecord narrationProcessing,
+            ProcessingStatus sharedProcessingStatus) {
+        ProcessingStatus effectiveProcessingStatus = sharedProcessingStatus == null
+                ? localization.getProcessingStatus()
+                : sharedProcessingStatus;
         return new ContentLocalizationRecord(
                 contentId,
                 localization.getLanguageCode(),
@@ -34,15 +48,29 @@ final class ContentManagementMapper {
                 localization.getAudioMediaId(),
                 localization.getDurationMinutes(),
                 localization.getStatus(),
-                localization.getProcessingStatus(),
+                effectiveProcessingStatus,
                 localization.getPublishedAt(),
-                localization.isVisibleToMobile(),
+                localization.isVisibleToMobile(effectiveProcessingStatus),
                 localization.getNarration() == null ? null : new StoryNarrationRecord(
                         localization.getNarration().getAudioMediaId(),
                         localization.getNarration().getDurationMinutes(),
                         narrationProcessing == null ? null : narrationProcessing.status().name(),
                         narrationProcessing == null ? null : narrationProcessing.lastErrorMessage() != null
                                 ? narrationProcessing.lastErrorMessage() : narrationProcessing.lastErrorCode()));
+    }
+
+    static LullabyPlaybackRecord toLullabyPlaybackRecord(
+            Long contentId, LullabyPlayback playback, AssetProcessingRecord processing) {
+        if (playback == null) {
+            throw new IllegalArgumentException("Lullaby playback must not be null");
+        }
+        return new LullabyPlaybackRecord(
+                contentId,
+                playback.getAudioMediaId(),
+                playback.getDurationMinutes(),
+                processing == null ? null : ProcessingStatus.valueOf(processing.status().name()),
+                processing == null ? null : processing.lastErrorMessage() != null
+                        ? processing.lastErrorMessage() : processing.lastErrorCode());
     }
 
     static StoryPageRecord toStoryPageRecord(Long contentId, StoryPage storyPage) {

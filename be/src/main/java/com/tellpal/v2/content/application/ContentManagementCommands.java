@@ -25,6 +25,14 @@ public final class ContentManagementCommands {
         }
     }
 
+    /** Command for the single content-scoped lullaby audio source. */
+    public record LullabyPlaybackCommand(Long audioMediaId, Integer durationMinutes) {
+        public LullabyPlaybackCommand {
+            audioMediaId = requirePositiveId(audioMediaId, "Lullaby audio media ID must be positive");
+            durationMinutes = requireNonNegative(durationMinutes, "Lullaby duration minutes must be non-negative");
+        }
+    }
+
     /**
      * Command for creating a content aggregate.
      */
@@ -246,7 +254,9 @@ public final class ContentManagementCommands {
         normalizePositiveId(audioMediaId, "Audio media ID must be positive");
         normalizeNonNegative(durationMinutes, "Duration minutes must not be negative");
         requireLocalizationStatus(status, publishedAt);
-        requireProcessingStatus(processingStatus);
+        if (processingStatus != null) {
+            requireProcessingStatus(processingStatus);
+        }
     }
 
     private static ContentType requireContentType(ContentType type) {
@@ -325,6 +335,13 @@ public final class ContentManagementCommands {
             return null;
         }
         if (value < 0) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    private static Integer requireNonNegative(Integer value, String message) {
+        if (value == null || value < 0) {
             throw new IllegalArgumentException(message);
         }
         return value;

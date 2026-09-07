@@ -177,6 +177,17 @@ public final class ContentApplicationExceptions {
         public LanguageCode getLanguageCode() { return languageCode; }
     }
 
+    public static final class GlobalMusicianLanguageNotAllowedException extends RuntimeException {
+        private final LanguageCode languageCode;
+
+        public GlobalMusicianLanguageNotAllowedException(LanguageCode languageCode) {
+            super("LULLABY MUSICIAN assignments must be global; language was " + languageCode.value());
+            this.languageCode = languageCode;
+        }
+
+        public LanguageCode getLanguageCode() { return languageCode; }
+    }
+
     public static final class ContributorInUseException extends RuntimeException {
 
         public ContributorInUseException(Long contributorId) {

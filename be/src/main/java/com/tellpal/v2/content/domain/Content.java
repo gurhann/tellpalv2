@@ -17,6 +17,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -54,6 +55,9 @@ public class Content extends BaseJpaEntity {
 
     @Column(name = "listening_cover_media_id")
     private Long listeningCoverMediaId;
+
+    @OneToOne(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
+    private LullabyPlayback lullabyPlayback;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ContentLocalization> localizations = new LinkedHashSet<>();
@@ -111,6 +115,10 @@ public class Content extends BaseJpaEntity {
         return listeningCoverMediaId;
     }
 
+    public LullabyPlayback getLullabyPlayback() {
+        return lullabyPlayback;
+    }
+
     public Set<ContentLocalization> getLocalizations() {
         return Collections.unmodifiableSet(localizations);
     }
@@ -128,6 +136,19 @@ public class Content extends BaseJpaEntity {
         return localizations.stream()
                 .filter(candidate -> candidate.getLanguageCode() == requiredLanguageCode)
                 .findFirst();
+    }
+
+    /** Creates or updates the single shared playback source for a lullaby. */
+    public LullabyPlayback upsertLullabyPlayback(Long audioMediaId, Integer durationMinutes) {
+        if (type != ContentType.LULLABY) {
+            throw new IllegalStateException("Lullaby playback is only supported for LULLABY content");
+        }
+        if (lullabyPlayback == null) {
+            lullabyPlayback = new LullabyPlayback(this, audioMediaId, durationMinutes);
+        } else {
+            lullabyPlayback.update(audioMediaId, durationMinutes);
+        }
+        return lullabyPlayback;
     }
 
     public void upsertStoryNarration(LanguageCode languageCode, Long audioMediaId, Integer durationMinutes) {
@@ -215,7 +236,7 @@ public class Content extends BaseJpaEntity {
             LocalizationStatus status,
             ProcessingStatus processingStatus,
             java.time.Instant publishedAt) {
-        validateLocalizationFieldsForType(bodyText, audioMediaId);
+        validateLocalizationFieldsForType(description, bodyText, coverMediaId, audioMediaId, durationMinutes);
         ContentLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode, title, status, processingStatus));
         localization.updateContent(title, description, bodyText, coverMediaId, audioMediaId, durationMinutes);
@@ -320,6 +341,7 @@ public class Content extends BaseJpaEntity {
             String creditName) {
         Long contributorId = requireContributorId(contributor);
         requireRole(role);
+        requireGlobalLullabyMusicianScope(role, languageCode);
         if (!contributor.getRoles().contains(role)) {
             throw new UnsupportedContributorRoleException(role);
         }
@@ -414,6 +436,7 @@ public class Content extends BaseJpaEntity {
             String creditName) {
         requirePositiveAssignmentId(assignmentId);
         requireRole(newRole);
+        requireGlobalLullabyMusicianScope(newRole, newLanguageCode);
         ContentContributor assignment = contributors.stream()
                 .filter(candidate -> Objects.equals(candidate.getId(), assignmentId))
                 .findFirst()
@@ -484,9 +507,24 @@ public class Content extends BaseJpaEntity {
         return -1;
     }
 
-    private void validateLocalizationFieldsForType(String bodyText, Long audioMediaId) {
+    private void validateLocalizationFieldsForType(
+            String description,
+            String bodyText,
+            Long coverMediaId,
+            Long audioMediaId,
+            Integer durationMinutes) {
+        boolean hasDescription = description != null && !description.isBlank();
         boolean hasBodyText = bodyText != null && !bodyText.isBlank();
+        boolean hasCoverMedia = coverMediaId != null;
         boolean hasAudioMedia = audioMediaId != null;
+        boolean hasDuration = durationMinutes != null;
+        if (type == ContentType.LULLABY) {
+            if (description != null || bodyText != null || hasCoverMedia || hasAudioMedia || hasDuration) {
+                throw new IllegalArgumentException(
+                        "Lullaby localizations only support title and publication state");
+            }
+            return;
+        }
         if (type == ContentType.STORY) {
             if (hasBodyText) {
                 throw new IllegalArgumentException("Story localizations must not store body text");
@@ -502,6 +540,12 @@ public class Content extends BaseJpaEntity {
         if ((type == ContentType.AUDIO_STORY || type == ContentType.MEDITATION || type == ContentType.LULLABY)
                 && !hasAudioMedia) {
             throw new IllegalArgumentException("Audio media is required for non-story content localizations");
+        }
+    }
+
+    private void requireGlobalLullabyMusicianScope(ContributorRole role, LanguageCode languageCode) {
+        if (type == ContentType.LULLABY && role == ContributorRole.MUSICIAN && languageCode != null) {
+            throw new GlobalMusicianLanguageNotAllowedException(languageCode);
         }
     }
 
@@ -638,6 +682,20 @@ public class Content extends BaseJpaEntity {
 
         public ContributorRole getRole() {
             return role;
+        }
+
+        public LanguageCode getLanguageCode() {
+            return languageCode;
+        }
+    }
+
+    /** Raised when a lullaby musician credit is incorrectly scoped to one locale. */
+    public static final class GlobalMusicianLanguageNotAllowedException extends IllegalArgumentException {
+        private final LanguageCode languageCode;
+
+        public GlobalMusicianLanguageNotAllowedException(LanguageCode languageCode) {
+            super("LULLABY MUSICIAN assignments must be global; language was " + languageCode.value());
+            this.languageCode = languageCode;
         }
 
         public LanguageCode getLanguageCode() {
