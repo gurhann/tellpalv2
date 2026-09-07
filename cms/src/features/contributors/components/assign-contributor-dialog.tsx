@@ -418,7 +418,9 @@ export function AssignContributorDialog({
                     <FieldError error={form.formState.errors.contributorId} />
                     {forceGlobalScope ? (
                       <p className="text-sm text-muted-foreground" role="status">
-                        This musician credit is shared across every lullaby locale.
+                        {locale === "tr"
+                          ? "Bu müzisyen kredisi tüm ninni dilleriyle paylaşılır."
+                          : "This musician credit is shared across every lullaby locale."}
                       </p>
                     ) : <div className="space-y-2">
                       <label

@@ -67,6 +67,22 @@ context:
 - Given MEDITATION localization, when form açılır, then dil-bazlı audio/text alanları görünür ve localization cover alanı yoktur.
 - Given responsive CMS detail, when viewport değişir veya API hata/loading döner, then alanlar erişilebilir, açıklayıcı ve layout’u bozmadan çalışır.
 
+### Review Findings
+
+- [x] [Review][Patch] Content metadata mutation playback snapshot’unu korumuyor — LULLABY metadata veya listening-cover kaydından sonra detail/list cache mapper’ı `playback`ı `null` yapıyor; ortak ses ve enstrümanlar kaybolmuş görünüyor ve kullanıcı yanlışlıkla ezebiliyor. [cms/src/features/contents/mutations/use-save-content.ts:20]
+- [x] [Review][Patch] Eksik LULLABY playback için açıklayıcı empty state yok — `content.playback === null` formu `0` değerleriyle normal editör gibi açıyor; spec’in missing-playback empty/loading beklentisi karşılanmıyor. [cms/src/features/contents/components/lullaby-playback-editor.tsx:92]
+- [x] [Review][Patch] LULLABY hidden legacy alanları doğrulamayı bloklayabilir — mevcut localization’da eski cover/duration/description değerleri varsa gizlenen alanlar schema `superRefine` tarafından reddediliyor ve title/status kaydı başarısız oluyor. [cms/src/features/contents/schema/content-localization-schema.ts:229]
+- [x] [Review][Patch] Contributor edit rol değişiminde global scope yanlış korunuyor — `forceGlobalScope` başlangıçtaki role göre hesaplandığı için MUSICIAN’dan başka role geçişte de `languageCode: null` gönderiliyor. [cms/src/features/contributors/components/edit-content-contributor-dialog.tsx:74]
+- [x] [Review][Patch] Localization form remount anahtarı narration alanlarını içermiyor — backend/cache güncellemesi narration asset veya süreyi değiştirirse açık form eski değerleri göstermeye devam edebilir. [cms/src/features/contents/components/localization-tabs.tsx:92]
+- [x] [Review][Patch] Yeni playback editor’ündeki bazı erişilebilirlik metinleri locale dışı — `advancedLabel` gibi görünür/yardımcı metinler Türkçe arayüzde İngilizce kalıyor. [cms/src/features/contents/components/lullaby-playback-editor.tsx:230]
+- [x] [Review][Patch] STORY narration processing durumu ham enum olarak gösteriliyor — Türkçe arayüzde `PENDING`/`FAILED` gibi değerler mevcut localized option label’ları kullanılmadan render ediliyor. [cms/src/features/contents/components/content-localization-form.tsx:525]
+- [x] [Review][Patch] LULLABY route entegrasyonu E2E ile korunmuyor — mevcut E2E LULLABY detail akışı playback editor’ünün gerçekten render edildiğini doğrulamıyor. [cms/e2e/content.spec.ts:465]
+- [x] [Review][Patch] Narration processing status/error için component assertion eksik — fixture veri taşısa da test yalnız asset/süreyi doğruluyor; processing görünürlüğü bozulsa test geçiyor. [cms/src/features/contents/components/content-localization-form.test.tsx:137]
+- [x] [Review][Patch] Enstrüman yukarı/aşağı sıralama testi eksik — mevcut test yalnız append akışını doğruluyor; move handler veya stable-code payload sırası bozulsa yakalanmıyor. [cms/src/features/contents/components/lullaby-playback-editor.test.tsx:53]
+- [x] [Review][Patch] LULLABY stale contributor role filtrelemesi test edilmiyor — karışık AUTHOR/NARRATOR/MUSICIAN response’unda yalnız MUSICIAN’ın görünmesi doğrulanmamış. [cms/src/features/contributors/components/content-contributor-panel.test.tsx:94]
+- [x] [Review][Defer] STORY narration temizleme admin sözleşmesiyle desteklenmiyor — null/omitted narration backend’de no-op; silme davranışı ayrı backend komutu/end-point kararı gerektiriyor. [cms/src/features/contents/mutations/use-content-localization-actions.ts:89] — deferred, backend sözleşmesi ve kullanıcı kararı gerektiriyor
+- [x] [Review][Defer] Responsive visual baseline çalıştırılamadı — Chromium executable bu ortamda kurulamadı; 390/768/1280/1440 baseline doğrulaması Playwright kurulumu sonrasına bırakıldı. [cms/e2e/content.spec.ts] — deferred, ortam bağımlılığı
+
 ## Spec Change Log
 
 ## Design Notes

@@ -74,8 +74,9 @@ export function EditContentContributorDialog({
   });
   const languageValue = form.watch("languageCode");
   const supportedRoles = assignment.contributorRoles ?? [assignment.role];
+  const selectedRole = form.watch("role");
   const forceGlobalScope =
-    content.summary.type === "LULLABY" && assignment.role === "MUSICIAN";
+    content.summary.type === "LULLABY" && selectedRole === "MUSICIAN";
   const roleOptions = contributorRoleOptions.filter((option) =>
     supportedRoles.includes(option.value),
   );

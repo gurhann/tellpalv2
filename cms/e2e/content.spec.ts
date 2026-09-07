@@ -465,6 +465,7 @@ test("create, edit, and publish flows work in the browser", async ({
   await expect(
     page.getByRole("heading", { name: /content #99/i }),
   ).toBeVisible();
+  await expect(page.getByTestId("lullaby-playback-editor")).toBeVisible();
 
   const metadataRegion = page.getByRole("region", { name: /^metadata$/i });
   await metadataRegion

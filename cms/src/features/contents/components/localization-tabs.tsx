@@ -100,6 +100,10 @@ function LocalizationWorkspacePane({
     localization.status,
     localization.processingStatus,
     localization.publishedAt ?? "",
+    localization.narration?.audioAssetId ?? "",
+    localization.narration?.durationMinutes ?? "",
+    localization.narration?.processingStatus ?? "",
+    localization.narration?.processingError ?? "",
   ].join("|");
 
   return (

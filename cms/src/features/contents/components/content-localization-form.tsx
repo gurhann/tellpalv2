@@ -76,6 +76,22 @@ function getLanguageLabel(
   );
 }
 
+function getProcessingStatusLabel(
+  status: ContentLocalizationViewModel["processingStatus"] | null,
+  locale: string,
+) {
+  if (!status) return locale === "tr" ? "Başlamadı" : "Not started";
+  if (locale !== "tr") {
+    return status.charAt(0) + status.slice(1).toLowerCase();
+  }
+  return {
+    PENDING: "Bekliyor",
+    PROCESSING: "İşleniyor",
+    COMPLETED: "Tamamlandı",
+    FAILED: "Başarısız",
+  }[status];
+}
+
 export function ContentLocalizationForm({
   content,
   mode,
@@ -522,7 +538,7 @@ export function ContentLocalizationForm({
             </div>
             {localization?.narration ? (
               <p className="text-sm text-muted-foreground" role="status">
-                {locale === "tr" ? "Anlatım işleme durumu" : "Narration processing"}: {localization.narration.processingStatus ?? (locale === "tr" ? "Başlamadı" : "Not started")}
+                {locale === "tr" ? "Anlatım işleme durumu" : "Narration processing"}: {getProcessingStatusLabel(localization.narration.processingStatus, locale)}
                 {localization.narration.processingError
                   ? ` — ${localization.narration.processingError}`
                   : ""}

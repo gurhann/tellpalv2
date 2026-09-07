@@ -124,14 +124,14 @@ describe("ContentLocalizationForm", () => {
       }).success,
     ).toBe(true);
 
-    const invalid = createContentLocalizationSchema("LULLABY").safeParse({
+    const legacy = createContentLocalizationSchema("LULLABY").safeParse({
       ...defaults,
       title: "Dandini Dastana",
       description: "Aciklama",
       bodyText: "Gövde",
       audioMediaId: 42,
     });
-    expect(invalid.success).toBe(false);
+    expect(legacy.success).toBe(true);
   });
 
   it("hides story page body input but shows optional full narration input", () => {
@@ -158,6 +158,7 @@ describe("ContentLocalizationForm", () => {
       String(screen.getByLabelText(/full narration audio asset id/i).value),
     ).toBe("901");
     expect(screen.getByLabelText(/full narration duration/i)).toHaveValue(8);
+    expect(screen.getByText(/Narration processing: Completed/i)).toBeVisible();
   });
 
   it("shows non-story body and audio inputs for meditation locales", () => {

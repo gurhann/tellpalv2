@@ -227,20 +227,8 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           });
         }
         if (contentType === "LULLABY") {
-          if (
-            values.description ||
-            values.bodyText ||
-            values.audioMediaId !== null ||
-            values.coverMediaId !== null ||
-            values.durationMinutes !== null
-          ) {
-            ctx.addIssue({
-              code: "custom",
-              message:
-                "Lullaby localizations only support title and publication state.",
-              path: ["title"],
-            });
-          }
+          // Legacy rows may carry hidden fields that are no longer editable.
+          // The LULLABY payload omits them, so they must not block title/status updates.
           return;
         }
         if (contentType === "MEDITATION" && !values.bodyText) {

@@ -52,8 +52,9 @@ describe("LullabyPlaybackEditor", () => {
 
     expect(await screen.findByText("Piano")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Harp" }));
+    fireEvent.click(screen.getByRole("button", { name: "Move Harp up" }));
     fireEvent.click(screen.getByRole("button", { name: "Save instrument order" }));
-    await waitFor(() => expect(apiMock.replaceLullabyInstruments).toHaveBeenCalledWith(4, ["PIANO", "HARP"], "en"));
+    await waitFor(() => expect(apiMock.replaceLullabyInstruments).toHaveBeenCalledWith(4, ["HARP", "PIANO"], "en"));
 
     fireEvent.click(screen.getByRole("button", { name: "Save shared playback" }));
     await waitFor(() => expect(apiMock.updateLullabyPlayback).toHaveBeenCalledWith(4, { audioMediaId: 44, durationMinutes: 3 }));
@@ -63,6 +64,7 @@ describe("LullabyPlaybackEditor", () => {
   it("keeps the workspace usable when the catalog fails to load", async () => {
     apiMock.listInstrumentCatalog.mockRejectedValueOnce(new Error("catalog unavailable"));
     render(<LullabyPlaybackEditor content={inactiveContentViewModel} languageCode="en" />, { wrapper });
+    expect(screen.getByText(/No shared playback exists yet/i)).toBeVisible();
     expect(await screen.findByRole("alert")).toHaveTextContent(/catalog could not be loaded/i);
     expect(screen.getByRole("button", { name: "Save shared playback" })).toBeEnabled();
   });

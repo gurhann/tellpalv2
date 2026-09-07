@@ -106,6 +106,36 @@ describe("ContentContributorPanel", () => {
     expect(screen.getAllByRole("button", { name: /add$/i })).toHaveLength(1);
   });
 
+  it("filters stale non-musician assignments from a lullaby panel", () => {
+    contributorHookMocks.useContentContributorAssignments.mockReturnValue({
+      assignments: [
+        {
+          ...globalContentContributorViewModel,
+          assignmentId: 201,
+          role: "MUSICIAN",
+          displayName: "Shared Musician",
+          effectiveCreditName: "Shared Musician",
+        },
+        {
+          ...contentContributorViewModels[0],
+          assignmentId: 202,
+          role: "AUTHOR",
+          displayName: "Legacy Author",
+          effectiveCreditName: "Legacy Author",
+        },
+      ],
+      isLoading: false,
+      problem: null,
+    });
+
+    render(<ContentContributorPanel content={inactiveContentViewModel} />, {
+      wrapper: createWrapper(),
+    });
+
+    expect(screen.getAllByText("Shared Musician")).toHaveLength(2);
+    expect(screen.queryByText("Legacy Author")).not.toBeInTheDocument();
+  });
+
   it("groups assignments by role and reorders only within the matching scope", async () => {
     const reorder = vi.fn().mockResolvedValue([
       { ...contentContributorViewModels[1], sortOrder: 0 },

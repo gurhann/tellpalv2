@@ -40,6 +40,7 @@ export function LullabyPlaybackEditor({ content, languageCode }: Props) {
     ? {
         playback: "Ortak playback",
         playbackDescription: "Bu ses ve süre tüm ninni dilleriyle paylaşılır.",
+        noPlayback: "Henüz ortak playback tanımlanmadı; ses ve süreyi girerek oluşturun.",
         audioLabel: "Ortak playback ses asset'i",
         audioDescription: "Tek ortak ninni ses asset'ini seçin veya yükleyin.",
         duration: "Ortak playback süresi (dakika)",
@@ -61,12 +62,14 @@ export function LullabyPlaybackEditor({ content, languageCode }: Props) {
         instrumentsError: "Enstrüman seçimi güncellenemedi. Tekrar deneyin.",
         available: "Kullanılabilir katalog enstrümanları",
         selected: "Seçili enstrümanlar",
+        advancedAudioOptions: "Gelişmiş ninni ses seçenekleri",
         moveUp: (name: string) => `${name} yukarı taşı`,
         moveDown: (name: string) => `${name} aşağı taşı`,
       }
     : {
         playback: "Shared playback",
         playbackDescription: "This audio and duration are shared by every lullaby locale.",
+        noPlayback: "No shared playback exists yet; enter an audio asset and duration to create it.",
         audioLabel: "Shared playback audio",
         audioDescription: "Choose or upload the single shared lullaby audio asset.",
         duration: "Shared playback duration (minutes)",
@@ -88,6 +91,7 @@ export function LullabyPlaybackEditor({ content, languageCode }: Props) {
         instrumentsError: "The instrument selection could not be updated. Try again.",
         available: "Available catalog instruments",
         selected: "Selected instruments",
+        advancedAudioOptions: "Advanced lullaby audio options",
         moveUp: (name: string) => `Move ${name} up`,
         moveDown: (name: string) => `Move ${name} down`,
       };
@@ -197,6 +201,11 @@ export function LullabyPlaybackEditor({ content, languageCode }: Props) {
         <p className="mt-1 text-sm text-muted-foreground">
           {copy.playbackDescription}
         </p>
+        {!playback ? (
+          <p className="mt-3 text-sm text-muted-foreground" role="status">
+            {copy.noPlayback}
+          </p>
+        ) : null}
         <form
           className="mt-4 grid gap-4 md:grid-cols-2"
           noValidate
@@ -207,7 +216,7 @@ export function LullabyPlaybackEditor({ content, languageCode }: Props) {
             name="audioMediaId"
             render={({ field, fieldState }) => (
               <AssetPickerField
-                advancedLabel="Advanced lullaby audio options"
+                advancedLabel={copy.advancedAudioOptions}
                 description={copy.audioDescription}
                 disabled={playbackMutation.isPending}
                 error={fieldState.error}

@@ -40,7 +40,10 @@ function updateContentListCache(
 
   return records.map((record) =>
     record.summary.id === savedContent.contentId
-      ? mapAdminContentSummaryToRead(savedContent, record.localizations)
+      ? {
+          ...mapAdminContentSummaryToRead(savedContent, record.localizations),
+          playback: record.playback,
+        }
       : record,
   );
 }
@@ -49,10 +52,10 @@ function updateContentDetailCache(
   existingRecord: ContentReadViewModel | undefined,
   savedContent: AdminContentResponse,
 ) {
-  return mapAdminContentSummaryToRead(
-    savedContent,
-    existingRecord?.localizations,
-  );
+  return {
+    ...mapAdminContentSummaryToRead(savedContent, existingRecord?.localizations),
+    playback: existingRecord?.playback ?? null,
+  };
 }
 
 export function useSaveContent(options: UseSaveContentOptions) {

@@ -147,13 +147,23 @@ describe("useSaveContent", () => {
       listeningCoverMediaId: 702,
     };
 
+    const existingRecord = {
+      ...storyContentViewModel,
+      playback: {
+        audioAssetId: 44,
+        durationMinutes: 3,
+        processingStatus: "COMPLETED" as const,
+        processingError: null,
+        instruments: [],
+      },
+    };
     queryClient.setQueryData(queryKeys.contents.list(), [
-      storyContentViewModel,
+      existingRecord,
       inactiveContentViewModel,
     ]);
     queryClient.setQueryData(
       queryKeys.contents.detail(1),
-      storyContentViewModel,
+      existingRecord,
     );
     contentAdminApiMock.updateContent.mockResolvedValue(updatedContent);
 
@@ -188,6 +198,7 @@ describe("useSaveContent", () => {
         hasListeningCover: boolean;
       };
       localizations: unknown[];
+      playback: { audioAssetId: number; durationMinutes: number } | null;
     }>(queryKeys.contents.detail(1));
     const listCache = queryClient.getQueryData<
       Array<{
@@ -218,6 +229,10 @@ describe("useSaveContent", () => {
       },
     });
     expect(detailCache?.localizations).toHaveLength(2);
+    expect(detailCache?.playback).toMatchObject({
+      audioAssetId: 44,
+      durationMinutes: 3,
+    });
     expect(listCache).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
