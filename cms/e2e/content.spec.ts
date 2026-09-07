@@ -233,6 +233,8 @@ test("create, edit, and publish flows work in the browser", async ({
         externalKey: string;
         ageRange: number | null;
         active: boolean;
+        textlessCoverMediaId: number | null;
+        listeningCoverMediaId: number | null;
       };
 
       createdDetail = {
@@ -240,6 +242,8 @@ test("create, edit, and publish flows work in the browser", async ({
         externalKey: body.externalKey,
         ageRange: body.ageRange,
         active: body.active,
+        textlessCoverMediaId: body.textlessCoverMediaId,
+        listeningCoverMediaId: body.listeningCoverMediaId,
       };
 
       await route.fulfill({
@@ -252,6 +256,8 @@ test("create, edit, and publish flows work in the browser", async ({
           ageRange: createdDetail.ageRange,
           active: createdDetail.active,
           pageCount: createdDetail.pageCount,
+          textlessCoverMediaId: createdDetail.textlessCoverMediaId,
+          listeningCoverMediaId: createdDetail.listeningCoverMediaId,
         }),
       });
       return;
@@ -479,6 +485,9 @@ test("create, edit, and publish flows work in the browser", async ({
   await expect(metadataRegion.getByLabel(/external key/i)).toHaveValue(
     "lullaby.smoke-harbor.v2",
   );
+  await expect(
+    page.getByText(/content changes could not be saved/i),
+  ).toHaveCount(0);
 
   await page
     .getByRole("region", { name: /localization workspace/i })

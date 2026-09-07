@@ -1,5 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
+import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -244,24 +246,28 @@ public class ContentAdminExceptionHandler {
     ProblemDetail handleAssetReferenceNotFound(
             AssetReferenceNotFoundException exception,
             HttpServletRequest request) {
-        return problemDetailsFactory.create(
+        ProblemDetail problem = problemDetailsFactory.create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid asset reference",
                 exception.getMessage(),
                 "asset_not_found",
                 request);
+        problem.setProperty("fieldErrors", Map.of(exception.fieldName(), exception.getMessage()));
+        return problem;
     }
 
     @ExceptionHandler(AssetMediaTypeMismatchException.class)
     ProblemDetail handleAssetMediaTypeMismatch(
             AssetMediaTypeMismatchException exception,
             HttpServletRequest request) {
-        return problemDetailsFactory.create(
+        ProblemDetail problem = problemDetailsFactory.create(
                 HttpStatus.BAD_REQUEST,
                 "Invalid asset media type",
                 exception.getMessage(),
                 "asset_media_type_mismatch",
                 request);
+        problem.setProperty("fieldErrors", Map.of(exception.fieldName(), exception.getMessage()));
+        return problem;
     }
 
     @ExceptionHandler(IllegalStateException.class)

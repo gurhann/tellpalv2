@@ -117,7 +117,7 @@ export function ContentDetailRoute() {
           notVisible: "Gizli",
           metadataTitle: "Metadata",
           metadataDescription:
-            "Temel icerik metadata'sini guncelleyin. Icerik turu olusturulduktan sonra sabittir; external key, yas araligi ve aktiflik durumu burada degistirilebilir.",
+            "Temel icerik metadata'sini guncelleyin. Icerik turu olusturulduktan sonra sabittir; external key, yas araligi, aktiflik durumu ve desteklenen turlerde dinleme kapagi burada degistirilebilir.",
           sourceCoverTitle: "Yazisiz Hikaye Kapagi",
           sourceCoverDescription:
             "Dil bagimsiz kapak ve sayfa kaynaklari ayri source images ekraninda yonetilir.",
@@ -186,7 +186,7 @@ export function ContentDetailRoute() {
           notVisible: "Hidden",
           metadataTitle: "Metadata",
           metadataDescription:
-            "Update the base content metadata. Content type is fixed after creation, while external key, age range, and active state can be changed here.",
+            "Update the base content metadata. Content type is fixed after creation, while external key, age range, active state, and the listening cover for supported types can be changed here.",
           sourceCoverTitle: "Textless Story Cover",
           sourceCoverDescription:
             "Language-independent cover and page sources are managed in the source images workspace.",

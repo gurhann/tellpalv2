@@ -76,7 +76,7 @@ export function ContentForm({
           contentType: "Icerik turu",
           selectContentType: "Icerik turu secin",
           contentTypeFixed:
-            "Icerik turu olusturulduktan sonra sabittir. Bu form yalnizca external key, age range ve aktiflik durumunu gunceller.",
+            "Icerik turu olusturulduktan sonra sabittir. Bu form external key, age range, aktiflik durumu ve desteklenen turlerde dinleme kapagini gunceller.",
           contentTypeLocked: "Olusturma sonrasi sabit",
           externalKey: "External key",
           ageRange: "Yas araligi",
@@ -105,7 +105,7 @@ export function ContentForm({
           contentType: "Content type",
           selectContentType: "Select content type",
           contentTypeFixed:
-            "Content type is fixed after creation. This form updates external key, age range, and active state only.",
+            "Content type is fixed after creation. This form updates external key, age range, active state, and the listening cover when supported.",
           contentTypeLocked: "Locked after creation",
           externalKey: "External key",
           ageRange: "Age range",

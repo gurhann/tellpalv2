@@ -18,14 +18,19 @@ vi.mock("@/features/assets/components/asset-picker-field", () => ({
   AssetPickerField: ({
     label,
     onChange,
+    value,
     testId,
   }: {
     label: string;
     onChange: (value: number | null) => void;
+    value: number | null;
     testId?: string;
   }) => (
     <div data-testid={testId}>
       <span>{label}</span>
+      <span data-testid={testId ? `${testId}-value` : undefined}>
+        {value ?? "none"}
+      </span>
       <button
         type="button"
         data-testid={testId ? `${testId}-select` : undefined}
@@ -266,5 +271,8 @@ describe("ContentForm", () => {
         listeningCoverMediaId: 702,
       });
     });
+    expect(
+      screen.getByTestId("content-listening-cover-value"),
+    ).toHaveTextContent("702");
   });
 });

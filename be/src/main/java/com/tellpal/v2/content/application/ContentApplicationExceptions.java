@@ -56,12 +56,30 @@ public final class ContentApplicationExceptions {
 
     public static final class AssetReferenceNotFoundException extends RuntimeException {
 
+        private final String fieldName;
+        private final Long assetId;
+
         public AssetReferenceNotFoundException(String fieldName, Long assetId) {
             super("Asset not found for " + fieldName + ": " + assetId);
+            this.fieldName = fieldName;
+            this.assetId = assetId;
+        }
+
+        public String fieldName() {
+            return fieldName;
+        }
+
+        public Long assetId() {
+            return assetId;
         }
     }
 
     public static final class AssetMediaTypeMismatchException extends RuntimeException {
+
+        private final String fieldName;
+        private final Long assetId;
+        private final AssetMediaType expectedMediaType;
+        private final AssetMediaType actualMediaType;
 
         public AssetMediaTypeMismatchException(
                 String fieldName,
@@ -70,6 +88,26 @@ public final class ContentApplicationExceptions {
                 AssetMediaType actualMediaType) {
             super("Asset " + assetId + " for " + fieldName + " must be "
                     + expectedMediaType + " but was " + actualMediaType);
+            this.fieldName = fieldName;
+            this.assetId = assetId;
+            this.expectedMediaType = expectedMediaType;
+            this.actualMediaType = actualMediaType;
+        }
+
+        public String fieldName() {
+            return fieldName;
+        }
+
+        public Long assetId() {
+            return assetId;
+        }
+
+        public AssetMediaType expectedMediaType() {
+            return expectedMediaType;
+        }
+
+        public AssetMediaType actualMediaType() {
+            return actualMediaType;
         }
     }
 

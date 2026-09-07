@@ -345,7 +345,8 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 }
                                 """.formatted(sourceCoverMediaId, audioMediaId)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("asset_media_type_mismatch"));
+                .andExpect(jsonPath("$.errorCode").value("asset_media_type_mismatch"))
+                .andExpect(jsonPath("$.fieldErrors.listeningCoverMediaId").isNotEmpty());
 
         mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -359,7 +360,8 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 }
                                 """.formatted(sourceCoverMediaId)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value("asset_not_found"));
+                .andExpect(jsonPath("$.errorCode").value("asset_not_found"))
+                .andExpect(jsonPath("$.fieldErrors.listeningCoverMediaId").isNotEmpty());
 
         assertThat(jdbcTemplate.queryForObject(
                 "select textless_cover_media_id from contents where id = ?", Long.class, contentId))
@@ -558,6 +560,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     @Test
     void listAndGetContentReturnLocalizationSnapshotsForAdminReadFlows() throws Exception {
         String accessToken = authenticateAdmin();
+        Long listeningCoverMediaId = registerImageAsset("/content/story/moonlight/listening-cover.jpg");
 
         MvcResult activeContentResult = mockMvc.perform(post("/api/admin/contents")
                         .header("Authorization", "Bearer " + accessToken)
@@ -574,6 +577,20 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andReturn();
 
         Long activeContentId = readPayload(activeContentResult).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", activeContentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "moonlight-story",
+                                  "ageRange": 5,
+                                  "active": true,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(listeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(listeningCoverMediaId));
 
         MvcResult inactiveContentResult = mockMvc.perform(post("/api/admin/contents")
                         .header("Authorization", "Bearer " + accessToken)
@@ -611,6 +628,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].contentId").value(activeContentId))
+                .andExpect(jsonPath("$[0].listeningCoverMediaId").value(listeningCoverMediaId))
                 .andExpect(jsonPath("$[0].localizations[0].languageCode").value("tr"))
                 .andExpect(jsonPath("$[1].contentId").value(inactiveContentId))
                 .andExpect(jsonPath("$[1].active").value(false))

@@ -5,3 +5,9 @@
 ## Deferred from: code review of spec-1-3-ortak-textless-kapak-sahipligi (2026-09-07)
 
 - `planning-artifacts/epics.md` and the historical architecture spine still describe `textlessCoverMediaId` as the shared audio/lullaby/meditation cover. This predates Story 1.3; the canonical epic context, spec, ADR-0010, and project memory now carry the corrected ownership split.
+
+## Deferred from: code review of spec-1-3-ortak-textless-kapak-sahipligi (2026-09-07)
+
+- The full PUT metadata flow can overwrite a newer cover edited in another tab because the form submits a previously read source/listening-cover snapshot. This is pre-existing whole-record update behavior and needs a separate optimistic-locking or PATCH decision.
+- The generic asset picker allows the parent metadata submit while a direct upload is still pending. This is pre-existing upload UX behavior and needs a dedicated coordination task.
+- `_bmad-output/specs/spec-shared-textless-cover/SPEC.md` still describes one shared textless cover for audio stories, meditation, and lullabies. It is historical planning material; superseding or removing stale ownership documents is deferred.

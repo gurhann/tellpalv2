@@ -1,3 +1,20 @@
+DO $$
+DECLARE
+    legacy_content_ids text;
+BEGIN
+    SELECT string_agg(id::text, ', ' ORDER BY id)
+      INTO legacy_content_ids
+      FROM contents
+     WHERE type <> 'STORY'
+       AND textless_cover_media_id IS NOT NULL;
+
+    IF legacy_content_ids IS NOT NULL THEN
+        RAISE EXCEPTION
+            'V24 blocked: non-STORY contents [%] still have textless_cover_media_id; resolve legacy cover ownership before applying this migration',
+            legacy_content_ids;
+    END IF;
+END $$;
+
 ALTER TABLE contents
     ADD COLUMN listening_cover_media_id bigint;
 

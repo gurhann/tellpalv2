@@ -184,11 +184,21 @@ describe("useSaveContent", () => {
         externalKey: string;
         active: boolean;
         ageRange: number | null;
+        listeningCoverAssetId: number | null;
+        hasListeningCover: boolean;
       };
       localizations: unknown[];
     }>(queryKeys.contents.detail(1));
     const listCache = queryClient.getQueryData<
-      Array<{ summary: { id: number; externalKey: string; active: boolean } }>
+      Array<{
+        summary: {
+          id: number;
+          externalKey: string;
+          active: boolean;
+          listeningCoverAssetId: number | null;
+          hasListeningCover: boolean;
+        };
+      }>
     >(queryKeys.contents.list());
 
     expect(contentAdminApiMock.updateContent).toHaveBeenCalledWith(1, {
@@ -203,6 +213,8 @@ describe("useSaveContent", () => {
         externalKey: "story.evening-garden.updated",
         active: false,
         ageRange: 6,
+        listeningCoverAssetId: 702,
+        hasListeningCover: true,
       },
     });
     expect(detailCache?.localizations).toHaveLength(2);
@@ -213,6 +225,8 @@ describe("useSaveContent", () => {
             id: 1,
             externalKey: "story.evening-garden.updated",
             active: false,
+            listeningCoverAssetId: 702,
+            hasListeningCover: true,
           }),
         }),
       ]),
