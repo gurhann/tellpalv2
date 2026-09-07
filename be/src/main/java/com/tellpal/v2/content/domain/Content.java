@@ -60,6 +60,9 @@ public class Content extends BaseJpaEntity {
     private LullabyPlayback lullabyPlayback;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LullabyInstrument> lullabyInstruments = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ContentLocalization> localizations = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -119,6 +122,14 @@ public class Content extends BaseJpaEntity {
         return lullabyPlayback;
     }
 
+    /** Returns the selected lullaby instruments in their persisted display order. */
+    public List<LullabyInstrument> getOrderedLullabyInstruments() {
+        return lullabyInstruments.stream()
+                .sorted(Comparator.comparingInt(LullabyInstrument::getDisplayOrder)
+                        .thenComparing(instrument -> instrument.getInstrumentCatalog().getCode()))
+                .toList();
+    }
+
     public Set<ContentLocalization> getLocalizations() {
         return Collections.unmodifiableSet(localizations);
     }
@@ -149,6 +160,44 @@ public class Content extends BaseJpaEntity {
             lullabyPlayback.update(audioMediaId, durationMinutes);
         }
         return lullabyPlayback;
+    }
+
+    /**
+     * Replaces the complete content-level instrument selection for a lullaby.
+     *
+     * <p>All validation occurs before the existing links are removed. The application service
+     * flushes that removal before persisting the replacement so the unique order constraint can be
+     * safely swapped in one transaction.
+     */
+    public void replaceLullabyInstruments(List<InstrumentCatalog> instrumentCatalogs) {
+        ensureLullabyTypeForInstruments();
+        if (instrumentCatalogs == null || instrumentCatalogs.isEmpty()) {
+            throw new IllegalArgumentException("A lullaby must have at least one instrument");
+        }
+        Set<String> codes = new java.util.HashSet<>();
+        for (InstrumentCatalog catalog : instrumentCatalogs) {
+            if (catalog == null) {
+                throw new IllegalArgumentException("Instrument catalog must not be null");
+            }
+            if (!catalog.isActive()) {
+                throw new IllegalArgumentException("Instrument catalog is retired: " + catalog.getCode());
+            }
+            if (!codes.add(catalog.getCode())) {
+                throw new IllegalArgumentException(
+                        "Lullaby instrument selection must not contain duplicate catalog codes: "
+                                + catalog.getCode());
+            }
+        }
+        lullabyInstruments.clear();
+        for (int index = 0; index < instrumentCatalogs.size(); index += 1) {
+            lullabyInstruments.add(new LullabyInstrument(this, instrumentCatalogs.get(index), index));
+        }
+    }
+
+    /** Removes the current links before a replacement is flushed by the application service. */
+    public void clearLullabyInstruments() {
+        ensureLullabyTypeForInstruments();
+        lullabyInstruments.clear();
     }
 
     public void upsertStoryNarration(LanguageCode languageCode, Long audioMediaId, Integer durationMinutes) {
@@ -549,6 +598,12 @@ public class Content extends BaseJpaEntity {
     private void requireGlobalLullabyMusicianScope(ContributorRole role, LanguageCode languageCode) {
         if (type == ContentType.LULLABY && role == ContributorRole.MUSICIAN && languageCode != null) {
             throw new GlobalMusicianLanguageNotAllowedException(languageCode);
+        }
+    }
+
+    private void ensureLullabyTypeForInstruments() {
+        if (type != ContentType.LULLABY) {
+            throw new IllegalStateException("Lullaby instruments are only supported for LULLABY content");
         }
     }
 

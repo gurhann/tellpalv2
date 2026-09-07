@@ -1,11 +1,22 @@
 package com.tellpal.v2.content.api;
 
+import java.util.List;
+
 /** Shared lullaby playback snapshot and its single content-scoped delivery status. */
 public record AdminLullabyPlaybackView(
         Long audioMediaId,
         Integer durationMinutes,
         String processingStatus,
-        String processingError) {
+        String processingError,
+        List<AdminLullabyInstrumentView> instruments) {
+
+    public AdminLullabyPlaybackView(
+            Long audioMediaId,
+            Integer durationMinutes,
+            String processingStatus,
+            String processingError) {
+        this(audioMediaId, durationMinutes, processingStatus, processingError, List.of());
+    }
 
     public AdminLullabyPlaybackView {
         if (audioMediaId == null || audioMediaId <= 0) {
@@ -17,5 +28,6 @@ public record AdminLullabyPlaybackView(
         if (processingStatus != null && processingStatus.isBlank()) {
             throw new IllegalArgumentException("Processing status must not be blank");
         }
+        instruments = instruments == null ? List.of() : List.copyOf(instruments);
     }
 }

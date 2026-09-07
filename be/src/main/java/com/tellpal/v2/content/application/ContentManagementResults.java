@@ -74,6 +74,36 @@ public final class ContentManagementResults {
         }
     }
 
+    /** Locale-resolved active catalog option returned to admin editors. */
+    public record InstrumentCatalogRecord(
+            Long instrumentId,
+            String code,
+            String displayName) {
+        public InstrumentCatalogRecord {
+            instrumentId = requirePositiveId(instrumentId, "Instrument catalog ID must be positive");
+            code = requireText(code, "Instrument catalog code must not be blank");
+            displayName = requireText(displayName, "Instrument catalog display name must not be blank");
+        }
+    }
+
+    /** Ordered instrument selection attached to a content-level lullaby playback. */
+    public record LullabyInstrumentRecord(
+            Long instrumentId,
+            String code,
+            String displayName,
+            int displayOrder) {
+        public LullabyInstrumentRecord {
+            instrumentId = requirePositiveId(instrumentId, "Instrument catalog ID must be positive");
+            code = requireText(code, "Instrument catalog code must not be blank");
+            if (displayName != null) {
+                displayName = displayName.trim();
+            }
+            if (displayOrder < 0) {
+                throw new IllegalArgumentException("Lullaby instrument display order must not be negative");
+            }
+        }
+    }
+
     /** Source snapshot of a story localization's optional full narration. */
     public record StoryNarrationRecord(
             Long audioMediaId,

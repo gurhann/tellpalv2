@@ -1,6 +1,9 @@
 package com.tellpal.v2.content.application;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.LocalizationStatus;
@@ -30,6 +33,23 @@ public final class ContentManagementCommands {
         public LullabyPlaybackCommand {
             audioMediaId = requirePositiveId(audioMediaId, "Lullaby audio media ID must be positive");
             durationMinutes = requireNonNegative(durationMinutes, "Lullaby duration minutes must be non-negative");
+        }
+    }
+
+    /** Replaces the complete content-level lullaby instrument selection by stable catalog codes. */
+    public record LullabyInstrumentSelectionCommand(Long contentId, List<String> instrumentCodes) {
+        public LullabyInstrumentSelectionCommand {
+            contentId = requirePositiveId(contentId, "Content ID must be positive");
+            if (instrumentCodes == null || instrumentCodes.isEmpty()) {
+                throw new IllegalArgumentException("Lullaby instrument selection must not be empty");
+            }
+            List<String> normalizedCodes = instrumentCodes.stream()
+                    .map(code -> requireInstrumentCode(code))
+                    .toList();
+            if (new HashSet<>(normalizedCodes).size() != normalizedCodes.size()) {
+                throw new IllegalArgumentException("Lullaby instrument selection must not contain duplicate codes");
+            }
+            instrumentCodes = List.copyOf(normalizedCodes);
         }
     }
 
@@ -345,5 +365,12 @@ public final class ContentManagementCommands {
             throw new IllegalArgumentException(message);
         }
         return value;
+    }
+
+    private static String requireInstrumentCode(String code) {
+        if (code == null || code.isBlank()) {
+            throw new IllegalArgumentException("Instrument catalog code must not be blank");
+        }
+        return code.trim().toUpperCase(Locale.ROOT);
     }
 }

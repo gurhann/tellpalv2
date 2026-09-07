@@ -44,6 +44,9 @@ public interface ContentRepository {
      */
     Optional<Content> findByIdForPlaybackWrite(Long id);
 
+    /** Loads a content aggregate with a write lock for replacing its ordered instrument links. */
+    Optional<Content> findByIdForInstrumentWrite(Long id);
+
     /**
      * Resolves a content aggregate by the externally visible key used across modules and admin tools.
      */

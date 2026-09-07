@@ -19,9 +19,14 @@ import com.tellpal.v2.content.application.ContentManagementCommands.UpdateConten
 import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.LullabyPlaybackRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.InstrumentCatalogRecord;
+import com.tellpal.v2.content.application.ContentManagementResults.LullabyInstrumentRecord;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentRepository;
+import com.tellpal.v2.content.domain.InstrumentCatalog;
+import com.tellpal.v2.content.domain.InstrumentCatalogRepository;
+import com.tellpal.v2.content.domain.LullabyInstrument;
 import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.shared.domain.LanguageCode;
@@ -44,14 +49,17 @@ public class ContentManagementService {
     private final ContentRepository contentRepository;
     private final ContentAssetReferenceValidator assetReferenceValidator;
     private final AssetProcessingApi assetProcessingApi;
+    private final InstrumentCatalogRepository instrumentCatalogRepository;
 
     public ContentManagementService(
             ContentRepository contentRepository,
             ContentAssetReferenceValidator assetReferenceValidator,
-            AssetProcessingApi assetProcessingApi) {
+            AssetProcessingApi assetProcessingApi,
+            InstrumentCatalogRepository instrumentCatalogRepository) {
         this.contentRepository = contentRepository;
         this.assetReferenceValidator = assetReferenceValidator;
         this.assetProcessingApi = assetProcessingApi;
+        this.instrumentCatalogRepository = instrumentCatalogRepository;
     }
 
     /**
@@ -206,6 +214,125 @@ public class ContentManagementService {
         AssetProcessingRecord processing = scheduleLullabyProcessing(savedContent, changed);
         return ContentManagementMapper.toLullabyPlaybackRecord(requireContentId(savedContent),
                 savedContent.getLullabyPlayback(), processing);
+    }
+
+    /** Returns active instrument catalog options with labels resolved for one supported locale. */
+    @Transactional(readOnly = true)
+    public java.util.List<InstrumentCatalogRecord> listInstrumentCatalog(LanguageCode languageCode) {
+        requireLanguageCode(languageCode);
+        return instrumentCatalogRepository.findAllActiveOrdered().stream()
+                .map(catalog -> new InstrumentCatalogRecord(
+                        requireCatalogId(catalog),
+                        catalog.getCode(),
+                        resolveDisplayName(catalog, languageCode)))
+                .toList();
+    }
+
+    /**
+     * Replaces all selected instruments for a lullaby using stable catalog codes.
+     *
+     * <p>Catalog validation is completed before the aggregate is changed. Existing links are
+     * flushed away before replacement to avoid transient unique-order conflicts while the whole
+     * operation remains one transaction.
+     */
+    @Transactional
+    public java.util.List<LullabyInstrumentRecord> replaceLullabyInstruments(
+            ContentManagementCommands.LullabyInstrumentSelectionCommand command) {
+        return replaceLullabyInstruments(command, null);
+    }
+
+    /**
+     * Replaces a lullaby's ordered instrument selection and, when requested, validates the
+     * response locale before changing the aggregate.
+     */
+    @Transactional
+    public java.util.List<LullabyInstrumentRecord> replaceLullabyInstruments(
+            ContentManagementCommands.LullabyInstrumentSelectionCommand command,
+            LanguageCode languageCode) {
+        Content content = contentRepository.findByIdForInstrumentWrite(command.contentId())
+                .orElseThrow(() -> new ContentNotFoundException(command.contentId()));
+        if (content.getType() != ContentType.LULLABY) {
+            throw new IllegalArgumentException("Lullaby instruments are only supported for LULLABY content");
+        }
+        java.util.List<InstrumentCatalog> catalogs = instrumentCatalogRepository
+                .findAllByCodeIn(command.instrumentCodes());
+        java.util.Map<String, InstrumentCatalog> catalogsByCode = catalogs.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        InstrumentCatalog::getCode,
+                        catalog -> catalog,
+                        (left, _right) -> left));
+        if (catalogsByCode.size() != command.instrumentCodes().size()
+                || !catalogsByCode.keySet().equals(new java.util.HashSet<>(command.instrumentCodes()))) {
+            java.util.List<String> unknownCodes = command.instrumentCodes().stream()
+                    .filter(code -> !catalogsByCode.containsKey(code))
+                    .toList();
+            throw new IllegalArgumentException("Unknown instrument catalog code(s): " + unknownCodes);
+        }
+        java.util.List<InstrumentCatalog> orderedCatalogs = command.instrumentCodes().stream()
+                .map(catalogsByCode::get)
+                .toList();
+        orderedCatalogs.stream()
+                .filter(catalog -> !catalog.isActive())
+                .findFirst()
+                .ifPresent(catalog -> {
+                    throw new IllegalArgumentException("Instrument catalog is retired: " + catalog.getCode());
+                });
+        // Resolve every requested label before clearing existing links. This keeps a bad or
+        // incomplete locale from returning 400 after the selection has already been committed.
+        if (languageCode != null) {
+            orderedCatalogs.forEach(catalog -> resolveDisplayName(catalog, requireLanguageCode(languageCode)));
+        }
+        content.clearLullabyInstruments();
+        contentRepository.saveAndFlush(content);
+        content.replaceLullabyInstruments(orderedCatalogs);
+        Content savedContent = contentRepository.saveAndFlush(content);
+        return toLullabyInstrumentRecords(savedContent, languageCode);
+    }
+
+    /** Returns one lullaby's ordered selections and optionally resolves their locale labels. */
+    @Transactional(readOnly = true)
+    public java.util.List<LullabyInstrumentRecord> listLullabyInstruments(
+            Long contentId, LanguageCode languageCode) {
+        Content content = contentRepository.findByIdForAdminRead(contentId)
+                .orElseThrow(() -> new ContentNotFoundException(contentId));
+        if (content.getType() != ContentType.LULLABY) {
+            throw new IllegalArgumentException("Lullaby instruments are only supported for LULLABY content");
+        }
+        return toLullabyInstrumentRecords(content, languageCode);
+    }
+
+    private static java.util.List<LullabyInstrumentRecord> toLullabyInstrumentRecords(
+            Content content, LanguageCode languageCode) {
+        return content.getOrderedLullabyInstruments().stream()
+                .map(instrument -> new LullabyInstrumentRecord(
+                        requireCatalogId(instrument.getInstrumentCatalog()),
+                        instrument.getInstrumentCatalog().getCode(),
+                        languageCode == null ? null : resolveDisplayName(instrument.getInstrumentCatalog(), languageCode),
+                        instrument.getDisplayOrder()))
+                .toList();
+    }
+
+    private static String resolveDisplayName(InstrumentCatalog catalog, LanguageCode languageCode) {
+        return catalog.findLocalization(languageCode)
+                .map(localization -> localization.getDisplayName())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Instrument catalog localization is missing for " + catalog.getCode()
+                                + " and language " + languageCode.value()));
+    }
+
+    private static Long requireCatalogId(InstrumentCatalog catalog) {
+        Long catalogId = catalog.getId();
+        if (catalogId == null || catalogId <= 0) {
+            throw new IllegalStateException("Instrument catalog must be persisted before mapping");
+        }
+        return catalogId;
+    }
+
+    private static LanguageCode requireLanguageCode(LanguageCode languageCode) {
+        if (languageCode == null) {
+            throw new IllegalArgumentException("Instrument catalog language code must not be null");
+        }
+        return languageCode;
     }
 
     private void upsertNarration(Content content, LanguageCode languageCode,

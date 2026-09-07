@@ -60,6 +60,11 @@ public class JpaContentRepositoryAdapter implements ContentRepository {
     }
 
     @Override
+    public Optional<Content> findByIdForInstrumentWrite(Long id) {
+        return repository.findByIdForInstrumentWrite(id);
+    }
+
+    @Override
     public Optional<Content> findByExternalKey(String externalKey) {
         return repository.findByExternalKey(externalKey);
     }

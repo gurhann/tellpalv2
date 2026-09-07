@@ -16,3 +16,19 @@
 
 - Public/mobile registry and asset-bundle consumers still resolve localization-scoped processing. Story 1.4 intentionally limits the change to the admin content contract; mobile/public endpoint migration is a later roadmap item.
 - The existing non-STORY processing worker requires an image listening cover, while Story 1.3 keeps that cover optional. Supporting coverless shared playback requires a separate asset-processing decision and is deferred without changing the new playback ownership model.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: Katalog enstrümanlarını emekliye ayırma, kullanılmayan kaydı silme ve bunların ayrı katalog yönetim yüzeyini sonraki çalışmaya bırak.
+  evidence: Story 1.5’in ana teslimi ninni seçimleri ve sıralamasıdır; katalog yönetimi planlama notlarında ertelenmiş, bu nedenle mevcut spec’in 1.600 token sınırını korumak için ayrıştırılmıştır.
+
+## Deferred from: review of spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme (2026-09-07)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: Katalog için EN/ES/PT/DE etiketlerinin seed edilmesi ve katalog localization yönetimi sonraki katalog yönetimi çalışmasına bırakıldı.
+  evidence: `LanguageCode` bu dilleri destekliyor ancak V26 yalnızca TR etiketleri seed ediyor; locale etiketi eksik olduğunda admin read bilinçli olarak 400 dönüyor.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: LULLABY yayınlanabilirlik/readiness akışına “en az bir enstrüman” kuralının eklenmesi sonraki yayınlama çalışmasına bırakıldı.
+  evidence: Mevcut `ContentPublicationPolicy` non-STORY içerikleri ortak akıştan geçiriyor ve Story 1.5 yalnızca katalog/selection/admin sözleşmesini kapsıyor; public/mobile yayın kapsamı da açıkça dışarıda.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-5-ninni-icin-katalogdan-sirali-enstruman-secme.md`
+  summary: Katalog kaydının pasifleştirilmesinin mevcut seçimlere etkisi ve veritabanı seviyesinde aktif katalog zorlaması ayrı emeklilik politikasıyla ele alınacak.
+  evidence: Selection write aktif olmayan kodu reddediyor; ancak emeklilik/silme davranışı frozen scope içinde deferred-work’e taşındı.

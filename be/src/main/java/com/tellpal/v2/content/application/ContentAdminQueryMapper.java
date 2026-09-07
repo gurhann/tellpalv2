@@ -6,6 +6,7 @@ import com.tellpal.v2.content.api.AdminContentLocalizationView;
 import com.tellpal.v2.content.api.AdminContentView;
 import com.tellpal.v2.content.api.AdminStoryNarrationView;
 import com.tellpal.v2.content.api.AdminLullabyPlaybackView;
+import com.tellpal.v2.content.api.AdminLullabyInstrumentView;
 import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
@@ -39,7 +40,14 @@ final class ContentAdminQueryMapper {
                         playback.getDurationMinutes(),
                         processing == null ? null : processing.status().name(),
                         processing == null ? null : processing.lastErrorMessage() != null
-                                ? processing.lastErrorMessage() : processing.lastErrorCode()),
+                                ? processing.lastErrorMessage() : processing.lastErrorCode(),
+                        content.getOrderedLullabyInstruments().stream()
+                                .map(instrument -> new AdminLullabyInstrumentView(
+                                        requireCatalogId(instrument.getInstrumentCatalog()),
+                                        instrument.getInstrumentCatalog().getCode(),
+                                        null,
+                                        instrument.getDisplayOrder()))
+                                .toList()),
                 content.getLocalizations().stream()
                         .sorted(Comparator.comparing(localization -> localization.getLanguageCode().value()))
                         .map(localization -> toLocalizationView(content, contentId, localization, processing))
@@ -88,5 +96,13 @@ final class ContentAdminQueryMapper {
             throw new IllegalStateException("Content must be persisted before admin query mapping");
         }
         return contentId;
+    }
+
+    private static Long requireCatalogId(com.tellpal.v2.content.domain.InstrumentCatalog catalog) {
+        Long catalogId = catalog.getId();
+        if (catalogId == null || catalogId <= 0) {
+            throw new IllegalStateException("Instrument catalog must be persisted before admin query mapping");
+        }
+        return catalogId;
     }
 }

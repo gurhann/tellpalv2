@@ -5,10 +5,13 @@
 |Spring components
 |_Services_
 
+* `c.t.v.c.api.AdminCategoryCurationQueryApi` (via `c.t.v.c.application.AdminCategoryCurationQueryService`)
 * `c.t.v.c.api.CategoryLookupApi` (via `c.t.v.c.application.CategoryLookupService`)
 * `c.t.v.c.api.PublicCategoryQueryApi` (via `c.t.v.c.application.query.PublicCategoryQueryService`)
 |Bean references
-|* `c.t.v.a.api.AssetRegistryApi` (in Asset)
+|* `c.t.v.c.api.EligibleContentQueryApi` (in Content)
+* `c.t.v.c.api.LocalizedContentIdentityLookupApi` (in Content)
+* `c.t.v.a.api.AssetRegistryApi` (in Asset)
 * `c.t.v.c.api.ContentLookupApi` (in Content)
 * `c.t.v.c.api.ContentLocalizationLookupApi` (in Content)
 * `c.t.v.c.api.PublicContentQueryApi` (in Content)

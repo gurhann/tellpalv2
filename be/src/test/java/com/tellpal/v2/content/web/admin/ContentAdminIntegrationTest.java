@@ -934,11 +934,24 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$.durationMinutes").value(10))
                 .andExpect(jsonPath("$.processingStatus").value("PENDING"));
 
+        mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
+                        .param("languageCode", "tr")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                { "instrumentCodes": ["CELESTA", "BELL"] }
+                                """))
+                .andExpect(status().isOk());
+
         mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.playback.audioMediaId").value(audioMediaId))
                 .andExpect(jsonPath("$.playback.durationMinutes").value(10))
+                .andExpect(jsonPath("$.playback.instruments[0].code").value("CELESTA"))
+                .andExpect(jsonPath("$.playback.instruments[0].displayOrder").value(0))
+                .andExpect(jsonPath("$.playback.instruments[1].code").value("BELL"))
+                .andExpect(jsonPath("$.playback.instruments[1].displayOrder").value(1))
                 .andExpect(jsonPath("$.localizations[0].audioMediaId").value(nullValue()))
                 .andExpect(jsonPath("$.localizations[1].audioMediaId").value(nullValue()));
 
@@ -1002,6 +1015,74 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.playback").value(nullValue()));
+    }
+
+    @Test
+    void lullabyInstrumentsUseLocaleCatalogLabelsAndPreserveSelectionOnInvalidUpdate() throws Exception {
+        String accessToken = authenticateAdmin();
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "LULLABY",
+                                  "externalKey": "catalog-lullaby",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(get("/api/admin/instrument-catalog")
+                        .param("languageCode", "tr")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(8))
+                .andExpect(jsonPath("$[0].code").value("BELL"))
+                .andExpect(jsonPath("$[0].displayName").value("Bell"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
+                        .param("languageCode", "tr")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                { "instrumentCodes": ["BELL", "CELESTA"] }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].code").value("BELL"))
+                .andExpect(jsonPath("$[0].displayName").value("Bell"))
+                .andExpect(jsonPath("$[0].displayOrder").value(0))
+                .andExpect(jsonPath("$[1].code").value("CELESTA"))
+                .andExpect(jsonPath("$[1].displayOrder").value(1));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                { "instrumentCodes": ["BELL", "UNKNOWN"] }
+                                """))
+                        .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
+                        .param("languageCode", "en")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                { "instrumentCodes": ["CELESTA", "BELL"] }
+                                """))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}/instruments", contentId)
+                        .param("languageCode", "tr")
+                        .header("Authorization", "Bearer " + accessToken))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$[0].code").value("BELL"))
+                .andExpect(jsonPath("$[0].displayName").value("Bell"))
+                .andExpect(jsonPath("$[0].displayOrder").value(0))
+                .andExpect(jsonPath("$[1].code").value("CELESTA"))
+                .andExpect(jsonPath("$[1].displayOrder").value(1));
     }
 
     private Long registerImageAsset(String objectPath) {

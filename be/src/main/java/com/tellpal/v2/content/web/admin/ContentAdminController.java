@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tellpal.v2.content.api.AdminContentQueryApi;
@@ -167,6 +168,93 @@ public class ContentAdminController {
         return AdminLullabyPlaybackResponse.from(contentManagementService.upsertLullabyPlayback(
                 contentId,
                 request.toCommand()));
+    }
+
+    @GetMapping({"/instrument-catalog", "/instruments/catalog"})
+    @Operation(
+            summary = "List instrument catalog",
+            description = "Returns active instrument catalog options with labels for a supported locale.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Instrument catalog returned"),
+            @ApiResponse(responseCode = "400", description = "Locale or catalog data is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminInstrumentCatalogResponse> listInstrumentCatalog(
+            @RequestParam(name = "languageCode", required = false) String languageCode,
+            @RequestParam(name = "language", required = false) String language,
+            @RequestParam(name = "lang", required = false) String lang) {
+        return contentManagementService.listInstrumentCatalog(resolveLanguageCode(languageCode, language, lang))
+                .stream()
+                .map(AdminInstrumentCatalogResponse::from)
+                .toList();
+    }
+
+    @GetMapping("/{contentId}/instruments")
+    @Operation(
+            summary = "List lullaby instruments",
+            description = "Returns one lullaby's ordered instrument selection, optionally with a locale label.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lullaby instruments returned"),
+            @ApiResponse(responseCode = "400", description = "Locale or content type is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminLullabyInstrumentResponse> listLullabyInstruments(
+            @PathVariable Long contentId,
+            @RequestParam(name = "languageCode", required = false) String languageCode,
+            @RequestParam(name = "language", required = false) String language,
+            @RequestParam(name = "lang", required = false) String lang) {
+        String resolvedLanguage = firstPresent(languageCode, language, lang);
+        return contentManagementService.listLullabyInstruments(
+                        contentId,
+                        resolvedLanguage == null ? null : LanguageCode.from(resolvedLanguage))
+                .stream()
+                .map(AdminLullabyInstrumentResponse::from)
+                .toList();
+    }
+
+    @PutMapping("/{contentId}/instruments")
+    @Operation(
+            summary = "Replace lullaby instruments",
+            description = "Replaces the complete ordered instrument selection for one lullaby by stable catalog codes.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lullaby instruments replaced"),
+            @ApiResponse(responseCode = "400", description = "Instrument selection is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "404", description = "Content was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+    })
+    public List<AdminLullabyInstrumentResponse> replaceLullabyInstruments(
+            @PathVariable Long contentId,
+            @RequestParam(name = "languageCode", required = false) String languageCode,
+            @RequestParam(name = "language", required = false) String language,
+            @RequestParam(name = "lang", required = false) String lang,
+            @Valid @RequestBody ReplaceLullabyInstrumentsRequest request) {
+        String resolvedLanguage = firstPresent(languageCode, language, lang);
+        LanguageCode responseLanguage = resolvedLanguage == null ? null : LanguageCode.from(resolvedLanguage);
+        return contentManagementService.replaceLullabyInstruments(
+                        request.toCommand(contentId), responseLanguage).stream()
+                .map(AdminLullabyInstrumentResponse::from)
+                .toList();
+    }
+
+    private static LanguageCode resolveLanguageCode(String languageCode, String language, String lang) {
+        String resolved = firstPresent(languageCode, language, lang);
+        if (resolved == null) {
+            throw new IllegalArgumentException("A supported language code is required");
+        }
+        return LanguageCode.from(resolved);
+    }
+
+    private static String firstPresent(String... values) {
+        for (String value : values) {
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}")
@@ -360,6 +448,15 @@ record UpdateLullabyPlaybackRequest(
 
     ContentManagementCommands.LullabyPlaybackCommand toCommand() {
         return new ContentManagementCommands.LullabyPlaybackCommand(audioMediaId, durationMinutes);
+    }
+}
+
+record ReplaceLullabyInstrumentsRequest(
+        @NotNull(message = "instrumentCodes is required")
+        List<@NotBlank(message = "instrument code must not be blank") String> instrumentCodes) {
+
+    ContentManagementCommands.LullabyInstrumentSelectionCommand toCommand(Long contentId) {
+        return new ContentManagementCommands.LullabyInstrumentSelectionCommand(contentId, instrumentCodes);
     }
 }
 

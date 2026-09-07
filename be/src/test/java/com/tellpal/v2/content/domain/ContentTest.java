@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -291,9 +292,47 @@ class ContentTest {
         assertThat(content.getContributors().iterator().next().getLanguageCode()).isNull();
     }
 
+    @Test
+    void lullabyInstrumentSelectionIsOrderedAndRejectsInvalidReplacementWithoutChangingCurrentLinks() {
+        Content content = Content.create(ContentType.LULLABY, "lullaby-instruments", 2, true);
+        InstrumentCatalog celesta = persistedInstrument(1L, "CELESTA");
+        InstrumentCatalog bell = persistedInstrument(2L, "BELL");
+
+        content.replaceLullabyInstruments(List.of(celesta, bell));
+        assertThat(content.getOrderedLullabyInstruments())
+                .extracting(instrument -> instrument.getInstrumentCatalog().getCode())
+                .containsExactly("CELESTA", "BELL");
+        assertThat(content.getOrderedLullabyInstruments())
+                .extracting(LullabyInstrument::getDisplayOrder)
+                .containsExactly(0, 1);
+
+        assertThatThrownBy(() -> content.replaceLullabyInstruments(List.of(celesta, celesta)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("duplicate");
+        assertThat(content.getOrderedLullabyInstruments())
+                .extracting(instrument -> instrument.getInstrumentCatalog().getCode())
+                .containsExactly("CELESTA", "BELL");
+    }
+
+    @Test
+    void lullabyInstrumentsAreNotSupportedForOtherContentTypes() {
+        Content story = Content.create(ContentType.STORY, "story-instruments", 2, true);
+        InstrumentCatalog celesta = persistedInstrument(1L, "CELESTA");
+
+        assertThatThrownBy(() -> story.replaceLullabyInstruments(List.of(celesta)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("LULLABY");
+    }
+
     private static Contributor persistedContributor(Long contributorId, String displayName) {
         Contributor contributor = Contributor.create(displayName, Set.of(ContributorRole.AUTHOR));
         ReflectionTestUtils.setField(contributor, "id", contributorId);
         return contributor;
+    }
+
+    private static InstrumentCatalog persistedInstrument(Long instrumentId, String code) {
+        InstrumentCatalog catalog = InstrumentCatalog.create(code);
+        ReflectionTestUtils.setField(catalog, "id", instrumentId);
+        return catalog;
     }
 }

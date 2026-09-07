@@ -34,6 +34,7 @@ Read order:
 - `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and backend-mediated CMS uploads/previews.
 - `ADR-0009`: registry reads must paginate and filter in the database; `Specification` covers row-local predicates while aggregate readiness needs a dedicated projection/read model.
 - `ADR-0010`: STORY source textless covers, localized reading covers, and shared listening covers are separate ownership concepts; listening covers are content-scoped for STORY, MEDITATION, and LULLABY.
+- `ADR-0011`: lullaby instrument selections are content-scoped ordered links to a language-independent catalog; display names are resolved from catalog localization rows and are not copied to content localizations.
 
 ## Coding and Documentation Defaults
 
@@ -86,6 +87,7 @@ Read order:
 - Category type is now content-aligned. Category seed and curation test data must use one of `STORY`, `AUDIO_STORY`, `MEDITATION`, or `LULLABY`, and curated content must match the selected category type.
 - Asset runtime now expects real Firebase Storage credentials in local development. Local and production share one bucket, and environment isolation happens through the configured path prefix (`local` or `prod`).
 - Asset upload and generated processing paths are prefix-aware. New manual uploads land under `/{prefix}/manual/...`, and generated variants/packages land under `/{prefix}/content/...`.
+- Lullaby playback and instrument selections are shared at content level. Instrument selection uses stable catalog codes and zero-based order; `MUSICIAN` contributors remain a separate concept.
 - CMS asset upload and preview are backend-mediated. Browsers send multipart uploads to the admin
   API and render short-lived backend preview URLs; Firebase/GCS signed upload and download URLs
   remain only for deprecated compatibility and mobile/public delivery needs.

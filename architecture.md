@@ -145,7 +145,7 @@ Her modül mümkün olduğunca şu iç yapıyı izler:
 |---|---|---|---|
 | `shared` | Ortak teknik ve küçük domain yapı taşları | `languages`, ortak enum/value object'ler | Yok |
 | `admin` | Admin kullanıcıları, roller, refresh token zinciri, JWT auth | `admin_users`, `admin_roles`, `admin_user_roles`, `admin_refresh_tokens` | `shared` |
-| `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access` | `shared`, `asset.api` |
+| `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ninni playback/enstrüman seçimleri, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access`, `lullaby_playbacks`, `instrument_catalogs`, `instrument_catalog_localizations`, `lullaby_instruments` | `shared`, `asset.api` |
 | `category` | Kategori yaşam döngüsü ve dil bazlı kürasyon | `categories`, `category_localizations`, `category_contents` | `shared`, `content.api`, `asset.api` |
 | `asset` | Medya asset kaydı, Firebase Storage referansları, işleme/paketleme pipeline'ı | `media_assets`, `asset_processing` benzeri işlem kayıtları | `shared`, `content.api` |
 | `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api` |
@@ -165,6 +165,9 @@ Ana aggregate'ler:
 - `Content`
 - `ContentLocalization`
 - `StoryPage`
+- `LullabyPlayback`
+- `InstrumentCatalog`
+- `LullabyInstrument`
 
 Ek domain nesneleri:
 
@@ -177,6 +180,8 @@ Kurallar:
 - `Content` ana aggregate root'tur.
 - `STORY` tipinde `page_count`, sayfa kümesiyle tutarlı olmak zorundadır.
 - `AUDIO_STORY`, `MEDITATION`, `LULLABY` için sayfa yönetimi kapalıdır.
+- Ninni enstrüman seçimi `Content` altında, dil bağımsız katalog kodlarıyla ve sıfırdan başlayan sıralı bağlantılarla tutulur; görünen adlar katalog localization satırlarından çözülür.
+- `MUSICIAN` contributor ilişkisi enstrüman kataloğundan ayrıdır ve enstrüman seçimi localization satırlarına kopyalanmaz.
 - Mobil görünürlük için yalnızca `status = PUBLISHED` yeterli değildir; ilgili localization ayrıca `processing_status = COMPLETED` olmalıdır.
 
 ### 8.2 `category` modülü

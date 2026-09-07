@@ -21,6 +21,8 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             select distinct content
             from Content content
             left join fetch content.localizations
+            left join fetch content.lullabyInstruments lullabyInstrument
+            left join fetch lullabyInstrument.instrumentCatalog
             order by content.id asc
             """)
     List<Content> findAllForAdminRead();
@@ -29,6 +31,8 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             select distinct content
             from Content content
             left join fetch content.localizations
+            left join fetch content.lullabyInstruments lullabyInstrument
+            left join fetch lullabyInstrument.instrumentCatalog
             where content.id = :id
             """)
     Optional<Content> findByIdForAdminRead(Long id);
@@ -76,6 +80,14 @@ interface SpringDataContentRepository extends JpaRepository<Content, Long>, JpaS
             where content.id = :id
             """)
     Optional<Content> findByIdForPlaybackWrite(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select content
+            from Content content
+            where content.id = :id
+            """)
+    Optional<Content> findByIdForInstrumentWrite(Long id);
 
     Optional<Content> findByExternalKey(String externalKey);
 

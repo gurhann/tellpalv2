@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.EntityManager;
 
@@ -25,6 +26,7 @@ import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPage
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.RemoveStoryPageCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.LullabyInstrumentSelectionCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementResults.StoryPageRecord;
 import com.tellpal.v2.content.application.ContentManagementService;
@@ -219,6 +221,48 @@ class ContentManagementIntegrationTest extends PostgresIntegrationTestBase {
                 "select role from contributor_roles where contributor_id = ?",
                 String.class,
                 author.contributorId())).containsExactly("AUTHOR");
+    }
+
+    @Test
+    void lullabyInstrumentSelectionPersistsStableCodesInZeroBasedOrderAndRollsBackInvalidChanges() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "instrumented-lullaby", 2, true));
+
+        assertThat(contentManagementService.replaceLullabyInstruments(
+                new LullabyInstrumentSelectionCommand(content.contentId(), List.of("CELESTA", "BELL"))))
+                .extracting(record -> record.code())
+                .containsExactly("CELESTA", "BELL");
+        assertThat(jdbcTemplate.queryForList(
+                "select display_order from lullaby_instruments where content_id = ? order by display_order",
+                Integer.class,
+                content.contentId())).containsExactly(0, 1);
+        List<Long> originalInstrumentIds = jdbcTemplate.queryForList(
+                "select instrument_catalog_id from lullaby_instruments where content_id = ? order by display_order",
+                Long.class,
+                content.contentId());
+
+        assertThat(contentManagementService.replaceLullabyInstruments(
+                new LullabyInstrumentSelectionCommand(content.contentId(), List.of("BELL", "CELESTA"))))
+                .extracting(record -> record.code())
+                .containsExactly("BELL", "CELESTA");
+        assertThat(jdbcTemplate.queryForList(
+                "select display_order from lullaby_instruments where content_id = ? order by display_order",
+                Integer.class,
+                content.contentId())).containsExactly(0, 1);
+
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> contentManagementService.replaceLullabyInstruments(
+                new LullabyInstrumentSelectionCommand(content.contentId(), List.of("CELESTA", "UNKNOWN"))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Unknown");
+        assertThat(jdbcTemplate.queryForList(
+                "select instrument_catalog_id from lullaby_instruments where content_id = ? order by display_order",
+                Long.class,
+                content.contentId())).containsExactly(originalInstrumentIds.get(1), originalInstrumentIds.get(0));
+
+        org.assertj.core.api.Assertions.assertThatThrownBy(() ->
+                new LullabyInstrumentSelectionCommand(content.contentId(), List.of()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must not be empty");
     }
 
     @Test
