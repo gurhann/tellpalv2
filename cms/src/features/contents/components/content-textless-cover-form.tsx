@@ -105,6 +105,7 @@ export function ContentTextlessCoverForm({
           ageRange: content.summary.ageRange,
           active: content.summary.active,
           textlessCoverMediaId: values.textlessCoverMediaId ?? null,
+          listeningCoverMediaId: content.summary.listeningCoverAssetId,
         }),
         {
           loading: copy.saving,

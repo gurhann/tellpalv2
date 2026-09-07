@@ -10,7 +10,8 @@ public record ContentReference(
         boolean active,
         Integer ageRange,
         Integer pageCount,
-        Long textlessCoverMediaId) {
+        Long textlessCoverMediaId,
+        Long listeningCoverMediaId) {
 
     public ContentReference(
             Long contentId,
@@ -19,7 +20,18 @@ public record ContentReference(
             boolean active,
             Integer ageRange,
             Integer pageCount) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, null);
+        this(contentId, type, externalKey, active, ageRange, pageCount, null, null);
+    }
+
+    public ContentReference(
+            Long contentId,
+            ContentApiType type,
+            String externalKey,
+            boolean active,
+            Integer ageRange,
+            Integer pageCount,
+            Long textlessCoverMediaId) {
+        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null);
     }
 
     public ContentReference {
@@ -34,6 +46,9 @@ public record ContentReference(
         }
         if (textlessCoverMediaId != null && textlessCoverMediaId <= 0) {
             throw new IllegalArgumentException("Textless cover media ID must be positive");
+        }
+        if (listeningCoverMediaId != null && listeningCoverMediaId <= 0) {
+            throw new IllegalArgumentException("Listening cover media ID must be positive");
         }
         externalKey = externalKey.trim();
     }

@@ -147,6 +147,20 @@ stack.
   `status=PUBLISHED` and `processingStatus=COMPLETED`.
 - `coverMediaId` must reference an asset with media type `IMAGE`.
 - Content-level `audioMediaId` must reference an asset with media type `AUDIO`.
+- `textlessCoverMediaId` is the optional STORY-only source cover used by the textless
+  illustration/translation workflow. It is distinct from both localization `coverMediaId` and
+  `listeningCoverMediaId`.
+- `listeningCoverMediaId` is an optional content-level cover supported only for `STORY`,
+  `MEDITATION`, and `LULLABY`. It must reference an `IMAGE` asset and is shared by every
+  localization of the content; it is not copied into localization rows.
+- A content update rejects requests that use the same non-null asset ID for
+  `textlessCoverMediaId` and `listeningCoverMediaId`.
+- Both content-level cover fields are part of the full update payload. Omitting either field is
+  interpreted as `null` and clears that stored reference; send the existing ID to preserve it.
+  Sending `null` explicitly also clears the reference. Cover clearing does not alter publication
+  visibility, localization processing status, or create an asset-processing job.
+- Database constraints additionally prevent a non-`STORY` row from storing
+  `textlessCoverMediaId`, and prevent `AUDIO_STORY` rows from storing `listeningCoverMediaId`.
 - Story page illustration ownership is localization-scoped. There is no page-level illustration
   fallback at runtime.
 - Story page localization `audioMediaId` must reference an asset with media type `AUDIO`.

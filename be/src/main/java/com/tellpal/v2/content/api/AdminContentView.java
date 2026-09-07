@@ -13,6 +13,7 @@ public record AdminContentView(
         Integer ageRange,
         Integer pageCount,
         Long textlessCoverMediaId,
+        Long listeningCoverMediaId,
         List<AdminContentLocalizationView> localizations) {
 
     public AdminContentView(
@@ -23,7 +24,19 @@ public record AdminContentView(
             Integer ageRange,
             Integer pageCount,
             List<AdminContentLocalizationView> localizations) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, null, localizations);
+        this(contentId, type, externalKey, active, ageRange, pageCount, null, null, localizations);
+    }
+
+    public AdminContentView(
+            Long contentId,
+            ContentApiType type,
+            String externalKey,
+            boolean active,
+            Integer ageRange,
+            Integer pageCount,
+            Long textlessCoverMediaId,
+            List<AdminContentLocalizationView> localizations) {
+        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null, localizations);
     }
 
     public AdminContentView {
@@ -38,6 +51,9 @@ public record AdminContentView(
         }
         if (textlessCoverMediaId != null && textlessCoverMediaId <= 0) {
             throw new IllegalArgumentException("Textless cover media ID must be positive");
+        }
+        if (listeningCoverMediaId != null && listeningCoverMediaId <= 0) {
+            throw new IllegalArgumentException("Listening cover media ID must be positive");
         }
         localizations = localizations == null ? List.of() : List.copyOf(localizations);
         externalKey = externalKey.trim();

@@ -34,6 +34,8 @@ type ContentReadResponse = {
   active: boolean;
   ageRange: number | null;
   pageCount: number | null;
+  textlessCoverMediaId: number | null;
+  listeningCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -108,6 +110,8 @@ test("contributor registry and assignment flows support delete and unassign", as
     active: true,
     ageRange: 5,
     pageCount: 2,
+    textlessCoverMediaId: null,
+    listeningCoverMediaId: null,
     localizations: [
       {
         contentId: 1,

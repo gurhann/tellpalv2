@@ -404,7 +404,8 @@ class ContentAdminControllerTest {
                 true,
                 5,
                 2,
-                321L));
+                321L,
+                654L));
 
         mockMvc.perform(put("/api/admin/contents/51")
                         .contentType("application/json")
@@ -413,17 +414,20 @@ class ContentAdminControllerTest {
                                   "externalKey": "moonlight-story",
                                   "ageRange": 5,
                                   "active": true,
-                                  "textlessCoverMediaId": 321
+                                  "textlessCoverMediaId": 321,
+                                  "listeningCoverMediaId": 654
                                 }
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(51))
-                .andExpect(jsonPath("$.textlessCoverMediaId").value(321));
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(321))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(654));
 
         verify(contentManagementService).updateContent(argThat(command ->
                 command.contentId().equals(51L)
                         && command.externalKey().equals("moonlight-story")
-                        && command.textlessCoverMediaId().equals(321L)));
+                        && command.textlessCoverMediaId().equals(321L)
+                        && command.listeningCoverMediaId().equals(654L)));
     }
 
     @Test

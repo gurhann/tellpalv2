@@ -28,6 +28,7 @@ describe("content view model mappers", () => {
       ageRange: 4,
       pageCount: 8,
       textlessCoverMediaId: 71,
+      listeningCoverMediaId: 72,
     };
 
     expect(mapAdminContent(dto)).toEqual({
@@ -40,6 +41,9 @@ describe("content view model mappers", () => {
       pageCount: 8,
       textlessCoverAssetId: 71,
       hasTextlessCover: true,
+      listeningCoverAssetId: 72,
+      hasListeningCover: true,
+      supportsListeningCover: true,
       supportsStoryPages: true,
       hasPages: true,
     });
@@ -94,6 +98,7 @@ describe("content view model mappers", () => {
       ageRange: 4,
       pageCount: 8,
       textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 14,
@@ -137,6 +142,9 @@ describe("content view model mappers", () => {
         pageCount: 8,
         textlessCoverAssetId: null,
         hasTextlessCover: false,
+        listeningCoverAssetId: null,
+        hasListeningCover: false,
+        supportsListeningCover: true,
         supportsStoryPages: true,
         hasPages: true,
       },
@@ -224,6 +232,7 @@ describe("content view model mappers", () => {
       ageRange: 8,
       pageCount: null,
       textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
     };
 
     const localizations = [
@@ -255,6 +264,9 @@ describe("content view model mappers", () => {
           pageCount: null,
           textlessCoverAssetId: null,
           hasTextlessCover: false,
+          listeningCoverAssetId: null,
+          hasListeningCover: false,
+          supportsListeningCover: true,
           supportsStoryPages: false,
           hasPages: false,
         },

@@ -18,6 +18,7 @@ type ContentReadResponse = {
   ageRange: number | null;
   pageCount: number | null;
   textlessCoverMediaId: number | null;
+  listeningCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -126,6 +127,7 @@ test("story pages keep illustration assets per locale", async ({ page }) => {
     ageRange: 5,
     pageCount: 1,
     textlessCoverMediaId: null,
+    listeningCoverMediaId: null,
     localizations: [
       {
         contentId: 1,
@@ -441,6 +443,7 @@ test("story pages can be added, localized, and deleted in one editor flow", asyn
     ageRange: 5,
     pageCount: 1,
     textlessCoverMediaId: null,
+    listeningCoverMediaId: null,
     localizations: [
       {
         contentId: 1,
@@ -778,6 +781,7 @@ test("story pages can be inserted after an existing row and renumber following p
     ageRange: 5,
     pageCount: 2,
     textlessCoverMediaId: null,
+    listeningCoverMediaId: null,
     localizations: [
       {
         contentId: 1,

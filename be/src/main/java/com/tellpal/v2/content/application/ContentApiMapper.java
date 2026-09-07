@@ -25,7 +25,8 @@ final class ContentApiMapper {
                 content.isActive(),
                 content.getAgeRange(),
                 content.getPageCount(),
-                content.getTextlessCoverMediaId());
+                content.getTextlessCoverMediaId(),
+                content.getListeningCoverMediaId());
     }
 
     static ContentLocalizationReference toLocalizationReference(Long contentId, ContentLocalization localization) {

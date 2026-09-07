@@ -113,6 +113,7 @@ describe("ContentTextlessCoverForm", () => {
         ageRange: 5,
         active: true,
         textlessCoverMediaId: 888,
+        listeningCoverMediaId: 702,
       });
     });
   });

@@ -14,6 +14,29 @@ vi.mock("@/features/contents/mutations/use-save-content", () => ({
   useSaveContent: saveContentHookMock.useSaveContent,
 }));
 
+vi.mock("@/features/assets/components/asset-picker-field", () => ({
+  AssetPickerField: ({
+    label,
+    onChange,
+    testId,
+  }: {
+    label: string;
+    onChange: (value: number | null) => void;
+    testId?: string;
+  }) => (
+    <div data-testid={testId}>
+      <span>{label}</span>
+      <button
+        type="button"
+        data-testid={testId ? `${testId}-select` : undefined}
+        onClick={() => onChange(702)}
+      >
+        Select asset 702
+      </button>
+    </div>
+  ),
+}));
+
 function makeProblem(
   overrides: Partial<ApiProblemDetail> = {},
 ): ApiProblemDetail {
@@ -68,6 +91,7 @@ describe("ContentForm", () => {
           externalKey: "",
           ageRange: null,
           active: true,
+          listeningCoverMediaId: null,
         }}
         mode="create"
       />,
@@ -89,6 +113,8 @@ describe("ContentForm", () => {
           externalKey: "story.evening-garden",
           ageRange: 5,
           active: true,
+          textlessCoverMediaId: null,
+          listeningCoverMediaId: null,
         }}
         mode="create"
       />,
@@ -105,6 +131,8 @@ describe("ContentForm", () => {
           externalKey: "meditation.rain-room",
           ageRange: 8,
           active: true,
+          textlessCoverMediaId: null,
+          listeningCoverMediaId: null,
         }}
         mode="update"
       />,
@@ -136,6 +164,7 @@ describe("ContentForm", () => {
           externalKey: "",
           ageRange: null,
           active: true,
+          listeningCoverMediaId: null,
         }}
         mode="create"
       />,
@@ -151,7 +180,44 @@ describe("ContentForm", () => {
     ).toBeVisible();
   });
 
-  it("submits editable metadata in update mode", async () => {
+  it("shows the listening cover selector only for supported content types", () => {
+    const renderUpdateForm = (
+      type: "STORY" | "MEDITATION" | "LULLABY" | "AUDIO_STORY",
+    ) =>
+      render(
+        <ContentForm
+          contentId={1}
+          initialValues={{
+            type,
+            externalKey: `${type.toLowerCase()}.evening-garden`,
+            ageRange: 5,
+            active: true,
+            textlessCoverMediaId: null,
+            listeningCoverMediaId: null,
+          }}
+          mode="update"
+        />,
+      );
+
+    const storyRender = renderUpdateForm("STORY");
+
+    expect(screen.getByText("Listening cover")).toBeVisible();
+
+    storyRender.unmount();
+    const meditationRender = renderUpdateForm("MEDITATION");
+    expect(screen.getByText("Listening cover")).toBeVisible();
+
+    meditationRender.unmount();
+    const lullabyRender = renderUpdateForm("LULLABY");
+    expect(screen.getByText("Listening cover")).toBeVisible();
+
+    lullabyRender.unmount();
+    renderUpdateForm("AUDIO_STORY");
+
+    expect(screen.queryByText("Listening cover")).not.toBeInTheDocument();
+  });
+
+  it("submits editable metadata and the selected listening cover in update mode", async () => {
     const mutationState = makeSaveMutationState({
       mutateAsync: vi.fn().mockResolvedValue({
         contentId: 1,
@@ -160,6 +226,8 @@ describe("ContentForm", () => {
         active: false,
         ageRange: 6,
         pageCount: 2,
+        textlessCoverMediaId: null,
+        listeningCoverMediaId: 702,
       }),
     });
     saveContentHookMock.useSaveContent.mockReturnValue(mutationState);
@@ -172,11 +240,14 @@ describe("ContentForm", () => {
           externalKey: "story.evening-garden",
           ageRange: 5,
           active: true,
+          textlessCoverMediaId: null,
+          listeningCoverMediaId: null,
         }}
         mode="update"
       />,
     );
 
+    fireEvent.click(screen.getByTestId("content-listening-cover-select"));
     fireEvent.change(screen.getByLabelText(/external key/i), {
       target: { value: "story.evening-garden.updated" },
     });
@@ -192,6 +263,7 @@ describe("ContentForm", () => {
         ageRange: 6,
         active: true,
         textlessCoverMediaId: null,
+        listeningCoverMediaId: 702,
       });
     });
   });

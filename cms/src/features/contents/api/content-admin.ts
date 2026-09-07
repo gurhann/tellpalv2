@@ -53,6 +53,7 @@ export type UpdateContentInput = {
   ageRange?: number | null;
   active: boolean;
   textlessCoverMediaId?: number | null;
+  listeningCoverMediaId?: number | null;
 };
 
 export type UpsertContentLocalizationInput = {
@@ -84,6 +85,7 @@ export const adminContentResponseSchema = z.object({
   ageRange: z.number().int().nonnegative().nullable(),
   pageCount: z.number().int().nonnegative().nullable(),
   textlessCoverMediaId: z.number().int().positive().nullable(),
+  listeningCoverMediaId: z.number().int().positive().nullable(),
 });
 
 export const adminContentLocalizationResponseSchema = z.object({

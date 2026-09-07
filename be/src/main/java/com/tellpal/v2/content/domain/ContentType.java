@@ -13,4 +13,8 @@ public enum ContentType {
     public boolean supportsStoryPages() {
         return this == STORY;
     }
+
+    public boolean supportsListeningCover() {
+        return this == STORY || this == MEDITATION || this == LULLABY;
+    }
 }

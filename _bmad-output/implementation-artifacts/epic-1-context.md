@@ -4,7 +4,7 @@
 
 ## Goal
 
-Tek bir canonical hikâyeye locale bazlı tam anlatım eklemeyi; ninninin ortak ses, textless kapak, süre, müzisyen ve enstrüman bilgisini ise bir kez yönetmeyi mümkün kılmak. Bu sahiplik sınırları yinelenen medya verisini ve eski bağımsız `AUDIO_STORY` kimliklerini önler; editörlerin her dilde yalnızca gerçekten yerelleşen bilgiyi değiştirmesini sağlar.
+Tek bir canonical hikâyeye locale bazlı tam anlatım eklemeyi; ninninin ortak ses, dinleme kapağı, süre, müzisyen ve enstrüman bilgisini ise bir kez yönetmeyi mümkün kılmak. Bu sahiplik sınırları yinelenen medya verisini ve eski bağımsız `AUDIO_STORY` kimliklerini önler; editörlerin her dilde yalnızca gerçekten yerelleşen bilgiyi değiştirmesini sağlar.
 
 ## Stories
 
@@ -19,8 +19,8 @@ Tek bir canonical hikâyeye locale bazlı tam anlatım eklemeyi; ninninin ortak 
 ## Requirements & Constraints
 
 - Tam anlatım yalnızca `STORY` localization’ının isteğe bağlı verisidir; tek parça `AUDIO` asset’i ve süre içerir. Var olan sayfa bazlı sesler korunur ve tam anlatımın yerine geçmez.
-- Ninninin playback verisi content düzeyinde tektir: ses, süre, ortak textless kapak, global `MUSICIAN` kredileri ve seçilmiş enstrümanlar diller arasında kopyalanamaz. Ninni localization’ı yalnızca başlık ve yayın durumunu kabul eder.
-- Textless kapak, sesli hikâye sunumu, ninni ve meditasyon için tek bir pozitif `IMAGE` asset referansıdır. STORY okuma deneyimi, ayrı olarak locale-specific kapağını kullanmaya devam eder.
+- Ninninin playback verisi content düzeyinde tektir: ses, süre, ortak textless dinleme kapağı, global `MUSICIAN` kredileri ve seçilmiş enstrümanlar diller arasında kopyalanamaz. Ninni localization’ı yalnızca başlık ve yayın durumunu kabul eder.
+- `STORY` üç ayrı kapak kavramını korur: content-level `textlessCoverMediaId`, normal başlıklı kapağın yazısız çeviri/illüstrasyon kaynağıdır; `ContentLocalization.coverMediaId`, dile özgü başlıklı okuma kapağıdır; yeni content-level dinleme kapağı ise sesli hikâye deneyiminde kullanılır. Kaynak kapak dinleme kapağı olarak yeniden kullanılamaz. Ninni ve meditasyon yalnızca kendi ortak, textless dinleme kapağını kullanır.
 - Enstrümanlar serbest metin ya da contributor değildir. Kararlı kodlu, yerelleştirilmiş katalogdan seçilir; seçimler benzersiz, sıfırdan başlayan sıralı ve mevcut seçimleri bozmadan yeniden sıralanabilir olmalıdır. Kullanımdaki katalog kaydı silinemez; yalnızca yeni seçimlere kapatılabilir.
 - Canonical `AUDIO_STORY` yeni content, category veya processing verisinde kabul edilmez. Şema daraltılmadan önce bu değeri kullanan mevcut content, category veya processing kayıtları açık bir hata ile migration’ı durdurmalıdır; veri dönüştürme/import kapsam dışıdır.
 - Asset referansları pozitif kimlikte ve beklenen medya türünde doğrulanır. URL ve processing çıktıları content içinde kopyalanmaz; okuma sırasında asset modülünden çözülür.
@@ -29,14 +29,14 @@ Tek bir canonical hikâyeye locale bazlı tam anlatım eklemeyi; ninninin ortak 
 ## Technical Decisions
 
 - `content` editoryal kimliği, playback sahipliğini, enstrüman seçimini ve read projection’larını sahiplenir. `asset` yalnızca asset kaydı, çözümleme ve operasyonel processing durumunu sahiplenir; modüller arası erişim public API üzerinden yapılır. `category` yalnızca canonical türlerle kürasyon yapar.
-- `StoryNarration`, `ContentLocalization`ın isteğe bağlı aggregate child’ıdır. `LullabyPlayback`, `Content`ın tek ortak child’ıdır; ortak kapak mevcut `Content.textlessCoverMediaId` alanını kullanır. Önerilen kavramlar `InstrumentCatalog`, `InstrumentCatalogLocalization` ve sıralı `LullabyInstrument` ilişkileridir.
+- `StoryNarration`, `ContentLocalization`ın isteğe bağlı aggregate child’ıdır. `LullabyPlayback`, `Content`ın tek ortak child’ıdır. `Content.textlessCoverMediaId` STORY kaynak kapağı olarak korunur; `STORY` anlatımı, ninni ve meditasyon için yeni ve ayrı bir content-level dinleme kapağı referansı kullanılır. Önerilen kavramlar `InstrumentCatalog`, `InstrumentCatalogLocalization` ve sıralı `LullabyInstrument` ilişkileridir.
 - Processing hedefi tiplenmiş olmalıdır: anlatım için `LOCALIZATION(contentId, languageCode)`, ninni playback’i için `CONTENT(contentId)`. Veritabanı hedef-kapsam/dil uyumsuzluklarını ve her hedefte yinelenen aktif kaydı engeller; content-scoped okuma `findByContent(contentId)` ile desteklenir.
 - Story anlatım hatası yalnızca o locale’ın sesli deneyimini etkiler, okunabilir hikâyeyi veya diğer dilleri etkilemez. Ortak ninni processing hatası her locale projeksiyonunu gizler fakat editoryal başlık ya da yayın durumunu değiştirmez.
 - Public sözleşmelerde canonical kimlik ile deneyim ayrıdır: sesli hikâye `canonicalType: STORY` ve `experienceType: AUDIO_STORY` olarak projekte edilir; `AUDIO_STORY` kalıcı bir content türü değildir. Public discovery/uyumluluk ayrıntıları bu epic’te uygulanmaz.
 
 ## UX & Interaction Patterns
 
-- CMS, sahiplik seviyesine göre tek baskın düzenleme akışı sunar: story narration ilgili localization editöründe; textless kapak ve ninni playback’i content editöründe yer alır.
+- CMS, sahiplik seviyesine göre tek baskın düzenleme akışı sunar: story narration ilgili localization editöründe; STORY kaynak kapağı, dinleme kapağı ve ninni playback’i content editöründe yer alır. Story'nin dile özgü başlıklı kapağı localization editöründe kalır.
 - LULLABY localization formlarında ses, süre, kapak, gövde/açıklama, müzisyen veya enstrüman alanları gösterilmez. MEDITATION localization’ında cover alanı gösterilmez; mevcut locale bazlı ses ve metin alanları korunur.
 - Yeni content oluşturma ve filtre akışlarında `AUDIO_STORY` seçeneği bulunmaz. Asset seçiciler erişilebilir, etiketleri anlaşılır ve farklı viewport’larda kullanılabilir kalmalıdır; layout/interaction değişiklikleri component ve görsel regresyon kapsamı alır.
 

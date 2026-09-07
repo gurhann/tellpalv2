@@ -29,6 +29,7 @@ final class ContentAdminQueryMapper {
                 content.getAgeRange(),
                 content.getPageCount(),
                 content.getTextlessCoverMediaId(),
+                content.getListeningCoverMediaId(),
                 content.getLocalizations().stream()
                         .sorted(Comparator.comparing(localization -> localization.getLanguageCode().value()))
                         .map(localization -> toLocalizationView(contentId, localization))

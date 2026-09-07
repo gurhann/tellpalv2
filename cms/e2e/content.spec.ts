@@ -17,6 +17,8 @@ type ContentReadResponse = {
   active: boolean;
   ageRange: number | null;
   pageCount: number | null;
+  textlessCoverMediaId: number | null;
+  listeningCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -80,6 +82,8 @@ test("create, edit, and publish flows work in the browser", async ({
       active: true,
       ageRange: 5,
       pageCount: 2,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 1,
@@ -104,6 +108,8 @@ test("create, edit, and publish flows work in the browser", async ({
       active: true,
       ageRange: 8,
       pageCount: null,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 2,
@@ -169,6 +175,8 @@ test("create, edit, and publish flows work in the browser", async ({
         active: body.active,
         ageRange: body.ageRange,
         pageCount: null,
+        textlessCoverMediaId: null,
+        listeningCoverMediaId: null,
         localizations: [],
       };
 
@@ -182,6 +190,8 @@ test("create, edit, and publish flows work in the browser", async ({
           ageRange: body.ageRange,
           active: body.active,
           pageCount: null,
+          textlessCoverMediaId: null,
+          listeningCoverMediaId: null,
         }),
       });
       return;

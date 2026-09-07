@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminContentResponse } from "@/features/contents/api/content-admin";
+import { AssetPickerField } from "@/features/assets/components/asset-picker-field";
 import { useSaveContent } from "@/features/contents/mutations/use-save-content";
 import {
   contentFormSchema,
@@ -81,6 +82,10 @@ export function ContentForm({
           ageRange: "Yas araligi",
           optional: "Opsiyonel",
           availability: "Erisim durumu",
+          listeningCover: "Dinleme kapagi",
+          listeningCoverTitle: "Dinleme kapagi sec",
+          listeningCoverDescription:
+            "Sesli deneyimde tum dillerle paylasilan textless kapagi secin veya yukleyin.",
           active: "Aktif",
           inactive: "Pasif",
           inactiveHelp:
@@ -106,6 +111,10 @@ export function ContentForm({
           ageRange: "Age range",
           optional: "Optional",
           availability: "Availability",
+          listeningCover: "Listening cover",
+          listeningCoverTitle: "Pick listening cover",
+          listeningCoverDescription:
+            "Choose the textless cover shared by the audio experience across all languages.",
           active: "Active",
           inactive: "Inactive",
           inactiveHelp: "Inactive content still appears in admin read screens.",
@@ -128,6 +137,10 @@ export function ContentForm({
         },
   );
   const selectedType = form.watch("type");
+  const supportsListeningCover =
+    selectedType === "STORY" ||
+    selectedType === "MEDITATION" ||
+    selectedType === "LULLABY";
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -307,6 +320,31 @@ export function ContentForm({
           />
           <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
+
+        {mode === "update" && supportsListeningCover ? (
+          <div className="md:col-span-2">
+            <Controller
+              control={form.control}
+              name="listeningCoverMediaId"
+              render={({ field, fieldState }) => (
+                <AssetPickerField
+                  id="listeningCoverMediaId"
+                  label={copy.listeningCover}
+                  mediaType="IMAGE"
+                  value={field.value ?? null}
+                  onChange={field.onChange}
+                  pickerTitle={copy.listeningCoverTitle}
+                  pickerDescription={copy.listeningCoverDescription}
+                  description={copy.listeningCoverDescription}
+                  disabled={saveMutation.isPending || form.formState.isSubmitting}
+                  error={fieldState.error}
+                  variant="editor"
+                  testId="content-listening-cover"
+                />
+              )}
+            />
+          </div>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

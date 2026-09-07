@@ -52,6 +52,9 @@ public class Content extends BaseJpaEntity {
     @Column(name = "textless_cover_media_id")
     private Long textlessCoverMediaId;
 
+    @Column(name = "listening_cover_media_id")
+    private Long listeningCoverMediaId;
+
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ContentLocalization> localizations = new LinkedHashSet<>();
 
@@ -104,6 +107,10 @@ public class Content extends BaseJpaEntity {
         return textlessCoverMediaId;
     }
 
+    public Long getListeningCoverMediaId() {
+        return listeningCoverMediaId;
+    }
+
     public Set<ContentLocalization> getLocalizations() {
         return Collections.unmodifiableSet(localizations);
     }
@@ -148,9 +155,40 @@ public class Content extends BaseJpaEntity {
     }
 
     public void updateTextlessCoverMediaId(Long textlessCoverMediaId) {
-        this.textlessCoverMediaId = normalizePositiveId(
+        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId);
+    }
+
+    public void updateListeningCoverMediaId(Long listeningCoverMediaId) {
+        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId);
+    }
+
+    /**
+     * Replaces both content-level cover references after validating their type-scoped ownership.
+     *
+     * <p>The source cover is reserved for STORY content, while the listening cover is shared by
+     * STORY, MEDITATION, and LULLABY content. Both references remain optional.
+     */
+    public void updateCoverMediaIds(Long textlessCoverMediaId, Long listeningCoverMediaId) {
+        Long normalizedTextlessCoverMediaId = normalizePositiveId(
                 textlessCoverMediaId,
                 "Textless cover media ID must be positive");
+        Long normalizedListeningCoverMediaId = normalizePositiveId(
+                listeningCoverMediaId,
+                "Listening cover media ID must be positive");
+        if (normalizedTextlessCoverMediaId != null && type != ContentType.STORY) {
+            throw new IllegalArgumentException("textlessCoverMediaId is only supported for STORY content");
+        }
+        if (normalizedListeningCoverMediaId != null && !type.supportsListeningCover()) {
+            throw new IllegalArgumentException(
+                    "listeningCoverMediaId is only supported for STORY, MEDITATION, or LULLABY content");
+        }
+        if (normalizedTextlessCoverMediaId != null
+                && normalizedTextlessCoverMediaId.equals(normalizedListeningCoverMediaId)) {
+            throw new IllegalArgumentException(
+                    "textlessCoverMediaId and listeningCoverMediaId must reference different assets");
+        }
+        this.textlessCoverMediaId = normalizedTextlessCoverMediaId;
+        this.listeningCoverMediaId = normalizedListeningCoverMediaId;
     }
 
     /**

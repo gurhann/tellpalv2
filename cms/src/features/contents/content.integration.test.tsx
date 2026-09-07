@@ -181,6 +181,7 @@ describe("Content integration", () => {
             active: body.active,
             pageCount: body.type === "STORY" ? 0 : null,
             textlessCoverMediaId: null,
+            listeningCoverMediaId: null,
           };
           createdRecord = {
             ...createdContent,

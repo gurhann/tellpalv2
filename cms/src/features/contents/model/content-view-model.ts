@@ -43,6 +43,9 @@ export type ContentSummaryViewModel = {
   pageCount: number | null;
   textlessCoverAssetId: number | null;
   hasTextlessCover: boolean;
+  listeningCoverAssetId: number | null;
+  hasListeningCover: boolean;
+  supportsListeningCover: boolean;
   supportsStoryPages: boolean;
   hasPages: boolean;
 };
@@ -151,6 +154,12 @@ export function mapAdminContent(
     pageCount: content.pageCount,
     textlessCoverAssetId: content.textlessCoverMediaId,
     hasTextlessCover: content.textlessCoverMediaId !== null,
+    listeningCoverAssetId: content.listeningCoverMediaId,
+    hasListeningCover: content.listeningCoverMediaId !== null,
+    supportsListeningCover:
+      content.type === "STORY" ||
+      content.type === "MEDITATION" ||
+      content.type === "LULLABY",
     supportsStoryPages: content.type === "STORY",
     hasPages: (content.pageCount ?? 0) > 0,
   };

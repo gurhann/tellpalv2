@@ -12,6 +12,7 @@ export const storyContentReadResponse: AdminContentReadResponse = {
   ageRange: 5,
   pageCount: 2,
   textlessCoverMediaId: 701,
+  listeningCoverMediaId: 702,
   localizations: [
     {
       contentId: 1,
@@ -58,6 +59,7 @@ export const meditationContentReadResponse: AdminContentReadResponse = {
   ageRange: 8,
   pageCount: null,
   textlessCoverMediaId: null,
+  listeningCoverMediaId: null,
   localizations: [
     {
       contentId: 2,
@@ -98,6 +100,7 @@ export const inactiveContentReadResponse: AdminContentReadResponse = {
   ageRange: 3,
   pageCount: null,
   textlessCoverMediaId: null,
+  listeningCoverMediaId: null,
   localizations: [],
 };
 

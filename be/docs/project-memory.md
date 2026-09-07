@@ -33,6 +33,7 @@ Read order:
 - `ADR-0007`: category type aligns with curated content type and no longer supports legacy `CONTENT` or `PARENT_GUIDANCE` values.
 - `ADR-0008`: asset runtime uses real Firebase Storage with one bucket, prefix isolation, and backend-mediated CMS uploads/previews.
 - `ADR-0009`: registry reads must paginate and filter in the database; `Specification` covers row-local predicates while aggregate readiness needs a dedicated projection/read model.
+- `ADR-0010`: STORY source textless covers, localized reading covers, and shared listening covers are separate ownership concepts; listening covers are content-scoped for STORY, MEDITATION, and LULLABY.
 
 ## Coding and Documentation Defaults
 

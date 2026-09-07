@@ -63,6 +63,7 @@ describe("useSaveContent", () => {
       ageRange: 3,
       pageCount: null,
       textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
     };
     const onSuccess = vi.fn();
     const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
@@ -143,6 +144,7 @@ describe("useSaveContent", () => {
       ageRange: 6,
       pageCount: 2,
       textlessCoverMediaId: 701,
+      listeningCoverMediaId: 702,
     };
 
     queryClient.setQueryData(queryKeys.contents.list(), [
@@ -173,6 +175,7 @@ describe("useSaveContent", () => {
         ageRange: 6,
         active: false,
         textlessCoverMediaId: 701,
+        listeningCoverMediaId: 702,
       });
     });
 
@@ -193,6 +196,7 @@ describe("useSaveContent", () => {
       ageRange: 6,
       active: false,
       textlessCoverMediaId: 701,
+      listeningCoverMediaId: 702,
     });
     expect(detailCache).toMatchObject({
       summary: {

@@ -74,6 +74,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
         ageRange: values.ageRange,
         active: values.active,
         textlessCoverMediaId: values.textlessCoverMediaId ?? null,
+        listeningCoverMediaId: values.listeningCoverMediaId ?? null,
       });
     },
     onSuccess: async (savedContent) => {

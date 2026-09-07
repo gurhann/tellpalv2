@@ -35,6 +35,8 @@ test("free access supports grant, filtered listing, and revoke flows", async ({
       active: true,
       ageRange: 5,
       pageCount: 2,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 1,
@@ -59,6 +61,8 @@ test("free access supports grant, filtered listing, and revoke flows", async ({
       active: true,
       ageRange: 8,
       pageCount: null,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 2,

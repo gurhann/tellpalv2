@@ -338,6 +338,7 @@ beforeEach(() => {
       ageRange: storyContentViewModel.summary.ageRange,
       active: storyContentViewModel.summary.active,
       textlessCoverMediaId: storyContentViewModel.summary.textlessCoverAssetId,
+      listeningCoverMediaId: storyContentViewModel.summary.listeningCoverAssetId,
       pageCount: storyContentViewModel.summary.pageCount,
       createdAt: storyContentViewModel.summary.createdAt,
       updatedAt: storyContentViewModel.summary.updatedAt,

@@ -15,6 +15,7 @@ const contentRecord = {
   ageRange: 5,
   pageCount: 2,
   textlessCoverMediaId: 41,
+  listeningCoverMediaId: 42,
   localizations: [
     {
       contentId: 1,
@@ -120,6 +121,14 @@ for (const viewport of visualViewports) {
         status: 200,
         contentType: "application/json",
         body: JSON.stringify(imageAsset),
+      });
+    });
+
+    await page.route("**/api/admin/media/42", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ...imageAsset, assetId: 42 }),
       });
     });
 

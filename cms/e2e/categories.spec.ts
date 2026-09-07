@@ -43,6 +43,8 @@ type ContentReadResponse = {
   active: boolean;
   ageRange: number;
   pageCount: number | null;
+  textlessCoverMediaId: number | null;
+  listeningCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -574,6 +576,8 @@ test("category curation add reorder remove survives refresh with hydrated locali
       active: true,
       ageRange: 5,
       pageCount: 2,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 1,
@@ -598,6 +602,8 @@ test("category curation add reorder remove survives refresh with hydrated locali
       active: true,
       ageRange: 6,
       pageCount: 3,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
       localizations: [
         {
           contentId: 11,

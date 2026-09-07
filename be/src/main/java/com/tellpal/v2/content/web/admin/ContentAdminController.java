@@ -263,10 +263,13 @@ record UpdateContentRequest(
         @NotNull(message = "active is required")
         Boolean active,
         @Positive(message = "textlessCoverMediaId must be positive")
-        Long textlessCoverMediaId) {
+        Long textlessCoverMediaId,
+        @Positive(message = "listeningCoverMediaId must be positive")
+        Long listeningCoverMediaId) {
 
     UpdateContentCommand toCommand(Long contentId) {
-        return new UpdateContentCommand(contentId, externalKey, ageRange, active, textlessCoverMediaId);
+        return new UpdateContentCommand(
+                contentId, externalKey, ageRange, active, textlessCoverMediaId, listeningCoverMediaId);
     }
 }
 

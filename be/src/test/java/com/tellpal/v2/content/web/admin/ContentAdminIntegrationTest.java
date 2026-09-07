@@ -1,6 +1,7 @@
 package com.tellpal.v2.content.web.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.tellpal.v2.asset.api.AssetKind;
@@ -84,6 +86,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     void createUpdateLocalizationProcessingAndStoryPagesWorkWithAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
         Long coverMediaId = registerImageAsset("/content/story/moonlight/cover.jpg");
+        Long listeningCoverMediaId = registerImageAsset("/content/story/moonlight/listening-cover.jpg");
         Long narrationAudioMediaId = registerAudioAsset("/content/story/moonlight/narration.mp3");
         Long illustrationMediaId = registerImageAsset("/content/story/moonlight/page-1.jpg");
 
@@ -115,6 +118,22 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.externalKey").value("moonlight-story-updated"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "moonlight-story-updated",
+                                  "ageRange": 6,
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(coverMediaId, listeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(coverMediaId))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(listeningCoverMediaId));
 
         mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", contentId)
                         .header("Authorization", "Bearer " + accessToken)
@@ -179,6 +198,293 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 Integer.class,
                 contentId);
         assertThat(pageCount).isEqualTo(1);
+    }
+
+    @Test
+    void contentLevelListeningCoverIsSharedAcrossLocalizationsAndTypeScoped() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long sourceCoverMediaId = registerImageAsset("/content/story/shared/source-cover.jpg");
+        Long firstListeningCoverMediaId = registerImageAsset("/content/story/shared/listening-cover-1.jpg");
+        Long secondListeningCoverMediaId = registerImageAsset("/content/story/shared/listening-cover-2.jpg");
+        Long trLocalizationCoverMediaId = registerImageAsset("/content/story/shared/tr-localization-cover.jpg");
+        Long enLocalizationCoverMediaId = registerImageAsset("/content/story/shared/en-localization-cover.jpg");
+        Long audioMediaId = registerAudioAsset("/content/story/shared/not-an-image.mp3");
+
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "STORY",
+                                  "externalKey": "shared-cover-story",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Paylasilan kapak",
+                                  "coverMediaId": %d,
+                                  "status": "DRAFT",
+                                  "processingStatus": "PENDING"
+                                }
+                                """.formatted(trLocalizationCoverMediaId)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/en", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Shared cover",
+                                  "coverMediaId": %d,
+                                  "status": "DRAFT",
+                                  "processingStatus": "PENDING"
+                                }
+                                """.formatted(enLocalizationCoverMediaId)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(sourceCoverMediaId, firstListeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(sourceCoverMediaId))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(firstListeningCoverMediaId));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(sourceCoverMediaId, sourceCoverMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"))
+                .andExpect(jsonPath("$.detail")
+                        .value("textlessCoverMediaId and listeningCoverMediaId must reference different assets"));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(sourceCoverMediaId))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(firstListeningCoverMediaId))
+                .andExpect(jsonPath("$.localizations[0].coverMediaId").value(enLocalizationCoverMediaId))
+                .andExpect(jsonPath("$.localizations[1].coverMediaId").value(trLocalizationCoverMediaId));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(firstListeningCoverMediaId))
+                .andExpect(jsonPath("$.localizations[0].coverMediaId").value(enLocalizationCoverMediaId))
+                .andExpect(jsonPath("$.localizations[1].coverMediaId").value(trLocalizationCoverMediaId))
+                .andExpect(jsonPath("$.localizations.length()").value(2));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(sourceCoverMediaId, secondListeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(sourceCoverMediaId))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(secondListeningCoverMediaId));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": null
+                                }
+                                """.formatted(sourceCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(nullValue()));
+
+        mockMvc.perform(get("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(sourceCoverMediaId))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.localizations[0].coverMediaId").value(enLocalizationCoverMediaId))
+                .andExpect(jsonPath("$.localizations[1].coverMediaId").value(trLocalizationCoverMediaId));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(sourceCoverMediaId, audioMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("asset_media_type_mismatch"));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-story",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": 999999
+                                }
+                                """.formatted(sourceCoverMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("asset_not_found"));
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select textless_cover_media_id from contents where id = ?", Long.class, contentId))
+                .isEqualTo(sourceCoverMediaId);
+        assertThat(jdbcTemplate.queryForObject(
+                "select listening_cover_media_id from contents where id = ?", Long.class, contentId))
+                .isNull();
+        assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from asset_processing where content_id = ?", Long.class, contentId))
+                .isZero();
+
+        MvcResult meditationResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "MEDITATION",
+                                  "externalKey": "shared-cover-meditation",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long meditationId = readPayload(meditationResult).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", meditationId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-meditation",
+                                  "active": true,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(firstListeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(firstListeningCoverMediaId));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", meditationId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-meditation",
+                                  "active": true,
+                                  "textlessCoverMediaId": %d,
+                                  "listeningCoverMediaId": null
+                                }
+                                """.formatted(sourceCoverMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+    }
+
+    @Test
+    void listeningCoverOwnershipIsEnforcedForLullabyAndAudioStory() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long listeningCoverMediaId = registerImageAsset("/content/shared/listening-cover.jpg");
+
+        MvcResult lullabyResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "LULLABY",
+                                  "externalKey": "shared-cover-lullaby",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long lullabyId = readPayload(lullabyResult).get("contentId").asLong();
+
+        MvcResult audioStoryResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "AUDIO_STORY",
+                                  "externalKey": "shared-cover-audio-story",
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long audioStoryId = readPayload(audioStoryResult).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-lullaby",
+                                  "active": true,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(listeningCoverMediaId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(listeningCoverMediaId));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", audioStoryId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "externalKey": "shared-cover-audio-story",
+                                  "active": true,
+                                  "listeningCoverMediaId": %d
+                                }
+                                """.formatted(listeningCoverMediaId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("invalid_request"));
+
+        assertThat(jdbcTemplate.queryForObject(
+                "select listening_cover_media_id from contents where id = ?", Long.class, lullabyId))
+                .isEqualTo(listeningCoverMediaId);
+        assertThat(jdbcTemplate.queryForObject(
+                "select listening_cover_media_id from contents where id = ?", Long.class, audioStoryId))
+                .isNull();
+
+        assertThatThrownBy(() -> jdbcTemplate.update(
+                "update contents set listening_cover_media_id = ? where id = ?",
+                listeningCoverMediaId,
+                audioStoryId))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
