@@ -105,6 +105,7 @@ describe("useContentLocalizationActions", () => {
     await act(async () => {
       await result.current.saveLocalization.mutateAsync({
         mode: "create",
+        contentType: "LULLABY",
         values: {
           languageCode: "en",
           title: "Moon Softly",
@@ -125,13 +126,7 @@ describe("useContentLocalizationActions", () => {
       "en",
       {
         title: "Moon Softly",
-        description: "A soft lullaby for early sleep.",
-        bodyText: "Sleep softly under a quiet moon.",
-        coverMediaId: null,
-        audioMediaId: 3,
-        durationMinutes: 5,
         status: "DRAFT",
-        processingStatus: "PENDING",
         publishedAt: null,
       },
     );
@@ -205,6 +200,7 @@ describe("useContentLocalizationActions", () => {
     await act(async () => {
       await result.current.saveLocalization.mutateAsync({
         mode: "update",
+        contentType: "STORY",
         values: {
           languageCode: "en",
           title: "Evening Garden Updated",
@@ -226,9 +222,7 @@ describe("useContentLocalizationActions", () => {
       {
         title: "Evening Garden Updated",
         description: "Updated English locale",
-        bodyText: null,
         coverMediaId: null,
-        audioMediaId: null,
         durationMinutes: 8,
         status: "PUBLISHED",
         processingStatus: "COMPLETED",

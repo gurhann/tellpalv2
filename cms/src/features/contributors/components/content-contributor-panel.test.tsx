@@ -91,7 +91,7 @@ describe("ContentContributorPanel", () => {
     );
   });
 
-  it("keeps assignment enabled when the content has no localizations", () => {
+  it("keeps the global musician assignment enabled when a lullaby has no localizations", () => {
     contributorHookMocks.useContentContributorAssignments.mockReturnValue({
       assignments: [],
       isLoading: false,
@@ -102,11 +102,8 @@ describe("ContentContributorPanel", () => {
       wrapper: createWrapper(),
     });
 
-    expect(screen.getByRole("heading", { name: "Author" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Illustrator" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Narrator" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Musician" })).toBeVisible();
-    expect(screen.getAllByRole("button", { name: /add$/i })).toHaveLength(4);
+    expect(screen.getAllByRole("button", { name: /add$/i })).toHaveLength(1);
   });
 
   it("groups assignments by role and reorders only within the matching scope", async () => {

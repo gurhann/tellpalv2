@@ -495,11 +495,6 @@ test("create, edit, and publish flows work in the browser", async ({
     .click();
   const localizationDialog = page.getByRole("dialog");
   await localizationDialog.getByLabel(/^title$/i).fill("Dream Harbor");
-  await localizationDialog
-    .getByRole("button", { name: /advanced/i })
-    .nth(0)
-    .click({ force: true });
-  await localizationDialog.getByLabel(/audio asset/i).fill("11");
   await Promise.all([
     page.waitForResponse(
       (response) =>

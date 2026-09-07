@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   contentAdminApi,
   type AdminContentLocalizationResponse,
+  type ContentType,
 } from "@/features/contents/api/content-admin";
 import {
   createContentReadViewModel,
@@ -17,6 +18,7 @@ import { queryKeys } from "@/lib/query-keys";
 type SaveLocalizationVariables = {
   mode: "create" | "update";
   values: ContentLocalizationFormValues;
+  contentType: ContentType;
 };
 
 type PublishLocalizationVariables = {
@@ -42,7 +44,11 @@ function upsertLocalizationInRecord(
           index === existingIndex ? localization : entry,
         );
 
-  return createContentReadViewModel(record.summary, nextLocalizations);
+  return createContentReadViewModel(
+    record.summary,
+    nextLocalizations,
+    record.playback,
+  );
 }
 
 function updateContentListRecords(
@@ -63,20 +69,41 @@ function updateContentListRecords(
   );
 }
 
-export function toLocalizationPayload(values: ContentLocalizationFormValues) {
-  return {
+export function toLocalizationPayload(
+  values: ContentLocalizationFormValues,
+  contentType: ContentType,
+) {
+  const common = {
     title: values.title.trim(),
+    status: values.status,
+    publishedAt: toPublishedAtPayload(values.publishedAt),
+  };
+  if (contentType === "LULLABY") return common;
+  if (contentType === "STORY") {
+    return {
+      ...common,
+      description: values.description,
+      coverMediaId: values.coverMediaId,
+      durationMinutes: values.durationMinutes,
+      processingStatus: values.processingStatus,
+      ...(values.narrationAudioMediaId != null &&
+      values.narrationDurationMinutes != null
+        ? {
+            narration: {
+              audioMediaId: values.narrationAudioMediaId,
+              durationMinutes: values.narrationDurationMinutes,
+            },
+          }
+        : {}),
+    };
+  }
+  return {
+    ...common,
     description: values.description,
     bodyText: values.bodyText,
-    coverMediaId: values.coverMediaId,
     audioMediaId: values.audioMediaId,
     durationMinutes: values.durationMinutes,
-    status: values.status,
     processingStatus: values.processingStatus,
-    publishedAt: toPublishedAtPayload(values.publishedAt),
-    ...(values.narrationAudioMediaId != null && values.narrationDurationMinutes != null
-      ? { narration: { audioMediaId: values.narrationAudioMediaId, durationMinutes: values.narrationDurationMinutes } }
-      : {}),
   };
 }
 
@@ -116,8 +143,8 @@ export function useContentLocalizationActions(contentId: number) {
   }
 
   const saveLocalization = useMutation({
-    mutationFn: async ({ mode, values }: SaveLocalizationVariables) => {
-      const payload = toLocalizationPayload(values);
+    mutationFn: async ({ mode, values, contentType }: SaveLocalizationVariables) => {
+      const payload = toLocalizationPayload(values, contentType);
 
       if (mode === "create") {
         return contentAdminApi.createLocalization(

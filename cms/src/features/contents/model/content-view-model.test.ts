@@ -148,6 +148,7 @@ describe("content view model mappers", () => {
         supportsStoryPages: true,
         hasPages: true,
       },
+      playback: null,
       localizations: [
         {
           contentId: 14,
@@ -220,6 +221,48 @@ describe("content view model mappers", () => {
       publishedLocalizationCount: 1,
       processingCompleteLocalizationCount: 1,
       visibleToMobileLocalizationCount: 1,
+    });
+  });
+
+  it("maps a shared lullaby playback snapshot and ordered instruments", () => {
+    const dto: AdminContentReadResponse = {
+      contentId: 31,
+      type: "LULLABY",
+      externalKey: "lullaby.moon",
+      active: true,
+      ageRange: 2,
+      pageCount: null,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: 91,
+      playback: {
+        audioMediaId: 92,
+        durationMinutes: 10,
+        processingStatus: "COMPLETED",
+        processingError: null,
+        instruments: [
+          {
+            instrumentId: 4,
+            code: "CELESTA",
+            displayName: null,
+            displayOrder: 0,
+          },
+          {
+            instrumentId: 5,
+            code: "BELL",
+            displayName: "Bell",
+            displayOrder: 1,
+          },
+        ],
+      },
+      localizations: [],
+    };
+
+    expect(mapAdminContentRead(dto).playback).toEqual({
+      audioAssetId: 92,
+      durationMinutes: 10,
+      processingStatus: "COMPLETED",
+      processingError: null,
+      instruments: dto.playback?.instruments,
     });
   });
 

@@ -11,7 +11,10 @@ import {
   contentContributorViewModels,
   contributorViewModels,
 } from "@/features/contributors/test/fixtures";
-import { storyContentViewModel } from "@/features/contents/test/fixtures";
+import {
+  inactiveContentViewModel,
+  storyContentViewModel,
+} from "@/features/contents/test/fixtures";
 import { ApiClientError } from "@/lib/http/client";
 
 import { AssignContributorDialog } from "./assign-contributor-dialog";
@@ -188,6 +191,43 @@ describe("AssignContributorDialog", () => {
           role: "AUTHOR",
           languageCode: null,
           creditName: "A. Case",
+        },
+      }),
+    );
+  });
+
+  it("forces lullaby musician assignments to the global scope", async () => {
+    const assignMutation = makeMutation({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    });
+    contributorActionMocks.useContributorActions.mockReturnValue({
+      createContributor: makeMutation(),
+      renameContributor: makeMutation(),
+      assignContributor: assignMutation,
+      isPending: false,
+    });
+
+    renderDialog({
+      content: inactiveContentViewModel,
+      role: "MUSICIAN",
+      forceGlobalScope: true,
+    });
+    fireEvent.click(screen.getByRole("option", { name: /annie case/i }));
+    expect(
+      screen.queryByLabelText(/scope/i),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /assign contributor/i }),
+    );
+
+    await waitFor(() =>
+      expect(assignMutation.mutateAsync).toHaveBeenCalledWith({
+        contentId: inactiveContentViewModel.summary.id,
+        values: {
+          contributorId: 11,
+          role: "MUSICIAN",
+          languageCode: null,
+          creditName: null,
         },
       }),
     );

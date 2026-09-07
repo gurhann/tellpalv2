@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  inactiveContentViewModel,
   meditationContentViewModel,
   storyContentViewModel,
 } from "@/features/contents/test/fixtures";
@@ -177,6 +178,27 @@ describe("ContentLocalizationForm", () => {
       screen.getByTestId("content-localization-audio-asset-dropzone"),
     ).toBeVisible();
     expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId("content-localization-cover-row")).not.toBeInTheDocument();
+  });
+
+  it("keeps lullaby locales limited to title and publication fields", () => {
+    render(
+      <ContentLocalizationForm
+        content={inactiveContentViewModel}
+        initialValues={{
+          ...getCreateLocalizationFormDefaults("en"),
+          title: "Moon Softly",
+        }}
+        mode="update"
+      />,
+    );
+
+    expect(screen.getByLabelText(/title/i)).toBeVisible();
+    expect(screen.getByLabelText(/^status$/i)).toBeVisible();
+    expect(screen.queryByText(/audio asset/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/cover asset/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/duration minutes/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/processing status/i)).not.toBeInTheDocument();
   });
 
   it("pairs cover media with a dedicated metadata sidebar", () => {
@@ -342,8 +364,8 @@ describe("ContentLocalizationForm", () => {
     fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: "Regenraum Pause" },
     });
-    fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[1]!);
-    fireEvent.change(screen.getByLabelText(/cover asset id/i), {
+    fireEvent.click(screen.getByRole("button", { name: /advanced/i }));
+    fireEvent.change(screen.getByLabelText(/audio asset id/i), {
       target: { value: "8" },
     });
     fireEvent.change(screen.getByLabelText(/duration minutes/i), {
@@ -354,10 +376,11 @@ describe("ContentLocalizationForm", () => {
     await waitFor(() => {
       expect(saveLocalization.mutateAsync).toHaveBeenCalledWith({
         mode: "update",
+        contentType: "MEDITATION",
         values: expect.objectContaining({
           languageCode: "de",
           title: "Regenraum Pause",
-          coverMediaId: 8,
+          audioMediaId: 8,
           durationMinutes: 7,
         }),
       });

@@ -18,7 +18,7 @@ describe("toLocalizationPayload", () => {
         publishedAt: "2026-03-17T09:00:00",
         narrationAudioMediaId: 901,
         narrationDurationMinutes: 8,
-      }),
+      }, "STORY"),
     ).toMatchObject({
       narration: { audioMediaId: 901, durationMinutes: 8 },
     });
@@ -39,7 +39,17 @@ describe("toLocalizationPayload", () => {
         publishedAt: null,
         narrationAudioMediaId: 901,
         narrationDurationMinutes: null,
-      }),
+      }, "STORY"),
     ).not.toHaveProperty("narration");
+  });
+
+  it("omits non-localized fields from lullaby payloads", () => {
+    expect(
+      toLocalizationPayload({
+        languageCode: "tr", title: "Dandini", description: "ignored", bodyText: "ignored",
+        coverMediaId: 3, audioMediaId: 4, durationMinutes: 5, status: "DRAFT",
+        processingStatus: "PENDING", publishedAt: null,
+      }, "LULLABY"),
+    ).toEqual({ title: "Dandini", status: "DRAFT", publishedAt: null });
   });
 });

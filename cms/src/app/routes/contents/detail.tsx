@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TaskRail } from "@/components/workspace/task-rail";
 import { WorkspaceStatusPill } from "@/components/workspace/workspace-primitives";
 import { ContentForm } from "@/features/contents/components/content-form";
+import { LullabyPlaybackEditor } from "@/features/contents/components/lullaby-playback-editor";
 import { ContentLocalizationTabs } from "@/features/contents/components/localization-tabs";
 import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import { StoryPageEntryLink } from "@/features/contents/components/story-page-entry-link";
@@ -127,6 +128,8 @@ export function ContentDetailRoute() {
           contributorsTitle: "Contributor Atamalari",
           contributorsDescription:
             "Paylasilan contributor kayitlarini bu icerige rol, dil, gorunen kredi adi ve siralama metadatasi ile baglayin.",
+          lullabyPlaybackTitle: "Ortak Ninni Playback",
+          lullabyPlaybackDescription: "Playback, katalog enstrümanlari ve müzisyen kredisi tüm dillerde bir kez yönetilir.",
         }
       : {
           detailFallbackTitle: "Content Detail",
@@ -196,6 +199,8 @@ export function ContentDetailRoute() {
           contributorsTitle: "Contributor assignments",
           contributorsDescription:
             "Assign shared contributor registry entries to this content item with role, language, display credit, and ordering metadata.",
+          lullabyPlaybackTitle: "Shared lullaby playback",
+          lullabyPlaybackDescription: "Playback, catalog instruments, and musician credit are managed once for every locale.",
         };
   const routeTitle =
     content?.primaryLocalization?.title ??
@@ -394,6 +399,18 @@ export function ContentDetailRoute() {
             }}
           />
         </FormSection>
+
+        {content.summary.type === "LULLABY" ? (
+          <FormSection
+            description={copy.lullabyPlaybackDescription}
+            title={copy.lullabyPlaybackTitle}
+          >
+            <LullabyPlaybackEditor
+              content={content}
+              languageCode={storyPageLanguageCode ?? requestedLanguageCode ?? undefined}
+            />
+          </FormSection>
+        ) : null}
 
         <FormSection
           description={copy.contributorsDescription}

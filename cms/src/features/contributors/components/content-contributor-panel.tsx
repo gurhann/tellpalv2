@@ -48,19 +48,22 @@ export function ContentContributorPanel({
   >(null);
   const [reorderError, setReorderError] = useState<string | null>(null);
   const visible = optimisticAssignments ?? query.assignments;
+  const roles: ContributorRole[] =
+    content.summary.type === "LULLABY" ? ["MUSICIAN"] : ROLES;
+  const visibleForPanel = visible.filter((item) => roles.includes(item.role));
   const grouped = useMemo(() => {
     const result = new Map<
       ContributorRole,
       Map<string, ContentContributorViewModel[]>
     >();
-    ROLES.forEach((role) => result.set(role, new Map()));
-    visible.forEach((item) => {
+    roles.forEach((role) => result.set(role, new Map()));
+    visibleForPanel.forEach((item) => {
       const scopes = result.get(item.role)!;
       const key = item.languageCode ?? "global";
       scopes.set(key, [...(scopes.get(key) ?? []), item]);
     });
     return result;
-  }, [visible]);
+  }, [visibleForPanel, roles]);
   async function move(
     item: ContentContributorViewModel,
     delta: -1 | 1,
@@ -134,7 +137,7 @@ export function ContentContributorPanel({
         </div>
       ) : query.problem ? null : (
         <div className="grid gap-4">
-          {ROLES.map((role) => {
+          {roles.map((role) => {
             const scopes = grouped.get(role)!;
             return (
               <section
@@ -252,6 +255,7 @@ export function ContentContributorPanel({
           existingAssignments={visible}
           role={assignRole}
           initialLanguageCode={activeLanguageCode}
+          forceGlobalScope={content.summary.type === "LULLABY" && assignRole === "MUSICIAN"}
           open
           onOpenChange={(open) => {
             if (!open) setAssignRole(null);

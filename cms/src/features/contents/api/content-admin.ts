@@ -63,7 +63,7 @@ export type UpsertContentLocalizationInput = {
   audioMediaId?: number | null;
   durationMinutes?: number | null;
   status: ContentLocalizationStatus;
-  processingStatus: ContentProcessingStatus;
+  processingStatus?: ContentProcessingStatus;
   publishedAt?: string | null;
   narration?: { audioMediaId: number; durationMinutes: number } | null;
 };
@@ -110,9 +110,47 @@ export const adminContentLocalizationResponseSchema = z.object({
 
 export const adminContentReadResponseSchema = adminContentResponseSchema.extend(
   {
+    playback: z
+      .object({
+        audioMediaId: z.number().int().positive(),
+        durationMinutes: z.number().int().nonnegative(),
+        processingStatus: contentProcessingStatusSchema.nullable(),
+        processingError: z.string().nullable(),
+        instruments: z
+          .array(
+            z.object({
+              instrumentId: z.number().int().positive(),
+              code: z.string().min(1),
+              displayName: z.string().min(1).nullable(),
+              displayOrder: z.number().int().nonnegative(),
+            }),
+          )
+          .default([]),
+      })
+      .nullable()
+      .optional(),
     localizations: z.array(adminContentLocalizationResponseSchema),
   },
 );
+
+const lullabyInstrumentSchema = z.object({
+  instrumentId: z.number().int().positive(),
+  code: z.string().min(1),
+  displayName: z.string().min(1).nullable(),
+  displayOrder: z.number().int().nonnegative(),
+});
+const instrumentCatalogOptionSchema = z.object({
+  instrumentId: z.number().int().positive(),
+  code: z.string().min(1),
+  displayName: z.string().min(1),
+});
+const lullabyPlaybackResponseSchema = z.object({
+  contentId: z.number().int().positive(),
+  audioMediaId: z.number().int().positive(),
+  durationMinutes: z.number().int().nonnegative(),
+  processingStatus: contentProcessingStatusSchema.nullable(),
+  processingError: z.string().nullable(),
+});
 
 export const adminContentReadListResponseSchema = z.array(
   adminContentReadResponseSchema,
@@ -153,6 +191,9 @@ export type AdminContentRegistryPage = z.infer<
 export type AdminContentRegistryItem = z.infer<
   typeof adminContentRegistryItemSchema
 >;
+export type LullabyInstrument = z.infer<typeof lullabyInstrumentSchema>;
+export type InstrumentCatalogOption = z.infer<typeof instrumentCatalogOptionSchema>;
+export type LullabyPlaybackResponse = z.infer<typeof lullabyPlaybackResponseSchema>;
 export type ContentRegistryQuery = {
   language: string;
   type?: ContentType;
@@ -202,6 +243,42 @@ export const contentAdminApi = {
       body: input,
       responseSchema: adminContentResponseSchema,
     });
+  },
+  updateLullabyPlayback(
+    contentId: number,
+    input: { audioMediaId: number; durationMinutes: number },
+  ) {
+    return apiClient.put<LullabyPlaybackResponse>(`${basePath}/${contentId}/playback`, {
+      body: input,
+      responseSchema: lullabyPlaybackResponseSchema,
+    });
+  },
+  listLullabyInstruments(contentId: number, languageCode?: string) {
+    const query = languageCode
+      ? `?languageCode=${encodeURIComponent(languageCode)}`
+      : "";
+    return apiClient.get<LullabyInstrument[]>(`${basePath}/${contentId}/instruments${query}`, {
+      responseSchema: z.array(lullabyInstrumentSchema),
+    });
+  },
+  replaceLullabyInstruments(
+    contentId: number,
+    instrumentCodes: string[],
+    languageCode?: string,
+  ) {
+    const query = languageCode
+      ? `?languageCode=${encodeURIComponent(languageCode)}`
+      : "";
+    return apiClient.put<LullabyInstrument[]>(`${basePath}/${contentId}/instruments${query}`, {
+      body: { instrumentCodes },
+      responseSchema: z.array(lullabyInstrumentSchema),
+    });
+  },
+  listInstrumentCatalog(languageCode: string) {
+    return apiClient.get<InstrumentCatalogOption[]>(
+      `/api/admin/instrument-catalog?languageCode=${encodeURIComponent(languageCode)}`,
+      { responseSchema: z.array(instrumentCatalogOptionSchema) },
+    );
   },
   createLocalization(
     contentId: number,

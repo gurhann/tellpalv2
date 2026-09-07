@@ -74,6 +74,8 @@ export function EditContentContributorDialog({
   });
   const languageValue = form.watch("languageCode");
   const supportedRoles = assignment.contributorRoles ?? [assignment.role];
+  const forceGlobalScope =
+    content.summary.type === "LULLABY" && assignment.role === "MUSICIAN";
   const roleOptions = contributorRoleOptions.filter((option) =>
     supportedRoles.includes(option.value),
   );
@@ -100,7 +102,7 @@ export function EditContentContributorDialog({
           assignmentId: assignment.assignmentId,
           values: {
             role: values.role,
-            languageCode: values.languageCode,
+            languageCode: forceGlobalScope ? null : values.languageCode,
             creditName: values.creditName.trim() || null,
           },
         }),
@@ -208,41 +210,49 @@ export function EditContentContributorDialog({
               >
                 {t("contributors.edit.scope")}
               </label>
-              <Controller
-                control={form.control}
-                name="languageCode"
-                render={({ field }) => (
-                  <Select
-                    value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
-                    onValueChange={(value) =>
-                      field.onChange(
-                        value === GLOBAL_SCOPE_SELECT_VALUE ? null : value,
-                      )
-                    }
-                  >
-                    <SelectTrigger id="edit-contributor-scope">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
-                        {t("contributors.picker.allLanguages")}
-                      </SelectItem>
-                      {languageOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+              {forceGlobalScope ? (
+                <p className="rounded-xl border border-border/70 bg-muted/20 px-3 py-2 text-sm text-muted-foreground" role="status">
+                  {locale === "tr"
+                    ? "Bu müzisyen kredisi tüm ninni dilleriyle paylaşılır."
+                    : "This musician credit is shared across every lullaby locale."}
+                </p>
+              ) : (
+                <Controller
+                  control={form.control}
+                  name="languageCode"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ?? GLOBAL_SCOPE_SELECT_VALUE}
+                      onValueChange={(value) =>
+                        field.onChange(
+                          value === GLOBAL_SCOPE_SELECT_VALUE ? null : value,
+                        )
+                      }
+                    >
+                      <SelectTrigger id="edit-contributor-scope">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={GLOBAL_SCOPE_SELECT_VALUE}>
+                          {t("contributors.picker.allLanguages")}
                         </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+                        {languageOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              )}
               <FieldError error={form.formState.errors.languageCode} />
               <p className="text-xs text-muted-foreground">
-                {(languageValue
-                  ? languageOptions.find(
+                {(forceGlobalScope || !languageValue
+                  ? t("contributors.picker.allLanguages")
+                  : languageOptions.find(
                       (option) => option.value === languageValue,
-                    )?.label
-                  : t("contributors.picker.allLanguages")) ??
+                    )?.label) ??
                   t("contributors.picker.allLanguages")}
                 · {t("contributors.picker.scopeHint")}
               </p>

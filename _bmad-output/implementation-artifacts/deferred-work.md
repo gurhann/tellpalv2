@@ -56,3 +56,10 @@
 - `ops/content-migration` çıktısındaki legacy `AUDIO_STORY` category map davranışı import-pipeline çalışmasına bırakıldı; Story 1.6 legacy importu kapsam dışı tutuyor.
 - Public/mobile `experienceType: AUDIO_STORY` projection regression coverage sonraki endpoint/projection yol haritasına bırakıldı; bu story public/mobile endpoint yüzeyi eklemiyor.
 - V28’in ilk blocker sınıfında durup diğer sınıfları sonraki çalıştırmaya bırakması fail-fast tasarım tercihi olarak korundu.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-7-cms-te-playback-ve-localization-editorlerini-ayristirma.md`
+  summary: STORY narration kaydını formdan temizleyerek mevcut narration child’ını silme davranışı ayrı backend komutuyla ele alınacak.
+  evidence: Mevcut admin upsert sözleşmesi null/omitted narration için no-op yapıyor; CMS bu story’de yeni delete endpointi icat etmedi.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-7-cms-te-playback-ve-localization-editorlerini-ayristirma.md`
+  summary: LULLABY detail visual baseline’larının 390/768/1280/1440 viewport’larında koşturulması Playwright Chromium kurulumu sonrasına bırakıldı.
+  evidence: Component/interaction testleri geçti, ancak bu makinede Chromium executable bulunmadığı için mevcut visual runner başlatılamadı.

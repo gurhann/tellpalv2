@@ -52,6 +52,7 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   role?: ContributorRole;
   initialLanguageCode?: string;
+  forceGlobalScope?: boolean;
 };
 
 const GLOBAL_SCOPE_SELECT_VALUE = "__global__";
@@ -63,6 +64,7 @@ export function AssignContributorDialog({
   onOpenChange,
   role = "AUTHOR",
   initialLanguageCode,
+  forceGlobalScope = false,
 }: Props) {
   const { locale, t } = useI18n();
   const roleLabel = t(`contributors.role.${role.toLowerCase()}` as never);
@@ -109,11 +111,13 @@ export function AssignContributorDialog({
       ...getAssignContributorFormDefaults(),
       role,
       languageCode:
-        role === "NARRATOR"
+        forceGlobalScope
+          ? null
+          : role === "NARRATOR"
           ? (initialLanguageCode ?? languageOptions[0]?.value ?? null)
           : null,
     }),
-    [role, languageOptions, initialLanguageCode],
+    [role, languageOptions, initialLanguageCode, forceGlobalScope],
   );
   const form = useZodForm<ContentContributorFormValues>({
     schema: contentContributorFormSchema,
@@ -176,7 +180,7 @@ export function AssignContributorDialog({
           values: {
             contributorId: v.contributorId,
             role: v.role,
-            languageCode: v.languageCode,
+            languageCode: forceGlobalScope ? null : v.languageCode,
             creditName: v.creditName.trim() || null,
           },
         }),
@@ -412,7 +416,11 @@ export function AssignContributorDialog({
                       {selected.displayName}
                     </p>
                     <FieldError error={form.formState.errors.contributorId} />
-                    <div className="space-y-2">
+                    {forceGlobalScope ? (
+                      <p className="text-sm text-muted-foreground" role="status">
+                        This musician credit is shared across every lullaby locale.
+                      </p>
+                    ) : <div className="space-y-2">
                       <label
                         className="text-sm font-medium"
                         htmlFor="content-contributor-scope"
@@ -455,7 +463,7 @@ export function AssignContributorDialog({
                           </Select>
                         )}
                       />
-                    </div>
+                    </div>}
                     <label
                       className="text-sm font-medium"
                       htmlFor="content-contributor-credit-name"

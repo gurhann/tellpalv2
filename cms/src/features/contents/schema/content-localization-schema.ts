@@ -230,7 +230,9 @@ export function createContentLocalizationSchema(contentType: ContentType) {
           if (
             values.description ||
             values.bodyText ||
-            values.audioMediaId !== null
+            values.audioMediaId !== null ||
+            values.coverMediaId !== null ||
+            values.durationMinutes !== null
           ) {
             ctx.addIssue({
               code: "custom",

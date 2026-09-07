@@ -80,6 +80,18 @@ export type ContentLocalizationViewModel = {
 
 export type ContentReadViewModel = {
   summary: ContentSummaryViewModel;
+  playback: {
+    audioAssetId: number;
+    durationMinutes: number;
+    processingStatus: ContentProcessingStatus | null;
+    processingError: string | null;
+    instruments: Array<{
+      instrumentId: number;
+      code: string;
+      displayName: string | null;
+      displayOrder: number;
+    }>;
+  } | null;
   localizations: ContentLocalizationViewModel[];
   primaryLocalization: ContentLocalizationViewModel | null;
   localizationCount: number;
@@ -122,9 +134,11 @@ export type StoryPageReadViewModel = StoryPageViewModel & {
 export function createContentReadViewModel(
   summary: ContentSummaryViewModel,
   localizations: ContentLocalizationViewModel[] = [],
+  playback: ContentReadViewModel["playback"] = null,
 ): ContentReadViewModel {
   return {
     summary,
+    playback,
     localizations,
     primaryLocalization: localizations[0] ?? null,
     localizationCount: localizations.length,
@@ -175,7 +189,18 @@ export function mapAdminContentRead(
 ): ContentReadViewModel {
   const localizations = content.localizations.map(mapAdminContentLocalization);
 
-  return createContentReadViewModel(mapAdminContent(content), localizations);
+  return {
+    ...createContentReadViewModel(mapAdminContent(content), localizations),
+    playback: content.playback
+      ? {
+          audioAssetId: content.playback.audioMediaId,
+          durationMinutes: content.playback.durationMinutes,
+          processingStatus: content.playback.processingStatus,
+          processingError: content.playback.processingError,
+          instruments: content.playback.instruments,
+        }
+      : null,
+  };
 }
 
 export function mapAdminContentReadList(

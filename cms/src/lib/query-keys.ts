@@ -68,6 +68,10 @@ export const queryKeys = {
       ] as const,
     contributors: (contentId: number) =>
       ["contents", "detail", contentId, "contributors"] as const,
+    playback: (contentId: number) =>
+      ["contents", "detail", contentId, "playback"] as const,
+    instruments: (contentId: number, languageCode?: string) =>
+      ["contents", "detail", contentId, "instruments", languageCode ?? null] as const,
   },
   categories: {
     all: ["categories"] as const,
