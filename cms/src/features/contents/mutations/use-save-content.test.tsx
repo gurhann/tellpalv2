@@ -71,6 +71,17 @@ describe("useSaveContent", () => {
     queryClient.setQueryData(queryKeys.contents.list(), [
       storyContentViewModel,
     ]);
+    const registryKey = queryKeys.contents.registry({
+      language: "tr",
+      page: 0,
+      size: 25,
+    });
+    queryClient.setQueryData(registryKey, {
+      items: [],
+      page: 0,
+      size: 25,
+      totalItems: 0,
+    });
     contentAdminApiMock.createContent.mockResolvedValue(createdContent);
 
     const { result } = renderHook(
@@ -124,7 +135,16 @@ describe("useSaveContent", () => {
       queryKey: queryKeys.contents.lists(),
     });
     expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: queryKeys.contents.registries(),
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: queryKeys.contents.detail(99),
+    });
+    expect(queryClient.getQueryData(registryKey)).toEqual({
+      items: [],
+      page: 0,
+      size: 25,
+      totalItems: 0,
     });
   });
 

@@ -39,6 +39,9 @@ export function useStoryPageActions({
       queryClient.invalidateQueries({
         queryKey: queryKeys.contents.lists(),
       }),
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.contents.registries(),
+      }),
       ...(typeof pageNumber === "number"
         ? [
             queryClient.invalidateQueries({

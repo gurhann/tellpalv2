@@ -36,6 +36,9 @@ export const queryKeys = {
     lists: () => ["contents", "list"] as const,
     list: (params?: QueryKeyParams) =>
       ["contents", "list", compactQueryKeyParams(params)] as const,
+    registries: () => ["contents", "registry"] as const,
+    registry: (params: QueryKeyParams) =>
+      ["contents", "registry", compactQueryKeyParams(params)] as const,
     details: () => ["contents", "detail"] as const,
     detail: (contentId: number) => ["contents", "detail", contentId] as const,
     localizations: (contentId: number) =>

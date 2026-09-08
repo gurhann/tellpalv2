@@ -10,7 +10,7 @@ import type { ApiProblemDetail } from "@/types/api";
 
 export function useContentRegistry(params: ContentRegistryQuery) {
   const query = useQuery({
-    queryKey: queryKeys.contents.list(params),
+    queryKey: queryKeys.contents.registry(params),
     queryFn: () => contentAdminApi.listRegistry(params),
   });
   const problem: ApiProblemDetail | null =

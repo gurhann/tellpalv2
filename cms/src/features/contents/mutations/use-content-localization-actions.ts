@@ -134,6 +134,9 @@ export function useContentLocalizationActions(contentId: number) {
         queryKey: queryKeys.contents.lists(),
       }),
       queryClient.invalidateQueries({
+        queryKey: queryKeys.contents.registries(),
+      }),
+      queryClient.invalidateQueries({
         queryKey: detailKey,
       }),
       queryClient.invalidateQueries({
