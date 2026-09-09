@@ -39,6 +39,10 @@ Read order:
 
 ## Coding and Documentation Defaults
 
+- `ADR-0013`: use Turkish for conversations, questions, progress updates, and final summaries;
+  write new long technical documents in English unless the user explicitly requests another language.
+- Preserve the language of existing Turkish documents during routine edits; translate on request
+  or as part of an agreed replacement. Product content and localization retain their audience languages.
 - Durable code comments, ADRs, and project-memory content are written in English.
 - Javadoc is required for public module contracts, public application services, and non-obvious domain rules.
 - Comments stay behavior-oriented and avoid boilerplate restatement of names.

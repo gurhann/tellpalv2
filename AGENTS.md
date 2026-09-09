@@ -59,6 +59,15 @@ When changing a durable engineering policy or architectural default, update
 When adding or changing REST controllers, follow the OpenAPI policy in
 `standards/rest-api-documentation-standard.md`.
 
+## Communication and Documentation Language
+
+Use Turkish for conversations, questions, progress updates, and final summaries. Write new long
+technical documents in English; keep ADRs, project memory, code comments, and API documentation
+in English. Explicit user requests for a deliverable's language take precedence. Preserve existing
+Turkish documents during routine edits; translate on request or as part of an agreed replacement.
+Product content and localization retain their intended audience languages.
+See `be/docs/adr/ADR-0013-communication-and-documentation-language.md`.
+
 ## Build, Test, and Development Commands
 Run commands from `be/`:
 

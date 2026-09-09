@@ -6,5 +6,5 @@
 user_name: Gürhan
 project_name: tellpalv2
 communication_language: Türkçe
-document_output_language: Türkçe
+document_output_language: English
 output_folder: "{project-root}/_bmad-output"
