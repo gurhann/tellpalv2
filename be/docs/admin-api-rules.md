@@ -153,14 +153,20 @@ stack.
 - `listeningCoverMediaId` is an optional content-level cover supported only for `STORY`,
   `MEDITATION`, and `LULLABY`. It must reference an `IMAGE` asset and is shared by every
   localization of the content; it is not copied into localization rows.
+- `listingCoverMediaId` is an optional LULLABY-only content-level static list/card cover. It must
+  reference an `IMAGE` asset, is shared by every localization, and is not copied into localization
+  rows or the lullaby playback record. For LULLABY, `listeningCoverMediaId` remains the separate
+  playback/detail cover and may reference a GIF registered as an `IMAGE` asset.
 - A content update rejects requests that use the same non-null asset ID for
   `textlessCoverMediaId` and `listeningCoverMediaId`.
-- Both content-level cover fields are part of the full update payload. Omitting either field is
+- All content-level cover fields are part of the full update payload. Omitting any field is
   interpreted as `null` and clears that stored reference; send the existing ID to preserve it.
   Sending `null` explicitly also clears the reference. Cover clearing does not alter publication
   visibility, localization processing status, or create an asset-processing job.
 - Database constraints additionally prevent a non-`STORY` row from storing
   `textlessCoverMediaId`.
+- Database constraints additionally prevent a non-`LULLABY` row from storing
+  `listingCoverMediaId`.
 - Story page illustration ownership is localization-scoped. There is no page-level illustration
   fallback at runtime.
 - Story page localization `audioMediaId` must reference an asset with media type `AUDIO`.

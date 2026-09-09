@@ -14,6 +14,7 @@ public record AdminContentView(
         Integer pageCount,
         Long textlessCoverMediaId,
         Long listeningCoverMediaId,
+        Long listingCoverMediaId,
         AdminLullabyPlaybackView playback,
         List<AdminContentLocalizationView> localizations) {
 
@@ -25,7 +26,7 @@ public record AdminContentView(
             Integer ageRange,
             Integer pageCount,
             List<AdminContentLocalizationView> localizations) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, null, null, null, localizations);
+        this(contentId, type, externalKey, active, ageRange, pageCount, null, null, null, null, localizations);
     }
 
     public AdminContentView(
@@ -37,7 +38,7 @@ public record AdminContentView(
             Integer pageCount,
             Long textlessCoverMediaId,
             List<AdminContentLocalizationView> localizations) {
-        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null, null, localizations);
+        this(contentId, type, externalKey, active, ageRange, pageCount, textlessCoverMediaId, null, null, null, localizations);
     }
 
     public AdminContentView {
@@ -55,6 +56,9 @@ public record AdminContentView(
         }
         if (listeningCoverMediaId != null && listeningCoverMediaId <= 0) {
             throw new IllegalArgumentException("Listening cover media ID must be positive");
+        }
+        if (listingCoverMediaId != null && listingCoverMediaId <= 0) {
+            throw new IllegalArgumentException("Listing cover media ID must be positive");
         }
         localizations = localizations == null ? List.of() : List.copyOf(localizations);
         externalKey = externalKey.trim();

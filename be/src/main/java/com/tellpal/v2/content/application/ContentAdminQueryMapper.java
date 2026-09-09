@@ -35,6 +35,7 @@ final class ContentAdminQueryMapper {
                 content.getPageCount(),
                 content.getTextlessCoverMediaId(),
                 content.getListeningCoverMediaId(),
+                content.getListingCoverMediaId(),
                 playback == null ? null : new AdminLullabyPlaybackView(
                         playback.getAudioMediaId(),
                         playback.getDurationMinutes(),

@@ -35,7 +35,9 @@ FR6: A lullaby localization manages only its title and publication state; its au
 
 FR7 [DEFERRED]: Public lullaby reads combine a locale-specific title with one shared playback payload, including resolved cover/audio, duration, musicians, and ordered localized instrument labels.
 
-FR8: The audio-story presentation, lullaby, and meditation always use `Content.textlessCoverMediaId`; CMS manages this cover at content level.
+FR8: STORY source textless covers, localized reading covers, and shared listening covers remain separate ownership concepts; CMS manages each at its correct scope.
+
+FR13: CMS can manage a LULLABY's static listing cover separately from its animated playback/detail cover without copying either asset to localizations.
 
 FR9 [DEFERRED]: STORY `READING` keeps its locale-specific `ContentLocalization.coverMediaId`, because its cover may contain translated title text.
 
@@ -67,7 +69,7 @@ NFR8: Flyway changes, REST contracts, persistence rules, module boundaries, and 
 
 - `content` owns the experience model, playback intent, catalog selection, and public read composition; `asset` owns registration, resolved references, and operational processing state.
 - Introduce `StoryNarration` as an optional child of `ContentLocalization`, with one full-story audio asset ID, duration, and localization-scoped processing target.
-- Introduce `LullabyPlayback` as an aggregate child of `Content`; reuse existing `Content.textlessCoverMediaId` for its shared cover rather than creating another cover column.
+- Keep `LullabyPlayback` as an aggregate child of `Content`; use `listeningCoverMediaId` for its shared playback/detail cover and `listingCoverMediaId` for its separate static listing cover.
 - Introduce `InstrumentCatalog`, `InstrumentCatalogLocalization`, and ordered `LullabyInstrument` links in the content module.
 - Evolve `asset` processing command, record, repository, API, state transition and path conventions to explicit `LOCALIZATION` and `CONTENT` targets, including `findByContent(contentId)`.
 - Public query services compose selected localization editorial fields with the relevant playback owner and `asset.api` status/output; they do not copy processing state into content. This public-read work is deferred with the mobile endpoint roadmap.
@@ -109,7 +111,7 @@ FR12: Epic 1 - Guarded Flyway schema contraction.
 
 Editörler tek bir canonical hikâyeye dil bazlı anlatım ekleyebilir; ninninin ortak sesini, textless kapağını, müzisyenlerini ve katalogdan seçilmiş enstrümanlarını bir kez yönetebilir. Sistem, eski canonical `AUDIO_STORY` oluşturmayı önler ve şema değişimini veri kaybetmeden güvenceye alır.
 
-**FRs covered:** FR1, FR4, FR5, FR6, FR8, FR10, FR11, FR12
+**FRs covered:** FR1, FR4, FR5, FR6, FR8, FR10, FR11, FR12, FR13
 
 ## Epic 1: Editörler ses ve kapak varlıklarını tutarlı yönetir
 
@@ -370,3 +372,34 @@ böylece aynı ses, kapak veya enstrüman bilgisini dillere tekrar tekrar girmem
 **When** farklı viewport’larda doğrulanır
 **Then** CMS UI standartlarındaki tek baskın editör akışı, görünür etiketler, erişilebilir seçimler ve kompakt asset-picker kuralları korunur
 **And** ilgili component/interaction testleri ile görsel regresyon kapsamı eklenir.
+
+### Story 1.8: Ninninin liste ve playback kapaklarını ayrı yönetme
+
+Bir CMS editörü olarak, ninninin listede gösterilen statik kapağını ve açıldığında kullanılan
+animasyonlu kapağını ayrı yönetmek istiyorum, böylece eski verideki iki görsel rolü kaybolmadan
+yeni sisteme taşınabilir.
+
+**Acceptance Criteria:**
+
+**Given** `LULLABY` türünde bir içerik
+**When** editör statik liste kapağını seçer, değiştirir veya temizlerse
+**Then** değer content scope'ta `listingCoverMediaId` olarak saklanır
+**And** varsa pozitif kimlikli bir `IMAGE` asset'ine referans verir.
+
+**Given** `LULLABY` türünde bir içerik
+**When** editör playback/detail kapağını seçer veya değiştirirse
+**Then** mevcut `listeningCoverMediaId`, `listingCoverMediaId`den bağımsız kalır
+**And** `IMAGE` olarak kaydedilmiş GIF asset'ini referans alabilir.
+
+**Given** birden fazla localization'a sahip bir ninni
+**When** ortak kapaklardan biri değişirse
+**Then** localization, playback ses/süre, müzisyen, enstrüman, processing durumu ve public/mobile sözleşmesi değişmez.
+
+**Given** `LULLABY` dışındaki bir içerik
+**When** `listingCoverMediaId` içeren bir güncelleme gönderilirse
+**Then** istek reddedilir ve kayıtlı değer değişmez.
+
+**Given** CMS içerik detay ekranı
+**When** editör bir ninniyi açarsa
+**Then** statik liste kapağı ile animasyonlu playback kapağı ayrı, anlaşılır etiketli seçiciler olarak görünür
+**And** asset doğrulama hataları ilgili alanda gösterilir.

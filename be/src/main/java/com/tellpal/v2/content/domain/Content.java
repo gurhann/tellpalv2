@@ -56,6 +56,9 @@ public class Content extends BaseJpaEntity {
     @Column(name = "listening_cover_media_id")
     private Long listeningCoverMediaId;
 
+    @Column(name = "listing_cover_media_id")
+    private Long listingCoverMediaId;
+
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private LullabyPlayback lullabyPlayback;
 
@@ -116,6 +119,10 @@ public class Content extends BaseJpaEntity {
 
     public Long getListeningCoverMediaId() {
         return listeningCoverMediaId;
+    }
+
+    public Long getListingCoverMediaId() {
+        return listingCoverMediaId;
     }
 
     public LullabyPlayback getLullabyPlayback() {
@@ -228,32 +235,39 @@ public class Content extends BaseJpaEntity {
     }
 
     public void updateTextlessCoverMediaId(Long textlessCoverMediaId) {
-        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId);
+        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId, listingCoverMediaId);
     }
 
     public void updateListeningCoverMediaId(Long listeningCoverMediaId) {
-        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId);
+        updateCoverMediaIds(textlessCoverMediaId, listeningCoverMediaId, listingCoverMediaId);
     }
 
     /**
      * Replaces both content-level cover references after validating their type-scoped ownership.
      *
-     * <p>The source cover is reserved for STORY content, while the listening cover is shared by
-     * STORY, MEDITATION, and LULLABY content. Both references remain optional.
+     * <p>The source cover is reserved for STORY content, the listening cover is shared by STORY,
+     * MEDITATION, and LULLABY content, and the listing cover is reserved for LULLABY content.
+     * All references remain optional.
      */
-    public void updateCoverMediaIds(Long textlessCoverMediaId, Long listeningCoverMediaId) {
+    public void updateCoverMediaIds(Long textlessCoverMediaId, Long listeningCoverMediaId, Long listingCoverMediaId) {
         Long normalizedTextlessCoverMediaId = normalizePositiveId(
                 textlessCoverMediaId,
                 "Textless cover media ID must be positive");
         Long normalizedListeningCoverMediaId = normalizePositiveId(
                 listeningCoverMediaId,
                 "Listening cover media ID must be positive");
+        Long normalizedListingCoverMediaId = normalizePositiveId(
+                listingCoverMediaId,
+                "Listing cover media ID must be positive");
         if (normalizedTextlessCoverMediaId != null && type != ContentType.STORY) {
             throw new IllegalArgumentException("textlessCoverMediaId is only supported for STORY content");
         }
         if (normalizedListeningCoverMediaId != null && !type.supportsListeningCover()) {
             throw new IllegalArgumentException(
                     "listeningCoverMediaId is only supported for STORY, MEDITATION, or LULLABY content");
+        }
+        if (normalizedListingCoverMediaId != null && type != ContentType.LULLABY) {
+            throw new IllegalArgumentException("listingCoverMediaId is only supported for LULLABY content");
         }
         if (normalizedTextlessCoverMediaId != null
                 && normalizedTextlessCoverMediaId.equals(normalizedListeningCoverMediaId)) {
@@ -262,6 +276,7 @@ public class Content extends BaseJpaEntity {
         }
         this.textlessCoverMediaId = normalizedTextlessCoverMediaId;
         this.listeningCoverMediaId = normalizedListeningCoverMediaId;
+        this.listingCoverMediaId = normalizedListingCoverMediaId;
     }
 
     /**

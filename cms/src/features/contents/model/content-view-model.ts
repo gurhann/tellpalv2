@@ -44,6 +44,8 @@ export type ContentSummaryViewModel = {
   hasTextlessCover: boolean;
   listeningCoverAssetId: number | null;
   hasListeningCover: boolean;
+  listingCoverAssetId: number | null;
+  hasListingCover: boolean;
   supportsListeningCover: boolean;
   supportsStoryPages: boolean;
   hasPages: boolean;
@@ -169,6 +171,8 @@ export function mapAdminContent(
     hasTextlessCover: content.textlessCoverMediaId !== null,
     listeningCoverAssetId: content.listeningCoverMediaId,
     hasListeningCover: content.listeningCoverMediaId !== null,
+    listingCoverAssetId: content.listingCoverMediaId ?? null,
+    hasListingCover: content.listingCoverMediaId != null,
     supportsListeningCover:
       content.type === "STORY" ||
       content.type === "MEDITATION" ||

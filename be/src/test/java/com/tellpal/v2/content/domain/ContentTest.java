@@ -14,6 +14,26 @@ import com.tellpal.v2.shared.domain.LanguageCode;
 class ContentTest {
 
     @Test
+    void lullabyKeepsListingAndPlaybackCoversIndependent() {
+        Content content = Content.create(ContentType.LULLABY, "lullaby-covers", 3, true);
+
+        content.updateCoverMediaIds(null, 11L, 12L);
+
+        assertThat(content.getListeningCoverMediaId()).isEqualTo(11L);
+        assertThat(content.getListingCoverMediaId()).isEqualTo(12L);
+    }
+
+    @Test
+    void listingCoverIsRejectedForNonLullabyContent() {
+        Content content = Content.create(ContentType.MEDITATION, "meditation-cover", 3, true);
+
+        assertThatThrownBy(() -> content.updateCoverMediaIds(null, null, 12L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("listingCoverMediaId");
+        assertThat(content.getListingCoverMediaId()).isNull();
+    }
+
+    @Test
     void assignContributorAppendsAtTheServerOwnedEndOfItsRoleAndLanguageGroup() {
         Content content = Content.create(ContentType.STORY, "story-contributors", 6, true);
         content.upsertLocalization(LanguageCode.TR, "Masal", null, null, null, null, null,

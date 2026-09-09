@@ -78,6 +78,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
         active: values.active,
         textlessCoverMediaId: values.textlessCoverMediaId ?? null,
         listeningCoverMediaId: values.listeningCoverMediaId ?? null,
+        listingCoverMediaId: values.listingCoverMediaId ?? null,
       });
     },
     onSuccess: async (savedContent) => {

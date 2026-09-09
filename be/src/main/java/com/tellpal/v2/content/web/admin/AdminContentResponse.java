@@ -10,7 +10,8 @@ public record AdminContentResponse(
         Integer ageRange,
         Integer pageCount,
         Long textlessCoverMediaId,
-        Long listeningCoverMediaId) {
+        Long listeningCoverMediaId,
+        Long listingCoverMediaId) {
 
     static AdminContentResponse from(ContentReference reference) {
         return new AdminContentResponse(
@@ -21,6 +22,7 @@ public record AdminContentResponse(
                 reference.ageRange(),
                 reference.pageCount(),
                 reference.textlessCoverMediaId(),
-                reference.listeningCoverMediaId());
+                reference.listeningCoverMediaId(),
+                reference.listingCoverMediaId());
     }
 }

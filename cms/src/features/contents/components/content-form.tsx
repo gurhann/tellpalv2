@@ -86,6 +86,14 @@ export function ContentForm({
           listeningCoverTitle: "Dinleme kapagi sec",
           listeningCoverDescription:
             "Sesli deneyimde tum dillerle paylasilan textless kapagi secin veya yukleyin.",
+          lullabyListingCover: "Liste kapağı (statik)",
+          lullabyListingCoverTitle: "Statik liste kapağını seç",
+          lullabyListingCoverDescription:
+            "Ninninin listelerde ve kartlarda kullanılan statik kapağını seçin veya yükleyin.",
+          lullabyPlaybackCover: "Playback kapağı (animasyonlu)",
+          lullabyPlaybackCoverTitle: "Animasyonlu playback kapağını seç",
+          lullabyPlaybackCoverDescription:
+            "Ninni playback ve detay deneyiminde kullanılan animasyonlu kapağı seçin veya yükleyin.",
           active: "Aktif",
           inactive: "Pasif",
           inactiveHelp:
@@ -105,7 +113,7 @@ export function ContentForm({
           contentType: "Content type",
           selectContentType: "Select content type",
           contentTypeFixed:
-            "Content type is fixed after creation. This form updates external key, age range, active state, and the listening cover when supported.",
+            "Content type is fixed after creation. This form updates external key, age range, active state, and supported cover fields.",
           contentTypeLocked: "Locked after creation",
           externalKey: "External key",
           ageRange: "Age range",
@@ -115,6 +123,14 @@ export function ContentForm({
           listeningCoverTitle: "Pick listening cover",
           listeningCoverDescription:
             "Choose the textless cover shared by the audio experience across all languages.",
+          lullabyListingCover: "Listing cover (static)",
+          lullabyListingCoverTitle: "Pick static listing cover",
+          lullabyListingCoverDescription:
+            "Choose the static cover used in lullaby lists and cards.",
+          lullabyPlaybackCover: "Playback cover (animated)",
+          lullabyPlaybackCoverTitle: "Pick animated playback cover",
+          lullabyPlaybackCoverDescription:
+            "Choose the animated cover used in the lullaby playback and detail experience.",
           active: "Active",
           inactive: "Inactive",
           inactiveHelp: "Inactive content still appears in admin read screens.",
@@ -141,6 +157,7 @@ export function ContentForm({
     selectedType === "STORY" ||
     selectedType === "MEDITATION" ||
     selectedType === "LULLABY";
+  const isLullaby = selectedType === "LULLABY";
   const saveProblem =
     saveMutation.error instanceof ApiClientError
       ? saveMutation.error.problem
@@ -321,7 +338,54 @@ export function ContentForm({
           <p className="text-sm text-muted-foreground">{copy.inactiveHelp}</p>
         </div>
 
-        {mode === "update" && supportsListeningCover ? (
+        {mode === "update" && isLullaby ? (
+          <>
+            <div className="md:col-span-2">
+              <Controller
+                control={form.control}
+                name="listingCoverMediaId"
+                render={({ field, fieldState }) => (
+                  <AssetPickerField
+                    id="listingCoverMediaId"
+                    label={copy.lullabyListingCover}
+                    mediaType="IMAGE"
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    pickerTitle={copy.lullabyListingCoverTitle}
+                    pickerDescription={copy.lullabyListingCoverDescription}
+                    description={copy.lullabyListingCoverDescription}
+                    disabled={saveMutation.isPending || form.formState.isSubmitting}
+                    error={fieldState.error}
+                    variant="editor"
+                    testId="content-listing-cover"
+                  />
+                )}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Controller
+                control={form.control}
+                name="listeningCoverMediaId"
+                render={({ field, fieldState }) => (
+                  <AssetPickerField
+                    id="listeningCoverMediaId"
+                    label={copy.lullabyPlaybackCover}
+                    mediaType="IMAGE"
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    pickerTitle={copy.lullabyPlaybackCoverTitle}
+                    pickerDescription={copy.lullabyPlaybackCoverDescription}
+                    description={copy.lullabyPlaybackCoverDescription}
+                    disabled={saveMutation.isPending || form.formState.isSubmitting}
+                    error={fieldState.error}
+                    variant="editor"
+                    testId="content-listening-cover"
+                  />
+                )}
+              />
+            </div>
+          </>
+        ) : mode === "update" && supportsListeningCover ? (
           <div className="md:col-span-2">
             <Controller
               control={form.control}
