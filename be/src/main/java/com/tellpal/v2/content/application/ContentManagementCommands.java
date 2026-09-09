@@ -74,15 +74,16 @@ public final class ContentManagementCommands {
             Integer ageRange,
             boolean active,
             Long textlessCoverMediaId,
-            Long listeningCoverMediaId) {
+            Long listeningCoverMediaId,
+            Long listingCoverMediaId) {
 
         public UpdateContentCommand(Long contentId, String externalKey, Integer ageRange, boolean active) {
-            this(contentId, externalKey, ageRange, active, null, null);
+            this(contentId, externalKey, ageRange, active, null, null, null);
         }
 
         public UpdateContentCommand(Long contentId, String externalKey, Integer ageRange, boolean active,
                 Long textlessCoverMediaId) {
-            this(contentId, externalKey, ageRange, active, textlessCoverMediaId, null);
+            this(contentId, externalKey, ageRange, active, textlessCoverMediaId, null, null);
         }
 
         public UpdateContentCommand {
@@ -95,6 +96,9 @@ public final class ContentManagementCommands {
             listeningCoverMediaId = normalizePositiveId(
                     listeningCoverMediaId,
                     "Listening cover media ID must be positive");
+            listingCoverMediaId = normalizePositiveId(
+                    listingCoverMediaId,
+                    "Listing cover media ID must be positive");
         }
     }
 

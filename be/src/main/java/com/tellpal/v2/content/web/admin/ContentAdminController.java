@@ -135,7 +135,7 @@ public class ContentAdminController {
     }
 
     @PutMapping("/{contentId}")
-    @Operation(summary = "Update content", description = "Updates the base metadata of an existing content aggregate.")
+    @Operation(summary = "Update content", description = "Updates base metadata and content-scoped covers. listingCoverMediaId is an IMAGE reference available only for LULLABY content.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Content updated"),
             @ApiResponse(responseCode = "400", description = "Content update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -345,11 +345,13 @@ record UpdateContentRequest(
         @Positive(message = "textlessCoverMediaId must be positive")
         Long textlessCoverMediaId,
         @Positive(message = "listeningCoverMediaId must be positive")
-        Long listeningCoverMediaId) {
+        Long listeningCoverMediaId,
+        @Positive(message = "listingCoverMediaId must be positive")
+        Long listingCoverMediaId) {
 
     UpdateContentCommand toCommand(Long contentId) {
         return new UpdateContentCommand(
-                contentId, externalKey, ageRange, active, textlessCoverMediaId, listeningCoverMediaId);
+                contentId, externalKey, ageRange, active, textlessCoverMediaId, listeningCoverMediaId, listingCoverMediaId);
     }
 }
 

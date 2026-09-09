@@ -20,11 +20,13 @@ vi.mock("@/features/assets/components/asset-picker-field", () => ({
     onChange,
     value,
     testId,
+    error,
   }: {
     label: string;
     onChange: (value: number | null) => void;
     value: number | null;
     testId?: string;
+    error?: { message?: string };
   }) => (
     <div data-testid={testId}>
       <span>{label}</span>
@@ -38,6 +40,7 @@ vi.mock("@/features/assets/components/asset-picker-field", () => ({
       >
         Select asset 702
       </button>
+      {error?.message ? <span>{error.message}</span> : null}
     </div>
   ),
 }));
@@ -236,7 +239,8 @@ describe("ContentForm", () => {
 
     meditationRender.unmount();
     const lullabyRender = renderUpdateForm("LULLABY");
-    expect(screen.getByText("Listening cover")).toBeVisible();
+    expect(screen.getByText("Listing cover (static)")).toBeVisible();
+    expect(screen.getByText("Playback cover (animated)")).toBeVisible();
 
     lullabyRender.unmount();
   });
@@ -293,5 +297,63 @@ describe("ContentForm", () => {
     expect(
       screen.getByTestId("content-listening-cover-value"),
     ).toHaveTextContent("702");
+  });
+
+  it("keeps lullaby listing and playback covers independently selectable", () => {
+    render(
+      <ContentForm
+        contentId={1}
+        initialValues={{
+          type: "LULLABY",
+          externalKey: "lullaby.evening-garden",
+          ageRange: 5,
+          active: true,
+          textlessCoverMediaId: null,
+          listingCoverMediaId: 701,
+          listeningCoverMediaId: 702,
+        }}
+        mode="update"
+      />,
+    );
+
+    expect(screen.getByTestId("content-listing-cover-value")).toHaveTextContent("701");
+    expect(screen.getByTestId("content-listening-cover-value")).toHaveTextContent("702");
+  });
+
+  it("preserves existing listing cover and submits both lullaby cover pickers", async () => {
+    const mutationState = makeSaveMutationState({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+    });
+    saveContentHookMock.useSaveContent.mockReturnValue(mutationState);
+    render(
+      <ContentForm contentId={1} mode="update" initialValues={{
+        type: "LULLABY", externalKey: "lullaby.covers", ageRange: null, active: true,
+        textlessCoverMediaId: null, listingCoverMediaId: 701, listeningCoverMediaId: 702,
+      }} />,
+    );
+
+    fireEvent.click(screen.getByTestId("content-listing-cover-select"));
+    fireEvent.click(screen.getByTestId("content-listening-cover-select"));
+    fireEvent.click(screen.getByRole("button", { name: /save metadata/i }));
+
+    await waitFor(() => expect(mutationState.mutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ listingCoverMediaId: 702, listeningCoverMediaId: 702 }),
+    ));
+  });
+
+  it("maps a listing cover API error onto the lullaby picker", async () => {
+    const mutationState = makeSaveMutationState({
+      mutateAsync: vi.fn().mockRejectedValue(makeApiClientError(makeProblem({
+        status: 400,
+        fieldErrors: { listingCoverMediaId: "Listing cover must be an image." },
+      }))),
+    });
+    saveContentHookMock.useSaveContent.mockReturnValue(mutationState);
+    render(<ContentForm contentId={1} mode="update" initialValues={{
+      type: "LULLABY", externalKey: "lullaby.covers", ageRange: null, active: true,
+      textlessCoverMediaId: null, listingCoverMediaId: 701, listeningCoverMediaId: 702,
+    }} />);
+    fireEvent.click(screen.getByRole("button", { name: /save metadata/i }));
+    expect(await screen.findByText("Listing cover must be an image.")).toBeVisible();
   });
 });

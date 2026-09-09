@@ -53,6 +53,7 @@ export type UpdateContentInput = {
   active: boolean;
   textlessCoverMediaId?: number | null;
   listeningCoverMediaId?: number | null;
+  listingCoverMediaId?: number | null;
 };
 
 export type UpsertContentLocalizationInput = {
@@ -85,6 +86,7 @@ export const adminContentResponseSchema = z.object({
   pageCount: z.number().int().nonnegative().nullable(),
   textlessCoverMediaId: z.number().int().positive().nullable(),
   listeningCoverMediaId: z.number().int().positive().nullable(),
+  listingCoverMediaId: z.number().int().positive().nullable(),
 });
 
 export const adminContentLocalizationResponseSchema = z.object({

@@ -511,6 +511,76 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void lullabyListingCoverIsIndependentAndTypeScoped() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long listingCover = registerImageAsset("/content/lullaby/listing.jpg");
+        Long playbackCover = registerGifImageAsset("/content/lullaby/playback.gif");
+        Long replacementListingCover = registerImageAsset("/content/lullaby/listing-2.jpg");
+        Long audioAsset = registerAudioAsset("/content/lullaby/not-an-image.mp3");
+        Long lullabyId = readPayload(mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("{\"type\":\"LULLABY\",\"externalKey\":\"lullaby-covers\",\"active\":true}"))
+                .andExpect(status().isCreated()).andReturn()).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"externalKey\":\"lullaby-covers\",\"active\":true,\"listingCoverMediaId\":%d,\"listeningCoverMediaId\":%d}"
+                                .formatted(listingCover, playbackCover)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listingCoverMediaId").value(listingCover))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(playbackCover));
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"externalKey\":\"lullaby-covers\",\"active\":true,\"listingCoverMediaId\":%d,\"listeningCoverMediaId\":%d}"
+                                .formatted(audioAsset, playbackCover)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.listingCoverMediaId").isNotEmpty());
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"externalKey\":\"lullaby-covers\",\"active\":true,\"listingCoverMediaId\":%d,\"listeningCoverMediaId\":null}"
+                                .formatted(replacementListingCover)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listingCoverMediaId").value(replacementListingCover))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(nullValue()));
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"title\":\"Ninni\",\"status\":\"DRAFT\"}"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/en", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"title\":\"Lullaby\",\"status\":\"DRAFT\"}"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(put("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"externalKey\":\"lullaby-covers\",\"active\":true,\"listingCoverMediaId\":null,\"listeningCoverMediaId\":%d}"
+                                .formatted(playbackCover)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listingCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(playbackCover));
+        mockMvc.perform(get("/api/admin/contents/{contentId}", lullabyId)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listingCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(playbackCover))
+                .andExpect(jsonPath("$.localizations.length()").value(2));
+
+        Long meditationId = readPayload(mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"type\":\"MEDITATION\",\"externalKey\":\"meditation-covers\",\"active\":true}"))
+                .andExpect(status().isCreated()).andReturn()).get("contentId").asLong();
+        mockMvc.perform(put("/api/admin/contents/{contentId}", meditationId)
+                        .header("Authorization", "Bearer " + accessToken).contentType("application/json")
+                        .content("{\"externalKey\":\"meditation-covers\",\"active\":true,\"listingCoverMediaId\":%d}".formatted(listingCover)))
+                .andExpect(status().isBadRequest());
+        assertThat(jdbcTemplate.queryForObject("select listing_cover_media_id from contents where id = ?", Long.class, meditationId))
+                .isNull();
+    }
+
+    @Test
     void duplicateExternalKeyReturnsConflictProblemDetails() throws Exception {
         String accessToken = authenticateAdmin();
 
@@ -1191,5 +1261,11 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 "audio/mpeg",
                 2048L,
                 SAMPLE_CHECKSUM)).assetId();
+    }
+
+    private Long registerGifImageAsset(String objectPath) {
+        return assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.LOCAL_STUB, objectPath, AssetKind.ORIGINAL_IMAGE,
+                "image/gif", 1024L, SAMPLE_CHECKSUM)).assetId();
     }
 }

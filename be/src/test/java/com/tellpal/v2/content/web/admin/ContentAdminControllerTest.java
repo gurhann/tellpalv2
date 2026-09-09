@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.time.Instant;
 import java.time.Clock;
@@ -89,8 +90,8 @@ class ContentAdminControllerTest {
     void createContentReturnsCreatedResponse() throws Exception {
         when(contentManagementService.createContent(any())).thenReturn(new ContentReference(
                 51L,
-                ContentApiType.STORY,
-                "moonlight-story",
+                ContentApiType.LULLABY,
+                "moonlight-lullaby",
                 true,
                 5,
                 0));
@@ -100,7 +101,7 @@ class ContentAdminControllerTest {
                         .content("""
                                 {
                                   "type": "STORY",
-                                  "externalKey": "moonlight-story",
+                                  "externalKey": "moonlight-lullaby",
                                   "ageRange": 5,
                                   "active": true
                                 }
@@ -405,7 +406,8 @@ class ContentAdminControllerTest {
                 5,
                 2,
                 321L,
-                654L));
+                654L,
+                655L));
 
         mockMvc.perform(put("/api/admin/contents/51")
                         .contentType("application/json")
@@ -414,20 +416,22 @@ class ContentAdminControllerTest {
                                   "externalKey": "moonlight-story",
                                   "ageRange": 5,
                                   "active": true,
-                                  "textlessCoverMediaId": 321,
-                                  "listeningCoverMediaId": 654
+                                  "listeningCoverMediaId": 654,
+                                  "listingCoverMediaId": 655
                                 }
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(51))
-                .andExpect(jsonPath("$.textlessCoverMediaId").value(321))
-                .andExpect(jsonPath("$.listeningCoverMediaId").value(654));
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.listeningCoverMediaId").value(654))
+                .andExpect(jsonPath("$.listingCoverMediaId").value(655));
 
         verify(contentManagementService).updateContent(argThat(command ->
                 command.contentId().equals(51L)
-                        && command.externalKey().equals("moonlight-story")
-                        && command.textlessCoverMediaId().equals(321L)
-                        && command.listeningCoverMediaId().equals(654L)));
+                        && command.externalKey().equals("moonlight-lullaby")
+                        && command.textlessCoverMediaId() == null
+                        && command.listeningCoverMediaId().equals(654L)
+                        && command.listingCoverMediaId().equals(655L)));
     }
 
     @Test

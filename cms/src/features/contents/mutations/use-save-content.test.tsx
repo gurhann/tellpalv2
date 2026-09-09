@@ -165,6 +165,7 @@ describe("useSaveContent", () => {
       pageCount: 2,
       textlessCoverMediaId: 701,
       listeningCoverMediaId: 702,
+      listingCoverMediaId: null,
     };
 
     const existingRecord = {
@@ -206,6 +207,7 @@ describe("useSaveContent", () => {
         active: false,
         textlessCoverMediaId: 701,
         listeningCoverMediaId: 702,
+        listingCoverMediaId: null,
       });
     });
 
@@ -238,6 +240,7 @@ describe("useSaveContent", () => {
       active: false,
       textlessCoverMediaId: 701,
       listeningCoverMediaId: 702,
+      listingCoverMediaId: null,
     });
     expect(detailCache).toMatchObject({
       summary: {
@@ -266,5 +269,45 @@ describe("useSaveContent", () => {
         }),
       ]),
     );
+  });
+
+  it("sends independently selected lullaby listing and playback covers", async () => {
+    const queryClient = new QueryClient();
+    contentAdminApiMock.updateContent.mockResolvedValue({
+      contentId: 9,
+      type: "LULLABY",
+      externalKey: "lullaby.covers",
+      active: true,
+      ageRange: null,
+      pageCount: null,
+      textlessCoverMediaId: null,
+      listingCoverMediaId: 701,
+      listeningCoverMediaId: 702,
+    });
+    const { result } = renderHook(
+      () => useSaveContent({ mode: "update", contentId: 9 }),
+      { wrapper: createWrapper(queryClient) },
+    );
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        type: "LULLABY",
+        externalKey: "lullaby.covers",
+        ageRange: null,
+        active: true,
+        textlessCoverMediaId: null,
+        listingCoverMediaId: 701,
+        listeningCoverMediaId: 702,
+      });
+    });
+
+    expect(contentAdminApiMock.updateContent).toHaveBeenCalledWith(9, {
+      externalKey: "lullaby.covers",
+      ageRange: null,
+      active: true,
+      textlessCoverMediaId: null,
+      listingCoverMediaId: 701,
+      listeningCoverMediaId: 702,
+    });
   });
 });

@@ -71,6 +71,10 @@ export const contentFormSchema = z.object({
       .nullable()
       .optional(),
   ),
+  listingCoverMediaId: z.preprocess(
+    parseAgeRange,
+    z.number().int("Listing cover asset id must be a whole number.").positive("Listing cover asset id must be positive.").nullable().optional(),
+  ),
 });
 
 export type ContentFormValues = z.infer<typeof contentFormSchema>;
@@ -91,6 +95,7 @@ export function getCreateContentFormDefaults(): ContentFormValues {
     active: true,
     textlessCoverMediaId: null,
     listeningCoverMediaId: null,
+    listingCoverMediaId: null,
   };
 }
 
@@ -104,6 +109,7 @@ export function mapContentReadToFormValues(
     active: content.summary.active,
     textlessCoverMediaId: content.summary.textlessCoverAssetId,
     listeningCoverMediaId: content.summary.listeningCoverAssetId,
+    listingCoverMediaId: content.summary.listingCoverAssetId,
   };
 }
 
@@ -117,5 +123,6 @@ export function mapContentResponseToFormValues(
     active: content.active,
     textlessCoverMediaId: content.textlessCoverMediaId,
     listeningCoverMediaId: content.listeningCoverMediaId,
+    listingCoverMediaId: content.listingCoverMediaId,
   };
 }

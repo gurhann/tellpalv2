@@ -85,11 +85,12 @@ public class ContentManagementService {
         ensureExternalKeyAvailable(command.contentId(), command.externalKey());
         assetReferenceValidator.requireImageAsset(command.textlessCoverMediaId(), "textlessCoverMediaId");
         assetReferenceValidator.requireImageAsset(command.listeningCoverMediaId(), "listeningCoverMediaId");
+        assetReferenceValidator.requireImageAsset(command.listingCoverMediaId(), "listingCoverMediaId");
         boolean externalKeyChanged = !Objects.equals(content.getExternalKey(), command.externalKey());
         boolean listeningCoverChanged = !Objects.equals(
                 content.getListeningCoverMediaId(), command.listeningCoverMediaId());
         content.updateDetails(command.externalKey(), command.ageRange(), command.active());
-        content.updateCoverMediaIds(command.textlessCoverMediaId(), command.listeningCoverMediaId());
+        content.updateCoverMediaIds(command.textlessCoverMediaId(), command.listeningCoverMediaId(), command.listingCoverMediaId());
         Content savedContent = contentRepository.save(content);
         if (savedContent.getType() == ContentType.LULLABY
                 && savedContent.getLullabyPlayback() != null
