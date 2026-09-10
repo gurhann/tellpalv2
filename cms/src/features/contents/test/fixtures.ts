@@ -13,6 +13,7 @@ export const storyContentReadResponse: AdminContentReadResponse = {
   pageCount: 2,
   textlessCoverMediaId: 701,
   listeningCoverMediaId: 702,
+  listingCoverMediaId: null,
   localizations: [
     {
       contentId: 1,
@@ -60,6 +61,7 @@ export const meditationContentReadResponse: AdminContentReadResponse = {
   pageCount: null,
   textlessCoverMediaId: null,
   listeningCoverMediaId: null,
+  listingCoverMediaId: null,
   localizations: [
     {
       contentId: 2,
@@ -101,6 +103,7 @@ export const inactiveContentReadResponse: AdminContentReadResponse = {
   pageCount: null,
   textlessCoverMediaId: null,
   listeningCoverMediaId: null,
+  listingCoverMediaId: null,
   localizations: [],
 };
 

@@ -90,8 +90,8 @@ class ContentAdminControllerTest {
     void createContentReturnsCreatedResponse() throws Exception {
         when(contentManagementService.createContent(any())).thenReturn(new ContentReference(
                 51L,
-                ContentApiType.LULLABY,
-                "moonlight-lullaby",
+                ContentApiType.STORY,
+                "moonlight-story",
                 true,
                 5,
                 0));
@@ -422,13 +422,13 @@ class ContentAdminControllerTest {
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentId").value(51))
-                .andExpect(jsonPath("$.textlessCoverMediaId").value(nullValue()))
+                .andExpect(jsonPath("$.textlessCoverMediaId").value(321))
                 .andExpect(jsonPath("$.listeningCoverMediaId").value(654))
                 .andExpect(jsonPath("$.listingCoverMediaId").value(655));
 
         verify(contentManagementService).updateContent(argThat(command ->
                 command.contentId().equals(51L)
-                        && command.externalKey().equals("moonlight-lullaby")
+                        && command.externalKey().equals("moonlight-story")
                         && command.textlessCoverMediaId() == null
                         && command.listeningCoverMediaId().equals(654L)
                         && command.listingCoverMediaId().equals(655L)));
