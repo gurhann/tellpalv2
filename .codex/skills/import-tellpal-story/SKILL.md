@@ -3,6 +3,11 @@ name: import-tellpal-story
 description: Validate and import prepared multilingual TellPal story folders through the existing CMS Admin API. Use when a user provides metadata.csv, per-language DOCX/images/audio, and yazısız source images and wants to automate content, localization, story-page, media, publication, and contributor entry without changing backend or CMS application code.
 ---
 
+For the legacy lullaby CSV shape, use the companion `inspect_lullabies.py` and
+`import_lullabies.py` scripts documented in [references/lullaby-import.md](references/lullaby-import.md).
+They use the same Admin API client and confirmation gates while mapping the two content-level cover
+roles and one shared ZIP audio source required by the current LULLABY model.
+
 # Import TellPal Story
 
 Use the bundled scripts as the only mutation path. Do not recreate the API workflow manually and do not modify `be/`, `cms/src/`, migrations, or API contracts.

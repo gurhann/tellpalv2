@@ -89,6 +89,48 @@ class TellPalAdminClient:
             "updated content",
         )
 
+    def update_lullaby_playback(
+        self, content_id: int, audio_media_id: int, duration_minutes: int
+    ) -> dict[str, object]:
+        return _expect_dict(
+            self._request_json(
+                "PUT",
+                f"/api/admin/contents/{content_id}/playback",
+                body={"audioMediaId": audio_media_id, "durationMinutes": duration_minutes},
+            ),
+            "updated lullaby playback",
+        )
+
+    def replace_lullaby_instruments(
+        self, content_id: int, instrument_codes: list[str]
+    ) -> list[dict[str, object]]:
+        return _expect_list(
+            self._request_json(
+                "PUT",
+                f"/api/admin/contents/{content_id}/instruments",
+                body={"instrumentCodes": instrument_codes},
+            ),
+            "updated lullaby instruments",
+        )
+
+    def list_lullaby_instruments(
+        self, content_id: int, language_code: str = "tr"
+    ) -> list[dict[str, object]]:
+        query = urllib.parse.urlencode({"languageCode": language_code})
+        return _expect_list(
+            self._request_json(
+                "GET", f"/api/admin/contents/{content_id}/instruments?{query}"
+            ),
+            "lullaby instruments",
+        )
+
+    def list_instrument_catalog(self, language_code: str = "tr") -> list[dict[str, object]]:
+        query = urllib.parse.urlencode({"languageCode": language_code})
+        return _expect_list(
+            self._request_json("GET", f"/api/admin/instrument-catalog?{query}"),
+            "instrument catalog",
+        )
+
     def create_localization(
         self,
         content_id: int,
