@@ -42,7 +42,7 @@ def main() -> int:
         print(format_preview(plan, api_base_url=api_base_url, contributor_resolutions=resolutions))
         print()
         entered = input("Type 'import' to start writes: ")
-        if entered.strip().casefold() != "import":
+        if entered != "import":
             report.mark_cancelled()
             print(f"Import cancelled. Run report: {report.result_path}")
             return 1
@@ -54,6 +54,8 @@ def main() -> int:
         return 0
     except KeyboardInterrupt as exception:
         if report is not None:
+            if client is not None:
+                report.record_last_request(client.last_request)
             report.mark_failure(exception)
             print(f"Import interrupted. Run report: {report.result_path}", file=sys.stderr)
         return 130

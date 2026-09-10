@@ -373,31 +373,38 @@ def sha256_file(path: str | Path) -> str:
 
 
 def _read_rows(path: Path) -> list[dict[str, object]]:
-    with path.open("r", encoding="utf-8-sig", newline="") as source:
-        reader = csv.DictReader(source)
-        columns = {normalize_text(item) for item in (reader.fieldnames or [])}
-        missing = sorted(REQUIRED_COLUMNS - columns)
-        if missing:
-            raise StoryValidationError(f"lullabies.csv is missing required columns: {missing}")
-        result: list[dict[str, object]] = []
-        seen_ids: set[int] = set()
-        for line_number, row in enumerate(reader, start=2):
-            language = normalize_text(row.get("language"))
-            if language not in SUPPORTED_LANGUAGES:
-                raise StoryValidationError(f"Line {line_number}: unsupported language {language!r}")
-            try:
-                legacy_id = int(normalize_text(row.get("id")))
-            except ValueError as exception:
-                raise StoryValidationError(f"Line {line_number}: id must be an integer") from exception
-            if legacy_id <= 0 or legacy_id in seen_ids:
-                raise StoryValidationError(f"Line {line_number}: id must be unique and positive")
-            seen_ids.add(legacy_id)
-            title = normalize_text(row.get("name"))
-            if not title:
-                raise StoryValidationError(f"Line {line_number}: name must not be blank")
-            summary = normalize_text(row.get("summary"), keep_empty=True)
-            result.append({"language": language, "legacy_id": legacy_id, "name": title, "summary": summary,
-                           "image_url": normalize_text(row.get("image_url")), "summary_image_url": normalize_text(row.get("summary_image_url"))})
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as source:
+            reader = csv.DictReader(source, strict=True)
+            headers = [normalize_text(item) for item in (reader.fieldnames or [])]
+            duplicate_headers = sorted({header for header in headers if headers.count(header) > 1})
+            if duplicate_headers:
+                raise StoryValidationError(f"lullabies.csv has duplicate columns: {duplicate_headers}")
+            columns = set(headers)
+            missing = sorted(REQUIRED_COLUMNS - columns)
+            if missing:
+                raise StoryValidationError(f"lullabies.csv is missing required columns: {missing}")
+            result: list[dict[str, object]] = []
+            seen_ids: set[int] = set()
+            for line_number, row in enumerate(reader, start=2):
+                language = normalize_text(row.get("language"))
+                if language not in SUPPORTED_LANGUAGES:
+                    raise StoryValidationError(f"Line {line_number}: unsupported language {language!r}")
+                try:
+                    legacy_id = int(normalize_text(row.get("id")))
+                except ValueError as exception:
+                    raise StoryValidationError(f"Line {line_number}: id must be an integer") from exception
+                if legacy_id <= 0 or legacy_id in seen_ids:
+                    raise StoryValidationError(f"Line {line_number}: id must be unique and positive")
+                seen_ids.add(legacy_id)
+                title = normalize_text(row.get("name"))
+                if not title:
+                    raise StoryValidationError(f"Line {line_number}: name must not be blank")
+                summary = normalize_text(row.get("summary"), keep_empty=True)
+                result.append({"language": language, "legacy_id": legacy_id, "name": title, "summary": summary,
+                               "image_url": normalize_text(row.get("image_url")), "summary_image_url": normalize_text(row.get("summary_image_url"))})
+    except (UnicodeDecodeError, csv.Error) as exception:
+        raise StoryValidationError(f"Cannot parse lullabies.csv: {exception}") from exception
     return result
 
 
@@ -461,7 +468,7 @@ def _extract_single_audio(zip_path: Path, directory: Path, legacy_id: int) -> Pa
     if destination.stat().st_size == 0:
         raise StoryValidationError(f"{legacy_id}.zip contains an empty MP3")
     data = destination.read_bytes()
-    if not (data.startswith(b"ID3") or any(data[index] == 0xFF and (data[index + 1] & 0xE0) == 0xE0 for index in range(max(0, len(data) - 1)))):
+    if _mp3_duration_seconds(destination) <= 0:
         raise StoryValidationError(f"{legacy_id}.zip does not contain a valid MP3 frame")
     return destination
 
@@ -476,8 +483,7 @@ def _skip_id3v2(data: bytes) -> int:
 def _mp3_duration_seconds(path: Path) -> float:
     data = path.read_bytes()
     index = _skip_id3v2(data)
-    frames = 0
-    samples = 0
+    seconds = 0.0
     while index + 4 <= len(data):
         header = int.from_bytes(data[index:index + 4], "big")
         parsed = _parse_mp3_header(header)
@@ -487,10 +493,9 @@ def _mp3_duration_seconds(path: Path) -> float:
         frame_length, sample_count, sample_rate = parsed
         if frame_length <= 0 or index + frame_length > len(data):
             break
-        frames += 1
-        samples += sample_count
+        seconds += sample_count / sample_rate
         index += frame_length
-    return samples / sample_rate if frames and sample_rate else 0.0
+    return seconds
 
 
 def _parse_mp3_header(header: int) -> tuple[int, int, int] | None:

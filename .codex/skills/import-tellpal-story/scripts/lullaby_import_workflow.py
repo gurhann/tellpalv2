@@ -187,7 +187,11 @@ def verify_group(
     published: bool = False,
 ) -> None:
     content = client.get_content(content_id)
-    if content.get("type") != "LULLABY" or content.get("externalKey") != group.external_key:
+    if (
+        content.get("type") != "LULLABY"
+        or content.get("externalKey") != group.external_key
+        or content.get("active") is not plan.active
+    ):
         raise RuntimeError(f"Verification failed for {group.external_key}: content identity mismatch")
     if content.get("listingCoverMediaId") != uploaded[group.listing_media_key] or content.get("listeningCoverMediaId") != uploaded[group.listening_media_key]:
         raise RuntimeError(f"Verification failed for {group.external_key}: cover references mismatch")

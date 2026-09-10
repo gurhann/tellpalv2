@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import sys
 import tempfile
 import threading
@@ -9,15 +10,16 @@ import unittest
 import zipfile
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import ANY, MagicMock, call, patch
 from urllib.parse import urlparse
 
 SCRIPT_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+import import_lullabies
 from lullaby_import_workflow import execute_import, remote_preflight
-from lullaby_manifest import StoryValidationError, _extract_single_audio, build_lullaby_plan, parse_summary
+from lullaby_manifest import StoryValidationError, _extract_single_audio, _mp3_duration_seconds, _read_rows, build_lullaby_plan, parse_summary
 from story_import_models import ContributorResolution
 from tellpal_admin_client import TellPalAdminClient
 
@@ -107,6 +109,12 @@ def _mp3(seed: int = 0) -> bytes:
     return frame * 2
 
 
+def _mp3_frame(*, sample_index: int) -> bytes:
+    sample_rate = (44100, 48000)[sample_index]
+    frame_length = (144 * 128000) // sample_rate
+    return bytes((0xFF, 0xFB, 0x90 | (sample_index << 2), 0x64)) + b"\x00" * (frame_length - 4)
+
+
 def _zip(payload: bytes) -> bytes:
     stream = io.BytesIO()
     with zipfile.ZipFile(stream, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -150,6 +158,39 @@ class LullabyManifestTest(unittest.TestCase):
                 archive.writestr("track.mp3", b"not mp3")
             with self.assertRaisesRegex(StoryValidationError, "valid MP3 frame"):
                 _extract_single_audio(invalid_mp3_zip, root / "audio", 2)
+
+    def test_id3_only_audio_is_rejected_even_with_duration_override(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            zip_path = root / "1.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("track.mp3", b"ID3" + b"\x00" * 32)
+            with self.assertRaisesRegex(StoryValidationError, "valid MP3 frame"):
+                _extract_single_audio(zip_path, root / "audio", 1)
+
+    def test_duration_sums_each_frame_at_its_own_sample_rate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            audio_path = Path(directory) / "mixed.mp3"
+            audio_path.write_bytes(_mp3_frame(sample_index=0) + _mp3_frame(sample_index=1))
+            self.assertAlmostEqual(
+                _mp3_duration_seconds(audio_path),
+                1152 / 44100 + 1152 / 48000,
+            )
+
+    def test_csv_parse_errors_and_duplicate_headers_are_validation_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            malformed = root / "malformed.csv"
+            malformed.write_bytes(b"\xff\xfe")
+            with self.assertRaisesRegex(StoryValidationError, "Cannot parse"):
+                _read_rows(malformed)
+            duplicate_headers = root / "duplicate.csv"
+            duplicate_headers.write_text(
+                "language,id,name,summary,image_url,image_url,summary_image_url\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(StoryValidationError, "duplicate columns"):
+                _read_rows(duplicate_headers)
 
     def test_build_groups_languages_and_reuses_two_cover_roles(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -221,8 +262,8 @@ class LullabyManifestTest(unittest.TestCase):
             self.assertEqual(plan.groups[0].duration_minutes, 1)
             objects["/bucket/1.zip"] = _zip(b"ID3" + b"\x00" * 20)
             with patch("urllib.request.urlopen", side_effect=open_url):
-                fallback_plan = build_lullaby_plan(csv_path, storage_base_url="https://storage.test", storage_bucket="bucket", duration_override=5)
-            self.assertEqual(fallback_plan.groups[0].duration_minutes, 5)
+                with self.assertRaisesRegex(StoryValidationError, "valid MP3 frame"):
+                    build_lullaby_plan(csv_path, storage_base_url="https://storage.test", storage_bucket="bucket", duration_override=5)
             with self.assertRaisesRegex(StoryValidationError, "positive integer"):
                 build_lullaby_plan(csv_path, duration_override=0)
 
@@ -339,6 +380,63 @@ class LullabyAdminClientWireTest(unittest.TestCase):
             ("GET", "/api/admin/contents/42/instruments?languageCode=en", None),
             ("GET", "/api/admin/instrument-catalog?languageCode=pt", None),
         ])
+
+
+class LullabyImportCliTest(unittest.TestCase):
+    def test_only_exact_import_confirmation_executes_writes(self):
+        for entered, expected_status, expected_execute_calls in (
+            ("import", 0, 1),
+            (" import", 1, 0),
+        ):
+            with self.subTest(entered=entered):
+                report = MagicMock(result_path=Path("report.json"))
+                client = MagicMock()
+                client.last_request = {"method": "GET", "path": "/api/admin/contents"}
+                execute = MagicMock(return_value={"groups": 1, "contentIds": [1]})
+                terminal = MagicMock()
+                terminal.isatty.return_value = True
+                with (
+                    patch.dict(os.environ, {"TELLPAL_API_BASE_URL": "https://api.test", "TELLPAL_ADMIN_USERNAME": "admin"}, clear=True),
+                    patch.object(sys, "argv", ["import_lullabies.py", "lullabies.csv"]),
+                    patch.object(sys, "stdin", terminal),
+                    patch.object(import_lullabies, "build_lullaby_plan", return_value=object()),
+                    patch.object(import_lullabies, "LullabyImportRunReport", return_value=report),
+                    patch.object(import_lullabies, "TellPalAdminClient", return_value=client),
+                    patch.object(import_lullabies, "remote_preflight", return_value=()),
+                    patch.object(import_lullabies, "format_preview", return_value="preview"),
+                    patch.object(import_lullabies.getpass, "getpass", return_value="secret"),
+                    patch("builtins.input", return_value=entered),
+                    patch.object(import_lullabies, "execute_import", execute),
+                ):
+                    self.assertEqual(import_lullabies.main(), expected_status)
+                self.assertEqual(execute.call_count, expected_execute_calls)
+                if expected_status:
+                    report.mark_cancelled.assert_called_once_with()
+
+    def test_keyboard_interrupt_records_last_request_before_failure(self):
+        report = MagicMock(result_path=Path("report.json"))
+        client = MagicMock()
+        client.last_request = {"method": "GET", "path": "/api/admin/contents"}
+        terminal = MagicMock()
+        terminal.isatty.return_value = True
+        with (
+            patch.dict(os.environ, {"TELLPAL_API_BASE_URL": "https://api.test", "TELLPAL_ADMIN_USERNAME": "admin"}, clear=True),
+            patch.object(sys, "argv", ["import_lullabies.py", "lullabies.csv"]),
+            patch.object(sys, "stdin", terminal),
+            patch.object(import_lullabies, "build_lullaby_plan", return_value=object()),
+            patch.object(import_lullabies, "LullabyImportRunReport", return_value=report),
+            patch.object(import_lullabies, "TellPalAdminClient", return_value=client),
+            patch.object(import_lullabies, "remote_preflight", side_effect=KeyboardInterrupt()),
+            patch.object(import_lullabies.getpass, "getpass", return_value="secret"),
+        ):
+            self.assertEqual(import_lullabies.main(), 130)
+        self.assertEqual(
+            report.method_calls,
+            [
+                call.record_last_request(client.last_request),
+                call.mark_failure(ANY),
+            ],
+        )
 
 
 if __name__ == "__main__":
