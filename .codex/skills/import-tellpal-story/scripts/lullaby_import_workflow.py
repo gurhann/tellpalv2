@@ -142,7 +142,10 @@ def execute_import(
                 if matches:
                     contributor_id = _positive_int(matches[0].get("contributorId"), "contributorId")
                 else:
-                    contributor_id = _positive_int(client.create_contributor(group.musician).get("contributorId"), "contributorId")
+                    contributor_id = _positive_int(
+                        client.create_contributor(group.musician, ["MUSICIAN"]).get("contributorId"),
+                        "contributorId",
+                    )
                 ids_by_name[name_key] = contributor_id
             client.assign_contributor(content_id, {
                 "contributorId": contributor_id,

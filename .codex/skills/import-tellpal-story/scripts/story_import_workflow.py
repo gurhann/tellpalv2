@@ -323,6 +323,12 @@ def _assign_contributors(
     content_id = _content_id(state)
     report.set_phase("assign-contributors")
     ids_by_name = {normalize_key(item.display_name): item.contributor_id for item in resolutions}
+    roles_by_name: dict[str, list[str]] = {}
+    for assignment in plan.contributor_assignments:
+        name_key = normalize_key(assignment.display_name)
+        roles_by_name.setdefault(name_key, [])
+        if assignment.role not in roles_by_name[name_key]:
+            roles_by_name[name_key].append(assignment.role)
     for assignment in plan.contributor_assignments:
         name_key = normalize_key(assignment.display_name)
         contributor_id = ids_by_name.get(name_key)
@@ -338,7 +344,7 @@ def _assign_contributors(
             if matches:
                 contributor_id = _positive_int(matches[0].get("contributorId"), "contributorId")
             else:
-                created = client.create_contributor(assignment.display_name)
+                created = client.create_contributor(assignment.display_name, roles_by_name[name_key])
                 contributor_id = _positive_int(created.get("contributorId"), "contributorId")
             ids_by_name[name_key] = contributor_id
         state.contributor_ids[name_key] = contributor_id

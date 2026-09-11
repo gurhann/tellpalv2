@@ -390,6 +390,11 @@ class LullabyAdminClientWireTest(unittest.TestCase):
                 requests.append(("PUT", self.path, json.loads(self.rfile.read(length))))
                 self._respond({} if self.path.endswith("/playback") else [])
 
+            def do_POST(self):  # noqa: N802
+                length = int(self.headers["Content-Length"])
+                requests.append(("POST", self.path, json.loads(self.rfile.read(length))))
+                self._respond({"contributorId": 15})
+
             def log_message(self, *_args):
                 return
 
@@ -403,6 +408,7 @@ class LullabyAdminClientWireTest(unittest.TestCase):
             client.replace_lullaby_instruments(42, ["BELL", "HARP"])
             client.list_lullaby_instruments(42, "en")
             client.list_instrument_catalog("pt")
+            client.create_contributor("Ali Kaan Uysal", ["MUSICIAN"])
         finally:
             server.shutdown()
             server.server_close()
@@ -412,6 +418,7 @@ class LullabyAdminClientWireTest(unittest.TestCase):
             ("PUT", "/api/admin/contents/42/instruments", {"instrumentCodes": ["BELL", "HARP"]}),
             ("GET", "/api/admin/contents/42/instruments?languageCode=en", None),
             ("GET", "/api/admin/instrument-catalog?languageCode=pt", None),
+            ("POST", "/api/admin/contributors", {"displayName": "Ali Kaan Uysal", "roles": ["MUSICIAN"]}),
         ])
 
 

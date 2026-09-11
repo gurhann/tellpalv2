@@ -185,12 +185,12 @@ class TellPalAdminClient:
             "contributor list",
         )
 
-    def create_contributor(self, display_name: str) -> dict[str, object]:
+    def create_contributor(self, display_name: str, roles: list[str]) -> dict[str, object]:
         return _expect_dict(
             self._request_json(
                 "POST",
                 "/api/admin/contributors",
-                body={"displayName": display_name},
+                body={"displayName": display_name, "roles": roles},
             ),
             "created contributor",
         )
