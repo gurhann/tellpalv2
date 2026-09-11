@@ -36,12 +36,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                     c.is_active,
                     cl.title,
                     cl.status as localization_status,
-                    case when c.type = 'LULLABY' then (
-                        select ap.status
-                        from asset_processings ap
-                        where ap.target_scope = 'CONTENT'
-                          and ap.content_id = c.id
-                    ) else cl.processing_status end as processing_status,
+                    cl.processing_status,
                     case
                         when c.type = 'STORY' and (
                             not c.is_active
@@ -68,10 +63,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                         when c.type <> 'STORY' and (
                             not c.is_active
                             or cl.id is null
-                            or coalesce(case when c.type = 'LULLABY' then (
-                                select ap.status from asset_processings ap
-                                where ap.target_scope = 'CONTENT' and ap.content_id = c.id
-                            ) else cl.processing_status end, '') <> 'COMPLETED'
+                            or coalesce(cl.processing_status, '') <> 'COMPLETED'
                         ) then 'ACTION_REQUIRED'
                         when cl.status = 'PUBLISHED' then 'PUBLISHED'
                         else 'READY_TO_PUBLISH'
