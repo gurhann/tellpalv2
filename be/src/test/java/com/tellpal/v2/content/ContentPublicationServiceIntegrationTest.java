@@ -186,7 +186,7 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
                 null,
                 null,
                 LocalizationStatus.DRAFT,
-                ProcessingStatus.PENDING,
+                null,
                 null));
         contentManagementService.upsertLullabyPlayback(
                 content.contentId(), new LullabyPlaybackCommand(audioMediaId, 5));

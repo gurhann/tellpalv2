@@ -52,10 +52,10 @@ class InstrumentCatalogMigrationIntegrationTest {
             }
             assertThat(codes).containsExactly(
                     "CELESTA", "BELL", "VIOLIN", "RHODES", "GLOCKENSPIEL", "HARP", "VIBRAPHONE",
-                    "STRING_ORCHESTRA");
+                    "STRING_ORCHESTRA", "PIANO");
             assertThat(labels).containsExactly(
                     "Çelesta", "Bell", "Keman", "Rhodes", "Glockenspiel", "Arp", "Vibrafon",
-                    "Yaylı Orkestra");
+                    "Yaylı Orkestra", "Piyano");
         }
     }
 

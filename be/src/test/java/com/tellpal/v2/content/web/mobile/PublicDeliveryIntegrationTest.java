@@ -192,7 +192,7 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                 null,
                 null,
                 LocalizationStatus.PUBLISHED,
-                ProcessingStatus.PENDING,
+                null,
                 PUBLISHED_AT));
         contentManagementService.upsertLullabyPlayback(
                 content.contentId(), new LullabyPlaybackCommand(audioMediaId, 5));
@@ -237,7 +237,7 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                 null,
                 null,
                 LocalizationStatus.PUBLISHED,
-                ProcessingStatus.PENDING,
+                null,
                 PUBLISHED_AT));
         assertThat(publicContentQueryApi.listContents(LanguageCode.TR, null, ContentApiType.LULLABY))
                 .extracting(summary -> summary.contentId())

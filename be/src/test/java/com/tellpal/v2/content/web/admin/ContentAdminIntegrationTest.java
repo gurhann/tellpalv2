@@ -1128,7 +1128,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .param("languageCode", "tr")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(8))
+                .andExpect(jsonPath("$.length()").value(9))
                 .andExpect(jsonPath("$[0].code").value("BELL"))
                 .andExpect(jsonPath("$[0].displayName").value("Bell"))
                 .andExpect(jsonPath("$[1].code").value("CELESTA"))
@@ -1137,14 +1137,16 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(jsonPath("$[2].displayName").value("Glockenspiel"))
                 .andExpect(jsonPath("$[3].code").value("HARP"))
                 .andExpect(jsonPath("$[3].displayName").value("Arp"))
-                .andExpect(jsonPath("$[4].code").value("RHODES"))
-                .andExpect(jsonPath("$[4].displayName").value("Rhodes"))
-                .andExpect(jsonPath("$[5].code").value("STRING_ORCHESTRA"))
-                .andExpect(jsonPath("$[5].displayName").value("Yaylı Orkestra"))
-                .andExpect(jsonPath("$[6].code").value("VIBRAPHONE"))
-                .andExpect(jsonPath("$[6].displayName").value("Vibrafon"))
-                .andExpect(jsonPath("$[7].code").value("VIOLIN"))
-                .andExpect(jsonPath("$[7].displayName").value("Keman"));
+                .andExpect(jsonPath("$[4].code").value("PIANO"))
+                .andExpect(jsonPath("$[4].displayName").value("Piyano"))
+                .andExpect(jsonPath("$[5].code").value("RHODES"))
+                .andExpect(jsonPath("$[5].displayName").value("Rhodes"))
+                .andExpect(jsonPath("$[6].code").value("STRING_ORCHESTRA"))
+                .andExpect(jsonPath("$[6].displayName").value("Yaylı Orkestra"))
+                .andExpect(jsonPath("$[7].code").value("VIBRAPHONE"))
+                .andExpect(jsonPath("$[7].displayName").value("Vibrafon"))
+                .andExpect(jsonPath("$[8].code").value("VIOLIN"))
+                .andExpect(jsonPath("$[8].displayName").value("Keman"));
 
         mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
                         .param("languageCode", "tr")
@@ -1189,7 +1191,7 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                         .andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/api/admin/contents/{contentId}/instruments", contentId)
-                        .param("languageCode", "en")
+                        .param("languageCode", "fr")
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType("application/json")
                         .content("""
