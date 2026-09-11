@@ -151,7 +151,7 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
         snapshotRows.stream()
                 .filter(row -> row.storyPageNumber() != null)
                 .forEach(row -> addStoryPageBlockers(blockers, row));
-        if (!ProcessingStatus.COMPLETED.name().equals(content.processingStatus())) {
+        if (!ProcessingStatus.COMPLETED.name().equals(content.effectiveProcessingStatus())) {
             blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
         }
         return List.copyOf(blockers);
@@ -183,7 +183,7 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
         }
         if (content.title() == null) {
             blockers.add(new AdminContentRegistryBlocker("LOCALIZATION_MISSING", null));
-        } else if (!ProcessingStatus.COMPLETED.name().equals(content.processingStatus())) {
+        } else if (!ProcessingStatus.COMPLETED.name().equals(content.effectiveProcessingStatus())) {
             blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
         }
         return List.copyOf(blockers);

@@ -59,5 +59,13 @@ public interface ContentRegistryReadRepository {
             String storyPageBodyText,
             Long storyPageAudioMediaId,
             Long storyPageIllustrationMediaId) {
+
+        /**
+         * Returns the delivery status used by registry readiness and blockers. For LULLABY this is
+         * the content-scoped delivery job; the persisted localization column remains a sentinel.
+         */
+        public String effectiveProcessingStatus() {
+            return processingStatus;
+        }
     }
 }

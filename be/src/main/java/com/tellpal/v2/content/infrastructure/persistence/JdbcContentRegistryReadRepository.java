@@ -36,7 +36,10 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                     c.is_active,
                     cl.title,
                     cl.status as localization_status,
-                    cl.processing_status,
+                    case
+                        when c.type = 'LULLABY' then coalesce(content_processing.status, 'PENDING')
+                        else cl.processing_status
+                    end as processing_status,
                     case
                         when c.type = 'STORY' and (
                             not c.is_active
@@ -63,7 +66,12 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                         when c.type <> 'STORY' and (
                             not c.is_active
                             or cl.id is null
-                            or coalesce(cl.processing_status, '') <> 'COMPLETED'
+                            or coalesce(
+                                case
+                                    when c.type = 'LULLABY' then content_processing.status
+                                    else cl.processing_status
+                                end,
+                                '') <> 'COMPLETED'
                         ) then 'ACTION_REQUIRED'
                         when cl.status = 'PUBLISHED' then 'PUBLISHED'
                         else 'READY_TO_PUBLISH'
@@ -84,6 +92,10 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                 left join content_localizations cl
                     on cl.content_id = c.id
                    and cl.language_code = :language
+                left join asset_processing content_processing
+                    on content_processing.content_id = c.id
+                   and content_processing.target_scope = 'CONTENT'
+                   and content_processing.processing_kind = 'DELIVERY'
             )
             """;
 
@@ -140,7 +152,10 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                             cl.description,
                             cl.cover_media_id,
                             cl.status as localization_status,
-                            cl.processing_status,
+                            case
+                                when c.type = 'LULLABY' then coalesce(content_processing.status, 'PENDING')
+                                else cl.processing_status
+                            end as processing_status,
                             sp.page_number as story_page_number,
                             spl.id as story_page_localization_id,
                             spl.body_text as story_page_body_text,
@@ -150,6 +165,10 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                         left join content_localizations cl
                             on cl.content_id = c.id
                            and cl.language_code = :language
+                        left join asset_processing content_processing
+                            on content_processing.content_id = c.id
+                           and content_processing.target_scope = 'CONTENT'
+                           and content_processing.processing_kind = 'DELIVERY'
                         left join story_pages sp
                             on sp.content_id = c.id
                         left join story_page_localizations spl

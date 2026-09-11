@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tellpal.v2.asset.api.AssetRecord;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.ContentAssetBundleApi;
 import com.tellpal.v2.asset.api.ContentDeliveryAssets;
@@ -24,7 +25,9 @@ import com.tellpal.v2.content.api.PublicStoryPage;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentRepository;
+import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.StoryPage;
+import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.shared.domain.LanguageCode;
 
 /**
@@ -41,16 +44,19 @@ public class PublicContentQueryService implements PublicContentQueryApi {
     private final com.tellpal.v2.content.api.ContentFreeAccessApi contentFreeAccessApi;
     private final ContentAssetBundleApi contentAssetBundleApi;
     private final AssetRegistryApi assetRegistryApi;
+    private final AssetProcessingApi assetProcessingApi;
 
     public PublicContentQueryService(
             ContentRepository contentRepository,
             com.tellpal.v2.content.api.ContentFreeAccessApi contentFreeAccessApi,
             ContentAssetBundleApi contentAssetBundleApi,
-            AssetRegistryApi assetRegistryApi) {
+            AssetRegistryApi assetRegistryApi,
+            AssetProcessingApi assetProcessingApi) {
         this.contentRepository = contentRepository;
         this.contentFreeAccessApi = contentFreeAccessApi;
         this.contentAssetBundleApi = contentAssetBundleApi;
         this.assetRegistryApi = assetRegistryApi;
+        this.assetProcessingApi = assetProcessingApi;
     }
 
     /**
@@ -164,7 +170,18 @@ public class PublicContentQueryService implements PublicContentQueryApi {
 
     private Optional<ContentLocalization> visibleLocalization(Content content, LanguageCode languageCode) {
         return content.findLocalization(languageCode)
-                .filter(ContentLocalization::isVisibleToMobile);
+                .filter(localization -> localization.isVisibleToMobile(
+                        resolveEffectiveProcessingStatus(content, localization)));
+    }
+
+    private ProcessingStatus resolveEffectiveProcessingStatus(
+            Content content, ContentLocalization localization) {
+        if (content.getType() != ContentType.LULLABY) {
+            return localization.getProcessingStatus();
+        }
+        return assetProcessingApi.findByContent(requireContentId(content.getId()))
+                .map(processing -> ProcessingStatus.valueOf(processing.status().name()))
+                .orElse(ProcessingStatus.PENDING);
     }
 
     private static List<Long> distinctOrderedIds(List<Long> contentIds) {

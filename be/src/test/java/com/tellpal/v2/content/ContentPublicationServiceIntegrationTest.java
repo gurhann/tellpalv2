@@ -20,6 +20,7 @@ import com.tellpal.v2.content.api.ContentReference;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementService;
@@ -58,6 +59,8 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
     void cleanDatabase() {
         jdbcTemplate.execute("""
                 truncate table
+                    asset_processing,
+                    lullaby_playbacks,
                     story_page_localizations,
                     story_pages,
                     content_localizations,
@@ -165,6 +168,45 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
         assertThat(archived.publishedAt()).isEqualTo(publishedAt);
         assertThat(row.get("status")).isEqualTo("ARCHIVED");
         assertThat(row.get("published_at")).isNotNull();
+    }
+
+    @Test
+    void lullabyPublicationResponseUsesCompletedSharedProcessingStatus() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "shared-publication", 3, true));
+        Long audioMediaId = registerAudioAsset("/content/lullaby/shared-publication/audio.mp3");
+
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(),
+                LanguageCode.TR,
+                "Ortak Ninni",
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalizationStatus.DRAFT,
+                ProcessingStatus.PENDING,
+                null));
+        contentManagementService.upsertLullabyPlayback(
+                content.contentId(), new LullabyPlaybackCommand(audioMediaId, 5));
+        jdbcTemplate.update("""
+                update asset_processing
+                   set status = 'COMPLETED',
+                       started_at = now(),
+                       completed_at = now(),
+                       updated_at = now()
+                 where content_id = ?
+                   and target_scope = 'CONTENT'
+                   and processing_kind = 'DELIVERY'
+                """, content.contentId());
+
+        ContentLocalizationRecord published = contentPublicationService.publishLocalization(
+                new PublishContentLocalizationCommand(
+                        content.contentId(), LanguageCode.TR, Instant.parse("2026-03-17T11:00:00Z")));
+
+        assertThat(published.processingStatus()).isEqualTo(ProcessingStatus.COMPLETED);
+        assertThat(published.visibleToMobile()).isTrue();
     }
 
     private Long registerImageAsset(String objectPath) {

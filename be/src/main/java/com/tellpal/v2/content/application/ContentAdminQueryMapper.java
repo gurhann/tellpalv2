@@ -11,6 +11,7 @@ import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentType;
+import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
 
@@ -64,13 +65,13 @@ final class ContentAdminQueryMapper {
         var processing = narration == null ? null : assetProcessingApi.findByTarget(
                 com.tellpal.v2.asset.api.AssetProcessingTarget.localization(contentId, localization.getLanguageCode()),
                 AssetProcessingKind.STORY_NARRATION).orElse(null);
-        var effectiveProcessing = content.getType() == ContentType.LULLABY && sharedProcessing != null
-                ? sharedProcessing.status().name()
+        var effectiveProcessing = content.getType() == ContentType.LULLABY
+                ? sharedProcessing == null
+                        ? ProcessingStatus.PENDING.name()
+                        : sharedProcessing.status().name()
                 : localization.getProcessingStatus().name();
-        var visibleToMobile = content.getType() == ContentType.LULLABY && sharedProcessing != null
-                ? localization.isVisibleToMobile(
-                        com.tellpal.v2.content.domain.ProcessingStatus.valueOf(effectiveProcessing))
-                : localization.isVisibleToMobile();
+        var visibleToMobile = localization.isVisibleToMobile(
+                ProcessingStatus.valueOf(effectiveProcessing));
         return new AdminContentLocalizationView(
                 contentId,
                 localization.getLanguageCode(),

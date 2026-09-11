@@ -37,14 +37,17 @@ import com.tellpal.v2.category.application.CategoryManagementService;
 import com.tellpal.v2.category.api.CategoryReference;
 import com.tellpal.v2.category.domain.CategoryType;
 import com.tellpal.v2.content.api.ContentReference;
+import com.tellpal.v2.content.api.ContentApiType;
 import com.tellpal.v2.content.application.ContentFreeAccessCommands.GrantContentFreeAccessCommand;
 import com.tellpal.v2.content.application.ContentFreeAccessService;
 import com.tellpal.v2.content.application.ContentManagementCommands.AddStoryPageCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.StoryPageManagementService;
+import com.tellpal.v2.content.api.PublicContentQueryApi;
 import com.tellpal.v2.content.domain.ContentType;
 import com.tellpal.v2.content.domain.LocalizationStatus;
 import com.tellpal.v2.content.domain.ProcessingStatus;
@@ -78,6 +81,9 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
 
     @Autowired
     private ContentManagementService contentManagementService;
+
+    @Autowired
+    private PublicContentQueryApi publicContentQueryApi;
 
     @Autowired
     private StoryPageManagementService storyPageManagementService;
@@ -169,6 +175,80 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
                         .queryParam("lang", "tr")
                         .queryParam("type", "AUDIO_STORY"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void lullabyVisibilityUsesSharedContentProcessingStatus() throws Exception {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "shared-processing-lullaby", 3, true));
+        Long audioMediaId = registerAudioAsset("/content/lullaby/shared-processing/audio.mp3");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(),
+                LanguageCode.TR,
+                "Ortak Ninni",
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                PUBLISHED_AT));
+        contentManagementService.upsertLullabyPlayback(
+                content.contentId(), new LullabyPlaybackCommand(audioMediaId, 5));
+
+        assertThat(publicContentQueryApi.listContents(LanguageCode.TR, null, ContentApiType.LULLABY))
+                .extracting(summary -> summary.contentId())
+                .doesNotContain(content.contentId());
+
+        jdbcTemplate.update("""
+                update asset_processing
+                   set status = 'COMPLETED',
+                       started_at = now(),
+                       completed_at = now(),
+                       updated_at = now()
+                 where content_id = ?
+                   and target_scope = 'CONTENT'
+                   and processing_kind = 'DELIVERY'
+                """, content.contentId());
+
+        assertThat(publicContentQueryApi.listContents(LanguageCode.TR, null, ContentApiType.LULLABY))
+                .extracting(summary -> summary.contentId())
+                .contains(content.contentId());
+        mockMvc.perform(get("/api/contents")
+                        .queryParam("lang", "tr")
+                        .queryParam("type", "LULLABY"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].contentId").value(content.contentId()));
+        mockMvc.perform(get("/api/contents/{contentId}", content.contentId())
+                        .queryParam("lang", "tr"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Ortak Ninni"));
+
+        ContentReference missingPlayback = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.LULLABY, "missing-processing-lullaby", 3, true));
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                missingPlayback.contentId(),
+                LanguageCode.TR,
+                "Eksik Ninni",
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                PUBLISHED_AT));
+        assertThat(publicContentQueryApi.listContents(LanguageCode.TR, null, ContentApiType.LULLABY))
+                .extracting(summary -> summary.contentId())
+                .doesNotContain(missingPlayback.contentId());
+
+        Long replacementAudioMediaId = registerAudioAsset("/content/lullaby/shared-processing/replacement.mp3");
+        contentManagementService.upsertLullabyPlayback(
+                content.contentId(), new LullabyPlaybackCommand(replacementAudioMediaId, 6));
+        assertThat(publicContentQueryApi.listContents(LanguageCode.TR, null, ContentApiType.LULLABY))
+                .extracting(summary -> summary.contentId())
+                .doesNotContain(content.contentId());
     }
 
     @Test

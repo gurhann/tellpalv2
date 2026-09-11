@@ -381,9 +381,14 @@ public class ContentManagementService {
         AssetProcessingRecord sharedProcessing = content.getType() == ContentType.LULLABY
                 ? assetProcessingApi.findByContent(requireContentId(content)).orElse(null)
                 : null;
+        ProcessingStatus effectiveSharedProcessing = content.getType() == ContentType.LULLABY
+                ? sharedProcessing == null
+                        ? ProcessingStatus.PENDING
+                        : ProcessingStatus.valueOf(sharedProcessing.status().name())
+                : null;
         return ContentManagementMapper.toLocalizationRecord(
                 requireContentId(content), localization, narrationProcessing,
-                sharedProcessing == null ? null : ProcessingStatus.valueOf(sharedProcessing.status().name()));
+                effectiveSharedProcessing);
     }
 
     private static ProcessingStatus resolveLocalizationProcessingStatus(Content content, ProcessingStatus requested) {

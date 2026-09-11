@@ -113,6 +113,56 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
                 .containsExactly(publishedId);
     }
 
+    @Test
+    void usesContentScopedLullabyDeliveryStatusInsteadOfLocalizationSentinel() {
+        long completedId = insertContent("LULLABY", "registry-lullaby-completed", true);
+        insertLocalization(completedId, "PUBLISHED", "PENDING", "Tamam Ninni", null, null);
+        insertContentProcessing(completedId, "COMPLETED");
+
+        long pendingId = insertContent("LULLABY", "registry-lullaby-pending", true);
+        insertLocalization(pendingId, "PUBLISHED", "PENDING", "Bekleyen Ninni", null, null);
+        insertContentProcessing(pendingId, "PENDING");
+
+        long processingId = insertContent("LULLABY", "registry-lullaby-processing", true);
+        insertLocalization(processingId, "PUBLISHED", "PENDING", "Islenen Ninni", null, null);
+        insertContentProcessing(processingId, "PROCESSING");
+
+        long failedId = insertContent("LULLABY", "registry-lullaby-failed", true);
+        insertLocalization(failedId, "PUBLISHED", "PENDING", "Hatali Ninni", null, null);
+        insertContentProcessing(failedId, "FAILED");
+
+        long missingId = insertContent("LULLABY", "registry-lullaby-missing", true);
+        insertLocalization(missingId, "PUBLISHED", "PENDING", "Eksik Ninni", null, null);
+
+        ContentRegistryReadRepository.RegistryPage publishedPage = contentRegistryReadRepository.findPage(
+                new RegistryQuery(
+                        LanguageCode.TR,
+                        ContentApiType.LULLABY,
+                        AdminContentRegistryReadiness.PUBLISHED,
+                        "",
+                        0,
+                        10));
+        assertThat(publishedPage.candidates())
+                .extracting(ContentRegistryReadRepository.RegistryCandidate::contentId)
+                .containsExactly(completedId);
+        assertThat(contentRegistryReadRepository.findSnapshots(List.of(completedId), LanguageCode.TR))
+                .singleElement()
+                .extracting(ContentRegistryReadRepository.RegistrySnapshotRow::effectiveProcessingStatus)
+                .isEqualTo("COMPLETED");
+
+        ContentRegistryReadRepository.RegistryPage actionRequiredPage = contentRegistryReadRepository.findPage(
+                new RegistryQuery(
+                        LanguageCode.TR,
+                        ContentApiType.LULLABY,
+                        AdminContentRegistryReadiness.ACTION_REQUIRED,
+                        "",
+                        0,
+                        10));
+        assertThat(actionRequiredPage.candidates())
+                .extracting(ContentRegistryReadRepository.RegistryCandidate::contentId)
+                .containsExactlyInAnyOrder(pendingId, processingId, failedId, missingId);
+    }
+
     private long insertContent(String type, String externalKey, boolean active) {
         return jdbcTemplate.queryForObject("""
                         insert into contents (type, external_key, is_active, page_count)
@@ -132,7 +182,7 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
             String processingStatus,
             String title,
             String description,
-            long coverMediaId) {
+            Long coverMediaId) {
         jdbcTemplate.update("""
                         insert into content_localizations
                             (content_id, language_code, title, description, cover_media_id, status, processing_status, published_at)
@@ -145,6 +195,34 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
                 status,
                 processingStatus,
                 status);
+    }
+
+    private void insertContentProcessing(long contentId, String status) {
+        jdbcTemplate.update("""
+                        insert into asset_processing
+                            (content_id, language_code, status, content_type, external_key,
+                             target_scope, processing_kind, started_at, lease_expires_at,
+                             completed_at, failed_at, last_error_code, last_error_message)
+                        select ?, null, ?, c.type, c.external_key,
+                               'CONTENT', 'DELIVERY',
+                               case when ? in ('PROCESSING', 'COMPLETED', 'FAILED') then now() else null end,
+                               case when ? = 'PROCESSING' then now() + interval '1 hour' else null end,
+                               case when ? = 'COMPLETED' then now() else null end,
+                               case when ? = 'FAILED' then now() else null end,
+                               case when ? = 'FAILED' then 'test_failure' else null end,
+                               case when ? = 'FAILED' then 'test failure' else null end
+                        from contents c
+                        where c.id = ?
+                        """,
+                contentId,
+                status,
+                status,
+                status,
+                status,
+                status,
+                status,
+                status,
+                contentId);
     }
 
     private long insertStoryPage(long contentId, int pageNumber) {

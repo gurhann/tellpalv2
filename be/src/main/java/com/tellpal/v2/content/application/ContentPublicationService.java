@@ -12,6 +12,8 @@ import com.tellpal.v2.content.domain.Content;
 import com.tellpal.v2.content.domain.ContentLocalization;
 import com.tellpal.v2.content.domain.ContentPublicationPolicy;
 import com.tellpal.v2.content.domain.ContentRepository;
+import com.tellpal.v2.content.domain.ContentType;
+import com.tellpal.v2.content.domain.ProcessingStatus;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingRecord;
 
@@ -65,7 +67,13 @@ public class ContentPublicationService {
         AssetProcessingRecord narrationProcessing = localization.getNarration() == null
                 ? null
                 : assetProcessingApi.findNarrationByLocalization(contentId, languageCode).orElse(null);
-        return ContentManagementMapper.toLocalizationRecord(contentId, localization, narrationProcessing);
+        ProcessingStatus sharedProcessingStatus = content.getType() == ContentType.LULLABY
+                ? assetProcessingApi.findByContent(contentId)
+                        .map(processing -> ProcessingStatus.valueOf(processing.status().name()))
+                        .orElse(ProcessingStatus.PENDING)
+                : null;
+        return ContentManagementMapper.toLocalizationRecord(
+                contentId, localization, narrationProcessing, sharedProcessingStatus);
     }
 
     private Content loadContent(Long contentId) {
