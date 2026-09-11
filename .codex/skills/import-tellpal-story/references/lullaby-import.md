@@ -41,3 +41,9 @@ through another public storage endpoint. The importer does not resume, update, d
 partial writes. Run reports are stored under
 `%LOCALAPPDATA%\TellPal\lullaby-import-agent\runs`; staged source objects are temporary and
 removed when the command exits. Reports are diagnostic only.
+
+To verify or import a single grouped lullaby, pass its generated external key to both commands:
+
+```powershell
+--external-key lullaby.dandini-dastana
+```

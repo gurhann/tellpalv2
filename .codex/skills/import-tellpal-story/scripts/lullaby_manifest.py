@@ -135,6 +135,7 @@ def build_lullaby_plan(
     active: bool = True,
     publish: bool = True,
     duration_override: int | None = None,
+    external_key: str | None = None,
     timeout_seconds: float = 120,
 ) -> LullabyPlan:
     csv_file = Path(csv_path).expanduser().resolve()
@@ -173,6 +174,8 @@ def build_lullaby_plan(
     groups: list[LullabyGroupPlan] = []
     external_keys: set[str] = set()
 
+    requested_external_key = normalize_text(external_key) if external_key else None
+    matched_requested_external_key = False
     for group_rows in grouped.values():
         languages = [str(row["language"]) for row in group_rows]
         if len(set(languages)) != len(languages):
@@ -184,6 +187,9 @@ def build_lullaby_plan(
         if external_key in external_keys:
             raise StoryValidationError(f"Duplicate generated external key: {external_key}")
         external_keys.add(external_key)
+        if requested_external_key and external_key != requested_external_key:
+            continue
+        matched_requested_external_key = matched_requested_external_key or bool(requested_external_key)
 
         listing_name = str(group_rows[0]["listing"])
         listening_name = str(group_rows[0]["listening"])
@@ -273,6 +279,9 @@ def build_lullaby_plan(
                 localizations=tuple(localizations),
             )
         )
+
+    if requested_external_key and not matched_requested_external_key:
+        raise StoryValidationError(f"No lullaby group matches --external-key {requested_external_key!r}")
 
     media = tuple(media_by_identity.values())
     source_fingerprint = sha256_file(csv_file)

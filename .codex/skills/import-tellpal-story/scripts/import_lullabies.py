@@ -87,6 +87,7 @@ def _plan_arguments(arguments: argparse.Namespace) -> dict[str, object]:
         "active": not arguments.inactive,
         "publish": not arguments.no_publish,
         "duration_override": arguments.duration_minutes,
+        "external_key": arguments.external_key,
         "timeout_seconds": arguments.timeout_seconds,
     }
 
@@ -98,6 +99,7 @@ def _add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--cover-prefix", default="cover_images")
     parser.add_argument("--audio-prefix", default="")
     parser.add_argument("--duration-minutes", type=int)
+    parser.add_argument("--external-key", help="Import only the generated lullaby external key")
     parser.add_argument("--timeout-seconds", type=float, default=120)
     parser.add_argument("--inactive", action="store_true")
     parser.add_argument("--no-publish", action="store_true")

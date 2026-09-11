@@ -327,6 +327,29 @@ class LullabyManifestTest(unittest.TestCase):
         self.assertEqual(sum(len(group.localizations) for group in plan.groups), 33)
         self.assertEqual(plan.expected_actions["publications"], 33)
 
+    def test_external_key_selects_only_one_lullaby_group(self):
+        csv_path = Path(__file__).resolve().parents[5] / "cms" / "yuklenecek_hikayeler" / "lullabies" / "lullabies.csv"
+
+        def open_url(url: str, timeout: float):
+            object_name = urlparse(url).path.split("/", 2)[-1]
+            if object_name.endswith(".zip"):
+                payload = _zip(_mp3())
+            elif object_name.lower().endswith(".gif"):
+                payload = b"GIF89a123"
+            else:
+                payload = b"\xff\xd8\xff\xe0"
+            return _Response(payload)
+
+        with patch("urllib.request.urlopen", side_effect=open_url):
+            plan = build_lullaby_plan(
+                csv_path,
+                storage_base_url="https://storage.test",
+                storage_bucket="bucket",
+                external_key="lullaby.dandini-dastana",
+            )
+        self.assertEqual([group.external_key for group in plan.groups], ["lullaby.dandini-dastana"])
+        self.assertEqual(sum(len(group.localizations) for group in plan.groups), 3)
+
         class ExistingContentClient:
             def list_contents(self):
                 return [{"externalKey": plan.groups[0].external_key}]
