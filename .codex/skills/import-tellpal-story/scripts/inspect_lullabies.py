@@ -39,6 +39,7 @@ def _plan_arguments(arguments: argparse.Namespace) -> dict[str, object]:
         "publish": not arguments.no_publish,
         "duration_override": arguments.duration_minutes,
         "external_key": arguments.external_key,
+        "service_account_json": arguments.service_account_json,
         "timeout_seconds": arguments.timeout_seconds,
     }
 
@@ -51,6 +52,7 @@ def _add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--audio-prefix", default="")
     parser.add_argument("--duration-minutes", type=int)
     parser.add_argument("--external-key", help="Import only the generated lullaby external key")
+    parser.add_argument("--service-account-json", help="Path to a service-account JSON used for private GCS objects")
     parser.add_argument("--timeout-seconds", type=float, default=120)
     parser.add_argument("--inactive", action="store_true")
     parser.add_argument("--no-publish", action="store_true")

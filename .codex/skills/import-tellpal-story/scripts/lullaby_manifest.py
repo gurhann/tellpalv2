@@ -86,11 +86,21 @@ class LullabyPlan:
 class StorageAssetStager:
     """Downloads public bucket objects into a run-local cache without touching the source folder."""
 
-    def __init__(self, base_url: str, bucket: str, cache_directory: Path, timeout_seconds: float):
+    def __init__(
+        self,
+        base_url: str,
+        bucket: str,
+        cache_directory: Path,
+        timeout_seconds: float,
+        service_account_json: str | Path | None = None,
+    ):
         self.base_url = base_url.rstrip("/")
         self.bucket = bucket.strip()
         self.cache_directory = cache_directory
         self.timeout_seconds = timeout_seconds
+        self.authorization_header = (
+            _service_account_authorization_header(service_account_json) if service_account_json else None
+        )
         self.cache_directory.mkdir(parents=True, exist_ok=True)
 
     def object_url(self, object_name: str) -> str:
@@ -103,7 +113,12 @@ class StorageAssetStager:
         destination = self.cache_directory / safe_name
         url = self.object_url(object_name)
         try:
-            with urllib.request.urlopen(url, timeout=self.timeout_seconds) as response, destination.open("wb") as target:
+            request = (
+                urllib.request.Request(url, headers={"Authorization": self.authorization_header})
+                if self.authorization_header
+                else url
+            )
+            with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response, destination.open("wb") as target:
                 content_length = response.headers.get("Content-Length")
                 if content_length and int(content_length) > 250 * 1024 * 1024:
                     raise StoryValidationError(f"Remote object is unexpectedly large: {object_name}")
@@ -124,6 +139,29 @@ class StorageAssetStager:
         return destination
 
 
+def _service_account_authorization_header(service_account_json: str | Path) -> str:
+    credential_path = Path(service_account_json).expanduser().resolve()
+    if not credential_path.is_file():
+        raise StoryValidationError(f"Service-account JSON does not exist: {credential_path}")
+    try:
+        from google.auth.transport.requests import Request
+        from google.oauth2 import service_account
+
+        credentials = service_account.Credentials.from_service_account_file(
+            str(credential_path),
+            scopes=["https://www.googleapis.com/auth/devstorage.read_only"],
+        )
+        credentials.refresh(Request())
+    except Exception as exception:
+        raise StoryValidationError(
+            "Cannot obtain a GCS read token from the supplied service-account JSON: "
+            f"{exception}"
+        ) from exception
+    if not credentials.token:
+        raise StoryValidationError("Service-account authentication returned an empty GCS token")
+    return f"Bearer {credentials.token}"
+
+
 def build_lullaby_plan(
     csv_path: str | Path,
     *,
@@ -136,6 +174,7 @@ def build_lullaby_plan(
     publish: bool = True,
     duration_override: int | None = None,
     external_key: str | None = None,
+    service_account_json: str | Path | None = None,
     timeout_seconds: float = 120,
 ) -> LullabyPlan:
     csv_file = Path(csv_path).expanduser().resolve()
@@ -151,7 +190,9 @@ def build_lullaby_plan(
     cache = Path(cache_directory).expanduser().resolve() if cache_directory else Path(
         tempfile.mkdtemp(prefix="tellpal-lullaby-import-")
     )
-    stager = StorageAssetStager(storage_base_url, storage_bucket, cache, timeout_seconds)
+    stager = StorageAssetStager(
+        storage_base_url, storage_bucket, cache, timeout_seconds, service_account_json
+    )
     grouped: dict[tuple[str, str], list[dict[str, object]]] = {}
     casefolded_pairs: dict[tuple[str, str], tuple[str, str]] = {}
     for row in rows:

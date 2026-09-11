@@ -47,3 +47,6 @@ To verify or import a single grouped lullaby, pass its generated external key to
 ```powershell
 --external-key lullaby.dandini-dastana
 ```
+
+Use `--service-account-json C:\\path\\service-account.json` when old bucket objects are private. The
+credential file path is used only to obtain a read token and is not written to manifests or run reports.

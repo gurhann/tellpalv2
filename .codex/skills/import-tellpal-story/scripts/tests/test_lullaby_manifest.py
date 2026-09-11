@@ -19,7 +19,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 import import_lullabies
 from lullaby_import_workflow import execute_import, remote_preflight
-from lullaby_manifest import StoryValidationError, _extract_single_audio, _mp3_duration_seconds, _read_rows, build_lullaby_plan, parse_summary
+from lullaby_manifest import StorageAssetStager, StoryValidationError, _extract_single_audio, _mp3_duration_seconds, _read_rows, build_lullaby_plan, parse_summary
 from story_import_models import ContributorResolution
 from tellpal_admin_client import TellPalAdminClient
 
@@ -123,6 +123,16 @@ def _zip(payload: bytes) -> bytes:
 
 
 class LullabyManifestTest(unittest.TestCase):
+    def test_storage_stager_sends_service_account_token_without_recording_credential_path(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("lullaby_manifest._service_account_authorization_header", return_value="Bearer token"):
+                stager = StorageAssetStager("https://storage.test", "bucket", Path(directory), 1, "secret.json")
+            with patch("urllib.request.urlopen", return_value=_Response(b"audio")) as open_url:
+                downloaded = stager.download("1.zip", ".zip")
+            request = open_url.call_args.args[0]
+            self.assertEqual(request.get_header("Authorization"), "Bearer token")
+            self.assertEqual(downloaded.read_bytes(), b"audio")
+
     def test_parse_summary_maps_catalog_codes_and_reports_piano(self):
         musician, codes, unsupported = parse_summary(
             " Müzik: Ali Kaan Uysal\n Enstrüman: Piyano ve Yaylı Orkestra "
