@@ -8,13 +8,18 @@ For the legacy lullaby CSV shape, use the companion `inspect_lullabies.py` and
 They use the same Admin API client and confirmation gates while mapping the two content-level cover
 roles and one shared ZIP audio source required by the current LULLABY model.
 
+For the legacy meditation CSV shape, use `inspect_meditations.py` and `import_meditations.py`
+documented in [references/meditation-import.md](references/meditation-import.md). They group
+translated rows by stable cover stem and map one content-level listening cover plus one localized
+audio/body payload per language.
+
 # Import TellPal Story
 
 Use the bundled scripts as the only mutation path. Do not recreate the API workflow manually and do not modify `be/`, `cms/src/`, migrations, or API contracts.
 
 ## Prepare the runtime
 
-1. Load Codex workspace dependencies and prefer the returned bundled Python executable. If the loader is unavailable, use an available Python 3.11+ runtime; the import scripts have no third-party runtime dependencies. Do not install packages.
+1. Load Codex workspace dependencies and prefer the returned bundled Python executable. If the loader is unavailable, use an available Python 3.11+ runtime; public-storage imports and text/Markdown body sources have no third-party runtime dependencies. The optional `--service-account-json` mode for private Firebase/GCS objects requires `google-auth` to already be available; do not install packages during an import run.
 2. Resolve this skill directory and the supplied story directory to absolute paths.
 3. Read [references/admin-api.md](references/admin-api.md) before a live import or when diagnosing an API failure.
 
