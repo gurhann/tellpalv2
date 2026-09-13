@@ -230,7 +230,7 @@ public class ContentAdminController {
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}")
-    @Operation(summary = "Create content localization", description = "Creates one localized content representation for a language.")
+    @Operation(summary = "Create content localization", description = "Creates one localized content representation for a language. For MEDITATION, bodyText may be omitted only for a DRAFT localization with processingStatus=PENDING; a non-blank body is required for PUBLISHED.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Content localization created"),
             @ApiResponse(responseCode = "400", description = "Localization request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -250,7 +250,7 @@ public class ContentAdminController {
     }
 
     @PutMapping("/{contentId}/localizations/{languageCode}")
-    @Operation(summary = "Update content localization", description = "Updates one localized content representation.")
+    @Operation(summary = "Update content localization", description = "Updates one localized content representation. Use this endpoint to add bodyText to a staged MEDITATION while preserving its DRAFT/PENDING state; publication still requires a non-blank body.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Content localization updated"),
             @ApiResponse(responseCode = "400", description = "Localization update is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -284,7 +284,7 @@ public class ContentAdminController {
     }
 
     @PostMapping("/{contentId}/localizations/{languageCode}/publish")
-    @Operation(summary = "Publish content localization", description = "Publishes one localized content item after publication rules are satisfied.")
+    @Operation(summary = "Publish content localization", description = "Publishes one localized content item after publication rules are satisfied. A bodyless or blank-body MEDITATION remains unpublished and is rejected with a content state conflict.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Content localization published"),
             @ApiResponse(responseCode = "400", description = "Publish request is invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
@@ -310,7 +310,8 @@ public class ContentAdminController {
             @ApiResponse(responseCode = "200", description = "Content localization archived"),
             @ApiResponse(responseCode = "401", description = "Admin token is missing or invalid", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
             @ApiResponse(responseCode = "403", description = "Admin user lacks permission", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
-            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
+            @ApiResponse(responseCode = "404", description = "Content or localization was not found", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail"))),
+            @ApiResponse(responseCode = "409", description = "Archive preconditions are not satisfied; a bodyless MEDITATION cannot be archived", content = @Content(schema = @Schema(ref = "#/components/schemas/ProblemDetail")))
     })
     public AdminContentLocalizationResponse archiveLocalization(
             @PathVariable Long contentId,

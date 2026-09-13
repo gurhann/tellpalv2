@@ -127,7 +127,9 @@ stack.
 
 - `STORY` content localization must not store `bodyText`.
 - `STORY` content localization must not store a single `audioMediaId`.
-- `MEDITATION` content localization requires `bodyText`.
+- `MEDITATION` content localization requires non-blank `bodyText` unless it remains in `DRAFT` with
+  `processingStatus=PENDING`; a bodyless DRAFT is reserved for explicitly staged imports and must
+  not be archived.
 - `MEDITATION` and `LULLABY` content localization require `audioMediaId`.
 - `publishedAt` is mandatory whenever a content localization is created or updated with
   `status=PUBLISHED`.
@@ -195,6 +197,13 @@ stack.
 - Archive preserves the previous `publishedAt` timestamp instead of clearing it.
 - Processing status updates only replace the workflow flag on the localization. They do not bypass
   publication readiness rules.
+- MEDITATION publication requires non-blank `bodyText`, including when the localization is
+  published through a direct create or update upsert. A bodyless staged DRAFT cannot become
+  published through either the upsert or publish endpoint.
+- MEDITATION archive requires non-blank `bodyText`; staged bodyless DRAFT localizations cannot be
+  archived until editorial completion.
+- The admin content registry reports bodyless MEDITATION localizations as `ACTION_REQUIRED` with a
+  `BODY_TEXT_MISSING` blocker even when their processing status is `COMPLETED`.
 
 ### Expected ProblemDetail Error Codes
 
@@ -225,14 +234,16 @@ stack.
 - Story seed data must also place page illustrations in `story_page_localizations`. Existing page
   rows no longer own a shared illustration field.
 - Non-story content seed data should use a valid audio asset because `MEDITATION` localizations
-  require `audioMediaId`; LULLABY localizations only support title and publication state.
+  require `audioMediaId`; bodyless staged MEDITATION seed data must use `DRAFT` and `PENDING`.
+  LULLABY localizations only support title and publication state.
 - `LOCAL_STUB` assets are valid for local sample content and processing tests.
 
 ### Frontend Form and Query Implications
 
 - Content type selection must drive field visibility before submit:
   - `STORY` hides content-level body and single-audio inputs
-  - `MEDITATION` requires body text and audio asset selection
+  - `MEDITATION` requires body text and audio asset selection for publication; an explicitly staged
+    DRAFT may temporarily omit body text while it remains unpublished
   - `LULLABY` exposes title and publication state only
 - Content list screens must not assume only active rows are returned.
 - Content detail screens can render localization snapshots from `GET /api/admin/contents/{id}`,

@@ -22,6 +22,7 @@ public final class ContentPublicationPolicy {
         Content requiredContent = requireContent(content);
         ContentLocalization requiredLocalization = requireLocalization(localization);
         Instant requiredPublishedAt = requirePublishedAt(publishedAt);
+        ensureMeditationHasBody(requiredContent, requiredLocalization, "publication");
         ensureStoryReadyForPublication(requiredContent, requiredLocalization.getLanguageCode());
         requiredLocalization.markStatus(LocalizationStatus.PUBLISHED, requiredPublishedAt);
     }
@@ -29,8 +30,11 @@ public final class ContentPublicationPolicy {
     /**
      * Archives a localization while preserving its existing publish timestamp.
      */
-    public void archive(ContentLocalization localization) {
-        requireLocalization(localization).markStatus(LocalizationStatus.ARCHIVED, localization.getPublishedAt());
+    public void archive(Content content, ContentLocalization localization) {
+        Content requiredContent = requireContent(content);
+        ContentLocalization requiredLocalization = requireLocalization(localization);
+        ensureMeditationHasBody(requiredContent, requiredLocalization, "archive");
+        requiredLocalization.markStatus(LocalizationStatus.ARCHIVED, requiredLocalization.getPublishedAt());
     }
 
     private void ensureStoryReadyForPublication(Content content, LanguageCode languageCode) {
@@ -42,6 +46,17 @@ public final class ContentPublicationPolicy {
             StoryPublicationBlocker blocker = blockers.getFirst();
             throw new IllegalStateException("Story publication requirements are incomplete: "
                     + publicationMessage(blocker));
+        }
+    }
+
+    private void ensureMeditationHasBody(
+            Content content, ContentLocalization localization, String operation) {
+        if (content.getType() != ContentType.MEDITATION) {
+            return;
+        }
+        if (localization.getBodyText() == null || localization.getBodyText().isBlank()) {
+            throw new IllegalStateException(
+                    "Meditation " + operation + " requires non-blank body text");
         }
     }
 

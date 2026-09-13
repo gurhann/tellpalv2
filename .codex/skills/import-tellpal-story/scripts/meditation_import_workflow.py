@@ -16,6 +16,7 @@ class MeditationRemotePreflightError(RuntimeError):
 
 
 def format_preview(plan: MeditationPlan, *, api_base_url: str | None = None) -> str:
+    staged_import = _staged_import(plan)
     languages = sorted(
         {
             localization.language_code
@@ -33,6 +34,8 @@ def format_preview(plan: MeditationPlan, *, api_base_url: str | None = None) -> 
         f"  Media uploads: {plan.expected_actions['media_uploads']}",
         f"  Content localizations: {plan.expected_actions['localizations']}",
         f"  Publications: {plan.expected_actions['publications']}",
+        "  Import mode: "
+        + ("STAGED (DRAFT/PENDING; publication disabled)" if staged_import else "STANDARD"),
         f"  Active: {str(plan.active).lower()}",
         f"  Source fingerprint: {plan.source_fingerprint}",
         "  Groups:",
@@ -54,7 +57,11 @@ def format_preview(plan: MeditationPlan, *, api_base_url: str | None = None) -> 
                 f"audio={localization.audio_source_name}"
             )
     if plan.missing_body_sources:
-        lines.append("  Live import: unavailable (body text required)")
+        lines.append("  Missing body localizations: " + ", ".join(plan.missing_body_sources))
+        if staged_import:
+            lines.append("  Live import: staged (missing bodies will remain null in DRAFT/PENDING)")
+        else:
+            lines.append("  Live import: unavailable (body text required)")
     if plan.warnings:
         lines.append("  Warnings:")
         lines.extend(f"    - {warning}" for warning in plan.warnings)
@@ -62,11 +69,7 @@ def format_preview(plan: MeditationPlan, *, api_base_url: str | None = None) -> 
 
 
 def remote_preflight(plan: MeditationPlan, client: TellPalAdminClient) -> tuple[()]:
-    if plan.missing_body_sources:
-        raise MeditationRemotePreflightError(
-            "Body text is required before live import; missing: "
-            + ", ".join(plan.missing_body_sources)
-        )
+    _ensure_body_policy(plan)
     existing = client.list_contents()
     planned_keys = {group.external_key for group in plan.groups}
     conflicts = sorted(
@@ -89,11 +92,7 @@ def execute_import(
     client: TellPalAdminClient,
     report: MeditationImportRunReport,
 ) -> dict[str, object]:
-    if plan.missing_body_sources:
-        raise MeditationRemotePreflightError(
-            "Body text is required before live import; missing: "
-            + ", ".join(plan.missing_body_sources)
-        )
+    _ensure_body_policy(plan)
     assert_source_unchanged(plan)
     report.mark_running()
     uploaded: dict[str, int] = {}
@@ -183,6 +182,8 @@ def execute_import(
         if plan.publish
         else [],
         "mediaUploads": len(uploaded),
+        "stagedImport": _staged_import(plan),
+        "missingBodySources": list(plan.missing_body_sources),
     }
     report.mark_success(summary)
     return summary
@@ -245,7 +246,11 @@ def verify_group(
             or stored.get("audioMediaId") != uploaded[localization.audio_media_key]
             or stored.get("durationMinutes") != localization.duration_minutes
             or stored.get("status") != expected_status
-            or stored.get("processingStatus") not in {"PENDING", "PROCESSING", "COMPLETED"}
+            or (
+                stored.get("processingStatus") != "PENDING"
+                if _staged_import(plan)
+                else stored.get("processingStatus") not in {"PENDING", "PROCESSING", "COMPLETED"}
+            )
         ):
             raise RuntimeError(
                 f"Verification failed for {group.external_key}/{localization.language_code}: localization mismatch"
@@ -292,3 +297,26 @@ def _positive_int(value: object, field: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise RuntimeError(f"API response field {field} must be a positive integer; received {value!r}")
     return value
+
+
+def _staged_import(plan: MeditationPlan) -> bool:
+    """Return whether the plan explicitly stages bodyless draft localizations."""
+    return bool(
+        getattr(plan, "allow_missing_body", False)
+        and plan.missing_body_sources
+    )
+
+
+def _ensure_body_policy(plan: MeditationPlan) -> None:
+    if not plan.missing_body_sources:
+        return
+    allow_missing_body = bool(getattr(plan, "allow_missing_body", False))
+    if not allow_missing_body:
+        raise MeditationRemotePreflightError(
+            "Body text is required before live import; missing: "
+            + ", ".join(plan.missing_body_sources)
+        )
+    if plan.publish:
+        raise MeditationRemotePreflightError(
+            "--allow-missing-body requires --no-publish; incomplete localizations cannot be published"
+        )

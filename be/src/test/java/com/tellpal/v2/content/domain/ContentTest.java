@@ -235,6 +235,109 @@ class ContentTest {
     }
 
     @Test
+    void meditationAllowsBodylessDraftOnlyAndPublicationRequiresBody() {
+        Content content = Content.create(ContentType.MEDITATION, "staged-meditation", 5, true);
+        ContentLocalization localization = content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                null,
+                null,
+                8L,
+                5,
+                LocalizationStatus.DRAFT,
+                ProcessingStatus.PENDING,
+                null);
+
+        assertThat(localization.getBodyText()).isNull();
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                null,
+                null,
+                8L,
+                5,
+                LocalizationStatus.DRAFT,
+                ProcessingStatus.COMPLETED,
+                null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must remain PENDING");
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                null,
+                null,
+                8L,
+                5,
+                LocalizationStatus.PUBLISHED,
+                ProcessingStatus.PENDING,
+                java.time.Instant.parse("2026-09-13T10:00:00Z")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Body text is required");
+        assertThatThrownBy(() -> content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                null,
+                null,
+                8L,
+                5,
+                LocalizationStatus.ARCHIVED,
+                ProcessingStatus.PENDING,
+                null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Body text is required");
+        assertThatThrownBy(() -> new ContentPublicationPolicy().publish(
+                content, localization, java.time.Instant.parse("2026-09-13T10:00:00Z")))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("non-blank body text");
+        assertThatThrownBy(() -> new ContentPublicationPolicy().archive(content, localization))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("archive requires non-blank body text");
+
+        localization.markStatus(
+                LocalizationStatus.PUBLISHED,
+                java.time.Instant.parse("2026-09-13T10:00:00Z"));
+        assertThat(localization.isVisibleToMobile(ProcessingStatus.COMPLETED)).isFalse();
+        localization.markStatus(LocalizationStatus.DRAFT, null);
+
+        content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                "   ",
+                null,
+                8L,
+                5,
+                LocalizationStatus.DRAFT,
+                ProcessingStatus.PENDING,
+                null);
+        assertThatThrownBy(() -> new ContentPublicationPolicy().publish(
+                content, localization, java.time.Instant.parse("2026-09-13T10:00:00Z")))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("non-blank body text");
+
+        content.upsertLocalization(
+                LanguageCode.TR,
+                "Meditasyon",
+                "Aksam rutini",
+                "Nefes al.",
+                null,
+                8L,
+                5,
+                LocalizationStatus.DRAFT,
+                ProcessingStatus.PENDING,
+                null);
+        assertThat(localization.getBodyText()).isEqualTo("Nefes al.");
+        assertThat(localization.getStatus()).isEqualTo(LocalizationStatus.DRAFT);
+        assertThat(localization.getProcessingStatus()).isEqualTo(ProcessingStatus.PENDING);
+        assertThat(localization.getAudioMediaId()).isEqualTo(8L);
+        assertThat(localization.getDurationMinutes()).isEqualTo(5);
+    }
+
+    @Test
     void narrationIsOnlyAllowedForStoryAndValidatesSourceAndDuration() {
         Content meditation = Content.create(ContentType.MEDITATION, "meditation", 5, true);
         meditation.upsertLocalization(LanguageCode.TR, "Meditasyon", null, "metin", null, 8L, 5,

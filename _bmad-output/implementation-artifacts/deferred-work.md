@@ -63,3 +63,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-7-cms-te-playback-ve-localization-editorlerini-ayristirma.md`
   summary: LULLABY detail visual baseline’larının 390/768/1280/1440 viewport’larında koşturulması Playwright Chromium kurulumu sonrasına bırakıldı.
   evidence: Component/interaction testleri geçti, ancak bu makinede Chromium executable bulunmadığı için mevcut visual runner başlatılamadı.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-meditation-staged-import.md`
+  summary: Importer Python testlerinin CI iş akışına eklenmesi ayrı bir pipeline kapsamı çalışmasına bırakıldı.
+  evidence: Mevcut backend workflow yalnızca `be/**` değişikliklerinde Maven verify çalıştırıyor; `.codex` importer testleri bu değişiklikten önce de CI’da koşulmuyordu.

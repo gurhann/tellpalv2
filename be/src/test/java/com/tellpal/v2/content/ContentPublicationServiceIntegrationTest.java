@@ -22,6 +22,7 @@ import com.tellpal.v2.content.application.ContentManagementCommands.CreateConten
 import com.tellpal.v2.content.application.ContentManagementCommands.CreateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.LullabyPlaybackCommand;
 import com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand;
+import com.tellpal.v2.content.application.ContentManagementCommands.UpdateContentLocalizationCommand;
 import com.tellpal.v2.content.application.ContentManagementResults.ContentLocalizationRecord;
 import com.tellpal.v2.content.application.ContentManagementService;
 import com.tellpal.v2.content.application.ContentPublicationCommands.ArchiveContentLocalizationCommand;
@@ -168,6 +169,102 @@ class ContentPublicationServiceIntegrationTest extends PostgresIntegrationTestBa
         assertThat(archived.publishedAt()).isEqualTo(publishedAt);
         assertThat(row.get("status")).isEqualTo("ARCHIVED");
         assertThat(row.get("published_at")).isNotNull();
+    }
+
+    @Test
+    void stagedMeditationAcceptsBodyLaterButCannotPublishWithoutIt() {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.MEDITATION, "staged-body-completion", 8, true));
+        Long audioMediaId = registerAudioAsset("/content/meditation/staged-body-completion/audio.mp3");
+
+        ContentLocalizationRecord staged = contentManagementService.createLocalization(
+                new CreateContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        "Staged Meditation",
+                        "A staged description",
+                        null,
+                        null,
+                        audioMediaId,
+                        9,
+                        LocalizationStatus.DRAFT,
+                        ProcessingStatus.PENDING,
+                        null));
+
+        assertThat(staged.bodyText()).isNull();
+        assertThat(staged.status()).isEqualTo(LocalizationStatus.DRAFT);
+        assertThat(staged.processingStatus()).isEqualTo(ProcessingStatus.PENDING);
+
+        assertThatThrownBy(() -> contentPublicationService.archiveLocalization(
+                new ArchiveContentLocalizationCommand(content.contentId(), LanguageCode.EN)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("archive requires non-blank body text");
+
+        assertThatThrownBy(() -> contentManagementService.updateLocalization(
+                new UpdateContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        "Staged Meditation",
+                        "A staged description",
+                        null,
+                        null,
+                        audioMediaId,
+                        9,
+                        LocalizationStatus.DRAFT,
+                        ProcessingStatus.COMPLETED,
+                        null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must remain PENDING");
+
+        assertThatThrownBy(() -> contentManagementService.updateLocalization(
+                new UpdateContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        "Staged Meditation",
+                        "A staged description",
+                        null,
+                        null,
+                        audioMediaId,
+                        9,
+                        LocalizationStatus.PUBLISHED,
+                        ProcessingStatus.PENDING,
+                        Instant.parse("2026-09-13T12:00:00Z"))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Body text is required");
+
+        assertThatThrownBy(() -> contentPublicationService.publishLocalization(
+                new PublishContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        Instant.parse("2026-09-13T12:00:00Z"))))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("non-blank body text");
+
+        ContentLocalizationRecord completed = contentManagementService.updateLocalization(
+                new UpdateContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        "Staged Meditation",
+                        "A staged description",
+                        "Breathe slowly.",
+                        null,
+                        audioMediaId,
+                        9,
+                        LocalizationStatus.DRAFT,
+                        ProcessingStatus.PENDING,
+                        null));
+
+        assertThat(completed.bodyText()).isEqualTo("Breathe slowly.");
+        assertThat(completed.status()).isEqualTo(LocalizationStatus.DRAFT);
+        assertThat(completed.processingStatus()).isEqualTo(ProcessingStatus.PENDING);
+        assertThat(completed.audioMediaId()).isEqualTo(audioMediaId);
+        assertThat(completed.durationMinutes()).isEqualTo(9);
+        ContentLocalizationRecord published = contentPublicationService.publishLocalization(
+                new PublishContentLocalizationCommand(
+                        content.contentId(),
+                        LanguageCode.EN,
+                        Instant.parse("2026-09-13T12:00:00Z")));
+        assertThat(published.status()).isEqualTo(LocalizationStatus.PUBLISHED);
     }
 
     @Test

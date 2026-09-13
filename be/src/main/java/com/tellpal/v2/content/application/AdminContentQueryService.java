@@ -183,8 +183,14 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
         }
         if (content.title() == null) {
             blockers.add(new AdminContentRegistryBlocker("LOCALIZATION_MISSING", null));
-        } else if (!ProcessingStatus.COMPLETED.name().equals(content.effectiveProcessingStatus())) {
-            blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
+        } else {
+            if (content.type() == ContentApiType.MEDITATION
+                    && (content.bodyText() == null || content.bodyText().isBlank())) {
+                blockers.add(new AdminContentRegistryBlocker("BODY_TEXT_MISSING", null));
+            }
+            if (!ProcessingStatus.COMPLETED.name().equals(content.effectiveProcessingStatus())) {
+                blockers.add(new AdminContentRegistryBlocker("PROCESSING_NOT_COMPLETED", null));
+            }
         }
         return List.copyOf(blockers);
     }

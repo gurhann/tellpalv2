@@ -48,7 +48,7 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
         insertStoryPageLocalization(readyPageId, "Hazir sayfa", 101L, 102L);
 
         long publishedId = insertContent("MEDITATION", "registry-published", true);
-        insertLocalization(publishedId, "PUBLISHED", "COMPLETED", "Yayindaki ses", "Aciklama", 200L);
+        insertLocalization(publishedId, "PUBLISHED", "COMPLETED", "Yayindaki ses", "Aciklama", "Nefes al.", 200L);
 
         ContentRegistryReadRepository.RegistryPage actionRequiredPage = contentRegistryReadRepository.findPage(
                 new RegistryQuery(
@@ -183,14 +183,26 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
             String title,
             String description,
             Long coverMediaId) {
+        insertLocalization(contentId, status, processingStatus, title, description, null, coverMediaId);
+    }
+
+    private void insertLocalization(
+            long contentId,
+            String status,
+            String processingStatus,
+            String title,
+            String description,
+            String bodyText,
+            Long coverMediaId) {
         jdbcTemplate.update("""
                         insert into content_localizations
-                            (content_id, language_code, title, description, cover_media_id, status, processing_status, published_at)
-                        values (?, 'tr', ?, ?, ?, ?, ?, case when ? = 'PUBLISHED' then now() else null end)
+                            (content_id, language_code, title, description, body_text, cover_media_id, status, processing_status, published_at)
+                        values (?, 'tr', ?, ?, ?, ?, ?, ?, case when ? = 'PUBLISHED' then now() else null end)
                         """,
                 contentId,
                 title,
                 description,
+                bodyText,
                 coverMediaId,
                 status,
                 processingStatus,

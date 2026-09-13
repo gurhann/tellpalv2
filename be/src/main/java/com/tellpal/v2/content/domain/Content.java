@@ -306,7 +306,14 @@ public class Content extends BaseJpaEntity {
         if (type == ContentType.LULLABY && processingStatus != ProcessingStatus.PENDING) {
             throw new IllegalArgumentException("LULLABY processing status is owned by shared playback");
         }
-        validateLocalizationFieldsForType(description, bodyText, coverMediaId, audioMediaId, durationMinutes);
+        validateLocalizationFieldsForType(
+                description,
+                bodyText,
+                coverMediaId,
+                audioMediaId,
+                durationMinutes,
+                status,
+                processingStatus);
         ContentLocalization localization = findLocalization(languageCode)
                 .orElseGet(() -> createLocalization(languageCode, title, status, processingStatus));
         localization.updateContent(title, description, bodyText, coverMediaId, audioMediaId, durationMinutes);
@@ -582,7 +589,9 @@ public class Content extends BaseJpaEntity {
             String bodyText,
             Long coverMediaId,
             Long audioMediaId,
-            Integer durationMinutes) {
+            Integer durationMinutes,
+            LocalizationStatus status,
+            ProcessingStatus processingStatus) {
         boolean hasDescription = description != null && !description.isBlank();
         boolean hasBodyText = bodyText != null && !bodyText.isBlank();
         boolean hasCoverMedia = coverMediaId != null;
@@ -605,7 +614,14 @@ public class Content extends BaseJpaEntity {
             return;
         }
         if (type == ContentType.MEDITATION && !hasBodyText) {
-            throw new IllegalArgumentException("Body text is required for meditations");
+            if (status != LocalizationStatus.DRAFT) {
+                throw new IllegalArgumentException(
+                        "Body text is required for meditations unless the localization remains DRAFT");
+            }
+            if (processingStatus != ProcessingStatus.PENDING) {
+                throw new IllegalArgumentException(
+                        "Bodyless meditation localizations must remain PENDING until body text is supplied");
+            }
         }
         if ((type == ContentType.MEDITATION || type == ContentType.LULLABY)
                 && !hasAudioMedia) {

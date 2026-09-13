@@ -54,7 +54,7 @@ public class ContentPublicationService {
     public ContentLocalizationRecord archiveLocalization(ArchiveContentLocalizationCommand command) {
         Content content = loadContent(command.contentId());
         ContentLocalization localization = loadLocalization(content, command.languageCode());
-        publicationPolicy.archive(localization);
+        publicationPolicy.archive(content, localization);
         Content savedContent = contentRepository.save(content);
         return toLocalizationRecord(savedContent, command.languageCode());
     }

@@ -113,6 +113,7 @@ class MeditationPlan:
     source_files: tuple[MeditationSourceFile, ...]
     source_fingerprint: str
     expected_actions: dict[str, int]
+    allow_missing_body: bool = False
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
@@ -125,7 +126,14 @@ class MeditationPlan:
 
     @property
     def live_import_available(self) -> bool:
-        return not self.missing_body_sources
+        return not self.missing_body_sources or (
+            self.allow_missing_body and not self.publish
+        )
+
+    @property
+    def staged_import(self) -> bool:
+        """Whether this plan stages one or more bodyless draft localizations."""
+        return bool(self.allow_missing_body and self.missing_body_sources)
 
 
 def build_meditation_plan(
@@ -138,6 +146,7 @@ def build_meditation_plan(
     cache_directory: str | Path | None = None,
     active: bool = True,
     publish: bool = True,
+    allow_missing_body: bool = False,
     external_key: str | None = None,
     service_account_json: str | Path | None = None,
     timeout_seconds: float = 120,
@@ -145,6 +154,9 @@ def build_meditation_plan(
     body_directory: str | Path | None = None,
     body_text_sources: Mapping[object, object] | None = None,
 ) -> MeditationPlan:
+    if allow_missing_body and publish:
+        raise StoryValidationError("--allow-missing-body requires --no-publish")
+
     csv_file = Path(csv_path).expanduser().resolve()
     if not csv_file.is_file():
         raise StoryValidationError(f"Meditation CSV does not exist: {csv_file}")
@@ -343,10 +355,17 @@ def build_meditation_plan(
         )
 
     if missing_body_sources:
-        warnings.append(
-            "Live import unavailable until body text is supplied for: "
-            + ", ".join(missing_body_sources)
-        )
+        missing_body_summary = ", ".join(missing_body_sources)
+        if allow_missing_body and not publish:
+            warnings.append(
+                "Body text is intentionally staged and must be supplied before publication for: "
+                + missing_body_summary
+            )
+        else:
+            warnings.append(
+                "Live import unavailable until body text is supplied for: "
+                + missing_body_summary
+            )
 
     source_files = tuple(
         MeditationSourceFile(str(path), path.stat().st_size, sha256_file(path))
@@ -379,6 +398,7 @@ def build_meditation_plan(
             "cover_updates": len(resolved_groups),
             "publications": localization_count if publish else 0,
         },
+        allow_missing_body=allow_missing_body,
     )
 
 

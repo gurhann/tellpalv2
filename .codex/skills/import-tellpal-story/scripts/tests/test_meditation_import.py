@@ -223,8 +223,49 @@ class MeditationManifestTest(unittest.TestCase):
         with patch("urllib.request.urlopen", side_effect=_storage(objects)):
             plan = build_meditation_plan(csv_path, storage_base_url="https://storage.test", storage_bucket="bucket")
         self.assertEqual(plan.missing_body_sources, ("meditation.one/tr",))
+        remote_client = _ExistingContentClient(plan.groups[0].external_key)
+        with self.assertRaisesRegex(MeditationRemotePreflightError, "before live import"):
+            remote_preflight(plan, remote_client)
+        self.assertEqual(remote_client.calls, [])
         with self.assertRaisesRegex(RuntimeError, "Body text is required"):
             execute_import(plan, _Client(), _Report())
+
+    def test_allow_missing_body_stages_draft_pending_without_publication(self):
+        csv_path = _csv("tr,1,Titel,Summary,one_kapak.jpg,one_kapak.jpg\n")
+        objects = {"cover_images/one_kapak.jpg": b"\xff\xd8\xff\xe0", "1.zip": _zip(_mp3())}
+        with patch("urllib.request.urlopen", side_effect=_storage(objects)):
+            plan = build_meditation_plan(
+                csv_path,
+                storage_base_url="https://storage.test",
+                storage_bucket="bucket",
+                allow_missing_body=True,
+                publish=False,
+            )
+
+        self.assertTrue(plan.live_import_available)
+        self.assertTrue(plan.staged_import)
+        self.assertEqual(plan.expected_actions["publications"], 0)
+        preview = format_preview(plan)
+        self.assertIn("STAGED (DRAFT/PENDING; publication disabled)", preview)
+        self.assertIn("Missing body localizations: meditation.one/tr", preview)
+        self.assertIn("Body text is intentionally staged and must be supplied before publication", preview)
+        self.assertNotIn("Live import unavailable until body text is supplied", preview)
+
+        client = _Client()
+        summary = execute_import(plan, client, _Report())
+
+        self.assertTrue(summary["stagedImport"])
+        self.assertEqual(summary["missingBodySources"], ["meditation.one/tr"])
+        self.assertNotIn("publish", client.calls)
+        localization = client.content["localizations"][0]
+        self.assertIsNone(localization["bodyText"])
+        self.assertEqual(localization["status"], "DRAFT")
+        self.assertEqual(localization["processingStatus"], "PENDING")
+
+    def test_allow_missing_body_requires_no_publish(self):
+        csv_path = _csv("tr,1,Titel,Summary,one_kapak.jpg,one_kapak.jpg\n")
+        with self.assertRaisesRegex(StoryValidationError, "allow-missing-body requires --no-publish"):
+            build_meditation_plan(csv_path, allow_missing_body=True)
 
     def test_duplicate_language_and_ambiguous_stem_are_precise(self):
         duplicate = _csv(
@@ -310,6 +351,22 @@ class MeditationManifestTest(unittest.TestCase):
                 storage_base_url="https://storage.test",
                 storage_bucket="bucket",
                 body_sources={("one", "tr"): "Body"},
+            )
+        client = _ExistingContentClient(plan.groups[0].external_key)
+        with self.assertRaisesRegex(MeditationRemotePreflightError, "already exists"):
+            remote_preflight(plan, client)
+        self.assertEqual(client.calls, ["list"])
+
+    def test_staged_remote_external_key_conflict_happens_before_any_write(self):
+        csv_path = _csv("tr,1,Title,Description,one_kapak.jpg,one_kapak.jpg\n")
+        objects = {"cover_images/one_kapak.jpg": b"\xff\xd8\xff\xe0", "1.zip": _zip(_mp3())}
+        with patch("urllib.request.urlopen", side_effect=_storage(objects)):
+            plan = build_meditation_plan(
+                csv_path,
+                storage_base_url="https://storage.test",
+                storage_bucket="bucket",
+                allow_missing_body=True,
+                publish=False,
             )
         client = _ExistingContentClient(plan.groups[0].external_key)
         with self.assertRaisesRegex(MeditationRemotePreflightError, "already exists"):
@@ -431,6 +488,68 @@ class MeditationImportCliTest(unittest.TestCase):
                 self.assertEqual(execute.call_count, expected_execute_calls)
                 if expected_status:
                     report.mark_cancelled.assert_called_once_with()
+
+    def test_staged_option_allows_login_and_confirmation_after_body_preflight(self):
+        report = MagicMock(result_path=Path("report.json"))
+        client = MagicMock(last_request={"method": "GET", "path": "/api/admin/contents"})
+        terminal = MagicMock()
+        terminal.isatty.return_value = True
+        plan = SimpleNamespace(
+            missing_body_sources=("meditation.one/tr",),
+            allow_missing_body=True,
+            publish=False,
+        )
+        with (
+            patch.dict(
+                os.environ,
+                {"TELLPAL_API_BASE_URL": "https://api.test", "TELLPAL_ADMIN_USERNAME": "admin"},
+                clear=True,
+            ),
+            patch.object(
+                sys,
+                "argv",
+                ["import_meditations.py", "meditations.csv", "--allow-missing-body", "--no-publish"],
+            ),
+            patch.object(sys, "stdin", terminal),
+            patch.object(import_meditations, "build_meditation_plan", return_value=plan) as build_plan,
+            patch.object(import_meditations, "MeditationImportRunReport", return_value=report),
+            patch.object(import_meditations, "TellPalAdminClient", return_value=client),
+            patch.object(import_meditations, "remote_preflight", return_value=()),
+            patch.object(import_meditations, "format_preview", return_value="preview"),
+            patch.object(import_meditations.getpass, "getpass", return_value="secret"),
+            patch("builtins.input", return_value="import"),
+            patch.object(import_meditations, "execute_import", return_value={"groups": 1, "contentIds": [1]}),
+        ):
+            self.assertEqual(import_meditations.main(), 0)
+        self.assertTrue(build_plan.call_args.kwargs["allow_missing_body"])
+        self.assertFalse(build_plan.call_args.kwargs["publish"])
+        client.login.assert_called_once_with("admin", "secret")
+
+    def test_missing_body_main_gate_stops_before_client_creation(self):
+        report = MagicMock(result_path=Path("report.json"))
+        plan = SimpleNamespace(
+            missing_body_sources=("meditation.one/tr",),
+            allow_missing_body=False,
+            publish=True,
+        )
+        terminal = MagicMock()
+        terminal.isatty.return_value = True
+        with (
+            patch.dict(
+                os.environ,
+                {"TELLPAL_API_BASE_URL": "https://api.test", "TELLPAL_ADMIN_USERNAME": "admin"},
+                clear=True,
+            ),
+            patch.object(sys, "argv", ["import_meditations.py", "meditations.csv"]),
+            patch.object(sys, "stdin", terminal),
+            patch.object(import_meditations, "build_meditation_plan", return_value=plan) as build_plan,
+            patch.object(import_meditations, "MeditationImportRunReport", return_value=report),
+            patch.object(import_meditations, "TellPalAdminClient") as client_factory,
+        ):
+            self.assertEqual(import_meditations.main(), 2)
+        self.assertFalse(build_plan.call_args.kwargs["allow_missing_body"])
+        self.assertTrue(build_plan.call_args.kwargs["publish"])
+        client_factory.assert_not_called()
 
 
 if __name__ == "__main__":

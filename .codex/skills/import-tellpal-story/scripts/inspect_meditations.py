@@ -36,6 +36,7 @@ def _plan_arguments(arguments: argparse.Namespace) -> dict[str, object]:
         "audio_prefix": arguments.audio_prefix,
         "active": not arguments.inactive,
         "publish": not arguments.no_publish,
+        "allow_missing_body": arguments.allow_missing_body,
         "external_key": arguments.external_key,
         "service_account_json": arguments.service_account_json,
         "timeout_seconds": arguments.timeout_seconds,
@@ -68,6 +69,11 @@ def _add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--timeout-seconds", type=float, default=120)
     parser.add_argument("--inactive", action="store_true")
     parser.add_argument("--no-publish", action="store_true")
+    parser.add_argument(
+        "--allow-missing-body",
+        action="store_true",
+        help="Preview bodyless MEDITATION localizations as DRAFT/PENDING (requires --no-publish)",
+    )
 
 
 def _parse_body_sources(values: list[str]) -> dict[tuple[str, str], str]:

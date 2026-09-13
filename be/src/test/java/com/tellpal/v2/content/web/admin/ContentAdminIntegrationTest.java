@@ -110,6 +110,63 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void meditationRegistryReportsMissingBodyAfterProcessingCompletes() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long audioMediaId = registerAudioAsset("/content/meditation/staged/voice.mp3");
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "MEDITATION",
+                                  "externalKey": "staged-meditation-registry",
+                                  "ageRange": 5,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(post("/api/admin/contents/{contentId}/localizations/tr", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "title": "Staged Meditation",
+                                  "audioMediaId": %d,
+                                  "durationMinutes": 8,
+                                  "status": "DRAFT",
+                                  "processingStatus": "PENDING"
+                                }
+                                """.formatted(audioMediaId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.bodyText").value(nullValue()))
+                .andExpect(jsonPath("$.status").value("DRAFT"))
+                .andExpect(jsonPath("$.processingStatus").value("PENDING"));
+
+        mockMvc.perform(patch("/api/admin/contents/{contentId}/localizations/tr/processing-status", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                { "processingStatus": "COMPLETED" }
+                                """))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/admin/content-registry")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .queryParam("language", "tr")
+                        .queryParam("type", "MEDITATION")
+                        .queryParam("readiness", "ACTION_REQUIRED")
+                        .queryParam("q", "staged-meditation-registry"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.items[0].contentId").value(contentId))
+                .andExpect(jsonPath("$.items[0].readiness").value("ACTION_REQUIRED"))
+                .andExpect(jsonPath("$.items[0].blockers[0].code").value("BODY_TEXT_MISSING"));
+    }
+
+    @Test
     void createUpdateLocalizationProcessingAndStoryPagesWorkWithAuthenticatedAdmin() throws Exception {
         String accessToken = authenticateAdmin();
         Long coverMediaId = registerImageAsset("/content/story/moonlight/cover.jpg");

@@ -51,6 +51,7 @@ public interface ContentRegistryReadRepository {
             boolean active,
             String title,
             String description,
+            String bodyText,
             Long coverMediaId,
             String localizationStatus,
             String processingStatus,

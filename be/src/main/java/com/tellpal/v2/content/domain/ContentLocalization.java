@@ -138,7 +138,9 @@ public class ContentLocalization extends BaseJpaEntity {
      * Returns whether this localization is eligible for mobile delivery.
      */
     public boolean isVisibleToMobile() {
-        return status == LocalizationStatus.PUBLISHED && processingStatus == ProcessingStatus.COMPLETED;
+        return status == LocalizationStatus.PUBLISHED
+                && processingStatus == ProcessingStatus.COMPLETED
+                && hasRequiredMobileBody();
     }
 
     /** Returns visibility using an externally owned processing status for shared playback types. */
@@ -146,7 +148,14 @@ public class ContentLocalization extends BaseJpaEntity {
         if (effectiveProcessingStatus == null) {
             throw new IllegalArgumentException("Effective processing status must not be null");
         }
-        return status == LocalizationStatus.PUBLISHED && effectiveProcessingStatus == ProcessingStatus.COMPLETED;
+        return status == LocalizationStatus.PUBLISHED
+                && effectiveProcessingStatus == ProcessingStatus.COMPLETED
+                && hasRequiredMobileBody();
+    }
+
+    private boolean hasRequiredMobileBody() {
+        return content.getType() != ContentType.MEDITATION
+                || (bodyText != null && !bodyText.isBlank());
     }
 
     /**

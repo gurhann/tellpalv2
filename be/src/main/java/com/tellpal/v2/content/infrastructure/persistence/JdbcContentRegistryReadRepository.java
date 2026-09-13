@@ -35,6 +35,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                     c.page_count,
                     c.is_active,
                     cl.title,
+                    cl.body_text,
                     cl.status as localization_status,
                     case
                         when c.type = 'LULLABY' then coalesce(content_processing.status, 'PENDING')
@@ -66,6 +67,8 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                         when c.type <> 'STORY' and (
                             not c.is_active
                             or cl.id is null
+                            or (c.type = 'MEDITATION'
+                                and (cl.body_text is null or btrim(cl.body_text) = ''))
                             or coalesce(
                                 case
                                     when c.type = 'LULLABY' then content_processing.status
@@ -150,6 +153,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                             c.is_active,
                             cl.title,
                             cl.description,
+                            cl.body_text,
                             cl.cover_media_id,
                             cl.status as localization_status,
                             case
@@ -214,6 +218,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                 resultSet.getBoolean("is_active"),
                 resultSet.getString("title"),
                 resultSet.getString("description"),
+                resultSet.getString("body_text"),
                 resultSet.getObject("cover_media_id", Long.class),
                 resultSet.getString("localization_status"),
                 resultSet.getString("processing_status"),

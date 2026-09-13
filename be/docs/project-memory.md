@@ -36,6 +36,7 @@ Read order:
 - `ADR-0010`: STORY source textless covers, localized reading covers, and shared listening covers are separate ownership concepts; LULLABY additionally owns a distinct content-scoped static listing cover while its listening cover remains the playback/detail asset.
 - `ADR-0011`: lullaby instrument selections are content-scoped ordered links to a language-independent catalog; display names are resolved from catalog localization rows and are not copied to content localizations.
 - `ADR-0012`: canonical content and category types are STORY, MEDITATION, and LULLABY; AUDIO_STORY is a STORY narration experience, not a persisted canonical type. Legacy independent audio-story import is a separate future migration.
+- `ADR-0014`: staged MEDITATION localizations may omit body text only as DRAFT/PENDING; publication and archive require non-blank body text, and the admin registry exposes missing body as ACTION_REQUIRED.
 
 ## Coding and Documentation Defaults
 

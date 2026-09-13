@@ -28,6 +28,8 @@ class MeditationImportRunReport:
             "sourceDirectory": plan.source_directory,
             "csvPath": plan.csv_path,
             "sourceFingerprint": plan.source_fingerprint,
+            "stagedImport": bool(getattr(plan, "staged_import", False)),
+            "missingBodySources": list(plan.missing_body_sources),
             "contentIds": [],
             "uploadedAssets": [],
             "completedSteps": [],
