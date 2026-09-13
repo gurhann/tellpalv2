@@ -492,7 +492,11 @@ def _extract_single_audio(zip_path: Path, directory: Path, legacy_id: int) -> Pa
     directory.mkdir(parents=True, exist_ok=True)
     try:
         with zipfile.ZipFile(zip_path) as archive:
-            files = [item for item in archive.infolist() if not item.is_dir()]
+            files = [
+                item
+                for item in archive.infolist()
+                if not item.is_dir() and not _is_macos_zip_metadata(item.filename)
+            ]
             if len(files) != 1:
                 raise StoryValidationError(f"{legacy_id}.zip must contain exactly one audio file")
             member = files[0]
@@ -521,6 +525,13 @@ def _extract_single_audio(zip_path: Path, directory: Path, legacy_id: int) -> Pa
     if _mp3_duration_seconds(destination) <= 0:
         raise StoryValidationError(f"{legacy_id}.zip does not contain a valid MP3 frame")
     return destination
+
+
+def _is_macos_zip_metadata(member_name: str) -> bool:
+    """Ignore Finder metadata that macOS adds beside the actual archived file."""
+    normalized = member_name.replace("\\", "/").lstrip("/")
+    basename = PurePosixPath(normalized).name
+    return normalized.startswith("__MACOSX/") or basename == ".DS_Store" or basename.startswith("._")
 
 
 def _skip_id3v2(data: bytes) -> int:

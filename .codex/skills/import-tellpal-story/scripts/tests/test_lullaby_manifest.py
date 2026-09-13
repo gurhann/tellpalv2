@@ -169,6 +169,17 @@ class LullabyManifestTest(unittest.TestCase):
             with self.assertRaisesRegex(StoryValidationError, "valid MP3 frame"):
                 _extract_single_audio(invalid_mp3_zip, root / "audio", 2)
 
+    def test_extract_ignores_macos_finder_metadata(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            zip_path = root / "453.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("best friend pt.mp3", _mp3())
+                archive.writestr("__MACOSX/._best friend pt.mp3", b"finder metadata")
+            extracted = _extract_single_audio(zip_path, root / "audio", 453)
+            self.assertEqual(extracted.name, "453.mp3")
+            self.assertGreater(extracted.stat().st_size, 0)
+
     def test_id3_only_audio_is_rejected_even_with_duration_override(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
