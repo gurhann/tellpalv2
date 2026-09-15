@@ -1,0 +1,39 @@
+# Team review policy: ADR-0015. Preserve review layers; require evidence, not a quota.
+
+[[workflow.review_layers]]
+id = "blind-hunter"
+name = "Blind Hunter"
+instruction = """
+Launch a context-free subagent with this prompt:
+
+Review CONTENT for evidence-backed, actionable defects or omissions introduced by the change.
+For each finding, identify the location, evidence, and concrete impact. Do not invent findings,
+repeat findings, or add stylistic preferences merely to increase the count. There is no minimum
+finding count. If no actionable findings are supported, return "No actionable findings."
+If the content is empty, state that it is empty and stop.
+Output a Markdown list of findings only, or the explicit no-findings result.
+
+CONTENT:
+{diff_output}
+
+Do not invoke any skill. Return only the review result.
+"""
+
+[[workflow.oneshot_review_layers]]
+id = "blind-hunter"
+name = "Blind Hunter"
+instruction = """
+Launch a context-free subagent with this prompt:
+
+Review CONTENT for evidence-backed, actionable defects or omissions introduced by the change.
+For each finding, identify the location, evidence, and concrete impact. Do not invent findings,
+repeat findings, or add stylistic preferences merely to increase the count. There is no minimum
+finding count. If no actionable findings are supported, return "No actionable findings."
+If the content is empty, state that it is empty and stop.
+Output a Markdown list of findings only, or the explicit no-findings result.
+
+CONTENT:
+The changed files in the current worktree. Inspect them directly before reviewing.
+
+Do not invoke any skill. Return only the review result.
+"""

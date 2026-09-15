@@ -1,152 +1,78 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-This repository is now organized for multiple apps. The Spring Boot backend lives under `be/`, so
-all backend code, build files, and backend docs should stay there.
+## Structure and Read Order
 
-The CMS frontend lives under `cms/`. Any work that changes frontend layout, shared UI primitives,
-route composition, or screenshot regression coverage must also follow `cms/AGENTS.md`.
+Backend code, builds, and docs belong under `be/`; CMS lives under `cms/`.
+Backend paths: `src/main/java` (code), `src/main/resources` (config/Flyway),
+`src/test/java` (tests), `docs` (design), and `pom.xml` (build), relative to `be/`.
+Team skills live under `.codex/skills`.
 
-Key backend paths:
+Before planning or implementing, read in order:
 
-- `be/src/main/java`: application code
-- `be/src/main/resources`: config and Flyway migrations
-- `be/src/test/java`: JUnit, jqwik, and integration tests
-- `be/docs`: schema and database design docs
-- `be/pom.xml`: Maven build
-- `.codex/skills`: team-shared Codex skills for backend work
+1. This file.
+2. `cms/AGENTS.md` for CMS work.
+3. `be/docs/project-memory.md` for backend standards or architecture work.
+4. Relevant ADRs under `be/docs/adr/`.
+5. `architecture.md` and relevant design docs. It is the canonical backend architecture:
+   consult it before backend design, planning, schema, boundary, or implementation decisions.
 
-Treat each top-level package under `com.tellpal.v2` as a Spring Modulith module.
+For CMS layout/interaction changes use `ui-ux-pro-max`; for shared primitives/frontend
+architecture use `senior-frontend`; for TellPal UI review/regression use `cms-ui-guardrails`.
+Follow the additional skill triggers and safeguards in `cms/AGENTS.md`.
 
-Shared project skills currently include:
+## Standards and Language
 
-- `write-flyway-migration`
-- `write-jpa-entity`
-- `write-spring-service`
-- `write-rest-controller`
-- `write-jqwik-property-test`
-- `write-testcontainers-integration-test`
-- `spring-modulith-boundary-check`
-- `task-decomposition`
-- `run-maven-tests`
-- `apply-project-standards`
-- `cms-ui-guardrails`
-
-## Standards Read Order
-Before planning or implementing work, read documents in this order when they exist:
-
-1. `AGENTS.md`
-2. `cms/AGENTS.md` when the task touches `cms/`
-3. `be/docs/project-memory.md` when the task touches backend standards or architecture
-4. relevant files under `be/docs/adr`
-5. `architecture.md` and other project-specific design docs
-
-## Standards Package
-This repository follows a reusable engineering standards package under
-`standards/`.
-
-That package defines:
-
-- comment and Javadoc rules
-- REST API documentation rules
-- ADR format
-- project-memory format
-- agent bootstrap guidance for future projects
-
-When changing a durable engineering policy or architectural default, update
-`be/docs/project-memory.md` and the relevant ADR.
-
-When adding or changing REST controllers, follow the OpenAPI policy in
+Follow `standards/` for comments/Javadoc, REST documentation, ADRs, project memory, and bootstrap guidance.
+When changing durable policies, update project memory and the relevant ADR using
+`apply-project-standards`. For REST controller changes, read and follow
 `standards/rest-api-documentation-standard.md`.
 
-## Communication and Documentation Language
+Use Turkish for conversations, questions, progress updates, and final summaries; English for
+new long technical documents, ADRs, project memory, code comments, and API documentation.
+Explicit language requests take precedence. Preserve existing Turkish documents during routine
+edits; translate on request or agreed replacement. Product localization keeps its audience language
+(ADR-0013). Keep rules concise without dropping unique safeguards; read deployment details when
+working on deployment and archived tasks only for relevant history (ADR-0015).
 
-Use Turkish for conversations, questions, progress updates, and final summaries. Write new long
-technical documents in English; keep ADRs, project memory, code comments, and API documentation
-in English. Explicit user requests for a deliverable's language take precedence. Preserve existing
-Turkish documents during routine edits; translate on request or as part of an agreed replacement.
-Product content and localization retain their intended audience languages.
-See `be/docs/adr/ADR-0013-communication-and-documentation-language.md`.
+## Build and Test Commands
 
-## Build, Test, and Development Commands
-Run commands from `be/`:
+Use the Maven wrapper from `be/`:
 
-- `cd be && docker compose up -d postgres`: start the local PostgreSQL dependency
-- `cd be && ./mvnw spring-boot:run`: run the backend locally with the default `local` profile
-- `cd be && ./mvnw test`: run the full test suite
-- `cd be && ./mvnw verify`: run full verification, including integration checks
-- `cd be && ./mvnw flyway:migrate`: validate migrations against the configured database
-- `cd be && ./mvnw spring-modulith:document`: regenerate Modulith docs if the plugin is configured
+- `docker compose up -d postgres`: local database.
+- `./mvnw spring-boot:run`: backend with default `local` profile.
+- `./mvnw test`: full test suite; `./mvnw verify`: full verification including integration checks.
+- `./mvnw flyway:migrate`: migrations against the configured database.
+- `./mvnw spring-modulith:document`: module docs, if the plugin is configured.
 
-Use the Maven wrapper instead of a system Maven install when possible.
+From `cms/`: `npm run build` (production), `npm run test` (Vitest),
+`npm run test:e2e` (Playwright), `npm run test:e2e:visual` (visual regression).
+Backend PRs and main pushes run `./mvnw verify` via `.github/workflows/backend-verify.yml`.
 
-Common CMS commands from `cms/`:
+## Deployment
 
-- `cd cms && npm run build`: create the production build
-- `cd cms && npm run test`: run unit and integration tests with Vitest
-- `cd cms && npm run test:e2e`: run Playwright end-to-end coverage
-- `cd cms && npm run test:e2e:visual`: run Playwright visual regression coverage
+Railway is the production target. Before deployment work, read `ops/railway/README.md` for
+service topology, environment variables, commands, admin bootstrap, and verification; update it
+when deployment behavior changes. Use `ops/railway/deploy.ps1` from the root for manual operations.
+Pushes to `main` affecting backend, CMS, Railway ops, or the deploy workflow trigger production
+through `.github/workflows/railway-deploy.yml` (requires `RAILWAY_TOKEN`).
+Before production deploys, run backend `./mvnw test` for backend changes and CMS `npm run build`
+for CMS changes; follow the runbook's complete production verification requirements.
+Keep deployment environment-driven: never hard-code domains, Firebase credential paths,
+database URLs, admin credentials, or secrets. Local and production share Firebase project/bucket;
+isolate storage through configured prefixes.
 
-## Deployment Guidelines
+## Coding, Security, and Verification
 
-Railway is the canonical production deploy target for this project. Follow
-`ops/railway/README.md` for service topology, environment variables, deploy
-commands, admin bootstrap, and verification steps.
-
-Pushes to `main` deploy production through `.github/workflows/railway-deploy.yml`
-when backend, CMS, Railway ops, or workflow files change. The workflow requires a
-GitHub Actions `RAILWAY_TOKEN` secret.
-
-Backend pull requests and pushes to `main` also run `.github/workflows/backend-verify.yml`,
-which executes `cd be && ./mvnw verify`.
-
-For manual Railway operations, use `ops/railway/deploy.ps1` from the repository root.
-
-Before production deploys, run the relevant local checks:
-
-- `cd be && ./mvnw test` for backend changes
-- `cd cms && npm run build` for CMS changes
-
-Keep deployment behavior environment-driven. Do not hard-code Railway domains,
-Firebase credential paths, database URLs, admin credentials, or secrets in code.
-Local and production currently share the same Firebase project and bucket; storage
-isolation is handled through the configured path prefix.
-
-## Coding Style & Naming Conventions
-Use constructor injection, keep methods small, and avoid field injection. Model DDD concepts explicitly: entities represent domain concepts, services orchestrate use cases, and controllers stay thin.
-
-Conventions:
-
-- Java packages, tables, and columns: `snake_case` for DB, lowercase package names for Java
-- Flyway files: `V{number}__description.sql`
-- enum values: `UPPER_SNAKE_CASE`
-- cross-module interaction: application APIs, events, or IDs, not internal classes or entity references
-
-## Testing Guidelines
-Use JUnit 5 for unit tests, jqwik for invariant/property tests, and Testcontainers with PostgreSQL for integration tests. Prefer tests that verify business rules, persistence constraints, and module boundaries.
-
-Keep test names descriptive and place tests beside the module they validate. Add integration coverage when changes affect Flyway, repositories, transactions, or REST APIs.
-
-## Commit & Pull Request Guidelines
-Use short conventional commit subjects such as `feat: add content localization endpoint` or `fix: enforce category ordering`.
-
-Pull requests should include:
-
-- a short summary of the backend change
-- impacted modules or packages
-- migration notes if `be/src/main/resources/db/migration` changed
-- test evidence, for example `./mvnw test` or `./mvnw verify`
-
-## Security & Architecture Notes
-Do not commit secrets, tokens, or private download URLs. Preserve Spring Modulith boundaries: no cross-module internal imports, no circular dependencies, and no business logic in controllers or infrastructure adapters.
-
-Use `architecture.md` at the repository root as the canonical backend architecture reference. For
-backend design, planning, schema, module boundary, and implementation decisions, consult this
-document first and keep new work aligned with it.
-
-For CMS frontend work:
-
-- read `cms/AGENTS.md`
-- use `ui-ux-pro-max` for layout and interaction changes
-- use `senior-frontend` for shared primitive and frontend architecture changes
-- use `cms-ui-guardrails` for TellPal CMS-specific UI review and regression rules
+- Treat each top-level `com.tellpal.v2` package as a Spring Modulith module. Interact through
+  application APIs, events, or IDs; no cross-module internal imports/entity references or cycles.
+- Use constructor injection, small methods, and explicit DDD entities/services. No field injection
+  or business logic in controllers/infrastructure adapters; services orchestrate use cases.
+- Java packages: lowercase; DB tables/columns: `snake_case`; enums: `UPPER_SNAKE_CASE`;
+  Flyway: `V{number}__description.sql`.
+- Never commit secrets, tokens, or private download URLs.
+- Use JUnit 5, jqwik for invariants, and Testcontainers/PostgreSQL for integration tests. Prefer
+  business-rule, persistence-constraint, and module-boundary coverage. Name tests descriptively
+  and place them beside their modules. Add integration coverage for Flyway, repositories,
+  transactions, and REST API changes.
+- Use short conventional commit subjects. PRs include a change summary, impacted modules/packages,
+  migration notes when applicable, and test evidence.
