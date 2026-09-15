@@ -13,6 +13,11 @@ documented in [references/meditation-import.md](references/meditation-import.md)
 translated rows by stable cover stem and map one content-level listening cover plus one localized
 audio/body payload per language.
 
+For the legacy audio-story CSV shape, use `inspect_audio_stories.py` and `import_audio_stories.py`
+documented in [references/audio-story-import.md](references/audio-story-import.md). They match each
+row to an existing STORY localization, map one root `{id}.zip` MP3 to its nested narration, attach a
+missing shared listening cover, and continue deterministic row failures with sidecar statuses.
+
 # Import TellPal Story
 
 Use the bundled scripts as the only mutation path. Do not recreate the API workflow manually and do not modify `be/`, `cms/src/`, migrations, or API contracts.

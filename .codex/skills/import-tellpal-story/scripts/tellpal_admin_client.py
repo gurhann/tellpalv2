@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import http.client
 import mimetypes
 import random
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -140,6 +142,15 @@ class TellPalAdminClient:
         path = f"/api/admin/contents/{content_id}/localizations/{language_code}"
         return _expect_dict(self._request_json("POST", path, body=body), "created localization")
 
+    def update_localization(
+        self,
+        content_id: int,
+        language_code: str,
+        body: dict[str, object],
+    ) -> dict[str, object]:
+        path = f"/api/admin/contents/{content_id}/localizations/{language_code}"
+        return _expect_dict(self._request_json("PUT", path, body=body), "updated localization")
+
     def publish_localization(self, content_id: int, language_code: str) -> dict[str, object]:
         path = f"/api/admin/contents/{content_id}/localizations/{language_code}/publish"
         return _expect_dict(
@@ -260,7 +271,7 @@ class TellPalAdminClient:
         allow_refresh: bool = True,
     ) -> object:
         normalized_method = method.upper()
-        attempts = 3 if normalized_method == "GET" else 1
+        attempts = 3 if normalized_method == "GET" else (2 if authenticated and self.refresh_token else 1)
         refreshed = False
         for attempt in range(attempts):
             try:
@@ -317,7 +328,7 @@ class TellPalAdminClient:
         except urllib.error.HTTPError as exception:
             payload = _decode_payload(exception.read())
             raise AdminApiError(method, path, exception.code, payload) from exception
-        except (urllib.error.URLError, TimeoutError, OSError) as exception:
+        except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exception:
             raise AdminTransportError(method, path, exception) from exception
         return _decode_payload(raw)
 
@@ -344,6 +355,8 @@ def validate_base_url(base_url: str) -> str:
     parsed = urllib.parse.urlparse(normalized)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise ValueError("TELLPAL_API_BASE_URL must be an absolute http(s) URL")
+    if parsed.username or parsed.password:
+        raise ValueError("TELLPAL_API_BASE_URL must not contain credentials")
     if parsed.query or parsed.fragment:
         raise ValueError("TELLPAL_API_BASE_URL must not contain a query or fragment")
     return normalized
@@ -436,5 +449,11 @@ def _error_summary(payload: object) -> str:
         for key in ("detail", "message", "title", "errorCode"):
             value = payload.get(key)
             if value:
-                return str(value)
-    return str(payload)[:500]
+                return _redact_text(str(value))[:500]
+    return _redact_text(str(payload))[:500]
+
+
+def _redact_text(value: str) -> str:
+    redacted = re.sub(r"(https?://)[^\s/@:]+:[^\s/@]+@", r"\1<redacted>@", value, flags=re.IGNORECASE)
+    redacted = re.sub(r"(?i)bearer\s+[A-Za-z0-9._~+/=-]+", "Bearer <redacted>", redacted)
+    return redacted

@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import http.client
 import math
 import re
 import tempfile
 import unicodedata
 import urllib.parse
+import urllib.error
 import urllib.request
 import zipfile
 from dataclasses import asdict, dataclass
@@ -37,6 +39,14 @@ class LullabyMediaPlan:
     kind: str
     checksum_sha256: str
     byte_size: int
+
+
+class StorageAssetError(StoryValidationError):
+    """Raised when a storage object cannot be downloaded safely."""
+
+    def __init__(self, message: str, *, fatal: bool):
+        super().__init__(message)
+        self.fatal = fatal
 
 
 @dataclass(frozen=True)
@@ -101,6 +111,7 @@ class StorageAssetStager:
         self.authorization_header = (
             _service_account_authorization_header(service_account_json) if service_account_json else None
         )
+        self._downloads: dict[tuple[str, str], Path] = {}
         self.cache_directory.mkdir(parents=True, exist_ok=True)
 
     def object_url(self, object_name: str) -> str:
@@ -109,6 +120,10 @@ class StorageAssetStager:
         return f"{self.base_url}/{encoded_bucket}/{encoded_object}"
 
     def download(self, object_name: str, suffix: str) -> Path:
+        cache_key = (object_name, suffix)
+        cached = self._downloads.get(cache_key)
+        if cached is not None and cached.is_file() and cached.stat().st_size > 0:
+            return cached
         safe_name = hashlib.sha256(object_name.encode("utf-8")).hexdigest() + suffix
         destination = self.cache_directory / safe_name
         url = self.object_url(object_name)
@@ -131,11 +146,21 @@ class StorageAssetStager:
                     if total > 250 * 1024 * 1024:
                         raise StoryValidationError(f"Remote object exceeds 250 MiB limit: {object_name}")
                     target.write(block)
-        except Exception as exception:
+        except urllib.error.HTTPError as exception:
             destination.unlink(missing_ok=True)
-            raise StoryValidationError(f"Cannot download storage object {object_name!r} from {url}: {exception}") from exception
+            raise StorageAssetError(
+                f"Cannot download storage object {object_name!r} from {url}: HTTP {exception.code}",
+                fatal=exception.code in {401, 403} or exception.code >= 500,
+            ) from exception
+        except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError, ValueError) as exception:
+            destination.unlink(missing_ok=True)
+            raise StorageAssetError(
+                f"Cannot download storage object {object_name!r} from {url}: {exception}",
+                fatal=True,
+            ) from exception
         if destination.stat().st_size == 0:
             raise StoryValidationError(f"Storage object is empty: {object_name}")
+        self._downloads[cache_key] = destination
         return destination
 
 
