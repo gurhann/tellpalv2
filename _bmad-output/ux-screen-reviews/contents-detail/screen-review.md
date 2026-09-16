@@ -92,3 +92,13 @@ Story ile aynı sadeleştirme Meditation ve Lullaby detay varyantlarına uygulan
 - Üstteki eyebrow, içerik adı ve açıklama kartı kaldırıldı.
 - İçerik listesine dönüş aksiyonu ilgili locale workspace başlığına taşındı ve mevcut locale durum badge’i korundu.
 - Meditation ses/süre; Lullaby playback, enstrüman ve kapak varyantları değişmeden bırakıldı.
+
+## İterasyon 8 — tüm type detail mockuplarının Variant A hizalaması
+
+- Bu iterasyon yalnızca `/labs/mockups/contents/:contentId` fixture-backed mockup rotalarını kapsar; production `/contents/:contentId` değişmeden bırakıldı.
+- Meditation ve Lullaby, Story ile aynı compact locale tabs, ortak metadata save, locale status/save ve operasyon özeti omurgasına alındı.
+- Meditation’da locale ses/süre ile ortak listening cover; Lullaby’da ortak playback süresi/sesi, enstrüman girişi ve listing/playback cover ayrımı korunarak görünür hale getirildi.
+- Lullaby playback süresi locale taslağından ayrıldı; böylece ortak alan yanlışlıkla seçili locale’e yazılmıyor.
+- Story, Meditation ve Lullaby için 390, 768, 1280 ve 1440px görsel baseline’ları ve route assertions doğrulandı.
+
+Bu iterasyonda build, hedefli ESLint, 10 mockup route testi ve 12 mockup detail visual testi başarılıdır.

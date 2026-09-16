@@ -156,10 +156,26 @@ describe("Variant A mockup routes", () => {
     );
 
     expect(
-      await screen.findByRole("heading", { name: /locale workspace · en/i }),
+      await screen.findByRole("heading", { name: /^locale workspace$/i }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: /meditation locale workspaces/i })).toBeInTheDocument();
     expect(screen.getByText(/meditation audio asset/i)).toBeInTheDocument();
     expect(screen.getAllByText(/shared listening cover/i).length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByRole("button", { name: /add locale/i }));
+    const localeDialog = await screen.findByRole("dialog", {
+      name: /add locale workspace/i,
+    });
+    expect(localeDialog).toBeInTheDocument();
+    fireEvent.click(
+      within(localeDialog).getAllByRole("button", { name: /^close$/i })[0],
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: /save shared metadata/i }),
+    );
+    expect(
+      screen.getByRole("button", { name: /^saved$/i }),
+    ).toBeInTheDocument();
   });
 
   it("opens the lullaby detail workspace from its type table", async () => {
@@ -175,9 +191,17 @@ describe("Variant A mockup routes", () => {
     expect(
       (await screen.findAllByRole("heading", { name: /shared lullaby playback/i })).length,
     ).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: /^locale workspace$/i })).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: /lullaby locale workspaces/i })).toBeInTheDocument();
     expect(screen.getByText(/listing cover \(static\)/i)).toBeInTheDocument();
     expect(screen.getByText(/playback cover \(animated\)/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /manage instruments/i })).toBeInTheDocument();
+
+    const playbackDuration = screen.getByLabelText(
+      /shared playback duration \(minutes\)/i,
+    );
+    fireEvent.change(playbackDuration, { target: { value: "6" } });
+    expect(playbackDuration).toHaveValue(6);
   });
 
   it("opens and closes the content create modal", async () => {

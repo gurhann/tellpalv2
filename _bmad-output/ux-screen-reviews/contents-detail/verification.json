@@ -19,28 +19,28 @@
       "id": "mockup-route-tests",
       "kind": "unit",
       "status": "passed",
-      "command": "npx.cmd vitest --run src/features/mockups/mockup-routes.test.tsx",
-      "note": "10 tests passed, including Story, Meditation, and Lullaby detail navigation from the type-specific tables."
+      "command": "npm.cmd exec vitest run src/features/mockups/mockup-routes.test.tsx",
+      "note": "10 tests passed, including locale dialog, shared metadata save, Lullaby playback duration, and all three detail routes."
     },
     {
       "id": "targeted-eslint",
       "kind": "static",
       "status": "passed",
-      "command": "npx.cmd eslint src/app/routes/mockups/content-detail.tsx src/app/routes/mockups/contents.tsx src/app/router.tsx src/components/language/language-tabs.tsx src/features/mockups/types.ts src/features/mockups/fixtures.ts src/features/mockups/mockup-routes.test.tsx",
-      "note": "No lint findings in changed CMS files."
+      "command": "npm.cmd exec eslint src/app/routes/mockups/content-detail.tsx src/features/mockups/mockup-routes.test.tsx e2e/visual/registry-toolbar.visual.spec.ts",
+      "note": "No lint findings in changed mockup detail and visual regression files."
     },
     {
       "id": "visual-regression",
       "kind": "visual",
-      "status": "blocked",
-      "command": "npx.cmd playwright test e2e/visual/registry-toolbar.visual.spec.ts --grep \"contents mockup detail\" --update-snapshots",
-      "note": "Playwright Chromium executable was missing; browser download timed out from the configured CDN. Existing reference screenshot was reviewed manually before the change."
+      "status": "passed",
+      "command": "npm.cmd exec -- playwright test e2e/visual/registry-toolbar.visual.spec.ts --grep \"contents mockup (detail visual|meditation detail visual|lullaby detail visual)\" --workers=1",
+      "note": "12 visual tests passed across Story, Meditation, and Lullaby at mobile, tablet, laptop, and desktop viewports."
     },
     {
       "id": "loss-prevention-review",
       "kind": "manual",
       "status": "passed",
-      "note": "The revised mockup keeps locale selection, localized cover/narration, story-page handoff, source cover/page sources, shared listening cover, compact metadata controls, publication, operational visibility summary, preview, contributor controls, and compact asset management represented without adding unverified domain fields."
+      "note": "The revised mockup keeps Story-only workflows scoped to Story, adds the shared detail hierarchy to Meditation and Lullaby, preserves type-specific assets, and leaves the production detail route unchanged."
     }
   ]
 }

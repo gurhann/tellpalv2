@@ -230,11 +230,11 @@ for (const viewport of visualViewports) {
     await page.goto("/labs/mockups/contents/demo-content");
     await installVisualStyles(page);
 
-    const detail = page.getByRole("heading", { name: "Locale workspace" });
-
-    await expect(detail).toBeVisible();
+    await expect(
+      page.locator("h2").filter({ hasText: "Locale workspace" }),
+    ).toHaveCount(1);
     await expect(page).toHaveScreenshot(
-      `contents-mockup-detail-${viewport.name}.png`,
+      `contents-mockup-detail-story-${viewport.name}.png`,
       {
         animations: "disabled",
         caret: "hide",
@@ -242,6 +242,35 @@ for (const viewport of visualViewports) {
       },
     );
   });
+
+  for (const detail of [
+    { contentId: "reference-meditation", slug: "meditation" },
+    { contentId: "reference-lullaby", slug: "lullaby" },
+  ]) {
+    test(`contents mockup ${detail.slug} detail visual - ${viewport.name}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({
+        width: viewport.width,
+        height: viewport.height,
+      });
+
+      await page.goto(`/labs/mockups/contents/${detail.contentId}`);
+      await installVisualStyles(page);
+
+      await expect(
+        page.getByRole("heading", { name: "Locale workspace" }),
+      ).toBeVisible();
+      await expect(page).toHaveScreenshot(
+        `contents-mockup-detail-${detail.slug}-${viewport.name}.png`,
+        {
+          animations: "disabled",
+          caret: "hide",
+          fullPage: true,
+        },
+      );
+    });
+  }
 
   test(`contents mockup meditation table visual - ${viewport.name}`, async ({
     page,

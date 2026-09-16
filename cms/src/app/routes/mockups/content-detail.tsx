@@ -55,6 +55,13 @@ type AssetDialogTarget =
   | { kind: "page-source"; pageNumber: number }
   | null;
 
+type MockupLocaleDraft = {
+  title: string;
+  description: string;
+  durationMinutes: string;
+  statusLabel: string;
+};
+
 function MockupAssetPreview({
   kind,
   ready,
@@ -1142,19 +1149,50 @@ function MockupReferenceContentDetail({
   content: MockupContentSummary;
 }) {
   const { locale } = useI18n();
-  const selectedLocale = content.locales[0]!;
   const isLullaby = content.typeLabel === "LULLABY";
-  const [draft, setDraft] = useState({
-    title: selectedLocale.title,
-    description: selectedLocale.description,
-    durationMinutes: String(selectedLocale.durationMinutes ?? content.playbackDurationMinutes ?? ""),
-    statusLabel: selectedLocale.statusLabel,
-  });
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState(
+    content.locales[0]?.languageCode ?? "en",
+  );
+  const selectedLocale =
+    content.locales.find(
+      (localeState) => localeState.languageCode === selectedLanguageCode,
+    ) ?? content.locales[0]!;
+  const [localeDrafts, setLocaleDrafts] = useState<
+    Record<string, MockupLocaleDraft>
+  >(() =>
+    Object.fromEntries(
+      content.locales.map((localeState) => [
+        localeState.languageCode,
+        {
+          title: localeState.title,
+          description: localeState.description,
+          durationMinutes: String(
+            localeState.durationMinutes ?? content.playbackDurationMinutes ?? "",
+          ),
+          statusLabel: localeState.statusLabel,
+        },
+      ]),
+    ),
+  );
+  const draft =
+    localeDrafts[selectedLanguageCode] ??
+    ({
+      title: selectedLocale.title,
+      description: selectedLocale.description,
+      durationMinutes: String(
+        selectedLocale.durationMinutes ?? content.playbackDurationMinutes ?? "",
+      ),
+      statusLabel: selectedLocale.statusLabel,
+    } satisfies MockupLocaleDraft);
   const [metadata, setMetadata] = useState({
     externalKey: content.externalKey,
     ageRange: String(content.ageRange),
     active: content.active,
   });
+  const [metadataSaved, setMetadataSaved] = useState(false);
+  const [playbackDurationMinutes, setPlaybackDurationMinutes] = useState(
+    String(content.playbackDurationMinutes ?? selectedLocale.durationMinutes ?? ""),
+  );
   const [assets, setAssets] = useState({
     audio: selectedLocale.hasAudio ?? false,
     listeningCover: content.hasListeningCover ?? false,
@@ -1164,7 +1202,10 @@ function MockupReferenceContentDetail({
   const [assetTarget, setAssetTarget] = useState<
     "audio" | "listening-cover" | "listing-cover" | "playback-cover" | null
   >(null);
-  const [saved, setSaved] = useState(false);
+  const [savedLanguageCode, setSavedLanguageCode] = useState<string | null>(
+    null,
+  );
+  const [localizationDialogOpen, setLocalizationDialogOpen] = useState(false);
 
   const copy =
     locale === "tr"
@@ -1196,12 +1237,19 @@ function MockupReferenceContentDetail({
           playbackCoverDescription: "Ninni playback ve detay deneyiminde kullanılan kapak.",
           metadata: "İçerik metadata’sı",
           metadataDescription: "Tüm diller tarafından paylaşılan alanlar.",
+          metadataSave: "Ortak metadata’yı kaydet",
           type: "Tür",
           externalKey: "External key",
           ageRange: "Yaş aralığı",
           active: "Aktif",
           visible: "Mobil görünürlük",
           processing: "İşleme",
+          railTitle: "Operasyon özeti",
+          railDescription: "Yayın kararını destekleyen kısa göstergeler.",
+          addLocale: "Dil ekle",
+          addLocaleTitle: "Dil çalışma alanı ekle",
+          addLocaleDescription:
+            "Bu mockup, yeni bir dil çalışma alanı akışını gösterir. Seçenekler sonraki adıma hazırlık olarak sunulur.",
           complete: "Tamamlandı",
           inProgress: "Devam ediyor",
           yes: "Evet",
@@ -1247,12 +1295,19 @@ function MockupReferenceContentDetail({
           playbackCoverDescription: "The cover used in lullaby playback and detail experiences.",
           metadata: "Content metadata",
           metadataDescription: "Fields shared across all locales.",
+          metadataSave: "Save shared metadata",
           type: "Type",
           externalKey: "External key",
           ageRange: "Age range",
           active: "Active",
           visible: "Mobile visibility",
           processing: "Processing",
+          railTitle: "Operational summary",
+          railDescription: "A short set of live indicators for publication decisions.",
+          addLocale: "Add locale",
+          addLocaleTitle: "Add locale workspace",
+          addLocaleDescription:
+            "This mockup presents the new locale workspace flow. Options are shown as a preparation step for the next action.",
           complete: "Complete",
           inProgress: "In progress",
           yes: "Yes",
@@ -1284,6 +1339,40 @@ function MockupReferenceContentDetail({
       setAssets((current) => ({ ...current, [stateKey]: true }));
     }
     setAssetTarget(null);
+  }
+
+  function updateDraft(
+    field: keyof MockupLocaleDraft,
+    value: string,
+    languageCode = selectedLanguageCode,
+  ) {
+    setSavedLanguageCode(null);
+    setLocaleDrafts((current) => ({
+      ...current,
+      [languageCode]: {
+        ...(current[languageCode] ?? {
+          title:
+            content.locales.find((item) => item.languageCode === languageCode)
+              ?.title ?? "",
+          description:
+            content.locales.find((item) => item.languageCode === languageCode)
+              ?.description ?? "",
+          durationMinutes: String(
+            content.locales.find((item) => item.languageCode === languageCode)
+              ?.durationMinutes ?? content.playbackDurationMinutes ?? "",
+          ),
+          statusLabel:
+            content.locales.find((item) => item.languageCode === languageCode)
+              ?.statusLabel ?? "Draft",
+        }),
+        [field]: value,
+      },
+    }));
+  }
+
+  function selectLanguage(languageCode: string) {
+    setSelectedLanguageCode(languageCode);
+    setSavedLanguageCode(null);
   }
 
   function assetReady(kind: "audio" | "listening-cover" | "listing-cover" | "playback-cover") {
@@ -1356,7 +1445,8 @@ function MockupReferenceContentDetail({
           <Input
             value={metadata.externalKey}
             onChange={(event) => {
-              setSaved(false);
+              setMetadataSaved(false);
+              setSavedLanguageCode(null);
               setMetadata((current) => ({ ...current, externalKey: event.target.value }));
             }}
           />
@@ -1368,7 +1458,8 @@ function MockupReferenceContentDetail({
             type="number"
             value={metadata.ageRange}
             onChange={(event) => {
-              setSaved(false);
+              setMetadataSaved(false);
+              setSavedLanguageCode(null);
               setMetadata((current) => ({ ...current, ageRange: event.target.value }));
             }}
           />
@@ -1378,9 +1469,21 @@ function MockupReferenceContentDetail({
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => setMetadata((current) => ({ ...current, active: !current.active }))}
+          onClick={() => {
+            setMetadataSaved(false);
+            setMetadata((current) => ({ ...current, active: !current.active }));
+          }}
         >
           {copy.active}: {metadata.active ? copy.yes : copy.no}
+        </Button>
+      </div>
+      <div className="flex justify-end border-t border-border/60 pt-4">
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => setMetadataSaved(true)}
+        >
+          {metadataSaved ? copy.saved : copy.metadataSave}
         </Button>
       </div>
       <div className="grid gap-3 md:grid-cols-2">
@@ -1391,6 +1494,105 @@ function MockupReferenceContentDetail({
     </FormSection>
   );
 
+  function getLocaleDraft(languageCode: string) {
+    const localeState = content.locales.find(
+      (item) => item.languageCode === languageCode,
+    );
+
+    return (
+      localeDrafts[languageCode] ?? {
+        title: localeState?.title ?? "",
+        description: localeState?.description ?? "",
+        durationMinutes: String(
+          localeState?.durationMinutes ?? content.playbackDurationMinutes ?? "",
+        ),
+        statusLabel: localeState?.statusLabel ?? "Draft",
+      }
+    );
+  }
+
+  function renderLocaleEditor(languageCode: string) {
+    const localeState = content.locales.find(
+      (item) => item.languageCode === languageCode,
+    );
+    if (!localeState) return null;
+
+    const localeDraft = getLocaleDraft(languageCode);
+
+    return (
+      <div className="grid gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="grid gap-1.5 text-sm font-medium text-foreground">
+            {copy.title}
+            <Input
+              value={localeDraft.title}
+              onChange={(event) =>
+                updateDraft("title", event.target.value, languageCode)
+              }
+            />
+          </label>
+          {!isLullaby ? (
+            <label className="grid gap-1.5 text-sm font-medium text-foreground md:col-span-2">
+              {copy.descriptionLabel}
+              <Textarea
+                value={localeDraft.description}
+                onChange={(event) =>
+                  updateDraft("description", event.target.value, languageCode)
+                }
+              />
+            </label>
+          ) : null}
+        </div>
+
+        {!isLullaby ? (
+          <div className="grid gap-3 md:grid-cols-2">
+            {renderAssetCard("audio", copy.audio)}
+            <label className="grid gap-1.5 rounded-2xl border border-border/70 bg-background/80 p-4 text-sm font-medium text-foreground">
+              {copy.duration}
+              <Input
+                min="0"
+                type="number"
+                value={localeDraft.durationMinutes}
+                onChange={(event) =>
+                  updateDraft("durationMinutes", event.target.value, languageCode)
+                }
+              />
+            </label>
+          </div>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-4">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              updateDraft(
+                "statusLabel",
+                localeDraft.statusLabel === "Published" ? "Archived" : "Published",
+                languageCode,
+              )
+            }
+          >
+            {localeDraft.statusLabel === "Published" ? copy.archive : copy.publish}
+          </Button>
+          <MockupStatusPill
+            tone={localeState.isProcessingComplete === false ? "warning" : "success"}
+          >
+            {copy.processing}: {localeState.isProcessingComplete === false ? copy.inProgress : copy.complete}
+          </MockupStatusPill>
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setSavedLanguageCode(languageCode)}
+          >
+            {savedLanguageCode === languageCode ? copy.saved : copy.save}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ContentPageShell
       eyebrow={copy.eyebrow}
@@ -1399,7 +1601,8 @@ function MockupReferenceContentDetail({
       showHeader={false}
       aside={
         <TaskRail
-          title={isLullaby ? copy.playback : copy.localeWorkspace}
+          title={copy.railTitle}
+          description={copy.railDescription}
           variant="detail"
           stats={[
             {
@@ -1414,7 +1617,7 @@ function MockupReferenceContentDetail({
             },
             {
               label: copy.duration,
-              value: `${draft.durationMinutes || "—"} min`,
+              value: `${(isLullaby ? playbackDurationMinutes : draft.durationMinutes) || "—"} min`,
             },
           ]}
         />
@@ -1428,75 +1631,34 @@ function MockupReferenceContentDetail({
             <Button asChild type="button" size="sm" variant="outline">
               <Link to="/labs/mockups/contents">{copy.back}</Link>
             </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setLocalizationDialogOpen(true)}
+            >
+              <Plus className="size-4" />
+              {copy.addLocale}
+            </Button>
             <MockupStatusPill tone={selectedLocale.isPublished ? "success" : "warning"}>
               {draft.statusLabel}
             </MockupStatusPill>
           </div>
         }
-        title={`${copy.localeWorkspace} · ${selectedLocale.languageCode.toUpperCase()}`}
+        title={copy.localeWorkspace}
       >
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-1.5 text-sm font-medium text-foreground">
-            {copy.title}
-            <Input
-              value={draft.title}
-              onChange={(event) => {
-                setSaved(false);
-                setDraft((current) => ({ ...current, title: event.target.value }));
-              }}
-            />
-          </label>
-          {!isLullaby ? (
-            <label className="grid gap-1.5 text-sm font-medium text-foreground md:col-span-2">
-              {copy.descriptionLabel}
-              <Textarea
-                value={draft.description}
-                onChange={(event) => {
-                  setSaved(false);
-                  setDraft((current) => ({ ...current, description: event.target.value }));
-                }}
-              />
-            </label>
-          ) : null}
-        </div>
-
-        {!isLullaby ? (
-          <div className="grid gap-3 md:grid-cols-2">
-            {renderAssetCard("audio", copy.audio)}
-            <label className="grid gap-1.5 rounded-2xl border border-border/70 bg-background/80 p-4 text-sm font-medium text-foreground">
-              {copy.duration}
-              <Input
-                min="0"
-                type="number"
-                value={draft.durationMinutes}
-                onChange={(event) => {
-                  setSaved(false);
-                  setDraft((current) => ({ ...current, durationMinutes: event.target.value }));
-                }}
-              />
-            </label>
-          </div>
-        ) : null}
-
-        <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-4">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => setDraft((current) => ({
-              ...current,
-              statusLabel: current.statusLabel === "Published" ? "Archived" : "Published",
-            }))}
-          >
-            {draft.statusLabel === "Published" ? copy.archive : copy.publish}
-          </Button>
-          <MockupStatusPill tone={selectedLocale.isProcessingComplete === false ? "warning" : "success"}>
-            {copy.processing}: {selectedLocale.isProcessingComplete === false ? copy.inProgress : copy.complete}
-          </MockupStatusPill>
-          <Button type="button" size="sm" onClick={() => setSaved(true)}>
-            {saved ? copy.saved : copy.save}
-          </Button>
-        </div>
+        <LanguageTabs
+          compact
+          items={content.locales.map((localeState) => ({
+            code: localeState.languageCode,
+            label: getMockupLanguageLabel(localeState.languageCode, locale),
+            tone: getReadinessTone(localeState),
+          }))}
+          listLabel={`${content.typeLabel} locale workspaces`}
+          value={selectedLanguageCode}
+          onValueChange={selectLanguage}
+          renderContent={(item) => renderLocaleEditor(item.code)}
+        />
       </FormSection>
 
       {isLullaby ? (
@@ -1508,10 +1670,9 @@ function MockupReferenceContentDetail({
               <Input
                 min="0"
                 type="number"
-                value={draft.durationMinutes}
+                value={playbackDurationMinutes}
                 onChange={(event) => {
-                  setSaved(false);
-                  setDraft((current) => ({ ...current, durationMinutes: event.target.value }));
+                  setPlaybackDurationMinutes(event.target.value);
                 }}
               />
             </label>
@@ -1527,6 +1688,39 @@ function MockupReferenceContentDetail({
           </div>
         </FormSection>
       ) : null}
+
+      <Dialog
+        open={localizationDialogOpen}
+        onOpenChange={setLocalizationDialogOpen}
+      >
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>{copy.addLocaleTitle}</DialogTitle>
+            <DialogDescription>{copy.addLocaleDescription}</DialogDescription>
+          </DialogHeader>
+          <DialogBody className="grid gap-3">
+            {content.locales.map((localeState) => (
+              <Button
+                key={localeState.languageCode}
+                type="button"
+                variant="outline"
+                disabled
+              >
+                {getMockupLanguageLabel(localeState.languageCode, locale)} · {copy.saved}
+              </Button>
+            ))}
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setLocalizationDialogOpen(false)}
+            >
+              {copy.close}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={assetTarget !== null} onOpenChange={(open) => !open && setAssetTarget(null)}>
         <DialogContent className="sm:max-w-xl">
