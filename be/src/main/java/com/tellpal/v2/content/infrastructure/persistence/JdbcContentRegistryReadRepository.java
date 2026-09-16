@@ -33,6 +33,11 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                     c.type,
                     c.external_key,
                     c.page_count,
+                    case
+                        when c.type = 'MEDITATION' then cl.duration_minutes
+                        when c.type = 'LULLABY' then lullaby_playback.duration_minutes
+                        else null
+                    end as duration_minutes,
                     c.is_active,
                     cl.title,
                     cl.body_text,
@@ -99,6 +104,8 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                     on content_processing.content_id = c.id
                    and content_processing.target_scope = 'CONTENT'
                    and content_processing.processing_kind = 'DELIVERY'
+                left join lullaby_playbacks lullaby_playback
+                    on lullaby_playback.content_id = c.id
             )
             """;
 
@@ -150,6 +157,11 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                             c.type,
                             c.external_key,
                             c.page_count,
+                            case
+                                when c.type = 'MEDITATION' then cl.duration_minutes
+                                when c.type = 'LULLABY' then lullaby_playback.duration_minutes
+                                else null
+                            end as duration_minutes,
                             c.is_active,
                             cl.title,
                             cl.description,
@@ -173,6 +185,8 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                             on content_processing.content_id = c.id
                            and content_processing.target_scope = 'CONTENT'
                            and content_processing.processing_kind = 'DELIVERY'
+                        left join lullaby_playbacks lullaby_playback
+                            on lullaby_playback.content_id = c.id
                         left join story_pages sp
                             on sp.content_id = c.id
                         left join story_page_localizations spl
@@ -215,6 +229,7 @@ public class JdbcContentRegistryReadRepository implements ContentRegistryReadRep
                 ContentApiType.valueOf(resultSet.getString("type")),
                 resultSet.getString("external_key"),
                 resultSet.getObject("page_count", Integer.class),
+                resultSet.getObject("duration_minutes", Integer.class),
                 resultSet.getBoolean("is_active"),
                 resultSet.getString("title"),
                 resultSet.getString("description"),

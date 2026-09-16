@@ -20,6 +20,11 @@ import {
   meditationContentViewModel,
   storyContentViewModel,
 } from "@/features/contents/test/fixtures";
+import type {
+  AdminContentRegistryItem,
+  ContentRegistryReadiness,
+  ContentType,
+} from "@/features/contents/api/content-admin";
 import {
   AuthContext,
   type AuthContextValue,
@@ -31,6 +36,10 @@ import type { AdminSessionPayload, ApiProblemDetail } from "@/types/api";
 const contentHookMocks = vi.hoisted(() => ({
   useContentList: vi.fn(),
   useContentDetail: vi.fn(),
+}));
+const contentRegistryHookMocks = vi.hoisted(() => ({
+  useContentRegistry: vi.fn(),
+  useContentRegistryCounts: vi.fn(),
 }));
 
 const categoryHookMocks = vi.hoisted(() => ({
@@ -68,6 +77,11 @@ vi.mock("@/features/contents/queries/use-content-list", () => ({
 
 vi.mock("@/features/contents/queries/use-content-detail", () => ({
   useContentDetail: contentHookMocks.useContentDetail,
+}));
+
+vi.mock("@/features/contents/queries/use-content-registry", () => ({
+  useContentRegistry: contentRegistryHookMocks.useContentRegistry,
+  useContentRegistryCounts: contentRegistryHookMocks.useContentRegistryCounts,
 }));
 
 vi.mock("@/features/categories/queries/use-category-list", () => ({
@@ -133,6 +147,68 @@ function makeContentListState() {
       meditationContentViewModel,
       inactiveContentViewModel,
     ],
+    isLoading: false,
+    isFetching: false,
+    problem: null,
+    refetch: vi.fn(),
+  };
+}
+
+function makeRegistryItem(
+  content: (typeof contentReadViewModels)[number],
+  selectedLanguage: string,
+  readiness: ContentRegistryReadiness,
+): AdminContentRegistryItem {
+  const localization = content.localizations.find(
+    (entry) => entry.languageCode === selectedLanguage,
+  );
+
+  return {
+    contentId: content.summary.id,
+    type: content.summary.type,
+    externalKey: content.summary.externalKey,
+    pageCount: content.summary.pageCount,
+    durationMinutes:
+      content.summary.type === "LULLABY"
+        ? (content.playback?.durationMinutes ?? null)
+        : (localization?.durationMinutes ?? null),
+    selectedLanguage,
+    title: localization?.title ?? null,
+    readiness,
+    blockers: [],
+    lastEditedAt: "2026-03-17T09:00:00Z",
+  };
+}
+
+function makeContentRegistryState(params: {
+  type?: ContentType;
+  readiness?: ContentRegistryReadiness;
+  q?: string;
+}) {
+  const items = [
+    makeRegistryItem(storyContentViewModel, "tr", "READY_TO_PUBLISH"),
+    makeRegistryItem(meditationContentViewModel, "de", "ACTION_REQUIRED"),
+    makeRegistryItem(inactiveContentViewModel, "tr", "ACTION_REQUIRED"),
+  ].filter((item) => {
+    const matchesType = !params.type || item.type === params.type;
+    const matchesReadiness =
+      !params.readiness || item.readiness === params.readiness;
+    const query = params.q?.trim().toLowerCase() ?? "";
+    const matchesQuery =
+      query.length === 0 ||
+      item.externalKey.toLowerCase().includes(query) ||
+      item.title?.toLowerCase().includes(query) ||
+      `${item.contentId}`.includes(query);
+    return matchesType && matchesReadiness && matchesQuery;
+  });
+
+  return {
+    registry: {
+      items,
+      page: 0,
+      size: 25,
+      totalItems: items.length,
+    },
     isLoading: false,
     isFetching: false,
     problem: null,
@@ -361,6 +437,8 @@ beforeEach(() => {
   });
   contentHookMocks.useContentList.mockReset();
   contentHookMocks.useContentDetail.mockReset();
+  contentRegistryHookMocks.useContentRegistry.mockReset();
+  contentRegistryHookMocks.useContentRegistryCounts.mockReset();
   categoryHookMocks.useCategoryList.mockReset();
   categoryHookMocks.useCategoryDetail.mockReset();
   categoryHookMocks.useCategoryLocalizations.mockReset();
@@ -374,6 +452,18 @@ beforeEach(() => {
   uploadAssetHookMocks.useUploadAsset.mockReset();
   contentHookMocks.useContentList.mockReturnValue(makeContentListState());
   contentHookMocks.useContentDetail.mockReturnValue(makeContentDetailState());
+  contentRegistryHookMocks.useContentRegistry.mockImplementation(
+    (params: {
+      type?: ContentType;
+      readiness?: ContentRegistryReadiness;
+      q?: string;
+    }) => makeContentRegistryState(params),
+  );
+  contentRegistryHookMocks.useContentRegistryCounts.mockReturnValue({
+    STORY: 1,
+    MEDITATION: 1,
+    LULLABY: 1,
+  });
   categoryHookMocks.useCategoryList.mockReturnValue(makeCategoryListState());
   categoryHookMocks.useCategoryDetail.mockReturnValue(
     makeCategoryDetailState(),
@@ -463,12 +553,12 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /content studio/i }),
+      await screen.findByRole("heading", { name: /^contents$/i, level: 1 }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Content type")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /^meditation$/i }),
+      screen.getByRole("tab", { name: /meditations/i }),
     ).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/^language$/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/editorial notes/i)).not.toBeInTheDocument();
   });
 
@@ -552,6 +642,31 @@ describe("CMS router auth flow", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("opens the requested locale and keeps it on detail handoff links", async () => {
+    renderRouter({
+      initialEntries: ["/contents/42?language=tr"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: /aksam bahcesi/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /open story pages/i }),
+    ).toHaveAttribute("href", "/contents/42/story-pages?language=tr");
+    expect(
+      screen.getByRole("link", { name: /manage source images/i }),
+    ).toHaveAttribute(
+      "href",
+      "/contents/42/story-pages?view=source-images&language=tr",
+    );
+  });
+
   it("navigates from content detail preview to the selected story page editor", async () => {
     const { router } = renderRouter({
       initialEntries: ["/contents/42"],
@@ -619,26 +734,67 @@ describe("CMS router auth flow", () => {
       },
     });
 
-    await screen.findByRole("heading", { name: /content studio/i });
+    await screen.findByRole("heading", { name: /^contents$/i, level: 1 });
 
     expect(
-      screen.queryByRole("button", { name: /^audio story$/i }),
+      screen.queryByRole("tab", { name: /audio story/i }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /^meditation$/i }));
+    fireEvent.mouseDown(screen.getByRole("tab", { name: /meditations/i }));
 
-    expect(screen.getByText("Regenraum Pause")).toBeInTheDocument();
-    expect(screen.queryByText("Evening Garden")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Regenraum Pause")).toBeInTheDocument();
+      expect(screen.queryByText("Evening Garden")).not.toBeInTheDocument();
+    });
     expect(
-      screen.getByText(/Meditation \| All states \| 1 \/ 3 records/i),
+      screen.getByText(/Meditations · 1 records · TR/i),
     ).toBeInTheDocument();
+  });
 
-    fireEvent.click(screen.getByRole("button", { name: /^inactive$/i }));
+  it("preserves registry query context through detail and back navigation", async () => {
+    const { router } = renderRouter({
+      initialEntries: [
+        "/contents?type=STORY&language=tr&readiness=READY_TO_PUBLISH&q=evening&page=2",
+      ],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
 
-    expect(screen.queryByText("Rain Room Reset")).not.toBeInTheDocument();
-    expect(
-      screen.getByText(/Meditation \| Inactive \| 0 \/ 3 records/i),
-    ).toBeInTheDocument();
+    await screen.findByRole("heading", { name: /^contents$/i, level: 1 });
+    expect(contentRegistryHookMocks.useContentRegistry).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        language: "tr",
+        type: "STORY",
+        readiness: "READY_TO_PUBLISH",
+        q: "evening",
+        page: 2,
+        size: 25,
+      }),
+    );
+
+    fireEvent.click(screen.getByText("Aksam Bahcesi"));
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/contents/1");
+      expect(router.state.location.search).toBe(
+        "?type=STORY&language=tr&readiness=READY_TO_PUBLISH&q=evening&page=2",
+      );
+    });
+
+    fireEvent.click(
+      await screen.findByRole("link", { name: /return to content registry/i }),
+    );
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/contents");
+      expect(router.state.location.search).toBe(
+        "?type=STORY&language=tr&readiness=READY_TO_PUBLISH&q=evening&page=2",
+      );
+    });
   });
 
   it("filters category registry rows by type, access, and state", async () => {
@@ -715,7 +871,7 @@ describe("CMS router auth flow", () => {
 
     expect(
       await screen.findByRole("heading", {
-        name: /content studio prototypes/i,
+        name: /contents registry explorations/i,
       }),
     ).toBeInTheDocument();
     expect(

@@ -159,6 +159,13 @@ describe("Content integration", () => {
           return jsonResponse(session);
         }
 
+        if (
+          url.pathname === "/api/admin/content-registry" &&
+          method === "GET"
+        ) {
+          return jsonResponse({ items: [], page: 0, size: 25, totalItems: 0 });
+        }
+
         if (url.pathname === "/api/admin/contents" && method === "GET") {
           return jsonResponse(
             createdRecord ? [createdRecord, ...listRecords] : listRecords,
@@ -172,7 +179,6 @@ describe("Content integration", () => {
             ageRange: number | null;
             active: boolean;
           };
-
           const createdContent: AdminContentResponse = {
             contentId: 99,
             type: body.type as AdminContentResponse["type"],
@@ -182,6 +188,7 @@ describe("Content integration", () => {
             pageCount: body.type === "STORY" ? 0 : null,
             textlessCoverMediaId: null,
             listeningCoverMediaId: null,
+            listingCoverMediaId: null,
           };
           createdRecord = {
             ...createdContent,
@@ -235,7 +242,7 @@ describe("Content integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /content studio/i });
+    await screen.findByRole("button", { name: /^create content$/i });
 
     fireEvent.click(screen.getByRole("button", { name: /^create content$/i }));
 
@@ -246,9 +253,11 @@ describe("Content integration", () => {
     fireEvent.change(within(dialog).getByLabelText(/age range/i), {
       target: { value: "4" },
     });
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: /^create content$/i }),
-    );
+    await act(async () => {
+      fireEvent.click(
+        within(dialog).getByRole("button", { name: /^create content$/i }),
+      );
+    });
 
     await waitFor(() => {
       expect(window.location.pathname).toBe("/contents/99");
@@ -269,6 +278,13 @@ describe("Content integration", () => {
 
         if (url.pathname === "/api/admin/auth/refresh" && method === "POST") {
           return jsonResponse(session);
+        }
+
+        if (
+          url.pathname === "/api/admin/content-registry" &&
+          method === "GET"
+        ) {
+          return jsonResponse({ items: [], page: 0, size: 25, totalItems: 0 });
         }
 
         if (url.pathname === "/api/admin/contents" && method === "GET") {
@@ -300,7 +316,7 @@ describe("Content integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /content studio/i });
+    await screen.findByRole("button", { name: /^create content$/i });
 
     fireEvent.click(screen.getByRole("button", { name: /^create content$/i }));
 
@@ -329,6 +345,19 @@ describe("Content integration", () => {
 
         if (url.pathname === "/api/admin/auth/refresh" && method === "POST") {
           return jsonResponse(session);
+        }
+
+        if (
+          url.pathname === "/api/admin/content-registry" &&
+          method === "GET"
+        ) {
+          return problemResponse(
+            401,
+            "Authentication failed",
+            "Access token is expired.",
+            "auth_failed",
+            "/api/admin/content-registry",
+          );
         }
 
         if (url.pathname === "/api/admin/contents" && method === "GET") {

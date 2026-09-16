@@ -48,6 +48,7 @@ public interface ContentRegistryReadRepository {
             ContentApiType type,
             String externalKey,
             Integer pageCount,
+            Integer durationMinutes,
             boolean active,
             String title,
             String description,

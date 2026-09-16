@@ -105,6 +105,26 @@ describe("ContentLocalizationTabs", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("keeps a requested missing locale on the create-localization path", () => {
+    render(
+      <ContentLocalizationTabs
+        content={storyContentViewModel}
+        initialLanguageCode="de"
+      />,
+    );
+
+    expect(
+      screen.getByText(/DE is not available for this content yet/i),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: /create DE localization/i }),
+    ).toBeVisible();
+    expect(screen.getByRole("tab", { name: /english/i })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  });
+
   it("shows an empty-state workflow when the content has no localizations", () => {
     render(<ContentLocalizationTabs content={inactiveContentViewModel} />);
 

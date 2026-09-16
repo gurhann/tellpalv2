@@ -5,11 +5,7 @@ import { apiClient } from "@/lib/http/client";
 const basePath = "/api/admin/contents";
 const registryPath = "/api/admin/content-registry";
 
-const contentTypeValues = [
-  "STORY",
-  "MEDITATION",
-  "LULLABY",
-] as const;
+const contentTypeValues = ["STORY", "MEDITATION", "LULLABY"] as const;
 
 const localizationStatusValues = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
 const processingStatusValues = [
@@ -102,12 +98,15 @@ export const adminContentLocalizationResponseSchema = z.object({
   processingStatus: contentProcessingStatusSchema,
   publishedAt: z.string().nullable(),
   visibleToMobile: z.boolean(),
-  narration: z.object({
-    audioMediaId: z.number().int().positive(),
-    durationMinutes: z.number().int().nonnegative(),
-    processingStatus: contentProcessingStatusSchema.nullable(),
-    processingError: z.string().nullable(),
-  }).nullable().optional(),
+  narration: z
+    .object({
+      audioMediaId: z.number().int().positive(),
+      durationMinutes: z.number().int().nonnegative(),
+      processingStatus: contentProcessingStatusSchema.nullable(),
+      processingError: z.string().nullable(),
+    })
+    .nullable()
+    .optional(),
 });
 
 export const adminContentReadResponseSchema = adminContentResponseSchema.extend(
@@ -167,6 +166,7 @@ export const adminContentRegistryItemSchema = z.object({
   type: contentTypeSchema,
   externalKey: z.string(),
   pageCount: z.number().int().nonnegative().nullable(),
+  durationMinutes: z.number().int().nonnegative().nullable(),
   selectedLanguage: z.string().min(1),
   title: z.string().nullable(),
   readiness: contentRegistryReadinessSchema,
@@ -194,8 +194,12 @@ export type AdminContentRegistryItem = z.infer<
   typeof adminContentRegistryItemSchema
 >;
 export type LullabyInstrument = z.infer<typeof lullabyInstrumentSchema>;
-export type InstrumentCatalogOption = z.infer<typeof instrumentCatalogOptionSchema>;
-export type LullabyPlaybackResponse = z.infer<typeof lullabyPlaybackResponseSchema>;
+export type InstrumentCatalogOption = z.infer<
+  typeof instrumentCatalogOptionSchema
+>;
+export type LullabyPlaybackResponse = z.infer<
+  typeof lullabyPlaybackResponseSchema
+>;
 export type ContentRegistryQuery = {
   language: string;
   type?: ContentType;
@@ -250,18 +254,24 @@ export const contentAdminApi = {
     contentId: number,
     input: { audioMediaId: number; durationMinutes: number },
   ) {
-    return apiClient.put<LullabyPlaybackResponse>(`${basePath}/${contentId}/playback`, {
-      body: input,
-      responseSchema: lullabyPlaybackResponseSchema,
-    });
+    return apiClient.put<LullabyPlaybackResponse>(
+      `${basePath}/${contentId}/playback`,
+      {
+        body: input,
+        responseSchema: lullabyPlaybackResponseSchema,
+      },
+    );
   },
   listLullabyInstruments(contentId: number, languageCode?: string) {
     const query = languageCode
       ? `?languageCode=${encodeURIComponent(languageCode)}`
       : "";
-    return apiClient.get<LullabyInstrument[]>(`${basePath}/${contentId}/instruments${query}`, {
-      responseSchema: z.array(lullabyInstrumentSchema),
-    });
+    return apiClient.get<LullabyInstrument[]>(
+      `${basePath}/${contentId}/instruments${query}`,
+      {
+        responseSchema: z.array(lullabyInstrumentSchema),
+      },
+    );
   },
   replaceLullabyInstruments(
     contentId: number,
@@ -271,10 +281,13 @@ export const contentAdminApi = {
     const query = languageCode
       ? `?languageCode=${encodeURIComponent(languageCode)}`
       : "";
-    return apiClient.put<LullabyInstrument[]>(`${basePath}/${contentId}/instruments${query}`, {
-      body: { instrumentCodes },
-      responseSchema: z.array(lullabyInstrumentSchema),
-    });
+    return apiClient.put<LullabyInstrument[]>(
+      `${basePath}/${contentId}/instruments${query}`,
+      {
+        body: { instrumentCodes },
+        responseSchema: z.array(lullabyInstrumentSchema),
+      },
+    );
   },
   listInstrumentCatalog(languageCode: string) {
     return apiClient.get<InstrumentCatalogOption[]>(

@@ -53,7 +53,10 @@ function updateContentDetailCache(
   savedContent: AdminContentResponse,
 ) {
   return {
-    ...mapAdminContentSummaryToRead(savedContent, existingRecord?.localizations),
+    ...mapAdminContentSummaryToRead(
+      savedContent,
+      existingRecord?.localizations,
+    ),
     playback: existingRecord?.playback ?? null,
   };
 }
@@ -92,7 +95,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
         updateContentDetailCache(record, savedContent),
       );
 
-      await Promise.all([
+      const refreshes = Promise.all([
         queryClient.invalidateQueries({
           queryKey: queryKeys.contents.lists(),
         }),
@@ -105,6 +108,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
       ]);
 
       options.onSuccess?.(savedContent);
+      void refreshes.catch(() => undefined);
     },
   });
 }

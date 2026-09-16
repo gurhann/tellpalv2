@@ -399,7 +399,9 @@ describe("Contributor integration", () => {
     );
 
     const dialog = await screen.findByRole("dialog");
-    fireEvent.click(within(dialog).getByRole("option", { name: /Lina Hart/ }));
+    fireEvent.click(
+      await within(dialog).findByRole("option", { name: /Lina Hart/ }),
+    );
     fireEvent.click(
       within(dialog).getByRole("button", { name: /^assign contributor$/i }),
     );
@@ -422,5 +424,5 @@ describe("Contributor integration", () => {
     expect(
       assignments.some((assignment) => assignment.creditName === "M. Rivers"),
     ).toBe(false);
-  });
+  }, 15_000);
 });

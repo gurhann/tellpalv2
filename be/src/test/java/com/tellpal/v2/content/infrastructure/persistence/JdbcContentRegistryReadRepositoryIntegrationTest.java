@@ -163,6 +163,35 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
                 .containsExactlyInAnyOrder(pendingId, processingId, failedId, missingId);
     }
 
+    @Test
+    void projectsMeditationLocalizationAndLullabyPlaybackDurations() {
+        long meditationId = insertContent("MEDITATION", "registry-meditation-duration", true);
+        insertLocalization(meditationId, "DRAFT", "COMPLETED", "Meditasyon", "Aciklama", null);
+        jdbcTemplate.update(
+                "update content_localizations set duration_minutes = ? where content_id = ?",
+                7,
+                meditationId);
+
+        long lullabyId = insertContent("LULLABY", "registry-lullaby-duration", true);
+        insertLocalization(lullabyId, "PUBLISHED", "PENDING", "Ninni", null, null);
+        long audioAssetId = insertAudioAsset();
+        jdbcTemplate.update(
+                "insert into lullaby_playbacks (content_id, audio_media_id, duration_minutes) values (?, ?, ?)",
+                lullabyId,
+                audioAssetId,
+                11);
+
+        assertThat(contentRegistryReadRepository.findSnapshots(
+                List.of(meditationId, lullabyId),
+                LanguageCode.TR))
+                .extracting(
+                        ContentRegistryReadRepository.RegistrySnapshotRow::contentId,
+                        ContentRegistryReadRepository.RegistrySnapshotRow::durationMinutes)
+                .containsExactly(
+                        org.assertj.core.groups.Tuple.tuple(meditationId, 7),
+                        org.assertj.core.groups.Tuple.tuple(lullabyId, 11));
+    }
+
     private long insertContent(String type, String externalKey, boolean active) {
         return jdbcTemplate.queryForObject("""
                         insert into contents (type, external_key, is_active, page_count)
@@ -174,6 +203,16 @@ class JdbcContentRegistryReadRepositoryIntegrationTest extends PostgresIntegrati
                 externalKey,
                 active,
                 type);
+    }
+
+    private long insertAudioAsset() {
+        return jdbcTemplate.queryForObject("""
+                        insert into media_assets (provider, object_path, media_type, kind)
+                        values ('LOCAL', ?, 'AUDIO', 'ORIGINAL_AUDIO')
+                        returning id
+                        """,
+                Long.class,
+                "registry-audio-" + System.nanoTime());
     }
 
     private void insertLocalization(

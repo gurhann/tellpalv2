@@ -19,6 +19,7 @@ type ContentReadResponse = {
   pageCount: number | null;
   textlessCoverMediaId: number | null;
   listeningCoverMediaId: number | null;
+  listingCoverMediaId: number | null;
   localizations: Array<{
     contentId: number;
     languageCode: string;
@@ -84,10 +85,11 @@ test("create, edit, and publish flows work in the browser", async ({
       pageCount: 2,
       textlessCoverMediaId: null,
       listeningCoverMediaId: null,
+      listingCoverMediaId: null,
       localizations: [
         {
           contentId: 1,
-          languageCode: "en",
+          languageCode: "tr",
           title: "Evening Garden",
           description: "A calm walk through a moonlit garden.",
           bodyText: null,
@@ -110,10 +112,11 @@ test("create, edit, and publish flows work in the browser", async ({
       pageCount: null,
       textlessCoverMediaId: null,
       listeningCoverMediaId: null,
+      listingCoverMediaId: null,
       localizations: [
         {
           contentId: 2,
-          languageCode: "de",
+          languageCode: "tr",
           title: "Regenraum Pause",
           description: "Kurze Atemubung mit Regenatmosphare.",
           bodyText: "Atme vier Takte lang ein und entspanne die Schultern.",
@@ -127,8 +130,93 @@ test("create, edit, and publish flows work in the browser", async ({
         },
       ],
     },
+    {
+      contentId: 3,
+      type: "LULLABY",
+      externalKey: "lullaby.moon-softly",
+      active: true,
+      ageRange: 3,
+      pageCount: null,
+      textlessCoverMediaId: null,
+      listeningCoverMediaId: null,
+      listingCoverMediaId: null,
+      playback: {
+        audioMediaId: 3,
+        durationMinutes: 11,
+        processingStatus: "COMPLETED",
+        processingError: null,
+        instruments: [],
+      },
+      localizations: [],
+    },
   ];
   let createdDetail: ContentReadResponse | null = null;
+
+  await page.route("**/api/admin/content-registry**", async (route) => {
+    const url = new URL(route.request().url());
+    const type = url.searchParams.get("type") ?? "STORY";
+    const language = url.searchParams.get("language") ?? "tr";
+    const readiness = url.searchParams.get("readiness");
+    const page = Number(url.searchParams.get("page") ?? "0");
+    const size = Number(url.searchParams.get("size") ?? "25");
+    const query = (url.searchParams.get("q") ?? "").trim().toLowerCase();
+    const records = createdDetail ? [createdDetail, ...baseList] : baseList;
+    const filteredItems = records
+      .filter((record) => record.type === type)
+      .filter((record) => {
+        if (!readiness) return true;
+        return record.contentId === 1
+          ? readiness === "PUBLISHED"
+          : readiness === "ACTION_REQUIRED";
+      })
+      .filter((record) => {
+        if (!query) return true;
+        const localization = record.localizations.find(
+          (candidate) => candidate.languageCode === language,
+        );
+        return [
+          record.externalKey,
+          localization?.title,
+          `${record.contentId}`,
+        ].some((value) => value?.toLowerCase().includes(query));
+      })
+      .map((record) => {
+        const localization = record.localizations.find(
+          (candidate) => candidate.languageCode === language,
+        );
+
+        return {
+          contentId: record.contentId,
+          type: record.type,
+          externalKey: record.externalKey,
+          pageCount: record.pageCount,
+          durationMinutes:
+            record.type === "LULLABY"
+              ? record.playback?.durationMinutes ?? null
+              : localization?.durationMinutes ?? null,
+          selectedLanguage: language,
+          title: localization?.title ?? null,
+          readiness: record.contentId === 1 ? "PUBLISHED" : "ACTION_REQUIRED",
+          blockers:
+            record.contentId === 1
+              ? []
+              : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
+          lastEditedAt: "2026-03-17T09:00:00Z",
+        };
+      });
+    const items = filteredItems.slice(page * size, page * size + size);
+
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        items,
+        page,
+        size,
+        totalItems: filteredItems.length,
+      }),
+    });
+  });
 
   await page.route("**/api/admin/auth/login", async (route) => {
     await route.fulfill({
@@ -177,6 +265,7 @@ test("create, edit, and publish flows work in the browser", async ({
         pageCount: null,
         textlessCoverMediaId: null,
         listeningCoverMediaId: null,
+        listingCoverMediaId: null,
         localizations: [],
       };
 
@@ -192,6 +281,7 @@ test("create, edit, and publish flows work in the browser", async ({
           pageCount: null,
           textlessCoverMediaId: null,
           listeningCoverMediaId: null,
+          listingCoverMediaId: null,
         }),
       });
       return;
@@ -258,6 +348,7 @@ test("create, edit, and publish flows work in the browser", async ({
           pageCount: createdDetail.pageCount,
           textlessCoverMediaId: createdDetail.textlessCoverMediaId,
           listeningCoverMediaId: createdDetail.listeningCoverMediaId,
+          listingCoverMediaId: createdDetail.listingCoverMediaId,
         }),
       });
       return;
@@ -298,7 +389,7 @@ test("create, edit, and publish flows work in the browser", async ({
         audioMediaId: body.audioMediaId ?? null,
         durationMinutes: body.durationMinutes ?? null,
         status: body.status,
-        processingStatus: body.processingStatus,
+        processingStatus: body.processingStatus ?? "PENDING",
         publishedAt: body.publishedAt ?? null,
         visibleToMobile: false,
       };
@@ -378,6 +469,22 @@ test("create, edit, and publish flows work in the browser", async ({
     });
   });
 
+  await page.route("**/api/admin/contents/99/instruments**", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([]),
+    });
+  });
+
+  await page.route("**/api/admin/instrument-catalog**", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([]),
+    });
+  });
+
   await page.route("**/api/admin/media/*", async (route) => {
     const assetId = Number(route.request().url().split("/").pop());
     const asset = mediaAssets.find((entry) => entry.assetId === assetId);
@@ -438,29 +545,37 @@ test("create, edit, and publish flows work in the browser", async ({
   await page.getByLabel(/password/i).fill("test1234");
   await page.getByRole("button", { name: /^sign in$/i }).click();
   await expect(
-    page.getByRole("heading", { name: /content studio/i }),
+    page.getByRole("heading", { name: /^contents$/i, level: 1 }),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: /^story$/i })).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: /^meditation$/i }),
-  ).toBeVisible();
+  await expect(page.getByRole("tab", { name: /^stories/i })).toBeVisible();
+  await expect(page.getByRole("tab", { name: /^meditations/i })).toBeVisible();
 
-  await page.getByRole("button", { name: /^meditation$/i }).click();
+  await page.getByRole("tab", { name: /^meditations/i }).click();
   await expect(page.getByText("Regenraum Pause")).toBeVisible();
   await expect(page.getByText("Evening Garden")).toHaveCount(0);
-  await expect(
-    page.getByText(/Meditation \| All states \| 1 \/ 2 records/i),
-  ).toBeVisible();
+  await expect(page.getByText(/Meditations · 1 records · TR/i)).toBeVisible();
+
+  await page.getByRole("tab", { name: /^lullabies/i }).click();
+  await expect(page.getByText("11 min")).toBeVisible();
 
   await page.getByRole("button", { name: /^create content$/i }).click();
-  await page.getByLabel(/content type/i).click();
+  const contentDialog = page.getByRole("dialog");
+  await contentDialog.getByLabel(/content type/i).click();
   await page.getByRole("option", { name: /^lullaby$/i }).click();
-  await page.getByLabel(/external key/i).fill("lullaby.smoke-harbor");
-  await page.getByLabel(/age range/i).fill("3");
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: /^create content$/i })
-    .click();
+  await contentDialog
+    .getByLabel(/external key/i)
+    .fill("lullaby.smoke-harbor");
+  await contentDialog.getByLabel(/age range/i).fill("3");
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/admin/contents/99") &&
+        response.request().method() === "GET",
+    ),
+    contentDialog
+      .getByRole("button", { name: /^create content$/i })
+      .click(),
+  ]);
 
   await expect(
     page.getByRole("heading", { name: /content #99/i }),
@@ -491,7 +606,7 @@ test("create, edit, and publish flows work in the browser", async ({
   ).toHaveCount(0);
 
   await page
-    .getByRole("region", { name: /localization workspace/i })
+    .getByRole("region", { name: /locale workspace/i })
     .getByRole("button", { name: /create first localization/i })
     .click();
   const localizationDialog = page.getByRole("dialog");

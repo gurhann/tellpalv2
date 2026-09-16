@@ -70,11 +70,15 @@ export function LanguageTabs({
       value={resolvedValue}
       onValueChange={onValueChange}
     >
-      <div className="overflow-x-auto pb-2">
+      <div
+        className={cn(compact ? "overflow-visible" : "overflow-x-auto", "pb-2")}
+      >
         <TabsList
           aria-label={resolvedListLabel}
           className={cn(
-            "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-[1.5rem] bg-muted/25 p-2",
+            compact
+              ? "h-auto w-full flex-wrap items-stretch justify-start gap-2 rounded-[1.5rem] bg-muted/25 p-2"
+              : "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-[1.5rem] bg-muted/25 p-2",
             compact && "gap-1 rounded-xl p-1",
             listClassName,
           )}
@@ -85,7 +89,8 @@ export function LanguageTabs({
               key={item.code}
               className={cn(
                 "group/language-tab min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-emerald-300 data-active:bg-emerald-50/80 data-active:shadow-[0_0_0_1px_rgba(16,185,129,0.12)]",
-                compact && "min-h-0 min-w-32 rounded-lg px-2 py-1.5",
+                compact &&
+                  "min-h-0 min-w-0 flex-[0_1_auto] rounded-lg px-3 py-2",
               )}
               disabled={item.disabled}
               value={item.code}
@@ -105,6 +110,11 @@ export function LanguageTabs({
                     tone={item.tone}
                     className="group-aria-selected/language-tab:bg-white"
                   />
+                  {compact && item.meta ? (
+                    <span className="text-xs font-medium text-muted-foreground group-aria-selected/language-tab:text-foreground">
+                      {item.meta}
+                    </span>
+                  ) : null}
                   <span className="mt-0.5 hidden rounded-full bg-emerald-600/10 p-1 text-emerald-700 group-aria-selected/language-tab:inline-flex">
                     <CheckCircle2 className="size-3.5" />
                     <span className="sr-only">Selected language</span>

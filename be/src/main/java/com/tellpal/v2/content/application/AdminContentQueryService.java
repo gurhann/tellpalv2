@@ -122,6 +122,7 @@ public class AdminContentQueryService implements AdminContentQueryApi, EligibleC
                 content.type(),
                 content.externalKey(),
                 content.pageCount(),
+                content.durationMinutes(),
                 languageCode,
                 content.title(),
                 candidate.readiness(),

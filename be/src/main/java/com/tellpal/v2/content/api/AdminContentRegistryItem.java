@@ -13,6 +13,7 @@ public record AdminContentRegistryItem(
         ContentApiType type,
         String externalKey,
         Integer pageCount,
+        Integer durationMinutes,
         LanguageCode selectedLanguage,
         String title,
         AdminContentRegistryReadiness readiness,

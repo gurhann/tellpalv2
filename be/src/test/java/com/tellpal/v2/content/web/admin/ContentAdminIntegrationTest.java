@@ -162,8 +162,50 @@ class ContentAdminIntegrationTest extends AdminApiIntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalItems").value(1))
                 .andExpect(jsonPath("$.items[0].contentId").value(contentId))
+                .andExpect(jsonPath("$.items[0].durationMinutes").value(8))
                 .andExpect(jsonPath("$.items[0].readiness").value("ACTION_REQUIRED"))
                 .andExpect(jsonPath("$.items[0].blockers[0].code").value("BODY_TEXT_MISSING"));
+    }
+
+    @Test
+    void lullabyRegistryReportsSharedPlaybackDuration() throws Exception {
+        String accessToken = authenticateAdmin();
+        Long audioMediaId = registerAudioAsset("/content/lullaby/registry/shared-playback.mp3");
+        MvcResult createResult = mockMvc.perform(post("/api/admin/contents")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "type": "LULLABY",
+                                  "externalKey": "registry-shared-playback-lullaby",
+                                  "ageRange": 3,
+                                  "active": true
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Long contentId = readPayload(createResult).get("contentId").asLong();
+
+        mockMvc.perform(put("/api/admin/contents/{contentId}/playback", contentId)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {
+                                  "audioMediaId": %d,
+                                  "durationMinutes": 11
+                                }
+                                """.formatted(audioMediaId)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/admin/content-registry")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .queryParam("language", "tr")
+                        .queryParam("type", "LULLABY")
+                        .queryParam("q", "registry-shared-playback-lullaby"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.items[0].contentId").value(contentId))
+                .andExpect(jsonPath("$.items[0].durationMinutes").value(11));
     }
 
     @Test

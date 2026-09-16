@@ -69,7 +69,7 @@ test("login, bootstrap refresh, and logout work in the browser", async ({
   await page.getByRole("button", { name: /^sign in$/i }).click();
 
   await expect(
-    page.getByRole("heading", { name: /content studio/i }),
+    page.getByRole("heading", { name: /^contents$/i, level: 1 }),
   ).toBeVisible();
 
   await page.reload();
@@ -78,7 +78,7 @@ test("login, bootstrap refresh, and logout work in the browser", async ({
     page.getByRole("heading", { name: /restoring admin session/i }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: /content studio/i }),
+    page.getByRole("heading", { name: /^contents$/i, level: 1 }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: /log out/i }).click();

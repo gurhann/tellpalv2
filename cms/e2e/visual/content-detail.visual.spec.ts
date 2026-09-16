@@ -16,6 +16,7 @@ const contentRecord = {
   pageCount: 2,
   textlessCoverMediaId: 41,
   listeningCoverMediaId: 42,
+  listingCoverMediaId: null,
   localizations: [
     {
       contentId: 1,
@@ -132,12 +133,15 @@ for (const viewport of visualViewports) {
       });
     });
 
-    await page.goto("/contents/1");
+    await page.goto("/contents/1?language=tr");
     await installVisualStyles(page);
 
     const contentDetail = page.locator("main");
 
     await expect(contentDetail).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Aksam Bahcesi", exact: true }),
+    ).toBeVisible();
     await expect(contentDetail).toHaveScreenshot(
       `content-detail-${viewport.name}.png`,
       {

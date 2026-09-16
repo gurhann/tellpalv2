@@ -64,26 +64,53 @@ const contentRecords = [
     ageRange: 3,
     pageCount: null,
     localizations: [],
+    playback: {
+      audioMediaId: 3,
+      durationMinutes: 11,
+      processingStatus: "COMPLETED",
+      processingError: null,
+      instruments: [],
+    },
   },
 ];
 
-const contentRegistryPage = {
-  items: contentRecords.map((content, index) => ({
-    contentId: content.contentId,
-    type: content.type,
-    externalKey: content.externalKey,
-    pageCount: content.pageCount,
-    selectedLanguage: "tr",
-    title: content.localizations[0]?.title ?? null,
-    readiness: index === 0 ? "PUBLISHED" : "ACTION_REQUIRED",
-    blockers:
-      index === 0 ? [] : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
-    lastEditedAt: "2026-03-17T09:00:00Z",
-  })),
-  page: 0,
-  size: 25,
-  totalItems: contentRecords.length,
-};
+function makeContentRegistryPage(url: URL) {
+  const type = url.searchParams.get("type") ?? "STORY";
+  const language = url.searchParams.get("language") ?? "tr";
+  const items = contentRecords
+    .filter((content) => content.type === type)
+    .map((content, index) => {
+      const localization = content.localizations.find(
+        (candidate) => candidate.languageCode === language,
+      );
+
+      return {
+        contentId: content.contentId,
+        type: content.type,
+        externalKey: content.externalKey,
+        pageCount: content.pageCount,
+        durationMinutes:
+          content.type === "LULLABY"
+            ? content.playback?.durationMinutes ?? null
+            : localization?.durationMinutes ?? null,
+        selectedLanguage: language,
+        title: localization?.title ?? null,
+        readiness: index === 0 ? "PUBLISHED" : "ACTION_REQUIRED",
+        blockers:
+          index === 0
+            ? []
+            : [{ code: "LOCALIZATION_MISSING", pageNumber: null }],
+        lastEditedAt: "2026-03-17T09:00:00Z",
+      };
+    });
+
+  return {
+    items,
+    page: Number(url.searchParams.get("page") ?? "0"),
+    size: Number(url.searchParams.get("size") ?? "25"),
+    totalItems: items.length,
+  };
+}
 
 const categoryRecords = [
   {
@@ -127,7 +154,9 @@ for (const viewport of visualViewports) {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(contentRegistryPage),
+        body: JSON.stringify(
+          makeContentRegistryPage(new URL(route.request().url())),
+        ),
       });
     });
 

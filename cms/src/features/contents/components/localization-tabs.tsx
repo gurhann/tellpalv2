@@ -25,6 +25,7 @@ import {
   getCreateLocalizationFormDefaults,
   mapLocalizationToFormValues,
 } from "@/features/contents/schema/content-localization-schema";
+import { useI18n } from "@/i18n/locale-provider";
 import { supportedCmsLanguageOptions } from "@/lib/languages";
 import type { LanguageBadgeTone } from "@/components/language/language-badge";
 
@@ -58,24 +59,6 @@ function getLocalizationTone(
   }
 
   return "info";
-}
-
-function getLocalizationDescription(
-  localization: ContentLocalizationViewModel,
-) {
-  const parts = [localization.statusLabel, localization.processingStatusLabel];
-
-  if (localization.visibleToMobile) {
-    parts.push("Mobile visible");
-  }
-
-  if (localization.hasAudioAsset) {
-    parts.push("Audio attached");
-  } else if (localization.hasCoverAsset) {
-    parts.push("Cover attached");
-  }
-
-  return parts.join(" / ");
 }
 
 function LocalizationWorkspacePane({
@@ -126,8 +109,15 @@ export function ContentLocalizationTabs({
   initialLanguageCode,
   onActiveLanguageChange,
 }: ContentLocalizationTabsProps) {
+  const { locale } = useI18n();
+  const normalizedInitialLanguageCode =
+    supportedCmsLanguageOptions.find(
+      (option) => option.code === initialLanguageCode?.toLowerCase(),
+    )?.code ?? null;
   const [activeLanguage, setActiveLanguage] = useState(
-    initialLanguageCode ?? content.localizations[0]?.languageCode ?? "",
+    normalizedInitialLanguageCode ??
+      content.localizations[0]?.languageCode ??
+      "",
   );
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const existingLanguageCodes = useMemo(
@@ -141,7 +131,17 @@ export function ContentLocalizationTabs({
       ),
     [existingLanguageCodes],
   );
-  const defaultCreateLanguageCode = availableLanguages[0]?.code ?? "en";
+  const preferredCreateLanguageCode = normalizedInitialLanguageCode
+    ? availableLanguages.find(
+        (option) => option.code === normalizedInitialLanguageCode,
+      )?.code
+    : undefined;
+  const defaultCreateLanguageCode =
+    preferredCreateLanguageCode ?? availableLanguages[0]?.code ?? "en";
+  const requestedLanguageIsMissing = Boolean(
+    normalizedInitialLanguageCode &&
+      !existingLanguageCodes.has(normalizedInitialLanguageCode),
+  );
   const localizationTabs: LanguageTabItem[] = useMemo(
     () =>
       content.localizations.map((localization) => ({
@@ -149,7 +149,6 @@ export function ContentLocalizationTabs({
         label: localization.languageLabel,
         tone: getLocalizationTone(localization),
         meta: localization.statusLabel,
-        description: getLocalizationDescription(localization),
       })),
     [content.localizations],
   );
@@ -159,16 +158,22 @@ export function ContentLocalizationTabs({
     "";
 
   useEffect(() => {
-    if (initialLanguageCode) {
-      setActiveLanguage(initialLanguageCode);
+    if (normalizedInitialLanguageCode) {
+      // Keep the local tab selection aligned with the URL-driven detail route.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveLanguage(normalizedInitialLanguageCode);
     }
-  }, [initialLanguageCode]);
+  }, [normalizedInitialLanguageCode]);
 
   useEffect(() => {
-    if (resolvedActiveLanguage) {
+    if (resolvedActiveLanguage && !requestedLanguageIsMissing) {
       onActiveLanguageChange?.(resolvedActiveLanguage);
     }
-  }, [onActiveLanguageChange, resolvedActiveLanguage]);
+  }, [
+    onActiveLanguageChange,
+    requestedLanguageIsMissing,
+    resolvedActiveLanguage,
+  ]);
 
   function handleActiveLanguageChange(languageCode: string) {
     setActiveLanguage(languageCode);
@@ -226,6 +231,30 @@ export function ContentLocalizationTabs({
 
   return (
     <>
+      {requestedLanguageIsMissing ? (
+        <div
+          className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm text-amber-950 sm:flex-row sm:items-center sm:justify-between"
+          role="status"
+        >
+          <span>
+            {normalizedInitialLanguageCode?.toUpperCase()} {locale === "tr"
+              ? "bu içerik için henüz mevcut değil."
+              : "is not available for this content yet."}
+          </span>
+          {availableLanguages.length > 0 ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(true)}
+            >
+              {locale === "tr"
+                ? `${normalizedInitialLanguageCode?.toUpperCase()} yerelleştirmesi oluştur`
+                : `Create ${normalizedInitialLanguageCode?.toUpperCase()} localization`}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
       {availableLanguages.length > 0 ? (
         <div className="flex justify-end">
           <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
@@ -236,6 +265,7 @@ export function ContentLocalizationTabs({
       ) : null}
 
       <LanguageTabs
+        compact
         items={localizationTabs}
         listLabel="Content localization tabs"
         onValueChange={handleActiveLanguageChange}

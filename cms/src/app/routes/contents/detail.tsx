@@ -31,20 +31,27 @@ export function ContentDetailRoute() {
   const { contentId = "" } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const requestedLanguageCode = searchParams.get("language");
+  const requestedLanguageCode = searchParams.get("language")?.toLowerCase() ?? null;
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
   const contentQuery = useContentDetail(
     hasValidContentId ? parsedContentId : null,
   );
-  const [activeStoryLanguageCode, setActiveStoryLanguageCode] = useState<
-    string | null
-  >(null);
+  const [activeStoryLanguageSelection, setActiveStoryLanguageSelection] =
+    useState<{ contentId: string; languageCode: string } | null>(null);
   const [isStoryPreviewOpen, setIsStoryPreviewOpen] = useState(false);
   const content = contentQuery.content;
+  const activeStoryLanguageCode =
+    activeStoryLanguageSelection?.contentId === contentId
+      ? activeStoryLanguageSelection.languageCode
+      : null;
+  const requestedLocalization = content?.localizations.find(
+    (localization) => localization.languageCode === requestedLanguageCode,
+  );
   const storyPageLanguageCode =
     activeStoryLanguageCode ??
+    requestedLocalization?.languageCode ??
     content?.primaryLocalization?.languageCode ??
     null;
   const selectedLocalization =
@@ -129,7 +136,8 @@ export function ContentDetailRoute() {
           contributorsDescription:
             "Paylasilan contributor kayitlarini bu icerige rol, dil, gorunen kredi adi ve siralama metadatasi ile baglayin.",
           lullabyPlaybackTitle: "Ortak Ninni Playback",
-          lullabyPlaybackDescription: "Playback, katalog enstrümanlari ve müzisyen kredisi tüm dillerde bir kez yönetilir.",
+          lullabyPlaybackDescription:
+            "Playback, katalog enstrümanlari ve müzisyen kredisi tüm dillerde bir kez yönetilir.",
         }
       : {
           detailFallbackTitle: "Content Detail",
@@ -200,9 +208,11 @@ export function ContentDetailRoute() {
           contributorsDescription:
             "Assign shared contributor registry entries to this content item with role, language, display credit, and ordering metadata.",
           lullabyPlaybackTitle: "Shared lullaby playback",
-          lullabyPlaybackDescription: "Playback, catalog instruments, and musician credit are managed once for every locale.",
+          lullabyPlaybackDescription:
+            "Playback, catalog instruments, and musician credit are managed once for every locale.",
         };
   const routeTitle =
+    selectedLocalization?.title ??
     content?.primaryLocalization?.title ??
     (hasValidContentId
       ? locale === "tr"
@@ -220,10 +230,20 @@ export function ContentDetailRoute() {
       const selectedLocaleLabel =
         selectedLocalization?.languageLabel ??
         (locale === "tr" ? "Henuz secilmedi" : "Not selected");
+      const registrySearchParams = new URLSearchParams(searchParams);
+      registrySearchParams.set("type", content.summary.type);
+      registrySearchParams.set("language", storyPageLanguageCode ?? "tr");
 
       return (
         <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-background/80 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+          <div className="flex min-w-0 flex-wrap items-center gap-3 text-sm">
+            <Button asChild type="button" variant="ghost" className="-ml-2">
+              <Link
+                to={`/contents?${registrySearchParams.toString()}`}
+              >
+                {copy.returnToRegistry}
+              </Link>
+            </Button>
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {copy.contentType}
@@ -392,11 +412,31 @@ export function ContentDetailRoute() {
             content={content}
             initialLanguageCode={requestedLanguageCode}
             onActiveLanguageChange={(languageCode) => {
-              setActiveStoryLanguageCode(languageCode);
+              setActiveStoryLanguageSelection((current) =>
+                current?.contentId === contentId &&
+                current.languageCode === languageCode
+                  ? current
+                  : { contentId, languageCode },
+              );
+              if (searchParams.get("language") === languageCode) {
+                return;
+              }
               const next = new URLSearchParams(searchParams);
               next.set("language", languageCode);
               setSearchParams(next, { replace: true });
             }}
+          />
+        </FormSection>
+
+        <FormSection
+          description={copy.metadataDescription}
+          title={copy.metadataTitle}
+        >
+          <ContentForm
+            key={`${content.summary.id}-${content.summary.externalKey}-${content.summary.ageRange}-${content.summary.active}`}
+            contentId={content.summary.id}
+            initialValues={mapContentReadToFormValues(content)}
+            mode="update"
           />
         </FormSection>
 
@@ -407,7 +447,7 @@ export function ContentDetailRoute() {
           >
             <LullabyPlaybackEditor
               content={content}
-              languageCode={storyPageLanguageCode ?? requestedLanguageCode ?? undefined}
+              languageCode={storyPageLanguageCode ?? undefined}
             />
           </FormSection>
         ) : null}
@@ -418,9 +458,7 @@ export function ContentDetailRoute() {
         >
           <ContentContributorPanel
             content={content}
-            activeLanguageCode={
-              storyPageLanguageCode ?? requestedLanguageCode ?? undefined
-            }
+            activeLanguageCode={storyPageLanguageCode ?? undefined}
           />
         </FormSection>
 
@@ -453,18 +491,6 @@ export function ContentDetailRoute() {
             </div>
           </FormSection>
         ) : null}
-
-        <FormSection
-          description={copy.metadataDescription}
-          title={copy.metadataTitle}
-        >
-          <ContentForm
-            key={`${content.summary.id}-${content.summary.externalKey}-${content.summary.ageRange}-${content.summary.active}`}
-            contentId={content.summary.id}
-            initialValues={mapContentReadToFormValues(content)}
-            mode="update"
-          />
-        </FormSection>
       </>
     );
   }

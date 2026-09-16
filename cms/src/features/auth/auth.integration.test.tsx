@@ -170,7 +170,7 @@ describe("Auth integration", () => {
     fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     expect(
-      await screen.findByRole("heading", { name: /content studio/i }),
+      await screen.findByRole("heading", { name: /^contents$/i, level: 1 }),
     ).toBeInTheDocument();
     expect(window.localStorage.getItem("tellpal.cms.refresh-token")).toBe(
       session.refreshToken,
@@ -230,7 +230,7 @@ describe("Auth integration", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /content studio/i }),
+      await screen.findByRole("heading", { name: /^contents$/i, level: 1 }),
     ).toBeInTheDocument();
     expect(window.localStorage.getItem("tellpal.cms.refresh-token")).toBe(
       session.refreshToken,
@@ -274,7 +274,7 @@ describe("Auth integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /content studio/i });
+    await screen.findByRole("heading", { name: /^contents$/i, level: 1 });
 
     fireEvent.click(screen.getByRole("button", { name: /log out/i }));
 
