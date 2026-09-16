@@ -3,6 +3,7 @@ import {
   BookOpenText,
   FolderKanban,
   Image,
+  PanelsTopLeft,
   ShieldCheck,
   Sparkles,
   Users,
@@ -62,6 +63,18 @@ export const cmsNavigationItems: CmsNavigationItem[] = [
     icon: Workflow,
   },
 ];
+
+export const localMockupNavigationItems: CmsNavigationItem[] = import.meta.env
+  .DEV
+  ? [
+      {
+        labelKey: "nav.mockups.label",
+        descriptionKey: "nav.mockups.description",
+        path: "/labs/mockups",
+        icon: PanelsTopLeft,
+      },
+    ]
+  : [];
 
 export function getRouteMeta(pathname: string): RouteMeta {
   if (pathname.startsWith("/labs/mockups")) {

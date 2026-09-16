@@ -726,7 +726,7 @@ describe("CMS router auth flow", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("renders hidden authenticated Variant A mockup routes and supports deep links", async () => {
+  it("renders authenticated Variant A mockup routes and exposes their local navigation entry", async () => {
     renderRouter({
       initialEntries: [
         "/labs/mockups/contents/demo-content/story-pages?language=tr",
@@ -748,9 +748,10 @@ describe("CMS router auth flow", () => {
     expect(
       screen.getByRole("button", { name: /add story page/i }),
     ).toBeEnabled();
-    expect(
-      screen.queryByRole("link", { name: /variant a mockups/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /mockups/i })).toHaveAttribute(
+      "href",
+      "/labs/mockups",
+    );
   });
 
   it("logs out from the top bar and returns the user to /login", async () => {
