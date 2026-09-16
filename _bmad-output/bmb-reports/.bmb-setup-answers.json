@@ -1,0 +1,12 @@
+{
+  "core": {
+    "user_name": "Gürhan",
+    "communication_language": "Türkçe",
+    "document_output_language": "English",
+    "output_folder": "{project-root}/_bmad-output"
+  },
+  "module": {
+    "bmad_builder_output_folder": ".agents/skills",
+    "bmad_builder_reports": "_bmad-output/bmb-reports"
+  }
+}
