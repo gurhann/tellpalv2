@@ -3,29 +3,29 @@ import { UiLabPage } from "@/components/workspace/ui-lab-page";
 export function UiContentsLabRoute() {
   return (
     <UiLabPage
-      topic="Content Studio Prototypes"
-      description="Three coded directions for the content registry and detail workspace. These variants focus on editorial flow, localization control, and story-page handoff."
-      recommendation="Variant A wins for production because it keeps the shell calm, makes the primary task obvious, and leaves the right rail available for readiness and story-page context."
+      topic="Contents Registry Explorations"
+      description="Three coded directions for the content registry. This pass treats each canonical content type as its own table, with compact shared controls and verified domain fields. Duration is domain-confirmed but still needs to be projected by the registry API."
+      recommendation="Current working direction: canonical type-led tables with compact language and readiness controls. Review the mockup before promoting it to the production Contents route."
       winnerHref="/labs/mockups/contents"
-      winnerLabel="Open Variant A mockup"
+      winnerLabel="Open current mockup"
       variants={[
         {
           id: "A",
-          name: "Variant A - Editorial Workspace",
+          name: "Type-led Registry",
           summary:
-            "Split layout with a quiet registry, single primary editor lane, and right-side readiness rail.",
+            "Content-type tabs that switch between dedicated tables above a compact registry toolbar.",
           highlights: [
-            "Primary work stays in one column; readiness and story actions stay in the rail.",
-            "Create and detail flows share the same modal contract and action density.",
-            "Best fit for daily editor work with low cognitive overhead.",
+            "Each type owns the columns editors need, instead of sharing one generic table.",
+            "Language and readiness stay as compact, labeled secondary controls.",
+            "Best current fit for the Contents-only exploration; detail remains deferred.",
           ],
           winner: true,
         },
         {
           id: "B",
-          name: "Variant B - Guided Studio",
+          name: "Guided Registry",
           summary:
-            "Step-driven flow: metadata, localization, assets, publish, then story pages.",
+            "A more guided registry flow with progressive filters and stronger onboarding cues.",
           highlights: [
             "Strong onboarding and guardrails for infrequent operators.",
             "Best when publication errors come from missed prerequisites.",
@@ -34,9 +34,9 @@ export function UiContentsLabRoute() {
         },
         {
           id: "C",
-          name: "Variant C - Operations Hybrid",
+          name: "Operations Hybrid",
           summary:
-            "Table-first workspace with heavier side drawers and denser status density.",
+            "Table-first workspace with heavier drawers and denser status treatment.",
           highlights: [
             "Fast for bulk review and registry-heavy work.",
             "Useful pattern for asset and operations surfaces.",

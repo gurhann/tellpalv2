@@ -3,7 +3,7 @@ name: TellPal CMS — Ürün Keşif Günlüğü
 status: active
 started: 2026-09-02
 review-cadence: P2W
-next-review: 2026-09-16
+next-review: 2026-09-30
 ---
 
 # Ürün Keşif Günlüğü
@@ -75,6 +75,51 @@ Kesinleşen kararların tarihçesi `.memlog.md` içinde tutulur; `DESIGN.md` ve
 ## Artefakt durumu
 
 - `contents-registry-first-draft.html` — 2026-09-02 tarihinde kullanıcı tarafından ilk taslak olarak kabul edildi. Bu onay, içerik hiyerarşisini ve ekranın kapsamını kapsar; üretim davranışı için O-001, O-004 ve O-006 açıkları teknik tasarımda ele alınacaktır.
+
+## Oturum 02 — Filtre yoğunluğu ve tür navigasyonu
+
+**Tarih:** 2026-09-15
+**Amaç:** İlk mockup’ın Contents ekranında filtreleme alanını küçültmek ve içerik
+türlerini daha görünür bir navigasyon kararı olarak değerlendirmek.
+
+| Kimlik | Soru / kullanıcı cevabı | Yorum | Güven |
+| --- | --- | --- | --- |
+| Q-023 | “Filtreleme kısmı çok yer kaplıyor. Türler ayrı tab olabilir.” | Türler, ikincil filtre çipleri yerine sayfanın üst seviyesinde sekme olarak prototiplendi. Dil ve yayın durumu etiketli, kompakt select kontrollerine indirildi. | C2 |
+| Q-024 | “Şimdilik Contents’i yapalım; içerik detaylarına sonra gireceğiz.” | Bu iterasyon yalnızca registry yüzeyini, satırdaki yayın engeli görünürlüğünü ve detay ekranına geçiş niyetini kapsar; detay alanları tasarlanmadı. | C3 |
+| Q-025 | “Türlerin filtre olmasına gerek yok. Her biri farklı tablo olabilir ve tab ile geçiş yapılabilir; türe özgü önemli alanları tabloya koyabiliriz.” | Sekmeler artık aynı tablodaki tür filtresi değildir. `All` görünümü kaldırılır; her tür kendine ait tablo şemasıyla açılır. | C3 |
+| Q-026 | “Sesli hikâyelerinde ayrı bir tab olmasına gerek yok sanki; çünkü hikâyelerin altında artık.” | Sesli hikâyeler ayrı bir üst seviye tür, filtre veya kayıt değildir. `STORY` içeriğinin seçili localization’ındaki opsiyonel anlatım özelliğidir. | C2 |
+
+## Oturum 03 — İçerik detayında odak ve domain sadakati
+
+**Tarih:** 2026-09-16
+**Amaç:** Contents detail mockup’ındaki bilgi tekrarını azaltmak ve mockup alanlarını
+domain sözleşmesiyle sınırlamak.
+
+| Kimlik | Soru / kullanıcı cevabı | Yorum | Güven |
+| --- | --- | --- | --- |
+| Q-027 | “Detay çok karmaşık; önce inceleyip iyileştirelim.” | Detay yüzeyi tek baskın seçili-locale workspace, kompakt ortak metadata/contributor bölümleri ve yalnızca operasyonel göstergeler taşıyan bir rail olarak sadeleştirildi. | C2 |
+| Q-028 | Önceki mockup’ta doğrulanmamış alanlar bulunması | Mockup, domain veya registry tarafından doğrulanmamış kavramları göstermemeli. Tür-spesifik alanlar ancak doğrulanmış sözleşme varsa eklenmeli. | C2 |
+
+### Çalışma hipotezi
+
+- Tür sekmeleri toplam kayıt sayılarıyla birlikte gösterilir; sayılar mevcut arama
+  ve ikincil filtrelerden bağımsız bir katalog özeti olarak tutuldu. Birleşik
+  `All` görünümü yoktur.
+- Arama yalnızca açık türün tablosunda çalışır. Dil varsayılanı Türkçe, yayın
+  durumu ise `Tümü` kalır.
+- Üç tür seçeneği dar ekranlarda satır kırabilir; toolbar veya tablist yatay
+  kaydırmaya zorlanmaz.
+- Hikâyeler tablosu yalnızca canonical `STORY` kayıtlarını içerir; sesli anlatım
+  ayrı kayıt değil, seçili localization kapsamındaki bir özelliktir.
+- Yayın engelleri hover’a bağlı değildir; satır içinde açılıp kapanan erişilebilir
+  bir bölge olarak gösterilir.
+
+### Açık kararlar
+
+| Kimlik | Karar ihtiyacı | Neden açık | Sonraki kanıt / soru |
+| --- | --- | --- | --- |
+| O-008 | Sekme sayılarının kapsamı | İlk mockup katalog toplamını gösteriyor; arama ve dil filtresiyle dinamik sayım tercih edilip edilmediği net değil. | Gerçek kayıt hacmi ve editör beklentisiyle karar ver. |
+| O-009 | Dar ekranlarda sekme satır kırılmasının kabulü | Yatay toolbar scroll kullanılmaması guardrail ile sabit; sekme yoğunluğu henüz kullanıcıyla doğrulanmadı. | 390px ekran üzerinde hızlı görev testi yap. |
 
 ## İki haftalık değerlendirme şablonu
 

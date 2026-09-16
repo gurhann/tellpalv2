@@ -148,6 +148,98 @@ for (const viewport of visualViewports) {
     );
   });
 
+  test(`contents mockup type tabs visual - ${viewport.name}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({
+      width: viewport.width,
+      height: viewport.height,
+    });
+
+    await page.goto("/labs/mockups/contents");
+    await installVisualStyles(page);
+
+    const mockupControls = page.getByTestId("contents-registry-mockup");
+
+    await expect(mockupControls).toBeVisible();
+    await expect(mockupControls).toHaveScreenshot(
+      `contents-mockup-type-tabs-${viewport.name}.png`,
+      {
+        animations: "disabled",
+        caret: "hide",
+      },
+    );
+  });
+
+  test(`contents mockup story table visual - ${viewport.name}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({
+      width: viewport.width,
+      height: viewport.height,
+    });
+
+    await page.goto("/labs/mockups/contents");
+    await installVisualStyles(page);
+
+    const table = page.getByTestId("contents-type-table");
+
+    await expect(table).toBeVisible();
+    await expect(table).toHaveScreenshot(
+      `contents-mockup-story-table-${viewport.name}.png`,
+      {
+        animations: "disabled",
+        caret: "hide",
+      },
+    );
+  });
+
+  test(`contents mockup detail visual - ${viewport.name}`, async ({ page }) => {
+    await page.setViewportSize({
+      width: viewport.width,
+      height: viewport.height,
+    });
+
+    await page.goto("/labs/mockups/contents/demo-content");
+    await installVisualStyles(page);
+
+    const detail = page.getByRole("heading", { name: "Locale workspace" });
+
+    await expect(detail).toBeVisible();
+    await expect(page).toHaveScreenshot(
+      `contents-mockup-detail-${viewport.name}.png`,
+      {
+        animations: "disabled",
+        caret: "hide",
+        fullPage: true,
+      },
+    );
+  });
+
+  test(`contents mockup meditation table visual - ${viewport.name}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({
+      width: viewport.width,
+      height: viewport.height,
+    });
+
+    await page.goto("/labs/mockups/contents");
+    await installVisualStyles(page);
+
+    await page.getByRole("tab", { name: "Meditations", exact: true }).click();
+    const table = page.getByTestId("contents-type-table");
+
+    await expect(table).toBeVisible();
+    await expect(table).toHaveScreenshot(
+      `contents-mockup-meditation-table-${viewport.name}.png`,
+      {
+        animations: "disabled",
+        caret: "hide",
+      },
+    );
+  });
+
   test(`categories registry toolbar visual - ${viewport.name}`, async ({
     page,
   }) => {

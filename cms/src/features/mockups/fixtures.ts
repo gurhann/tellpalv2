@@ -13,6 +13,7 @@ export const mockupDemoContent: MockupContent = {
   active: true,
   ageRange: 6,
   pageCount: 4,
+  hasTextlessCover: true,
   summaryLabel: "Editorial workspace seed",
   note: "Primary demo record for Variant A shell validation.",
   isDemo: true,
@@ -102,6 +103,7 @@ export const mockupReferenceMeditation: MockupContentSummary = {
       isProcessingComplete: false,
       hasCover: false,
       hasAudio: true,
+      durationMinutes: 12,
       note: "Audio exists, but the release checklist is still incomplete.",
     },
   ],
@@ -114,6 +116,7 @@ export const mockupReferenceLullaby: MockupContentSummary = {
   active: false,
   ageRange: 3,
   pageCount: null,
+  playbackDurationMinutes: 4,
   summaryLabel: "Reference item",
   note: "Shows the inactive state and archive posture inside the same registry.",
   isDemo: false,
@@ -258,6 +261,7 @@ export const mockupStoryPages: MockupStoryPage[] = [
     pageNumber: 1,
     summary: "Arrival at the harbor and first breathing cue.",
     note: "Best page to validate opening-scene illustration density.",
+    hasTextlessSource: true,
     localizations: [
       {
         languageCode: "en",
@@ -288,6 +292,7 @@ export const mockupStoryPages: MockupStoryPage[] = [
     pageNumber: 2,
     summary: "Lantern lights and the first story beat.",
     note: "Strong page for testing a long-form editor modal.",
+    hasTextlessSource: false,
     localizations: [
       {
         languageCode: "en",
@@ -318,6 +323,7 @@ export const mockupStoryPages: MockupStoryPage[] = [
     pageNumber: 3,
     summary: "Boat rhythm and breathing cadence.",
     note: "Useful to preview mixed-ready states inside the table.",
+    hasTextlessSource: true,
     localizations: [
       {
         languageCode: "en",
@@ -349,6 +355,7 @@ export const mockupStoryPages: MockupStoryPage[] = [
     pageNumber: 4,
     summary: "Final dock scene and the sleep landing.",
     note: "Closing page demonstrates draft completeness and release staging.",
+    hasTextlessSource: false,
     localizations: [
       {
         languageCode: "en",

@@ -1,14 +1,12 @@
-import { CirclePlus, Eye, Search } from "lucide-react";
+import { ChevronRight, CirclePlus, RotateCcw, Search } from "lucide-react";
 import { useDeferredValue, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import {
-  FilterBar,
-  FilterBarActions,
-  FilterBarGroup,
-  FilterBarSummary,
-} from "@/components/data/filter-bar";
 import { DataTable, type DataTableColumn } from "@/components/data/data-table";
+import {
+  RegistryToolbar,
+  RegistryToolbarGroup,
+} from "@/components/data/registry-toolbar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,235 +18,548 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { TaskRail } from "@/components/workspace/task-rail";
-import { ContentPageShell } from "@/features/contents/components/content-page-shell";
-import { mockupContentRegistry } from "@/features/mockups/fixtures";
 import {
-  countProcessingComplete,
-  countVisibleLocales,
-} from "@/features/mockups/lib";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ContentPageShell } from "@/features/contents/components/content-page-shell";
 import {
   MockupInfoCard,
   MockupStatusPill,
 } from "@/features/mockups/components/mockup-ui";
+import { mockupContentRegistry } from "@/features/mockups/fixtures";
 import type { MockupContentSummary } from "@/features/mockups/types";
 import { useI18n } from "@/i18n/locale-provider";
 
-function getStateTone(content: MockupContentSummary) {
-  return content.active ? ("success" as const) : ("default" as const);
+type ContentType = "STORY" | "MEDITATION" | "LULLABY";
+type ContentTab = ContentType;
+type ReadinessFilter =
+  "ALL" | "ACTION_REQUIRED" | "READY_TO_PUBLISH" | "PUBLISHED";
+type LanguageCode = "tr" | "en";
+
+const typeOrder: ContentTab[] = ["STORY", "MEDITATION", "LULLABY"];
+const languageOptions: LanguageCode[] = ["tr", "en"];
+
+function getTypeLabel(type: ContentType, locale: "tr" | "en") {
+  const labels: Record<ContentType, { tr: string; en: string }> = {
+    STORY: { tr: "Hikâyeler", en: "Stories" },
+    MEDITATION: { tr: "Meditasyonlar", en: "Meditations" },
+    LULLABY: { tr: "Ninniler", en: "Lullabies" },
+  };
+
+  return labels[type][locale];
+}
+
+function getReadinessLabel(readiness: ReadinessFilter, locale: "tr" | "en") {
+  const labels: Record<ReadinessFilter, { tr: string; en: string }> = {
+    ALL: { tr: "Tüm durumlar", en: "All statuses" },
+    ACTION_REQUIRED: { tr: "Aksiyon gerekli", en: "Action required" },
+    READY_TO_PUBLISH: { tr: "Yayına hazır", en: "Ready to publish" },
+    PUBLISHED: { tr: "Yayında", en: "Published" },
+  };
+
+  return labels[readiness][locale];
+}
+
+function getLocalizedState(
+  content: MockupContentSummary,
+  language: LanguageCode,
+) {
+  return content.locales.find(
+    (localeState) => localeState.languageCode === language,
+  );
+}
+
+function getLanguageLabel(language: LanguageCode, locale: "tr" | "en") {
+  return language === "tr"
+    ? locale === "tr"
+      ? "Türkçe"
+      : "Turkish"
+    : locale === "tr"
+      ? "İngilizce"
+      : "English";
+}
+
+function getBlockers(
+  content: MockupContentSummary,
+  language: LanguageCode,
+  locale: "tr" | "en",
+) {
+  const copy =
+    locale === "tr"
+      ? {
+          inactive: "İçerik pasif",
+          missingLocale: "Seçili dil lokalizasyonu yok",
+          missingTitle: "Başlık eksik",
+          missingCover: "Kapak görseli eksik",
+          missingText: "Metin eksik",
+          missingAudio: "Ses dosyası eksik",
+          missingIllustration: "Görsel eksik",
+          processing: "İşleme tamamlanmadı",
+        }
+      : {
+          inactive: "Content is inactive",
+          missingLocale: "Selected locale is missing",
+          missingTitle: "Title is missing",
+          missingCover: "Cover image is missing",
+          missingText: "Text is missing",
+          missingAudio: "Audio is missing",
+          missingIllustration: "Illustration is missing",
+          processing: "Processing is not complete",
+        };
+  const blockers: string[] = [];
+  const localizedState = getLocalizedState(content, language);
+
+  if (!content.active) blockers.push(copy.inactive);
+  if (!localizedState) {
+    blockers.push(copy.missingLocale);
+    return blockers;
+  }
+
+  if (!localizedState.title.trim()) blockers.push(copy.missingTitle);
+
+  if (content.typeLabel === "STORY") {
+    if (localizedState.hasCover === false) blockers.push(copy.missingCover);
+    if (localizedState.hasBodyText === false) blockers.push(copy.missingText);
+    if (localizedState.hasAudio === false) blockers.push(copy.missingAudio);
+    if (localizedState.hasIllustration === false) {
+      blockers.push(copy.missingIllustration);
+    }
+  }
+
+  if (
+    content.typeLabel === "MEDITATION" &&
+    localizedState.hasBodyText === false
+  ) {
+    blockers.push(copy.missingText);
+  }
+  if (localizedState.isProcessingComplete === false) {
+    blockers.push(copy.processing);
+  }
+
+  return blockers;
+}
+
+function getReadiness(
+  content: MockupContentSummary,
+  language: LanguageCode,
+  locale: "tr" | "en",
+): Exclude<ReadinessFilter, "ALL"> {
+  const localizedState = getLocalizedState(content, language);
+  const blockers = getBlockers(content, language, locale);
+
+  if (blockers.length > 0) return "ACTION_REQUIRED";
+  if (localizedState?.isPublished) return "PUBLISHED";
+  return "READY_TO_PUBLISH";
+}
+
+function getReadinessTone(readiness: Exclude<ReadinessFilter, "ALL">) {
+  switch (readiness) {
+    case "PUBLISHED":
+      return "success" as const;
+    case "READY_TO_PUBLISH":
+      return "accent" as const;
+    case "ACTION_REQUIRED":
+    default:
+      return "warning" as const;
+  }
+}
+
+function getTitle(content: MockupContentSummary, language: LanguageCode) {
+  return getLocalizedState(content, language)?.title || content.externalKey;
+}
+
+function getCopy(locale: "tr" | "en") {
+  return locale === "tr"
+    ? {
+        eyebrow: "İçerik operasyonu",
+        title: "İçerikler",
+        description:
+          "İçeriği bul, seçili dilde yayın durumunu gör ve düzenleyiciye geç.",
+        backToLab: "Mockup’lara dön",
+        create: "İçerik oluştur",
+        searchLabel: "İçeriklerde ara",
+        searchPlaceholder: "Başlık, anahtar veya ID ile ara",
+        typeLabel: "İçerik türü",
+        languageLabel: "Dil",
+        readinessLabel: "Yayın durumu",
+        reset: "Filtreleri temizle",
+        records: "içerik",
+        languages: "dil",
+        pages: "sayfa",
+        duration: "Süre",
+        noLocalization: "Seçili dil yok",
+        mobileVisible: "Mobilde görünür",
+        waiting: "Yayınlamayı bekliyor",
+        blockers: "engeli gör",
+        hideBlockers: "Engelleri gizle",
+        blockersFor: (language: string) => `${language} için yayın engelleri`,
+        actionCount: "aksiyon gerekli",
+        updatedFirst: "Son güncellenen önce",
+        reference: "Referans kaydı",
+        demo: "Demo kayıt",
+        createTitle: "İçerik oluştur",
+        createDescription:
+          "Bu mockup, metadata adımından sonra seçili dil bağlamını koruyan sade bir içerik oluşturma girişini gösterir.",
+        createOutcomeTitle: "Akış notu",
+        createOutcomeBody:
+          "Kaydetme sonrasında editör ilgili içerik detayına geçer; tür sekmeleri ve liste filtreleri bu ekranda kalır.",
+        close: "Kapat",
+        tableCaption: "İçerik registry mockup’ı",
+        toolbarLabel: "İçerik kayıt kontrolleri",
+      }
+    : {
+        eyebrow: "Content operations",
+        title: "Contents",
+        description:
+          "Find content, read its selected-locale readiness, and move into the editor.",
+        backToLab: "Back to mockups",
+        create: "Create content",
+        searchLabel: "Search contents",
+        searchPlaceholder: "Search by title, key, or ID",
+        typeLabel: "Content type",
+        languageLabel: "Language",
+        readinessLabel: "Readiness",
+        reset: "Clear filters",
+        records: "records",
+        languages: "locales",
+        pages: "pages",
+        duration: "Duration",
+        noLocalization: "No selected locale",
+        mobileVisible: "Visible on mobile",
+        waiting: "Waiting to publish",
+        blockers: "blockers",
+        hideBlockers: "Hide blockers",
+        blockersFor: (language: string) => `Publish blockers for ${language}`,
+        actionCount: "need action",
+        updatedFirst: "Most recently edited first",
+        reference: "Reference item",
+        demo: "Demo record",
+        createTitle: "Create content",
+        createDescription:
+          "This mockup shows a quiet metadata entry that preserves the selected locale before the editor handoff.",
+        createOutcomeTitle: "Flow note",
+        createOutcomeBody:
+          "After save, editors move to the content detail route; type tabs and registry filters stay on this screen.",
+        close: "Close",
+        tableCaption: "Content registry mockup",
+        toolbarLabel: "Content registry controls",
+      };
+}
+
+function TypeTabs({
+  value,
+  counts,
+  locale,
+  onValueChange,
+}: {
+  value: ContentTab;
+  counts: Record<ContentTab, number>;
+  locale: "tr" | "en";
+  onValueChange: (value: ContentTab) => void;
+}) {
+  const copy = getCopy(locale);
+
+  return (
+    <Tabs
+      value={value}
+      onValueChange={(nextValue) => onValueChange(nextValue as ContentTab)}
+    >
+      <TabsList
+        aria-label={copy.typeLabel}
+        className="w-full flex-wrap justify-start gap-x-1 gap-y-1 sm:w-auto"
+        variant="line"
+      >
+        {typeOrder.map((type) => (
+          <TabsTrigger
+            key={type}
+            className="flex-none gap-2 px-3 py-2"
+            onClick={() => onValueChange(type)}
+            value={type}
+          >
+            <span>{getTypeLabel(type, locale)}</span>
+            <span
+              aria-hidden="true"
+              className="rounded-full bg-muted px-1.5 py-0.5 text-[0.7rem] font-semibold text-muted-foreground"
+            >
+              {counts[type]}
+            </span>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
+  );
+}
+
+function ReadinessCell({
+  content,
+  language,
+  locale,
+  expanded,
+  onToggle,
+}: {
+  content: MockupContentSummary;
+  language: LanguageCode;
+  locale: "tr" | "en";
+  expanded: boolean;
+  onToggle: (contentId: string) => void;
+}) {
+  const copy = getCopy(locale);
+  const readiness = getReadiness(content, language, locale);
+  const blockers = getBlockers(content, language, locale);
+  const localizedState = getLocalizedState(content, language);
+  const detail =
+    readiness === "PUBLISHED"
+      ? copy.mobileVisible
+      : readiness === "READY_TO_PUBLISH"
+        ? copy.waiting
+        : blockers.length === 1
+          ? blockers[0]
+          : `${blockers.length} ${copy.blockers}`;
+
+  return (
+    <div className="grid gap-2">
+      <MockupStatusPill tone={getReadinessTone(readiness)}>
+        {getReadinessLabel(readiness, locale)}
+      </MockupStatusPill>
+      {blockers.length > 0 ? (
+        <>
+          <Button
+            aria-controls={expanded ? `blockers-${content.id}` : undefined}
+            aria-expanded={expanded}
+            className="w-fit justify-start px-0 text-xs text-amber-800 hover:bg-transparent hover:underline"
+            type="button"
+            variant="ghost"
+            size="xs"
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggle(content.id);
+            }}
+          >
+            {expanded
+              ? copy.hideBlockers
+              : `${blockers.length} ${copy.blockers}`}
+          </Button>
+          {expanded ? (
+            <div
+              className="grid gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-950"
+              id={`blockers-${content.id}`}
+              onClick={(event) => event.stopPropagation()}
+              role="region"
+              aria-label={copy.blockersFor(getLanguageLabel(language, locale))}
+            >
+              <p className="font-semibold">
+                {copy.blockersFor(getLanguageLabel(language, locale))}
+              </p>
+              <ul className="grid gap-1.5 pl-4 leading-5">
+                {blockers.map((blocker) => (
+                  <li key={blocker}>{blocker}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <p className="text-xs leading-5 text-muted-foreground">{detail}</p>
+      )}
+      {!localizedState ? (
+        <span className="text-xs text-muted-foreground">
+          {copy.noLocalization}
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 export function MockupContentsRoute() {
   const { locale } = useI18n();
+  const navigate = useNavigate();
+  const copy = getCopy(locale);
   const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("ALL");
-  const [selectedState, setSelectedState] = useState<
-    "ALL" | "ACTIVE" | "INACTIVE"
-  >("ALL");
+  const [selectedType, setSelectedType] = useState<ContentTab>("STORY");
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode>("tr");
+  const [selectedReadiness, setSelectedReadiness] =
+    useState<ReadinessFilter>("ALL");
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const deferredSearch = useDeferredValue(search);
-  const copy =
-    locale === "tr"
-      ? {
-          eyebrow: "Variant A Mockups",
-          title: "Content Studio Mockup",
-          description:
-            "Fixture tabanli registry ve detail akisi, sakin ana kolon ve readiness rail ile production benzeri bir Variant A demosu sunar.",
-          backToLab: "Mockup index",
-          create: "Create content",
-          searchLabel: "Search mockup contents",
-          searchPlaceholder: "Search by external key or localized title",
-          filterTypes: "All types",
-          filterState: "All states",
-          active: "Active",
-          inactive: "Inactive",
-          records: "records",
-          summaryDescription:
-            "Filters stay intentionally light so the registry remains calm before the detail handoff.",
-          createTitle: "Create content",
-          createDescription:
-            "This modal previews the Variant A creation posture: short metadata fields up front, locale workspaces after save, and the right rail left free for readiness context.",
-          createOutcomeTitle: "Expected outcome",
-          createOutcomeBody:
-            "After save, editors land in the detail workspace with the first locale tab open and story-page handoff available for STORY records.",
-          close: "Close",
-          snapshotTitle: "Registry readiness",
-          snapshotDescription:
-            "The rail keeps overall release posture visible while the main lane stays focused on the registry.",
-          visible: "Visible locales",
-          processing: "Processing complete",
-          demo: "Variant A demo",
-          reference: "Reference item",
-          open: "Open workspace",
-          noteTitle: "Why this shell wins",
-          noteOne:
-            "The registry remains quiet until an editor commits to a detail route.",
-          noteTwo:
-            "Create stays available without competing with readiness context.",
-          noteThree:
-            "Story-specific actions remain off the list screen until the selected record needs them.",
-          toolbarTitle: "Registry controls",
-        }
-      : {
-          eyebrow: "Variant A Mockups",
-          title: "Content Studio Mockup",
-          description:
-            "A fixture-backed registry and detail handoff that shows the calm main lane and readiness rail of Variant A in a production-like shell.",
-          backToLab: "Mockup index",
-          create: "Create content",
-          searchLabel: "Search mockup contents",
-          searchPlaceholder: "Search by external key or localized title",
-          filterTypes: "All types",
-          filterState: "All states",
-          active: "Active",
-          inactive: "Inactive",
-          records: "records",
-          summaryDescription:
-            "Filters stay intentionally light so the registry remains calm before the detail handoff.",
-          createTitle: "Create content",
-          createDescription:
-            "This modal previews the Variant A creation posture: short metadata fields up front, locale workspaces after save, and the right rail left free for readiness context.",
-          createOutcomeTitle: "Expected outcome",
-          createOutcomeBody:
-            "After save, editors land in the detail workspace with the first locale tab open and story-page handoff available for STORY records.",
-          close: "Close",
-          snapshotTitle: "Registry readiness",
-          snapshotDescription:
-            "The rail keeps overall release posture visible while the main lane stays focused on the registry.",
-          visible: "Visible locales",
-          processing: "Processing complete",
-          demo: "Variant A demo",
-          reference: "Reference item",
-          open: "Open workspace",
-          noteTitle: "Why this shell wins",
-          noteOne:
-            "The registry remains quiet until an editor commits to a detail route.",
-          noteTwo:
-            "Create stays available without competing with readiness context.",
-          noteThree:
-            "Story-specific actions remain off the list screen until the selected record needs them.",
-          toolbarTitle: "Registry controls",
-        };
 
-  const typeOptions = useMemo(() => {
-    const nextOptions = new Set<string>();
+  const typeCounts = useMemo(() => {
+    const counts = Object.fromEntries(
+      typeOrder.map((type) => [type, 0]),
+    ) as Record<ContentTab, number>;
 
     mockupContentRegistry.forEach((content) => {
-      nextOptions.add(content.typeLabel);
+      counts[content.typeLabel] += 1;
     });
 
-    return ["ALL", ...Array.from(nextOptions)];
+    return counts;
   }, []);
 
   const filteredContents = useMemo(() => {
     const normalizedSearch = deferredSearch.trim().toLowerCase();
 
     return mockupContentRegistry.filter((content) => {
-      if (selectedType !== "ALL" && content.typeLabel !== selectedType) {
+      if (content.typeLabel !== selectedType) {
         return false;
       }
 
-      if (selectedState === "ACTIVE" && !content.active) {
+      if (
+        selectedReadiness !== "ALL" &&
+        getReadiness(content, selectedLanguage, locale) !== selectedReadiness
+      ) {
         return false;
       }
 
-      if (selectedState === "INACTIVE" && content.active) {
-        return false;
-      }
+      if (normalizedSearch.length === 0) return true;
 
-      if (normalizedSearch.length === 0) {
-        return true;
-      }
-
+      const localizedTitle = getTitle(content, selectedLanguage).toLowerCase();
       return (
+        localizedTitle.includes(normalizedSearch) ||
         content.externalKey.toLowerCase().includes(normalizedSearch) ||
-        content.locales.some((localeState) =>
-          localeState.title.toLowerCase().includes(normalizedSearch),
-        )
+        content.id.toLowerCase().includes(normalizedSearch)
       );
     });
-  }, [deferredSearch, selectedState, selectedType]);
+  }, [
+    deferredSearch,
+    locale,
+    selectedLanguage,
+    selectedReadiness,
+    selectedType,
+  ]);
 
-  const visibleLocaleCount = mockupContentRegistry.reduce(
-    (sum, content) => sum + countVisibleLocales(content.locales),
-    0,
-  );
-  const processingCompleteCount = mockupContentRegistry.reduce(
-    (sum, content) => sum + countProcessingComplete(content.locales),
-    0,
-  );
-  const totalLocaleCount = mockupContentRegistry.reduce(
-    (sum, content) => sum + content.locales.length,
-    0,
-  );
+  const actionRequiredCount = filteredContents.filter(
+    (content) =>
+      getReadiness(content, selectedLanguage, locale) === "ACTION_REQUIRED",
+  ).length;
+  const hasActiveFilters =
+    search.trim().length > 0 ||
+    selectedLanguage !== "tr" ||
+    selectedReadiness !== "ALL";
 
-  const columns: DataTableColumn<MockupContentSummary>[] = [
-    {
-      id: "content",
-      header: locale === "tr" ? "Content" : "Content",
-      cell: (content) => (
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="font-medium text-foreground">
-              {content.locales[0]?.title ?? content.externalKey}
-            </p>
-            <MockupStatusPill tone={content.isDemo ? "accent" : "default"}>
-              {content.isDemo ? copy.demo : copy.reference}
-            </MockupStatusPill>
-          </div>
-          <p className="text-xs text-muted-foreground">{content.externalKey}</p>
+  const resetFilters = () => {
+    setSearch("");
+    setSelectedLanguage("tr");
+    setSelectedReadiness("ALL");
+    setExpanded(null);
+  };
+
+  const getCompactTypeMeta = (content: MockupContentSummary) => {
+    return selectedType === "STORY"
+      ? `${content.pageCount ?? "—"} ${copy.pages}`
+      : null;
+  };
+  const formatDuration = (content: MockupContentSummary) => {
+    const durationMinutes =
+      content.typeLabel === "MEDITATION"
+        ? getLocalizedState(content, selectedLanguage)?.durationMinutes
+        : content.playbackDurationMinutes;
+
+    return durationMinutes == null
+      ? "—"
+      : `${durationMinutes} ${locale === "tr" ? "dk" : "min"}`;
+  };
+
+  const identityColumn: DataTableColumn<MockupContentSummary> = {
+    id: "content",
+    header: getTypeLabel(selectedType, locale),
+    cellClassName: "min-w-0 whitespace-normal",
+    cell: (content) => (
+      <div className="space-y-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-medium text-foreground">
+            {getTitle(content, selectedLanguage)}
+          </p>
+          <MockupStatusPill tone={content.isDemo ? "accent" : "default"}>
+            {content.isDemo ? copy.demo : copy.reference}
+          </MockupStatusPill>
+          {selectedType === "STORY" ? (
+            <ChevronRight
+              aria-hidden="true"
+              className="size-4 text-muted-foreground"
+            />
+          ) : null}
         </div>
-      ),
-    },
-    {
-      id: "type",
-      header: locale === "tr" ? "Format" : "Format",
-      cell: (content) => (
-        <MockupStatusPill tone="default">{content.typeLabel}</MockupStatusPill>
-      ),
-    },
-    {
-      id: "state",
-      header: locale === "tr" ? "State" : "State",
-      cell: (content) => (
-        <MockupStatusPill tone={getStateTone(content)}>
-          {content.active ? copy.active : copy.inactive}
-        </MockupStatusPill>
-      ),
-    },
-    {
-      id: "locales",
-      header: locale === "tr" ? "Locale coverage" : "Locale coverage",
-      cell: (content) => (
+        <p className="text-xs text-muted-foreground">
+          {content.externalKey} · #{content.id}
+        </p>
+        {getCompactTypeMeta(content) ? (
+          <p className="text-xs text-muted-foreground sm:hidden">
+            {getCompactTypeMeta(content)}
+          </p>
+        ) : null}
+      </div>
+    ),
+  };
+  const coverageColumn: DataTableColumn<MockupContentSummary> = {
+    id: "coverage",
+    header: locale === "tr" ? "Dil kapsamı" : "Locale coverage",
+    headerClassName: "hidden sm:table-cell",
+    cellClassName: "hidden sm:table-cell",
+    cell: (content) => {
+      const localizedState = getLocalizedState(content, selectedLanguage);
+
+      return (
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {countVisibleLocales(content.locales)} / {content.locales.length}{" "}
-            {copy.visible}
+            {content.locales.length} {copy.languages}
           </p>
-          <p className="text-xs text-muted-foreground">{content.note}</p>
+          <p className="text-xs text-muted-foreground">
+            {selectedLanguage.toUpperCase()} ·{" "}
+            {localizedState
+              ? getLanguageLabel(selectedLanguage, locale)
+              : copy.noLocalization}
+          </p>
         </div>
-      ),
+      );
     },
-    {
-      id: "actions",
-      header: locale === "tr" ? "Actions" : "Actions",
-      align: "right",
-      cellClassName: "w-[1%]",
-      cell: (content) =>
-        content.isDemo ? (
-          <Button asChild size="sm" type="button" variant="outline">
-            <Link to="/labs/mockups/contents/demo-content">
-              <Eye className="size-4" />
-              {copy.open}
-            </Link>
-          </Button>
-        ) : (
-          <Button disabled size="sm" type="button" variant="ghost">
-            {copy.reference}
-          </Button>
-        ),
-    },
-  ];
+  };
+  const readinessColumn: DataTableColumn<MockupContentSummary> = {
+    id: "readiness",
+    header: locale === "tr" ? "Yayın durumu" : "Readiness",
+    cellClassName: "whitespace-normal",
+    cell: (content) => (
+      <ReadinessCell
+        content={content}
+        expanded={expanded === content.id}
+        language={selectedLanguage}
+        locale={locale}
+        onToggle={(contentId) =>
+          setExpanded((current) => (current === contentId ? null : contentId))
+        }
+      />
+    ),
+  };
+  const columns: DataTableColumn<MockupContentSummary>[] =
+    selectedType === "STORY"
+      ? [
+          identityColumn,
+          {
+            id: "pages",
+            header: locale === "tr" ? "Sayfalar" : "Pages",
+            headerClassName: "hidden sm:table-cell",
+            cellClassName: "hidden sm:table-cell",
+            cell: (content) => `${content.pageCount ?? "—"} ${copy.pages}`,
+          },
+          coverageColumn,
+          readinessColumn,
+        ]
+      : [
+          identityColumn,
+          {
+            id: "duration",
+            header: copy.duration,
+            headerClassName: "hidden sm:table-cell",
+            cellClassName: "hidden sm:table-cell",
+            cell: (content) => formatDuration(content),
+          },
+          coverageColumn,
+          readinessColumn,
+        ];
 
   return (
     <>
@@ -267,93 +578,129 @@ export function MockupContentsRoute() {
             </Button>
           </>
         }
-        aside={
-          <TaskRail
-            title={copy.snapshotTitle}
-            description={copy.snapshotDescription}
-            stats={[
-              {
-                label: copy.visible,
-                value: `${visibleLocaleCount} / ${totalLocaleCount}`,
-                tone: visibleLocaleCount > 0 ? "success" : "warning",
-              },
-              {
-                label: copy.processing,
-                value: `${processingCompleteCount} / ${totalLocaleCount}`,
-                tone:
-                  processingCompleteCount === totalLocaleCount
-                    ? "success"
-                    : "warning",
-              },
-            ]}
-          >
-            <div className="grid gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-              <p className="font-medium text-foreground">{copy.noteTitle}</p>
-              <p>{copy.noteOne}</p>
-              <p>{copy.noteTwo}</p>
-              <p>{copy.noteThree}</p>
-            </div>
-          </TaskRail>
-        }
         toolbar={
-          <FilterBar aria-label={copy.toolbarTitle}>
-            <FilterBarGroup>
-              <div className="relative min-w-[16rem] flex-1">
-                <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
-                <Input
-                  aria-label={copy.searchLabel}
-                  className="pl-8"
-                  placeholder={copy.searchPlaceholder}
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-            </FilterBarGroup>
-            <FilterBarActions>
-              {typeOptions.map((typeOption) => (
-                <Button
-                  key={typeOption}
-                  size="sm"
-                  type="button"
-                  variant={
-                    selectedType === typeOption ? "secondary" : "outline"
-                  }
-                  onClick={() => setSelectedType(typeOption)}
+          <div className="space-y-4" data-testid="contents-registry-mockup">
+            <div className="border-b border-border/60 pb-1">
+              <TypeTabs
+                counts={typeCounts}
+                locale={locale}
+                onValueChange={(value) => {
+                  setSelectedType(value);
+                  setExpanded(null);
+                }}
+                value={selectedType}
+              />
+            </div>
+
+            <RegistryToolbar
+              ariaLabel={copy.toolbarLabel}
+              search={
+                <RegistryToolbarGroup
+                  className="w-full"
+                  label={copy.searchLabel}
                 >
-                  {typeOption === "ALL" ? copy.filterTypes : typeOption}
-                </Button>
-              ))}
-              {[
-                { key: "ALL" as const, label: copy.filterState },
-                { key: "ACTIVE" as const, label: copy.active },
-                { key: "INACTIVE" as const, label: copy.inactive },
-              ].map((stateOption) => (
-                <Button
-                  key={stateOption.key}
-                  size="sm"
-                  type="button"
-                  variant={
-                    selectedState === stateOption.key ? "secondary" : "outline"
-                  }
-                  onClick={() => setSelectedState(stateOption.key)}
-                >
-                  {stateOption.label}
-                </Button>
-              ))}
-            </FilterBarActions>
-            <FilterBarSummary
-              title={`${filteredContents.length} / ${mockupContentRegistry.length} ${copy.records}`}
-              description={copy.summaryDescription}
+                  <div className="relative min-w-[16rem] flex-1">
+                    <Search className="pointer-events-none absolute left-2.5 top-2 size-4 text-muted-foreground" />
+                    <Input
+                      aria-label={copy.searchLabel}
+                      className="pl-8"
+                      placeholder={copy.searchPlaceholder}
+                      value={search}
+                      onChange={(event) => {
+                        setSearch(event.target.value);
+                        setExpanded(null);
+                      }}
+                    />
+                  </div>
+                </RegistryToolbarGroup>
+              }
+              filters={
+                <>
+                  <RegistryToolbarGroup label={copy.languageLabel}>
+                    <Select
+                      value={selectedLanguage}
+                      onValueChange={(value) => {
+                        setSelectedLanguage(value as LanguageCode);
+                        setExpanded(null);
+                      }}
+                    >
+                      <SelectTrigger
+                        aria-label={copy.languageLabel}
+                        className="w-[9.5rem]"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languageOptions.map((language) => (
+                          <SelectItem key={language} value={language}>
+                            {getLanguageLabel(language, locale)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </RegistryToolbarGroup>
+                  <RegistryToolbarGroup label={copy.readinessLabel}>
+                    <Select
+                      value={selectedReadiness}
+                      onValueChange={(value) => {
+                        setSelectedReadiness(value as ReadinessFilter);
+                        setExpanded(null);
+                      }}
+                    >
+                      <SelectTrigger
+                        aria-label={copy.readinessLabel}
+                        className="w-[11.5rem]"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(
+                          [
+                            "ALL",
+                            "ACTION_REQUIRED",
+                            "READY_TO_PUBLISH",
+                            "PUBLISHED",
+                          ] as ReadinessFilter[]
+                        ).map((readiness) => (
+                          <SelectItem key={readiness} value={readiness}>
+                            {getReadinessLabel(readiness, locale)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </RegistryToolbarGroup>
+                  {hasActiveFilters ? (
+                    <Button
+                      className="self-end"
+                      type="button"
+                      variant="ghost"
+                      onClick={resetFilters}
+                    >
+                      <RotateCcw className="size-4" />
+                      {copy.reset}
+                    </Button>
+                  ) : null}
+                </>
+              }
+              summaryTitle={`${filteredContents.length} ${copy.records} · ${selectedLanguage.toUpperCase()}`}
+              summaryDescription={`${actionRequiredCount} ${copy.actionCount} · ${copy.updatedFirst}`}
             />
-          </FilterBar>
+          </div>
         }
       >
-        <DataTable
-          caption="Variant A content mockup registry"
-          columns={columns}
-          getRowId={(content) => content.id}
-          rows={filteredContents}
-        />
+        <div data-testid="contents-type-table">
+          <DataTable
+            caption={copy.tableCaption}
+            columns={columns}
+            getRowId={(content) => content.id}
+            onRowClick={
+              selectedType === "STORY"
+                ? (content) => navigate(`/labs/mockups/contents/${content.id}`)
+                : undefined
+            }
+            rows={filteredContents}
+          />
+        </div>
       </ContentPageShell>
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -366,19 +713,7 @@ export function MockupContentsRoute() {
             <MockupInfoCard
               title={copy.createOutcomeTitle}
               description={copy.createOutcomeBody}
-            >
-              <div className="grid gap-3 sm:grid-cols-3">
-                <MockupStatusPill tone="accent">
-                  Metadata first
-                </MockupStatusPill>
-                <MockupStatusPill tone="success">
-                  Locale tabs after save
-                </MockupStatusPill>
-                <MockupStatusPill tone="default">
-                  Readiness stays in the rail
-                </MockupStatusPill>
-              </div>
-            </MockupInfoCard>
+            />
           </DialogBody>
           <DialogFooter>
             <Button

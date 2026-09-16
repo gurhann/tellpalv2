@@ -39,7 +39,7 @@ export function WorkspaceShell({
     >
       <div className={cn("min-w-0 space-y-5", !aside && "xl:col-span-2")}>
         <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
-          <CardHeader className="gap-3 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] px-5 py-5 sm:flex sm:flex-row sm:items-start sm:justify-between sm:px-6">
+          <CardHeader className="grid-cols-1 gap-3 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] px-5 py-5 sm:grid-cols-[1fr_auto] sm:flex-row sm:items-start sm:justify-between sm:px-6">
             <div className="min-w-0 space-y-2">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 {eyebrow}
@@ -55,7 +55,7 @@ export function WorkspaceShell({
             </div>
 
             {actions ? (
-              <CardAction className="col-auto row-auto mt-1 w-full justify-self-stretch sm:w-auto">
+              <CardAction className="col-start-1 row-span-1 row-start-auto mt-1 w-full justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:w-auto sm:justify-self-end">
                 <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                   {actions}
                 </div>

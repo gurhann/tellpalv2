@@ -10,6 +10,7 @@ export type MockupLocaleState = {
   hasCover?: boolean;
   hasAudio?: boolean;
   hasIllustration?: boolean;
+  durationMinutes?: number;
   note: string;
 };
 
@@ -26,10 +27,12 @@ export type MockupContributorAssignment = {
 export type MockupContentSummary = {
   id: string;
   externalKey: string;
-  typeLabel: string;
+  typeLabel: "STORY" | "MEDITATION" | "LULLABY";
   active: boolean;
   ageRange: number;
   pageCount: number | null;
+  playbackDurationMinutes?: number;
+  hasTextlessCover?: boolean;
   locales: MockupLocaleState[];
   summaryLabel: string;
   note: string;
@@ -74,5 +77,6 @@ export type MockupStoryPage = {
   pageNumber: number;
   summary: string;
   note: string;
+  hasTextlessSource?: boolean;
   localizations: MockupLocaleState[];
 };

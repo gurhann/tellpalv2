@@ -51,6 +51,98 @@ function renderMockupRoute(initialEntry: string) {
 }
 
 describe("Variant A mockup routes", () => {
+  it("uses content types as separate tables with type-specific columns", async () => {
+    renderMockupRoute("/labs/mockups/contents");
+
+    const typeTabs = await screen.findByRole("tablist", {
+      name: /content type/i,
+    });
+
+    expect(
+      within(typeTabs).getByRole("tab", { name: "Stories", exact: true }),
+    ).toBeVisible();
+    expect(
+      within(typeTabs).queryByRole("tab", {
+        name: "Audio stories",
+        exact: true,
+      }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /language/i })).toBeVisible();
+    expect(screen.getByRole("combobox", { name: /readiness/i })).toBeVisible();
+    expect(
+      screen.getByRole("columnheader", { name: "Pages", exact: true }),
+    ).toBeVisible();
+    expect(screen.getByText("Yildizli Liman")).toBeInTheDocument();
+
+    const blockerTrigger = screen.getAllByRole("button", {
+      name: "2 blockers",
+    })[0];
+    fireEvent.click(blockerTrigger);
+    expect(
+      screen.getByRole("region", { name: /publish blockers for turkish/i }),
+    ).toBeInTheDocument();
+    fireEvent.click(blockerTrigger);
+    expect(
+      screen.queryByRole("region", { name: /publish blockers for turkish/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      within(typeTabs).getByRole("tab", { name: "Meditations", exact: true }),
+    );
+
+    await waitFor(() => {
+      expect(
+        within(typeTabs).getByRole("tab", {
+          name: "Meditations",
+          exact: true,
+        }),
+      ).toHaveAttribute("data-state", "active");
+    });
+    expect(
+      screen.queryByRole("columnheader", { name: "Runtime", exact: true }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("columnheader", { name: "Focus", exact: true }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("meditation.rain-window-reset"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Duration", exact: true }),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("combobox", { name: /language/i }));
+    fireEvent.click(await screen.findByRole("option", { name: "English" }));
+    expect(screen.getByText("12 min")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("columnheader", { name: "Pages", exact: true }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      within(typeTabs).getByRole("tab", { name: "Lullabies", exact: true }),
+    );
+    await waitFor(() => {
+      expect(
+        within(typeTabs).getByRole("tab", {
+          name: "Lullabies",
+          exact: true,
+        }),
+      ).toHaveAttribute("data-state", "active");
+    });
+    expect(screen.getByText("4 min")).toBeInTheDocument();
+  });
+
+  it("opens the story workspace when an editor selects a story row", async () => {
+    renderMockupRoute("/labs/mockups/contents");
+
+    fireEvent.click(
+      await screen.findByRole("row", { name: /yildizli liman/i }),
+    );
+
+    expect(
+      await screen.findByRole("link", { name: /back to registry/i }),
+    ).toBeInTheDocument();
+  });
+
   it("opens and closes the content create modal", async () => {
     renderMockupRoute("/labs/mockups/contents");
 
@@ -98,6 +190,54 @@ describe("Variant A mockup routes", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText(/preferred locale/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/turkish/i).length).toBeGreaterThan(0);
+  });
+
+  it("keeps content detail focused on one locale workspace", async () => {
+    renderMockupRoute("/labs/mockups/contents/demo-content");
+
+    expect(
+      await screen.findByRole("heading", { name: /locale workspace/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /content metadata/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /contributor assignments/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /operational summary/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/why it works/i)).not.toBeInTheDocument();
+  });
+
+  it("keeps locale and source asset actions available in the detail mockup", async () => {
+    renderMockupRoute("/labs/mockups/contents/demo-content");
+
+    expect(
+      (await screen.findAllByRole("button", { name: /manage asset/i })).length,
+    ).toBe(3);
+    expect(screen.getAllByRole("button", { name: /edit source/i }).length).toBe(
+      4,
+    );
+
+    fireEvent.click(
+      (await screen.findAllByRole("button", { name: /manage asset/i }))[0],
+    );
+
+    expect(
+      await screen.findByRole("dialog", { name: /choose or upload an asset/i }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /choose existing asset/i }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: /choose or upload an asset/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it("changes the selected locale in the category detail workspace", async () => {
