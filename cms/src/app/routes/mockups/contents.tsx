@@ -693,10 +693,8 @@ export function MockupContentsRoute() {
             caption={copy.tableCaption}
             columns={columns}
             getRowId={(content) => content.id}
-            onRowClick={
-              selectedType === "STORY"
-                ? (content) => navigate(`/labs/mockups/contents/${content.id}`)
-                : undefined
+            onRowClick={(content) =>
+              navigate(`/labs/mockups/contents/${content.id}`)
             }
             rows={filteredContents}
           />

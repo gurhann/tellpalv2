@@ -1,0 +1,124 @@
+{
+  "evidence": [
+    {
+      "id": "canonical-content-types",
+      "source": "be/src/main/java/com/tellpal/v2/content/domain/ContentType.java",
+      "claim": "The persisted content types are STORY, MEDITATION, and LULLABY; an audio story is not a separate content type.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "story-audio-semantics",
+      "source": "cms/src/features/contents/components/content-localization-form.tsx; cms/src/app/routes/story-pages.tsx; be/src/main/java/com/tellpal/v2/content/domain/StoryNarration.java",
+      "claim": "Story narration is a story localization property, while page audio belongs to localized story pages; these are distinct from a generic localized audio field.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "localized-asset-bindings",
+      "source": "cms/src/features/contents/components/content-localization-form.tsx; be/src/main/java/com/tellpal/v2/content/domain/ContentLocalization.java",
+      "claim": "A localization can manage localized title, description/body, cover asset, duration, and its relevant audio binding.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "content-level-metadata",
+      "source": "cms/src/features/contents/components/content-form.tsx; be/src/main/java/com/tellpal/v2/content/domain/Content.java",
+      "claim": "Content-level metadata includes external key, age range, and active state; content type is locked while editing an existing record.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "story-cover-ownership",
+      "source": "be/docs/adr/ADR-0010-content-asset-ownership.md; cms/src/app/routes/contents/detail.tsx",
+      "claim": "Story source/textless cover, localized reading covers, and shared listening cover are separate asset ownership concepts.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "lullaby-cover-ownership",
+      "source": "be/docs/adr/ADR-0010-content-asset-ownership.md; cms/src/features/contents/components/content-form.tsx",
+      "claim": "Lullabies have content-scoped listing and playback/detail cover variants.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "lullaby-shared-playback",
+      "source": "cms/src/features/contents/components/lullaby-playback-editor.tsx; be/src/main/java/com/tellpal/v2/content/domain/LullabyPlayback.java",
+      "claim": "Lullaby playback audio, duration, processing state, and instruments are shared content-level data rather than locale-specific fields.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "locale-selection-context",
+      "source": "cms/src/features/contents/components/localization-tabs.tsx; cms/src/app/routes/contents/detail.tsx",
+      "claim": "The selected locale drives the localization workspace and is preserved in the URL when navigating to story pages.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "localization-lifecycle",
+      "source": "cms/src/features/contents/components/localization-tabs.tsx; cms/src/features/contents/components/content-localization-form.tsx",
+      "claim": "The detail screen supports adding a localization and editing localization status, processing information, publication date, and mobile visibility.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "publication-actions",
+      "source": "cms/src/features/contents/components/localization-tabs.tsx; cms/src/features/contents/components/publication-actions.tsx",
+      "claim": "Publication actions are part of the selected localization workflow, including publish/archive posture.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "contributors",
+      "source": "cms/src/features/contributors/components/content-contributor-panel.tsx",
+      "claim": "Content contributors can be assigned, edited, reordered, and unassigned, with role and language scope.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "source-page-assets",
+      "source": "cms/src/app/routes/contents/detail.tsx; cms/src/features/story-pages/components/story-content-preview-dialog.tsx; be/docs/adr/ADR-0010-content-asset-ownership.md",
+      "claim": "Story source cover and page-level source illustrations are managed independently of localized assets and publication readiness.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "story-preview",
+      "source": "cms/src/app/routes/contents/detail.tsx; cms/src/features/story-pages/components/story-content-preview-dialog.tsx",
+      "claim": "The production detail screen provides a selected-locale story preview with playback/navigation and page editing entry points.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "story-page-navigation",
+      "source": "cms/src/app/routes/story-pages.tsx; cms/src/app/routes/contents/detail.tsx",
+      "claim": "The detail screen can open the story-pages child route while retaining the selected language context.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "operational-rail",
+      "source": "cms/src/app/routes/contents/detail.tsx",
+      "claim": "The detail screen summarizes visible locales, processing completion, and story page count in a compact operational rail.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "route-error-states",
+      "source": "cms/src/app/routes/contents/detail.tsx",
+      "claim": "The route handles invalid content identifiers, loading, not-found, and retryable API error states.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "type-specific-localization",
+      "source": "cms/src/features/contents/components/content-localization-form.tsx",
+      "claim": "Meditation localizations expose localized description, audio, and duration, while lullaby localization stays limited to locale metadata and status because playback is content-scoped.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "type-specific-content-assets",
+      "source": "cms/src/features/contents/components/content-form.tsx; be/docs/adr/ADR-0010-content-asset-ownership.md",
+      "claim": "Meditation supports a shared listening cover; lullaby exposes separate static listing and animated playback covers.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "mockup-registry-navigation",
+      "source": "cms/src/app/routes/mockups/contents.tsx; cms/src/features/mockups/fixtures.ts",
+      "claim": "The type-tabbed contents registry contains Story, Meditation, and Lullaby records and can route a selected row to its content detail mockup.",
+      "verdict": "VERIFIED"
+    },
+    {
+      "id": "asset-preview-pattern",
+      "source": "cms/src/features/assets/components/asset-picker-field.tsx; cms/src/features/assets/components/asset-field-preview.tsx",
+      "claim": "The production asset picker presents selected image and audio assets through bounded previews with compact management actions.",
+      "verdict": "VERIFIED"
+    }
+  ]
+}

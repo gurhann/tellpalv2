@@ -11,6 +11,7 @@ type ContentPageShellProps = {
   children: ReactNode;
   aside?: ReactNode;
   className?: string;
+  showHeader?: boolean;
 };
 
 export function ContentPageShell({
@@ -22,6 +23,7 @@ export function ContentPageShell({
   children,
   aside,
   className,
+  showHeader,
 }: ContentPageShellProps) {
   return (
     <WorkspaceShell
@@ -32,6 +34,7 @@ export function ContentPageShell({
       actions={actions}
       aside={aside}
       className={className}
+      showHeader={showHeader}
     >
       {children}
     </WorkspaceShell>

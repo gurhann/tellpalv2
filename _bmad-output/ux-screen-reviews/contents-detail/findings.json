@@ -1,0 +1,123 @@
+{
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "high",
+      "user_impact": "The label 'Localized audio' blurs story narration and page-level audio, so an editor cannot tell which audio asset is being managed from the content detail screen.",
+      "affected_function_ids": ["manage-story-narration", "manage-page-audio"],
+      "evidence": ["story-audio-semantics"]
+    },
+    {
+      "id": "F-002",
+      "severity": "high",
+      "user_impact": "The mockup exposes the localized reading cover and source cover but omits the shared listening cover, hiding a real story asset workflow.",
+      "affected_function_ids": ["manage-listening-cover", "manage-localized-cover", "manage-source-cover"],
+      "evidence": ["story-cover-ownership"]
+    },
+    {
+      "id": "F-003",
+      "severity": "high",
+      "user_impact": "The locale workspace is visually read-only: copy, duration, status, mobile visibility, processing, and publication actions are not represented as editable controls.",
+      "affected_function_ids": ["edit-locale-copy", "manage-locale-duration", "manage-locale-status", "publish-or-archive-locale", "create-localization"],
+      "evidence": ["localized-asset-bindings", "localization-lifecycle", "publication-actions"]
+    },
+    {
+      "id": "F-004",
+      "severity": "high",
+      "user_impact": "The header only opens the story-page mockup; it does not expose the production story preview flow with playback and page navigation.",
+      "affected_function_ids": ["preview-story", "preserve-locale-context"],
+      "evidence": ["story-preview"]
+    },
+    {
+      "id": "F-005",
+      "severity": "medium",
+      "user_impact": "Contributor assignments are shown as a static list, making the credits workspace look informational even though assignments, roles, language scope, and order are managed here.",
+      "affected_function_ids": ["manage-contributors"],
+      "evidence": ["contributors"]
+    },
+    {
+      "id": "F-006",
+      "severity": "medium",
+      "user_impact": "Content metadata appears as three immutable values and does not represent active-state editing; this makes the shared content workspace look incomplete.",
+      "affected_function_ids": ["edit-content-metadata"],
+      "evidence": ["content-level-metadata"]
+    },
+    {
+      "id": "F-007",
+      "severity": "high",
+      "user_impact": "Meditation and lullaby rows in the type tables did not open a detail workspace, so type-specific editorial work was unreachable from the primary registry flow.",
+      "affected_function_ids": ["open-meditation-detail", "open-lullaby-detail"],
+      "evidence": ["mockup-registry-navigation"]
+    },
+    {
+      "id": "F-008",
+      "severity": "high",
+      "user_impact": "Using the story detail template for every type would expose story-only concepts such as pages and source illustrations where they do not apply, while hiding meditation and lullaby-specific fields.",
+      "affected_function_ids": ["open-meditation-detail", "manage-meditation-audio-duration", "open-lullaby-detail", "manage-lullaby-cover-variants", "manage-lullaby-playback"],
+      "evidence": ["type-specific-localization", "type-specific-content-assets", "lullaby-shared-playback"]
+    },
+    {
+      "id": "F-009",
+      "severity": "medium",
+      "user_impact": "Language-independent metadata appeared after the locale workspace, forcing editors to pass through language-specific work before reaching content-level decisions.",
+      "affected_function_ids": ["edit-content-metadata", "manage-listening-cover", "manage-lullaby-cover-variants"],
+      "evidence": ["content-level-metadata", "story-cover-ownership", "type-specific-content-assets"]
+    },
+    {
+      "id": "F-010",
+      "severity": "medium",
+      "user_impact": "Tall locale tabs with repeated status labels used too much vertical space and made locale selection compete with the editing workspace.",
+      "affected_function_ids": ["select-active-locale", "manage-locale-status"],
+      "evidence": ["locale-selection-context", "localization-lifecycle"]
+    },
+    {
+      "id": "F-011",
+      "severity": "medium",
+      "user_impact": "A separate mobile-visibility action was unclear and duplicated the state-management concept represented by localization status.",
+      "affected_function_ids": ["manage-locale-status"],
+      "evidence": ["localization-lifecycle"]
+    },
+    {
+      "id": "F-012",
+      "severity": "medium",
+      "user_impact": "Loaded image and audio cards occupied more space than necessary and did not communicate the compact selected-asset pattern used by the production asset controls.",
+      "affected_function_ids": ["manage-localized-cover", "manage-story-narration", "manage-meditation-audio-duration", "manage-lullaby-playback", "manage-source-cover", "manage-lullaby-cover-variants"],
+      "evidence": ["asset-preview-pattern", "localized-asset-bindings", "lullaby-shared-playback", "source-page-assets"]
+    },
+    {
+      "id": "F-013",
+      "severity": "medium",
+      "user_impact": "The locale workspace repeated the current title and description in a summary card before showing the same values as editable form fields, adding noise without a separate decision or action.",
+      "affected_function_ids": ["edit-locale-copy", "select-active-locale"],
+      "evidence": ["locale-selection-context", "localized-asset-bindings"]
+    },
+    {
+      "id": "F-014",
+      "severity": "low",
+      "user_impact": "The content metadata section used a technical title and repeated content type as a form field, making the shared content context feel heavier than necessary.",
+      "affected_function_ids": ["edit-content-metadata"],
+      "evidence": ["content-level-metadata", "canonical-content-types"]
+    },
+    {
+      "id": "F-015",
+      "severity": "medium",
+      "user_impact": "A separate content-details section added a large navigation stop before the locale workspace, while story preview and story-page actions were visually detached from the locale they operate on.",
+      "affected_function_ids": ["preview-story", "preserve-locale-context", "edit-content-metadata", "manage-listening-cover"],
+      "evidence": ["story-preview", "story-page-navigation", "content-level-metadata", "story-cover-ownership"]
+    },
+    {
+      "id": "F-016",
+      "severity": "medium",
+      "user_impact": "The page header card repeated the story title and explanatory copy already available in the locale workspace, adding vertical weight before the primary editing surface.",
+      "affected_function_ids": ["edit-locale-copy", "preview-story", "preserve-locale-context", "open-registry"],
+      "evidence": ["locale-selection-context", "story-preview", "story-page-navigation"]
+    },
+    {
+      "id": "F-017",
+      "severity": "medium",
+      "user_impact": "Meditation and lullaby detail pages used the same redundant page header pattern, leaving the back action detached from the locale workspace that owns the editing context.",
+      "affected_function_ids": ["edit-locale-copy", "open-meditation-detail", "open-lullaby-detail", "open-registry"],
+      "evidence": ["locale-selection-context", "mockup-registry-navigation", "type-specific-localization"]
+    }
+  ]
+}

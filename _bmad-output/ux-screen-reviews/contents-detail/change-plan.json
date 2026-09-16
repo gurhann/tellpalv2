@@ -1,0 +1,140 @@
+{
+  "changes": [
+    {
+      "id": "C-001",
+      "finding_id": "F-001",
+      "scope": "mockup",
+      "preserved_function_ids": ["manage-story-narration", "manage-page-audio"],
+      "evidence_ids": ["story-audio-semantics"],
+      "change": "Rename the story locale audio card to Story narration and add an explicit handoff note that page-level audio is managed in Story pages; keep the asset dialog actions intact."
+    },
+    {
+      "id": "C-002",
+      "finding_id": "F-002",
+      "scope": "mockup",
+      "preserved_function_ids": ["manage-listening-cover", "manage-localized-cover", "manage-source-cover"],
+      "evidence_ids": ["story-cover-ownership"],
+      "change": "Add a shared listening-cover asset card in the content-level section, separate from the selected locale cover and source cover."
+    },
+    {
+      "id": "C-003",
+      "finding_id": "F-003",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-locale-copy", "manage-locale-duration", "manage-locale-status", "publish-or-archive-locale", "create-localization"],
+      "evidence_ids": ["localized-asset-bindings", "localization-lifecycle", "publication-actions"],
+      "change": "Represent the selected locale's editable fields and lifecycle actions in a compact form-like workspace, with explicit save, publication, visibility, processing, and add-locale affordances."
+    },
+    {
+      "id": "C-004",
+      "finding_id": "F-004",
+      "scope": "mockup",
+      "preserved_function_ids": ["preview-story", "preserve-locale-context"],
+      "evidence_ids": ["story-preview"],
+      "change": "Add a preview action alongside the story-pages handoff, opening a compact locale-aware preview dialog in the mockup."
+    },
+    {
+      "id": "C-005",
+      "finding_id": "F-005",
+      "scope": "mockup",
+      "preserved_function_ids": ["manage-contributors"],
+      "evidence_ids": ["contributors"],
+      "change": "Add compact assignment controls to the contributor section: assign contributor, edit, reorder, and unassign affordances."
+    },
+    {
+      "id": "C-006",
+      "finding_id": "F-006",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-content-metadata"],
+      "evidence_ids": ["content-level-metadata"],
+      "change": "Turn shared metadata into a compact editable form, keeping content type read-only and adding the verified active-state control."
+    },
+    {
+      "id": "C-007",
+      "finding_id": "F-007",
+      "scope": "mockup",
+      "preserved_function_ids": ["open-meditation-detail", "open-lullaby-detail"],
+      "evidence_ids": ["mockup-registry-navigation"],
+      "change": "Make every row in the type-specific contents tables open its matching detail mockup."
+    },
+    {
+      "id": "C-008",
+      "finding_id": "F-008",
+      "scope": "mockup",
+      "preserved_function_ids": ["open-meditation-detail", "manage-meditation-audio-duration", "open-lullaby-detail", "manage-lullaby-cover-variants", "manage-lullaby-playback"],
+      "evidence_ids": ["type-specific-localization", "type-specific-content-assets", "lullaby-shared-playback"],
+      "change": "Add type-specific detail variants: Meditation gets locale audio/duration plus shared listening cover; Lullaby gets locale metadata, shared playback/instrument entry, and separate listing/playback covers."
+    },
+    {
+      "id": "C-009",
+      "finding_id": "F-009",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-content-metadata", "manage-listening-cover", "manage-lullaby-cover-variants"],
+      "evidence_ids": ["content-level-metadata", "story-cover-ownership", "type-specific-content-assets"],
+      "change": "Place the shared metadata and content-level asset section before locale-specific editing in Story, Meditation, and Lullaby detail variants."
+    },
+    {
+      "id": "C-010",
+      "finding_id": "F-010",
+      "scope": "mockup",
+      "preserved_function_ids": ["select-active-locale", "manage-locale-status"],
+      "evidence_ids": ["locale-selection-context", "localization-lifecycle"],
+      "change": "Add a compact language-tab presentation and communicate locale status through the tab tone without repeating status text in the tab."
+    },
+    {
+      "id": "C-011",
+      "finding_id": "F-011",
+      "scope": "mockup",
+      "preserved_function_ids": ["manage-locale-status"],
+      "evidence_ids": ["localization-lifecycle"],
+      "change": "Remove the standalone mobile-visibility edit action while retaining the operational visibility summary and locale lifecycle controls."
+    },
+    {
+      "id": "C-012",
+      "finding_id": "F-012",
+      "scope": "mockup",
+      "preserved_function_ids": ["manage-localized-cover", "manage-story-narration", "manage-meditation-audio-duration", "manage-lullaby-playback", "manage-source-cover", "manage-lullaby-cover-variants"],
+      "evidence_ids": ["asset-preview-pattern", "localized-asset-bindings", "lullaby-shared-playback", "source-page-assets"],
+      "change": "Replace oversized asset placeholders with bounded image thumbnails and compact audio waveform/player previews while keeping manage/add asset actions."
+    },
+    {
+      "id": "C-013",
+      "finding_id": "F-013",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-locale-copy", "select-active-locale"],
+      "evidence_ids": ["locale-selection-context", "localized-asset-bindings"],
+      "change": "Remove the read-only locale title/description summary card and keep the editable form labels as the single source of visible field context."
+    },
+    {
+      "id": "C-014",
+      "finding_id": "F-014",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-content-metadata"],
+      "evidence_ids": ["content-level-metadata", "canonical-content-types"],
+      "change": "Move the immutable content type into a compact context badge and keep shared editable metadata controls compact."
+    },
+    {
+      "id": "C-015",
+      "finding_id": "F-015",
+      "scope": "mockup",
+      "preserved_function_ids": ["preview-story", "preserve-locale-context", "edit-content-metadata", "manage-listening-cover"],
+      "evidence_ids": ["story-preview", "story-page-navigation", "content-level-metadata", "story-cover-ownership"],
+      "change": "Remove the separate Story content-details section, fold shared metadata and listening-cover controls into a compact locale-workspace context row, and move locale-aware preview and story-page actions into the locale workspace header."
+    },
+    {
+      "id": "C-016",
+      "finding_id": "F-016",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-locale-copy", "preview-story", "preserve-locale-context", "open-registry"],
+      "evidence_ids": ["locale-selection-context", "story-preview", "story-page-navigation"],
+      "change": "Remove only the Story page-header card containing the eyebrow, title, and description; leave the shared metadata section unchanged and move back, preview, and story-pages actions into the locale workspace header."
+    },
+    {
+      "id": "C-017",
+      "finding_id": "F-017",
+      "scope": "mockup",
+      "preserved_function_ids": ["edit-locale-copy", "open-meditation-detail", "open-lullaby-detail", "open-registry"],
+      "evidence_ids": ["locale-selection-context", "mockup-registry-navigation", "type-specific-localization"],
+      "change": "Hide the page-header card for Meditation and Lullaby and move the contents-registry back action into each type-specific locale workspace header while retaining all type-specific fields and actions."
+    }
+  ]
+}

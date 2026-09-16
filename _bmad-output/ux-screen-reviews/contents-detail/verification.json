@@ -1,0 +1,46 @@
+{
+  "screen": "Contents Detail",
+  "checks": [
+    {
+      "id": "artifact-validator",
+      "kind": "contract",
+      "status": "passed",
+      "command": "uv run .agents/skills/tellpal-screen-ux-review/scripts/validate-review-artifacts.py _bmad-output/ux-screen-reviews/contents-detail",
+      "note": "Function map, domain evidence, findings, and change plan references are valid."
+    },
+    {
+      "id": "cms-build",
+      "kind": "build",
+      "status": "passed",
+      "command": "npm.cmd run build",
+      "note": "TypeScript compilation and Vite production build completed successfully."
+    },
+    {
+      "id": "mockup-route-tests",
+      "kind": "unit",
+      "status": "passed",
+      "command": "npx.cmd vitest --run src/features/mockups/mockup-routes.test.tsx",
+      "note": "10 tests passed, including Story, Meditation, and Lullaby detail navigation from the type-specific tables."
+    },
+    {
+      "id": "targeted-eslint",
+      "kind": "static",
+      "status": "passed",
+      "command": "npx.cmd eslint src/app/routes/mockups/content-detail.tsx src/app/routes/mockups/contents.tsx src/app/router.tsx src/components/language/language-tabs.tsx src/features/mockups/types.ts src/features/mockups/fixtures.ts src/features/mockups/mockup-routes.test.tsx",
+      "note": "No lint findings in changed CMS files."
+    },
+    {
+      "id": "visual-regression",
+      "kind": "visual",
+      "status": "blocked",
+      "command": "npx.cmd playwright test e2e/visual/registry-toolbar.visual.spec.ts --grep \"contents mockup detail\" --update-snapshots",
+      "note": "Playwright Chromium executable was missing; browser download timed out from the configured CDN. Existing reference screenshot was reviewed manually before the change."
+    },
+    {
+      "id": "loss-prevention-review",
+      "kind": "manual",
+      "status": "passed",
+      "note": "The revised mockup keeps locale selection, localized cover/narration, story-page handoff, source cover/page sources, shared listening cover, compact metadata controls, publication, operational visibility summary, preview, contributor controls, and compact asset management represented without adding unverified domain fields."
+    }
+  ]
+}

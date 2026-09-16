@@ -18,6 +18,7 @@ type WorkspaceShellProps = {
   aside?: ReactNode;
   children: ReactNode;
   className?: string;
+  showHeader?: boolean;
 };
 
 export function WorkspaceShell({
@@ -29,6 +30,7 @@ export function WorkspaceShell({
   aside,
   children,
   className,
+  showHeader = true,
 }: WorkspaceShellProps) {
   return (
     <div
@@ -38,37 +40,39 @@ export function WorkspaceShell({
       )}
     >
       <div className={cn("min-w-0 space-y-5", !aside && "xl:col-span-2")}>
-        <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
-          <CardHeader className="grid-cols-1 gap-3 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] px-5 py-5 sm:grid-cols-[1fr_auto] sm:flex-row sm:items-start sm:justify-between sm:px-6">
-            <div className="min-w-0 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-                {eyebrow}
-              </p>
-              <div className="space-y-1.5">
-                <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                  {title}
-                </h1>
-                <CardDescription className="max-w-3xl text-sm leading-6">
-                  {description}
-                </CardDescription>
-              </div>
-            </div>
-
-            {actions ? (
-              <CardAction className="col-start-1 row-span-1 row-start-auto mt-1 w-full justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:w-auto sm:justify-self-end">
-                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                  {actions}
+        {showHeader ? (
+          <Card className="border border-border/70 bg-card/95 shadow-xl shadow-slate-950/5">
+            <CardHeader className="grid-cols-1 gap-3 border-b border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(246,243,236,0.9),_rgba(255,255,255,0)_45%)] px-5 py-5 sm:grid-cols-[1fr_auto] sm:flex-row sm:items-start sm:justify-between sm:px-6">
+              <div className="min-w-0 space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                  {eyebrow}
+                </p>
+                <div className="space-y-1.5">
+                  <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    {title}
+                  </h1>
+                  <CardDescription className="max-w-3xl text-sm leading-6">
+                    {description}
+                  </CardDescription>
                 </div>
-              </CardAction>
-            ) : null}
-          </CardHeader>
+              </div>
 
-          {toolbar ? (
-            <CardContent className="bg-muted/10 px-5 py-4 sm:px-6">
-              {toolbar}
-            </CardContent>
-          ) : null}
-        </Card>
+              {actions ? (
+                <CardAction className="col-start-1 row-span-1 row-start-auto mt-1 w-full justify-self-stretch sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:w-auto sm:justify-self-end">
+                  <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                    {actions}
+                  </div>
+                </CardAction>
+              ) : null}
+            </CardHeader>
+
+            {toolbar ? (
+              <CardContent className="bg-muted/10 px-5 py-4 sm:px-6">
+                {toolbar}
+              </CardContent>
+            ) : null}
+          </Card>
+        ) : null}
 
         <div className="space-y-5">{children}</div>
       </div>

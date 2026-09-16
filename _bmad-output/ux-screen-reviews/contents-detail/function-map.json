@@ -1,0 +1,180 @@
+{
+  "screen": "Contents Detail",
+  "functions": [
+    {
+      "id": "open-registry",
+      "purpose": "Return to the contents registry.",
+      "trigger": "Select the back action.",
+      "result": "The registry screen opens.",
+      "evidence_ids": ["story-page-navigation"]
+    },
+    {
+      "id": "select-active-locale",
+      "purpose": "Choose the localization being reviewed or edited.",
+      "trigger": "Select a locale tab.",
+      "result": "The locale workspace updates to that language.",
+      "evidence_ids": ["locale-selection-context"]
+    },
+    {
+      "id": "preserve-locale-context",
+      "purpose": "Keep the selected language while moving into story pages.",
+      "trigger": "Open story pages.",
+      "result": "The story-pages route opens with the language context preserved.",
+      "evidence_ids": ["locale-selection-context", "story-page-navigation"]
+    },
+    {
+      "id": "create-localization",
+      "purpose": "Add a new content localization.",
+      "trigger": "Select add localization and complete the dialog.",
+      "result": "A new locale becomes available for editing.",
+      "evidence_ids": ["localization-lifecycle"]
+    },
+    {
+      "id": "edit-locale-copy",
+      "purpose": "Edit localized title, description, or story body.",
+      "trigger": "Edit fields in the selected locale workspace.",
+      "result": "The selected localization can be saved with its content copy.",
+      "evidence_ids": ["localized-asset-bindings"]
+    },
+    {
+      "id": "manage-localized-cover",
+      "purpose": "Bind or replace the selected locale's reading cover.",
+      "trigger": "Manage the localized cover asset.",
+      "result": "The localization's cover binding is updated.",
+      "evidence_ids": ["localized-asset-bindings", "story-cover-ownership"]
+    },
+    {
+      "id": "manage-story-narration",
+      "purpose": "Bind and configure story narration audio for the selected locale.",
+      "trigger": "Manage story narration audio and narration duration.",
+      "result": "The locale's narration binding and duration are updated.",
+      "evidence_ids": ["story-audio-semantics", "localized-asset-bindings"]
+    },
+    {
+      "id": "manage-page-audio",
+      "purpose": "Manage localized audio attached to individual story pages.",
+      "trigger": "Open story pages for the selected locale.",
+      "result": "Page-level audio can be reviewed or edited in the child route.",
+      "evidence_ids": ["story-audio-semantics", "source-page-assets"]
+    },
+    {
+      "id": "manage-locale-duration",
+      "purpose": "Set the selected localization's duration where the content type supports it.",
+      "trigger": "Edit the locale duration field.",
+      "result": "The localization duration is saved.",
+      "evidence_ids": ["localized-asset-bindings"]
+    },
+    {
+      "id": "manage-locale-status",
+      "purpose": "Update locale publication status and mobile visibility.",
+      "trigger": "Change status or visibility in the localization form.",
+      "result": "The selected localization state is saved.",
+      "evidence_ids": ["localization-lifecycle"]
+    },
+    {
+      "id": "publish-or-archive-locale",
+      "purpose": "Publish or archive the selected localization.",
+      "trigger": "Use the publication action.",
+      "result": "The localization publication posture changes after confirmation.",
+      "evidence_ids": ["publication-actions"]
+    },
+    {
+      "id": "edit-content-metadata",
+      "purpose": "Edit shared external key, age range, and active state.",
+      "trigger": "Edit content metadata and save.",
+      "result": "Shared content metadata is updated.",
+      "evidence_ids": ["content-level-metadata"]
+    },
+    {
+      "id": "manage-listening-cover",
+      "purpose": "Bind the shared listening cover where supported.",
+      "trigger": "Manage the content-level listening cover.",
+      "result": "The shared listening cover binding is updated.",
+      "evidence_ids": ["story-cover-ownership"]
+    },
+    {
+      "id": "manage-lullaby-listing-cover",
+      "purpose": "Bind the lullaby listing cover.",
+      "trigger": "Manage the lullaby listing cover.",
+      "result": "The content-level listing cover binding is updated.",
+      "evidence_ids": ["lullaby-cover-ownership"]
+    },
+    {
+      "id": "manage-lullaby-playback",
+      "purpose": "Manage shared lullaby playback audio and duration.",
+      "trigger": "Edit and save playback fields.",
+      "result": "Shared playback data is updated.",
+      "evidence_ids": ["lullaby-shared-playback"]
+    },
+    {
+      "id": "manage-lullaby-instruments",
+      "purpose": "Select, order, and save lullaby instruments.",
+      "trigger": "Toggle or reorder instruments and save.",
+      "result": "The shared instrument configuration is updated.",
+      "evidence_ids": ["lullaby-shared-playback"]
+    },
+    {
+      "id": "manage-contributors",
+      "purpose": "Manage contributor assignments, roles, language scope, and order.",
+      "trigger": "Assign, edit, reorder, or unassign a contributor.",
+      "result": "Content credits and assignments are updated.",
+      "evidence_ids": ["contributors"]
+    },
+    {
+      "id": "manage-source-cover",
+      "purpose": "Manage the language-independent textless/source cover.",
+      "trigger": "Manage the source cover asset.",
+      "result": "The source cover binding is updated independently from localized covers.",
+      "evidence_ids": ["story-cover-ownership", "source-page-assets"]
+    },
+    {
+      "id": "manage-source-page-images",
+      "purpose": "Review and edit source illustrations for each story page.",
+      "trigger": "Select a page source action.",
+      "result": "The page-level source illustration can be updated.",
+      "evidence_ids": ["source-page-assets"]
+    },
+    {
+      "id": "preview-story",
+      "purpose": "Preview the selected locale's story experience.",
+      "trigger": "Open story preview.",
+      "result": "A preview opens with locale-aware playback and page navigation.",
+      "evidence_ids": ["story-preview"]
+    },
+    {
+      "id": "handle-route-errors",
+      "purpose": "Communicate loading, not-found, invalid-route, and retryable API states.",
+      "trigger": "Route or API state changes.",
+      "result": "The appropriate feedback and recovery action is shown.",
+      "evidence_ids": ["route-error-states"]
+    },
+    {
+      "id": "open-meditation-detail",
+      "purpose": "Open the meditation-specific detail workspace from the Meditation table.",
+      "trigger": "Select a meditation row.",
+      "result": "The detail screen focuses on localized meditation audio, duration, and shared listening cover.",
+      "evidence_ids": ["mockup-registry-navigation", "type-specific-localization", "type-specific-content-assets"]
+    },
+    {
+      "id": "manage-meditation-audio-duration",
+      "purpose": "Manage meditation locale audio and duration.",
+      "trigger": "Edit the meditation locale fields or manage its audio asset.",
+      "result": "The meditation localization can be prepared with its audio and duration.",
+      "evidence_ids": ["type-specific-localization"]
+    },
+    {
+      "id": "open-lullaby-detail",
+      "purpose": "Open the lullaby-specific detail workspace from the Lullaby table.",
+      "trigger": "Select a lullaby row.",
+      "result": "The detail screen focuses on locale metadata, shared playback, instruments, and lullaby cover variants.",
+      "evidence_ids": ["mockup-registry-navigation", "lullaby-shared-playback", "type-specific-content-assets"]
+    },
+    {
+      "id": "manage-lullaby-cover-variants",
+      "purpose": "Manage lullaby listing and playback cover variants.",
+      "trigger": "Manage a lullaby cover asset.",
+      "result": "Static listing and animated playback covers remain separate content-level assets.",
+      "evidence_ids": ["type-specific-content-assets"]
+    }
+  ]
+}

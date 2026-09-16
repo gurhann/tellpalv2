@@ -116,7 +116,7 @@ export const cmsRoutes: RouteObject[] = [
           { path: "/labs/mockups", element: <MockupLabsIndexRoute /> },
           { path: "/labs/mockups/contents", element: <MockupContentsRoute /> },
           {
-            path: "/labs/mockups/contents/demo-content",
+            path: "/labs/mockups/contents/:contentId",
             element: <MockupContentDetailRoute />,
           },
           {

@@ -21,7 +21,7 @@ const mockupRoutes = [
     element: <MockupContentsRoute />,
   },
   {
-    path: "/labs/mockups/contents/demo-content",
+    path: "/labs/mockups/contents/:contentId",
     element: <MockupContentDetailRoute />,
   },
   {
@@ -143,6 +143,43 @@ describe("Variant A mockup routes", () => {
     ).toBeInTheDocument();
   });
 
+  it("opens the meditation detail workspace from its type table", async () => {
+    renderMockupRoute("/labs/mockups/contents");
+
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Meditations", exact: true }),
+    );
+    fireEvent.click(screen.getByRole("combobox", { name: /language/i }));
+    fireEvent.click(await screen.findByRole("option", { name: "English" }));
+    fireEvent.click(
+      await screen.findByRole("row", { name: /rain window reset/i }),
+    );
+
+    expect(
+      await screen.findByRole("heading", { name: /locale workspace · en/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/meditation audio asset/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/shared listening cover/i).length).toBeGreaterThan(0);
+  });
+
+  it("opens the lullaby detail workspace from its type table", async () => {
+    renderMockupRoute("/labs/mockups/contents");
+
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Lullabies", exact: true }),
+    );
+    fireEvent.click(screen.getByRole("combobox", { name: /language/i }));
+    fireEvent.click(await screen.findByRole("option", { name: "English" }));
+    fireEvent.click(await screen.findByRole("row", { name: /moon drift/i }));
+
+    expect(
+      (await screen.findAllByRole("heading", { name: /shared lullaby playback/i })).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByText(/listing cover \(static\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/playback cover \(animated\)/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /manage instruments/i })).toBeInTheDocument();
+  });
+
   it("opens and closes the content create modal", async () => {
     renderMockupRoute("/labs/mockups/contents");
 
@@ -216,7 +253,11 @@ describe("Variant A mockup routes", () => {
 
     expect(
       (await screen.findAllByRole("button", { name: /manage asset/i })).length,
-    ).toBe(3);
+    ).toBe(4);
+    expect(
+      screen.getByText(/shared listening cover/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/story narration/i)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /edit source/i }).length).toBe(
       4,
     );

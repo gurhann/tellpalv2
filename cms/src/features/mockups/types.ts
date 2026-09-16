@@ -33,6 +33,9 @@ export type MockupContentSummary = {
   pageCount: number | null;
   playbackDurationMinutes?: number;
   hasTextlessCover?: boolean;
+  hasListeningCover?: boolean;
+  hasListingCover?: boolean;
+  hasPlaybackCover?: boolean;
   locales: MockupLocaleState[];
   summaryLabel: string;
   note: string;

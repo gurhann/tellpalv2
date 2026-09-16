@@ -30,6 +30,7 @@ type LanguageTabsProps = {
   className?: string;
   listClassName?: string;
   contentClassName?: string;
+  compact?: boolean;
 };
 
 export function LanguageTabs({
@@ -43,6 +44,7 @@ export function LanguageTabs({
   className,
   listClassName,
   contentClassName,
+  compact = false,
 }: LanguageTabsProps) {
   const { t } = useI18n();
   const resolvedListLabel = listLabel ?? t("language.tabs.label");
@@ -73,6 +75,7 @@ export function LanguageTabs({
           aria-label={resolvedListLabel}
           className={cn(
             "h-auto w-max min-w-full items-stretch justify-start gap-2 rounded-[1.5rem] bg-muted/25 p-2",
+            compact && "gap-1 rounded-xl p-1",
             listClassName,
           )}
           variant="line"
@@ -80,17 +83,25 @@ export function LanguageTabs({
           {items.map((item) => (
             <TabsTrigger
               key={item.code}
-              className="group/language-tab min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-emerald-300 data-active:bg-emerald-50/80 data-active:shadow-[0_0_0_1px_rgba(16,185,129,0.12)]"
+              className={cn(
+                "group/language-tab min-h-[5.5rem] min-w-44 flex-none items-start justify-start whitespace-normal rounded-[1.1rem] border border-transparent px-3 py-2 text-left after:hidden data-active:border-emerald-300 data-active:bg-emerald-50/80 data-active:shadow-[0_0_0_1px_rgba(16,185,129,0.12)]",
+                compact && "min-h-0 min-w-32 rounded-lg px-2 py-1.5",
+              )}
               disabled={item.disabled}
               value={item.code}
               onClick={() => onValueChange(item.code)}
             >
-              <div className="flex min-h-full w-full flex-col items-start gap-2">
+              <div
+                className={cn(
+                  "flex min-h-full w-full flex-col items-start gap-2",
+                  compact && "gap-0",
+                )}
+              >
                 <div className="flex w-full items-start justify-between gap-2">
                   <LanguageBadge
                     code={item.code}
                     label={item.label}
-                    meta={item.meta}
+                    meta={compact ? undefined : item.meta}
                     tone={item.tone}
                     className="group-aria-selected/language-tab:bg-white"
                   />
