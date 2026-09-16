@@ -134,9 +134,7 @@ for (const viewport of visualViewports) {
     await page.goto("/contents");
     await installVisualStyles(page);
 
-    const toolbar = page.locator(
-      'section[aria-label="Content registry filters"]',
-    );
+    const toolbar = page.getByRole("region", { name: "Content filters" });
 
     await expect(toolbar).toBeVisible();
     await expect(toolbar).toHaveScreenshot(
