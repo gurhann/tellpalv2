@@ -1,0 +1,52 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - main [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e12]:
+          - paragraph [ref=e13]: TellPal CMS
+          - heading "Editorial operations, one secure workspace" [level=2] [ref=e14]
+          - generic [ref=e15]: This workspace gives editors controlled access to content, categories, assets, processing jobs, contributors, and free-access rules.
+      - generic [ref=e16]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - img [ref=e20]
+            - text: Language
+          - combobox "Language" [ref=e24]:
+            - generic: English
+            - img
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - img [ref=e28]
+            - generic [ref=e31]:
+              - paragraph [ref=e32]: Admin Access
+              - heading "Sign in to TellPal CMS" [level=1] [ref=e33]
+              - generic [ref=e34]: Use your admin username and password. A valid refresh token will be stored locally to restore the session on the next app boot.
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - text: Username
+              - textbox "Username" [ref=e38]:
+                - /placeholder: bootstrap-admin
+            - generic [ref=e39]:
+              - text: Password
+              - textbox "Password" [ref=e40]:
+                - /placeholder: Enter your password
+            - generic [ref=e41]:
+              - paragraph [ref=e42]: Session behavior
+              - list [ref=e43]:
+                - listitem [ref=e44]:
+                  - img [ref=e45]
+                  - text: Access token stays in memory and refresh token stays in local storage.
+                - listitem [ref=e48]:
+                  - img [ref=e49]
+                  - text: After sign-in you will land on /contents/1?language=tr.
+            - generic [ref=e51]:
+              - button "Sign in" [ref=e52]:
+                - generic [ref=e53]: Sign in
+              - link "Review admin API" [ref=e54] [cursor=pointer]:
+                - /url: http://localhost:8080/swagger-ui/index.html
+  - region "Notifications alt+T"
+```

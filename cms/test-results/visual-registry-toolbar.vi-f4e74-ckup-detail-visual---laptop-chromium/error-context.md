@@ -1,0 +1,312 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - paragraph [ref=e8]: TellPal CMS
+          - heading "Editorial Workspace" [level=1] [ref=e9]
+          - paragraph [ref=e10]: Route skeleton for the CMS shell, navigation, and protected layout.
+        - navigation [ref=e11]:
+          - link "Contents Editorial records and localization flows." [ref=e12] [cursor=pointer]:
+            - /url: /contents
+            - img [ref=e14]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Contents
+              - generic [ref=e18]: Editorial records and localization flows.
+          - link "Categories Category metadata and curation workspaces." [ref=e19] [cursor=pointer]:
+            - /url: /categories
+            - img [ref=e21]
+            - generic [ref=e23]:
+              - generic [ref=e24]: Categories
+              - generic [ref=e25]: Category metadata and curation workspaces.
+          - link "Contributors Credits, names, roles, and assignments." [ref=e26] [cursor=pointer]:
+            - /url: /contributors
+            - img [ref=e28]
+            - generic [ref=e33]:
+              - generic [ref=e34]: Contributors
+              - generic [ref=e35]: Credits, names, roles, and assignments.
+          - link "Free Access Access keys and grant visibility." [ref=e36] [cursor=pointer]:
+            - /url: /free-access
+            - img [ref=e38]
+            - generic [ref=e41]:
+              - generic [ref=e42]: Free Access
+              - generic [ref=e43]: Access keys and grant visibility.
+          - link "Media Advanced asset registry, previews, and debug." [ref=e44] [cursor=pointer]:
+            - /url: /media
+            - img [ref=e46]
+            - generic [ref=e50]:
+              - generic [ref=e51]: Media
+              - generic [ref=e52]: Advanced asset registry, previews, and debug.
+          - link "Media Processing Packaging state and retry operations." [ref=e53] [cursor=pointer]:
+            - /url: /media-processing
+            - img [ref=e55]
+            - generic [ref=e59]:
+              - generic [ref=e60]: Media Processing
+              - generic [ref=e61]: Packaging state and retry operations.
+          - generic [ref=e62]:
+            - paragraph [ref=e63]: Local tools
+            - link "Mockups Clickable UI review routes." [ref=e65] [cursor=pointer]:
+              - /url: /labs/mockups
+              - img [ref=e67]
+              - generic [ref=e69]:
+                - generic [ref=e70]: Mockups
+                - generic [ref=e71]: Clickable UI review routes.
+    - generic [ref=e72]:
+      - banner [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - paragraph [ref=e76]: TellPal CMS
+            - generic [ref=e77]:
+              - heading "Variant A Mockups" [level=2] [ref=e78]
+              - paragraph [ref=e79]: Hidden fixture-backed routes that preview the winning Variant A shell.
+          - generic [ref=e80]:
+            - combobox "Language" [ref=e82]:
+              - generic: English
+              - img
+            - generic [ref=e83]:
+              - paragraph [ref=e84]: admin
+              - paragraph [ref=e85]: ADMIN
+            - button "Log out" [ref=e86]:
+              - img
+              - generic [ref=e87]: Log out
+      - main [ref=e88]:
+        - generic [ref=e89]:
+          - generic [ref=e91]:
+            - region "Content metadata" [ref=e92]:
+              - generic [ref=e93]:
+                - heading "Content metadata" [level=2] [ref=e96]
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - generic [ref=e100]:
+                      - generic [ref=e101]:
+                        - img [ref=e102]
+                        - generic [ref=e107]:
+                          - heading "Shared listening cover" [level=3] [ref=e108]
+                          - paragraph [ref=e109]: The listening experience cover shared across locales.
+                      - generic [ref=e110]: Ready
+                    - button "Manage asset" [ref=e111]:
+                      - img
+                      - text: Manage asset
+                  - generic [ref=e112]:
+                    - generic [ref=e113]:
+                      - text: Type
+                      - generic [ref=e114]: STORY
+                    - generic [ref=e115]:
+                      - text: External key
+                      - textbox "External key" [ref=e116]: story.starlit-harbor
+                    - generic [ref=e117]:
+                      - text: Age range
+                      - spinbutton "Age range" [ref=e118]: "6"
+                    - generic [ref=e119]:
+                      - 'button "Active: Yes" [ref=e120]'
+                      - button "Save shared metadata" [ref=e121]
+            - region "Locale workspace" [ref=e122]:
+              - generic [ref=e123]:
+                - generic [ref=e124]:
+                  - generic:
+                    - heading "Locale workspace" [level=2]
+                  - generic [ref=e126]:
+                    - link "Back to registry" [ref=e127] [cursor=pointer]:
+                      - /url: /labs/mockups/contents
+                    - button "Preview story" [ref=e128]:
+                      - img
+                      - text: Preview story
+                    - link "Open story page mockup" [ref=e129] [cursor=pointer]:
+                      - /url: /labs/mockups/contents/demo-content/story-pages?language=en
+                      - img
+                      - text: Open story page mockup
+                    - button "Add locale" [ref=e130]:
+                      - img
+                      - text: Add locale
+                - generic [ref=e132]:
+                  - tablist "Content locale workspaces" [ref=e134]:
+                    - tab "en English Selected language" [selected] [ref=e135]:
+                      - generic [ref=e137]:
+                        - generic [ref=e138]:
+                          - generic [ref=e139]: en
+                          - generic [ref=e140]: English
+                        - generic [ref=e141]:
+                          - img
+                          - generic [ref=e142]: Selected language
+                    - tab "tr Turkish" [ref=e143]:
+                      - generic [ref=e146]:
+                        - generic [ref=e147]: tr
+                        - generic [ref=e148]: Turkish
+                  - tabpanel "en English Selected language" [ref=e149]:
+                    - generic [ref=e150]:
+                      - generic [ref=e151]:
+                        - generic [ref=e152]:
+                          - text: Title
+                          - textbox "Title" [ref=e153]: Starlit Harbor
+                        - generic [ref=e154]:
+                          - text: Duration (minutes)
+                          - spinbutton "Duration (minutes)" [ref=e155]
+                        - generic [ref=e156]:
+                          - text: Description
+                          - textbox "Description" [ref=e157]: A quiet harbor walk that slows the bedtime routine.
+                        - generic [ref=e158]:
+                          - 'button "Status: Published" [ref=e159]'
+                          - button "Archive locale" [ref=e160]
+                          - generic [ref=e161]: "Processing complete: Complete"
+                          - button "Save locale changes" [ref=e162]
+                      - generic [ref=e163]:
+                        - generic [ref=e164]:
+                          - generic [ref=e165]:
+                            - generic [ref=e166]:
+                              - img [ref=e167]
+                              - generic [ref=e172]:
+                                - paragraph [ref=e173]: Localized cover
+                                - paragraph [ref=e174]: Ready
+                            - generic [ref=e175]: Ready
+                          - generic [ref=e176]:
+                            - generic "Compact image asset preview" [ref=e177]
+                            - paragraph [ref=e181]: Selected image asset
+                          - button "Manage asset" [ref=e182]:
+                            - img
+                            - text: Manage asset
+                        - generic [ref=e183]:
+                          - generic [ref=e184]:
+                            - generic [ref=e185]:
+                              - img [ref=e186]
+                              - generic [ref=e190]:
+                                - paragraph [ref=e191]: Story narration
+                                - paragraph [ref=e192]: Ready
+                            - generic [ref=e193]: Ready
+                          - generic [ref=e195]:
+                            - img [ref=e197]
+                            - generic [ref=e212]: 0:00
+                          - button "Manage asset" [ref=e213]:
+                            - img
+                            - text: Manage asset
+                      - paragraph [ref=e214]: Page audio is managed in the Story pages workspace.
+            - region "Contributor assignments" [ref=e215]:
+              - generic [ref=e216]:
+                - generic [ref=e217]:
+                  - heading "Contributor assignments" [level=2] [ref=e219]
+                  - button "Assign contributor" [ref=e221]:
+                    - img
+                    - text: Assign contributor
+                - generic [ref=e223]:
+                  - generic [ref=e224]:
+                    - generic [ref=e225]:
+                      - paragraph [ref=e226]: Lina Hart
+                      - paragraph [ref=e227]: Lina Hart
+                    - generic [ref=e228]:
+                      - generic [ref=e229]: Author
+                      - generic [ref=e230]: English
+                      - generic [ref=e231]:
+                        - img [ref=e232]
+                        - text: "Order: 1"
+                      - 'button "Edit: Lina Hart" [ref=e235]':
+                        - img
+                        - text: Edit
+                      - 'button "Move up: Lina Hart" [disabled]':
+                        - img
+                      - 'button "Move down: Lina Hart" [ref=e236]':
+                        - img
+                      - 'button "Unassign: Lina Hart" [ref=e237]':
+                        - img
+                  - generic [ref=e238]:
+                    - generic [ref=e239]:
+                      - paragraph [ref=e240]: Mert Aydin
+                      - paragraph [ref=e241]: Mert Aydin
+                    - generic [ref=e242]:
+                      - generic [ref=e243]: Translator
+                      - generic [ref=e244]: Turkish
+                      - generic [ref=e245]:
+                        - img [ref=e246]
+                        - text: "Order: 2"
+                      - 'button "Edit: Mert Aydin" [ref=e249]':
+                        - img
+                        - text: Edit
+                      - 'button "Move up: Mert Aydin" [ref=e250]':
+                        - img
+                      - 'button "Move down: Mert Aydin" [ref=e251]':
+                        - img
+                      - 'button "Unassign: Mert Aydin" [ref=e252]':
+                        - img
+                  - generic [ref=e253]:
+                    - generic [ref=e254]:
+                      - paragraph [ref=e255]: Sora Vale
+                      - paragraph [ref=e256]: Sora Vale
+                    - generic [ref=e257]:
+                      - generic [ref=e258]: Illustration
+                      - generic [ref=e259]: English
+                      - generic [ref=e260]:
+                        - img [ref=e261]
+                        - text: "Order: 3"
+                      - 'button "Edit: Sora Vale" [ref=e264]':
+                        - img
+                        - text: Edit
+                      - 'button "Move up: Sora Vale" [ref=e265]':
+                        - img
+                      - 'button "Move down: Sora Vale" [disabled]':
+                        - img
+                      - 'button "Unassign: Sora Vale" [ref=e266]':
+                        - img
+            - region "Source images" [ref=e267]:
+              - generic [ref=e268]:
+                - heading "Source images" [level=2] [ref=e271]
+                - generic [ref=e273]:
+                  - generic [ref=e274]:
+                    - generic [ref=e275]:
+                      - generic [ref=e276]:
+                        - img [ref=e277]
+                        - generic [ref=e282]:
+                          - heading "Textless/source cover" [level=3] [ref=e283]
+                          - paragraph [ref=e284]: Source cover linked
+                      - generic [ref=e285]: Ready
+                    - generic [ref=e286]:
+                      - generic "Compact image asset preview" [ref=e287]
+                      - paragraph [ref=e291]: Selected source image
+                    - button "Manage asset" [ref=e292]:
+                      - img
+                      - text: Manage asset
+                  - generic [ref=e293]:
+                    - generic [ref=e294]:
+                      - generic [ref=e295]:
+                        - img [ref=e296]
+                        - generic [ref=e301]:
+                          - heading "Textless page illustrations" [level=3] [ref=e302]
+                          - paragraph [ref=e303]: 2 / 4 page sources linked
+                      - generic [ref=e304]: 2 / 4
+                    - paragraph [ref=e305]: Review page-level sources for translation and illustration handoff.
+                    - generic [ref=e306]:
+                      - generic [ref=e307]:
+                        - generic [ref=e308]:
+                          - paragraph [ref=e309]: Page 1
+                          - paragraph [ref=e310]: Ready
+                        - button "Edit source" [ref=e311]
+                      - generic [ref=e312]:
+                        - generic [ref=e313]:
+                          - paragraph [ref=e314]: Page 2
+                          - paragraph [ref=e315]: Pending
+                        - button "Edit source" [ref=e316]
+                      - generic [ref=e317]:
+                        - generic [ref=e318]:
+                          - paragraph [ref=e319]: Page 3
+                          - paragraph [ref=e320]: Ready
+                        - button "Edit source" [ref=e321]
+                      - generic [ref=e322]:
+                        - generic [ref=e323]:
+                          - paragraph [ref=e324]: Page 4
+                          - paragraph [ref=e325]: Pending
+                        - button "Edit source" [ref=e326]
+          - complementary [ref=e327]:
+            - generic [ref=e328]:
+              - heading "Operational summary" [level=2] [ref=e330]
+              - generic [ref=e332]:
+                - generic [ref=e333]:
+                  - paragraph [ref=e334]: Mobile visibility
+                  - paragraph [ref=e335]: 1 / 2
+                - generic [ref=e336]:
+                  - paragraph [ref=e337]: Processing complete
+                  - paragraph [ref=e338]: 1 / 2
+                - generic [ref=e339]:
+                  - paragraph [ref=e340]: Story pages
+                  - paragraph [ref=e341]: 4 pages
+  - region "Notifications alt+T"
+```
