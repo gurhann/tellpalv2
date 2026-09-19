@@ -79,6 +79,53 @@ class TellPalAdminClient:
     def list_contents(self) -> list[dict[str, object]]:
         return _expect_list(self._request_json("GET", "/api/admin/contents"), "content list")
 
+    def list_categories(self) -> list[dict[str, object]]:
+        return _expect_list(self._request_json("GET", "/api/admin/categories"), "category list")
+
+    def create_category(self, body: dict[str, object]) -> dict[str, object]:
+        return _expect_dict(
+            self._request_json("POST", "/api/admin/categories", body=body),
+            "created category",
+        )
+
+    def list_category_localizations(self, category_id: int) -> list[dict[str, object]]:
+        return _expect_list(
+            self._request_json("GET", f"/api/admin/categories/{category_id}/localizations"),
+            "category localization list",
+        )
+
+    def create_category_localization(
+        self,
+        category_id: int,
+        language_code: str,
+        body: dict[str, object],
+    ) -> dict[str, object]:
+        path = f"/api/admin/categories/{category_id}/localizations/{language_code}"
+        return _expect_dict(
+            self._request_json("POST", path, body=body),
+            "created category localization",
+        )
+
+    def register_media_asset(
+        self,
+        *,
+        provider: str,
+        object_path: str,
+        kind: str,
+        mime_type: str | None = None,
+    ) -> dict[str, object]:
+        body: dict[str, object] = {
+            "provider": provider,
+            "objectPath": object_path,
+            "kind": kind,
+        }
+        if mime_type:
+            body["mimeType"] = mime_type
+        return _expect_dict(
+            self._request_json("POST", "/api/admin/media", body=body),
+            "registered media asset",
+        )
+
     def get_content(self, content_id: int) -> dict[str, object]:
         return _expect_dict(self._request_json("GET", f"/api/admin/contents/{content_id}"), "content")
 

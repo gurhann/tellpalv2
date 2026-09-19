@@ -18,6 +18,11 @@ documented in [references/audio-story-import.md](references/audio-story-import.m
 row to an existing STORY localization, map one root `{id}.zip` MP3 to its nested narration, attach a
 missing shared listening cover, and continue deterministic row failures with sidecar statuses.
 
+For the legacy public category CSV shape, use `inspect_categories.py` and `import_categories.py`
+documented in [references/category-import.md](references/category-import.md). They apply the reviewed
+33-group mapping, preserve `AUDIO_STORY` only as source provenance, register category images through
+the Admin API, and create/reuse category aggregates with DRAFT localizations.
+
 # Import TellPal Story
 
 Use the bundled scripts as the only mutation path. Do not recreate the API workflow manually and do not modify `be/`, `cms/src/`, migrations, or API contracts.
@@ -80,4 +85,3 @@ The importer logs in, performs read-only remote preflight, prints the approved p
 Return the content ID, external key, imported languages, page/media/contributor counts, published languages, and the absolute `result.json` path. On failure, report the failed phase and last endpoint from the run report and state that recovery is manual.
 
 Run artifacts are stored under `%LOCALAPPDATA%\TellPal\story-import-agent\runs\<run-id>\`. They are diagnostic only and cannot be used to resume.
-
