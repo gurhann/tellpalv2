@@ -146,6 +146,7 @@ Detail and workspace routes must follow one shared composition contract.
 - Buttons and chips must preserve keyboard access and announce selected state.
 - Touch targets must remain comfortable at all supported breakpoints.
 - Reduced-motion users must not receive decorative motion that changes layout comprehension.
+- The CMS uses light mode only. It must not follow the operating system color scheme or expose a dark-mode path.
 
 ## 8. Visual Regression Policy
 
