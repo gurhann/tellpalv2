@@ -148,17 +148,17 @@ export function AssetFieldPreview({
       <>
         <div
           className={cn(
-            "rounded-2xl border border-border/70 bg-background p-4",
+            "min-w-0 rounded-2xl border border-border/70 bg-background p-3",
             className,
           )}
           data-testid="asset-field-preview-editor-cover"
         >
-          <div className="grid gap-4 xl:grid-cols-[minmax(13rem,15rem)_1fr] xl:items-start">
+          <div className="grid gap-3 xl:grid-cols-[minmax(9rem,11rem)_minmax(0,1fr)] xl:items-start">
             <div
-              className="mx-auto w-full max-w-[15rem]"
+              className="mx-auto w-full max-w-[11rem]"
               data-testid="asset-field-preview-editor-cover-stage"
             >
-              <div className="flex min-h-[19rem] items-center justify-center rounded-[1.5rem] bg-background px-4 py-5">
+              <div className="flex min-h-[13rem] items-center justify-center rounded-xl bg-background px-2 py-3">
                 {renderPreviewStatus()}
               </div>
             </div>
@@ -168,7 +168,7 @@ export function AssetFieldPreview({
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Portrait preview
                 </p>
-                <p className="break-all text-sm font-medium text-foreground">
+                <p className="break-words text-sm font-medium text-foreground">
                   {asset.objectPath}
                 </p>
               </div>
@@ -197,9 +197,7 @@ export function AssetFieldPreview({
                 </div>
               ) : (
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Cover assets are shown in a portrait-focused frame so square
-                  and phone-ready images read closer to their in-app
-                  composition.
+                  Selected image asset
                 </p>
               )}
             </div>
@@ -211,7 +209,7 @@ export function AssetFieldPreview({
               <DialogHeader>
                 <DialogTitle>Kapak onizlemesi</DialogTitle>
                 <DialogDescription>
-                  Asset #{asset.id} icin buyutulmus mobil kapak gorunumu.
+                  Asset #{asset.id} icin buyutulmus kapak gorunumu.
                 </DialogDescription>
               </DialogHeader>
               <DialogBody className="px-5 pb-5">

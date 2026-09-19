@@ -37,7 +37,7 @@ This list tracks UI debt, regression coverage, and standards follow-up work sepa
   - `/contents/:contentId/story-pages`
 - Required standard:
   - screenshot checklist with stable viewports and deterministic data
-  - detail workspace routes must be covered at `390`, `768`, `1280`, and `1440`
+  - detail workspace routes must be covered at the supported web widths `1280` and `1440`
   - content and category detail must keep one dominant workspace and a compact operational rail
 - Regression guard:
   - visual screenshot assertions

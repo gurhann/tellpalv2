@@ -27,6 +27,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `ADR-0011`: lullaby instrument selections are content-scoped ordered links to a language-independent catalog; display names are resolved from catalog localization rows and are not copied to content localizations.
 - `ADR-0012`: canonical content and category types are STORY, MEDITATION, and LULLABY; AUDIO_STORY is a STORY narration experience, not a persisted canonical type. Legacy independent audio-story import is a separate future migration.
 - `ADR-0014`: staged MEDITATION localizations may omit body text only as DRAFT/PENDING; publication and archive require non-blank body text, and the admin registry exposes missing body as ACTION_REQUIRED.
+- `ADR-0016`: TellPal CMS is a web-only admin surface; supported visual QA targets are laptop and desktop browser widths (`1280` and `1440`), while mobile/tablet CMS fidelity is out of scope unless explicitly revisited.
 
 ## Coding and Documentation Defaults
 

@@ -549,10 +549,10 @@ export function ContentLocalizationForm({
 
         {showsLocalizationCover ? (
           <div
-            className="grid gap-5 md:col-span-2 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]"
+            className="grid gap-5 md:col-span-2 xl:grid-cols-[minmax(0,1.15fr)_minmax(15rem,0.85fr)]"
             data-testid="content-localization-cover-layout"
           >
-            <div data-testid="content-localization-cover-row">
+            <div className="min-w-0" data-testid="content-localization-cover-row">
             <Controller
               control={form.control}
               name="coverMediaId"

@@ -578,7 +578,7 @@ test("create, edit, and publish flows work in the browser", async ({
   ]);
 
   await expect(
-    page.getByRole("heading", { name: /content #99/i }),
+    page.getByRole("heading", { name: /locale workspace/i }),
   ).toBeVisible();
   await expect(page.getByTestId("lullaby-playback-editor")).toBeVisible();
 
@@ -623,8 +623,10 @@ test("create, edit, and publish flows work in the browser", async ({
   ]);
 
   await expect(
-    page.getByRole("heading", { name: /dream harbor/i }),
-  ).toBeVisible();
+    page
+      .getByRole("region", { name: /locale workspace/i })
+      .getByLabel(/^title$/i),
+  ).toHaveValue("Dream Harbor");
   await expect(page.getByRole("tab", { name: /turkish/i })).toBeVisible();
 
   await page.getByRole("button", { name: /publish locale/i }).click();

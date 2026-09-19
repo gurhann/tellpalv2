@@ -146,6 +146,7 @@ describe("ContentForm", () => {
           ageRange: 5,
           active: true,
           textlessCoverMediaId: null,
+          listingCoverMediaId: null,
           listeningCoverMediaId: null,
         }}
         mode="create"
@@ -291,6 +292,7 @@ describe("ContentForm", () => {
         ageRange: 6,
         active: true,
         textlessCoverMediaId: null,
+        listingCoverMediaId: null,
         listeningCoverMediaId: 702,
       });
     });

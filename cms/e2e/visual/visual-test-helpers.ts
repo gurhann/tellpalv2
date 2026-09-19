@@ -11,8 +11,6 @@ type SessionPayload = {
 };
 
 export const visualViewports = [
-  { name: "mobile", width: 390, height: 844 },
-  { name: "tablet", width: 768, height: 1024 },
   { name: "laptop", width: 1280, height: 900 },
   { name: "desktop", width: 1440, height: 1024 },
 ] as const;

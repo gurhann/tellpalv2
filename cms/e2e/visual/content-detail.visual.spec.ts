@@ -133,15 +133,29 @@ for (const viewport of visualViewports) {
       });
     });
 
+    await page.route("**/api/admin/media/*/content-token", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          previewUrl: imageAsset.cachedDownloadUrl,
+          expiresAt: "2027-04-19T09:00:00Z",
+        }),
+      });
+    });
+
     await page.goto("/contents/1?language=tr");
     await installVisualStyles(page);
 
-    const contentDetail = page.locator("main");
+    const contentDetail = page.locator("body");
 
     await expect(contentDetail).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Aksam Bahcesi", exact: true }),
+      page.getByRole("heading", { name: "Locale workspace", exact: true }),
     ).toBeVisible();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(viewport.width);
     await expect(contentDetail).toHaveScreenshot(
       `content-detail-${viewport.name}.png`,
       {

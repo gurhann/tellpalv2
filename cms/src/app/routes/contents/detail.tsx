@@ -31,7 +31,8 @@ export function ContentDetailRoute() {
   const { contentId = "" } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const requestedLanguageCode = searchParams.get("language")?.toLowerCase() ?? null;
+  const requestedLanguageCode =
+    searchParams.get("language")?.toLowerCase() ?? null;
   const parsedContentId = Number(contentId);
   const hasValidContentId =
     Number.isInteger(parsedContentId) && parsedContentId > 0;
@@ -68,8 +69,6 @@ export function ContentDetailRoute() {
   const copy =
     locale === "tr"
       ? {
-          detailFallbackTitle: "Icerik Detayi",
-          route: "Rota",
           invalidRoute: "Gecersiz rota",
           invalidContentRoute: "Gecersiz icerik rotasi",
           invalidRouteDescription:
@@ -80,12 +79,7 @@ export function ContentDetailRoute() {
           contentNotFound: "Icerik bulunamadi",
           metadataUnavailable: "Metadata kullanilamiyor",
           metadataLoading: "Metadata yukleniyor",
-          routeMissing:
-            "Bu rota icerik kaydindan gecerli bir sayisal icerik kimligi bekler.",
-          routeLoading:
-            "Metadata, dil calisma alanlari ve contributor akislari yukleniyor.",
-          routeLoaded: (externalKey: string) =>
-            `${externalKey} icin bir dil secin, icerigi guncelleyin ve hazir oldugunda yayina alin.`,
+          route: "Rota",
           notFoundDescription:
             "Admin API bu rota icin bir icerik kaydi dondurmedi.",
           retryDescription:
@@ -103,8 +97,6 @@ export function ContentDetailRoute() {
             "Bu icerik rotasi icin henuz detay payload'i yok.",
           eyebrow: "Editoryal Cekirdek",
           selectedLocale: "Secili dil",
-          contentType: "Tur",
-          lifecycle: "Durum",
           openStoryPages: "Hikaye sayfalarini ac",
           previewStory: "Hikayeyi onizle",
           storyPagesUnavailable: "Hikaye sayfalari kullanilamiyor",
@@ -140,8 +132,6 @@ export function ContentDetailRoute() {
             "Playback, katalog enstrümanlari ve müzisyen kredisi tüm dillerde bir kez yönetilir.",
         }
       : {
-          detailFallbackTitle: "Content Detail",
-          route: "Route",
           invalidRoute: "Invalid route",
           invalidContentRoute: "Invalid content route",
           invalidRouteDescription:
@@ -152,12 +142,7 @@ export function ContentDetailRoute() {
           contentNotFound: "Content not found",
           metadataUnavailable: "Metadata unavailable",
           metadataLoading: "Loading metadata",
-          routeMissing:
-            "This route expects a valid numeric content id from the content registry.",
-          routeLoading:
-            "Loading metadata, locale workspaces, and contributor workflows.",
-          routeLoaded: (externalKey: string) =>
-            `Choose a locale for ${externalKey}, update the record, and publish when it is ready.`,
+          route: "Route",
           notFoundDescription:
             "The admin API did not return a content record for this route.",
           retryDescription:
@@ -175,8 +160,6 @@ export function ContentDetailRoute() {
             "No detail payload is available for this content route yet.",
           eyebrow: "Editorial Core",
           selectedLocale: "Selected locale",
-          contentType: "Type",
-          lifecycle: "Status",
           openStoryPages: "Open story pages",
           previewStory: "Preview story",
           storyPagesUnavailable: "Story pages unavailable",
@@ -211,88 +194,8 @@ export function ContentDetailRoute() {
           lullabyPlaybackDescription:
             "Playback, catalog instruments, and musician credit are managed once for every locale.",
         };
-  const routeTitle =
-    selectedLocalization?.title ??
-    content?.primaryLocalization?.title ??
-    (hasValidContentId
-      ? locale === "tr"
-        ? `Icerik #${parsedContentId}`
-        : `Content #${parsedContentId}`
-      : copy.detailFallbackTitle);
-  const routeDescription = content
-    ? copy.routeLoaded(content.summary.externalKey)
-    : hasValidContentId
-      ? copy.routeLoading
-      : copy.routeMissing;
 
-  function renderToolbar() {
-    if (content) {
-      const selectedLocaleLabel =
-        selectedLocalization?.languageLabel ??
-        (locale === "tr" ? "Henuz secilmedi" : "Not selected");
-      const registrySearchParams = new URLSearchParams(searchParams);
-      registrySearchParams.set("type", content.summary.type);
-      registrySearchParams.set("language", storyPageLanguageCode ?? "tr");
-
-      return (
-        <div className="flex flex-col gap-3 rounded-[1.4rem] border border-border/70 bg-background/80 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex min-w-0 flex-wrap items-center gap-3 text-sm">
-            <Button asChild type="button" variant="ghost" className="-ml-2">
-              <Link
-                to={`/contents?${registrySearchParams.toString()}`}
-              >
-                {copy.returnToRegistry}
-              </Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                {copy.contentType}
-              </span>
-              <WorkspaceStatusPill tone="accent">
-                {content.summary.typeLabel}
-              </WorkspaceStatusPill>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                {copy.selectedLocale}
-              </span>
-              <WorkspaceStatusPill
-                tone={
-                  selectedLocalization?.isPublished
-                    ? "success"
-                    : selectedLocalization
-                      ? "warning"
-                      : "default"
-                }
-              >
-                {selectedLocaleLabel}
-              </WorkspaceStatusPill>
-            </div>
-          </div>
-
-          <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
-            {canOpenStoryPages ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsStoryPreviewOpen(true)}
-              >
-                <Play className="size-4" />
-                {copy.previewStory}
-              </Button>
-            ) : null}
-            <StoryPageEntryLink
-              canOpen={canOpenStoryPages}
-              contentId={parsedContentId}
-              label={copy.openStoryPages}
-              preferredLanguageCode={storyPageLanguageCode}
-              unavailableLabel={copy.storyPagesUnavailable}
-            />
-          </div>
-        </div>
-      );
-    }
-
+  function renderFallbackToolbar() {
     const title = !hasValidContentId
       ? copy.invalidRoute
       : contentQuery.isNotFound
@@ -400,12 +303,67 @@ export function ContentDetailRoute() {
       sourceImagesSearchParams.set("language", storyPageLanguageCode);
     }
     const sourceImagesHref = `/contents/${parsedContentId}/story-pages?${sourceImagesSearchParams.toString()}`;
+    const registrySearchParams = new URLSearchParams(searchParams);
+    registrySearchParams.set("type", content.summary.type);
+    registrySearchParams.set("language", storyPageLanguageCode ?? "tr");
+    const selectedLocaleLabel =
+      selectedLocalization?.languageLabel ??
+      (locale === "tr" ? "Henuz secilmedi" : "Not selected");
 
     return (
       <>
         <FormSection
+          title={copy.metadataTitle}
+        >
+          <ContentForm
+            key={`${content.summary.id}-${content.summary.externalKey}-${content.summary.ageRange}-${content.summary.active}`}
+            contentId={content.summary.id}
+            initialValues={mapContentReadToFormValues(content)}
+            mode="update"
+          />
+        </FormSection>
+
+        <FormSection
+          actions={
+            <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+              <Button asChild type="button" size="sm" variant="outline">
+                <Link to={`/contents?${registrySearchParams.toString()}`}>
+                  {copy.returnToRegistry}
+                </Link>
+              </Button>
+              {canOpenStoryPages ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsStoryPreviewOpen(true)}
+                >
+                  <Play className="size-4" />
+                  {copy.previewStory}
+                </Button>
+              ) : null}
+              <StoryPageEntryLink
+                canOpen={canOpenStoryPages}
+                contentId={parsedContentId}
+                label={copy.openStoryPages}
+                preferredLanguageCode={storyPageLanguageCode}
+                unavailableLabel={copy.storyPagesUnavailable}
+                variant="outline"
+              />
+              <WorkspaceStatusPill
+                tone={
+                  selectedLocalization?.isPublished
+                    ? "success"
+                    : selectedLocalization
+                      ? "warning"
+                      : "default"
+                }
+              >
+                {selectedLocaleLabel}
+              </WorkspaceStatusPill>
+            </div>
+          }
           contentClassName="gap-4"
-          description={copy.workspaceDescription}
           title={copy.localeWorkspace}
         >
           <ContentLocalizationTabs
@@ -428,21 +386,8 @@ export function ContentDetailRoute() {
           />
         </FormSection>
 
-        <FormSection
-          description={copy.metadataDescription}
-          title={copy.metadataTitle}
-        >
-          <ContentForm
-            key={`${content.summary.id}-${content.summary.externalKey}-${content.summary.ageRange}-${content.summary.active}`}
-            contentId={content.summary.id}
-            initialValues={mapContentReadToFormValues(content)}
-            mode="update"
-          />
-        </FormSection>
-
         {content.summary.type === "LULLABY" ? (
           <FormSection
-            description={copy.lullabyPlaybackDescription}
             title={copy.lullabyPlaybackTitle}
           >
             <LullabyPlaybackEditor
@@ -453,7 +398,6 @@ export function ContentDetailRoute() {
         ) : null}
 
         <FormSection
-          description={copy.contributorsDescription}
           title={copy.contributorsTitle}
         >
           <ContentContributorPanel
@@ -464,7 +408,6 @@ export function ContentDetailRoute() {
 
         {content.summary.supportsStoryPages ? (
           <FormSection
-            description={copy.sourceCoverDescription}
             title={copy.sourceCoverTitle}
           >
             <div className="flex flex-col gap-4 rounded-2xl border border-border/70 bg-card/95 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
@@ -552,13 +495,33 @@ export function ContentDetailRoute() {
     );
   }
 
+  const shellTitle = content
+    ? copy.localeWorkspace
+    : !hasValidContentId
+      ? copy.invalidRoute
+      : contentQuery.isNotFound
+        ? copy.recordNotFound
+        : contentQuery.problem
+          ? copy.metadataUnavailable
+          : copy.metadataLoading;
+  const shellDescription = content
+    ? copy.workspaceDescription
+    : !hasValidContentId
+      ? copy.invalidRouteDescription
+      : contentQuery.isNotFound
+        ? copy.notFoundDescription
+        : contentQuery.problem
+          ? copy.retryDescription
+          : copy.loadingDescription;
+
   return (
     <>
       <ContentPageShell
         eyebrow={copy.eyebrow}
-        title={routeTitle}
-        description={routeDescription}
-        toolbar={renderToolbar()}
+        title={shellTitle}
+        description={shellDescription}
+        showHeader={Boolean(!content)}
+        toolbar={!content ? renderFallbackToolbar() : undefined}
         aside={renderAside()}
       >
         {renderDetailContent()}

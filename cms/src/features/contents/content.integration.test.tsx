@@ -452,7 +452,7 @@ describe("Content integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /evening garden/i });
+    await screen.findByRole("heading", { name: /locale workspace/i });
 
     fireEvent.change(screen.getByLabelText(/external key/i), {
       target: { value: "story.evening-garden.secured" },
@@ -558,7 +558,7 @@ describe("Content integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /regenraum pause/i });
+    await screen.findByRole("heading", { name: /locale workspace/i });
     expect(
       await screen.findByRole("heading", { name: /locale workspace/i }),
     ).toBeVisible();
@@ -656,7 +656,7 @@ describe("Content integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /evening garden/i });
+    await screen.findByRole("heading", { name: /locale workspace/i });
 
     fireEvent.click(screen.getByRole("button", { name: /publish locale/i }));
 

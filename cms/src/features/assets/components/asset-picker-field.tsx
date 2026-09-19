@@ -333,7 +333,7 @@ export function AssetPickerField({
             Loading selected asset details...
           </div>
         ) : selectedAsset ? (
-          <div className="space-y-3">
+          <div className="min-w-0 space-y-3">
             <AssetFieldPreview
               actions={shouldInlineEditorActions ? actionButtons : undefined}
               asset={selectedAsset}

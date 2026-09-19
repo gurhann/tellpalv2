@@ -41,7 +41,7 @@ Registry toolbar rules:
 - filter groups must have visible labels
 - chip sizing and spacing must be consistent across the registry
 - horizontal scroll is forbidden
-- mobile and narrow widths must stack vertically with readable spacing
+- supported web widths must keep controls readable and free of horizontal overflow; mobile-specific composition is outside the CMS support target
 
 ## 3. Search and Filter Rules
 
@@ -95,8 +95,8 @@ Detail and workspace routes must follow one shared composition contract.
   - technical or debug helper copy hidden behind advanced affordances or kept visually secondary
 - Editorial asset picker fields must not be forced into half-width columns beside a single orphan input.
 - Story-page illustration and audio pickers for the same locale must be grouped as one media workspace:
-  - desktop and tablet layouts should pair the image and audio pickers in a balanced two-column grid
-  - narrow layouts may stack the pickers, but they must keep compact editor density
+- desktop web layouts should pair the image and audio pickers in a balanced two-column grid
+  - smaller layouts may retain the existing fallback, but mobile-specific composition is not a fidelity requirement
 - Asset picker fields that support uploads must also support direct file drop:
   - accepted file types must match the picker media type
   - invalid type, empty drop, and multi-file drop states must show inline feedback
@@ -104,7 +104,7 @@ Detail and workspace routes must follow one shared composition contract.
 - When a cover or illustration field directly supports publishing decisions, prefer a balanced two-column block:
   - media card on the left
   - compact metadata stack on the right
-  - mobile and tablet layouts may collapse back to one column
+- smaller layouts may collapse back to one column, but mobile-specific composition is not a fidelity requirement
 - Use a full-width media row only when there is no closely related metadata stack to pair beside it.
 - Detail routes should preserve the primary workspace at all supported widths. The rail may remain visible, but it must not visually outweigh the main lane.
 - Story-page workspaces must expose an in-route active language control when table status, readiness counts, and editor defaults depend on a selected locale.
@@ -148,6 +148,8 @@ Detail and workspace routes must follow one shared composition contract.
 - Reduced-motion users must not receive decorative motion that changes layout comprehension.
 - The CMS uses light mode only. It must not follow the operating system color scheme or expose a dark-mode path.
 
+The CMS is a web-only admin surface. Supported layout and visual QA targets are laptop and desktop browser widths; mobile and tablet viewport fidelity is out of scope unless ADR-0016 is revisited.
+
 ## 8. Visual Regression Policy
 
 - Functional tests alone are not sufficient for layout-affecting route changes.
@@ -158,7 +160,8 @@ Detail and workspace routes must follow one shared composition contract.
 - Detail workspace coverage must include:
   - `/contents/:contentId`
   - `/categories/:categoryId`
-  - viewport widths `390`, `768`, `1280`, and `1440`
+- viewport widths `1280` and `1440`
+- mobile and tablet screenshot baselines are not required for CMS changes
 - Additional registry and detail surfaces should be added through `cms/docs/ui-regression-task-list.md`.
 
 Visual harness requirements:

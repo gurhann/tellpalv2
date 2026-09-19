@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useMemo, useState, type ReactNode } from "react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -574,7 +574,7 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /evening garden/i }),
+      await screen.findByRole("heading", { name: /locale workspace/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /open story pages/i }),
@@ -606,6 +606,38 @@ describe("CMS router auth flow", () => {
     expect(
       screen.getByRole("button", { name: /publish locale/i }),
     ).toBeInTheDocument();
+    const metadataRegion = screen.getByRole("region", { name: /^metadata$/i });
+    const localeWorkspaceRegion = screen.getByRole("region", {
+      name: /locale workspace/i,
+    });
+    const contributorsRegion = screen.getByRole("region", {
+      name: /contributor assignments/i,
+    });
+    const sourceImagesRegion = screen.getByRole("region", {
+      name: /textless story cover/i,
+    });
+    expect(
+      metadataRegion.compareDocumentPosition(localeWorkspaceRegion) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      localeWorkspaceRegion.compareDocumentPosition(contributorsRegion) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      contributorsRegion.compareDocumentPosition(sourceImagesRegion) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      within(localeWorkspaceRegion).getByRole("link", {
+        name: /return to content registry/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(localeWorkspaceRegion).getByRole("button", {
+        name: /preview story/i,
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /turkish/i })).toBeInTheDocument();
     expect(screen.queryByText(/locale notes/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/contributor notes/i)).not.toBeInTheDocument();
@@ -613,6 +645,31 @@ describe("CMS router auth flow", () => {
     expect(screen.queryByText(/workspace handoff/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/release posture/i)).not.toBeInTheDocument();
     expect(screen.getAllByText(/^status$/i)).toHaveLength(1);
+  });
+
+  it("keeps route context visible while content detail is loading", async () => {
+    contentHookMocks.useContentDetail.mockReturnValue({
+      content: null,
+      isLoading: true,
+      problem: null,
+      isNotFound: false,
+      refetch: vi.fn(),
+    });
+
+    renderRouter({
+      initialEntries: ["/contents/42"],
+      authState: {
+        status: "authenticated",
+        isBootstrapped: true,
+        session: makeSession(),
+        lastProblem: null,
+      },
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: /loading content detail/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/route: \/contents\/42/i)).toBeInTheDocument();
   });
 
   it("does not expose story preview on non-story content detail routes", async () => {
@@ -635,10 +692,13 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /regenraum pause/i }),
+      await screen.findByRole("heading", { name: /locale workspace/i }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /preview story/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: /textless story cover/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -654,7 +714,7 @@ describe("CMS router auth flow", () => {
     });
 
     expect(
-      await screen.findByRole("heading", { name: /aksam bahcesi/i }),
+      await screen.findByRole("heading", { name: /locale workspace/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /open story pages/i }),
@@ -765,7 +825,9 @@ describe("CMS router auth flow", () => {
     });
 
     await screen.findByRole("heading", { name: /^contents$/i, level: 1 });
-    expect(contentRegistryHookMocks.useContentRegistry).toHaveBeenLastCalledWith(
+    expect(
+      contentRegistryHookMocks.useContentRegistry,
+    ).toHaveBeenLastCalledWith(
       expect.objectContaining({
         language: "tr",
         type: "STORY",

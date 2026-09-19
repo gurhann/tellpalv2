@@ -388,7 +388,7 @@ describe("Contributor integration", () => {
       fetchImplementation: fetchMock as typeof fetch,
     });
 
-    await screen.findByRole("heading", { name: /evening garden/i });
+    await screen.findByRole("heading", { name: /locale workspace/i });
     expect(await screen.findByText("M. Rivers")).toBeVisible();
 
     fireEvent.click(
