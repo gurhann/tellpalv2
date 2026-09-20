@@ -106,6 +106,38 @@ class TellPalAdminClient:
             "created category localization",
         )
 
+    def update_category_localization(
+        self,
+        category_id: int,
+        language_code: str,
+        body: dict[str, object],
+    ) -> dict[str, object]:
+        path = f"/api/admin/categories/{category_id}/localizations/{language_code}"
+        return _expect_dict(
+            self._request_json("PUT", path, body=body),
+            "updated category localization",
+        )
+
+    def list_category_contents(
+        self,
+        category_id: int,
+        language_code: str,
+    ) -> list[dict[str, object]]:
+        path = f"/api/admin/categories/{category_id}/localizations/{language_code}/contents"
+        return _expect_list(self._request_json("GET", path), "category curation list")
+
+    def add_category_content(
+        self,
+        category_id: int,
+        language_code: str,
+        body: dict[str, object],
+    ) -> dict[str, object]:
+        path = f"/api/admin/categories/{category_id}/localizations/{language_code}/contents"
+        return _expect_dict(
+            self._request_json("POST", path, body=body),
+            "created category curation",
+        )
+
     def register_media_asset(
         self,
         *,
