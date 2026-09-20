@@ -1,0 +1,250 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-07-28T00:13:05.174+03:00",
+    "last_updated": "2026-09-20T11:25:00.000+03:00"
+  },
+  "mode": "initial_scan",
+  "scan_level": "exhaustive",
+  "project_root": "C:\\github\\tellpal",
+  "project_knowledge": "C:\\github\\tellpal\\docs",
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:15:34.919+03:00",
+      "summary": "C:\\github\\tellpal, tek parçalı Flutter/Dart mobil monolith olarak sınıflandırıldı; Android ve iOS platformları doğrulandı, dosyasız v2/be iskeleti ayrı proje sayılmadı."
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:18:17.207+03:00",
+      "summary": "Mevcut proje belgeleri envanterlendi. Kullanıcı talebiyle docs altındaki Crashlytics sürüm raporları içerik incelemesinden hariç tutuldu; mimari, RevenueCat, geliştirme kuralları ve bileşen README belgeleri kaynak kodla karşılaştırılacak."
+    },
+    {
+      "step": "step_3",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:19:56.872+03:00",
+      "summary": "Flutter 3.41.2 / Dart 3.11.0 mobil teknoloji yığını; feature-based Clean Architecture, BLoC/Cubit durum yönetimi, GetIt DI ve go_router navigasyon örüntüleri kaynak koddan doğrulandı."
+    },
+    {
+      "step": "step_4",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:34:06.361+03:00",
+      "outputs": [
+        "screen-flow-map.md",
+        "api-contracts.md",
+        "data-models.md",
+        "backend-services.md",
+        "state-management.md",
+        "component-inventory.md",
+        "asset-inventory.md"
+      ],
+      "summary": "238 Dart uygulama dosyası, 28 test dosyası, platform yapılandırmaları ve 184 asset exhaustive seviyede tarandı; ekran/akış, API, veri, servis, durum, bileşen ve varlık belgeleri üretildi."
+    },
+    {
+      "step": "step_5",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:36:57.386+03:00",
+      "outputs": [
+        "source-tree-analysis.md"
+      ],
+      "summary": "Repository ve lib feature/katman ağacı, kritik giriş noktaları, generated alanlar, asset konumları ve boş backend iskeleti belgelendi."
+    },
+    {
+      "step": "step_6",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:36:57.386+03:00",
+      "outputs": [
+        "development-guide.md",
+        "deployment-guide.md"
+      ],
+      "summary": "Yerel geliştirme, codegen, analiz/test, Android/iOS build, manuel release süreci, sürüm drift'i ve servis yapılandırma gereksinimleri belgelendi."
+    },
+    {
+      "step": "step_7",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:36:57.386+03:00",
+      "summary": "Repository tek parçalı mobil monolith olduğu için çok parçalı entegrasyon analizi uygulanabilir değil; dış servis ilişkileri backend-services.md içinde belgelendi."
+    },
+    {
+      "step": "step_8",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:39:06.528+03:00",
+      "outputs": [
+        "architecture.md"
+      ],
+      "summary": "Mevcut mobil mimari; composition root, feature/katman sınırları, navigasyon, servisler, cache, güvenlik, test, deployment ve kritik hikâye okuyucu durum makinesiyle belgelendi."
+    },
+    {
+      "step": "step_9",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:40:53.459+03:00",
+      "outputs": [
+        "project-overview.md",
+        "test-strategy.md",
+        "contribution-guide.md"
+      ],
+      "summary": "Yönetici seviyesinde proje özeti, yeniden geliştirme başlangıç sırası, mevcut test tabanı, kritik test boşlukları ve hedef karakterizasyon/E2E matrisi üretildi."
+    },
+    {
+      "step": "step_10",
+      "status": "completed",
+      "timestamp": "2026-07-28T00:41:57.876+03:00",
+      "outputs": [
+        "index.md"
+      ],
+      "summary": "Tüm üretilen ve ilgili mevcut belgeleri gruplayan, kritik uyarıları ve başlangıç okuma sırasını gösteren master index oluşturuldu."
+    },
+    {
+      "step": "step_11_iteration",
+      "status": "completed",
+      "timestamp": "2026-09-20T11:25:00.000+03:00",
+      "outputs": [
+        "contribution-guide.md",
+        "emulator-validation.md"
+      ],
+      "summary": "BMAD checklist doğrulaması ve Android emülatör runtime doğrulaması tamamlandı; ana ekran, onboarding/bildirim izni, anonim kullanım ve profil, auth form doğrulamaları, parent mode, paywall, ücretsiz Haberci Nota hikâye/ZIP/ses akışı, Uyku oynatıcıları, Kaan Satranç Öğreniyor tamamlanma ekranı ve hızlı swipe/ikinci ZIP davranışı gözlendi."
+    }
+  ],
+  "current_step": "step_11",
+  "findings": {
+    "project_classification": {
+      "repository_type": "monolith",
+      "parts_count": 1,
+      "primary_technology": "Flutter/Dart",
+      "platforms": [
+        "Android",
+        "iOS"
+      ],
+      "entry_point": "lib/main.dart",
+      "summary": "Feature tabanlı Clean Architecture ve BLoC/Cubit göstergeleri taşıyan tek mobil istemci."
+    },
+    "existing_documentation": {
+      "relevant_sources": [
+        "README.md",
+        "architecture.md",
+        "REVENUCAT_INTEGRATION.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "lib/common/components/cubit/README.md"
+      ],
+      "excluded_by_user": [
+        "docs/1.0.32_crashlytcs/**",
+        "docs/1.0.33_crashlytcs/**",
+        "docs/1.0.34_crashlytcs/**"
+      ],
+      "user_context": "Crashlytics belgelerini inceleme; bunun dışında tüm ekranlar, akışlar, servisler, veri modelleri ve entegrasyonlar kapsamda."
+    },
+    "technology_stack": {
+      "toolchain": "Flutter 3.41.2, Dart 3.11.0",
+      "app_version": "1.0.35+333",
+      "language": "Dart",
+      "ui": "Flutter Material",
+      "state_management": "BLoC/Cubit (flutter_bloc 9.1.1, bloc 9.2.0)",
+      "dependency_injection": "GetIt 9.2.0",
+      "navigation": "go_router 17.1.0",
+      "networking": "Dio 5.9.1 + Retrofit 4.9.2",
+      "cloud": "Firebase Core/Auth/Realtime Database/Storage/Remote Config/Messaging/Analytics/Performance/Crashlytics",
+      "premium": "RevenueCat purchases_flutter 9.12.1",
+      "attribution": "Adjust SDK 5.5.0",
+      "audio": "audio_service 0.18.18 + just_audio 0.10.5",
+      "persistence": "SharedPreferences, Hive-backed Dio cache, Flutter cache manager",
+      "localization": "slang 4.12.1 + flutter_localizations",
+      "architecture_pattern": "Feature-based layered Clean Architecture with presentation/domain/data separation, Cubit state containers, GetIt service locator and route-based UI composition."
+    },
+    "batches_completed": [
+      {
+        "path": "lib/common",
+        "files_scanned": 51,
+        "summary": "Ortak bileşenler; Firebase, RevenueCat, ses, önbellek, tercih, performans ve yaşam döngüsü servisleri tarandı."
+      },
+      {
+        "path": "lib/config + lib/core",
+        "files_scanned": 16,
+        "summary": "Rotalar, tema, Firebase/Remote Config bağlantıları, ağ hata modeli ve ortak yardımcılar tarandı."
+      },
+      {
+        "path": "lib/features/auth",
+        "files_scanned": 28,
+        "summary": "Splash, onboarding, anonim kullanım, e-posta/Google/Apple giriş, doğrulama, parola ve profil kurulum akışları tarandı."
+      },
+      {
+        "path": "lib/features/stories",
+        "files_scanned": 77,
+        "summary": "Hikâye vitrinleri, arama, kategori, etkileşimli ağaç, ses ve kırılgan tek/iki ZIP indirme akışı tarandı."
+      },
+      {
+        "path": "lib/features/parent_mode",
+        "files_scanned": 26,
+        "summary": "Ebeveyn rehberi vitrin, kategori, günlük ücretsiz kitap, okuma ve dinleme akışları tarandı."
+      },
+      {
+        "path": "lib/features/profile",
+        "files_scanned": 20,
+        "summary": "Profil, dil, bildirim, geri bildirim, hesap, parola, silme, promosyon ve premium akışları tarandı."
+      },
+      {
+        "path": "lib/features/relax",
+        "files_scanned": 9,
+        "summary": "Ninni, meditasyon, sesli hikâye, premium erişim ve ortak oynatıcı akışları tarandı."
+      },
+      {
+        "path": "lib/gen + lib/services + lib/utils",
+        "files_scanned": 9,
+        "summary": "Üretilen yerelleştirme kodu, uygulama servisleri ve yardımcı katmanlar tarandı."
+      },
+      {
+        "path": "android + ios",
+        "files_scanned": 0,
+        "summary": "Platform yapılandırmaları, izinler, minimum hedefler ve arka plan ses yetenekleri incelendi; sayı yalnızca Dart taraması dışında olduğu için sıfır bırakıldı."
+      },
+      {
+        "path": "test",
+        "files_scanned": 28,
+        "summary": "Unit/widget test kapsamı, güçlü regresyon alanları ve kritik uçtan uca test boşlukları tarandı."
+      },
+      {
+        "path": "assets",
+        "files_scanned": 184,
+        "summary": "Görsel, ikon, animasyon, font, yerelleştirme ve landing varlıkları tür, dizin ve boyut bazında envanterlendi."
+      }
+    ]
+  },
+  "project_types": [
+    {
+      "part_id": "mobile-app",
+      "project_type_id": "mobile",
+      "display_name": "Flutter Mobile Application"
+    }
+  ],
+  "outputs_generated": [
+    "project-scan-report.json",
+    "screen-flow-map.md",
+    "api-contracts.md",
+    "data-models.md",
+    "backend-services.md",
+    "state-management.md",
+    "component-inventory.md",
+    "asset-inventory.md",
+    "source-tree-analysis.md",
+    "development-guide.md",
+    "deployment-guide.md",
+    "architecture.md",
+    "project-overview.md",
+    "test-strategy.md",
+    "contribution-guide.md",
+    "index.md",
+    "emulator-validation.md"
+  ],
+  "resume_instructions": "Step 1-10 ve ilk Step 11 doğrulama iterasyonu tamamlandı. Kullanıcı 6/7/8 ile inceleme veya ek belge isteyebilir; '9' ya da 'done' ile Step 12 finalizasyonuna geçilir.",
+  "validation_status": {
+    "last_validated": "2026-09-20T11:25:00.000+03:00",
+    "validation_errors": [],
+    "documentation": "15 Markdown belge, 3366 satır; tüm iç linkler ve code fence çiftleri geçerli, incomplete marker ve hassas anahtar deseni bulunmadı.",
+    "source_verification": "23 GoRouter rotası ve 31 Cubit kaynakla yeniden sayıldı.",
+    "tests": "flutter test: 88/88 başarılı.",
+    "analysis": "dart analyze: 0 error, 25 warning, 162 info; mevcut kaynak kalitesi borcu, belge üretiminden kaynaklanmıyor.",
+    "runtime_risks": "Debug emülatöründe açılış/paywall sırasında frame skip gözlendi; temiz ilk açılışta bildirim izni ve anonim devam sonrasında otomatik RevenueCat paywall denemesi Error 3 üretti. Gerçek e-posta kaydı başarıyla doğrulandı; profil sihirbazının veri doldurulmuş yolu, e-posta doğrulama bağlantısı ve Google/Apple auth henüz test edilmedi. Profil sihirbazı Skip ile tamamlanırken de Billing Error 3 görüldü, ancak yeniden başlatmada kayıtlı oturum ve ana ekran korundu. Rahatla/parent ilk yükleme ağ yanıtına bağlı. Hızlı swipe sırasında MediaCodec Handler dead-thread uyarıları oluştu ve son sayfa deterministik doğrulanamadı. Dallanma model desteği var ancak erişilebilir ücretsiz içerikte seçim kartı bulunamadı; premium seçimleri Billing unavailable nedeniyle test edilemedi. AudioService logunda Android 14+ foreground media playback izni için SecurityException uyarısı görüldü; emülatörde oynatma yine de devam etti."
+  }
+}
