@@ -2,7 +2,7 @@
 title: TellPal Mobile v1 Yeniden Yazım
 status: draft
 created: 2026-09-20
-updated: 2026-09-20
+updated: 2026-09-22
 ---
 
 # PRD: TellPal Mobile v1 Yeniden Yazım
@@ -22,6 +22,16 @@ Eski uygulamayla uyumluluk temel alınırken `be/docs/mobile-delivery-discovery.
 Kullanıcının zamanla ilgili açıklaması, PRD veya mühendislik çalışmasının aceleye getirilmesini gerektiren bir teslim tarihi değildir. İlk aşamada ürünün işleyişini yeniden tasarlamaya zaman ayrılmayacaktır; gerekli analiz, mimari değerlendirme ve güvenilirlik doğrulaması replacement hedefini desteklemek için yapılabilir.
 
 Başarı, eski uygulamada yapılabilen işlemleri gerçekleştiren ve canlı sürümün yerini alabilecek bir sürümün yayınlanmasıdır. Yeni backende uyum ve crash problemlerinin azaltılması temel kalite hedefleridir. Flutter zorunlu değildir; teknoloji seçimi bu hedeflere göre mimari aşamada değerlendirilecektir.
+
+### Discovery ile uzlaştırılmış kararlar
+
+19 Eylül discovery belgesinin dokuz yönlendirme bölümü 22 Eylül tarihinde PRD ve sonraki kullanıcı kararlarıyla karşılaştırılmıştır. Ayrıntılı karşılaştırma [discovery uzlaştırma notundadır](reconcile-discovery.md). Discovery'nin teknik yönü [addendum.md](addendum.md) içinde mimari girdisi olarak korunur; endpoint veya şema burada kesinleştirilmez.
+
+- RevenueCat ve kullanıcı akış kayıtları, sonraki karar gereği ilk release öncesi tamamlanır.
+- Discovery genel içerik aramasını önerir; son kullanıcı kararı arama kapsamını gerçek request/response incelemesine bırakmıştır.
+- Etkileşimli hikâyeler ve ebeveyn rehberleri son kullanıcı kararıyla kapsam dışıdır. Eski envanterde bulunmaları bu işlevleri geri getirmez.
+- Manifest, medya erişimi ve işleme için discovery yönü korunur; kesin şema, süreler ve teknik mekanizmalar mimari aşamasında gerçek çıktılarla doğrulanır.
+- Migration, oynatma yaşam döngüsü, dil görünürlüğü ve %99,5 kararlılık hedefi sonraki görüşmelerle netleştirilmiştir. Bunlar discovery'deki eski açık sorular nedeniyle yeniden belirsiz sayılmaz.
 
 ## Desteklenen platformlar ve cihazlar
 
@@ -55,7 +65,7 @@ Platform bazında crash-free kullanıcı oranı yayın değerlendirmesinde en az
 RevenueCat entegrasyonu ve kullanıcı akışlarının backende loglanması ilk replacement sürümünün kapsamındadır. Geliştirme sırasının son adımlarında tamamlanacak ve release öncesinde doğrulanacaktır; yayın sonrasına ertelenmiş özellikler değildir. Bu karar, mobile delivery discovery belgesindeki ertelemenin mevcut PRD kapsamında geliştirme sırasına ait olduğunu netleştirir.
 
 - RevenueCat: mevcut abonelerin erişimi, satın alma, satın alımları geri yükleme ve abonelik erişim durumunun doğrulanması yayın öncesi kabul kapsamındadır.
-- Kullanıcı akışlarının backende loglanması: izlenecek akışlar ve olaylar ile kaydedilecek veri kapsamı gereksinim çalışmasında tanımlanacak; entegrasyon ve doğrulama release öncesi son adımlarda tamamlanacaktır.
+- Kullanıcı akışlarının backende loglanması: akış kapsamı FR-21'de onaylanmıştır; teknik olay alanları ve saklama politikası sözleşmede tanımlanacak, entegrasyon ve doğrulama release öncesi son adımlarda tamamlanacaktır.
 
 Bu entegrasyonların ihtiyaçları ilgili gereksinim ve mimari kararlarında baştan dikkate alınacaktır. Crash/hata tanılama, kullanıcı akışlarının loglanmasından ayrı bir güvenilirlik ihtiyacıdır; kullanıcı akışlarının loglanmasına ilişkin son aşama kararı crash tanılamanın zamanlamasını belirlemez.
 
@@ -67,12 +77,14 @@ Eski uygulamanın `app/old/docs/data-models.md` envanterine göre geçiş incele
 
 - Hesap kimlikleri, oturum devamlılığı, anonim kullanım durumu, abonelikler ve erişim hakları.
 - Her iki nesil profil verisi: ad, avatar, doğum tarihi/yaş aralığı, müşteri tipi, kullanım amaçları, favori türler ve pazarlama tercihleri.
-- Dil ve çocuk/ebeveyn modu dahil mevcut kullanıcı tercihleri.
+- Dil dahil mevcut kullanıcı tercihleri. Eski çocuk/ebeveyn modu değeri tarihsel veri olarak değerlendirilebilir; ebeveyn modu yeni uygulamada etkinleştirilmeyecektir.
 - Okunan içerik listeleri, okuma/dinleme geçmişi, tamamlanma durumu, süreler ve saklanmış kalan sayfa/ilerleme bilgisi.
 - Geri bildirim kayıtları, promosyon kayıtları ve mevcut içeriklerle kullanıcı geçmişi arasındaki kimlik ilişkileri.
 - Cihazda saklanan tercihler, açılış/onboarding durumu ve yerel kullanıcı kayıtları. Eski indirilmiş medya ve yeniden üretilebilir önbellekler aşağıdaki temizlik kararı kapsamındadır.
 
 Bu envanter dokümantasyon kanıtıdır; canlı sistem ve cihazlarda bulunan verilerin eksiksiz listesi olarak kabul edilmeyecektir. Geçiş planında tüm kaynaklar ve şema nesilleri doğrulanacak, eski ve yeni kimlikler eşleştirilecek, eksik veya eşleştirilemeyen kayıtlar sessizce atılmayacaktır. Özellikle yalnız cihazda bulunan anonim kullanıcı verilerinin korunması ayrıca doğrulanacaktır.
+
+Kaldırılan etkileşimli hikâyeler ve ebeveyn rehberlerine ait geçmişin korunma/gösterim biçimi OQ-3'te çözülmelidir. Bu işlevleri kapsamdan çıkarmak, geçmiş kayıtlarını silme izni değildir; içerikleri yeniden oynatılabilir hale getirme zorunluluğu da doğurmaz.
 
 Veriyi koruma gereksinimi aynı veritabanı şemasını veya dosya biçimini kullanma zorunluluğu getirmez. Teknik temsil değişebilir; kullanıcı verisinin anlamı ve ilişkileri korunmalıdır.
 
@@ -84,7 +96,7 @@ Yayın kabulü, eski canlı sürüm üzerine güncelleme senaryolarında mevcut 
 
 Eski uygulamayı hesapsız kullanan kişi, yeni sürüme geçtiğinde kayıt olmaya zorlanmadan anonim kullanıma devam edecektir. Yeni anonim kullanım Firebase Anonymous Auth kimliğiyle ilişkilendirilecek; cihazda mevcut profil, tercihler, geçmiş ve diğer korunacak kullanıcı kayıtları yeni anonim uygulama hesabına taşınacaktır. Bu karar, belgelerde eski anonim kullanımın yerel bir işaretle yönetildiği bilgisini dikkate alır; eski kullanıcı için doğrulanmış bir Firebase UID bulunduğu varsayılmayacaktır.
 
-Kesinti veya yeniden deneme kullanıcı kayıtlarını çoğaltmamalı veya kaybettirmemelidir. Anonim geçişin tamamlandığı doğrulanmadan gerekli yerel kayıtlar temizlenmeyecektir. Eski indirilmiş medya ve yeniden üretilebilir önbelleklerin temizlenmesine ilişkin karar geçerlidir. Anonim kullanıcı daha sonra kayıtlı hesaba dönüştüğünde profil ve dil verilerinin korunması yönündeki discovery kararı da geçerliliğini korur.
+Kesinti veya yeniden deneme kullanıcı kayıtlarını çoğaltmamalı veya kaybettirmemelidir. Anonim geçişin tamamlandığı doğrulanmadan gerekli yerel kayıtlar temizlenmeyecektir. Eski indirilmiş medya ve yeniden üretilebilir önbelleklerin temizlenmesine ilişkin karar geçerlidir. Anonim kullanıcı daha sonra yeni kayıtlı hesaba dönüştüğünde profil, dil dahil tercihler, geçmiş ve ilerleme korunur; var olan hesaba girişte o hesabın verileri kullanılır ve otomatik birleştirme yapılmaz.
 
 ### Eski ve yeni sistemin birlikte çalışması
 
@@ -109,14 +121,14 @@ Açık geçiş kararları: cihaza özgü yerel kayıtların ve anonim kimlikleri
 
 Mevcut çocuk deneyimini kullanan kişiler, bildikleri ekranlardan hikâye okuyabilmeli, sesli içerik dinleyebilmeli ve hesaplarını yönetebilmelidir. Mevcut aboneler erişim haklarını; anonim kullanıcılar kayıt zorunluluğu olmadan kullanımını korumalıdır. İçerik ekibi CMS'de hazırladığı içeriği cihazda test edebilmeli ve onayladığı sürümü yayınlayabilmelidir.
 
-İlk sürüm yeni bir hedef kitle, yeni keşif modeli veya yeni kullanıcı alışkanlığı yaratmayı hedeflemez. Tek hesapta bir profil vardır; profil yaşı bilgilendiricidir. Çocuk/ebeveyn modu seçimi bağımsız bir yetkilendirme rolü değildir.
+İlk sürüm yeni bir hedef kitle veya kullanıcı alışkanlığı yaratmayı hedeflemez; keşifte yalnız onaylanmış discovery değişiklikleri uygulanır. Tek hesapta bir profil vardır; profil yaşı bilgilendiricidir. Ebeveyn modu kapsam dışıdır.
 
 ### Kaynaklardan çıkarılmış yolculuk taslakları
 
 Aşağıdaki akışlar legacy belgelerinden ve kabul edilen geçiş kararlarından çıkarılmıştır; kullanıcı araştırması veya yeni persona icadı değildir. Ayrıntıları referans sürümle kontrol edilecek, son incelemede onaylanacaktır.
 
 - **UJ-1 — Mevcut kullanıcının güncellemesi:** Yeni sürüm açılır, hesap/geçiş durumu belirlenir, gerekiyorsa taşıma ekranı gösterilir. Başarılı geçişten sonra profil, geçmiş ve erişim hakları kullanılabilir. Kesinti tekrar denemeye götürür; boş profil oluşturmaz.
-- **UJ-2 — Anonim başlangıç ve daha sonra kayıt:** İlk açılış akışı anonim devam veya kayıt/giriş sunar. Anonim kullanıcı katalogdan ücretsiz içerik tüketir; daha sonra yeni kayıtlı hesaba dönüşürken profil ve dilini korur. Var olan hesaba giriş, o hesabın verilerini kullanır.
+- **UJ-2 — Anonim başlangıç ve daha sonra kayıt:** İlk açılış akışı normal kataloğa girmeden anonim devam veya kayıt/giriş sunar. Anonim kullanıcı katalogdan ücretsiz içerik tüketir; daha sonra yeni kayıtlı hesaba dönüşürken profil, tercihler, geçmiş ve ilerlemesini korur. Var olan hesaba giriş, o hesabın verilerini kullanır; otomatik birleştirme yapılmaz.
 - **UJ-3 — Hikâye keşfi ve okuma:** Ana ekran/kategori/aramadan içerik seçilir, detay görülür, okuma başlatılır. İlk sayfa hazır olduğunda anlatım açılır; otomatik veya manuel ilerleme kullanılır; tamamlanma/geçmiş güncellenir.
 - **UJ-4 — Dinleme:** Sesli hikâye veya meditasyon detayından dinleme başlatılır; ninni kartı doğrudan oynatıcıyı açar. Kullanıcı arka planda dinlemeye devam eder, oynatıcı kontrollerini kullanır ve geri döner.
 - **UJ-5 — Hesap ve destek işlemleri:** Profil, dil, geçmiş, hesap ve destek işlemleri mevcut giriş noktalarından yürütülür.
@@ -133,19 +145,24 @@ Aşağıdaki akışlar legacy belgelerinden ve kabul edilen geçiş kararlarınd
 - **Tester:** Test adayına erişme yetkisi olan kişi; abonelikten ayrı yetki.
 - **Migration:** Kullanıcı verisinin ilk geçişte yeni sisteme taşınması. Başarısız işlemin tekrarı yeni bir hesap migration'ı değildir.
 - **Oynatma önbelleği:** Yeniden üretilebilir geçici medya. Kullanıcının kalıcı profil/geçmiş verisi değildir.
+- **Manifest:** Bir revizyona ait sıralı sayfaları, medya kimliklerini ve hazır olma/bütünlük bilgisini tanımlayan teslim kaydı; kesin şeması mimari aşamasında belirlenir.
 - **Parite:** Onaylı istisnalar dışında referans sürümün görünüm ve kullanıcı işlevlerinin karşılanması.
 
 ## İşlevsel gereksinimler
 
-Aşağıdaki gereksinimler ürün davranışını tanımlar. Endpoint, DTO, mobil framework ve veri taşıma mekanizması mimari çıktılarda belirlenecektir. Legacy envanterinden türetilen ayrıntılar runtime kanıtı eksik olsa da sessizce kapsamdan çıkarılamaz; farklılıklar açık karara bağlanır.
+Aşağıdaki gereksinimler ürün davranışını tanımlar. Endpoint, DTO, mobil framework ve veri taşıma mekanizması mimari çıktılarda belirlenecektir. Legacy envanterinden türetilen ayrıntılar runtime kanıtı eksik olsa da sessizce kapsamdan çıkarılamaz; farklılıklar açık karara bağlanır. FR kimlikleri sabittir; kapsamdan çıkarılan FR-17 yeniden numaralandırılmaz.
 
 ### Açılış, kimlik ve profil — UJ-1, UJ-2, UJ-5
 
 #### FR-1 — Açılış ve navigasyon
 İlk kurulum, geri dönen kullanıcı ve migration gereken kullanıcı doğru giriş akışına yönlendirilir. Onboarding, ana hikâye, rahatlama ve profil yüzeyleri ile geri navigasyon referans sürümle karşılaştırılır. Yeniden açılış yanlışlıkla onboarding veya boş profil başlatmaz.
 
+İlk kurulumda normal kataloğa girişten önce kayıt/giriş veya anonim devam seçimi yapılır. Bu seçim, geri dönen kullanıcının geçerli oturumunu gereksiz yere sıfırlamaz.
+
 #### FR-2 — Kimlik doğrulama
 E-posta, Google ve Apple giriş/kayıt; e-posta doğrulama ve parola sıfırlama desteklenir. Referans kayıt formundaki zorunlu onay, ayrı pazarlama tercihi ve e-posta/parola doğrulamaları karşılanır; eksik zorunlu alan/onay başarıya dönüşmez. İptal/hata yeni başarılı oturum sayılmaz. Firebase kimliği doğru uygulama hesabıyla eşleşir; benzer e-posta adresleri nedeniyle hesaplar sessizce birleştirilmez.
+
+Kimlik doğrulama otoritesi Firebase Auth'tur; doğrulanmış Firebase UID, backend'deki uygulama kullanıcısı/profiliyle eşleştirilir. Yeni sistemde uygulama profili için esas kayıt backend'dedir. Eski sistemin paralel çalışması bu yeni profil sahipliğini değiştirmez.
 
 #### FR-3 — Anonim kullanım ve dönüşüm
 Anonim devam Firebase Anonymous Auth ile mümkün olur. Anonim kullanıcı yeni kayıtlı hesap oluşturduğunda anonim dönemdeki profil, tercihler, geçmiş ve ilerleme yeni hesaba taşınır. Kullanıcı var olan hesaba giriş yaptığında o hesabın verileri kullanılır; anonim veri otomatik olarak birleştirilmez. Bu davranış kullanıcı tarafından onaylanmıştır. Eski uygulamadan anonim migration sırasında geçmişin korunması kararı da geçerlidir.
@@ -156,15 +173,19 @@ Referans sürümün profil kurulum alanları, atlanabilir adımları, avatar ve 
 #### FR-5 — Hesap ve tercih yönetimi
 Çıkış, parola değiştirme, hesap silme, dil değiştirme ve bildirim tercihi mevcut işlevleriyle bulunur. Hesap değişiminde önceki hesabın özel verileri görünmez. Hesap silme yalnız yeni sistemdeki hesabı ve o sistemdeki kullanıcı verilerini kapsar. Eski sistemdeki kayıtlar ile eski uygulama sürümünü kullanan cihazlar etkilenmez. Kullanıcı bu kapsamı onaylamıştır.
 
+Paylaşılan Firebase kimliğiyle bu etkinin nasıl sınırlandırılacağı ve yeniden girişin silinen veriyi eski sistemden geri taşımamasının nasıl sağlanacağı OQ-6'da teknik doğrulama olarak tutulur. Hesap silme kararından mağaza aboneliğinin otomatik iptali sonucu çıkarılmaz; kullanıcıya açıklanan abonelik etkisi sözleşmede netleştirilecektir.
+
 ### Katalog ve keşif — UJ-3, UJ-4
 
 #### FR-6 — Ana ekran ve kategori
 Ana ekran CMS sıralı kategori satırları ve sınırlı önizleme içerikleri sunar; tam kategoriye geçiş vardır. Dil/erişim kitlesi için uygun içeriği olmayan kategori gösterilmez. Tam listede içeriklerin atlanmaması ve tekrarlanmaması sayfalama kabulüne dahildir.
 
+Liste yanıtları küçük içerik özetleridir; tam teslim/oynatma verisi detay veya başlatma akışında alınır. Ana ekran satır bileşimi, sayfalama ve hata sözleşmesi OQ-4'te belirlenecektir; CMS kategori sırası onaylı kuraldır.
+
 Editör seçimi ve benzer içerik yüzeyleri referans envanterine dahildir; seçilen öneri doğru içerik/deneyime gider. Uygulanabilir içerik bulunmadığında bozuk kart veya geçersiz hedef gösterilmez.
 
-#### FR-7 — Genel arama
-Arama kapsamı henüz kararlaştırılmamıştır. Eski uygulama `/story/search` üzerinden yalnız hikâye araması yapmaktadır; discovery belgesi ise uygun içerik türleri arasında genel içerik aramasını yönlendirmektedir. Eski istemcinin gerçek request/response örnekleri ve yeni backend hedef sözleşmesi incelenerek karar verilecektir. Sonuçlar her durumda bağımsız kişi kaydı değil içerik olur; katkı sağlayıcı bilgileri arama eşleşmesine katkı verebilir. Sonuçlar deneyim/tür bağlamını belirtir; boş sonuç ve ağ hatası birbirinden ayrılır.
+#### FR-7 — İçerik araması; tür kapsamı açık
+Arama kapsamı henüz kararlaştırılmamıştır. Eski uygulamada `/story/search` ve `StorySearchByCategoryType[]` yanıt modeli belgelenmiştir; endpoint adı ve bu model, gerçekte hangi içerik türlerinin döndüğünü tek başına kanıtlamaz. Önceki “yalnız hikâye” ifadesi doğrulanmış bulgu olarak kullanılmayacaktır. Discovery uygun içerik türleri arasında genel aramayı yönlendirir; sonraki kullanıcı kararı gereği gerçek legacy request/response örnekleri ve yeni backend hedef sözleşmesi incelenerek kapsam belirlenecektir. Sonuçlar bağımsız kişi kaydı değil içeriktir; içerik ve katkı sağlayıcı bilgileri eşleşmede kullanılabilir. Sonuçlar uygun olduğunda deneyim/türe göre gruplanır; boş sonuç ve ağ hatası birbirinden ayrılır. Karakter eşiği ve debounce davranışı referans kanıtıyla doğrulanacaktır.
 
 #### FR-8 — İçerik ve deneyim ayrımı
 Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda görünebilir. Seçilen deneyim doğru detay/oynatmayı açar; diğer deneyimin işleme hatası hazır deneyimi engellemez.
@@ -172,8 +193,12 @@ Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda gör�
 #### FR-9 — Dil ve fallback
 Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Dil görünürlüğü referans sürümdeki gibidir: Türkçe, İngilizce ve Almanca açıktır; Portekizce yalnız mevcut uzaktan yapılandırma tarafından açıldığında görünür; İspanyolca kapalıdır. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Kullanıcı bu davranışı onaylamıştır.
 
+Fallback, seçilen dilde içerik bulunmadığında değerlendirilir; İngilizce deneyimin kendisi yayınlı ve kullanıcı için erişilebilir olmalıdır. Fallback, yayınlanmamış veya yetkisiz bir deneyimi açamaz.
+
 #### FR-10 — Ücretsiz ve kilitli görünürlük
 Ücretsiz ve kilitli içerik katalogda görünür; kilitli içeriği başlatma paywall açar. Dil bazlı CMS ücretsiz seçimi STORY'nin okuma ve sesli deneyimlerine uygulanır. Abone olmayanlara özel kategori CMS sırasıyla yalnız o kitleye gösterilir; aktif aboneye gösterilmez.
+
+Bu kategori ücretsiz ve kilitli içerikleri birlikte barındırabilir. Anonim ve kayıtlı kullanıcılar aynı içerik erişim kurallarına tabidir; aynı dil, yayın ve erişim hakkı koşullarında yalnız giriş türü nedeniyle farklı içerik hakkı oluşmaz.
 
 ### Okuma ve dinleme — UJ-3, UJ-4
 
@@ -182,6 +207,8 @@ Hikâye, sesli hikâye ve meditasyon bilgi/detay yüzeyinden açık kullanıcı 
 
 #### FR-12 — Sayfalı hikâye
 Sayfa görseli ve anlatım sesi birlikte doğru sayfaya aittir. İlk sayfa hazır olunca başlayabilir; tüm hikâyeyi beklemek gerekmez. Anlatım bitişi animasyonla ilerler; manuel gezinme çalışır. Hazır olmayan sayfa yükleme durumuna geçer, sonsuz bekleme yerine toparlanabilir hata sunar.
+
+İlk sürümün discovery yönü, revizyonlu manifest ile her sayfanın ayrı görsel ve anlatım sesinin teslimidir. İlk sayfanın görseli ve sesi hazır olduğunda tüketim başlar; sonraki sayfa ve sınırlı ileri hazırlık yapılır. Zayıf bağlantıda manuel geçişin yükleme göstermesi kabul edilebilir; bitişik sayfanın her koşulda hazır olması garanti edilmez. Manifestin detayda mı başlatmada mı alınacağı ve kesin şeması OQ-8'de açık kalır.
 
 #### FR-13 — Hikâye kontrolleri ve tamamlanma
 Referans sürümdeki anlatım/müzik kontrolleri, otomatik ve manuel sayfa ilerletme ile tamamlanma davranışları korunur. Hızlı gezinme ile otomatik ilerlemenin çakışması yanlış sayfa veya çift ses üretmez. Tamamlanma ekranındaki değerlendirme, benzer içerik ve paywall girişleri envanterden doğrulanır. Etkileşimli hikâye dalları ve seçimleri replacement kapsamı dışındadır.
@@ -192,10 +219,15 @@ Referans sürümün ninni, meditasyon ve sesli hikâye oynatma kontrolleri aynı
 #### FR-15 — Medya hazırlığı ve görsel sunum
 İlk sayfa ve sınırlı ileri hazırlık Wi-Fi ve hücresel bağlantıda kullanılabilir; tüm hikâyeyi spekülatif indirme anlamına gelmez. Detayda sınırlı ses hazırlığı başlatma anında yeniden kullanılır. Ninni liste ve oynatıcı görselleri ayrıdır; mevcut animasyon tek statik görsele indirgenmez. Hikâye görsel oranı korunur; metin güvenli alanı ve tablet kırpması cihazlarla doğrulanır.
 
+Sesli hikâye ve meditasyon detayındaki hazırlık tüm ses dosyasının indirilmesini gerektirmez ve otomatik oynatma başlatmaz. Telefon ve tablette aynı portre hikâye görseli, oranı korunarak ekranı dolduracak şekilde kırpılır. Merkezden kırpma geçici varsayımdır; metin güvenli alanlarıyla temsilî cihazlarda doğrulanmadan kesin kural sayılmaz.
+
 #### FR-16 — İlerleme, geçmiş ve istatistikler
 Okuma/dinleme geçmişi, tamamlanma, saklanan ilerleme ve profil istatistikleri referans işlevleriyle korunur. Tek olayın tekrar işlenmesi tamamlanma veya süreyi iki kez saymaz. Uygulama tamamen kapatılıp yeniden açıldığında ana ekrandan açılır; kullanıcı doğrudan önceki hikâye/oynatıcıya geri götürülmez. Uygulama arka planda kaldığında açık hikâye veya oynatma oturumu kaldığı yerden devam eder. Kullanıcı bu davranışı onaylamıştır.
 
 ### Yardımcı yüzeyler — UJ-5
+
+#### FR-17 — Geri çekildi: ebeveyn rehberleri
+Kullanıcı kararıyla kapsam dışıdır; bu kimlik yeniden kullanılmaz. Eski belgelerdeki ebeveyn rehberi akışları uygulama gereksinimi değildir. Tarihsel kullanıcı kayıtlarının korunması OQ-3'te ayrıca ele alınır.
 
 #### FR-18 — Destek ve iletişim
 Geri bildirim gönderimi, doğrulama ve mevcut sınırlar; yerelleştirilmiş yasal/yardım belgeleri; uygulama değerlendirme çağrısı ve sürüm bilgisi; duyuru, bildirim izni ve deep-link giriş noktaları korunur. Başarısız gönderim başarılı gösterilmez. Duyuru/bildirim ve deep-link hedefleri geçerli ekrana gider veya anlaşılır durum sunar. Kullanıcıya görünen bildirim/duyuru/deep-link davranışı referans sürümle aynı kalır; teknik sağlayıcı veya SDK seçimi mimari aşamasında değişebilir. Mevcut operasyonel yapılandırmanın görünür özellikleri, ücretsiz içerikleri, duyuruları ve paywall tetiklerini yönetme ihtiyaçları envantere dahildir; aynı Remote Config anahtarlarının kullanılması şart değildir.
@@ -219,11 +251,17 @@ Okuma ve sesli hikâye yayınları dil/deneyim bazında bağımsızdır. Bir kap
 #### FR-23 — Tester erişimi ve onay
 Tester, kilitli adaylar dahil yetkili olduğu test revizyonlarını açabilir; test/revizyon göstergesi görür. Normal kullanıcı aday alamaz. Gösterge yetkilendirme yerine geçmez. Medya değişikliği hazırlık ve yeniden cihaz testi gerektirir; genel yayın gerekli hazırlık ve açık onaydan sonra yapılır.
 
+Test yayını genel yayından ayrı ara durumdur. Tester yetkisi abonelik hakkından ayrıdır; görünür test/revizyon göstergesi detay veya oynatıcıda sunulur. Üretilen medyayı değiştirmeyen yalnız metadata değişiklikleri daha hafif onaydan geçebilir; hangi alanların bu koşulu sağladığı OQ-8'de tanımlanır.
+
 #### FR-24 — İşleme başarısızlığı
 Medya hazırlama başarısızlığı ilgili adayın test/genel yayınını engeller; CMS hata ve yeniden deneme yolunu gösterir. Başarısız aday mevcut canlı içeriği değiştirmez. Üretilmiş medya hazır kabul edilmeden gerçekten erişilebilir ve bütün olmalıdır.
 
+Hazırlanacak ve doğrulanacak çıktılar: liste küçük görselleri; gerektiğinde detay/oynatıcı görselleri; sayfa görselleri ve anlatım sesleri; gerektiğinde animasyonlu dinleme görselleri; sıralı sayfa, varlık kimliği ve hazır olma/bütünlük bilgisi taşıyan revizyonlu manifest. Yalnız işleme planı veya kayıt oluşturulması, dosyaların üretilmiş ve kullanılabilir olduğuna kanıt değildir. Boyutlar, codec, kalite bütçesi ve işleme orkestrasyonu OQ-8'de belirlenecektir.
+
 #### FR-25 — Korumalı medya ve revizyon sürekliliği
 Liste/detay görünürlüğü korumalı tam medya erişimi vermez. Başlatma yetkisi kontrol edilir; aktif oynatma kabul edilen revizyona bağlı kalır. Süresi dolan medya erişimi, yayından çekme ve güvenlik istisnaları OQ-8'de tamamlanacaktır. Temizlik canlı, rollback ve oturum için gerekli revizyonları korur.
+
+Korumalı medya backend erişim kontrolünden sonra kısa ömürlü URL'lerle sunulur; URL ömrü ve yenileme mekanizması henüz seçilmemiştir. Metadata erişimi, detayda ön hazırlık veya cache varlığı korumalı tam medyaya erişim kontrolünü atlatamaz. İlk sürüm yayınına kadar backend'in güvenilir abonelik erişimi kontrolü tamamlanmalıdır; RevenueCat'in son adım olması erişim kontrolünü isteğe bağlı yapmaz. Saklama ve temizlik parametreleri backend/ortam yapılandırmasından yönetilir.
 
 ### Replacement ve migration — UJ-1, UJ-2
 
@@ -241,7 +279,7 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 
 ## Çapraz kalite gereksinimleri
 
-- **NFR-1 — Kararlılık:** FR-1–FR-29 kritik kabul senaryolarında bilinen crash, donma veya veri kaybı engeli kalmaz. Sayısal üretim kararlılığı eşiği OQ-2'de açık olup bu ifade tek başına yüzde yüz crash-free garantisi değildir.
+- **NFR-1 — Kararlılık:** Etkin FR-1–FR-29 gereksinimlerinin (geri çekilmiş FR-17 hariç) kritik kabul senaryolarında bilinen crash, donma veya veri kaybı engeli kalmaz. Platform bazında en az %99,5 crash-free kullanıcı hedefi kararlaştırılmıştır; OQ-2'de açık olanlar ölçüm süresi/örneklemi ve cihaz bazlı bütçelerdir. Test cihazlarında bellek kaynaklı kapanma veya kritik oynatma hatası yayın engelidir.
 - **NFR-2 — Bellek:** Düşük bellekli cihaz, en ağır içerik ve tekrarlı oturum testleri yapılır. Isınma sonrası tekrar döngülerinde açıklanamayan sürekli bellek artışı giderilir. Cihaz sınıfı başına tepe/kararlı kullanım bütçeleri OQ-2'de belirlenir.
 - **NFR-3 — Akıcılık ve başlatma:** Soğuk/sıcak açılış, ilk sayfa/ilk ses, sayfa geçişi ve yeniden bağlanma ölçülür. Cihaz, ağ ve önbellek koşullarıyla p50/p95 hedefleri kararlaştırılır; eski performans kabul tavanı değildir.
 - **NFR-4 — Veri bütünlüğü:** Migration ve tekrar deneme testleri korunacak alanlar ve kimlik ilişkilerinde kayıp/çoğalma göstermemelidir. Başarı, yalnız taşınan kayıt sayısıyla değil alan/ilişki doğrulamasıyla değerlendirilir.
@@ -249,6 +287,7 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 - **NFR-6 — Uyumluluk:** Onaylanmış minimum işletim sistemi ve telefon/tablet kapsamı korunur. Gerçek cihazlarda oynatma, migration ve arka plan davranışı doğrulanır; yalnız emülatör başarısı yeterli değildir.
 - **NFR-7 — Görsel parite:** Kararlaştırılmış referans ekranlar aynı cihaz boyutu, dil ve içerik koşullarında karşılaştırılır. Onaylı değişiklikler hariç görünür sapmalar kapanmadan ilgili ekran kabul edilmez; görüntü sıkıştırma metin okunabilirliğini bozamaz.
 - **NFR-8 — Tanılama:** Crash, bellek kaynaklı sonlanma, donma ve oynatma hataları sürüm/platform/cihaz bağlamıyla araştırılabilir olmalıdır. Kullanıcı akış loglarıyla crash ölçümü ayrı veri amaçlarıdır.
+- **NFR-9 — Gelecekte offline kullanım için temel:** Revizyon/varlık kimliği sabit, bütünlük ve tamlık doğrulanabilir, indirmeye devam etmeye uygun bir medya temeli tasarlanır. Silinebilir oynatma önbelleği ile gelecekte kullanıcının açıkça saklayacağı offline içerik ayrılır. İlk sürüm kullanıcı kontrollü offline indirme ekranı veya tam hikâyenin offline hazır olduğu garantisi sunmaz; cache bütçesi, boşaltma ve devam semantiği OQ-8'de belirlenecektir.
 
 ## İlk sürüm kapsamı ve kapsam dışı işler
 
@@ -258,7 +297,7 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 
 ## Başarı ölçütleri ve yayın kapıları
 
-- **SM-1 — İşlevsel replacement:** Referans envanterindeki her kullanıcı işlevi karşılanmış veya açıkça onaylanmış istisnayla açıklanmış olmalıdır. Açık, kararsız işlev kaybı kalamaz. FR-1–FR-29'u doğrular.
+- **SM-1 — İşlevsel replacement:** Referans envanterindeki her kullanıcı işlevi karşılanmış veya açıkça onaylanmış istisnayla açıklanmış olmalıdır. Açık, kararsız işlev kaybı kalamaz. FR-1–FR-29'un etkin gereksinimlerini doğrular; geri çekilmiş FR-17 uygulanmaz.
 - **SM-2 — Güvenli güncelleme:** Kayıtlı/anonim/abone kullanıcı ve kesintili migration testlerinde korunacak veri kaybı, kopya kayıt ve yanlış hesap eşleşmesi sıfır olmalıdır. FR-26–FR-29'u doğrular.
 - **SM-3 — Üretim kararlılığı:** Platform bazında en az %99,5 crash-free kullanıcı oranı sağlanır. Değerlendirme süresi/örneklemi yeterli olmalı; donma ve bellek sonlanması ayrıca incelenmelidir. Test cihazlarındaki bellek kaynaklı kapanma ve kritik oynatma hatası yayın engelidir. NFR-1, NFR-2 ve NFR-8'i doğrular.
 - **SM-4 — Medya deneyimi:** Onaylanacak cihaz/ağ matrisi ve gecikme bütçelerinde okuma/dinleme kabul testleri geçer. FR-11–FR-16 ve NFR-2, NFR-3'ü doğrular.
@@ -276,13 +315,16 @@ Bu maddeler taslakta bilinçli olarak açık tutulmuştur. Hiçbiri örtük onay
 |---|---|---|
 | OQ-1 | Referans oynatıcı kontrollerinin tam paritesi ve yeni backend'in gerekli medya/oynatma desteği | Ürün sahibi + backend/mobil; epikler öncesi kapsam ve uygunluk kontrolü |
 | OQ-2 | Crash metriğinin kaynağı ve kök nedenleri; %99,5 crash-free kullanıcı hedefi için değerlendirme süresi/örneklemi; bellek ve gecikme bütçeleri, cihaz/ağ matrisi | Mobil/QA + ürün sahibi; mimari ölçüm planı, yayın öncesi eşikler ve kanıt |
-| OQ-3 | Yeni sisteme sonradan gelen ikinci cihazın yalnız yerel kayıtları; anonim kimlik ve alan eşleştirmesi; hatalı/eksik legacy kayıtların çözümü | Mobil/backend; migration tasarımı ve testleri öncesi |
-| OQ-4 | Arama kapsamı: eski uygulamadaki yalnız hikâye araması mı, discovery'deki genel içerik araması mı; gerçek legacy request/response örnekleri ve yeni backend hedef sözleşmesiyle karar verilecek. Kategori sıralaması ile boş/hata durumları da doğrulanacak. Dil görünürlüğü ve fallback kararlaştırıldı | Ürün sahibi + backend/mobil; UX/API sözleşmesi öncesi |
+| OQ-3 | İkinci cihazdaki benzersiz yerel kayıtların ele alınması (hesap migration'ı tekrarlanmaz); anonim kimlik/alan eşleştirmesi; hatalı/eksik kayıtlar; kaldırılmış içeriklere ait geçmişin korunma/gösterim biçimi | Mobil/backend + gerektiğinde ürün sahibi; migration tasarımı ve testleri öncesi |
+| OQ-4 | Legacy aramanın döndürdüğü gerçek içerik türleri ve hedef arama kapsamı; request/response örnekleriyle karar verilecek. Küçük liste DTO'ları, ana ekran bileşimi, sayfalama, arama sıralaması ve hata sözleşmesi doğrulanacak. CMS kategori sırası, dil görünürlüğü ve fallback kararlaştırıldı | Ürün sahibi + backend/mobil; UX/API sözleşmesi öncesi |
+| OQ-6 | Yalnız yeni sistem hesabını silme kararının ortak Firebase kimliğiyle uygulanması; silinen verinin tekrar migration ile geri gelmemesi ve abonelik etkisinin açıklanması. Ürün kararı korunur; teknik uygulama henüz kanıtlanmadı | Backend/mobil + ürün sahibi; hesap silme uygulanmadan önce |
 | OQ-7 | Backend olay alanları, saklama süresi ve hata/tekrar politikası. Olay kapsamı ve abonelik görünür davranışı kararlaştırıldı; RevenueCat ürün/teklif kimlikleri gerçek entegrasyon sözleşmesinde belirlenecek | Ürün sahibi + backend/mobil; son entegrasyonlardan önce sözleşme |
-| OQ-8 | Korumalı medya erişim yenileme, yayından çekme, metadata-only onay sınırı; manifest, gerçek işleme/ön hazırlık ve retention parametreleri. Kullanıcı davranışı kuralları kararlaştırıldı, teknik çözüm gerçek backend/media kanıtıyla mimari aşamasında belirlenecek | Backend/mobil mimarisi; ilgili epikler öncesi |
+| OQ-8 | Korumalı URL ömrü/yenileme, yayından çekme, metadata-only onay sınırı; manifest şeması ve alınma anı; gerçek dönüşüm, ileri hazırlık, retry/idempotency; retention ve cache bütçesi/boşaltma/indirmeye devam parametreleri. Discovery yönü korunur; kesin çözüm gerçek backend/media kanıtıyla mimari aşamasında belirlenecek | Backend/mobil mimarisi; ilgili epikler öncesi |
 | OQ-9 | Mevcut veri/SDK kapsamı ve mağaza hedef kitle beyanı. Bildirim/duyuru/deep-link kullanıcı davranışı ile izin akışı referans sürümle aynı kalacak | Ürün sahibi + mobil; yayın akışları kesinleşmeden önce |
 | OQ-10 | Eski sistemin kesin kapanış koşulu, yeni sistem hatasında geri dönüş yaklaşımı ve iki sistemin ortak içerik/operasyon yönetimi. Kademeli rollout ve genişletme kanıtı kararlaştırıldı | Ürün sahibi + operasyon/backend; rollout öncesi |
 
 ## Varsayımlar ve kanıt sınırları
+
+Epik ve uygulama sözleşmelerinden önce referans ekranlar, ekran–endpoint eşleştirmeleri, gizli değerlerden arındırılmış request/response/hata örnekleri, ücretsiz/kilitli/test/yayınlanmamış/fallback vakaları ve telefon/tablet medya gözlemleri tamamlanmalıdır. Bu girdiler mobil API sözleşmesi, yetki matrisi, manifest şeması ve migration/birlikte çalışma planını besler. Backend'deki önceki adapter/işleme gözlemleri güncel kod ve gerçek çıktılarla yeniden doğrulanacaktır; PRD güncellemesi bu doğrulamaların yapıldığı anlamına gelmez.
 
 Ürün sahibinin kabul ettiği replacement kapsamı, legacy belgelerdeki kullanıcı işlevlerini kapsar; her ayrıntının gerçek cihazda çalıştığı henüz doğrulanmamıştır. UJ taslakları kaynaklardan çıkarılmıştır ve son görüşmede gözden geçirilecektir. Yeni backend'in bu gereksinimleri hazır karşıladığı varsayılmamaktadır. Yaklaşık %85 crash-free ve yüksek çözünürlük hipotezi doğrulanmış bulgu değildir. Açık noktalar kapanmadan belge `final` durumuna alınmayacaktır.
