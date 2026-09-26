@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.api;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
+import java.util.List;
 
 /**
  * Command types used by the asset processing lifecycle API.
@@ -21,7 +22,14 @@ public final class AssetProcessingCommands {
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
-            Integer pageCount) {
+            Integer pageCount,
+            List<AssetProcessingPageSource> pageSources) {
+
+        public ScheduleAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind,
+                AssetProcessingContentType contentType, String externalKey, Long coverSourceAssetId,
+                Long audioSourceAssetId, Integer pageCount) {
+            this(target, kind, contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
+        }
 
         public ScheduleAssetProcessingCommand(
                 AssetProcessingTarget target,
@@ -31,7 +39,7 @@ public final class AssetProcessingCommands {
                 Long audioSourceAssetId,
                 Integer pageCount) {
             this(target, AssetProcessingKind.DELIVERY, contentType, externalKey, coverSourceAssetId,
-                    audioSourceAssetId, pageCount);
+                    audioSourceAssetId, pageCount, List.of());
         }
 
         public ScheduleAssetProcessingCommand(
@@ -43,7 +51,7 @@ public final class AssetProcessingCommands {
                 Long audioSourceAssetId,
                 Integer pageCount) {
             this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
-                    coverSourceAssetId, audioSourceAssetId, pageCount);
+                    coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
         }
 
         public ScheduleAssetProcessingCommand {
@@ -57,6 +65,8 @@ public final class AssetProcessingCommands {
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
             pageCount = normalizePageCount(kind, contentType, pageCount);
+            pageSources = pageSources == null ? List.of() : List.copyOf(pageSources);
+            validatePageSources(kind, target, contentType, pageSources);
             if (kind == AssetProcessingKind.STORY_NARRATION && audioSourceAssetId == null) {
                 throw new IllegalArgumentException("Narration audio source asset ID is required");
             }
@@ -103,7 +113,14 @@ public final class AssetProcessingCommands {
             String externalKey,
             Long coverSourceAssetId,
             Long audioSourceAssetId,
-            Integer pageCount) {
+            Integer pageCount,
+            List<AssetProcessingPageSource> pageSources) {
+
+        public RetryAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind,
+                AssetProcessingContentType contentType, String externalKey, Long coverSourceAssetId,
+                Long audioSourceAssetId, Integer pageCount) {
+            this(target, kind, contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
+        }
 
         public RetryAssetProcessingCommand(
                 Long contentId,
@@ -114,12 +131,12 @@ public final class AssetProcessingCommands {
                 Long audioSourceAssetId,
                 Integer pageCount) {
             this(AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
-                    coverSourceAssetId, audioSourceAssetId, pageCount);
+                    coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
         }
 
         public RetryAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingContentType contentType,
                 String externalKey, Long coverSourceAssetId, Long audioSourceAssetId, Integer pageCount) {
-            this(target, AssetProcessingKind.DELIVERY, contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
+            this(target, AssetProcessingKind.DELIVERY, contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
         }
 
         public RetryAssetProcessingCommand {
@@ -131,6 +148,10 @@ public final class AssetProcessingCommands {
             coverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
             audioSourceAssetId = normalizePositiveId(audioSourceAssetId, "Audio source asset ID must be positive");
             pageCount = normalizePageCount(kind, contentType, pageCount);
+            pageSources = pageSources == null ? List.of() : List.copyOf(pageSources);
+            if (!(kind == AssetProcessingKind.STORY_PAGE_MEDIA && pageSources.isEmpty())) {
+                validatePageSources(kind, target, contentType, pageSources);
+            }
             if (kind == AssetProcessingKind.STORY_NARRATION && audioSourceAssetId == null) {
                 throw new IllegalArgumentException("Narration audio source asset ID is required");
             }
@@ -296,6 +317,28 @@ public final class AssetProcessingCommands {
         if (kind == AssetProcessingKind.STORY_NARRATION
                 && (!target.isLocalization() || contentType != AssetProcessingContentType.STORY)) {
             throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
+        }
+        if (kind == AssetProcessingKind.STORY_PAGE_MEDIA
+                && (!target.isLocalization() || contentType != AssetProcessingContentType.STORY)) {
+            throw new IllegalArgumentException("Story page media processing requires a STORY localization target");
+        }
+    }
+
+    private static void validatePageSources(AssetProcessingKind kind, AssetProcessingTarget target,
+            AssetProcessingContentType contentType, List<AssetProcessingPageSource> pageSources) {
+        if (kind == AssetProcessingKind.STORY_PAGE_MEDIA) {
+            if (!target.isLocalization() || contentType != AssetProcessingContentType.STORY || pageSources.isEmpty()) {
+                throw new IllegalArgumentException("Story page media processing requires an ordered page source snapshot");
+            }
+            int previousPageNumber = 0;
+            for (AssetProcessingPageSource source : pageSources) {
+                if (source == null || source.pageNumber() <= previousPageNumber) {
+                    throw new IllegalArgumentException("Story page source snapshot must be ordered by page number");
+                }
+                previousPageNumber = source.pageNumber();
+            }
+        } else if (!pageSources.isEmpty()) {
+            throw new IllegalArgumentException("Page source snapshots are only supported for story page media processing");
         }
     }
 }

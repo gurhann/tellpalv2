@@ -8,6 +8,7 @@
 * `c.t.v.a.api.AssetProcessingApi` (via `c.t.v.a.application.AssetProcessingService`)
 * `c.t.v.a.api.AssetRegistryApi` (via `c.t.v.a.application.AssetRegistryService`)
 * `c.t.v.a.api.ContentAssetBundleApi` (via `c.t.v.a.application.ContentAssetBundleService`)
+* `c.t.v.a.api.StoryPageMediaManifestApi` (via `c.t.v.a.application.StoryPageMediaManifestService`)
 |Bean references
 |* `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)
 |===

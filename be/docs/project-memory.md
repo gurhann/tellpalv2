@@ -28,6 +28,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `ADR-0012`: canonical content and category types are STORY, MEDITATION, and LULLABY; AUDIO_STORY is a STORY narration experience, not a persisted canonical type. Legacy independent audio-story import is a separate future migration.
 - `ADR-0014`: staged MEDITATION localizations may omit body text only as DRAFT/PENDING; publication and archive require non-blank body text, and the admin registry exposes missing body as ACTION_REQUIRED.
 - `ADR-0016`: TellPal CMS is a web-only admin surface; supported visual QA targets are laptop and desktop browser widths (`1280` and `1440`), while mobile/tablet CMS fidelity is out of scope unless explicitly revisited.
+- `ADR-0017`: localized story-page image renditions are stored under immutable source/profile revisions and exposed to allowlisted Firebase testers through a versioned manifest; existing page audio and legacy delivery remain unchanged.
 
 ## Coding and Documentation Defaults
 

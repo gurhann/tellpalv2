@@ -67,3 +67,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-meditation-staged-import.md`
   summary: Importer Python testlerinin CI iş akışına eklenmesi ayrı bir pipeline kapsamı çalışmasına bırakıldı.
   evidence: Mevcut backend workflow yalnızca `be/**` değişikliklerinde Maven verify çalıştırıyor; `.codex` importer testleri bu değişiklikten önce de CI’da koşulmuyordu.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-story-page-media-delivery.md`
+  summary: Story page rendition profile changes need an explicit reprocessing operation for unchanged page sources.
+  evidence: Profile version participates in the output revision, but completed jobs cannot be rescheduled unless the source snapshot changes; this slice covers the initial profile, not profile rollout and regeneration operations.

@@ -32,4 +32,5 @@ public interface PublicContentQueryApi {
      * Returns localized story pages when the content is a visible story in the requested language.
      */
     Optional<List<PublicStoryPage>> findStoryPages(Long contentId, LanguageCode languageCode);
+
 }

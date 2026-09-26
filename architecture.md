@@ -215,6 +215,10 @@ Kurallar:
 - Orijinal, optimize edilmiş ve ZIP paketlenmiş dosyalar aynı `media_assets` tablosunda `kind` ile ayrıştırılır.
 - İşleme süreci kalıcı durum makinesi olarak tutulur: `PENDING -> PROCESSING -> COMPLETED | FAILED`
 - İşleme başarısız olduğunda yeniden deneme mümkündür.
+- `STORY_PAGE_MEDIA`, eski `DELIVERY` yaşam döngüsünden ayrı bir iş türüdür. İçerik modülü sayfa sırasını ve yerelleştirilmiş kaynak asset kimliklerini public API sözleşmesiyle sağlar; asset modülü dönüştürme, nesne depolama ve doğrulamayı sahiplenir.
+- Tamamlanan story-page revizyonları içerik/dil/revizyon anahtarıyla immutable manifestlerde tutulur. Revizyon girdisi kaynak görsel SHA-256 değerlerini ve dönüşüm profil sürümünü kapsar; yeni çıktılar `revisions/{revision}` altında yazılır.
+- Deney manifesti yalnızca doğrulanmış görsel türevlerini sunar; sayfa sesleri mevcut kaynak asset kimliği olarak kalır. Bu iş türünün durumu eski mobil görünürlük/yerelleştirme durumunu değiştirmez.
+- Deney teslimatı Firebase ID token doğrulaması ve `TELLPAL_STORY_PAGE_MEDIA_TEST_ALLOWED_FIREBASE_UIDS` allowlist'i gerektirir. Varsayılan allowlist boştur; manifest uç noktası kısa ömürlü imzalı medya erişimi üretir.
 
 ### 8.4 `user` modülü
 

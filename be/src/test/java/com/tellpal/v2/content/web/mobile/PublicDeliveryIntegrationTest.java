@@ -178,6 +178,18 @@ class PublicDeliveryIntegrationTest extends PostgresIntegrationTestBase {
     }
 
     @Test
+    void storyPageMediaExperimentRequiresAllowlistedFirebaseIdentity() throws Exception {
+        mockMvc.perform(get("/api/test/story-page-media/{contentId}", 123L)
+                        .queryParam("lang", "tr"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/test/story-page-media/{contentId}", 123L)
+                        .queryParam("lang", "tr")
+                        .header("Authorization", "Bearer stub:ordinary-mobile-user"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void lullabyVisibilityUsesSharedContentProcessingStatus() throws Exception {
         ContentReference content = contentManagementService.createContent(
                 new CreateContentCommand(ContentType.LULLABY, "shared-processing-lullaby", 3, true));

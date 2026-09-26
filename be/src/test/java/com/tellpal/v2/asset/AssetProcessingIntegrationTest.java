@@ -6,6 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.awt.image.BufferedImage;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.tellpal.v2.asset.api.AssetKind;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
+import com.tellpal.v2.asset.api.AssetProcessingPageSource;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RetryAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.StartAssetProcessingCommand;
@@ -26,6 +33,10 @@ import com.tellpal.v2.asset.api.AssetProcessingRecord;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.asset.api.AssetRegistryApi;
 import com.tellpal.v2.asset.api.AssetStorageProvider;
+import com.tellpal.v2.asset.api.StoryPageMediaManifestApi;
+import com.tellpal.v2.asset.infrastructure.storage.AssetStorageClientRegistry;
+import com.tellpal.v2.asset.infrastructure.storage.StorageObjectContent;
+import com.tellpal.v2.asset.domain.StorageProvider;
 import com.tellpal.v2.asset.api.RegisterMediaAssetCommand;
 import com.tellpal.v2.asset.infrastructure.processing.AssetProcessingJobExecutor;
 import com.tellpal.v2.content.api.ContentReference;
@@ -54,6 +65,12 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
     private AssetRegistryApi assetRegistryApi;
 
     @Autowired
+    private AssetStorageClientRegistry assetStorageClientRegistry;
+
+    @Autowired
+    private StoryPageMediaManifestApi storyPageMediaManifestApi;
+
+    @Autowired
     private AssetProcessingApi assetProcessingApi;
 
     @Autowired
@@ -80,6 +97,95 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
                     media_assets
                 restart identity cascade
                 """);
+    }
+
+    @Test
+    void storyPageMediaCreatesVerifiedImmutableRevisionsAndRetainsThePriorBytes() throws Exception {
+        ContentReference content = createStoryWithLocalizedPage("page-media-revision");
+        Long firstImageId = registerFirebaseImage("page-media/first.png", pngFixture(80, 40));
+        storyPageManagementService.upsertStoryPageLocalization(new com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand(
+                content.contentId(), 1, LanguageCode.TR, "Page one", null, firstImageId));
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        AssetProcessingRecord started = assetProcessingApi.start(new StartAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA));
+
+        assetProcessingJobExecutor.process(started);
+
+        var first = storyPageMediaManifestApi.findLatest(content.contentId(), LanguageCode.TR).orElseThrow();
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_PAGE_MEDIA).orElseThrow().status())
+                .isEqualTo(com.tellpal.v2.asset.api.AssetProcessingState.COMPLETED);
+        var firstEntry = first.pages().getFirst();
+        assertThat(firstEntry.illustration().mimeType()).isEqualTo("image/jpeg");
+        assertThat(firstEntry.illustration().byteSize()).isPositive();
+        assertThat(firstEntry.illustration().checksumSha256()).matches("[0-9a-f]{64}");
+        assertThat(firstEntry.width()).isEqualTo(80);
+        assertThat(firstEntry.height()).isEqualTo(40);
+        byte[] oldBytes = readObject(firstEntry.illustration().storageLocation().objectPath());
+
+        Long secondImageId = registerFirebaseImage("page-media/second.png", pngFixture(50, 100));
+        storyPageManagementService.upsertStoryPageLocalization(new com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand(
+                content.contentId(), 1, LanguageCode.TR, "Page one updated", null, secondImageId));
+        AssetProcessingRecord secondStarted = assetProcessingApi.start(new StartAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA));
+        assetProcessingJobExecutor.process(secondStarted);
+
+        var second = storyPageMediaManifestApi.findLatest(content.contentId(), LanguageCode.TR).orElseThrow();
+        assertThat(second.revision()).isNotEqualTo(first.revision());
+        assertThat(storyPageMediaManifestApi.findRevision(content.contentId(), LanguageCode.TR, first.revision()))
+                .hasValue(first);
+        assertThat(readObject(firstEntry.illustration().storageLocation().objectPath())).containsExactly(oldBytes);
+        assertThat(second.pages().getFirst().illustration().assetId()).isNotEqualTo(firstEntry.illustration().assetId());
+        assertThat(second.pages().getFirst().width()).isEqualTo(50);
+        assertThat(second.pages().getFirst().height()).isEqualTo(100);
+    }
+
+    @Test
+    void missingPageImageFailsPersistentlyWithoutPublishingAManifest() {
+        ContentReference content = createStoryWithLocalizedPage("page-media-missing");
+        Long pageId = jdbcTemplate.queryForObject(
+                "select id from story_pages where content_id = ? and page_number = 1", Long.class, content.contentId());
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA, AssetProcessingContentType.STORY,
+                content.externalKey(), null, null, 1,
+                List.of(new AssetProcessingPageSource(pageId, 1, 987654321L, null))));
+        AssetProcessingRecord started = assetProcessingApi.start(new StartAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA));
+
+        assetProcessingJobExecutor.process(started);
+
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_PAGE_MEDIA).orElseThrow().status())
+                .isEqualTo(com.tellpal.v2.asset.api.AssetProcessingState.FAILED);
+        assertThat(storyPageMediaManifestApi.findLatest(content.contentId(), LanguageCode.TR)).isEmpty();
+    }
+
+    @Test
+    void failedStoryPageMediaProcessingCanRetryAfterSourceBytesAreRepaired() throws Exception {
+        ContentReference content = createStoryWithLocalizedPage("page-media-retry");
+        Long sourceId = registerFirebaseImage("page-media/retry.png", new byte[] {1, 2, 3, 4});
+        storyPageManagementService.upsertStoryPageLocalization(new com.tellpal.v2.content.application.ContentManagementCommands.UpsertStoryPageLocalizationCommand(
+                content.contentId(), 1, LanguageCode.TR, "Page one", null, sourceId));
+        AssetProcessingTarget target = AssetProcessingTarget.localization(content.contentId(), LanguageCode.TR);
+        AssetProcessingRecord firstAttempt = assetProcessingApi.start(new StartAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA));
+
+        assetProcessingJobExecutor.process(firstAttempt);
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_PAGE_MEDIA).orElseThrow().status())
+                .isEqualTo(com.tellpal.v2.asset.api.AssetProcessingState.FAILED);
+
+        assetStorageClientRegistry.uploadObject(StorageProvider.FIREBASE_STORAGE, "page-media/retry.png",
+                "image/png", pngFixture(32, 16).length, new ByteArrayInputStream(pngFixture(32, 16)));
+        AssetProcessingRecord retry = assetProcessingApi.retry(new RetryAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA, AssetProcessingContentType.STORY,
+                content.externalKey(), null, null, 1, List.of()));
+        AssetProcessingRecord retryStarted = assetProcessingApi.start(new StartAssetProcessingCommand(
+                target, AssetProcessingKind.STORY_PAGE_MEDIA));
+        assetProcessingJobExecutor.process(retryStarted);
+
+        assertThat(retry.status()).isEqualTo(com.tellpal.v2.asset.api.AssetProcessingState.PENDING);
+        assertThat(assetProcessingApi.findByTarget(target, AssetProcessingKind.STORY_PAGE_MEDIA).orElseThrow().status())
+                .isEqualTo(com.tellpal.v2.asset.api.AssetProcessingState.COMPLETED);
+        assertThat(storyPageMediaManifestApi.findLatest(content.contentId(), LanguageCode.TR)).isPresent();
     }
 
     @Test
@@ -579,6 +685,52 @@ class AssetProcessingIntegrationTest extends PostgresIntegrationTestBase {
     private AssetProcessingRecord scheduleAndStart(ScheduleAssetProcessingCommand command) {
         assetProcessingApi.schedule(command);
         return assetProcessingApi.start(new StartAssetProcessingCommand(command.target()));
+    }
+
+    private ContentReference createStoryWithLocalizedPage(String externalKey) {
+        ContentReference content = contentManagementService.createContent(
+                new CreateContentCommand(ContentType.STORY, externalKey, 5, true));
+        Long coverSourceAssetId = registerImageAsset("/content/story/" + externalKey + "/tr/original/cover.jpg");
+        contentManagementService.createLocalization(new CreateContentLocalizationCommand(
+                content.contentId(), LanguageCode.TR, "Test story", null, null, coverSourceAssetId,
+                null, null, LocalizationStatus.DRAFT, ProcessingStatus.PENDING, null));
+        storyPageManagementService.addStoryPage(new AddStoryPageCommand(content.contentId(), null));
+        return content;
+    }
+
+    private Long registerFirebaseImage(String objectPath, byte[] bytes) {
+        assetStorageClientRegistry.uploadObject(StorageProvider.FIREBASE_STORAGE, objectPath,
+                "image/png", bytes.length, new ByteArrayInputStream(bytes));
+        String checksum;
+        try {
+            checksum = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception);
+        }
+        return assetRegistryApi.register(new RegisterMediaAssetCommand(
+                AssetStorageProvider.FIREBASE_STORAGE, objectPath, AssetKind.ORIGINAL_IMAGE,
+                "image/png", (long) bytes.length, checksum)).assetId();
+    }
+
+    private static byte[] pngFixture(int width, int height) {
+        try {
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", output);
+            return output.toByteArray();
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not generate test image", exception);
+        }
+    }
+
+    private byte[] readObject(String objectPath) {
+        StorageObjectContent object = assetStorageClientRegistry.openObject(
+                StorageProvider.FIREBASE_STORAGE, objectPath, null).orElseThrow();
+        try (var input = object.content()) {
+            return input.readAllBytes();
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception);
+        }
     }
 
     private Long registerImageAsset(String objectPath) {

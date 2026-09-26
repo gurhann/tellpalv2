@@ -2,6 +2,7 @@ package com.tellpal.v2.asset.domain;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import com.tellpal.v2.shared.infrastructure.persistence.BaseJpaEntity;
 import com.tellpal.v2.asset.api.AssetProcessingTarget;
 import com.tellpal.v2.asset.api.AssetProcessingTargetScope;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
+import com.tellpal.v2.asset.api.AssetProcessingPageSource;
 
 /**
  * Aggregate root that tracks the asset processing lifecycle for one typed target.
@@ -55,6 +57,12 @@ public class AssetProcessing extends BaseJpaEntity {
     @Column(name = "page_count")
     private Integer pageCount;
 
+    @Column(name = "page_source_snapshot", columnDefinition = "text")
+    private String pageSourceSnapshot;
+
+    @Column(name = "page_source_followup_snapshot", columnDefinition = "text")
+    private String pageSourceFollowupSnapshot;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private AssetProcessingStatus status;
@@ -94,13 +102,14 @@ public class AssetProcessing extends BaseJpaEntity {
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount,
+            List<AssetProcessingPageSource> pageSources,
             Instant nextAttemptAt) {
         this.targetScope = requireTarget(target).scope();
         this.kind = requireKind(kind);
         validateKindTarget(this.kind, target, contentType);
         this.contentId = target.contentId();
         this.languageCode = target.languageCode();
-        refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount);
+        refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount, pageSources);
         this.status = AssetProcessingStatus.PENDING;
         this.attemptCount = 0;
         this.nextAttemptAt = requireInstant(nextAttemptAt, "Next attempt time must not be null");
@@ -123,7 +132,22 @@ public class AssetProcessing extends BaseJpaEntity {
                 coverSourceAssetId,
                 audioSourceAssetId,
                 pageCount,
+                List.of(),
                 nextAttemptAt);
+    }
+
+    public static AssetProcessing schedule(
+            AssetProcessingTarget target,
+            AssetProcessingKind kind,
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            List<AssetProcessingPageSource> pageSources,
+            Instant nextAttemptAt) {
+        return new AssetProcessing(target, kind, contentType, externalKey, coverSourceAssetId,
+                audioSourceAssetId, pageCount, pageSources, nextAttemptAt);
     }
 
     public static AssetProcessing schedule(
@@ -143,6 +167,7 @@ public class AssetProcessing extends BaseJpaEntity {
                 coverSourceAssetId,
                 audioSourceAssetId,
                 pageCount,
+                List.of(),
                 nextAttemptAt);
     }
 
@@ -184,6 +209,34 @@ public class AssetProcessing extends BaseJpaEntity {
 
     public Integer getPageCount() {
         return pageCount;
+    }
+
+    public List<AssetProcessingPageSource> getPageSources() {
+        return decodePageSources(pageSourceSnapshot);
+    }
+
+    public List<AssetProcessingPageSource> getPageSourceFollowup() {
+        return decodePageSources(pageSourceFollowupSnapshot);
+    }
+
+    /** Coalesces a newer localized page snapshot while the current worker lease remains active. */
+    public void queuePageSourceFollowup(List<AssetProcessingPageSource> pageSources) {
+        requireStatus(AssetProcessingStatus.PROCESSING);
+        if (kind != AssetProcessingKind.STORY_PAGE_MEDIA) {
+            throw new IllegalStateException("Only story page media processing accepts a follow-up snapshot");
+        }
+        if (pageSources == null || pageSources.isEmpty()) {
+            throw new IllegalArgumentException("Story page media follow-up snapshot must not be empty");
+        }
+        this.pageSourceFollowupSnapshot = encodePageSources(pageSources);
+    }
+
+    public void clearPageSourceFollowup() {
+        requireStatus(AssetProcessingStatus.PROCESSING);
+        if (kind != AssetProcessingKind.STORY_PAGE_MEDIA) {
+            throw new IllegalStateException("Only story page media processing accepts a follow-up snapshot");
+        }
+        this.pageSourceFollowupSnapshot = null;
     }
 
     public AssetProcessingStatus getStatus() {
@@ -254,6 +307,16 @@ public class AssetProcessing extends BaseJpaEntity {
             Long coverSourceAssetId,
             Long audioSourceAssetId,
             Integer pageCount) {
+        refreshContext(contentType, externalKey, coverSourceAssetId, audioSourceAssetId, pageCount, List.of());
+    }
+
+    public void refreshContext(
+            ProcessingContentType contentType,
+            String externalKey,
+            Long coverSourceAssetId,
+            Long audioSourceAssetId,
+            Integer pageCount,
+            List<AssetProcessingPageSource> pageSources) {
         ProcessingContentType requiredContentType = requireContentType(contentType);
         String requiredExternalKey = requireText(externalKey, "External key must not be blank");
         Long normalizedCoverSourceAssetId = normalizePositiveId(coverSourceAssetId, "Cover source asset ID must be positive");
@@ -272,6 +335,28 @@ public class AssetProcessing extends BaseJpaEntity {
         this.coverSourceAssetId = normalizedCoverSourceAssetId;
         this.audioSourceAssetId = normalizedAudioSourceAssetId;
         this.pageCount = normalizedPageCount;
+        this.pageSourceSnapshot = encodePageSources(pageSources);
+        this.pageSourceFollowupSnapshot = null;
+    }
+
+    private static String encodePageSources(List<AssetProcessingPageSource> pageSources) {
+        if (pageSources == null || pageSources.isEmpty()) return null;
+        return pageSources.stream().map(source -> String.join(":",
+                source.pageId().toString(), Integer.toString(source.pageNumber()),
+                source.illustrationAssetId() == null ? "" : source.illustrationAssetId().toString(),
+                source.audioAssetId() == null ? "" : source.audioAssetId().toString()))
+                .collect(java.util.stream.Collectors.joining(";"));
+    }
+
+    private static List<AssetProcessingPageSource> decodePageSources(String snapshot) {
+        if (snapshot == null || snapshot.isBlank()) return List.of();
+        return java.util.Arrays.stream(snapshot.split(";"))
+                .map(row -> row.split(":", -1))
+                .map(fields -> new AssetProcessingPageSource(
+                        Long.valueOf(fields[0]), Integer.parseInt(fields[1]),
+                        fields[2].isBlank() ? null : Long.valueOf(fields[2]),
+                        fields[3].isBlank() ? null : Long.valueOf(fields[3])))
+                .toList();
     }
 
     /**
@@ -304,6 +389,25 @@ public class AssetProcessing extends BaseJpaEntity {
         clearFailureDetails();
     }
 
+    /** Completes the active snapshot or immediately queues the latest follow-up snapshot. */
+    public void completeOrQueueFollowup(Instant completedAt) {
+        if (pageSourceFollowupSnapshot == null || pageSourceFollowupSnapshot.isBlank()) {
+            complete(completedAt);
+            return;
+        }
+        requireStatus(AssetProcessingStatus.PROCESSING);
+        Instant at = requireInstant(completedAt, "Completion time must not be null");
+        this.pageSourceSnapshot = pageSourceFollowupSnapshot;
+        this.pageSourceFollowupSnapshot = null;
+        this.status = AssetProcessingStatus.PENDING;
+        this.nextAttemptAt = at;
+        this.completedAt = null;
+        this.failedAt = null;
+        this.leaseExpiresAt = null;
+        this.startedAt = null;
+        clearFailureDetails();
+    }
+
     /**
      * Marks the current processing attempt as failed with diagnostic details.
      */
@@ -320,6 +424,25 @@ public class AssetProcessing extends BaseJpaEntity {
         this.leaseExpiresAt = null;
         this.lastErrorCode = normalizedErrorCode;
         this.lastErrorMessage = normalizedErrorMessage;
+    }
+
+    /** Drops a failed active attempt in favor of a newer snapshot when one arrived during processing. */
+    public void failOrQueueFollowup(String errorCode, String errorMessage, Instant failedAt) {
+        if (pageSourceFollowupSnapshot == null || pageSourceFollowupSnapshot.isBlank()) {
+            fail(errorCode, errorMessage, failedAt);
+            return;
+        }
+        requireStatus(AssetProcessingStatus.PROCESSING);
+        Instant at = requireInstant(failedAt, "Failure time must not be null");
+        this.pageSourceSnapshot = pageSourceFollowupSnapshot;
+        this.pageSourceFollowupSnapshot = null;
+        this.status = AssetProcessingStatus.PENDING;
+        this.nextAttemptAt = at;
+        this.completedAt = null;
+        this.failedAt = null;
+        this.leaseExpiresAt = null;
+        this.startedAt = null;
+        clearFailureDetails();
     }
 
     /**
@@ -406,6 +529,10 @@ public class AssetProcessing extends BaseJpaEntity {
         if (kind == AssetProcessingKind.STORY_NARRATION
                 && (!target.isLocalization() || contentType != ProcessingContentType.STORY)) {
             throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
+        }
+        if (kind == AssetProcessingKind.STORY_PAGE_MEDIA
+                && (!target.isLocalization() || contentType != ProcessingContentType.STORY)) {
+            throw new IllegalArgumentException("Story page media processing requires a STORY localization target");
         }
     }
 

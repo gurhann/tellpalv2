@@ -24,6 +24,8 @@ final class AssetProcessingMapper {
                 assetProcessing.getCoverSourceAssetId(),
                 assetProcessing.getAudioSourceAssetId(),
                 assetProcessing.getPageCount(),
+                assetProcessing.getPageSources(),
+                assetProcessing.getPageSourceFollowup(),
                 AssetProcessingState.valueOf(assetProcessing.getStatus().name()),
                 assetProcessing.getAttemptCount(),
                 assetProcessing.getNextAttemptAt(),

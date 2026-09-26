@@ -21,7 +21,7 @@ class AssetProcessingStatusListener {
         if (!event.target().isLocalization()) {
             return;
         }
-        if (event.kind() == com.tellpal.v2.asset.api.AssetProcessingKind.STORY_NARRATION) {
+        if (event.kind() != com.tellpal.v2.asset.api.AssetProcessingKind.DELIVERY) {
             return;
         }
         contentManagementService.markLocalizationProcessingStatus(new MarkContentLocalizationProcessingCommand(

@@ -17,6 +17,12 @@ import com.tellpal.v2.content.domain.ContentRepository;
 import com.tellpal.v2.content.domain.StoryPage;
 import com.tellpal.v2.content.domain.StoryPageLocalization;
 import com.tellpal.v2.shared.domain.LanguageCode;
+import com.tellpal.v2.asset.api.AssetProcessingApi;
+import com.tellpal.v2.asset.api.AssetProcessingKind;
+import com.tellpal.v2.asset.api.AssetProcessingContentType;
+import com.tellpal.v2.asset.api.AssetProcessingPageSource;
+import com.tellpal.v2.asset.api.AssetProcessingTarget;
+import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingCommand;
 
 /**
  * Application service for maintaining story pages and their localized page content.
@@ -26,12 +32,15 @@ public class StoryPageManagementService {
 
     private final ContentRepository contentRepository;
     private final ContentAssetReferenceValidator assetReferenceValidator;
+    private final AssetProcessingApi assetProcessingApi;
 
     public StoryPageManagementService(
             ContentRepository contentRepository,
-            ContentAssetReferenceValidator assetReferenceValidator) {
+            ContentAssetReferenceValidator assetReferenceValidator,
+            AssetProcessingApi assetProcessingApi) {
         this.contentRepository = contentRepository;
         this.assetReferenceValidator = assetReferenceValidator;
+        this.assetProcessingApi = assetProcessingApi;
     }
 
     /**
@@ -42,9 +51,11 @@ public class StoryPageManagementService {
         Content content = loadContent(command.contentId());
         if (command.afterPageNumber() == null) {
             StoryPage storyPage = content.addStoryPage(null);
+            Content saved = contentRepository.save(content);
+            schedulePageMediaForAllLocalizations(saved);
             return ContentManagementMapper.toStoryPageRecord(
                     command.contentId(),
-                    contentRepository.save(content).findStoryPage(storyPage.getPageNumber()).orElse(storyPage));
+                    saved.findStoryPage(storyPage.getPageNumber()).orElse(storyPage));
         }
 
         int temporaryOffset = requireTemporaryOffset(content);
@@ -58,6 +69,7 @@ public class StoryPageManagementService {
 
         content.renumberStoryPagesContiguously();
         Content persistedContent = contentRepository.save(content);
+        schedulePageMediaForAllLocalizations(persistedContent);
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
                 persistedContent.findStoryPage(insertedPageNumber).orElse(insertedPage));
@@ -74,9 +86,10 @@ public class StoryPageManagementService {
                 command.textlessIllustrationMediaId(),
                 "textlessIllustrationMediaId");
         storyPage.updateTextlessIllustrationMediaId(command.textlessIllustrationMediaId());
+        Content saved = contentRepository.save(content);
         return ContentManagementMapper.toStoryPageRecord(
                 command.contentId(),
-                contentRepository.save(content).findStoryPage(command.pageNumber()).orElse(storyPage));
+                saved.findStoryPage(command.pageNumber()).orElse(storyPage));
     }
 
     /**
@@ -91,7 +104,7 @@ public class StoryPageManagementService {
         content.removeStoryPageOnly(command.pageNumber());
         contentRepository.saveAndFlush(content);
         content.renumberStoryPagesContiguously();
-        contentRepository.save(content);
+        schedulePageMediaForAllLocalizations(contentRepository.save(content));
     }
 
     /**
@@ -109,6 +122,7 @@ public class StoryPageManagementService {
                 command.bodyText(),
                 command.audioMediaId(),
                 command.illustrationMediaId());
+        schedulePageMedia(content, command.languageCode());
         StoryPage persistedContent = contentRepository.save(content)
                 .findStoryPage(command.pageNumber())
                 .orElse(storyPage);
@@ -118,6 +132,30 @@ public class StoryPageManagementService {
                 command.contentId(),
                 command.pageNumber(),
                 persistedLocalization);
+    }
+
+    private void schedulePageMediaForAllLocalizations(Content content) {
+        content.getLocalizations().stream()
+                .map(localization -> localization.getLanguageCode())
+                .forEach(languageCode -> schedulePageMedia(content, languageCode));
+    }
+
+    private void schedulePageMedia(Content content, LanguageCode languageCode) {
+        if (content.getType() != com.tellpal.v2.content.domain.ContentType.STORY) return;
+        var orderedSources = content.getStoryPages().stream()
+                .sorted(java.util.Comparator.comparingInt(StoryPage::getPageNumber))
+                .map(page -> page.findLocalization(languageCode)
+                        .map(pageLocalization -> new AssetProcessingPageSource(
+                                page.getId(), page.getPageNumber(), pageLocalization.getIllustrationMediaId(),
+                                pageLocalization.getAudioMediaId()))
+                        .orElseGet(() -> new AssetProcessingPageSource(page.getId(), page.getPageNumber(), null, null)))
+                .toList();
+        if (orderedSources.isEmpty()) return;
+        assetProcessingApi.schedule(new ScheduleAssetProcessingCommand(
+                AssetProcessingTarget.localization(requireContentId(content), languageCode),
+                AssetProcessingKind.STORY_PAGE_MEDIA,
+                AssetProcessingContentType.STORY,
+                content.getExternalKey(), null, null, orderedSources.size(), orderedSources));
     }
 
     private Content loadContent(Long contentId) {

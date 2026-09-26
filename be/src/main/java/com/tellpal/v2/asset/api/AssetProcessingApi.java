@@ -62,6 +62,9 @@ public interface AssetProcessingApi {
 
     Optional<AssetProcessingRecord> findByTarget(AssetProcessingTarget target, AssetProcessingKind kind);
 
+    /** Story-page media lookup with a string locale for module consumers that avoid shared domain types. */
+    Optional<AssetProcessingRecord> findStoryPageMediaSnapshot(Long contentId, String languageCode);
+
     /**
      * Lists recent processing entries, capped by the implementation for operational safety.
      */

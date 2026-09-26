@@ -8,6 +8,7 @@ public enum MediaKind {
     THUMBNAIL_TABLET(MediaAssetType.IMAGE),
     DETAIL_PHONE(MediaAssetType.IMAGE),
     DETAIL_TABLET(MediaAssetType.IMAGE),
+    STORY_PAGE_RENDITION(MediaAssetType.IMAGE),
     OPTIMIZED_AUDIO(MediaAssetType.AUDIO),
     CONTENT_ZIP(MediaAssetType.ARCHIVE),
     CONTENT_ZIP_PART1(MediaAssetType.ARCHIVE),

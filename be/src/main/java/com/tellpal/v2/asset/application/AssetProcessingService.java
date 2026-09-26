@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tellpal.v2.asset.api.AssetProcessingApi;
 import com.tellpal.v2.asset.api.AssetProcessingContentType;
 import com.tellpal.v2.asset.api.AssetProcessingKind;
+import com.tellpal.v2.asset.api.AssetProcessingPageSource;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.CompleteAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.FailAssetProcessingCommand;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.RecoverExpiredAssetProcessingCommand;
@@ -84,6 +85,7 @@ public class AssetProcessingService implements AssetProcessingApi {
                 command.coverSourceAssetId(),
                 command.audioSourceAssetId(),
                 command.pageCount(),
+                command.pageSources(),
                 Instant.now(clock));
         AssetProcessing saved = saveNewProcessing(created);
         publishStatusChanged(saved);
@@ -117,7 +119,9 @@ public class AssetProcessingService implements AssetProcessingApi {
                 command.externalKey(),
                 command.coverSourceAssetId(),
                 command.audioSourceAssetId(),
-                command.pageCount());
+                command.pageCount(),
+                command.kind() == AssetProcessingKind.STORY_PAGE_MEDIA && command.pageSources().isEmpty()
+                        ? assetProcessing.getPageSources() : command.pageSources());
         assetProcessing.retry(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -147,7 +151,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord complete(CompleteAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
-        assetProcessing.complete(Instant.now(clock));
+        assetProcessing.completeOrQueueFollowup(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
         return AssetProcessingMapper.toRecord(saved);
@@ -160,7 +164,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord fail(FailAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
-        assetProcessing.fail(command.errorCode(), command.errorMessage(), Instant.now(clock));
+        assetProcessing.failOrQueueFollowup(command.errorCode(), command.errorMessage(), Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
         return AssetProcessingMapper.toRecord(saved);
@@ -194,6 +198,14 @@ public class AssetProcessingService implements AssetProcessingApi {
                 .map(AssetProcessingMapper::toRecord);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AssetProcessingRecord> findStoryPageMediaSnapshot(Long contentId, String languageCode) {
+        AssetProcessingTarget target = AssetProcessingTarget.localization(
+                requireContentId(contentId), requireLanguageCode(LanguageCode.from(languageCode)));
+        return findByTarget(target, AssetProcessingKind.STORY_PAGE_MEDIA);
+    }
+
     /**
      * Returns recent processing entries for operational screens and jobs.
      */
@@ -215,17 +227,33 @@ public class AssetProcessingService implements AssetProcessingApi {
                     command.externalKey(),
                     command.coverSourceAssetId(),
                     command.audioSourceAssetId(),
-                    command.pageCount());
+                    command.pageCount(),
+                    command.pageSources());
             return AssetProcessingMapper.toRecord(assetProcessingRepository.save(assetProcessing));
         }
         if (status == AssetProcessingStatus.PROCESSING) {
+            if (command.kind() == AssetProcessingKind.STORY_PAGE_MEDIA) {
+                List<AssetProcessingPageSource> latestSnapshot = command.pageSources();
+                if (assetProcessing.getPageSources().equals(latestSnapshot)) {
+                    if (!assetProcessing.getPageSourceFollowup().isEmpty()) {
+                        assetProcessing.clearPageSourceFollowup();
+                        return AssetProcessingMapper.toRecord(assetProcessingRepository.save(assetProcessing));
+                    }
+                    return AssetProcessingMapper.toRecord(assetProcessing);
+                }
+                if (!assetProcessing.getPageSourceFollowup().equals(latestSnapshot)) {
+                    assetProcessing.queuePageSourceFollowup(latestSnapshot);
+                    return AssetProcessingMapper.toRecord(assetProcessingRepository.save(assetProcessing));
+                }
+                return AssetProcessingMapper.toRecord(assetProcessing);
+            }
             throw new AssetProcessingAlreadyRunningException(assetProcessing.getTarget());
         }
         if (status == AssetProcessingStatus.COMPLETED) {
-            if (isReschedulableSourceChange(command)) {
+            if (isReschedulableSourceChange(assetProcessing, command)) {
                 assetProcessing.refreshContext(
                         ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
-                        command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
+                        command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount(), command.pageSources());
                 assetProcessing.reschedule(Instant.now(clock));
                 AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
                 publishStatusChanged(saved);
@@ -233,10 +261,10 @@ public class AssetProcessingService implements AssetProcessingApi {
             }
             throw new AssetProcessingAlreadyCompletedException(assetProcessing.getTarget());
         }
-        if (isReschedulableSourceChange(command)) {
+        if (isReschedulableSourceChange(assetProcessing, command)) {
             assetProcessing.refreshContext(
                     ProcessingContentType.valueOf(command.contentType().name()), command.externalKey(),
-                    command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount());
+                    command.coverSourceAssetId(), command.audioSourceAssetId(), command.pageCount(), command.pageSources());
             assetProcessing.reschedule(Instant.now(clock));
             AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
             publishStatusChanged(saved);
@@ -245,7 +273,10 @@ public class AssetProcessingService implements AssetProcessingApi {
         throw new AssetProcessingRetryRequiredException(assetProcessing.getTarget());
     }
 
-    private static boolean isReschedulableSourceChange(ScheduleAssetProcessingCommand command) {
+    private static boolean isReschedulableSourceChange(AssetProcessing processing, ScheduleAssetProcessingCommand command) {
+        if (command.kind() == AssetProcessingKind.STORY_PAGE_MEDIA) {
+            return !processing.getPageSources().equals(command.pageSources());
+        }
         return command.kind() == AssetProcessingKind.STORY_NARRATION
                 || (command.kind() == AssetProcessingKind.DELIVERY
                         && command.target().isContent()

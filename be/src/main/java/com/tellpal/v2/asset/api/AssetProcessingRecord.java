@@ -1,6 +1,7 @@
 package com.tellpal.v2.asset.api;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.tellpal.v2.shared.domain.LanguageCode;
 
@@ -19,6 +20,8 @@ public record AssetProcessingRecord(
         Long coverSourceAssetId,
         Long audioSourceAssetId,
         Integer pageCount,
+        List<AssetProcessingPageSource> pageSources,
+        List<AssetProcessingPageSource> pageSourceFollowup,
         AssetProcessingState status,
         int attemptCount,
         Instant nextAttemptAt,
@@ -52,8 +55,19 @@ public record AssetProcessingRecord(
             Instant createdAt,
             Instant updatedAt) {
         this(processingId, AssetProcessingTarget.localization(contentId, languageCode), AssetProcessingKind.DELIVERY, contentType, externalKey,
-                coverSourceAssetId, audioSourceAssetId, pageCount, status, attemptCount, nextAttemptAt,
+                coverSourceAssetId, audioSourceAssetId, pageCount, List.of(), List.of(), status, attemptCount, nextAttemptAt,
                 leaseExpiresAt, startedAt, completedAt, failedAt, lastErrorCode, lastErrorMessage, createdAt, updatedAt);
+    }
+
+    public AssetProcessingRecord(Long processingId, AssetProcessingTarget target, AssetProcessingKind kind,
+            AssetProcessingContentType contentType, String externalKey, Long coverSourceAssetId,
+            Long audioSourceAssetId, Integer pageCount, List<AssetProcessingPageSource> pageSources,
+            AssetProcessingState status, int attemptCount, Instant nextAttemptAt, Instant leaseExpiresAt,
+            Instant startedAt, Instant completedAt, Instant failedAt, String lastErrorCode,
+            String lastErrorMessage, Instant createdAt, Instant updatedAt) {
+        this(processingId, target, kind, contentType, externalKey, coverSourceAssetId, audioSourceAssetId,
+                pageCount, pageSources, List.of(), status, attemptCount, nextAttemptAt, leaseExpiresAt,
+                startedAt, completedAt, failedAt, lastErrorCode, lastErrorMessage, createdAt, updatedAt);
     }
 
     public AssetProcessingRecord {
@@ -81,6 +95,8 @@ public record AssetProcessingRecord(
         if (pageCount != null && pageCount < 0) {
             throw new IllegalArgumentException("Page count must not be negative");
         }
+        pageSources = pageSources == null ? List.of() : List.copyOf(pageSources);
+        pageSourceFollowup = pageSourceFollowup == null ? List.of() : List.copyOf(pageSourceFollowup);
         if (nextAttemptAt == null) {
             throw new IllegalArgumentException("Next attempt time must not be null");
         }
