@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--
+  PRD Validation Report — skeleton template.
+
+  This file is a starter the synthesis pass fills in directly. There is no
+  substitution engine. The LLM:
+    1. Reads {doc_workspace}/review-rubric.md and every review-{slug}.md from
+       additional reviewers.
+    2. Copies this skeleton.
+    3. Replaces the placeholder content (everything between TEMPLATE markers)
+       with the consolidated review, preserving the structure and CSS.
+    4. Writes the result to {doc_workspace}/validation-report.html.
+    5. Writes a markdown twin to {doc_workspace}/validation-report.md.
+
+  Visual rules the LLM must preserve:
+    - The container width, the color tokens, the typography.
+    - One dimension = one collapsible <section class="dimension">.
+    - Verdict pill uses the verdict-* class matching its judgment.
+    - Severity badge uses the sev-* class matching its level.
+    - Each extra reviewer (adversarial, etc.) gets its own collapsible section
+      below the rubric dimensions.
+    - The footer always shows the artifact paths and timestamp.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PRD Validation: TellPal Mobile v1</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --border: #e7e5e4;
+    --text: #1c1917;
+    --muted: #78716c;
+
+    --verdict-strong: #16a34a;
+    --verdict-adequate: #65a30d;
+    --verdict-thin: #d97706;
+    --verdict-broken: #dc2626;
+
+    --sev-low: #64748b;
+    --sev-medium: #ca8a04;
+    --sev-high: #ea580c;
+    --sev-critical: #dc2626;
+
+    --grade-exc: #16a34a;
+    --grade-good: #65a30d;
+    --grade-fair: #d97706;
+    --grade-poor: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  header.report-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .title h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .title .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .grade {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .grade-excellent { background: var(--grade-exc); }
+  .grade-good { background: var(--grade-good); }
+  .grade-fair { background: var(--grade-fair); }
+  .grade-poor { background: var(--grade-poor); }
+
+  .synthesis {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--muted);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-size: 15.5px;
+  }
+  .synthesis p { margin: 0 0 10px; }
+  .synthesis p:last-child { margin-bottom: 0; }
+
+  .dimension-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .dim-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .dim-card .dim-name { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .dim-card .dim-verdict { font-size: 14px; font-weight: 600; }
+
+  section.dimension, section.reviewer-section { margin-bottom: 14px; }
+  section.dimension details, section.reviewer-section details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  section summary {
+    padding: 14px 20px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section summary::-webkit-details-marker { display: none; }
+  section summary::before {
+    content: "▸";
+    display: inline-block;
+    color: var(--muted);
+    transition: transform 0.15s ease;
+  }
+  section details[open] summary::before { transform: rotate(90deg); }
+  section summary h2 {
+    display: inline;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    flex: 1;
+  }
+  .verdict-pill {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .verdict-strong { background: var(--verdict-strong); }
+  .verdict-adequate { background: var(--verdict-adequate); }
+  .verdict-thin { background: var(--verdict-thin); }
+  .verdict-broken { background: var(--verdict-broken); }
+
+  .dim-body { padding: 4px 20px 18px; }
+  .dim-judgment { color: var(--text); font-size: 14.5px; }
+  .dim-judgment p { margin: 0 0 10px; }
+
+  .findings-list { padding: 0 20px 4px; }
+  article.finding {
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+  }
+  article.finding:first-child { border-top: none; }
+  article.finding header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .badge {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .badge-sev-low { background: rgba(100, 116, 139, 0.12); color: var(--sev-low); }
+  .badge-sev-medium { background: rgba(202, 138, 4, 0.14); color: var(--sev-medium); }
+  .badge-sev-high { background: rgba(234, 88, 12, 0.14); color: var(--sev-high); }
+  .badge-sev-critical { background: rgba(220, 38, 38, 0.14); color: var(--sev-critical); }
+  .finding-title { margin: 0; font-size: 15px; font-weight: 500; flex: 1; min-width: 200px; }
+  .finding-location { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; color: var(--muted); }
+  .finding-note, .finding-fix { margin-top: 6px; font-size: 14px; }
+  .finding-fix strong { color: var(--muted); font-weight: 500; }
+
+  .reviewer-source {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  .mechanical {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 24px;
+    font-size: 14px;
+  }
+  .mechanical h3 { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mechanical ul { margin: 0; padding-left: 20px; }
+  .mechanical li { margin-bottom: 4px; color: var(--text); }
+
+  footer.report-footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  footer .meta { display: flex; gap: 24px; flex-wrap: wrap; }
+</style>
+</head>
+<body><div class="container"><header class="report-header"><div class="title"><h1>TellPal Mobile v1 — Validation Report</h1><div class="subtitle">/Users/gurhankucuk/Documents/GitHub/tellpalv2/_bmad-output/planning-artifacts/prds/prd-tellpalv2-2026-09-20/prd.md</div></div><div class="grade grade-fair">Fair</div></header><div class="synthesis"><p>The draft has a coherent replacement thesis, explicit exclusions, strong migration invariants, and unusually honest evidence boundaries; it is suitable input for architecture discovery, not an unconditional implementation or release contract. Its principal weakness is that several parity-based requirements still lack a closed, approved acceptance baseline, while performance thresholds and open-item closure are not yet separated into clear architecture, implementation, and release gates. No finding below requires redesigning the product or choosing Flutter/native in the PRD.</p><p>The focused reviews add early feasibility gates for signed in-place upgrades and shared identity/entitlement coexistence, plus tighter release-measurement timing. No current reviewer found a blocker to starting architecture investigation. Four high, five medium and three low findings are recorded (12 reviewer findings, not 12 independent defects); the two measurement findings overlap. No critical finding was identified. The Fair grade describes acceptance completeness, not a rejection of the replacement strategy.</p><p>Validate only: PRD/addendum unchanged. Document-level evidence, not runtime verification.</p></div><div class="mechanical"><h3>Recommended next gate</h3>
+<ul><li><strong>Architecture may start now.</strong> This validation does not finalize the PRD or authorize implementation.</li><li><strong>Before architecture is ratified / foundational stories:</strong> prove representative in-place upgrade and identity/entitlement compatibility. Keep RevenueCat implementation late as already agreed.</li><li><strong>Before affected implementation acceptance:</strong> approve the finite parity baseline; settle user-visible migration/media edge outcomes; clarify lifecycle cases and approve provisional performance budgets.</li><li><strong>Before qualification and limited rollout:</strong> freeze measurement definitions, sample/window sufficiency and separate initial-release from expansion gates; then collect the required evidence.</li><li>Product-visible choices remain for the owner. Reviewer proposals are not accepted decisions. The appropriate follow-up is a scoped PRD Update, not renewed product discovery.</li></ul></div><h2>Dimension summary</h2><div class="dimension-summary"><div class="dim-card"><div class="dim-name">Decision-readiness</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div><div class="dim-card"><div class="dim-name">Substance over theater</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div><div class="dim-card"><div class="dim-name">Strategic coherence</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div><div class="dim-card"><div class="dim-name">Done-ness clarity</div><div class="dim-verdict" style="color:var(--verdict-thin)">thin</div></div><div class="dim-card"><div class="dim-name">Scope honesty</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div><div class="dim-card"><div class="dim-name">Downstream usability</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div><div class="dim-card"><div class="dim-name">Shape fit</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div></div><section class="dimension"><details><summary><h2>Decision-readiness</h2><span class="verdict-pill verdict-adequate">adequate</span></summary><div class="dim-body"><div class="dim-judgment"><p>The decisions are explicit: preserve the familiar product, replace the implementation, retain data, permit mixed old/new devices, and avoid continuous synchronization (<code>prd.md:18–24</code>, <code>103–118</code>). The statement that time constraints do not imply rushed engineering is useful and actionable (<code>22</code>). Technology choice is correctly deferred (<code>24</code>; <code>addendum.md:7–9</code>). Search scope is honestly unresolved rather than decided from an endpoint name (<code>187–188</code>).</p>
+<p>The open-item table already gives accountable roles and revisit points (<code>314–324</code>). However, the last sentence makes <em>all</em> open questions prerequisites for final status, including operational matters legitimately scheduled later. That makes the handoff state unnecessarily ambiguous, although it does not prevent beginning architecture investigation.</p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Separate PRD finalization from downstream gate closure</h3></header><div class="finding-note"><p>(§ Open points / Evidence limits, <code>prd.md:317–324,330</code>) — “Açık noktalar kapanmadan belge <code>final</code> durumuna alınmayacaktır” treats URL TTL, cache budgets, release sample size, and the legacy shutdown decision like unresolved product scope. The same table schedules these for architecture or rollout, creating an unclear completion condition. <em>Fix:</em> classify each open item as a product-decision prerequisite, architecture/design deliverable, implementation prerequisite, or release/operations gate; allow explicitly owned downstream work to remain open at PRD sign-off. This is handoff clarification, not a request to select technical mechanisms now.</p></div></article></div></details></section><section class="dimension"><details><summary><h2>Substance over theater</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p>The draft avoids novelty claims and invented market positioning. The reported “yaklaşık %85” and image/RAM explanation are clearly identified as unverified evidence and a hypothesis (<code>prd.md:48–50</code>). Reliability concerns are specific to this product: repeated reader sessions, low-memory devices, image readability, playback lifecycle, and update data integrity (<code>52–61</code>). The future-offline foundation is bounded against a first-release offline UI commitment (<code>290,296</code>).</p>
+<p>The journeys are explicitly source-derived rather than claimed customer research (<code>128</code>). Repetition between narrative decisions and FRs is somewhat long, but it preserves high-risk invariants rather than adding empty template furniture. No additional finding is warranted for length alone.</p></div></div><div class="findings-list"></div></details></section><section class="dimension"><details><summary><h2>Strategic coherence</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p>The thesis is clear: a store-update replacement that preserves familiar capabilities while improving backend fit and reliability (<code>prd.md:18–24,277–278</code>). Feature exclusions are explicit (<code>296</code>), and the migration cutoff resolves the apparent tension between “preserve everything” and unsynchronized old devices (<code>107–109</code>). RevenueCat and event logging are late implementation work, not silently postponed product scope (<code>65–70</code>).</p>
+<p>Success criteria test replacement, safe update, stability, and media performance (<code>300–303</code>). The counter-metrics prohibit reducing functionality, hiding failing devices, and discarding migration data to make results look better (<code>304–306</code>). These metrics serve the thesis rather than measuring unrelated growth or activity. The publication/testing capabilities are justified by the content-delivery dependency, not an unexplained expansion into a new product.</p></div></div><div class="findings-list"></div></details></section><section class="dimension"><details open><summary><h2>Done-ness clarity</h2><span class="verdict-pill verdict-thin">thin</span></summary><div class="dim-body"><div class="dim-judgment"><p>Many FRs have observable consequences: canceled authentication must not become a successful session (<code>163</code>), repeated events must not double-count completion (<code>225</code>), failed processing must leave live content intact (<code>257</code>), and migration must not expose a blank profile as normal success (<code>272</code>). Every active FR has at least one testable consequence; FR-17 is explicitly withdrawn, not missing.</p>
+<p>However, testing a subset of a compound FR does not establish full replacement. Several capabilities still point to the reference application or an inventory that must be verified, without fixing the complete behavior and expected outcomes. The draft admits this limitation (<code>328–330</code>), making it a blocker for complete implementation acceptance rather than a reason to halt architecture discovery.</p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">The closed parity acceptance baseline is still missing</h3></header><div class="finding-note"><p>(§ FR-4, FR-13, FR-18, FR-20, SM-1, <code>prd.md:171,214,233,241,300,328–330</code>) — Phrases such as “referans sürümün profil kurulum alanları,” “tamamlanma davranışları korunur,” “geri bildirim gönderimi, doğrulama ve mevcut sınırlar,” and “envanterden doğrulanarak korunur” defer significant behavior to future discovery. SM-1 requires <em>every</em> reference function to be covered, but the PRD does not yet identify an approved, finite baseline whose items can each be accepted or explicitly excepted. <em>Fix:</em> bind a versioned companion acceptance inventory to <code>1.0.35+333</code>, including relevant screenshots, entry/exit conditions, validation/error outcomes, platform differences, and accepted exceptions. Keep detail in the companion rather than expanding every FR. Complete the affected baseline before implementation stories are committed; architecture investigation can proceed now.</p></div></article><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Performance and measurement thresholds need an earlier decision gate</h3></header><div class="finding-note"><p>(§ NFR-1–3 / OQ-2 / SM-3–4, <code>prd.md:61,282–284,302–303,317</code>) — “p50/p95 hedefleri kararlaştırılır” and “yayın öncesi eşikler” acknowledge missing bounds but allow selecting budgets very late. Memory stability, startup latency, and sample/window definitions are central success criteria; deciding them after implementation can make acceptance circular. <em>Fix:</em> require architecture/measurement work to propose representative device/network/content conditions and provisional budgets before affected implementation acceptance criteria are approved; finalize the production observation window/sample and release thresholds before rollout. Preserve the accepted 99.5% target and do not treat the reported 85% as a verified baseline.</p></div></article></div></details></section><section class="dimension"><details><summary><h2>Scope honesty</h2><span class="verdict-pill verdict-adequate">adequate</span></summary><div class="dim-body"><div class="dim-judgment"><p>The draft explicitly disclaims implementation approval (<code>prd.md:10</code>), distinguishes historical observations from current evidence (<code>14</code>), and refuses to assume backend readiness (<code>12,328</code>). Scope removal is honest: interactive stories and parent guides are excluded, but their historical records cannot silently be deleted (<code>87,230,296</code>). Mixed-version divergence, no automatic account merging, and no first-release offline manager are explicit rather than hidden compromises.</p>
+<p>There are nine grouped OQ rows (OQ-1–4 and OQ-6–10), zero literal <code>[ASSUMPTION]</code> callouts, and zero <code>[NOTE FOR PM]</code> callouts. This is acceptable for a draft feeding investigation, not for a green-light-to-build contract. One genuine provisional UI inference is described in prose but lacks the workflow's required assumption indexing.</p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-low">low</span><h3 class="finding-title">Make the provisional crop assumption extractable</h3></header><div class="finding-note"><p>(§ FR-15 / Evidence limits, <code>prd.md:222,326–330</code>; <code>addendum.md:39</code>) — “Merkezden kırpma geçici varsayımdır” is appropriately qualified but is not tagged/indexed. A downstream reader extracting only FR-15 could lose its unresolved status when consolidating assumptions. <em>Fix:</em> give the centered-crop assumption a stable identifier, mark it inline and include it in a compact assumptions index with the representative-device/text-safe-area validation condition. Do not convert it into an approved product decision.</p></div></article></div></details></section><section class="dimension"><details><summary><h2>Downstream usability</h2><span class="verdict-pill verdict-adequate">adequate</span></summary><div class="dim-body"><div class="dim-judgment"><p>The glossary defines reference version, replacement, experience, tester, revision, migration, cache, manifest, and parity (<code>prd.md:138–149</code>). FR IDs are stable and unique, the withdrawn FR-17 is explained, UJ references resolve, and SM references correctly exclude it (<code>153,282,300</code>). Addendum content separates architectural direction and investigation parameters from observed product requirements (<code>addendum.md:21–43</code>).</p>
+<p>The journeys use actors by role, not named protagonists. This is a small rubric mismatch rather than evidence of an unclear target market; the source-derived nature of the journeys is transparent, and inventing customer research to satisfy a template would make the PRD worse.</p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-low">low</span><h3 class="finding-title">Journey actors are not named or consistently state-scoped</h3></header><div class="finding-note"><p>(§ UJ-1–7, <code>prd.md:128–136</code>) — Labels such as “Mevcut kullanıcının güncellemesi” and “Hesap ve destek işlemleri” do not carry a named protagonist and often omit account/subscription/device state. Migration and entitlement acceptance depend on these states. <em>Fix:</em> when confirming the existing journeys, add minimal illustrative named actors and only relevant state (for example, an existing subscriber updating a phone while a tablet stays old); explicitly retain their illustrative/source-derived status. No persona workshop or new redesign journey is needed.</p></div></article></div></details></section><section class="dimension"><details><summary><h2>Shape fit</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p>The structure fits a launch-stakes, brownfield consumer replacement: source priority, platform constraints, data continuity, bounded journeys, grouped FRs, quality requirements, non-goals, release gates, and owned open questions. It does not force a new market/differentiation narrative or a redesign brief onto the work. The distinction between replacement behavior and new migration/test-publication requirements is apparent (<code>prd.md:20,128–136</code>).</p>
+<p>Code/runtime evidence is not claimed where only documentation exists (<code>prd.md:12–14</code>; <code>addendum.md:39,43–45</code>). This review therefore treats external parity and backend suitability as pending verification, not proven inaccuracies in the source references. A full UX redesign phase is not required to improve this PRD.</p></div></div><div class="findings-list"></div></details></section><section class="reviewer-section"><details><summary><h2>Functional parity and migration safety</h2><span class="reviewer-source">review-parity-migration.md</span></summary><div class="dim-body"><p>Date: 2026-09-25<br>Mode: Validate only; no product decisions or PRD changes made.</p>
+<h3>Verdict</h3>
+<p><strong>Conditional pass for architecture discovery; not ready for implementation stories.</strong> The PRD faithfully preserves the accepted replacement, one-time migration and dual-system rules. No critical finding or blocker to starting architecture investigation was found. Two high findings concern when essential feasibility evidence must be obtained, not a request to reopen accepted product decisions. Counts: 0 critical, 2 high, 1 medium, 1 low.</p>
+<h3>Source extraction orientation</h3>
+<ul><li>Read current <code>prd.md</code>, <code>addendum.md</code>, <code>.memlog.md</code>, both legacy extraction reports and <code>be/docs/mobile-delivery-discovery.md</code>. Checked legacy <code>app/old/docs/backend-services.md</code> and <code>data-models.md</code> for identity and local-data evidence. Source-code inventory is not live runtime proof.</li><li>Later user decisions correctly override discovery: RevenueCat and flow logging are first-release requirements implemented late; search scope remains payload-dependent; interactive stories and parent guides are excluded.</li><li>Preserved decisions include reference build <code>1.0.35+333</code>, minimum platform versions, existing visible controls, cold-start home/background-session continuity, locale gating and fallback, anonymous-to-new-account preservation and no automatic merge into an existing account.</li><li>Migration correctly distinguishes first successful account transition, safe retry and later device-local conversion. Old clients remain on the old backend; subsequent old-system activity is intentionally not synchronized. This is <strong>not</strong> a defect or data-loss finding.</li><li>Old downloaded media/cache cleanup is explicitly separated from retained profile/history/progress and migration inputs. Historical records for removed content are not authorized for deletion. New-system-only deletion and no resurrection through remigration are recorded, rather than assumed solved.</li><li>No test execution, current backend capability proof, actual subscription transaction, signing verification or device migration was performed in this review.</li></ul>
+<h3>Findings</h3></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">PM-1 — in-place update feasibility is gated too late for a framework decision</h3></header><div class="finding-note"><p><strong>Evidence:</strong> <code>prd.md:277–278</code>, FR-29, requires the selected technology to preserve platform identity, signing, session and local-data access, but says this is verified “yayın öncesi”. <code>prd.md:23</code> leaves Flutter/native open. <code>addendum.md</code>, “Mobile technology choice,” appropriately includes migration risk among selection criteria.</p>
+<p><strong>Risk:</strong> A late release-only check permits selecting and implementing a framework before proving that it can read the old installation's retained data and credentials. Server-side migration alone cannot establish local anonymous-data recovery. A blocked real upgrade would invalidate the central replacement requirement even if fresh installs work.</p>
+<p><strong>Suggested fix:</strong> Add an early architecture exit condition: a representative signed in-place upgrade proof on both platforms, including access to old persisted anonymous and registered-user records and the existing platform identity. This is a limited feasibility proof, not the full release test suite or a prescribed framework. Keep the comprehensive real-device/update matrix as a release gate.</p>
+<p><strong>Owner / phase gate:</strong> Mobile architect + QA; <strong>before stories</strong>, and before ratifying the framework/platform architecture. No need to block architecture investigation itself.</p></div></article><article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">PM-2 — shared identity and paid-access coexistence must be designed before late feature integration</h3></header><div class="finding-note"><p><strong>Evidence:</strong> <code>prd.md:320</code> schedules OQ-6's shared-Firebase isolation/no-remigration proof only “hesap silme uygulanmadan önce”; <code>prd.md:321</code> puts OQ-7's RevenueCat identifiers/contracts before the final integrations. <code>app/old/docs/backend-services.md:60–62</code> documents Auth UID as a common key for legacy profile and RevenueCat identity and distinguishes local anonymous mode from Firebase anonymous auth. FR-5 and FR-19 require old-device isolation and subscriber continuity; the addendum explicitly warns that deleting a shared Firebase identity cannot simply be presumed harmless to legacy clients.</p>
+<p><strong>Risk:</strong> The individual open questions are present, but the schedule allows account migration/authentication design to solidify before verifying a mutually compatible mapping among legacy identity, new account lifecycle and subscription entitlement. Discovering the incompatibility while implementing deletion or purchases would require reworking foundations and could jeopardize old-client access or new-system deletion semantics.</p>
+<p><strong>Suggested fix:</strong> Add a cross-cutting identity/entitlement architecture dependency covering registered and anonymous migration, conversion, existing-account login, purchase/restore ownership, new-system deletion, re-entry and simultaneous old-client use. Require evidence that the accepted product outcomes can coexist; escalate only a demonstrated impossibility to the product owner. Keep RevenueCat implementation in its approved late position, but prove identity compatibility early. Do not assume a particular UID-remapping or transfer policy.</p>
+<p><strong>Owner / phase gate:</strong> Backend/mobile architect; <strong>before stories</strong> that implement authentication, account migration or subscription identity. End-to-end paid-access and deletion/coexistence acceptance remains <strong>before release</strong>.</p></div></article><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">PM-3 — acknowledged migration edge policies still prevent a complete acceptance oracle</h3></header><div class="finding-note"><p><strong>Evidence:</strong> <code>prd.md:318</code>, OQ-3 explicitly leaves unique local records on a later-upgraded device and removed-content history presentation open. <code>prd.md:285</code>, NFR-4, requires field/relationship validation; <code>prd.md:300–301</code>, SM-1/SM-2, require no undecided functional loss and zero lost retained data. The coexistence section correctly limits account migration to the first transition and does not authorize ongoing synchronization.</p>
+<p><strong>Risk:</strong> This is a deliberately open product/acceptance decision, not a contradiction. Until disposition and presentation are chosen, QA cannot determine whether retaining a unique local record outside normal history satisfies the user-visible preservation requirement, nor how unavailable/removed content should appear. Counting imported records is explicitly insufficient.</p>
+<p><strong>Suggested fix:</strong> Close OQ-3 with concrete examples: an already-migrated account whose second device has unique retained local data; history referencing removed interactive/parent content; and a retained history entry whose content identity cannot be mapped. For each, record intended preservation, visible outcome and retry/failure acceptance. Separate pre-transition data from intentionally unimported later legacy activity. Any solution must preserve the accepted no-repeat-account-migration rule; do not silently introduce synchronization or deletion.</p>
+<p><strong>Owner / phase gate:</strong> Product owner + mobile/backend; <strong>before stories</strong> for migration/history. May be resolved during architecture discovery with product confirmation when the outcome is user-visible.</p></div></article><article class="finding"><header><span class="badge badge-sev-low">low</span><h3 class="finding-title">PM-4 — linked historical extracts can still be mistaken for current requirements</h3></header><div class="finding-note"><p><strong>Evidence:</strong> <code>extract-contracts.md:20,22–23,55,57,74</code> still describes general search, interactive/parent capability preservation and open numeric reliability gates as requirements. <code>extract-legacy-flows.md</code> also contains historical branch/parent test needs. The current PRD's source-priority section, exclusions and addendum correctly supersede those statements, so this is not a current PRD scope defect.</p>
+<p><strong>Risk:</strong> A downstream worker opening an extraction directly may schedule deliberately removed features or reopen already accepted decisions. The existing date/authority notes mitigate but do not fully prevent this.</p>
+<p><strong>Suggested fix:</strong> Preserve historical evidence; add a prominent superseded-status note with explicit pointers to the current search, excluded-feature, anonymous conversion and reliability decisions. Do not rewrite the old inventory to pretend those legacy capabilities never existed.</p>
+<p><strong>Owner / phase gate:</strong> Document maintainer; <strong>before stories</strong> consume these extracts. Safe editorial follow-up subject to update authorization.</p></div></article></div><div class="dim-body"><ul><li><strong>Before architecture:</strong> No newly discovered product blocker. Architecture may investigate the current, explicit requirements without deciding open user-visible behavior on the user's behalf.</li><li><strong>Before stories:</strong> Prove in-place upgrade feasibility and identity/entitlement coexistence; resolve the OQ-3 acceptance cases and already recorded parity/search evidence gaps. Keep known open items visible rather than claiming full readiness.</li><li><strong>Before release:</strong> Execute full real-device parity, migration/retry/cleanup, subscriber continuity, account deletion/no-resurrection and old/new-client coexistence tests. Runtime evidence is still outstanding, as the PRD already acknowledges.</li></ul></div></details></section><section class="reviewer-section"><details><summary><h2>Reliability and media acceptance</h2><span class="reviewer-source">review-reliability.md</span></summary><div class="dim-body"><p>Date: 2026-09-25</p>
+<p>Intent: Validate only. The PRD and its accepted decisions were not changed.</p>
+<p><strong>Suitable for architecture exploration, with explicit acceptance dependencies; not yet a release-ready acceptance contract.</strong> No critical finding or reliability-specific blocker to starting architecture was identified. Findings: <strong>1 high (release-measurement gate), 2 medium (product acceptance details to close with architecture), 0 low</strong>. These are refinements of acknowledged open items, not evidence that the accepted replacement scope is wrong.</p>
+<p>Sources reviewed: <code>prd.md</code>, <code>addendum.md</code>, <code>.memlog.md</code>, <code>reconcile-discovery.md</code>, and <code>be/docs/mobile-delivery-discovery.md</code>. Evidence locations below use current <code>prd.md</code> line numbers unless another file is named. This is document validation, not a runtime, crash-log, device, entitlement, or backend audit.</p></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">R-REL-1 — freeze the measurement contract before collecting gate evidence</h3></header><div class="finding-note"><p><strong>Evidence:</strong> Line 61: “Platform bazında crash-free kullanıcı oranı yayın değerlendirmesinde en az %99,5 olmalıdır.” The same paragraph explicitly leaves definition, window and sample open. Line 302 requires a sufficient measurement window/sample and separate examination of hangs and memory terminations. Line 308 conditions rollout expansion on sufficient usage and the 99.5% target. OQ-2, line 317, assigns a measurement plan to architecture but thresholds/evidence only to “yayın öncesi”. NFR-3, line 284, also leaves device/network-conditioned p50/p95 targets to be agreed.</p>
+<p><strong>Why it matters:</strong> The target itself is clear and must not be reopened. However, there is not yet a reproducible pass/fail rule for either the initial limited release or subsequent expansion. A small zero-crash cohort, mixed release versions, or a tool that misses memory terminations could yield a misleading pass. Late selection of a window, sample or latency budget after observing outcomes also weakens the acceptance gate. Existing counter-metrics correctly prohibit concealing failed devices; they do not yet define how evidence qualifies.</p>
+<p><strong>Recommended resolution:</strong> Complete the existing OQ-2 with a version/platform-scoped measurement definition, eligible-user denominator, collection coverage, minimum observation/sample sufficiency, treatment of insufficient evidence, and an explicit relationship between the preproduction device gate and the production expansion gate. Define how memory terminations/hangs are independently checked. Approve the device/network/content matrix and latency/memory acceptance budgets before collecting the evidence used for those gates. Do not invent numeric budgets in this review or use the reported 85% as a verified baseline.</p>
+<p><strong>Owner / timing gate:</strong> Mobile + QA + product owner. Architecture may begin now. Freeze the measurement plan and test budgets before acceptance qualification; freeze the initial-release/expansion protocol before limited rollout. Actual proof remains a release/expansion gate, not a prerequisite to architecture.</p></div></article><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">R-REL-2 — separate protected-media mechanism choices from user-visible expiry/revocation policy</h3></header><div class="finding-note"><p><strong>Evidence:</strong> FR-25, line 262: “aktif oynatma kabul edilen revizyona bağlı kalır” followed by “Süresi dolan medya erişimi, yayından çekme ve güvenlik istisnaları OQ-8'de tamamlanacaktır.” Line 264 requires short-lived URLs and backend authorization. OQ-8, line 322, groups URL lifetime/renewal and withdrawal with manifest, cache and processing parameters under backend/mobile architecture. Discovery line 46 also explicitly makes admitted-session continuity subject to final withdrawal/security rules.</p>
+<p><strong>Why it matters:</strong> TTL values, refresh transport and retention mechanisms are valid architecture deferrals. Whether an already-playing session continues, pauses recoverably, or stops when an entitlement expires or a revision is withdrawn is also an observable product/security decision. Without distinguishing routine URL expiry from loss of authorization or urgent withdrawal, valid implementations can differ in session continuity and premium access behavior while claiming compliance. This is an acknowledged open policy, not an existing contradiction or proven vulnerability.</p>
+<p><strong>Recommended resolution:</strong> Have architecture propose a small outcome table for routine URL expiry with authorization retained, transient renewal failure, authorization lost, ordinary publication rollback/withdrawal, and urgent security withdrawal. Ratify the visible stop/retry/resume and position-preservation outcomes with the product owner. Keep protocol, TTL, retry counts and storage implementation in architecture. Preserve the existing rule that public metadata/cache possession alone never grants access.</p>
+<p><strong>Owner / timing gate:</strong> Backend/mobile architecture with product owner for visible outcomes. No blocker to starting architecture; close before protected delivery/player acceptance stories are finalized (the existing OQ-8 epic gate).</p></div></article><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">R-REL-3 — make paused-state and process-death lifecycle acceptance explicit</h3></header><div class="finding-note"><p><strong>Evidence:</strong> FR-14, line 217: “Çağrı geldiğinde veya kulaklık çıkarıldığında oynatma duraklar; kullanıcı kendi eylemiyle yeniden başlatır.” FR-16, line 225: “Uygulama tamamen kapatılıp yeniden açıldığında ana ekrandan açılır” and “Uygulama arka planda kaldığında açık hikâye veya oynatma oturumu kaldığı yerden devam eder.” NFR-6, line 287, requires real-device background behavior validation.</p>
+<p><strong>Why it matters:</strong> The accepted cold-start/home rule and user-action-only interruption recovery are sound. The generic background continuation sentence can nevertheless be read as automatic resume even when the session was paused by the user or an interruption. It also lacks an explicit test classification for an operating-system-terminated process that the user never manually closed—important in a low-memory reliability project. This is wording/test precision, not a request to reopen the established lifecycle decision.</p>
+<p><strong>Recommended resolution:</strong> Add derived acceptance cases distinguishing an alive background session (preserve position and play/pause state), return after user/interruption pause (do not auto-resume), and process death followed by launch (apply the cold-start/home rule). Check that the chosen interpretation matches the accepted decision; only ask the owner if actual legacy evidence exposes a conflict. Add call/headphone removal while backgrounded and foreground-return cases to the device test plan. No framework or OS implementation mechanism belongs in the PRD.</p>
+<p><strong>Owner / timing gate:</strong> Mobile + QA; product owner only for a genuine behavioral conflict. Architecture may begin. Resolve before lifecycle acceptance stories/tests are approved.</p></div></article></div><div class="dim-body"><h3>Confirmed strengths and non-findings</h3>
+<ul><li>The roughly 85% crash-free report and high-resolution-image/RAM explanation are explicitly unverified (lines 48–50). The addendum correctly treats rendition size, resident pages, prefetch and cache limits as investigation candidates. No framework choice or image root cause is justified by these documents alone.</li><li>At least 99.5% crash-free users per platform is consistently approved; test-device memory termination and critical playback faults block release. Crash instrumentation is not postponed with business-flow logging (lines 61, 70, 244, 282, 289).</li><li>First-page readiness, bounded preparation on cellular and Wi-Fi, no complete-story speculative download, no detail autoplay, and preservation of animation/readability are explicit (FR-11–15). Exact dimensions, codecs, manifest schema and cache budgets are legitimate design work, not missing PRD implementation detail.</li><li>Race prevention for page/audio changes and competing players is explicit (lines 214, 217). Background audio, system controls, and user-action-only recovery after call/headphone interruptions are present.</li><li>Actual generated-media availability/integrity—not merely processing plans—is required. Failed candidates cannot replace live revisions; testers and subscriptions remain separate; cleanup protects required revisions (FR-22–25).</li><li>Counter-metrics prohibit attaining quality by deleting functionality, sacrificing media quality, concealing bad devices or losing migration data (lines 304–306).</li><li>A full offline manager is explicitly excluded; it must not be smuggled into reliability remediation. Future-compatible asset identity/integrity remains an accepted foundation.</li></ul>
+<h3>Suggested disposition</h3>
+<p>Defer R-REL-1 and R-REL-2 to their existing OQ-2/OQ-8 owners with the tighter timing and product-signoff conditions above. R-REL-3 is a candidate for a narrow clarification after user authorization to edit. None authorizes changing the accepted threshold, platform floor, framework freedom, rollout strategy, or replacement scope. No evidence supports reopening the whole discovery process.<br></p></div></details></section><section class="reviewer-section"><details><summary><h2>Historical review — not current findings</h2><span class="reviewer-source">review-draft.md</span></summary><div class="dim-body"><p>review-draft.md (2026-09-20) was read as historical context only. It predates the reconciled PRD; its removed-feature, already-resolved behavior and open-threshold statements are not carried forward as current requirements or counted findings.</p></div></details></section><div class="mechanical"><h3>Mechanical notes</h3><ul><li>Finding count: <strong>0 critical, 1 high, 2 medium, 2 low</strong>. No current finding blocks beginning architecture investigation; the high finding blocks calling the replacement acceptance baseline implementation-ready.</li><li>Active FRs total 28, with FR-17 retained as an explicitly withdrawn ID. UJ-1–7, SM-1–4, SM-C1–3, and NFR-1–9 are unique; checked cross-references resolve.</li><li>OQ-5 is absent from the current open-item table. Stable numbering need not be repaired by renumbering; a short resolved/retired note would make the gap intentional to downstream readers.</li><li>The assumptions section explains evidence limits well, but the centered-crop assumption has no literal tag/index roundtrip; see the low finding above.</li><li>UJs have role labels but no named protagonists; see the low finding above.</li><li><code>prd.md:93</code> promises detailed migration acceptance criteria “PRD'nin devamında.” NFR-4 and SM-2 provide invariant-level acceptance, while field mappings and fixtures remain future work. Clarify that detailed fixtures belong to the downstream migration plan, not an already completed later section.</li><li>The append-only memlog includes superseded intermediate statements (for example, open crash targets and event scope), followed by later accepted decisions. Current PRD text correctly reflects the later decisions; historical log entries should not be rewritten.</li><li>Review is against the current draft only; historical <code>review-draft.md</code> findings were not imported as current findings.</li></ul></div><footer class="report-footer"><div class="meta"><span>Rubric: .agents/skills/bmad-prd/assets/prd-validation-checklist.md</span><span>Generated: 2026-09-25T20:18:26Z</span></div><p>PRD: /Users/gurhankucuk/Documents/GitHub/tellpalv2/_bmad-output/planning-artifacts/prds/prd-tellpalv2-2026-09-20/prd.md<br>Markdown report: /Users/gurhankucuk/Documents/GitHub/tellpalv2/_bmad-output/planning-artifacts/prds/prd-tellpalv2-2026-09-20/validation-report.md</p></footer></div></body></html>
+

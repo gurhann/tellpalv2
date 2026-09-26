@@ -69,7 +69,8 @@ def main() -> int:
         print(
             f"Import completed: lanes={summary['lanes']}, "
             f"publishedCategoryLocalizations={summary['publishedCategoryLocalizations']}, "
-            f"createdLinks={summary['createdLinks']}, reusedLinks={summary['reusedLinks']}"
+            f"createdLinks={summary['createdLinks']}, reusedLinks={summary['reusedLinks']}, "
+            f"skippedLinks={summary.get('skippedLinks', 0)}"
         )
         print(f"Run report: {report.result_path}")
         return 0

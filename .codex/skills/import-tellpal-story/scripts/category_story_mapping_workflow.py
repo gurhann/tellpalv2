@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from typing import Any
 
@@ -11,7 +12,7 @@ from category_story_mapping_manifest import (
     assert_source_unchanged,
     normalize_key,
 )
-from tellpal_admin_client import TellPalAdminClient
+from tellpal_admin_client import AdminApiError, TellPalAdminClient
 
 
 class CategoryStoryMappingImportError(RuntimeError):
@@ -102,7 +103,11 @@ class RemoteMappingPlan:
 
     @property
     def ready(self) -> bool:
-        return not self.conflicts
+        return any(lane.assignments for lane in self.lanes)
+
+    @property
+    def skipped_count(self) -> int:
+        return len({number for conflict in self.conflicts for number in conflict.source_row_numbers})
 
     @property
     def lane_count(self) -> int:
@@ -127,6 +132,7 @@ class RemoteMappingPlan:
             "publishCategoryLocalizationCount": self.publish_count,
             "createCount": self.create_count,
             "reuseCount": self.reuse_count,
+            "skippedCount": self.skipped_count,
             "conflicts": [item.to_dict() for item in self.conflicts],
             "lanes": [lane.to_dict() for lane in self.lanes],
         }
@@ -252,23 +258,9 @@ def remote_preflight(
             existing_by_content[content_id] = entry
             existing_by_order[display_order] = entry
 
-        planned_content_ids = {item.content_id for item in lane_assignments}
-        for existing_content_id in sorted(set(existing_by_content) - planned_content_ids):
-            lane_conflicts.append(
-                MappingConflict(
-                    code="unexpected_existing_curation",
-                    message=(
-                        f"Existing content {existing_content_id} is not present in the source lane; "
-                        "refusing to alter editorial state"
-                    ),
-                    language_code=source_lane.language_code,
-                    category_name=source_lane.category_name,
-                )
-            )
-
-        seen_planned_content: set[int] = set()
+        planned_counts = Counter(item.content_id for item in lane_assignments)
         for assignment in lane_assignments:
-            if assignment.content_id in seen_planned_content:
+            if planned_counts[assignment.content_id] > 1:
                 lane_conflicts.append(
                     MappingConflict(
                         code="duplicate_canonical_content_in_lane",
@@ -282,7 +274,6 @@ def remote_preflight(
                         source_row_numbers=(assignment.row.source_row_number,),
                     )
                 )
-            seen_planned_content.add(assignment.content_id)
             existing = existing_by_content.get(assignment.content_id)
             if existing is not None:
                 existing_order = _required_non_negative_int(existing, "displayOrder")
@@ -325,7 +316,19 @@ def remote_preflight(
                         )
                     )
 
+        # Corrupt stored curation makes the lane unsafe; ordinary row conflicts only skip that row.
+        if any(not conflict.source_row_numbers for conflict in lane_conflicts):
+            conflicts.extend(
+                replace(conflict, source_row_numbers=tuple(row.source_row_number for row in source_lane.rows))
+                if not conflict.source_row_numbers else conflict
+                for conflict in lane_conflicts
+            )
+            continue
         conflicts.extend(lane_conflicts)
+        skipped_rows = {number for conflict in lane_conflicts for number in conflict.source_row_numbers}
+        lane_assignments = [item for item in lane_assignments if item.row.source_row_number not in skipped_rows]
+        if not lane_assignments:
+            continue
         lanes.append(
             RemoteMappingLane(
                 source=source_lane,
@@ -355,21 +358,29 @@ def execute_mapping_import(
     published_count = 0
     created_count = 0
     reused_count = 0
+    skipped_count = remote.skipped_count
+    verified_lanes = []
     for lane in remote.lanes:
         if lane.publish_category_localization:
             localization = lane.category_localization
-            response = client.update_category_localization(
-                lane.category_id,
-                lane.source.language_code,
-                {
-                    "name": localization.get("name"),
-                    "description": localization.get("description"),
-                    "imageMediaId": localization.get("imageMediaId"),
-                    "status": "PUBLISHED",
-                    "publishedAt": utc_now(),
-                },
-            )
-            del response
+            try:
+                client.update_category_localization(
+                    lane.category_id,
+                    lane.source.language_code,
+                    {
+                        "name": localization.get("name"),
+                        "description": localization.get("description"),
+                        "imageMediaId": localization.get("imageMediaId"),
+                        "status": "PUBLISHED",
+                        "publishedAt": utc_now(),
+                    },
+                )
+            except AdminApiError as exception:
+                _require_record_rejection(exception)
+                for assignment in lane.assignments:
+                    report.record_skip(assignment, exception)
+                skipped_count += len(lane.assignments)
+                continue
             published_count += 1
             report.record_category_localization(
                 lane.category_id,
@@ -378,21 +389,31 @@ def execute_mapping_import(
                 "PUBLISH",
             )
 
+        completed_assignments = []
         for assignment in lane.assignments:
             if assignment.action == "REUSE":
                 reused_count += 1
                 report.record_link(assignment, "REUSE")
+                completed_assignments.append(assignment)
                 continue
-            client.add_category_content(
-                lane.category_id,
-                lane.source.language_code,
-                {"contentId": assignment.content_id, "displayOrder": assignment.display_order},
-            )
+            try:
+                client.add_category_content(
+                    lane.category_id,
+                    lane.source.language_code,
+                    {"contentId": assignment.content_id, "displayOrder": assignment.display_order},
+                )
+            except AdminApiError as exception:
+                _require_record_rejection(exception)
+                report.record_skip(assignment, exception)
+                skipped_count += 1
+                continue
             created_count += 1
             report.record_link(assignment, "CREATE")
+            completed_assignments.append(assignment)
+        verified_lanes.append(replace(lane, assignments=tuple(completed_assignments)))
 
     report.record_step("mutations-complete")
-    for lane in remote.lanes:
+    for lane in verified_lanes:
         _verify_lane(lane, client)
     report.record_step("verification-complete")
     summary = {
@@ -400,16 +421,23 @@ def execute_mapping_import(
         "publishedCategoryLocalizations": published_count,
         "createdLinks": created_count,
         "reusedLinks": reused_count,
+        "skippedLinks": skipped_count,
     }
     report.mark_success(summary)
     return summary
 
 
 def require_ready(remote: RemoteMappingPlan) -> None:
-    if remote.conflicts:
-        lines = ["Remote preflight is blocked:"]
+    if not remote.ready:
+        lines = ["Remote preflight has no valid assignments to import:"]
         lines.extend(f"- [{item.code}] {item.message}" for item in remote.conflicts)
         raise CategoryStoryMappingImportError("\n".join(lines))
+
+
+def _require_record_rejection(exception: AdminApiError) -> None:
+    # Only definitive record rejections can be skipped; auth and uncertain writes stop the run.
+    if exception.status not in {400, 404, 409, 422}:
+        raise exception
 
 
 def format_preview(
@@ -435,6 +463,7 @@ def format_preview(
             f"Links to create: {remote.create_count}",
             f"Links to reuse: {remote.reuse_count}",
             f"Conflicts: {len(remote.conflicts)}",
+            f"Assignments to skip: {remote.skipped_count}; valid assignments will continue",
         ]
     )
     for conflict in remote.conflicts[:20]:
@@ -602,7 +631,11 @@ def _verify_lane(lane: RemoteMappingLane, client: TellPalAdminClient) -> None:
         (_required_id(item, "contentId"), _required_non_negative_int(item, "displayOrder"))
         for item in actual
     )
-    expected_pairs = sorted((item.content_id, item.display_order) for item in lane.assignments)
+    expected_pairs = sorted(
+        {(_required_id(item, "contentId"), _required_non_negative_int(item, "displayOrder"))
+         for item in lane.current_entries}
+        | {(item.content_id, item.display_order) for item in lane.assignments}
+    )
     if actual_pairs != expected_pairs:
         raise CategoryStoryMappingImportError(
             f"Verification failed for {lane.source.category_name!r}/{lane.source.language_code}: "

@@ -40,6 +40,7 @@ class CategoryStoryMappingRunReport:
             "languages": list(plan.languages),
             "categoryLocalizations": [],
             "links": [],
+            "skippedRecords": [],
             "completedSteps": [],
             "lastRequest": None,
             "error": None,
@@ -49,6 +50,15 @@ class CategoryStoryMappingRunReport:
 
     def record_remote_preflight(self, remote: Any) -> None:
         self.state["remotePreflight"] = remote.to_dict()
+        self.state["skippedRecords"] = list(self.state["remotePreflight"].get("conflicts", []))
+        self.flush()
+
+    def record_skip(self, assignment: Any, exception: BaseException) -> None:
+        self.state["skippedRecords"].append({
+            **assignment.to_dict(),
+            "code": "api_record_rejected",
+            "message": _safe_error_message(exception),
+        })
         self.flush()
 
     def mark_running(self) -> None:
@@ -104,7 +114,7 @@ class CategoryStoryMappingRunReport:
         self.flush()
 
     def mark_success(self, summary: dict[str, object]) -> None:
-        self.state["status"] = "COMPLETED"
+        self.state["status"] = "COMPLETED_WITH_SKIPS" if summary.get("skippedLinks", 0) else "COMPLETED"
         self.state["phase"] = "complete"
         self.state["completedAt"] = utc_now()
         self.state["summary"] = summary

@@ -17,10 +17,11 @@ from category_story_mapping_manifest import (  # noqa: E402
 )
 from category_story_mapping_report import CategoryStoryMappingRunReport  # noqa: E402
 from category_story_mapping_workflow import (  # noqa: E402
+    CategoryStoryMappingImportError,
     execute_mapping_import,
     remote_preflight,
 )
-from tellpal_admin_client import TellPalAdminClient  # noqa: E402
+from tellpal_admin_client import AdminApiError, AdminTransportError, TellPalAdminClient  # noqa: E402
 
 
 class FakeAdminClient:
@@ -84,6 +85,7 @@ class FakeReport:
         self.links = []
         self.steps = []
         self.summary = None
+        self.skipped = []
 
     def mark_running(self):
         pass
@@ -99,6 +101,9 @@ class FakeReport:
 
     def mark_success(self, summary):
         self.summary = summary
+
+    def record_skip(self, assignment, exception):
+        self.skipped.append((assignment.content_id, str(exception)))
 
 
 def content(content_id, title, *, status="PUBLISHED", active=True, content_type="STORY"):
@@ -205,6 +210,100 @@ class CategoryMappingWorkflowTests(unittest.TestCase):
         self.assertEqual(remote.reuse_count, 1)
         self.assertEqual(remote.create_count, 0)
         self.assertEqual(client.added_links, [])
+
+    def test_invalid_rows_are_skipped_while_valid_rows_in_same_lane_are_created(self):
+        plan = self._plan(
+            ("tr", "STORY", "Hikayeler", "Missing"),
+            ("tr", "STORY", "Hikayeler", "Draft"),
+            ("tr", "STORY", "Hikayeler", "Valid"),
+            ("tr", "STORY", "Hikayeler", "Ambiguous"),
+        )
+        client = FakeAdminClient(contents=[content(101, "Draft", status="DRAFT"),
+            content(102, "Valid"), content(103, "Ambiguous"), content(104, "Ambiguous")])
+        remote = remote_preflight(plan, client)
+        self.assertTrue(remote.ready)
+        self.assertEqual(remote.skipped_count, 3)
+        summary = execute_mapping_import(plan, client, FakeReport(), remote)
+        self.assertEqual(summary["createdLinks"], 1)
+        self.assertEqual(summary["skippedLinks"], 3)
+        self.assertEqual(client.added_links[0][2], {"contentId": 102, "displayOrder": 2})
+        rerun = remote_preflight(plan, client)
+        self.assertEqual(rerun.reuse_count, 1)
+        self.assertEqual(rerun.create_count, 0)
+
+    def test_order_conflict_skips_only_affected_row_and_preserves_existing_links(self):
+        plan = self._plan(("tr", "STORY", "Hikayeler", "Conflicting"),
+                          ("tr", "STORY", "Hikayeler", "Valid"))
+        client = FakeAdminClient(contents=[content(101, "Conflicting"), content(102, "Valid")],
+                                 current=[{"contentId": 999, "displayOrder": 0}])
+        summary = execute_mapping_import(plan, client, FakeReport(), remote_preflight(plan, client))
+        self.assertEqual(summary["createdLinks"], 1)
+        self.assertEqual(summary["skippedLinks"], 1)
+        self.assertEqual(client.curation[(7, "tr")][0], {"contentId": 999, "displayOrder": 0})
+
+    def test_definitive_api_rejection_does_not_block_next_assignment(self):
+        plan = self._plan(("tr", "STORY", "Hikayeler", "Rejected"),
+                          ("tr", "STORY", "Hikayeler", "Valid"))
+        client = FakeAdminClient(contents=[content(101, "Rejected"), content(102, "Valid")])
+        original = client.add_category_content
+        def add(category_id, language, body):
+            if body["contentId"] == 101:
+                raise AdminApiError("POST", "/contents", 409, {"detail": "Rejected"})
+            return original(category_id, language, body)
+        client.add_category_content = add
+        report = FakeReport()
+        summary = execute_mapping_import(plan, client, report, remote_preflight(plan, client))
+        self.assertEqual(summary["createdLinks"], 1)
+        self.assertEqual(summary["skippedLinks"], 1)
+        self.assertEqual(report.skipped[0][0], 101)
+
+    def test_uncertain_write_or_auth_failure_stops_without_retry(self):
+        for error in (AdminTransportError("POST", "/contents", "timeout"),
+                      AdminApiError("POST", "/contents", 401, {}),
+                      AdminApiError("POST", "/contents", 500, {})):
+            with self.subTest(error=type(error).__name__, message=str(error)):
+                plan = self._plan(("tr", "STORY", "Hikayeler", "First"),
+                                  ("tr", "STORY", "Hikayeler", "Second"))
+                client = FakeAdminClient(contents=[content(101, "First"), content(102, "Second")])
+                client.add_category_content = MagicMock(side_effect=error)
+                with self.assertRaises(type(error)):
+                    execute_mapping_import(plan, client, FakeReport(), remote_preflight(plan, client))
+                self.assertEqual(client.add_category_content.call_count, 1)
+
+    def test_missing_category_does_not_block_valid_category(self):
+        plan = self._plan(("tr", "STORY", "Absent category", "First"),
+                          ("tr", "STORY", "Hikayeler", "Second"))
+        client = FakeAdminClient(contents=[content(101, "First"), content(102, "Second")])
+        summary = execute_mapping_import(plan, client, FakeReport(), remote_preflight(plan, client))
+        self.assertEqual(summary["skippedLinks"], 1)
+        self.assertEqual(summary["createdLinks"], 1)
+
+    def test_publication_rejection_skips_lane_and_continues_next_category(self):
+        plan = self._plan(("tr", "STORY", "Hikayeler", "First"),
+                          ("tr", "STORY", "Other", "Second"))
+        client = FakeAdminClient(contents=[content(101, "First"), content(102, "Second")])
+        client.categories.append({**client.categories[0], "categoryId": 8})
+        client.category_localizations[8] = [
+            {**client.category_localizations[7][0], "categoryId": 8, "name": "Other"}]
+        client.curation[(8, "tr")] = []
+        original = client.update_category_localization
+        def publish(category_id, language, body):
+            if category_id == 7:
+                raise AdminApiError("PUT", "/localizations/tr", 409, {})
+            return original(category_id, language, body)
+        client.update_category_localization = publish
+        report = FakeReport()
+        summary = execute_mapping_import(plan, client, report, remote_preflight(plan, client))
+        self.assertEqual(summary["skippedLinks"], 1)
+        self.assertEqual(summary["createdLinks"], 1)
+        self.assertEqual(client.added_links[0][0], 8)
+
+    def test_no_valid_rows_never_publishes_an_empty_category(self):
+        plan = self._plan(("tr", "STORY", "Hikayeler", "Missing"))
+        client = FakeAdminClient()
+        with self.assertRaisesRegex(CategoryStoryMappingImportError, "no valid assignments"):
+            execute_mapping_import(plan, client, FakeReport(), remote_preflight(plan, client))
+        self.assertEqual(client.events, [])
 
     def test_ambiguous_content_blocks_without_writes(self):
         plan = self._plan(("tr", "STORY", "Hikayeler", "Bir Öykü"))
@@ -388,6 +487,25 @@ class CategoryMappingReportTests(unittest.TestCase):
             self.assertEqual(payload["remotePreflight"], {"ready": True})
             self.assertNotIn("Bearer", json.dumps(payload))
             self.assertNotIn("password", json.dumps(payload).lower())
+
+    def test_report_persists_preflight_and_runtime_skips_with_partial_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "mapping.csv"
+            path.write_text("language,type,name,name\ntr,STORY,Hikayeler,Missing\n"
+                            "tr,STORY,Hikayeler,Rejected\ntr,STORY,Hikayeler,Valid\n", encoding="utf-8")
+            plan = build_category_story_mapping_plan(path)
+            client = FakeAdminClient(contents=[content(101, "Rejected"), content(102, "Valid")])
+            remote = remote_preflight(plan, client)
+            report = CategoryStoryMappingRunReport(plan, "https://example.test", storage_root=root / "reports")
+            report.record_remote_preflight(remote)
+            report.record_skip(remote.lanes[0].assignments[0], AdminApiError("POST", "/contents", 409, {}))
+            report.mark_success({"createdLinks": 1, "skippedLinks": 2})
+            payload = json.loads(report.result_path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "COMPLETED_WITH_SKIPS")
+            self.assertEqual(len(payload["skippedRecords"]), 2)
+            self.assertEqual(payload["skippedRecords"][0]["code"], "missing_content_localization")
+            self.assertEqual(payload["skippedRecords"][1]["code"], "api_record_rejected")
 
 
 if __name__ == "__main__":
