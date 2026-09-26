@@ -1,0 +1,4 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Local backend HTTP is enabled only for this debug build. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
