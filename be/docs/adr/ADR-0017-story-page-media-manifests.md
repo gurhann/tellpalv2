@@ -15,7 +15,7 @@ The asset processing worker previously planned story-page image outputs without 
 - The initial configurable experiment profile defaults to a 1440-pixel longest edge, JPEG quality 85, 40 million input pixels, and 20 MiB source bytes. These are operational experiment defaults, not production rendition commitments.
 - Revision identity incorporates ordered page IDs/numbers, source-byte SHA-256 fingerprints, page audio source IDs, and profile version. Objects live below an environment-prefixed `revisions/{revision}` path. Each completed revision is retained with an immutable manifest; retries may reuse only identical content-addressed output.
 - Page audio remains the existing source asset reference. The job kind does not update legacy localization readiness or alter current public page responses.
-- Test delivery requires a verified Firebase ID token and a UID listed in `TELLPAL_STORY_PAGE_MEDIA_TEST_ALLOWED_FIREBASE_UIDS`. The default allowlist is empty. The endpoint returns short-lived signed rendition URLs only after authorization and only for a manifest matching the current ordered source snapshot. An explicit retained revision can be fetched by allowlisted testers.
+- Test delivery requires a verified Firebase ID token and a UID listed in `TELLPAL_STORY_PAGE_MEDIA_TEST_ALLOWED_FIREBASE_UIDS`. The default allowlist is empty. The endpoint returns short-lived signed rendition and existing source-audio URLs only after authorization and only for a manifest matching the current ordered source snapshot. Audio is passed through unchanged. An explicit retained revision can be fetched by allowlisted testers.
 
 ## Consequences
 

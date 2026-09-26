@@ -57,7 +57,7 @@ public class TestStoryPageMediaController {
     }
 
     @GetMapping("/{contentId}")
-    @Operation(summary = "Get protected story page media manifest", description = "Returns one verified manifest and short-lived rendition URLs to allowlisted Firebase users.")
+    @Operation(summary = "Get protected story page media manifest", description = "Returns one verified manifest and short-lived image and source-audio URLs to allowlisted Firebase users.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Verified manifest returned"),
             @ApiResponse(responseCode = "401", description = "Firebase authentication is missing or invalid"),

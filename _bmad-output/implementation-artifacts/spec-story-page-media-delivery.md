@@ -79,6 +79,7 @@ An asset job needs an ordered snapshot of page IDs and localized source asset ID
 **Verification Results:**
 - `env TESTCONTAINERS_RYUK_DISABLED=true mvn -q -Djava.awt.headless=true test` -- passed (complete backend suite, including Docker-backed integration tests).
 - `env TESTCONTAINERS_RYUK_DISABLED=true mvn -q -Djava.awt.headless=true verify` -- passed (full Maven verification).
+- The protected experiment response also provides short-lived signed URLs for existing page audio assets; audio remains pass-through and is not transcoded.
 - Testcontainers Ryuk was disabled because Docker Desktop's raw socket cannot be mounted in this environment; test containers shut down normally.
 
 ## Suggested Review Order

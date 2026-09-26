@@ -30,7 +30,9 @@ public record TestStoryPageMediaManifestResponse(
                                 entry.pageId(), entry.pageNumber(),
                                 Asset.from(assetRegistryApi.refreshDownloadUrlCache(
                                         new RefreshMediaAssetDownloadUrlCommand(entry.illustration().assetId()))),
-                                entry.audioAssetId(), entry.sourceChecksumSha256(), entry.width(), entry.height()))
+                                entry.audioAssetId() == null ? null : Asset.from(assetRegistryApi.refreshDownloadUrlCache(
+                                        new RefreshMediaAssetDownloadUrlCommand(entry.audioAssetId()))),
+                                entry.sourceChecksumSha256(), entry.width(), entry.height()))
                         .toList());
     }
 
@@ -38,7 +40,7 @@ public record TestStoryPageMediaManifestResponse(
             Long pageId,
             int pageNumber,
             Asset illustration,
-            Long audioAssetId,
+            Asset audio,
             String sourceChecksumSha256,
             int width,
             int height) {
