@@ -38,6 +38,8 @@ Yeniden geliştirme kararları için önerilen sıra:
 4. [Backend ve Harici Servisler](./backend-services.md)
 5. [Test Tabanı ve Stratejisi](./test-strategy.md)
 
+Mevcut görünümü başka bir teknolojide yeniden kurmak için [Tasarım sistemi ve ekran kanıtları](./design-system/README.md) başlangıç noktasıdır.
+
 ## Üretilen Dokümantasyon
 
 ### Temel Belgeler
