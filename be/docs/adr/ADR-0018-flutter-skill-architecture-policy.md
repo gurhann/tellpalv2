@@ -26,6 +26,11 @@ follow them. The repository contains the Flutter client under `app/mobile/`.
   installation is pinned to upstream commit `4772c71f182e628df8601b4868ded9b6482d3891`.
 - Keep the existing BMad process requirements; these skills supply Flutter-specific technical
   rules within that process. Record explicitly approved deviations here and in project memory.
+- The 2026-09-28 CA update applies this decision to the mobile architecture spine and the
+  adopted architecture copied into `epics-mobile.md`. Earlier Riverpod/Notifier and `go_router`
+  selections are superseded; their historical memlog entries remain as decision history.
+  Preserve AD identifiers and product invariants; AD-12 specifies composition and disposal
+  ownership so route-owned BLoCs cannot terminate the application media session.
 - Skill examples do not redefine TellPal backend contracts or require every optional Firebase
   service. Preserve the established API, authentication, and storage ownership decisions.
 - Evaluate SDK/package compatibility when implementing; example version numbers are not an
@@ -49,8 +54,12 @@ The backend remains governed by `architecture.md`; CMS rules remain in `cms/AGEN
 - `AGENTS.md`
 - `be/docs/project-memory.md`
 - `app/mobile/`
+- `_bmad-output/planning-artifacts/architecture/architecture-tellpalv2-2026-09-25/ARCHITECTURE-SPINE.md`
+- `_bmad-output/planning-artifacts/epics-mobile.md`
 - https://github.com/RobertAlvv/flutter-skills/tree/4772c71f182e628df8601b4868ded9b6482d3891
 
 ## Supersedes / Superseded By
 
-None.
+Supersedes the state-management/dependency-composition and routing technology selections in
+the 2026-09-25 mobile spine (AD-2 and AD-6), while preserving their behavioral invariants.
+No prior ADR is superseded.

@@ -3,13 +3,14 @@ name: TellPal Mobile Replacement
 type: architecture-spine
 purpose: build-substrate
 altitude: initiative
-paradigm: feature-first lean Clean Architecture
+paradigm: feature-first Clean Architecture
 scope: Flutter mobile v1 clean-room store-update replacement
 status: final
 created: 2026-09-25
-updated: 2026-09-26
+updated: 2026-09-28
 binds: [FR-1, FR-2, FR-3, FR-5, FR-6, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, NFR-6, NFR-8, NFR-9]
 sources:
+  - ../../../../be/docs/adr/ADR-0018-flutter-skill-architecture-policy.md
   - ../../prds/prd-tellpalv2-2026-09-20/prd.md
   - ../../prds/prd-tellpalv2-2026-09-20/addendum.md
   - ../../../../be/docs/mobile-delivery-discovery.md
@@ -24,18 +25,22 @@ companions:
 
 ## Design Paradigm
 
-One Flutter application, organized by product feature. Each feature owns presentation state and data adapters; domain rules are plain Dart and depend on neither Flutter nor Riverpod. Shared facilities provide identity, navigation, networking, media and diagnostics. Add a repository or use-case boundary only when it protects a real rule or external dependency.
+One Flutter application using feature-first Clean Architecture and the `flutter-scalable-app` skill under ADR-0018. Features own `presentation`, `domain` and `data`; presentation calls domain use cases and data implements domain repository contracts. Domain business rules depend on neither Flutter, BLoC, routing nor infrastructure implementations. Shared facilities provide identity, navigation, networking, media and diagnostics. Introduce each boundary with its first consuming capability.
 
 ```mermaid
 flowchart LR
-  UI[Feature screens] --> State[Feature Riverpod controllers]
-  State --> Domain[Plain Dart rules and feature contracts]
-  State --> Data[Feature data adapters]
+  UI[Feature screen and view] --> State[BLoC or Cubit]
+  State --> UseCase[Domain use cases]
+  UseCase --> Contract[Domain repository contracts]
+  Data[Data implementations] -. implements .-> Contract
   Data --> Transport[Shared authenticated transport]
-  State --> Media[Shared media session]
+  State --> MediaPort[Shared media contract]
+  Media[Application media coordinator] -. implements .-> MediaPort
   Media --> Platform[Audio engine and OS controls]
   Transport --> Backend[Backend APIs]
 ```
+
+ADR-0018 supersedes the earlier Riverpod and `go_router` selections. This is the production target, not a claim that the existing media PoC already implements it. The installed skill references guide implementation; backend contracts and existing product safeguards remain authoritative.
 
 ## Invariants & Rules
 
@@ -43,19 +48,19 @@ flowchart LR
 
 - **Binds:** All mobile features and store-update delivery.
 - **Prevents:** Competing Android/iOS implementations or feature logic scattering across global horizontal folders.
-- **Rule:** Evolve `app/mobile` into the sole production client. Feature modules own their screens, controllers, domain rules and adapters; dependencies flow toward plain-Dart rules and shared interfaces. The PoC entry screen and test credentials remain development-only.
+- **Rule:** Evolve `app/mobile` into the sole production client. Each feature owns `presentation` (screens, views, widgets, BLoCs/Cubits), `domain` (entities, repository interfaces, use cases) and `data` (models, datasources, repository implementations). Presentation depends on domain; data implements domain contracts; domain never imports data or platform adapters. The composition root wires implementations. Domain may use pure-Dart value types and DI annotation metadata, but not runtime container lookup. The PoC entry screen and test credentials remain development-only.
 
 ### AD-2 — One state owner per feature capability [ADOPTED]
 
 - **Binds:** Authentication, catalog, reader, profile, paywall and migration UI.
 - **Prevents:** Conflicting copies of state, screen-specific loading/error conventions and business decisions inside widgets.
-- **Rule:** Riverpod providers compose dependencies; Notifier/AsyncNotifier owners expose immutable state and named user actions, including loading, error and retry. Keep ephemeral widget state local. Domain rules must not import Riverpod.
+- **Rule:** Use `flutter_bloc` with one BLoC/Cubit state owner per feature capability instance; use BLoC for event-driven/concurrent flows and Cubit for simple linear state. Events and states use Freezed; represent loading, empty, error, retry and loaded outcomes as applicable. Widgets dispatch actions and render immutable state; use BlocSelector for partial-state consumption and BlocListener for one-time UI effects. Business operations call injected domain use cases, never HTTP or data implementations. Keep ephemeral widget state local without duplicating BLoC-owned state. Define ordering/cancellation for competing actions and reject results for obsolete account, language, request or media-session generations; changing libraries does not provide this automatically.
 
 ### AD-3 — One application-scoped media session [ADOPTED]
 
 - **Binds:** Illustrated reading, full-story narration, meditation, lullaby and system playback controls.
 - **Prevents:** Overlapping players, stale page completion, playback loss on route replacement and contradictory background controls.
-- **Rule:** A single media coordinator owns the logical session, serializes takeovers/source changes, rejects stale commands and completions, and is the sole producer of playback progress/completion transitions. It may coordinate separate narration and music channels; it must not permit unrelated sessions to overlap. Feature controllers observe it and issue commands. Use `just_audio` for audio, `audio_service` for background/system controls and `audio_session` for interruptions. The coordinator owns player disposal and the admitted media revision; route disposal does not dispose the session or its active assets. Account change stops protected playback before the next account becomes ready. Preserve the PRD's loop, interruption, background and cold-relaunch behaviors on both platforms.
+- **Rule:** A single media coordinator owns the logical session, serializes takeovers/source changes, rejects stale commands and completions, and is the sole producer of playback progress/completion transitions. It may coordinate separate narration and music channels; it must not permit unrelated sessions to overlap. Feature BLoCs/Cubits observe its shared contract and issue commands; they do not create players or own playback completion. Use `just_audio` for audio, `audio_service` for background/system controls and `audio_session` for interruptions. The coordinator owns player disposal and the admitted media revision; route disposal does not dispose the session or its active assets. Account change stops protected playback before the next account becomes ready. Preserve the PRD's loop, interruption, background and cold-relaunch behaviors on both platforms.
 
 ### AD-4 — Backend-owned account migration [ADOPTED]
 
@@ -73,13 +78,13 @@ flowchart LR
 
 - **Binds:** First launch, sign-in, migration gate, tabs, detail and player entry.
 - **Prevents:** Feature-local redirects, inconsistent back stacks and normal catalog access during unfinished migration.
-- **Rule:** One application session projection combines verified identity, backend user, migration and access into signed-out, resolving, migration-pending/failed, ready and account-switching states; one `go_router` graph admits routes from that projection. During account change, invalidate old asynchronous results, stop protected media, clear account-scoped state/cache, then admit the new account only after backend resolution. Navigation gates improve UX but never replace server authorization. Preserve separate tab stacks and reference deep-link behavior. Select a package release compatible with the pinned Flutter SDK.
+- **Rule:** One application-scoped AppSessionBloc projects verified identity, backend user, migration and access into signed-out, resolving, migration-pending/failed, ready and account-switching states. One `auto_route` AppRouter admits routes from this projection; guards reevaluate when session state changes and cannot retain stale admission. Features use generated routes and `context.router`, not direct Navigator calls or local auth redirects. Pass stable identifiers and required scalar context (experience, language, revision), never full entities or credentials; resolve and authorize at the destination. During account change, invalidate old async results, stop protected media, clear account-scoped state/cache, then admit the new account only after backend resolution. Navigation never replaces server authorization. Preserve independent tab stacks and reference deep links, including guarded entry after cold launch.
 
 ### AD-7 — One authenticated transport, typed feature adapters [ADOPTED]
 
 - **Binds:** Every protected backend call and media manifest request.
 - **Prevents:** Inconsistent token attachment, timeout/error handling and network calls from widgets.
-- **Rule:** The shared transport obtains a current Firebase ID token, attaches it to protected calls and normalizes authentication, timeout and network failures. Feature-owned typed adapters map backend contracts into feature models and expose testable error/retry behavior. Retry mutations only with a stable idempotency identity; stale-account responses cannot update current state. Start with small handwritten clients and contract tests; reassess OpenAPI generation when contracts stabilize. Never ship the allowlisted PoC endpoint, test-token UI or development cleartext exception as production access.
+- **Rule:** The shared transport obtains a current Firebase ID token, attaches it to protected calls and normalizes authentication, timeout and network failures. Feature data sources and models map verified contracts; repository implementations return domain entities through domain interfaces using `Either<Failure, T>` (dartz), wrapped in Future or Stream as required. Use cases depend on these interfaces; DTO JSON serialization stays in data (`json_serializable`, models extending domain entities). Retry mutations only with stable idempotency identity; stale-account responses cannot update current state. Start with handwritten typed clients and contract tests; reassess OpenAPI generation when contracts stabilize. Never ship the allowlisted PoC endpoint, test-token UI or development cleartext exception as production access.
 
 ### AD-8 — Separate durable user data from evictable media [ADOPTED]
 
@@ -105,12 +110,20 @@ flowchart LR
 - **Prevents:** A store update exposing incompatible backend behavior to all users or retiring the old system before migration and entitlement evidence exists.
 - **Rule:** Keep old clients on the old system while new-version users migrate; deploy backend compatibility before exposing new mobile cohorts. Expand staged store rollout only against reference-parity, signed-upgrade, migration, purchase/restore, event, crash-free and performance evidence by platform. Product owner and operations retain an explicit stop/containment and recovery decision; do not equate a store rollback with restoration of migrated data. Old-system shutdown is a separate decision, never implied by new-version release.
 
+### AD-12 — One composition root with explicit disposal ownership [ADOPTED]
+
+- **Binds:** Feature creation, app session, navigation, media lifetime and account teardown.
+- **Prevents:** Duplicate shared instances, service lookup hidden in business logic, double disposal and route closure terminating background playback.
+- **Rule:** Use `get_it` with `injectable` in the composition root; register interfaces to implementations and constructor-inject dependencies. Resolve BLoCs/Cubits at provider/composition boundaries only. Each route/tab capability instance has one feature state owner, created by a factory and closed by its BlocProvider; retained tab ownership preserves its navigation state. AppSessionBloc, AppRouter and the media coordinator are app-scoped single instances; expose existing app BLoCs with BlocProvider.value and let the composition root alone dispose them. Feature close cancels its subscriptions, not shared playback. Account-switch orchestration invalidates and clears account-bound state before ready (AD-6), without retaining prior-user data in app singletons. Await async initialization before admitting dependent routes. Tests replace dependencies through the same contracts.
+
 ## Consistency Conventions
 
 | Concern | Convention |
 | --- | --- |
 | Feature boundary | Features import shared contracts, not another feature's internal presentation or data adapter. |
-| State | Immutable snapshots; one owner; explicit loading, error and retry; discard stale asynchronous results. |
+| State | BLoC/Cubit + Freezed; one owner; explicit loading/empty/error/retry; reject stale results; no BuildContext in state owners or domain. |
+| UI composition | Route screen supplies DI/provider; view/widgets render state. Use shared AppColors/AppTypography tokens, const widgets and lazy dynamic lists; preserve legacy reference appearance. Network images use CachedNetworkImage with bounded decode size and must obey AD-8/10 account, integrity and authorization boundaries. |
+| Generation and verification | Use auto_route_generator, injectable_generator, Freezed and json_serializable; regenerate with build_runner after annotation changes. Before accepting a consuming story, verify generated code, analyze, and run relevant use-case, bloc, widget and contract tests; test platform lifecycle on devices when affected. |
 | Identity | Firebase UID is the authenticated identity; backend user/profile ID is application data; no email-based account merge. |
 | Content/media identity | Share one content/experience/asset reference vocabulary across catalog, playback, progress and events; `AUDIO_STORY` is a `STORY` experience, not a canonical content type. Preserve the admitted language and revision through playback and URL renewal. |
 | Time and errors | Parse server timestamps as UTC; show recoverable user-facing errors without logging credentials or private URLs. |
@@ -119,13 +132,16 @@ flowchart LR
 
 ```text
 app/mobile/lib/
-  app/                 # bootstrap, route graph, environment composition
-  core/                # auth transport, error types, diagnostics, bounded media cache
-  features/            # auth, migration, catalog, reader, listening, profile, purchase
-  media/               # one application-scoped playback coordinator
+  app/                 # bootstrap, environment, AppSessionBloc, composition
+  core/                # DI, router, theme, transport, shared contracts, diagnostics/cache
+  features/<feature>/
+    domain/            # entity/, repository/, use_case/
+    data/              # model/, datasource/, repository_impl/
+    presentation/      # screen/, bloc/ or cubit/, widgets/; view/ when needed
+  media/               # one application-scoped coordinator and platform adapters
 ```
 
-Runtime providers: Firebase Auth for identity, TellPal backend for account/content/access and migration, Firebase Storage for authorized short-lived media, RevenueCat for purchase/restore. Local development uses the protected PoC route; production uses separately authorized mobile contracts. CI and release builds must preserve the live app identity and supported iOS 15/Android API 24 minimums.
+Runtime providers: Firebase Auth for identity, TellPal backend for account/content/access and migration, Firebase Storage for authorized short-lived media, RevenueCat for purchase/restore. The existing media experiment uses the protected PoC route. E1/E2 require verified production-shaped catalog/media contracts and authorized development/test access before their consuming stories; the PoC route is not their production API. CI and release builds must preserve the live app identity and supported iOS 15/Android API 24 minimums.
 
 ## Capability → Architecture Map
 
@@ -137,6 +153,7 @@ Runtime providers: Firebase Auth for identity, TellPal backend for account/conte
 | Profile, entitlement, purchase and events | `features/profile`, `features/purchase`, `core/` | AD-2, AD-7, AD-8, AD-9 |
 | Support, announcements, notifications and deep links | `features/support`, `app/`, environment configuration | AD-1, AD-6, AD-9 |
 | Candidate/live publication and protected media | backend contracts, feature adapters and `media/` | AD-7, AD-8, AD-10 |
+| Dependency composition and lifecycle | `app/`, `core/di`, route/tab providers | AD-1, AD-2, AD-3, AD-6, AD-12 |
 | Reliability, privacy and release verification | `core/`, platform targets, backend operations and test suites | AD-3, AD-5, AD-9, AD-11 |
 
 ## Deferred
@@ -146,6 +163,7 @@ Runtime providers: Firebase Auth for identity, TellPal backend for account/conte
 - Shared-Firebase new-system account deletion, tombstone/remigration prevention and subscription consequences: resolve PRD OQ-6 before account-deletion implementation or migration acceptance.
 - Candidate/live authorization matrix, immutable manifest schema, revision-addressed renewal, revoked-access behavior, revision retention and download integrity: resolve PRD OQ-8 with backend/CMS/mobile examples before catalog/reader/player publication stories.
 - Media budgets, image crop policy, cache size, retry timing and rollout thresholds: measure against representative content/devices and PRD acceptance gates before release.
-- Concrete package versions, navigation code generation, persistent storage engine and OpenAPI generation: pin only after compatibility checks against the product SDK baseline and legacy upgrade proof.
+- Exact SDK/package versions and generator compatibility: resolve and lock the chosen Flutter/BLoC/auto_route/get_it/injectable/Freezed/JSON toolchain before the first consuming story; preserve Android API 24 and iOS/iPadOS 15 minimums. The code-generation approach is adopted, not deferred. Existing skill example versions are not a tested package set. AD-5 signed-upgrade proof remains required before auth/migration development, not a blocker for controlled E1/E2 discovery/media work.
+- Persistent storage engine and OpenAPI generation: decide once verified storage/API contracts justify them, before the first affected story; do not independently invent account/cache formats across features.
 - RevenueCat product IDs, event fields/retention, support/configuration and notification/deep-link SDK/permission behavior: settle with provider/backend contracts and PRD OQ-9 before release-required implementation.
 - Rollout cohort controls, numeric expansion/stop thresholds, recovery actions and old-system shutdown: resolve PRD OQ-10 with product owner and operations before rollout; preserve coexistence until that decision.

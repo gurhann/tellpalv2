@@ -37,6 +37,10 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
   Architecture, BLoC/Cubit, `auto_route`, and `get_it` + `injectable`. Use the relevant auditors
   for reviews. This client policy complements BMad workflows and does not change backend
   architecture or imply that existing Flutter code has already been migrated.
+  The mobile spine at `_bmad-output/planning-artifacts/architecture/architecture-tellpalv2-2026-09-25/ARCHITECTURE-SPINE.md`
+  and `epics-mobile.md` now reflect this choice, replacing their earlier Riverpod/go_router
+  selections. AD-12 fixes DI/disposal ownership; all story readiness and backend-contract gates
+  remain open until verified separately.
 
 - `ADR-0013`: follow the language policy in root `AGENTS.md` (Turkish communication, English technical documentation).
 - `ADR-0015`: keep unique safeguards, load deployment details for deployment work, and archive completed
