@@ -20,6 +20,21 @@ For CMS layout/interaction changes use `ui-ux-pro-max`; for shared primitives/fr
 architecture use `senior-frontend`; for TellPal UI review/regression use `cms-ui-guardrails`.
 Follow the additional skill triggers and safeguards in `cms/AGENTS.md`.
 
+## Flutter Development
+
+For Flutter planning, implementation, refactoring, and review (including `app/mobile/`),
+use the installed `RobertAlvv/flutter-skills` skills. Before architectural decisions or
+implementation, read `.codex/skills/flutter-scalable-app/SKILL.md` and its relevant
+references. Its feature-first Clean Architecture,
+BLoC/Cubit, `auto_route`, and `get_it` + `injectable` patterns are required.
+Use `architecture-auditor` for architectural reviews and the relevant specialized auditor
+for state management, widget/runtime performance, atomic design, testability, or CI/CD
+from `.codex/skills/`.
+See `be/docs/adr/ADR-0018-flutter-skill-architecture-policy.md` for the skill inventory,
+installation revision, and scope. Apply these skills alongside the existing BMad workflow;
+Flutter technical choices follow this policy. Record any explicitly approved deviation in
+the ADR and project memory. Skill installation alone does not migrate existing app code.
+
 ## Standards and Language
 
 Follow `standards/` for comments/Javadoc, REST documentation, ADRs, project memory, and bootstrap guidance.

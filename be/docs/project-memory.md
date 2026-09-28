@@ -32,6 +32,12 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 ## Coding and Documentation Defaults
 
+- `ADR-0018`: Flutter development uses the installed `RobertAlvv/flutter-skills` suite.
+  `flutter-scalable-app` and its references govern client architecture: feature-first Clean
+  Architecture, BLoC/Cubit, `auto_route`, and `get_it` + `injectable`. Use the relevant auditors
+  for reviews. This client policy complements BMad workflows and does not change backend
+  architecture or imply that existing Flutter code has already been migrated.
+
 - `ADR-0013`: follow the language policy in root `AGENTS.md` (Turkish communication, English technical documentation).
 - `ADR-0015`: keep unique safeguards, load deployment details for deployment work, and archive completed
   CMS tasks with stable links. Blind Hunter requires evidence-backed findings with no minimum count;
