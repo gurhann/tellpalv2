@@ -1,7 +1,7 @@
 ---
-stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics]
-currentStep: step-03-create-stories
-status: story-design-in-progress
+stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories]
+currentStep: step-04-final-validation
+status: story-drafting-complete-final-validation-pending
 inputDocuments:
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-meditation-lullabies.jpg"
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-reading-listening.jpg"
@@ -28,9 +28,85 @@ inputDocuments:
 
 ## Overview
 
-The user approved the requirements inventory and the revised seven-epic order: discovery/reading and listening precede auth/migration. Step 3 is in progress. Story boundaries and acceptance criteria require collaborative review; no application code is changed.
+Story drafting is complete: 72 individually approved stories across seven epics (12 + 10 + 21 + 6 + 5 + 7 + 11). Final workflow validation of global FR/NFR/UX coverage, story sizing/dependencies, document consistency and unresolved readiness gates remains pending. Scope approval does not establish implementation readiness or acceptance evidence. No application code is changed.
+
+The user approved applying all review recommendations on 2026-09-28. The updates clarify acceptance checks and delivery ownership; they do not close OQ gates or certify implementation. The current status is recorded here and in frontmatter; earlier progress snapshots are retained in [Planning history](#planning-history). Source-document reconciliation for the approved language and iOS parental-gate decisions remains part of final validation.
 
 New planning prose is English under repository policy. Canonical FR/NFR excerpts below retain their original Turkish wording to preserve requirements without translation drift. There are 28 active FRs, one withdrawn FR identifier, 9 NFRs and 25 extracted UX requirements.
+
+## Planning scope and execution boundaries
+
+### Scope and evidence precedence
+
+The latest explicit user decisions and adopted architecture govern implementation. The PRD owns product scope. Historical extraction and design documents provide evidence only where compatible with that scope. Flutter is selected; earlier framework-choice wording is superseded. This is a clean-room feature-first replacement, evolving app/mobile as the sole product client, with no application implementation authorized in this planning session.
+
+FR-17 is withdrawn and never renumbered. Parent mode/guides, interactive branches, UI redesign, multiple profiles, continuous legacy synchronization and explicit offline-download management remain excluded. Their historical data is not authorized for deletion. Legacy ZIP boundaries, defects and Billing errors are not required behavior. Older extraction statements that restore excluded features, finalize general search, or leave FR-21 event categories undefined are superseded.
+
+The existing epics.md remains the CMS/backend plan. FR-22–25 must remain traceable here as mobile behavior and backend/CMS dependencies; this inventory does not assert that backend publication, processing or authorization work is already complete, nor duplicate its implementation plan. Consult backend project memory, ADRs and canonical architecture before making any backend design or implementation decision.
+
+### Delivery boundaries agreed with the user
+
+- E1 and E2 are independently demonstrable under controlled development/test access. AD-5 is not a prerequisite for media/discovery work; it remains mandatory before E3 auth/migration feature development. Preparatory evidence collection can proceed earlier without implementing those features.
+- Controlled access must use an authorized development/test mechanism. No hardcoded credentials, production auth bypass, production PoC endpoint or test-token UI is allowed. The specific mechanism is a prerequisite to settle from existing safe capabilities, not a new auth feature hidden in E1.
+- Free eligible content is sufficient to validate the main media flow. Locked content stays visible as contracted and protected media stays denied. Full purchase/paywall journeys remain explicitly incomplete until E6; no early epic claims full FR-10/19/20 or release acceptance.
+- E1/E2 consume verified backend identity/access contracts for controlled users. E3 later proves real session persistence, migration and account-switch isolation. Do not substitute in-memory progress for durable progress or a client flag for server authorization.
+- Backend/CMS dependencies are tracked as contract/readiness prerequisites, not presumed complete from their existing epic plan. A fixture can support isolated tests but cannot alone satisfy real-backend integration acceptance.
+- Crash/memory/latency diagnostics, privacy, error handling and visual evidence begin with their first feature. E7 aggregates release evidence rather than deferring all quality work.
+- Shared core/media changes are introduced by the first consuming capability and extended by later capabilities. Do not create separate technical-layer epics or bulk-create future infrastructure/entities.
+
+### Planning decisions and execution order
+
+The user approved retaining all seven epics and 72 story identities. An epic is not a single implementation session. Final validation must assess individual story size and dependencies; split only an actual oversized story while preserving traceability. No acceptance criterion is removed by this review.
+
+Track scope approval, implementation readiness and acceptance evidence separately. An approved story is not automatically ready to implement. Each story below records these dimensions; its prerequisites identify outstanding decisions, dependencies and evidence. Readiness changes only after those prerequisites are verified. This planning session has not produced implementation acceptance evidence.
+
+#### Planning status definitions
+
+The local delivery-status line in every story records three separate dimensions: scope is approved for planning; implementation readiness is pending verification of that story's prerequisites; acceptance evidence is absent from this planning exercise. An approved scope is not an implementation or release acceptance. Update readiness and evidence only against recorded verification outcomes. The current global workflow status is in Overview; historical snapshots do not change it.
+
+#### Shared readiness and acceptance checks
+
+Before Story 1.1, lock and verify a compatible Flutter/Dart, flutter_bloc, auto_route/generator, get_it/injectable/generator, Freezed, json_serializable and build_runner toolchain under ADR-0018 and the mobile spine. Record exact versions, successful code generation and analyze results, and compatibility with Android API 24 and iOS/iPadOS 15. Skill example versions are not compatibility evidence. Introduce only the bootstrap/composition needed by the first capability; do not create a separate technical epic or bulk-create future features.
+
+For every affected UI story, collect UX-DR24 evidence with the feature: localized text at agreed normal and enlarged text scales; reachable controls and safe areas; icon role/name/selected semantics using platform accessibility tools; at least 48dp touch targets; and measured contrast over representative actual artwork. Resolve the scale/device matrix and contrast acceptance criteria before the affected screen's acceptance without silently redesigning it. Record screen/state/device/language/content and outcomes. Failed checks block the affected screen's acceptance. Story 7.5 repeats these checks on the release candidate rather than deferring them until release.
+
+**First working package:** Stories 1.1 and 1.2, executed sequentially as separate work units. Demonstrate accurate Library listing followed by opening the correct story detail. Reader implementation starts subsequently with Story 1.3 and is not silently included in this package.
+
+| Story | Conditions to establish readiness |
+| --- | --- |
+| 1.1 | Verify and lock the shared toolchain/generators with recorded generation, analyze and supported-platform compatibility evidence; then verify real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/fallback and empty/error states. Establish authorized development/test access and Library reference states. |
+| 1.2 | Accept 1.1; verify content/experience/language identity, detail payload and error fixtures, valid/absent detail recommendations, navigation/back behavior and detail reference states. Verify EXT-CATALOG closure. |
+
+AD-5 does not block this discovery package. Signed-upgrade and registered-session evidence can be collected independently; auth/migration development must still wait for AD-5 completion. Controlled access does not authorize production bypasses. Backend readiness is verified, not inferred from the separate CMS/backend plan.
+
+**Context handling for implementation:** Work on one story at a time. Carry its acceptance criteria, relevant architecture invariants, resolved contracts/reference evidence and a concise dependency/outcome record into that session. Record changed files, verification results and remaining blockers before handoff. The complete epic remains a reference, not a request to implement every story in one context. Verify reference entry/action/result/back behavior while preparing each feature rather than deferring discovery to Epic 7.
+
+**Epic 7 work types:** Stories 7.1–7.4 implement flow-event integrations; 7.5–7.9 consolidate release-candidate verification; 7.10–7.11 define and verify rollout/recovery operations. Keep their IDs and criteria. Verification stories are not all new product features, and an entire platform matrix need not execute in one work session.
+
+**Initial exposure versus rollout expansion:** OQ-2/OQ-10 must distinguish evidence required before the first limited distribution from observation evidence required to expand each platform's cohort. Record measurement source (including any controlled pre-release cohort), candidate version, sample/window, owner and decision for each gate. The >=99.5% crash-free user target is unchanged. This distinction does not waive pre-release criteria or authorize exposure with known blockers. Do not assume production samples exist before users receive a build; resolve measurement source and progression before rollout. Missing evidence blocks the gate to which it belongs. Stories 7.6 and 7.10 must use this same resolved gate mapping.
+
+### External dependency register
+
+These records connect mobile consumers to separately delivered backend/CMS/provider capabilities. Module names describe the existing canonical ownership; they do not approve new backend designs. Accountable roles below must identify named assignees and link existing delivery work or explicitly assign missing work before the affected mobile story becomes ready. An unassigned item or a historical discovery/PoC document cannot satisfy that gate.
+
+Reference documents: [CMS/backend epics](./epics.md), [canonical backend architecture](../../architecture.md), [ADR-0017 experimental manifest scope](../../be/docs/adr/ADR-0017-story-page-media-manifests.md), [mobile architecture spine](./architecture/architecture-tellpalv2-2026-09-25/ARCHITECTURE-SPINE.md) and [historical contract extraction](./prds/prd-tellpalv2-2026-09-20/extract-contracts.md). These links establish context, not completion of the external delivery work.
+
+For each record, the owner must record: exact external work link and status; named assignee; versioned contract path; redacted success/error fixture paths; real-backend/provider verification evidence; consuming mobile stories; and closure decision/date. Proposed evidence destination: `_bmad-output/implementation-artifacts/mobile-contracts/<dependency-id>/`. These are reserved destinations, not claims that files or evidence exist. Readiness remains pending until actual paths and outcomes are recorded and accepted by both the external owner and mobile implementer. Fixture-only success is insufficient for real integration acceptance.
+
+| Dependency ID | Mobile consumers | Accountable role | Existing work/reference and missing assignment | Required closure evidence |
+| --- | --- | --- | --- | --- |
+| EXT-CATALOG | 1.1–1.2, 1.8–1.10, 2.1, 2.3, 2.7 | Backend content/category owner | `epics.md` defers public read composition/filtering/pagination; link or assign mobile catalog/detail/search delivery work. OQ-4/8 remain open. | Versioned identity/language/audience/list/detail/search contracts, pagination/error fixtures and actual backend results, including detail recommendations. |
+| EXT-MEDIA | 1.3–1.4, 1.11–1.12, 2.2–2.3, 2.9–2.10 | Backend content/asset owner | `epics.md` Stories 1.1–1.4 and 1.8 cover related processing/asset ownership; ADR-0017 describes experimental manifests only. Assign production start/manifest/renewal and interrupted-transfer delivery work. | OQ-8 admission/immutable identity/integrity/renewal/resume contract; actual generated files and authorized real-backend transfer evidence. |
+| EXT-HISTORY | 1.5, 1.7, 2.8, 3.12 | Backend user owner with mobile persistence owner | No delivery story for durable progress/history is established by `epics.md`; link or assign it before the first producer. | Versioned duration/progress/completion, stable event identity and deduplication contracts; durable pending-record/process-restart tests and backend field-level outcomes. |
+| EXT-ACCOUNT | 3.3–3.13, 3.18–3.19 | Backend user owner with identity integration owner | `architecture.md` and PRD contract extraction are design/evidence references; assign or link verified Firebase UID/account/profile/session delivery work. | Verified UID resolution, provider and preference/profile fixtures, failure/retry and account-isolation evidence. AD-5 remains separate. |
+| EXT-MIGRATION | 3.14–3.17, 3.20–3.21, 7.7–7.8 | Backend user/migration owner with mobile local-data owner | Account migration, local import and deletion delivery work is not established by `epics.md`; link or assign it under OQ-3/6. | Source/target fields and identity maps, durable receipts/status, interruption/multi-device fixtures, deletion/tombstone/legacy-isolation outcomes. |
+| EXT-PUBLICATION | 5.1–5.4, 7.8 | Backend content/asset owner and CMS publication owner | `epics.md` processing/localization stories are partial inputs; link or assign candidate/live, approval invalidation, processing-error/retry and test-language delivery work. | Revision-specific readiness/approval, failed-candidate isolation, tester/subscriber/ordinary-user matrix and actual CMS/backend/mobile results. |
+| EXT-RETENTION | 1.11–1.12, 2.9–2.10, 5.5 | Backend asset owner with mobile cache owner | ADR-0017 retains experiment revisions but does not establish production cleanup. Link or assign OQ-8 retention/withdrawal/revocation delivery work. | Actual retained file access for live/rollback/active sessions, cleanup safety and revision-addressed renewal/revocation tests. |
+| EXT-PURCHASE | 6.1–6.7, 7.4, 7.7–7.8 | Purchase/backend owner and store/RevenueCat integration owner | `architecture.md` purchase ownership is a reference, not store integration evidence; link or assign OQ-7/8 entitlement/reconciliation delivery work. | Store/provider-to-application identity and products/offerings contracts; real purchase/restore/conflict and backend-authoritative access outcomes. |
+| EXT-SUPPORT | 4.1–4.6, 7.9 | Support API/configuration owner and notification/provider integration owner | Assign or link OQ-9 feedback, localized documents, announcements, notification/link and rating configuration work; provider selection remains open. | Versioned limits/fallback/target/permission contracts; real service/provider fixtures and platform outcomes. |
+| EXT-EVENTS | 7.1–7.4 | Backend event owner with mobile event-delivery owner | `architecture.md` event ownership does not establish implemented ingestion/deduplication. Link or assign OQ-7 event delivery work. | Event fields/privacy/retention/retry contracts; real backend delivery and deduplication evidence tied to account and operation IDs. |
+
+All records currently have unverified closure and pending named-assignee/work/contract/evidence links. Update the affected records as prerequisite work is completed; do not mark all stories ready from this register's creation.
 
 ## Requirements Inventory
 
@@ -192,15 +268,7 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 
 ### Additional Requirements
 
-### Scope and evidence precedence
-
-The latest explicit user decisions and adopted architecture govern implementation. The PRD owns product scope. Historical extraction and design documents provide evidence only where compatible with that scope. Flutter is selected; earlier framework-choice wording is superseded. This is a clean-room feature-first replacement, evolving app/mobile as the sole product client, with no application implementation authorized in this planning session.
-
-FR-17 is withdrawn and never renumbered. Parent mode/guides, interactive branches, UI redesign, multiple profiles, continuous legacy synchronization and explicit offline-download management remain excluded. Their historical data is not authorized for deletion. Legacy ZIP boundaries, defects and Billing errors are not required behavior. Older extraction statements that restore excluded features, finalize general search, or leave FR-21 event categories undefined are superseded.
-
-The existing epics.md remains the CMS/backend plan. FR-22–25 must remain traceable here as mobile behavior and backend/CMS dependencies; this inventory does not assert that backend publication, processing or authorization work is already complete, nor duplicate its implementation plan. Consult backend project memory, ADRs and canonical architecture before making any backend design or implementation decision.
-
-### Evidence gates and unresolved decisions
+#### Evidence gates and unresolved decisions
 
 | Gate | Current evidence / required closure | Timing |
 | --- | --- | --- |
@@ -208,7 +276,7 @@ The existing epics.md remains the CMS/backend plan. FR-22–25 must remain trace
 | OQ-1 | Complete reader/player controls and backend capability evidence; reference screenshots and redacted screen-to-API success/error fixtures. | Before finalizing affected epic scope and suitability. |
 | OQ-2 | >=99.5% crash-free users per platform is fixed. Measurement window/sample, device/network matrix and memory/latency p50/p95 budgets remain open. | Measurement plan early; thresholds and sufficient evidence before release. |
 | OQ-3 + OQ-6 | Later-device unique local records, source/target fields and identity mapping, invalid/unmapped data, removed-content history, shared-Firebase deletion, tombstones and remigration prevention. | Resolve before migration acceptance criteria; deletion contract before deletion implementation. |
-| OQ-4 | Partially resolved by user screenshots: reading stories, audio stories, meditation and lullabies appear in legacy search. Real payloads, matching/ranking/group counts, threshold/debounce, lightweight catalog, pagination and errors remain open; see evidence update below. | Before affected UX/API contracts and consuming stories. |
+| OQ-4 | Partially resolved by user screenshots: reading stories, audio stories, meditation and lullabies appear in legacy search. Real payloads, matching/ranking/group counts, threshold/debounce, lightweight catalog, pagination and errors remain open; see evidence update below. | Before finalizing the affected UX/API contracts or implementing the stories that depend on them. |
 | OQ-8 / AD-10 | Authorization matrix, shared content/experience/asset IDs, immutable manifest, start/fetch point, renewal/revocation, actual renditions/integrity, metadata-only approval, retention, bounded prefetch/cache and retry/resume semantics. Experimental PoC response is insufficient as production contract. | Resolve relevant contracts before catalog/reader/player publication stories. |
 | OQ-7 | RevenueCat products/offerings and event fields, retention, idempotency/retry contract; FR-21 event categories are already fixed. | Before late integration implementation; purchase/restore and events verified before release. |
 | OQ-9 | Notification/announcement/deep-link behavior, permissions, SDK/data scope and store audience declarations. | Before finalizing release flows and related integrations. |
@@ -218,7 +286,7 @@ Supported minimums remain Android API 24 and iOS/iPadOS 15, phone and tablet. Kn
 
 DESIGN.md is verified-with-gaps; EXPERIENCE.md is marked final but remains historical evidence subject to PRD exclusions. COVERAGE.md has a stale blanket statement that tablet screenshots do not exist; its ending and TABLET.md describe emulated tablet captures. Treat these as screen-size evidence only. Images are indexed here and will be inspected for each relevant screen; this inventory does not claim fresh visual/runtime verification.
 
-### Language availability decision — 2026-09-27
+#### Language availability decision — 2026-09-27
 
 The user reports that Turkish, English and Portuguese content is currently loaded and directs that these languages be usable. This supersedes earlier PRD/design-source statements that enabled German and conditionally exposed Portuguese. This is a product decision and user-reported content status, not an independent audit of all content/experience readiness.
 
@@ -226,7 +294,7 @@ New languages may first be enabled for test use through remote configuration and
 
 E1 owns language consumption and safe configuration behavior for controlled test users, E2 applies it to listening, E3 owns persisted account preference/migration, and E5 verifies test-versus-live language exposure with authorized users. Story 1.10 is approved for planning; no implementation is authorized here. Existing FR-9 English fallback and language/revision continuity rules remain in force.
 
-### Search evidence update — 2026-09-27
+#### Search evidence update — 2026-09-27
 
 User-supplied legacy screenshots are retained under `mobile-evidence/search-2026-09-27/`. They establish visible search outcomes, not captured network payloads or verified backend implementation. Exact app version/device OS was not independently established.
 
@@ -242,77 +310,77 @@ The user recalls that legacy matching used content name, description and contrib
 
 Story 1.9 is approved for planning, with OQ-4 contract verification still required before implementation. E1 can implement grouped search presentation and the already available reading-detail destination; E2 must own and verify listening destinations once available. Do not label all search destinations accepted while they depend on future E2 stories.
 
-### Adopted architecture requirements
+#### Adopted architecture requirements
 
 Aligned on 2026-09-28 with ADR-0018 and the mobile architecture spine: BLoC/Cubit, auto_route and get_it + injectable replace the earlier Riverpod/go_router choices. AD-12 makes DI and disposal ownership explicit. This alignment does not complete final story validation, close OQ gates or change any story readiness status.
 
-### AD-1 — One feature-first Flutter codebase [ADOPTED]
+##### AD-1 — One feature-first Flutter codebase [ADOPTED]
 
 - **Binds:** All mobile features and store-update delivery.
 - **Prevents:** Competing Android/iOS implementations or feature logic scattering across global horizontal folders.
 - **Rule:** Evolve `app/mobile` into the sole production client. Each feature owns `presentation` (screens, views, widgets, BLoCs/Cubits), `domain` (entities, repository interfaces, use cases) and `data` (models, datasources, repository implementations). Presentation depends on domain; data implements domain contracts; domain never imports data or platform adapters. The composition root wires implementations. Domain may use pure-Dart value types and DI annotation metadata, but not runtime container lookup. The PoC entry screen and test credentials remain development-only.
 
-### AD-2 — One state owner per feature capability [ADOPTED]
+##### AD-2 — One state owner per feature capability [ADOPTED]
 
 - **Binds:** Authentication, catalog, reader, profile, paywall and migration UI.
 - **Prevents:** Conflicting copies of state, screen-specific loading/error conventions and business decisions inside widgets.
 - **Rule:** Use `flutter_bloc` with one BLoC/Cubit state owner per feature capability instance; use BLoC for event-driven/concurrent flows and Cubit for simple linear state. Events and states use Freezed; represent loading, empty, error, retry and loaded outcomes as applicable. Widgets dispatch actions and render immutable state; use BlocSelector for partial-state consumption and BlocListener for one-time UI effects. Business operations call injected domain use cases, never HTTP or data implementations. Keep ephemeral widget state local without duplicating BLoC-owned state. Define ordering/cancellation for competing actions and reject results for obsolete account, language, request or media-session generations; changing libraries does not provide this automatically.
 
-### AD-3 — One application-scoped media session [ADOPTED]
+##### AD-3 — One application-scoped media session [ADOPTED]
 
 - **Binds:** Illustrated reading, full-story narration, meditation, lullaby and system playback controls.
 - **Prevents:** Overlapping players, stale page completion, playback loss on route replacement and contradictory background controls.
 - **Rule:** A single media coordinator owns the logical session, serializes takeovers/source changes, rejects stale commands and completions, and is the sole producer of playback progress/completion transitions. It may coordinate separate narration and music channels; it must not permit unrelated sessions to overlap. Feature BLoCs/Cubits observe its shared contract and issue commands; they do not create players or own playback completion. Use `just_audio` for audio, `audio_service` for background/system controls and `audio_session` for interruptions. The coordinator owns player disposal and the admitted media revision; route disposal does not dispose the session or its active assets. Account change stops protected playback before the next account becomes ready. Preserve the PRD's loop, interruption, background and cold-relaunch behaviors on both platforms.
 
-### AD-4 — Backend-owned account migration [ADOPTED]
+##### AD-4 — Backend-owned account migration [ADOPTED]
 
 - **Binds:** Registered and anonymous upgrades, second devices, retained user data.
 - **Prevents:** Duplicate imports, lost local records, new data overwritten by old data and repeated migration on later-upgraded devices.
 - **Rule:** Firebase Auth establishes identity; backend maps the verified UID to the canonical application user and owns idempotent account migration and its terminal status. The client gates normal use on verified persisted completion and exposes pending/retry states. Device-only anonymous data is imported separately with a stable operation identity and retained until a durable receipt confirms its disposition; an accepted upload is not completion. A later-upgraded device never restarts completed account migration; old-version devices keep using the old backend without continuous synchronization. Anonymous-to-new-account transfer and existing-account sign-in are distinct paths; no automatic merge into an existing account. New-system-only account deletion must leave the shared legacy identity usable and prevent remigration of deleted data.
 
-### AD-5 — In-place update compatibility is an early gate [ADOPTED]
+##### AD-5 — In-place update compatibility is an early gate [ADOPTED]
 
 - **Binds:** Product app identity, signing, local data access and FR-29.
 - **Prevents:** A working fresh install that cannot replace the live app or read migration inputs.
 - **Rule:** Before auth/migration feature stories, verify the live Android application ID, iOS bundle ID and approved signing/provisioning; then prove representative signed in-place upgrades on both platforms can read retained local records and sessions. The documented legacy IDs are `com.scoustech.interactive_short_kid_stories_tellpal` (Android) and `com.scoustech.interactiveShortKidStoriesTellpal` (iOS). The PoC IDs are experimental and do not satisfy this gate.
 
-### AD-6 — Central navigation from authoritative session state [ADOPTED]
+##### AD-6 — Central navigation from authoritative session state [ADOPTED]
 
 - **Binds:** First launch, sign-in, migration gate, tabs, detail and player entry.
 - **Prevents:** Feature-local redirects, inconsistent back stacks and normal catalog access during unfinished migration.
 - **Rule:** One application-scoped AppSessionBloc projects verified identity, backend user, migration and access into signed-out, resolving, migration-pending/failed, ready and account-switching states. One `auto_route` AppRouter admits routes from this projection; guards reevaluate when session state changes and cannot retain stale admission. Features use generated routes and `context.router`, not direct Navigator calls or local auth redirects. Pass stable identifiers and required scalar context (experience, language, revision), never full entities or credentials; resolve and authorize at the destination. During account change, invalidate old async results, stop protected media, clear account-scoped state/cache, then admit the new account only after backend resolution. Navigation never replaces server authorization. Preserve independent tab stacks and reference deep links, including guarded entry after cold launch.
 
-### AD-7 — One authenticated transport, typed feature adapters [ADOPTED]
+##### AD-7 — One authenticated transport, typed feature adapters [ADOPTED]
 
 - **Binds:** Every protected backend call and media manifest request.
 - **Prevents:** Inconsistent token attachment, timeout/error handling and network calls from widgets.
 - **Rule:** The shared transport obtains a current Firebase ID token, attaches it to protected calls and normalizes authentication, timeout and network failures. Feature data sources and models map verified contracts; repository implementations return domain entities through domain interfaces using `Either<Failure, T>` (dartz), wrapped in Future or Stream as required. Use cases depend on these interfaces; DTO JSON serialization stays in data (`json_serializable`, models extending domain entities). Retry mutations only with stable idempotency identity; stale-account responses cannot update current state. Start with handwritten typed clients and contract tests; reassess OpenAPI generation when contracts stabilize. Never ship the allowlisted PoC endpoint, test-token UI or development cleartext exception as production access.
 
-### AD-8 — Separate durable user data from evictable media [ADOPTED]
+##### AD-8 — Separate durable user data from evictable media [ADOPTED]
 
 - **Binds:** Profile/progress, device-local migration, cache, offline foundation and account switching.
 - **Prevents:** Deleting migration input with cache cleanup, showing another account's data or treating cached media as a protected entitlement.
 - **Rule:** Backend owns application profile, progress and access decisions; Firebase owns authentication. Locally preserved migration inputs remain distinct from bounded, evictable media cache. Key private cache by account/access scope and immutable asset revision, expose only complete/integrity-verified entries, and retain active entries through playback. Purge account-private cache on account change; never delete unacknowledged migration input. Cache presence cannot bypass server admission. Explicit offline downloads are outside v1.
 
-### AD-9 — Environment and diagnostic boundaries [ADOPTED]
+##### AD-9 — Environment and diagnostic boundaries [ADOPTED]
 
 - **Binds:** Local/test/production builds, reliability work and release integrations.
 - **Prevents:** Test access in production, leaked tokens/private URLs and unobservable playback failures.
 - **Rule:** Inject backend endpoints and provider configuration per environment; never embed secrets or signed URLs in code or telemetry. Capture crash, playback, memory and latency diagnostics with version/platform/device and network/cache context in development and staged release. Add RevenueCat purchase/restore and backend user-flow events before release; client purchase state is advisory until backend access confirms it. A logical progress or flow event has one owner and stable event ID across retries; server deduplicates it, and delivery failure never blocks reading or listening.
 
-### AD-10 — One publication and protected-media admission boundary [ADOPTED]
+##### AD-10 — One publication and protected-media admission boundary [ADOPTED]
 
 - **Binds:** Catalog, candidate testing, story/meditation/lullaby playback, cache and URL renewal.
 - **Prevents:** Candidate media leaking to ordinary users, failed processing replacing live media, revision mixing or cache bypassing access checks.
 - **Rule:** Backend publication/access decisions distinguish candidate from live by language and experience; tester authorization is separate from subscription. Catalog visibility does not authorize full media. A protected start admits one immutable content/experience/language/revision manifest; renewal remains revision-addressed and rechecks the applicable access policy. Failed candidates never displace the last live revision. Shared content/asset identity and integrity semantics must be contracted before reader, catalog and media consumers implement against them.
 
-### AD-11 — Staged release with coexistence and recovery gate [ADOPTED]
+##### AD-11 — Staged release with coexistence and recovery gate [ADOPTED]
 
 - **Binds:** Mobile release, backend routing/migration, RevenueCat and old-system operations.
 - **Prevents:** A store update exposing incompatible backend behavior to all users or retiring the old system before migration and entitlement evidence exists.
 - **Rule:** Keep old clients on the old system while new-version users migrate; deploy backend compatibility before exposing new mobile cohorts. Expand staged store rollout only against reference-parity, signed-upgrade, migration, purchase/restore, event, crash-free and performance evidence by platform. Product owner and operations retain an explicit stop/containment and recovery decision; do not equate a store rollback with restoration of migrated data. Old-system shutdown is a separate decision, never implied by new-version release.
 
-### AD-12 — One composition root with explicit disposal ownership [ADOPTED]
+##### AD-12 — One composition root with explicit disposal ownership [ADOPTED]
 
 - **Binds:** Feature creation, app session, navigation, media lifetime and account teardown.
 - **Prevents:** Duplicate shared instances, service lookup hidden in business logic, double disposal and route closure terminating background playback.
@@ -372,7 +440,7 @@ UX-DR25: **Evidence and gaps.** Attach screen/state/device/language/content evid
 
 ### FR Coverage Map
 
-FR-1: E3: authoritative startup/session and migration routing; E1–E2: test-only navigation for media validation.
+FR-1: E3: initial onboarding (3.3), membership onboarding/conversion (3.16), authoritative startup/session and migration routing; E1–E2: incremental test shell (1.1/2.1), with production stack isolation (3.5) and full three-tab integration (3.12).
 
 FR-2: E3: registration, sign-in, verification and recovery.
 
@@ -438,7 +506,7 @@ A controlled, authorized development/test user can browse the real catalog, find
 
 **FRs covered:** FR-6–13, FR-15–16, FR-25; navigation integration with FR-1.
 
-**Implementation notes:** Resolve relevant OQ-1/4/8 evidence and production-shaped contracts before consuming stories. Protected live-media authorization is mandatory. No production auth/migration work is implied.
+**Implementation notes:** Resolve relevant OQ-1/4/8 evidence and production-shaped contracts before implementing the affected stories. Protected live-media authorization is mandatory. No production auth/migration work is implied.
 
 ### Epic 2: Listen to lullabies, meditations and audio stories
 
@@ -488,47 +556,15 @@ The replacement has verified backend flow events, platform parity, reliability, 
 
 **Implementation notes:** Depends on E1–E6. OQ-2/7/9/10 release evidence must close; preserve legacy coexistence and separate shutdown approval.
 
-### Delivery boundaries agreed with the user
-
-- E1 and E2 are independently demonstrable under controlled development/test access. AD-5 is not a prerequisite for media/discovery work; it remains mandatory before E3 auth/migration feature development. Preparatory evidence collection can proceed earlier without implementing those features.
-- Controlled access must use an authorized development/test mechanism. No hardcoded credentials, production auth bypass, production PoC endpoint or test-token UI is allowed. The specific mechanism is a prerequisite to settle from existing safe capabilities, not a new auth feature hidden in E1.
-- Free eligible content is sufficient to validate the main media flow. Locked content stays visible as contracted and protected media stays denied. Full purchase/paywall journeys remain explicitly incomplete until E6; no early epic claims full FR-10/19/20 or release acceptance.
-- E1/E2 consume verified backend identity/access contracts for controlled users. E3 later proves real session persistence, migration and account-switch isolation. Do not substitute in-memory progress for durable progress or a client flag for server authorization.
-- Backend/CMS dependencies are tracked as contract/readiness prerequisites, not presumed complete from their existing epic plan. A fixture can support isolated tests but cannot alone satisfy real-backend integration acceptance.
-- Crash/memory/latency diagnostics, privacy, error handling and visual evidence begin with their first feature. E7 aggregates release evidence rather than deferring all quality work.
-- Shared core/media changes are introduced by the first consuming capability and extended by later capabilities. Do not create separate technical-layer epics or bulk-create future infrastructure/entities.
-
-
-### Planning decisions after the multi-perspective review
-
-The user approved retaining all seven epics and 72 story identities. An epic is not a single implementation session. Final validation must assess individual story size and dependencies; split only an actual oversized story while preserving traceability. No acceptance criterion is removed by this review.
-
-Track scope approval, implementation readiness and acceptance evidence separately. An approved story is not automatically ready to implement. Each story below records these dimensions; its prerequisites identify outstanding decisions, dependencies and evidence. Readiness changes only after those prerequisites are verified. This planning session has not produced implementation acceptance evidence.
-
-**First working package:** Stories 1.1 and 1.2, executed sequentially as separate work units. Demonstrate accurate Library listing followed by opening the correct story detail. Reader implementation starts subsequently with Story 1.3 and is not silently included in this package.
-
-| Story | Conditions to establish readiness |
-| --- | --- |
-| 1.1 | Verify real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/fallback and empty/error states. Establish authorized development/test access and Library reference states. |
-| 1.2 | Accept 1.1; verify content/experience/language identity, detail payload and error fixtures, navigation/back behavior and detail reference states. |
-
-AD-5 does not block this discovery package. Signed-upgrade and registered-session evidence can be collected independently; auth/migration development must still wait for AD-5 completion. Controlled access does not authorize production bypasses. Backend readiness is verified, not inferred from the separate CMS/backend plan.
-
-**Context handling for implementation:** Work on one story at a time. Carry its acceptance criteria, relevant architecture invariants, resolved contracts/reference evidence and a concise dependency/outcome record into that session. Record changed files, verification results and remaining blockers before handoff. The complete epic remains a reference, not a request to implement every story in one context. Verify reference entry/action/result/back behavior while preparing each feature rather than deferring discovery to Epic 7.
-
-**Epic 7 work types:** Stories 7.1–7.4 implement flow-event integrations; 7.5–7.9 consolidate release-candidate verification; 7.10–7.11 define and verify rollout/recovery operations. Keep their IDs and criteria. Verification stories are not all new product features, and an entire platform matrix need not execute in one work session.
-
-**Initial exposure versus rollout expansion:** OQ-2/OQ-10 must distinguish evidence required before the first limited distribution from observation evidence required to expand each platform's cohort. Record measurement source (including any controlled pre-release cohort), candidate version, sample/window, owner and decision for each gate. The >=99.5% crash-free user target is unchanged. This distinction does not waive pre-release criteria or authorize exposure with known blockers. Do not assume production samples exist before users receive a build; resolve measurement source and progression before rollout. Missing evidence blocks the gate to which it belongs. Stories 7.6 and 7.10 must use this same resolved gate mapping.
-
 ## Epic 1: Discover content and read illustrated stories
 
 A controlled, authorized development/test user can discover eligible content and complete an illustrated story with reference visuals and reliable progress.
 
-The user approved starting with Library listing verification, followed by card-to-content opening. Stories 1.1–1.12 are approved for planning. The user approved proceeding to Epic 2 after the Epic 1 planning review; open evidence/contract gates remain unchanged. Implementation remains outside this session. Remaining epics will be detailed sequentially.
+Stories 1.1–1.12 are approved for planning. The first working package remains Library listing (1.1) followed by card-to-detail opening (1.2); open evidence/contract gates remain unchanged. Implementation remains outside this planning session.
 
 ### Story 1.1: Discover eligible content on the Library home screen
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to see category rows and content previews appropriate to my language and access audience,
@@ -536,7 +572,7 @@ So that I can see what is available to read.
 
 **Requirements:** FR-6, FR-9, FR-10 (listing scope); NFR-5–8; UX-DR1–4, UX-DR10, UX-DR22–25.
 
-**Prerequisites:** Agreed home-list contract and redacted response examples covering category order, preview limits, language/fallback and audience eligibility; authorized development/test access; existing reference design assets. AD-5 does not block this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only.
+**Prerequisites:** Agreed home-list contract and redacted response examples covering category order, preview limits, language/fallback and audience eligibility; authorized development/test access; existing reference design assets. AD-5 does not block this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register). Verify the toolchain/generator gate and relevant UX-DR24 checks under Shared readiness and acceptance checks. This first shell consumer owns Library navigation; later destination capabilities extend the same shell without being claimed as complete here.
 
 **Acceptance Criteria:**
 
@@ -574,10 +610,15 @@ So that I can see what is available to read.
 **Then** typography, spacing, card aspect ratios, horizontal rows and their loading states preserve the in-scope reference appearance,
 **And** tablet layout uses its documented rules rather than uniform phone scaling; emulated evidence is not labeled real-device proof.
 
+**Given** the controlled-test Library shell,
+**When** its bottom navigation and back behavior are exercised,
+**Then** the three reference navigation items preserve their layout and selected/unselected states,
+**And** Library owns its initial stack/scroll context; Sleep and Profile destinations remain explicitly incomplete until their consuming stories, without adding production-auth bypasses.
+
 
 ### Story 1.2: Open the selected story detail from Library
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to open the story I selected from Library and inspect its details,
@@ -585,7 +626,7 @@ So that I can decide whether to start reading it.
 
 **Requirements:** FR-6, FR-8–11, FR-25 (metadata/access boundary); NFR-5–7; UX-DR2–4, UX-DR10, UX-DR12, UX-DR22–25.
 
-**Prerequisites:** Story 1.1; agreed content/experience/language identity and detail response/error contracts, with representative real-backend fixtures. This story does not require the later reader implementation; its accepted outcome is the detail surface. Production auth/migration and real paywall integration remain in Epics 3 and 6.
+**Prerequisites:** Story 1.1; agreed content/experience/language identity and detail response/error contracts, with representative real-backend fixtures. This story does not require the later reader implementation; its accepted outcome is the detail surface. Production auth/migration and real paywall integration remain in Epics 3 and 6. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register). Verify detail-related-content fixtures for valid and absent recommendations.
 
 **Acceptance Criteria:**
 
@@ -618,9 +659,19 @@ So that I can decide whether to start reading it.
 **Then** duplicate detail routes are not stacked for the same repeated action,
 **And** a stale response cannot replace the currently selected story with a different one.
 
+**Given** eligible related content on story detail,
+**When** a recommendation is selected and the reader returns,
+**Then** the correct content and reading experience detail opens under the same language/access rules,
+**And** the originating detail/navigation context is preserved.
+
+**Given** no eligible related content is available,
+**When** story detail renders its recommendation area,
+**Then** no broken card or invalid target is shown; completion-screen recommendations remain Story 1.5 scope.
+
+
 ### Story 1.3: Start reading the selected story
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to open the first page of my selected story with my narration preference,
@@ -628,7 +679,7 @@ So that I can begin reading without waiting for the entire story to download.
 
 **Requirements:** FR-11–12, FR-13 (initial narration preference), FR-15, FR-25; NFR-2–3, NFR-5–8; UX-DR12–13, UX-DR22–25; AD-3, AD-7–10.
 
-**Prerequisites:** Story 1.2; agreed protected-start and immutable manifest contracts, actual first-page image/audio outputs with readiness/integrity evidence, and authorized development/test access. Resolve the relevant OQ-1/8 contracts before implementation. Introduce the application-scoped media coordinator for this first consuming capability; no dependency on the later listening epic. Numerical performance budgets remain subject to OQ-2 and are not invented here.
+**Prerequisites:** Story 1.2; agreed protected-start and immutable manifest contracts, actual first-page image/audio outputs with readiness/integrity evidence, and authorized development/test access. Resolve the relevant OQ-1/8 contracts before implementation. Introduce the application-scoped media coordinator for this first consuming capability; no dependency on the later listening epic. Numerical performance budgets remain subject to OQ-2 and are not invented here. Verify the applicable EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -664,7 +715,7 @@ So that I can begin reading without waiting for the entire story to download.
 
 ### Story 1.4: Navigate story pages manually and automatically
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to change pages myself or advance automatically when narration ends,
@@ -712,7 +763,7 @@ So that I can follow the story at my preferred pace without mismatched pages or 
 
 ### Story 1.5: Complete a story and preserve its completion record
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to see the completion screen when I finish a story and retain my reading record,
@@ -720,7 +771,7 @@ So that my completed reading is recognized reliably.
 
 **Requirements:** FR-13, FR-16; FR-6 (related content); NFR-4–7; UX-DR14, UX-DR21–25; AD-3, AD-7, AD-9.
 
-**Prerequisites:** Stories 1.2–1.4; characterized reference completion trigger for narrated and silent/manual reading, stable completion-screen evidence, evaluation/related-content contracts, and a durable idempotent completion/duration contract for the controlled test user. OQ-1 must settle the trigger before implementation. User approval of this story does not select a trigger: merely opening the last page is not assumed to complete reading. Production-account migration is Epic 3 scope; backend flow analytics is separate Epic 7 scope.
+**Prerequisites:** Stories 1.2–1.4; characterized reference completion trigger for narrated and silent/manual reading, stable completion-screen evidence, evaluation/related-content contracts, and a durable idempotent completion/duration contract for the controlled test user. OQ-1 must settle the trigger before implementation. User approval of this story does not select a trigger: merely opening the last page is not assumed to complete reading. Production-account migration is Epic 3 scope; backend flow analytics is separate Epic 7 scope. Verify the applicable EXT-HISTORY closure records in the [external dependency register](#external-dependency-register). Resolve durable local pending-record persistence/recovery, stable account/session/event identities, acknowledgement and storage-failure handling before implementation; do not select a storage engine here. Business progress/history records remain distinct from evictable media and bounded flow telemetry. Characterize reading-duration rules for narrated/silent/manual reading, page-preparation waits and background/lock intervals with OQ-1 reference evidence and the backend history contract.
 
 **Acceptance Criteria:**
 
@@ -754,9 +805,25 @@ So that my completed reading is recognized reliably.
 **Then** the in-scope reference layout and controls are preserved,
 **And** incomplete reference evidence is resolved before visual acceptance is claimed.
 
+**Given** progress, duration or completion delivery is unacknowledged when the process terminates,
+**When** the application relaunches and delivery can resume,
+**Then** durably pending records are recovered with their original account, session and stable event identities and retried until the contracted acknowledgement,
+**And** no record is lost or counted twice because of process restart; an acknowledgement lost after server success is reconciled idempotently without attributing the record to the next account.
+
+**Given** local pending-record persistence fails,
+**When** recording continues or recovery is offered,
+**Then** the resolved contract's failure behavior is shown without claiming durable or server-confirmed success,
+**And** recording failure does not block content use or silently turn business records into evictable media cache.
+
+**Given** timed narrated and silent/manual reading fixtures with page preparation waits and pauses,
+**When** duration is calculated and persisted,
+**Then** recorded totals match the characterized duration rules for each interval,
+**And** excluded intervals and manual page jumps cannot inflate the total; elapsed wall-clock time is not assumed to equal eligible reading time.
+
+
 ### Story 1.6: Control narration and music while reading
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to change narration and music settings while reading,
@@ -796,7 +863,7 @@ So that I can use the story audio controls as in the reference application.
 
 ### Story 1.7: Preserve reading sessions through interruptions
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to return from a brief interruption without losing my reading session,
@@ -804,7 +871,7 @@ So that I can continue with consistent page, audio and progress state.
 
 **Requirements:** FR-13–16 (reader lifecycle scope); NFR-1, NFR-4, NFR-6, NFR-8; UX-DR13, UX-DR25; AD-3, AD-8–9.
 
-**Prerequisites:** Stories 1.3–1.6; agreed durable progress/duration contract and characterized background/lock behavior. Continue using the application-scoped coordinator and controlled test user. Production account switching and migration remain in Epic 3. Dedicated listening experiences are Epic 2 scope.
+**Prerequisites:** Stories 1.3–1.6; agreed durable progress/duration contract and characterized background/lock behavior. Continue using the application-scoped coordinator and controlled test user. Production account switching and migration remain in Epic 3. Dedicated listening experiences are Epic 2 scope. Verify the Story 1.5 duration rules for background, screen-lock and interruption intervals before lifecycle acceptance.
 
 **Acceptance Criteria:**
 
@@ -836,9 +903,15 @@ So that I can continue with consistent page, audio and progress state.
 **Then** each of the preceding outcomes is verified with platform-specific evidence,
 **And** emulator-only results are not presented as physical-device acceptance.
 
+**Given** measured foreground, background, screen-lock and interruption intervals,
+**When** the session returns or its duration delivery is retried,
+**Then** totals match the characterized reading-duration rules,
+**And** intervals are neither lost nor counted twice; preservation of the session does not imply counting all background time.
+
+
 ### Story 1.8: Browse all content in a category
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to browse all eligible content in a Library category and open a selected story,
@@ -846,7 +919,7 @@ So that I can discover content beyond the home-screen previews.
 
 **Requirements:** FR-6, FR-9–10; NFR-5–7; UX-DR4, UX-DR10–11, UX-DR22–25.
 
-**Prerequisites:** Stories 1.1–1.2; agreed OQ-4 category/pagination/order/error contract and representative real-backend fixtures. Expected items are evaluated against the selected language and access audience. No new backend schema or endpoint is selected by this story.
+**Prerequisites:** Stories 1.1–1.2; agreed OQ-4 category/pagination/order/error contract and representative real-backend fixtures. Expected items are evaluated against the selected language and access audience. No new backend schema or endpoint is selected by this story. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -880,7 +953,7 @@ So that I can discover content beyond the home-screen previews.
 
 ### Story 1.9: Search content in grouped results
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to find content in clearly identified reading and listening result groups,
@@ -888,7 +961,7 @@ So that I can choose the content and experience I am looking for.
 
 **Requirements:** FR-7–10; NFR-5–7; UX-DR4, UX-DR11, UX-DR24–25.
 
-**Prerequisites:** Stories 1.1–1.2; resolve OQ-4 matching, grouping/count, ranking, threshold/debounce, pagination and error contracts with real request/response evidence. User screenshots establish reading-story, audio-story, meditation and lullaby result coverage. Content name, description and contributor-name matching are user-recalled behavior requiring field-isolated validation; approval does not certify current backend support. Contributor matches return content, not person records.
+**Prerequisites:** Stories 1.1–1.2; resolve OQ-4 matching, grouping/count, ranking, threshold/debounce, pagination and error contracts with real request/response evidence. User screenshots establish reading-story, audio-story, meditation and lullaby result coverage. Content name, description and contributor-name matching are user-recalled behavior requiring field-isolated validation; approval does not certify current backend support. Contributor matches return content, not person records. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -927,9 +1000,20 @@ So that I can choose the content and experience I am looking for.
 **Then** their identity and experience are retained accurately,
 **And** their functional detail/player destinations remain explicitly assigned to Epic 2 and are not claimed as complete by this story. Cross-experience search acceptance requires that later integration; unavailable destinations must not be shipped as completed user flows.
 
+**Given** the verified search contract paginates one or more result groups,
+**When** the user loads subsequent search results,
+**Then** all eligible matches are reachable without omissions or duplicates under that contract,
+**And** group counts and end-of-results behavior remain consistent with the verified semantics.
+
+**Given** a subsequent search-results page fails after earlier results loaded,
+**When** the error is shown and retried,
+**Then** existing results and query context remain available and retry obtains the failed page without skipping or duplicating matches,
+**And** an older query/language/account page cannot be appended to the current results. A non-paginated verified contract does not acquire pagination by inference.
+
+
 ### Story 1.10: Discover and read content in enabled languages
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to use supported languages and see content consistently in my selected language,
@@ -971,7 +1055,7 @@ So that I can discover and read appropriate content without mixed-language resul
 
 ### Story 1.11: Renew media access without changing the active story revision
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want expired media access to be renewed for my current story session,
@@ -979,7 +1063,7 @@ So that I can continue reading without mixing content versions or losing my posi
 
 **Requirements:** FR-12, FR-25; NFR-4–5, NFR-9; UX-DR13; AD-3, AD-7–10.
 
-**Prerequisites:** Stories 1.3–1.4; agreed OQ-8 revision-addressed renewal, access-denial, withdrawal and retention contracts. URL lifetime and withdrawal/revocation policy remain open until that contract is settled; this story does not invent a TTL or guarantee continuation after revocation.
+**Prerequisites:** Stories 1.3–1.4; agreed OQ-8 revision-addressed renewal, access-denial, withdrawal and retention contracts. URL lifetime and withdrawal/revocation policy remain open until that contract is settled; this story does not invent a TTL or guarantee continuation after revocation. Verify the applicable EXT-MEDIA/EXT-RETENTION closure records in the [external dependency register](#external-dependency-register). Resolve interrupted-download continuation and safe-restart/integrity behavior in OQ-8 before implementing the shared NFR-9 transfer foundation; retaining playback position alone does not satisfy this requirement.
 
 **Acceptance Criteria:**
 
@@ -1009,9 +1093,20 @@ So that I can continue reading without mixing content versions or losing my posi
 **When** the old request completes,
 **Then** its result cannot modify the new media session.
 
+**Given** a partially received media asset and a connection or process interruption,
+**When** its transfer is recovered under the resolved OQ-8 continuation contract,
+**Then** the verified partial data is used only for the same immutable asset/revision and applicable account/access scope,
+**And** evidence demonstrates continuation of the remaining transfer, not merely restoration of the playback position.
+
+**Given** a renewed URL, rejected continuation, unsupported continuation response or changed/mismatched asset identity,
+**When** transfer recovery is evaluated,
+**Then** the contracted continuation or safe-restart outcome is followed without combining incompatible bytes,
+**And** the complete asset passes integrity checks before being exposed as a ready cache entry; partial playback follows only the separately contracted streaming-readiness rules. This adds no user-controlled offline-download UI.
+
+
 ### Story 1.12: Read reliably through long and repeated sessions
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want long reading sessions and repeated story visits to remain stable,
@@ -1056,8 +1151,8 @@ Twelve stories have been individually approved for planning; no implementation o
 
 | Requirement | Story coverage and remaining integration |
 | --- | --- |
-| FR-6 | 1.1/1.2 home previews and destinations, 1.8 complete categories, 1.5 related content. OQ-4 fixtures must explicitly include editor-selected home content and valid/absent related content; retain detail-related surfaces under 1.2 source requirements. |
-| FR-7 | 1.9 grouped search; listening destinations complete in Epic 2. Matching fields remain user-reported pending evidence. |
+| FR-6 | 1.1/1.2 home previews, destinations and verified valid/absent detail recommendations; 1.8 complete categories; 1.5 completion recommendations. OQ-4 fixtures must include editor-selected home content and valid/absent recommendations. |
+| FR-7 | 1.9 grouped search plus contract-dependent result pagination/error/retry; listening destinations complete in Epic 2. Matching fields remain user-reported pending evidence. |
 | FR-8 | 1.2/1.3 reading-experience identity; cross-experience identity and listening independence require Epic 2. |
 | FR-9 | 1.1/1.10 language consumption and latest TR/EN/PT decision; durable preference/migration in Epic 3, authorized test/live verification in Epic 5. |
 | FR-10 | 1.1/1.2/1.8/1.9 listing and access separation; full paywall and subscriber-audience integration in Epic 6. |
@@ -1070,7 +1165,7 @@ Twelve stories have been individually approved for planning; no implementation o
 
 Before implementation, close the relevant OQ-1 control/completion evidence, OQ-4 catalog/search contracts, OQ-8 media/access/cache contracts and controlled test-access mechanism. OQ-2 numeric budgets and durations must be established before quantitative reliability acceptance. AD-5 remains an Epic 3 auth/migration development gate rather than blocking Epic 1.
 
-The remaining story-design workflow is not complete: Epic 2 onward, final global FR/UX coverage verification and final validation remain pending. Source PRD language-availability wording is superseded by the explicit decision recorded here; source synchronization remains a documentation follow-up, not permission to apply the old language rule.
+Source PRD language-availability wording is superseded by the explicit decision recorded here; source synchronization remains a documentation follow-up, not permission to apply the old language rule.
 
 ## Epic 2: Listen to lullabies, meditations and audio stories
 
@@ -1078,11 +1173,11 @@ A controlled, authorized development/test user can discover listening experience
 
 **Scope:** FR-6–10, FR-11, FR-14–16, FR-25; NFR-1–9 as applicable; UX-DR1–4, UX-DR15–16, UX-DR18, UX-DR21–25. Reuse Epic 1 transport, content identity, diagnostics, language configuration and the single application-scoped media coordinator. Do not introduce independent competing players. Stories 2.1–2.10 are approved for planning. The user approved proceeding to Epic 3 after the Epic 2 planning review; open contract/evidence gates remain unchanged.
 
-**Planning constraints:** AD-5 still gates Epic 3 auth/migration development, not controlled-user listening. Real backend admission remains mandatory. Lullaby selection starts its player directly; meditation/audio-story selection opens detail and requires an explicit start action. Looping is specific to lullabies. Language visibility follows the latest TR/EN/PT and test-to-live decision. Full purchase/paywall acceptance remains Epic 6 scope. Search-to-listening destinations deferred from Story 1.9 must be completed in this epic. Resolve relevant OQ-1/4/8 contracts before consuming stories and OQ-2 budgets before quantitative acceptance.
+**Planning constraints:** AD-5 still gates Epic 3 auth/migration development, not controlled-user listening. Real backend admission remains mandatory. Lullaby selection starts its player directly; meditation/audio-story selection opens detail and requires an explicit start action. Looping is specific to lullabies. Language visibility follows the latest TR/EN/PT and test-to-live decision. Full purchase/paywall acceptance remains Epic 6 scope. Search-to-listening destinations deferred from Story 1.9 must be completed in this epic. Resolve relevant OQ-1/4/8 contracts before implementing the affected stories and OQ-2 budgets before quantitative acceptance.
 
 ### Story 2.1: Discover listening content on the Sleep screen
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to see lullabies, meditations and audio stories in their respective sections,
@@ -1090,7 +1185,7 @@ So that I can discover content to listen to.
 
 **Requirements:** FR-6, FR-8–10; NFR-5–7; UX-DR1–4, UX-DR15, UX-DR18, UX-DR22–25.
 
-**Prerequisites:** Epic 1 shared catalog transport, language/access context and controlled test access; agreed Sleep catalog ordering, eligibility and error contracts under OQ-4/8. Actual listening start and detail destinations belong to subsequent stories; this story accepts listing only.
+**Prerequisites:** Epic 1 shared catalog transport, language/access context and controlled test access; agreed Sleep catalog ordering, eligibility and error contracts under OQ-4/8. Actual listening start and detail destinations belong to subsequent stories; this story accepts listing only. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register). Story 1.1 owns the initial shell; extend that same shell with Sleep navigation and retained independent stacks rather than replacing Library navigation.
 
 **Acceptance Criteria:**
 
@@ -1120,9 +1215,15 @@ So that I can discover content to listen to.
 **When** Sleep lists audio stories,
 **Then** the unavailable reading experience does not prevent that audio-story experience from appearing.
 
+**Given** Library and Sleep have independent navigation/scroll contexts,
+**When** the user switches between those tabs and uses system back,
+**Then** each ready tab retains its own context and back behavior matches the verified reference,
+**And** changing tabs does not create duplicate shells or media sessions; full Profile integration remains assigned to Story 3.12.
+
+
 ### Story 2.2: Start listening directly from a lullaby card
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to tap a lullaby card and enter its player directly,
@@ -1130,7 +1231,7 @@ So that I can begin listening without an intermediate detail screen.
 
 **Requirements:** FR-11, FR-14 (basic player controls), FR-15, FR-25; NFR-1, NFR-5–7; UX-DR16, UX-DR22–25; AD-3, AD-7–10.
 
-**Prerequisites:** Story 2.1 and Epic 1 shared media coordinator/transport; agreed protected lullaby-start contract and actual audio/player artwork, including animation. Characterize reference player exit behavior under OQ-1 before implementation. Looping, seeking and background/system controls are detailed in subsequent stories. Actual purchase/paywall integration remains Epic 6 scope.
+**Prerequisites:** Story 2.1 and Epic 1 shared media coordinator/transport; agreed protected lullaby-start contract and actual audio/player artwork, including animation. Characterize reference player exit behavior under OQ-1 before implementation. Looping, seeking and background/system controls are detailed in subsequent stories. Actual purchase/paywall integration remains Epic 6 scope. Verify the applicable EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -1164,7 +1265,7 @@ So that I can begin listening without an intermediate detail screen.
 
 ### Story 2.3: Start meditation or audio-story playback from detail
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to inspect meditation or audio-story information and explicitly start listening,
@@ -1172,7 +1273,7 @@ So that I can choose content before audio begins.
 
 **Requirements:** FR-8, FR-11, FR-14–15, FR-25; NFR-1, NFR-5–7; UX-DR12, UX-DR16, UX-DR22–25; AD-3, AD-7–10.
 
-**Prerequisites:** Stories 2.1–2.2 and the existing shared media coordinator; agreed detail, bounded preparation and protected-start contracts with real media outputs. Preparation must respect server authorization; metadata visibility is not permission to fetch protected full media. Production purchase/paywall integration remains Epic 6 scope.
+**Prerequisites:** Stories 2.1–2.2 and the existing shared media coordinator; agreed detail, bounded preparation and protected-start contracts with real media outputs. Preparation must respect server authorization; metadata visibility is not permission to fetch protected full media. Production purchase/paywall integration remains Epic 6 scope. Verify the applicable EXT-CATALOG/EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -1208,9 +1309,15 @@ So that I can choose content before audio begins.
 **When** detail and player appearance are compared,
 **Then** both preserve the in-scope reference layout and visual behavior.
 
+**Given** a listed meditation or audio-story experience is withdrawn or no longer available before detail or start resolves,
+**When** the backend reports that outcome,
+**Then** the UI distinguishes unavailability from a transient network failure and offers a valid return to discovery,
+**And** playback is not started and an unavailable experience is not trapped in a success-looking or endless retry flow.
+
+
 ### Story 2.4: Control listening and handle track endings
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to pause, resume and seek within audio,
@@ -1252,7 +1359,7 @@ So that I can control listening with the expected behavior when a track ends.
 
 ### Story 2.5: Listen in the background and use system media controls
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want playback to continue while the screen is locked or I use another application,
@@ -1296,7 +1403,7 @@ So that I can keep listening and control the same session from the operating sys
 
 ### Story 2.6: Switch safely between reading and listening sessions
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader or listener,
 I want only my selected content to play when I start a different experience,
@@ -1335,7 +1442,7 @@ So that changing stories or listening content does not produce competing playbac
 
 ### Story 2.7: Reach listening experiences from search and complete lists
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want content found in search or a complete category list to open the correct listening flow,
@@ -1377,7 +1484,7 @@ So that I can reach the intended experience from every supported discovery entry
 
 ### Story 2.8: Record listening progress and history accurately
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want my listening progress, duration and completion information to be preserved accurately,
@@ -1385,7 +1492,7 @@ So that my listening history reflects what I actually listened to.
 
 **Requirements:** FR-16; NFR-4–5; AD-3, AD-7–9.
 
-**Prerequisites:** Stories 2.2–2.6; durable backend progress/history contract for the controlled test user, including stable event identity and server deduplication. Characterize meditation/audio-story completion and lullaby-loop history semantics against reference behavior and the backend contract before implementation. User-visible profile history/statistics and production identity/migration integration remain Epic 3 scope. These records are not deferred backend flow analytics from Epic 7.
+**Prerequisites:** Stories 2.2–2.6; durable backend progress/history contract for the controlled test user, including stable event identity and server deduplication. Characterize meditation/audio-story completion and lullaby-loop history semantics against reference behavior and the backend contract before implementation. User-visible profile history/statistics and production identity/migration integration remain Epic 3 scope. These records are not deferred backend flow analytics from Epic 7. Verify the applicable EXT-HISTORY closure records in the [external dependency register](#external-dependency-register). Resolve durable local pending-record persistence/recovery, stable account/session/event identities, acknowledgement and storage-failure handling before implementation; do not select a storage engine here. Business progress/history records remain distinct from evictable media and bounded flow telemetry.
 
 **Acceptance Criteria:**
 
@@ -1416,9 +1523,20 @@ So that my listening history reflects what I actually listened to.
 **Then** the result follows verified reference and backend contract semantics,
 **And** a loop is not assumed to create a new completion without that evidence.
 
+**Given** progress, duration or completion delivery is unacknowledged when the process terminates,
+**When** the application relaunches and delivery can resume,
+**Then** durably pending records are recovered with their original account, session and stable event identities and retried until the contracted acknowledgement,
+**And** no record is lost or counted twice because of process restart; an acknowledgement lost after server success is reconciled idempotently without attributing the record to the next account.
+
+**Given** local pending-record persistence fails,
+**When** recording continues or recovery is offered,
+**Then** the resolved contract's failure behavior is shown without claiming durable or server-confirmed success,
+**And** recording failure does not block content use or silently turn business records into evictable media cache.
+
+
 ### Story 2.9: Recover listening from connectivity and media-access failures
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to recover from temporary connection failures without losing my listening position,
@@ -1426,7 +1544,7 @@ So that I can continue the same content safely.
 
 **Requirements:** FR-14–16, FR-25; NFR-1, NFR-4–6, NFR-9; AD-3, AD-7–10.
 
-**Prerequisites:** Stories 1.11 and 2.2–2.8; agreed OQ-8 renewal, retry/resume, access-denial and immutable-revision contracts. Reuse the existing protected-media renewal infrastructure. URL lifetime and withdrawal/revocation policy remain contract decisions; this story does not promise playback after authorization is revoked.
+**Prerequisites:** Stories 1.11 and 2.2–2.8; agreed OQ-8 renewal, retry/resume, access-denial and immutable-revision contracts. Reuse the existing protected-media renewal infrastructure. URL lifetime and withdrawal/revocation policy remain contract decisions; this story does not promise playback after authorization is revoked. Apply Story 1.11 interrupted-transfer semantics to listening assets and verify EXT-MEDIA/EXT-RETENTION closure; position recovery alone is insufficient for NFR-9.
 
 **Acceptance Criteria:**
 
@@ -1458,9 +1576,15 @@ So that I can continue the same content safely.
 **Then** no duplicate playback occurs,
 **And** listening duration is not recorded twice for the same logical activity.
 
+**Given** an interrupted listening-media transfer, including process termination or URL renewal,
+**When** recovery runs under the shared OQ-8 contract,
+**Then** transfer continuation is verified for the same immutable asset/revision separately from playback-position recovery,
+**And** rejected/unsupported continuation or incompatible partial data follows the safe-restart and integrity behavior established in Story 1.11 without unauthorized cache reuse.
+
+
 ### Story 2.10: Listen reliably through long sessions
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want long listening sessions and repeated content changes to remain stable,
@@ -1518,7 +1642,6 @@ Ten stories have been individually approved for planning. No implementation, exe
 
 Before implementation, resolve relevant OQ-1 reference exit/control/failed-takeover and loop-history behavior, OQ-4 discovery/search contracts, and OQ-8 admission/preparation/cache/renewal contracts. OQ-2 durations and quantitative budgets must close before reliability acceptance. AD-5 continues to gate auth/migration feature development in Epic 3; it does not block planning Epic 3 or invalidate the approved controlled-user media-first order.
 
-Current totals: 12 Epic 1 stories and 10 Epic 2 stories approved for planning. Epic 3–7 story design and global final FR/UX coverage validation remain pending.
 
 ## Epic 3: Keep my account and data when upgrading
 
@@ -1530,7 +1653,7 @@ New users can enter through registered or anonymous identity flows, while existi
 
 ### Story 3.1: Prove a safe signed Android in-place update
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing Android user,
 I want the replacement to install as an update without losing my session or local records,
@@ -1571,7 +1694,7 @@ So that I can continue using my account and retained data.
 
 ### Story 3.2: Prove a safe signed iOS in-place update
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing iOS user,
 I want the replacement to update my installed application while retaining its session and local records,
@@ -1613,7 +1736,7 @@ So that adopting the replacement does not require starting again.
 
 ### Story 3.3: Start anonymously as a new user
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to continue without registration on first install,
@@ -1621,7 +1744,7 @@ So that I can begin using the application anonymously.
 
 **Requirements:** FR-1–3, FR-10 (equal eligibility); NFR-4–7; UX-DR5–6, UX-DR22–25; AD-4–7.
 
-**Prerequisites:** AD-5 passed with both platform upgrade evidence tasks; agreed verified-UID/backend account resolution, idempotency and session-state contracts before consuming implementation. This story covers a genuinely new installation without retained legacy records. Detection must not misclassify an existing legacy installation as new or discard its inputs. Legacy anonymous migration and anonymous-to-registered conversion remain separate stories.
+**Prerequisites:** AD-5 passed with both platform upgrade evidence tasks; agreed verified-UID/backend account resolution, idempotency and session-state contracts before implementing the affected stories. This story covers a genuinely new installation without retained legacy records. Detection must not misclassify an existing legacy installation as new or discard its inputs. Legacy anonymous migration and anonymous-to-registered conversion remain separate stories. Verify the applicable EXT-ACCOUNT closure records in the [external dependency register](#external-dependency-register). This story owns the initial three-page onboarding and account-choice entry. Verify per-page Skip/final Start, interrupted-onboarding/relaunch and presentation behavior against SCREENS 01–04; alternate membership onboarding is delivered in Story 3.16.
 
 **Acceptance Criteria:**
 
@@ -1652,9 +1775,20 @@ So that I can begin using the application anonymously.
 **Then** the same content rules apply,
 **And** anonymous identity alone does not grant premium access.
 
+**Given** a genuinely new installation eligible for introduction,
+**When** onboarding is displayed and traversed,
+**Then** the three reference pages, artwork, indicators and localized title/body presentation appear in the verified order,
+**And** each page's Skip and final Start produce the verified reference result and account-choice sheet without implicitly authenticating the user.
+
+**Given** onboarding is interrupted or the application is reopened before or after account choice,
+**When** authoritative startup eligibility is resolved,
+**Then** continuation/repetition follows the verified reference and persisted state,
+**And** existing valid sessions or retained legacy records are not routed as a fresh installation or reset. Initial introduction and alternate membership onboarding remain distinct surfaces.
+
+
 ### Story 3.4: Create a new account with email and password
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to create an account using my email and password,
@@ -1700,7 +1834,7 @@ So that I can establish a registered identity in the application.
 
 ### Story 3.5: Sign in with email and password
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a registered user,
 I want to sign into my existing account,
@@ -1708,7 +1842,7 @@ So that I can access my own application data safely.
 
 **Requirements:** FR-1–3, FR-5 (account isolation), FR-26–27 (admission gate only); NFR-4–7; UX-DR7, UX-DR22–25; AD-4, AD-6–8.
 
-**Prerequisites:** AD-5 passed; Stories 3.3–3.4 identity resolution and verified Firebase/backend session contracts. Implement persisted account/migration status admission here; do not implement or assume completed migration for legacy accounts. Migration-pending users must remain gated. The sign-in success path is independently verifiable with an existing ready backend account; data import is subsequent scope.
+**Prerequisites:** AD-5 passed; Stories 3.3–3.4 identity resolution and verified Firebase/backend session contracts. Implement persisted account/migration status admission here; do not implement or assume completed migration for legacy accounts. Migration-pending users must remain gated. The sign-in success path is independently verifiable with an existing ready backend account; data import is subsequent scope. Integrate production session admission with the shell introduced in Stories 1.1/2.1, including invalidation of every retained tab stack on account-context change.
 
 **Acceptance Criteria:**
 
@@ -1744,9 +1878,15 @@ So that I can access my own application data safely.
 **Then** that session is retained and resolved,
 **And** the user is not unnecessarily sent back to sign-in.
 
+**Given** retained tab routes and state from a previous account,
+**When** sign-out or an account switch changes authoritative session admission,
+**Then** every old account-bound tab stack and pending destination is invalidated before the next account is ready,
+**And** tab selection or system back cannot restore an old user's private screen.
+
+
 ### Story 3.6: Sign in or register with Google
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign in or create an account using Google,
@@ -1790,7 +1930,7 @@ So that I can access the application through that identity provider.
 
 ### Story 3.7: Sign in or register with Apple
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign in or create an account using Apple,
@@ -1834,7 +1974,7 @@ So that I can access the application through that identity provider.
 
 ### Story 3.8: Verify an email address
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an email-account user,
 I want to use my verification link and see my verified status in the application,
@@ -1876,7 +2016,7 @@ So that the application accurately reflects my email verification.
 
 ### Story 3.9: Reset a forgotten password
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an email-account user,
 I want to set a new password after forgetting my old one,
@@ -1921,11 +2061,11 @@ So that I can regain access to the same account.
 
 ### Story 3.10: Set up a new user profile
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to enter profile information step by step or skip optional steps,
-So that I can start using the application without mandatory optional profile data.
+So that I can start using the application without providing optional profile data.
 
 **Requirements:** FR-1, FR-4; NFR-4–7; UX-DR9, UX-DR22–25; AD-4, AD-6–8.
 
@@ -1967,7 +2107,7 @@ So that I can start using the application without mandatory optional profile dat
 
 ### Story 3.11: Edit the profile name and avatar
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to change my profile name and avatar,
@@ -2009,7 +2149,7 @@ So that my profile reflects my current choices.
 
 ### Story 3.12: View my reading and listening history and profile statistics
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to view my completed stories, reading/listening history and accumulated time,
@@ -2017,7 +2157,7 @@ So that I can see my own usage accurately.
 
 **Requirements:** FR-16, FR-4–5; NFR-4–7; UX-DR17, UX-DR22–25; AD-6–8.
 
-**Prerequisites:** AD-5 passed; Stories 3.5 and 3.10–3.11; verified backend history/statistics contracts and existing populated account fixtures. Completion and duration producers from Epics 1–2 are inputs. Historical records from migration are verified in later migration stories. Resolve OQ-3 before defining how removed-content history appears; this story must not infer deletion or a playable destination for removed experiences.
+**Prerequisites:** AD-5 passed; Stories 3.5 and 3.10–3.11; verified backend history/statistics contracts and existing populated account fixtures. Completion and duration producers from Epics 1–2 are inputs. Historical records from migration are verified in later migration stories. Resolve OQ-3 before defining how removed-content history appears; this story must not infer deletion or a playable destination for removed experiences. Own completion of the Library/Sleep/Profile shell integration using the existing router/session/media ownership and verified tab/back reference behavior.
 
 **Acceptance Criteria:**
 
@@ -2047,9 +2187,15 @@ So that I can see my own usage accurately.
 **Then** imported entries are verified with the migration stories and removed-content presentation follows the resolved OQ-3 decision,
 **And** the absence of a currently playable feature does not authorize deleting historical records.
 
+**Given** the ready account's Library, Sleep and Profile tabs,
+**When** the user navigates within each tab, switches tabs and uses system back,
+**Then** each tab retains its own valid stack and scroll context under the verified reference behavior,
+**And** account changes invalidate old tab contexts under Story 3.5 rather than restoring previous-user data.
+
+
 ### Story 3.13: Persist my language preference on my account
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want my chosen language to be retained for my account,
@@ -2090,7 +2236,7 @@ So that I see the same language after relaunch or sign-in on another device.
 
 ### Story 3.14: Migrate a registered account once on its first transition
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing registered user,
 I want my account data preserved when I first adopt the replacement,
@@ -2098,7 +2244,7 @@ So that my profile, preferences, history and progress remain usable.
 
 **Requirements:** FR-26–27, FR-29; FR-4, FR-9, FR-16 (retained data); NFR-4–6; AD-4–6, AD-11.
 
-**Prerequisites:** AD-5 passed; earlier Epic 3 verified identity and session admission; resolved OQ-3 source/target identity and field mapping, exceptions and removed-content history treatment, plus OQ-6 deletion/tombstone/remigration prevention constraints. This is approved product-level planning, not finalized executable migration acceptance: refine field-level fixtures after those decisions close. Backend owns idempotency and persisted terminal status. Device-only inputs are separate subsequent scope; do not make them disappear through account migration.
+**Prerequisites:** AD-5 passed; earlier Epic 3 verified identity and session admission; resolved OQ-3 source/target identity and field mapping, exceptions and removed-content history treatment, plus OQ-6 deletion/tombstone/remigration prevention constraints. This is approved product-level planning, not finalized executable migration acceptance: refine field-level fixtures after those decisions close. Backend owns idempotency and persisted terminal status. Device-only inputs are separate subsequent scope; do not make them disappear through account migration. Verify the applicable EXT-MIGRATION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2136,7 +2282,7 @@ So that my profile, preferences, history and progress remain usable.
 
 ### Story 3.15: Preserve legacy anonymous device records during upgrade
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing anonymous user,
 I want my locally retained profile, preferences and history to survive the replacement update,
@@ -2144,7 +2290,7 @@ So that I can continue anonymously without losing my data.
 
 **Requirements:** FR-3, FR-27–29; FR-4, FR-9, FR-16 (preservation); NFR-4–6; AD-4–8.
 
-**Prerequisites:** AD-5 passed; verified new anonymous identity/session contracts from Story 3.3; resolved OQ-3 device record inventory, field/identity mapping, stable import operation identity and invalid/unmapped record disposition, with applicable OQ-6 remigration/deletion constraints. Migration acceptance remains conditional on those decisions and field-level evidence. Legacy anonymous flags are not proof of a pre-existing Firebase anonymous UID. This import is distinct from account-wide migration.
+**Prerequisites:** AD-5 passed; verified new anonymous identity/session contracts from Story 3.3; resolved OQ-3 device record inventory, field/identity mapping, stable import operation identity and invalid/unmapped record disposition, with applicable OQ-6 remigration/deletion constraints. Migration acceptance remains conditional on those decisions and field-level evidence. Legacy anonymous flags are not proof of a pre-existing Firebase anonymous UID. This import is distinct from account-wide migration. Verify the applicable EXT-MIGRATION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2181,7 +2327,7 @@ So that I can continue anonymously without losing my data.
 
 ### Story 3.16: Convert an anonymous account into a new registered account
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an anonymous user,
 I want to register without losing my existing application data,
@@ -2189,7 +2335,7 @@ So that my profile and usage history remain available after registration.
 
 **Requirements:** FR-3, FR-4, FR-9, FR-16; NFR-4–6; AD-4, AD-6–8.
 
-**Prerequisites:** AD-5 passed; Stories 3.3–3.7 identity/provider boundaries and verified backend conversion contract. Resolve credential-linking, stable operation identity, partial-success recovery and durable conversion confirmation before implementation. Do not infer a required UID change or persistence engine. Legacy input handling follows Story 3.15 where applicable; conversion must not discard unacknowledged inputs.
+**Prerequisites:** AD-5 passed; Stories 3.3–3.7 identity/provider boundaries and verified backend conversion contract. Resolve credential-linking, stable operation identity, partial-success recovery and durable conversion confirmation before implementation. Do not infer a required UID change or persistence engine. Legacy input handling follows Story 3.15 where applicable; conversion must not discard unacknowledged inputs. Own the alternate membership onboarding for anonymous-to-registered entry (SCREENS 03); verify its entry points, registration/login/Google/email hierarchy and applicable Apple presentation before acceptance. This is distinct from Story 3.3 initial introduction and the Epic 6 premium offering.
 
 **Acceptance Criteria:**
 
@@ -2221,9 +2367,15 @@ So that my profile and usage history remain available after registration.
 **Then** success is not prematurely displayed,
 **And** required source data is not removed early.
 
+**Given** an anonymous user opens a reference membership entry point,
+**When** alternate membership onboarding is displayed and its actions are used,
+**Then** its reference illustration/benefits and registration, existing-account login and provider actions remain distinct from the initial three-page introduction,
+**And** new-account actions use conversion while existing-account actions use the no-automatic-merge sign-in path; cancelling retains the anonymous account and its data.
+
+
 ### Story 3.17: Upgrade a later device on an already migrated account
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with multiple devices,
 I want a later-upgraded device to use my existing new-system account,
@@ -2267,7 +2419,7 @@ So that migration is not repeated and current data remains intact.
 
 ### Story 3.18: Sign out safely
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign out and allow another account to use the device safely,
@@ -2308,7 +2460,7 @@ So that my private data and playback are not exposed to the next user.
 
 ### Story 3.19: Change my password from account settings
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to set a new password using my current password,
@@ -2350,7 +2502,7 @@ So that I can update my account credentials safely.
 
 ### Story 3.20: Delete my new-system account
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to understand the consequences of deleting my account and complete the action safely,
@@ -2358,7 +2510,7 @@ So that my new-system account and its user data are removed within the agreed sc
 
 **Requirements:** FR-5; FR-26–28 (remigration prevention); NFR-4–7; UX-DR19, UX-DR24–25; AD-4, AD-6–8.
 
-**Prerequisites:** AD-5 passed; earlier account/session and migration boundaries. OQ-6 must be resolved before implementation: shared Firebase identity treatment, old-system isolation, deletion/remigration prevention, subscription consequences and safe retry semantics. Refine executable deletion/migration acceptance cases from that contract. This story does not assume deleting the shared Firebase identity is compatible with the product decision.
+**Prerequisites:** AD-5 passed; earlier account/session and migration boundaries. OQ-6 must be resolved before implementation: shared Firebase identity treatment, old-system isolation, deletion/remigration prevention, subscription consequences and safe retry semantics. Refine executable deletion/migration acceptance cases from that contract. This story does not assume deleting the shared Firebase identity is compatible with the product decision. Verify the applicable EXT-MIGRATION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2395,7 +2547,7 @@ So that my new-system account and its user data are removed within the agreed sc
 
 ### Story 3.21: Safely remove obsolete legacy media and caches
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an upgrading user,
 I want obsolete legacy downloads removed safely,
@@ -2438,7 +2590,7 @@ Twenty-one stories have been individually approved for planning; this is not evi
 
 | Requirement | Story coverage and remaining integration |
 | --- | --- |
-| FR-1 | 3.3 onboarding/new anonymous start, 3.5 session restoration/admission, 3.10 setup routing and 3.14–3.17 migration gates. Reference onboarding presentation remains governed by UX-DR5–6. |
+| FR-1 | 3.3 initial onboarding/new anonymous start; 3.16 distinct membership onboarding/conversion; 3.5 session restoration/admission and retained-stack isolation; 3.12 full tab-shell integration; 3.10 setup routing; 3.14–3.17 migration gates. UX-DR5–6 reference checks remain mandatory. |
 | FR-2 | 3.4–3.9 email/Google/Apple entry, verification and password recovery. |
 | FR-3 | 3.3 new anonymous identity, 3.5 existing-account sign-in without merge, 3.15 legacy anonymous import and 3.16 new-account conversion. |
 | FR-4 | 3.10–3.11 setup/editing; 3.14–3.17 retention across migration/conversion including both legacy profile generations under resolved field contracts. |
@@ -2452,7 +2604,7 @@ Twenty-one stories have been individually approved for planning; this is not evi
 
 Migration stories currently state approved product outcomes. Resolve OQ-3 source/target fields and IDs, malformed/unmapped records, later-device local conflicts and removed-content history presentation before finalizing executable migration acceptance. Resolve OQ-6 shared-Firebase deletion, remigration prevention and subscription consequences before deletion implementation and migration acceptance. The content inventory must include all PRD-preserved data, including meaningful historical feedback/promotion records and their identity relationships; this review does not reduce it to visible profile fields.
 
-Real store purchase/restore and entitlement verification remain Epic 6. Support/notification/deep-link surfaces remain Epic 4; candidate/live test authorization remains Epic 5. All 43 stories across Epics 1–3 are planning approvals only. Final FR/UX coverage review and cross-epic integration validation remain pending after Epics 4–7 are detailed.
+Real store purchase/restore and entitlement verification remain Epic 6 scope. Support/notification/deep-link surfaces belong to Epic 4; candidate/live test authorization belongs to Epic 5. Their drafted stories do not imply completed integration.
 
 ## Epic 4: Manage support and communication
 
@@ -2460,11 +2612,11 @@ Users can send feedback, access localized legal/help documents, manage notificat
 
 **Scope:** FR-18 and FR-5 notification preference; NFR-1, NFR-4–8 as applicable; UX-DR17, UX-DR20, UX-DR24–25; AD-1, AD-6–9. Stories 4.1–4.6 are approved for planning. The user approved proceeding to Epic 5 after the Epic 4 planning review; contract and runtime evidence gates remain open.
 
-**Planning constraints:** Use the authoritative session/account/migration gates from Epic 3 and content destinations from Epics 1–2. Resolve OQ-9 reference/provider/permission behavior and relevant backend contracts before consuming implementation. Preserve user-visible behavior without assuming every old SDK or remote configuration key must be copied. Document and notification links must not bypass admission or protected-content authorization. Actual premium purchase/restore remains Epic 6 scope. Do not infer feedback daily limits from the visible character counter; verify each independently.
+**Planning constraints:** Use the authoritative session/account/migration gates from Epic 3 and content destinations from Epics 1–2. Resolve OQ-9 reference/provider/permission behavior and relevant backend contracts before implementing the affected stories. Preserve user-visible behavior without assuming every old SDK or remote configuration key must be copied. Document and notification links must not bypass admission or protected-content authorization. Actual premium purchase/restore remains Epic 6 scope. Do not infer feedback daily limits from the visible character counter; verify each independently.
 
 ### Story 4.1: Send feedback
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to send feedback about the application and see its outcome,
@@ -2472,7 +2624,7 @@ So that I know whether my message was submitted successfully.
 
 **Requirements:** FR-18; NFR-4–7; UX-DR20, UX-DR24–25; AD-6–7, AD-9.
 
-**Prerequisites:** Epic 3 authoritative account/session context; verified feedback validation, daily-limit and idempotent submission contracts. Preserve the observed 0/200 counter; verify daily limits independently rather than deriving them from that counter. Reference form appearance comes from SCREENS 32.
+**Prerequisites:** Epic 3 authoritative account/session context; verified feedback validation, daily-limit and idempotent submission contracts. Preserve the observed 0/200 counter; verify daily limits independently rather than deriving them from that counter. Reference form appearance comes from SCREENS 32. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2509,7 +2661,7 @@ So that I know whether my message was submitted successfully.
 
 ### Story 4.2: View help and legal documents
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want help and legal links to open the correct document,
@@ -2517,7 +2669,7 @@ So that I can read the information relevant to my application use.
 
 **Requirements:** FR-18; FR-2 (registration document entry); NFR-6–7; UX-DR20, UX-DR24–25.
 
-**Prerequisites:** Reference document-entry inventory, localized document sources and agreed missing-translation fallback contract. Preserve existing registration/profile entry points. Localized document fallback is a separate contract from content playback fallback and must not be inferred from it.
+**Prerequisites:** Reference document-entry inventory, localized document sources and agreed missing-translation fallback contract. Preserve existing registration/profile entry points. Localized document fallback is a separate contract from content playback fallback and must not be inferred from it. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2552,7 +2704,7 @@ So that I can read the information relevant to my application use.
 
 ### Story 4.3: Manage notification permission and preference
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to choose whether to receive notifications and see the actual current status,
@@ -2560,7 +2712,7 @@ So that notification behavior reflects my choice and device permissions.
 
 **Requirements:** FR-5, FR-18; NFR-4–7; UX-DR17, UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Epic 3 account context; OQ-9 reference permission timing, platform/provider configuration, device registration ownership and preference persistence contracts. Application preference and OS permission are distinct states; do not infer that changing one can override the other.
+**Prerequisites:** Epic 3 account context; OQ-9 reference permission timing, platform/provider configuration, device registration ownership and preference persistence contracts. Application preference and OS permission are distinct states; do not infer that changing one can override the other. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2597,7 +2749,7 @@ So that notification behavior reflects my choice and device permissions.
 
 ### Story 4.4: Show applicable in-app announcements
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to see announcements relevant to me and reach their intended content,
@@ -2605,7 +2757,7 @@ So that I can act on current application information.
 
 **Requirements:** FR-18; NFR-1, NFR-5–7; UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Earlier content/account navigation and admission gates; OQ-9 verified announcement presentation, targeting, timing, dismissal/repetition and target contracts. App-internal announcement targets must use the authoritative route graph already established; external notification/link intake is the following story. Existing configuration keys and SDKs are not mandatory implementation choices.
+**Prerequisites:** Earlier content/account navigation and admission gates; OQ-9 verified announcement presentation, targeting, timing, dismissal/repetition and target contracts. App-internal announcement targets must use the authoritative route graph already established; external notification/link intake is the following story. Existing configuration keys and SDKs are not mandatory implementation choices. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2640,7 +2792,7 @@ So that I can act on current application information.
 
 ### Story 4.5: Reach the correct destination from notifications and external links
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want notifications and supported links to take me to their intended application destination,
@@ -2648,7 +2800,7 @@ So that I can reach the relevant experience safely.
 
 **Requirements:** FR-18; FR-1, FR-8, FR-11, FR-25 (routing/access integration); NFR-1, NFR-5–7; UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Epics 1–3 content destinations and authoritative session/migration gates; Story 4.3 notification registration; resolved OQ-9 platform link formats, notification targets and reference start behavior. Use the existing route graph and media coordinator. Retain the logical destination through admission rather than treating a link as authorization.
+**Prerequisites:** Epics 1–3 content destinations and authoritative session/migration gates; Story 4.3 notification registration; resolved OQ-9 platform link formats, notification targets and reference start behavior. Use the existing route graph and media coordinator. Retain the logical destination through admission rather than treating a link as authorization. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2684,7 +2836,7 @@ So that I can reach the relevant experience safely.
 
 ### Story 4.6: Rate the application and view its installed version
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to rate the application and see which version I am using,
@@ -2692,7 +2844,7 @@ So that I can provide store feedback and identify my installed release.
 
 **Requirements:** FR-18; NFR-6–7; UX-DR20, UX-DR24–25; AD-9.
 
-**Prerequisites:** Verified reference rating entry points, eligibility/frequency configuration, platform review/store behavior and correct application listing identity. Runtime version information must come from the installed build. OQ-9 provider/configuration verification applies; a review request is not proof of a submitted review.
+**Prerequisites:** Verified reference rating entry points, eligibility/frequency configuration, platform review/store behavior and correct application listing identity. Runtime version information must come from the installed build. OQ-9 provider/configuration verification applies; a review request is not proof of a submitted review. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2727,9 +2879,8 @@ Six stories have been individually approved for planning. FR-18 is covered by fe
 
 Operational configuration is traced across epics: language test/live visibility in 1.10/3.13 and Epic 5, category/free eligibility in Epics 1–2 with backend/CMS contracts, announcement rules in 4.4, rating rules in 4.6, and paywall trigger configuration in Epic 6. Preserve reference-visible controls while allowing replacement provider/configuration implementations. Their actual contracts remain prerequisites rather than presumed current backend capabilities.
 
-OQ-9 must resolve permission timing, SDK/data scope, provider configuration and link/announcement behavior before consuming implementation. Verify feedback daily limits, document fallback, announcement repetition and rating eligibility explicitly. Platform-specific runtime evidence, notification delivery and external-link admission must be checked end to end; planning approval is not runtime acceptance. Epics 5–7 and final global coverage/readiness validation remain pending.
+OQ-9 must resolve permission timing, SDK/data scope, provider configuration and link/announcement behavior before implementing the affected stories. Verify feedback daily limits, document fallback, announcement repetition and rating eligibility explicitly. Platform-specific runtime evidence, notification delivery and external-link admission must be checked end to end; planning approval is not runtime acceptance.
 
-Current totals: 12 + 10 + 21 + 6 = 49 individually approved stories across Epics 1–4.
 
 ## Epic 5: Test content safely before publication
 
@@ -2737,11 +2888,11 @@ Authorized testers can consume candidate content on devices and identify the exa
 
 **Scope:** FR-22–25; FR-9 new-language test/live visibility; NFR-4–7, NFR-9; AD-7–10. Stories 5.1–5.5 are approved for planning. The user approved proceeding to Epic 6 after the Epic 5 planning review; OQ-8 readiness gates remain open.
 
-**Planning constraints:** Use the production-shaped account/session and reader/listening boundaries from Epics 1–3. Resolve OQ-8 candidate/live authorization matrix, immutable manifest, readiness, approval invalidation, renewal/withdrawal and retention contracts before consuming implementation. Tester permission is independent of subscription. Do not duplicate the existing CMS/backend epic plan or introduce a mobile publish/approval UI without an explicit requirement; the mobile contribution is consumption, clear revision identification and device evidence. Ordinary-user candidate isolation must already be enforced in Epics 1–2; this epic adds authorized candidate use and full integration verification. Test-only language visibility follows the user's updated remote configuration decision.
+**Planning constraints:** Use the production-shaped account/session and reader/listening boundaries from Epics 1–3. Resolve OQ-8 candidate/live authorization matrix, immutable manifest, readiness, approval invalidation, renewal/withdrawal and retention contracts before implementing the affected stories. Tester permission is independent of subscription. Do not duplicate the existing CMS/backend epic plan or introduce a mobile publish/approval UI without an explicit requirement; the mobile contribution is consumption, clear revision identification and device evidence. Ordinary-user candidate isolation must already be enforced in Epics 1–2; this epic adds authorized candidate use and full integration verification. Test-only language visibility follows the user's updated remote configuration decision.
 
 ### Story 5.1: Open an authorized candidate revision on device
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an authorized tester,
 I want to open candidate content and identify the revision under test,
@@ -2749,7 +2900,7 @@ So that I can verify the intended version on a device.
 
 **Requirements:** FR-23–25; NFR-5–7; AD-7–10.
 
-**Prerequisites:** Epics 1–3 production-shaped media/session foundations; resolved OQ-8 tester/candidate access matrix, candidate entry route, revision identity, readiness and renewal contracts. Do not introduce a mobile publication or approval UI by inference. Existing CMS/backend ownership remains intact.
+**Prerequisites:** Epics 1–3 production-shaped media/session foundations; resolved OQ-8 tester/candidate access matrix, candidate entry route, revision identity, readiness and renewal contracts. Do not introduce a mobile publication or approval UI by inference. Existing CMS/backend ownership remains intact. Verify the applicable EXT-PUBLICATION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2785,7 +2936,7 @@ So that I can verify the intended version on a device.
 
 ### Story 5.2: Preserve live content while a candidate is prepared
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to keep using published content while its next revision is prepared,
@@ -2826,7 +2977,7 @@ So that an unfinished or failed candidate does not interrupt my experience.
 
 ### Story 5.3: Verify ready candidate media and invalidate stale approval
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a tester,
 I want complete candidate media and revision-specific test evidence,
@@ -2834,7 +2985,7 @@ So that approval cannot silently apply to different or incomplete media.
 
 **Requirements:** FR-22–24; NFR-4–6, NFR-9; AD-8, AD-10.
 
-**Prerequisites:** Stories 5.1–5.2; resolved OQ-8 actual rendition/manifest readiness, integrity, candidate replacement and approval invalidation contracts. Backend/CMS owns processing, publishing and approval mutations; mobile provides revision-addressed device evidence. No new mobile approval/publishing UI is assumed.
+**Prerequisites:** Stories 5.1–5.2; resolved OQ-8 actual rendition/manifest readiness, integrity, candidate replacement and approval invalidation contracts. Backend/CMS owns processing, publishing and approval mutations; mobile provides revision-addressed device evidence. No new mobile approval/publishing UI is assumed. Verify the applicable EXT-PUBLICATION/EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2869,7 +3020,7 @@ So that approval cannot silently apply to different or incomplete media.
 
 ### Story 5.4: Enable a new language for testing before live use
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a content team member,
 I want a new language verified by authorized test users before making it generally available,
@@ -2912,7 +3063,7 @@ So that language rollout can proceed without exposing unfinished experiences.
 
 ### Story 5.5: Protect required media revisions from cleanup
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader or listener,
 I want cleanup to preserve the media needed by my active experience,
@@ -2920,7 +3071,7 @@ So that maintenance does not break reading or listening.
 
 **Requirements:** FR-22, FR-25; NFR-1, NFR-5–6, NFR-9; AD-3, AD-8, AD-10.
 
-**Prerequisites:** Stories 5.1–5.3 and existing revision-addressed playback/renewal; resolved OQ-8 server retention, rollback protection, active-session lifetime, withdrawal/revocation and device-cache policies. Backend owns retention cleanup; mobile integration verifies actual file access and playback. No duration or revocation behavior is invented by this planning approval.
+**Prerequisites:** Stories 5.1–5.3 and existing revision-addressed playback/renewal; resolved OQ-8 server retention, rollback protection, active-session lifetime, withdrawal/revocation and device-cache policies. Backend owns retention cleanup; mobile integration verifies actual file access and playback. No duration or revocation behavior is invented by this planning approval. Verify the applicable EXT-RETENTION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2965,7 +3116,6 @@ Five stories have been individually approved for planning. Backend/CMS publicati
 
 OQ-8 remains an implementation/readiness prerequisite: candidate entry path and permission matrix, actual manifest/rendition integrity, material versus metadata-only changes, approval invalidation, URL renewal/lifetime, withdrawal/revocation behavior, cache and retention intervals. The existing backend/CMS epics do not by themselves prove these contracts are implemented. Final end-to-end evidence must include ordinary, tester and subscribed users with the applicable independent permission combinations.
 
-Current totals: 12 + 10 + 21 + 6 + 5 = 54 individually approved stories across Epics 1–5. Epics 6–7 and final global coverage/readiness validation remain pending.
 
 ## Epic 6: Purchase and recover premium access
 
@@ -2977,7 +3127,7 @@ Existing subscribers retain verified access; users can purchase, restore and use
 
 ### Story 6.1: Recognize an existing subscriber's access
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing subscriber,
 I want my subscription recognized by the replacement,
@@ -2985,7 +3135,7 @@ So that I can continue accessing eligible content after the update.
 
 **Requirements:** FR-10, FR-19, FR-25; NFR-4–6; UX-DR21, UX-DR25; AD-4, AD-7–10.
 
-**Prerequisites:** Epic 3 identity/account isolation; verified RevenueCat/store-to-application identity and entitlement contracts, backend access authority, refresh/error behavior and representative Android/iOS store fixtures. Resolve applicable OQ-7/8 before implementation. Existing subscription evidence must not be inferred from a local premium flag or simulator Billing failure.
+**Prerequisites:** Epic 3 identity/account isolation; verified RevenueCat/store-to-application identity and entitlement contracts, backend access authority, refresh/error behavior and representative Android/iOS store fixtures. Resolve applicable OQ-7/8 before implementation. Existing subscription evidence must not be inferred from a local premium flag or simulator Billing failure. Verify the applicable EXT-PURCHASE closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -3025,7 +3175,7 @@ So that I can continue accessing eligible content after the update.
 
 ### Story 6.2: Open and dismiss premium offers with the required parental gate
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user considering premium access,
 I want to view the appropriate subscription offers through the reference access controls,
@@ -3090,7 +3240,7 @@ So that I can decide whether to continue with a purchase.
 
 ### Story 6.3: Purchase a subscription and receive verified premium access
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user choosing a subscription,
 I want my purchase completed and verified for the correct account,
@@ -3146,7 +3296,7 @@ So that I can access eligible premium content without paying again after an inte
 
 ### Story 6.4: Restore existing purchases
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with an existing purchase,
 I want to restore my eligible subscription,
@@ -3203,7 +3353,7 @@ So that I can recover verified premium access without purchasing again.
 
 ### Story 6.5: Redeem supported promotion codes and offers
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with an eligible promotion,
 I want to redeem it through the supported reference flow,
@@ -3254,7 +3404,7 @@ So that I can receive its verified offer or access benefit on the correct accoun
 
 ### Story 6.6: View membership status and manage a subscription
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a subscriber,
 I want to view my verified membership status and open the appropriate store management screen,
@@ -3305,7 +3455,7 @@ So that I can manage renewal and understand my remaining access.
 
 ### Story 6.7: Preserve subscription rights through account transitions
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an anonymous subscriber becoming a registered user,
 I want my verified subscription rights preserved through the account transition,
@@ -3365,8 +3515,6 @@ OQ-7 remains a prerequisite for real RevenueCat/store product and offering ident
 
 FR-21 backend flow-event integration and release-wide purchase/restore/account-transition regression evidence remain in Epic 7. Required financial-flow events must be verified before release alongside all other contracted event categories; no successful plan review substitutes for those checks.
 
-Current totals: 12 + 10 + 21 + 6 + 5 + 7 = 61 individually approved stories across Epics 1–6. Epic 7 and final global FR/NFR/UX coverage/readiness validation remain pending. The user approved proceeding to Epic 7.
-
 
 ## Epic 7: Receive a verified and recoverable replacement release
 
@@ -3379,7 +3527,7 @@ Users receive a replacement whose critical journeys, data continuity, platform b
 
 ### Story 7.1: Diagnose discovery journeys through backend flow records
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user browsing and searching the catalog,
 I want discovery failures to be traceable without blocking my use of the application,
@@ -3387,7 +3535,7 @@ So that problems can be investigated while I continue using available content.
 
 **Requirements:** FR-21; NFR-4–5, NFR-8; AD-7, AD-9.
 
-**Prerequisites:** Epic 1 discovery journeys and Epic 3 account boundaries; verified backend event ingestion and deduplication. Resolve OQ-7 event fields, identity, retention, bounded pending-record storage and retry/delivery rules, plus applicable OQ-9 privacy scope, before implementation. Shared delivery behavior is introduced for these consuming journeys and extended by later event stories; this story does not implement those later producers.
+**Prerequisites:** Epic 1 discovery journeys and Epic 3 account boundaries; verified backend event ingestion and deduplication. Resolve OQ-7 event fields, identity, retention, bounded pending-record storage and retry/delivery rules, plus applicable OQ-9 privacy scope, before implementation. Shared delivery behavior is introduced for these consuming journeys and extended by later event stories; this story does not implement those later producers. Verify the applicable EXT-EVENTS closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -3425,7 +3573,7 @@ So that problems can be investigated while I continue using available content.
 
 ### Story 7.2: Diagnose reading and listening journeys through backend flow records
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user reading or listening to content,
 I want playback and completion failures to be traceable without disrupting my session,
@@ -3474,7 +3622,7 @@ So that problems can be investigated without changing my recorded history or usa
 
 ### Story 7.3: Diagnose authentication and migration journeys through backend flow records
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user signing in, registering or carrying my data into the replacement,
 I want failures in these journeys to be traceable,
@@ -3524,7 +3672,7 @@ So that interrupted transitions can be investigated without exposing my credenti
 
 ### Story 7.4: Diagnose paywall, purchase and restore journeys through backend flow records
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user purchasing or restoring premium access,
 I want transaction-flow problems to be traceable with accurate outcomes,
@@ -3573,7 +3721,7 @@ So that delayed or failed confirmation can be investigated without charging me a
 
 ### Story 7.5: Verify reference screen and interaction parity on the release candidate
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user upgrading from the legacy application,
 I want the retained screens and interactions to remain familiar and usable,
@@ -3581,7 +3729,7 @@ So that I can continue my existing journeys without unintended visual or behavio
 
 **Requirements:** NFR-6–7; UX-DR1–25 for retained scope; reference-parity verification across active FRs; approved language and iOS parental-gate decisions.
 
-**Prerequisites:** Epics 1–6 and a representative release candidate; reference evidence for the retained scope, matched device dimensions, language, content and account conditions. Use feature-level evidence already collected; this story consolidates candidate acceptance rather than deferring visual checks until release. Missing real-device/tablet and actual premium-offer evidence remains a gap until supplied.
+**Prerequisites:** Epics 1–6 and a representative release candidate; reference evidence for the retained scope, matched device dimensions, language, content and account conditions. Use feature-level evidence already collected; this story consolidates candidate acceptance rather than deferring visual checks until release. Missing real-device/tablet and actual premium-offer evidence remains a gap until supplied. Use the feature-level UX-DR24 matrix and recorded normal/enlarged text scales, device cases and contrast criteria from Shared readiness and acceptance checks; repeat verification on the candidate.
 
 **Acceptance Criteria:**
 
@@ -3620,10 +3768,20 @@ So that I can continue my existing journeys without unintended visual or behavio
 **Then** it includes the reference image, candidate image and outstanding differences,
 **And** a screen without reference evidence is not marked verified.
 
+**Given** localized candidate screens at the agreed normal and enlarged text scales,
+**When** the accessibility matrix runs on supported phone/tablet layouts,
+**Then** titles, consent text, controls and all-items actions remain readable/reachable with safe areas respected,
+**And** tappable icons expose the correct role, name and selected state through platform accessibility tools.
+
+**Given** interactive controls over representative actual media,
+**When** touch targets and contrast are measured,
+**Then** at least 48dp touch targets and the agreed contrast criteria are met,
+**And** evidence identifies the screen/state/device/language/content and failed checks block affected-screen acceptance. Reference screenshots alone do not prove accessibility.
+
 
 ### Story 7.6: Verify stability and performance on real devices
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user reading and listening on a supported device,
 I want the replacement to remain stable and responsive during sustained use,
@@ -3671,7 +3829,7 @@ So that I can complete my sessions without crashes, freezes or memory-related te
 
 ### Story 7.7: Verify session and data continuity through a signed release-candidate upgrade
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing user updating the legacy application,
 I want my session, preserved data and subscription to remain usable,
@@ -3720,7 +3878,7 @@ So that I can adopt the replacement without reinstalling or recreating my accoun
 
 ### Story 7.8: Verify account and content access boundaries on the release candidate
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user of the replacement,
 I want my account data and content permissions isolated correctly,
@@ -3771,7 +3929,7 @@ So that other users cannot access my data or content outside their authorized sc
 
 ### Story 7.9: Verify store-package permissions, privacy and production configuration
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user installing the store release,
 I want its permissions, privacy information and enabled capabilities to match its actual behavior,
@@ -3820,7 +3978,7 @@ So that I can make informed choices and use the intended production experience.
 
 ### Story 7.10: Expand or stop staged rollout based on verified evidence
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user receiving the replacement update,
 I want rollout to expand only when its critical outcomes are verified,
@@ -3870,7 +4028,7 @@ So that unresolved failures are contained before more users are exposed.
 
 ### Story 7.11: Recover safely after a release problem
 
-**Delivery status:** Scope approved; implementation readiness pending prerequisite verification; acceptance evidence not established by this planning session. Outstanding conditions are listed under **Prerequisites**.
+**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user who has installed the replacement,
 I want release problems contained and corrected without losing my data or access rights,
@@ -3928,8 +4086,49 @@ Eleven stories have been individually approved for planning. This epic consolida
 | NFR-1–3, NFR-6, NFR-8 | 7.6 device stability, memory, latency and crash-free evidence; 7.7 real-device upgrade evidence; 7.10 evidence-based expansion. |
 | NFR-4–5 | 7.1–7.4 event integrity/privacy; 7.7 data continuity; 7.8 access, deletion and privacy boundaries; 7.9 SDK/permission declarations; 7.11 preservation during recovery. |
 | NFR-7 and retained UX-DRs | 7.5 candidate parity consolidation, with specific feature-level coverage in earlier epics. |
-| NFR-9 | Earlier media/cache stories own the future-offline foundation; final global validation must verify those explicit mappings. This epic does not add offline download UI or promise full offline readiness. |
+| NFR-9 | 1.11 owns interrupted-transfer continuation, safe restart and immutable-asset integrity; 2.9 applies the same contract to listening; 1.12/2.10 verify bounded cache/resource behavior. Final validation checks these outcomes separately from playback-position recovery. No offline download UI or full offline-readiness promise is added. |
 
 Open prerequisites remain explicit: OQ-2 measurement matrix, budgets and sufficient sample/window; OQ-3/6 migration/deletion contracts; OQ-7 event and purchase contracts; OQ-8 media/access/revocation rules; OQ-9 SDK, permission and store declarations; OQ-10 staged rollout and rehearsed recovery. Earlier OQ-1/4 reference and discovery gaps also require closure for affected stories. Actual acceptance evidence has not been produced by this planning exercise.
 
-Current totals: 12 + 10 + 21 + 6 + 5 + 7 + 11 = 72 individually approved stories across seven epics. Story drafting is complete. Final workflow validation of global FR/NFR/UX coverage, story sizing/dependencies, document consistency and unresolved readiness gates remains pending. Source-document reconciliation for the approved language and iOS parental-gate decisions must be included in that review.
+Current drafting and validation status is recorded in [Overview](#overview). All prerequisite and acceptance-evidence gates remain open until independently verified.
+
+
+## Planning history
+
+These snapshots record earlier approval checkpoints in their original wording. They describe the state at those checkpoints, not current work remaining. The dates of individual checkpoints are not reconstructed here; the current drafting/validation state is authoritative in Overview and frontmatter. Unique scope/evidence safeguards in these records remain subject to the current decisions above.
+
+**Initial inventory and epic-order approval:**
+
+> The user approved the requirements inventory and the revised seven-epic order: discovery/reading and listening precede auth/migration. Step 3 is in progress. Story boundaries and acceptance criteria require collaborative review; no application code is changed.
+
+**Earlier epic-planning snapshot:**
+
+> The user approved starting with Library listing verification, followed by card-to-content opening. Stories 1.1–1.12 are approved for planning. The user approved proceeding to Epic 2 after the Epic 1 planning review; open evidence/contract gates remain unchanged. Implementation remains outside this session. Remaining epics will be detailed sequentially.
+
+**Earlier epic-planning snapshot:**
+
+> The remaining story-design workflow is not complete: Epic 2 onward, final global FR/UX coverage verification and final validation remain pending. Source PRD language-availability wording is superseded by the explicit decision recorded here; source synchronization remains a documentation follow-up, not permission to apply the old language rule.
+
+**Earlier epic-planning snapshot:**
+
+> Current totals: 12 Epic 1 stories and 10 Epic 2 stories approved for planning. Epic 3–7 story design and global final FR/UX coverage validation remain pending.
+
+**Earlier epic-planning snapshot:**
+
+> Real store purchase/restore and entitlement verification remain Epic 6. Support/notification/deep-link surfaces remain Epic 4; candidate/live test authorization remains Epic 5. All 43 stories across Epics 1–3 are planning approvals only. Final FR/UX coverage review and cross-epic integration validation remain pending after Epics 4–7 are detailed.
+
+**Earlier epic-planning snapshot:**
+
+> Current totals: 12 + 10 + 21 + 6 = 49 individually approved stories across Epics 1–4.
+
+**Earlier epic-planning snapshot:**
+
+> Current totals: 12 + 10 + 21 + 6 + 5 = 54 individually approved stories across Epics 1–5. Epics 6–7 and final global coverage/readiness validation remain pending.
+
+**Earlier epic-planning snapshot:**
+
+> Current totals: 12 + 10 + 21 + 6 + 5 + 7 = 61 individually approved stories across Epics 1–6. Epic 7 and final global FR/NFR/UX coverage/readiness validation remain pending. The user approved proceeding to Epic 7.
+
+**Epic 4 planning snapshot:**
+
+> Epics 5–7 and final global coverage/readiness validation remain pending.
