@@ -1,7 +1,9 @@
 ---
 stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories]
 currentStep: step-04-final-validation
-status: story-drafting-complete-final-validation-pending
+status: final-validation-performed-remediation-required
+validationDate: 2026-09-29
+validationReport: "_bmad-output/planning-artifacts/epics-mobile-final-validation.md"
 inputDocuments:
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-meditation-lullabies.jpg"
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-reading-listening.jpg"
@@ -28,9 +30,9 @@ inputDocuments:
 
 ## Overview
 
-Story drafting is complete: 72 individually approved stories across seven epics (12 + 10 + 21 + 6 + 5 + 7 + 11). Final workflow validation of global FR/NFR/UX coverage, story sizing/dependencies, document consistency and unresolved readiness gates remains pending. Scope approval does not establish implementation readiness or acceptance evidence. No application code is changed.
+Story drafting is complete: 72 individually approved stories across seven epics (12 + 10 + 21 + 6 + 5 + 7 + 11). Final workflow validation was performed on 2026-09-29: all active requirements have story references, but acceptance precision, source reconciliation and unresolved readiness gates prevent an unconditional pass. See the [final validation report](./epics-mobile-final-validation.md). Step 4 remains open for remediation and revalidation. Scope approval does not establish implementation readiness or acceptance evidence. No application code is changed.
 
-The user approved applying all review recommendations on 2026-09-28. The updates clarify acceptance checks and delivery ownership; they do not close OQ gates or certify implementation. The current status is recorded here and in frontmatter; earlier progress snapshots are retained in [Planning history](#planning-history). Source-document reconciliation for the approved language and iOS parental-gate decisions remains part of final validation.
+The user approved applying all review recommendations on 2026-09-28. The updates clarify acceptance checks and delivery ownership; they do not close OQ gates or certify implementation. The current status is recorded here and in frontmatter; earlier progress snapshots are retained in [Planning history](#planning-history). Source-document reconciliation for the approved language and iOS parental-gate decisions remains an open validation finding.
 
 New planning prose is English under repository policy. Canonical FR/NFR excerpts below retain their original Turkish wording to preserve requirements without translation drift. There are 28 active FRs, one withdrawn FR identifier, 9 NFRs and 25 extracted UX requirements.
 
@@ -3520,7 +3522,7 @@ FR-21 backend flow-event integration and release-wide purchase/restore/account-t
 
 Users receive a replacement whose critical journeys, data continuity, platform behavior and recovery controls have been verified before staged exposure. Operators can investigate contracted flow failures without interrupting content consumption or exposing unnecessary personal data.
 
-**Scope:** FR-21, FR-29; release verification of all active FRs and NFR-1–9; UX-DR1–25; AD-5, AD-9–11. Stories 7.1–7.11 are approved for planning. Epic 7 coverage review is recorded below; final workflow validation is pending.
+**Scope:** FR-21, FR-29; release verification of all active FRs and NFR-1–9; UX-DR1–25; AD-5, AD-9–11. Stories 7.1–7.11 are approved for planning. Epic 7 coverage review is recorded below; final workflow validation has been performed and requires remediation as recorded in Overview and the linked report.
 
 **Planning constraints:** Build on Epics 1–6 and actual external backend/provider readiness. Flow-event integration is required before release; crash and performance diagnostics remain earlier feature responsibilities. Split event integration into bounded journey groups, beginning with catalog/search/detail events and their shared delivery behavior. Resolve applicable OQ-7 event schema, identity, retention, queue limits and retry/deduplication contracts and OQ-9 data/SDK scope before implementation. Complete OQ-2 measurement budgets and sufficient device/platform evidence, and OQ-10 rollout/containment/recovery decisions before release. AD-5 remains an earlier auth/migration development gate and must not be postponed to this epic. The existing anonymous iOS Simulator probe is partial evidence, not signed real-device or registered-session proof. No rollout or legacy shutdown is authorized by this planning review.
 
