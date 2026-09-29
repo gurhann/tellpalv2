@@ -4,9 +4,9 @@
 
 ### Mobile technology choice
 
-Flutter is not a fixed requirement for the rewrite. Flutter and native iOS/Android development may be compared during architecture work against the product requirements, migration risk, delivery time, crash reduction, media/playback reliability, maintainability, testing, and operational cost.
+Flutter was selected for the replacement after the initial PRD exploration. ADR-0018 and the mobile architecture spine govern its feature-first Clean Architecture, BLoC/Cubit, auto_route, and get_it + injectable implementation. The earlier Flutter-versus-native comparison is decision history, not an open framework choice.
 
-The PRD must define externally observable capabilities and parity expectations without prematurely selecting the implementation technology.
+The PRD continues to define externally observable capabilities and parity expectations. The selected framework does not relax data preservation, signed-update compatibility, platform minimums or reliability gates.
 
 ### Image memory and stability investigation
 

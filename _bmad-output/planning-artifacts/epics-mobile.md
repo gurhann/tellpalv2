@@ -1484,6 +1484,11 @@ So that I can reach the intended experience from every supported discovery entry
 **Then** the same rules apply,
 **And** locked media cannot be started without authorization through an alternative route.
 
+**Given** a STORY with eligible reading and audio-story experiences in two published languages, and a CMS free selection for only one of those languages,
+**When** equivalent anonymous and registered non-subscribers discover and start either experience,
+**Then** the CMS free selection applies to both experiences in the selected language,
+**And** the other language retains its own free/locked decision; listing and start outcomes are verified against the authoritative backend rule without granting access to unpublished media. Record the real-backend fixture and repeat the relevant subscriber/lock regression in Epic 6.
+
 ### Story 2.8: Record listening progress and history accurately
 
 **Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
@@ -3185,7 +3190,7 @@ So that I can decide whether to continue with a purchase.
 
 **Requirements:** FR-10, FR-19; FR-13 completion entry integration; UX-DR21, UX-DR25; user clarification on 2026-09-28: preserve the legacy iOS parental gate. This gate remains in scope independently of the excluded parent-mode content feature.
 
-**Planning status:** Offer-screen and parental-gate criteria approved for planning. Exact legacy gate triggers, challenge and validity/reset behavior remain verification prerequisites. This records a legacy behavior requirement, not a verified statement of current Apple review policy.
+**Planning status:** Offer-screen and parental-gate criteria approved for planning. The user selected reference-app verification on 2026-09-29 rather than assigning unobserved entry points by assumption. The 1.0.35+333 legacy source calls `showChildProtectionDialog` in `SetUserTypeInformationService.showPaywall` on non-debug iOS, before `RevenueCatUI.presentPaywallIfNeeded`. The promotion-code path calls `RevenueCatUI.presentPaywallIfNeeded` directly; profile store-listing and story-completion review calls also do not invoke that shared gate in the inspected paths. These are source-code observations, not proof of release-build behavior or a decision to remove a gate from any entry. Verify the actual entry-point matrix, challenge and validity/reset behavior on a representative iOS build before assigning affected Epic 4/6 acceptance. This records a legacy behavior requirement, not a verified statement of current Apple review policy.
 
 **Prerequisites:** Story 6.1; verified OQ-7 offerings, store products, reference premium entry points and actual offer-screen evidence. Verify the legacy iOS gate UI, challenge, trigger points and validity/reset rules before implementation. Its coverage of purchase, restore, subscription management and external links must be mapped across Epics 4 and 6; do not infer these details from the excluded parent-mode feature or from simulator Billing errors.
 

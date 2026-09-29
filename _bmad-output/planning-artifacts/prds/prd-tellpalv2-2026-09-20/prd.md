@@ -2,7 +2,7 @@
 title: TellPal Mobile v1 Yeniden Yazım
 status: draft
 created: 2026-09-20
-updated: 2026-09-22
+updated: 2026-09-29
 ---
 
 # PRD: TellPal Mobile v1 Yeniden Yazım
@@ -21,7 +21,7 @@ Eski uygulamayla uyumluluk temel alınırken `be/docs/mobile-delivery-discovery.
 
 Kullanıcının zamanla ilgili açıklaması, PRD veya mühendislik çalışmasının aceleye getirilmesini gerektiren bir teslim tarihi değildir. İlk aşamada ürünün işleyişini yeniden tasarlamaya zaman ayrılmayacaktır; gerekli analiz, mimari değerlendirme ve güvenilirlik doğrulaması replacement hedefini desteklemek için yapılabilir.
 
-Başarı, eski uygulamada yapılabilen işlemleri gerçekleştiren ve canlı sürümün yerini alabilecek bir sürümün yayınlanmasıdır. Yeni backende uyum ve crash problemlerinin azaltılması temel kalite hedefleridir. Flutter zorunlu değildir; teknoloji seçimi bu hedeflere göre mimari aşamada değerlendirilecektir.
+Başarı, eski uygulamada yapılabilen işlemleri gerçekleştiren ve canlı sürümün yerini alabilecek bir sürümün yayınlanmasıdır. Yeni backende uyum ve crash problemlerinin azaltılması temel kalite hedefleridir. Mimari aşamada Flutter seçilmiş ve bu seçim `be/docs/adr/ADR-0018-flutter-skill-architecture-policy.md` ile kabul edilmiştir. Bu teknoloji kararı, kullanıcıya görünen işlevlerin veya veri koruma yükümlülüğünün azaltılmasına izin vermez.
 
 ### Discovery ile uzlaştırılmış kararlar
 
@@ -191,7 +191,7 @@ Arama kapsamı henüz kararlaştırılmamıştır. Eski uygulamada `/story/searc
 Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda görünebilir. Seçilen deneyim doğru detay/oynatmayı açar; diğer deneyimin işleme hatası hazır deneyimi engellemez.
 
 #### FR-9 — Dil ve fallback
-Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Dil görünürlüğü referans sürümdeki gibidir: Türkçe, İngilizce ve Almanca açıktır; Portekizce yalnız mevcut uzaktan yapılandırma tarafından açıldığında görünür; İspanyolca kapalıdır. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Kullanıcı bu davranışı onaylamıştır.
+Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Sonraki kullanıcı kararı gereği Türkçe, İngilizce ve Portekizce kullanılabilir; Almanca veya başka bir dil yalnız çeviri dosyası bulunduğu için kendiliğinden açılmaz. Yeni bir dil uzaktan yapılandırmayla önce yetkili test kitlesine, daha sonra canlı kullanıcıya açılabilir. Teste özel dil normal kullanıcıya dil seçiminde, katalogda veya fallback sonucunda görünmez. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Uzaktan yapılandırma alınamadığında veya geçersiz olduğunda uygulanacak güvenli sonuç ayrıca kararlaştırılacaktır.
 
 Fallback, seçilen dilde içerik bulunmadığında değerlendirilir; İngilizce deneyimin kendisi yayınlı ve kullanıcı için erişilebilir olmalıdır. Fallback, yayınlanmamış veya yetkisiz bir deneyimi açamaz.
 
@@ -239,6 +239,8 @@ RevenueCat üzerinden mevcut aboneliklerin tanınması, satın alma, geri yükle
 
 #### FR-20 — Promosyon ve paywall
 Referans sürümdeki promosyon kodu/teklif, paywall giriş ve kapatma, üyelik yönetimi işlevleri envanterden doğrulanarak korunur. Hatalı/geçersiz promosyon tanımlı hata sunar. RevenueCat ürün/teklif kimlikleri ile teknik tetikleme/entegrasyon ayrıntıları gerçek entegrasyon sözleşmesinde belirlenecektir. Kullanıcı bu yaklaşımı onaylamıştır.
+
+Kullanıcının 2026-09-28 kararıyla, eski iOS uygulamasındaki ebeveyn kapısı replacement kapsamındadır; bu kapı, kapsam dışı ebeveyn modu/rehberlerinden ayrıdır. Hangi girişlerde gerektiği, kapı sorusu ve geçerlilik/sıfırlama davranışı referans uygulamada doğrulanacaktır. Kaynak kod gözlemi ürün davranışının cihazda doğrulandığı anlamına gelmez.
 
 #### FR-21 — Kullanıcı akışlarının backend kaydı
 Giriş/kayıt, migration, katalog-arama-detay görüntüleme, okuma/dinleme başlatma-tamamlama, paywall/satın alma/restore ve hata-yeniden deneme akışları release öncesinde backende kaydedilir. Olaylar içerik metni, medya URL'leri veya gereksiz kişisel veri içermez. Veri alanları, saklama süresi ve hata/tekrar politikası gerçek backend sözleşmesinde belirlenecektir. Kayıt başarısızlığı okuma/dinlemeyi durdurmamalı; yeniden deneme aynı olayı çoğaltmamalıdır. Crash tanılaması bu son entegrasyona bağımlı değildir.
