@@ -14,6 +14,8 @@ implementationReadiness: not-established
 
 Validation was performed; the workflow does not pass unconditionally. Seven epics contain 72 unique stories (12/10/21/6/5/7/11). All 28 active FRs, nine NFRs and 25 UX-DRs have story references. FR-17 remains withdrawn, with no implementing story. Reference coverage is complete; executable acceptance and readiness remain conditional.
 
+The V2–V5 sections below preserve the original 2026-09-29 findings. Subsequent product clarifications and document changes are summarized in the 2026-09-30 remediation update near the end of this report. A final structural revalidation and execution evidence are still pending; the original verdict is not silently converted into a runtime pass.
+
 The existing artifact records steps 1–3 as completed and step 4 as current. This review resumes that state at the user's request; it does not regenerate the inventory or change the approved seven-epic order. `stepsCompleted` remains unchanged because the final validation has not passed. No application code, source product decision, dependency contract or runtime evidence is changed.
 
 Sources inspected: root AGENTS.md, backend project memory, ADR-0018, relevant ADR-0017, canonical backend architecture, mobile architecture spine, PRD/addendum/extraction/reconciliation sources, the historical design-system contract and its screen/tablet/asset/coverage inventories, and the referenced iOS Simulator report. No project-context.md was found. All frontmatter input paths exist in this workspace, including the external worktree report; that absolute path is not a portable repository attachment.
@@ -43,7 +45,7 @@ The following map identifies principal acceptance owners rather than treating a 
 | 15 | 1.3/1.4/1.12 and 2.2/2.3/2.10 | Traced; OQ-2 matrix must include Wi-Fi and cellular cases |
 | 16 | 1.5/1.7, 2.5/2.8/2.9 and 3.12/3.14–3.17 | Traced; durable history/duration/import contracts open |
 | 17 | None | Correctly withdrawn; historical data preservation remains |
-| 18 | 4.1–4.6 | Traced; support contracts and gate ownership V3 remain open |
+| 18 | 4.1–4.6 | Traced; legacy rating trigger/deferral source characterized, live Remote Config values and support contracts remain open; gate ownership V3 applies |
 | 19 | 6.1/6.3/6.4/6.6/6.7 | Traced; real store/RevenueCat/account fixtures required |
 | 20 | 6.2/6.5/6.6 | Traced; actual offerings and supported promotion contracts required |
 | 21 | 7.1–7.4 | Traced; all contracted event categories, privacy and deduplication included |
@@ -112,11 +114,11 @@ Explicit required story prerequisites point backward. The structural scan's 3.3 
 
 E1/E2 can demonstrate their stated controlled-user domains without E3 application auth/migration implementation, after real backend contracts and authorized test access are verified. Full purchase journeys finish in E6, and full release acceptance in E7. These are incremental, independently useful slices, not a claim that E1/E2 deliver the complete replacement on their own. V3 remains an unresolved possible forward dependency for gated E4 actions.
 
-### V1 — Implementation readiness cannot pass (blocking gate)
+### V1 — External integration evidence is pending (execution gate)
 
-Evidence: epics-mobile.md Shared readiness checks (before Story 1.1), external dependency register, every story's Delivery status, and migration planning review. All ten EXT records still lack verified closure and named-assignee/work/contract/evidence links. The compatible generator/toolchain set and safe controlled access are not verified. AD-5 has only partial Simulator evidence; physical signed Android/iOS updates, registered sessions and populated retained records remain open. Migration/deletion and quantitative performance criteria are also not executable until their relevant OQs close.
+Evidence: epics-mobile.md Shared readiness checks, external dependency register, every story's Delivery status, and migration planning review. All ten EXT records still lack verified closure and named-assignee/work/contract/evidence links. The compatible generator/toolchain set and safe controlled access are not verified. AD-5 has only partial Simulator evidence; physical signed Android/iOS updates, registered sessions and populated retained records remain open. Migration/deletion and quantitative performance criteria also need their relevant OQs closed.
 
-Action: close prerequisites per consuming story, recording actual assignees, contracts, fixtures and outcomes. Do not require every later release gate before 1.1, and do not require AD-5 for controlled E1/E2 work. Conversely, approval of scope cannot substitute for any applicable prerequisite. No story was promoted to ready by this review.
+Clarification from the user on 2026-09-29: backend functions are expected to be built with the related mobile task when needed. Their current absence does not block completing the epic plan or starting that feature slice. For example, Story 1.1 can start with its backend catalog companion work, produce the versioned response contract and fixtures, then integrate and verify the mobile Library. The companion work may be in the same task or linked sequential work. Require named ownership and real contract/evidence closure before accepting the consuming integration, not before starting the work. AD-5 remains an earlier gate for auth/migration development, not controlled E1/E2 work. No runtime acceptance or full integration readiness is claimed by this planning review.
 
 ### V2 — Canonical source reconciliation remains unfinished (P2)
 
@@ -142,8 +144,32 @@ Evidence: 1.10/5.4 specify valid test/live visibility and stale-response rejecti
 
 Action: resolve the safe configuration/fallback contract before 1.10 and add its unavailable/invalid/retry cases there, with 5.4 audience regression. Keep TR/EN/PT decisions intact and prove test-only languages/candidates cannot leak. Do not invent a persistence/TTL/default-language rule during validation.
 
-## 6. Save and completion decision
+## 6. Remediation update — 2026-09-30
+
+| Finding | Current planning-artifact state | Remaining proof |
+| --- | --- | --- |
+| V1 | Backend/CMS companion work may start with the consuming mobile story; integration is accepted only after its real contract and evidence are verified. | Ten EXT closures, compatible toolchain, controlled access, AD-5 physical-device update proof and story-specific runtime contracts. |
+| V2 | PRD now records Flutter, permanently available TR/EN/PT, test-first rollout for new languages and the iOS parental gate. | Device and integration acceptance remains separate. |
+| V3 | Direct iOS paywall entry points use Story 6.2's fresh gate; the promotion-code entry screen is its own lock. The user deferred any additional external-link gate unless App Review rejects the app for that reason, leaving a documented submission risk. | Verify actual entry-point matrix and App Review outcome before claiming release compliance. |
+| V4 | Story 2.7 now requires a same-STORY, same-language free-selection check across reading and audio-story experiences, with an unaffected second language. | Real CMS/backend fixture and executed mobile acceptance. |
+| V5 | Stories 1.10/5.4 and PRD preserve TR/EN/PT, English startup without an accessible preference, and same-tester valid cached eligibility for a test-only language during remote failure. | Versioned cache validity/verification contract and executed audience tests. |
+
+Additional legacy source characterization resolved the story-completion prompt order: the rating invitation is evaluated first; if it is not eligible, the automatic completion paywall branch is Android-only and depends on Remote Config and non-premium status. The user chose to preserve this behavior and the separate Android-only reader Exit paywall hook. Rating eligibility advances on completed-story Return to Stories actions, with its threshold/reminder values controlled by configuration; live Remote Config values remain unverified. The native review result cannot prove that a rating was submitted. These updates are planning decisions and source evidence, not execution acceptance.
+
+The [legacy open-point audit](./epics-mobile-legacy-open-points-audit.md) now covers AD-5 and every active OQ gate listed in the epic by checking the sibling old Flutter source against each one. It settles source-visible search triggering (three characters, 500 ms), notification-permission request timing (deferred startup), the OS-permission-only profile switch, image-carousel/zoom announcement behavior and promotion-code-to-RevenueCat-offering flow. Stories 1.9/4.3/4.4/6.5 and the PRD were aligned with those findings. The old code does not settle new backend/media/migration contracts, signed-device updates, store outcomes, quantitative release thresholds, notification/deep-link navigation, Portuguese announcement artwork policy or rollout decisions. Those are explicitly listed as product questions or execution contracts in the audit; no absent code is presented as proof of absent runtime configuration.
+
+### Product-decision update — 2026-10-01
+
+The user approved notification/deep-link destination routing as a new replacement feature, not an old-app behavior. Story 4.5 and FR-18 now require a new route/provider contract and platform acceptance evidence. The user rejected the legacy English-artwork fallback for Portuguese announcements: use Portuguese artwork or omit an unavailable announcement. The user set conflict precedence for a later device: existing new-system account records remain authoritative over conflicting old local records; unique local records still need a field-level safe-disposition contract. The user clarified that **new-language** tester-to-live promotion is managed in CMS after checks. This does not assign mobile store-release cohort approval or old-system shutdown to CMS; those are separate decisions tracked under OQ-10. The [audit](./epics-mobile-legacy-open-points-audit.md), relevant epic criteria and PRD were updated. No runtime/integration evidence was created by these product decisions.
+
+The user then assigned staged **mobile application release** approval and store-console operation to themselves. Story 7.10, OQ-10 and the PRD now identify that owner separately from CMS language promotion. Cohort sizes, observation periods, stop/expansion thresholds, recovery and legacy-system shutdown remain open; this answer is not permission to publish a build.
+
+### Document revalidation — 2026-10-01
+
+A fresh structural scan found 72 unique story IDs across seven epics, with every active FR-1–29 except withdrawn FR-17 referenced by at least one story. All stories have a delivery status, requirements and Given/When/Then acceptance criteria. Story 1.1 is the initial shell and has no predecessor; Story 6.2 splits its acceptance criteria into offer and parental-gate sections. The changed Story 3.17, 4.4, 4.5, 5.4 and 7.10 criteria were reviewed against the 2026-10-01 decisions. V2–V5's planning-document corrections are recorded, while their integration/device evidence remains pending. V1's ten external dependency records remain unclosed. This scan confirms coverage and format, not single-agent implementation readiness, provider contracts or runtime acceptance. The `remediation-required` verdict therefore remains in place.
+
+## 7. Save and completion decision
 
 The review result and report link are saved in epics-mobile.md. Story IDs, requirements and scope approvals are retained. This report recommends corrections; it does not silently amend their criteria or source decisions.
 
-Step 4 remains open. Revalidate V2–V5 after document/acceptance clarification and V1 against actual per-story closure evidence. Until the required checks pass, the skill's “All validations complete! [C] Complete Workflow” success menu is not applicable. A later completion selection must not turn missing evidence into development readiness.
+Step 4 remains open for revalidation of the document and story execution boundaries. Revalidate V2–V5 after document/acceptance clarification. V1 tracks real per-story integration evidence during execution; missing backend capability alone does not prevent epic-plan completion or the start of its companion work. A later workflow completion must not turn missing runtime evidence into integration acceptance.

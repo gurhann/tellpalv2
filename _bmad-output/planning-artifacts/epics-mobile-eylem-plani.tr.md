@@ -20,12 +20,12 @@ Kaynaklar: [son doğrulama raporu](./epics-mobile-final-validation.md) ve [mobil
 | --- | --- |
 | Gereksinim izlenebilir | Hangi story’nin gereksinimi üstlendiği belli. |
 | Kapsam onaylı | Story’nin planlanan ürün kapsamına dahil olması kabul edilmiş. |
-| Önkoşullar bekleniyor | Geliştirmeden önce gerekli sözleşme, karar, erişim veya kanıt eksik. |
+| Entegrasyon önkoşulları bekleniyor | İlgili backend/CMS işi story ile birlikte başlayabilir; sözleşme ve kanıt, mobil entegrasyon kabulünden önce tamamlanır. |
 | Kabul kanıtı yok | Story’nin kabul kriterlerini geçtiğini gösteren uygulama/test sonucu henüz üretilmemiş. Planlama aşamasında bu beklenen bir durum. |
 | `remediation-required` | Doğrulama yapıldı; rapordaki eksikler giderilip yeniden kontrol edilmeli. |
 | P2 | Bulguların öncelik etiketi. Etkilenen işin kabulünü değiştiren somut eksikler olarak ele alınmalı; story önkoşullarının yerine geçmez. |
 
-**Bütün story’lerin kabul testlerini bugün çalıştırmak zorunda değilsin.** Geliştirmeye başlamak için seçilen story’nin önkoşullarını kapatırsın; kabul kanıtını o story uygulanırken üretirsin. Buna karşılık, sözleşmesi ve kritik davranışı belirsiz bir story’yi “hazır” olarak kabul etmemelisin. Mevcut rapor, bütün plan için koşulsuz geliştirme hazırlığı onayı vermiyor.
+**Bütün story’lerin kabul testlerini bugün çalıştırmak zorunda değilsin.** Seçilen story’nin eksik backend/CMS işini aynı çalışma diliminde veya bağlı ardışık görevde yapabilirsin. Sözleşmeyi mobil entegrasyondan önce, gerçek kabul kanıtını story tamamlanırken üretirsin. Mevcut rapor, bütün entegrasyonların bugün tamamlandığını söylemiyor.
 
 ## Önce hangi işleri yapmalısın?
 
@@ -37,8 +37,8 @@ Kaynaklar: [son doğrulama raporu](./epics-mobile-final-validation.md) ve [mobil
 | 2 | iOS ebeveyn kapısının giriş noktalarını ve sahibini belirle | Giriş noktası matrisi ve etkilenen story kriterleri | V3 |
 | 3 | CMS ücretsiz seçimi için iki deneyimi birlikte doğrulayan kriter ekle | Mevcut story’ye bağlı somut kabul senaryosu | V4 |
 | 4 | Dil yapılandırması hata davranışını kararlaştır | Hata/fallback sözleşmesi ve story kriterleri | V5 |
-| 5 | Story 1.1’in teknik ve sözleşme önkoşullarını doğrula | Story’ye bağlı hazırlık kaydı | V1 |
-| 6 | 1.1’i uygula ve kabul et; ardından 1.2’ye geç | Library listesi, sonra doğru detay açılışı | V1 |
+| 5 | Story 1.1’i backend katalog işiyle başlat; sözleşmeyi ve araçları doğrula | Story’ye bağlı backend ve mobil çalışma kaydı | V1 |
+| 6 | 1.1’in backend + mobil entegrasyonunu kabul et; ardından 1.2’ye geç | Library listesi, sonra doğru detay açılışı | V1 |
 | 7 | Sonraki story’lerin önkoşullarını ihtiyaç sırasıyla kapat | Her story için ayrı hazırlık ve kabul kanıtı | V1 |
 
 İlk dört işin analizi sırasında 1.1 için araç/sözleşme incelemesi yürütülebilir. Sonraki epic’lere ait açık bir konunun her durumda 1.1’i engellediğini varsayma; hangi story’yi etkilediğini açıkça kaydet.
@@ -64,9 +64,11 @@ Kaynaklar: [son doğrulama raporu](./epics-mobile-final-validation.md) ve [mobil
 
 Epic 6 kapıyı tanımlıyor; fakat Epic 4’teki duyuru, dış bağlantı veya mağaza değerlendirme girişlerinden bazıları da bu kapıyı gerektirebilir. Hangi girişlerin gerçekten etkilendiği bilinmeden Epic 4’ün bütün bu işlemlerini tamamlanmış saymak doğru olmaz.
 
-**2026-09-29 görüşme kararı:** Giriş noktalarını varsaymak yerine eski iOS uygulamasında doğrulayacağız. 1.0.35+333 kaynak kodunda ortak `showPaywall` yolu debug dışı iOS’ta ebeveyn kapısını açıyor. Promosyon teklif yolu doğrudan RevenueCat paywall’unu çağırıyor; incelenen mağaza listesi ve değerlendirme çağrıları da ortak kapıdan geçmiyor. Bu fark, ürünün korunacak davranışı veya cihazda görülen sonuç olarak henüz kabul edilmedi. Temsilî iOS build’inde gerçek girişleri, başarısız/iptal/başarılı sonucu ve yeniden açılış durumunu ayrıca gözlemlemek gerekiyor.
+**2026-09-29 görüşme kararı:** Kullanıcı eski uygulamayı iPhone’da açabiliyor. Doğrudan paywall her açıldığında iOS ebeveyn kapısı değişen dört rakamlı diziyle yeniden tamamlanır; önceki başarı ve sayı dizisi aynı oturumda sonraki açılışı serbest bırakmaz. Referans ekran görüntüsü dört rakamın yazıyla sunulduğunu, dört giriş alanını ve Vazgeç eylemini gösteriyor; kullanıcı başlık, yönerge, sayı sözcükleri ve eylemlerin seçili dile göre yerelleştirildiğini ve doğru girişin paywall'u otomatik açtığını doğruladı. Yanlış girişte pencere kapanmıyor, paywall açılmıyor; kullanıcı haneleri silip yeniden girebiliyor. Vazgeç seçilince pencere kapanır, paywall açılmaz ve önceki ekranda kalınır. Android'de kapı yoktur. Promosyon kodu giriş ekranı her kullanımda kendi kilit işlevini görür ve ardından paywall öncesinde ikinci kapı gösterilmez. Epic 4'te yalnız onaylanmış bir işlem doğrudan paywall açarsa kapıdan geçer; kaynakla netleştirilen görsel duyuru böyle bir işlem değildir. Kullanıcı, Apple'ın güncel Kids Category 1.3 dış bağlantı metni gösterildikten sonra ek kapıyı yalnız bu nedenle App Review ret verirse eklemeye karar verdi. Bu tercih uyum doğrulaması değildir.
 
-**Yapılacak iş:** Referans iOS uygulamasında giriş noktalarını inceleyip aşağıdaki matrisi doldur. Her satır için “var/yok/doğrulanamadı” ve kanıt bağlantısı kaydet.
+**2026-09-30 kaynak denetimi:** Eski Flutter istemcisi, kullanıcı ekran görüntüleri ve kararları [açık nokta denetiminde](./epics-mobile-legacy-open-points-audit.md) birleştirildi. Kaynakta görülen davranışlar story kabul kriterlerine işlendi; gerçek cihaz, etkin yapılandırma ve backend/mağaza çıktıları ayrı kanıt olarak bekliyor. Aşağıdaki matris, kalan giriş noktası testlerinde kullanılacak.
+
+**Kaynak envanteri:** Eski Flutter kodu kardeş `tellpal` deposunda incelendi. Duyuru görseline dokunmak büyük görsel katmanını açıyor; kaynakta duyurudan dış bağlantı veya paywall hedefi bulunmadı. Değerlendirme istemi uygulamada başlıyor, “Yorum Yaz” App Store’a gidiyor. Story 6.6 mağaza yönetimi ayrı bir dış hedef adayıdır. Story 4.2 PDF’i uygulama içinde gösterir. Story 4.5’teki bildirim/deep-link hedef davranışı incelenen eski Flutter kaynağında doğrulanmadı ve ürün kararı bekliyor. Ek dış bağlantı kapısı, kullanıcı kararı gereği yalnız bu nedenle App Review ret verirse eklenecek; bilinen risk Story 7.9’da izlenir.
 
 | İncelenecek giriş | Kaydedilecek bilgi |
 | --- | --- |
@@ -77,9 +79,9 @@ Epic 6 kapıyı tanımlıyor; fakat Epic 4’teki duyuru, dış bağlantı veya 
 | İptal, yanlış cevap ve başarılı cevap | Hedef açılıyor mu; kullanıcı nereye dönüyor? |
 | Tekrarlı dokunma, arka plana geçiş ve yeniden açılış | Önceki doğrulama ne kadar geçerli; ne zaman sıfırlanıyor? |
 
-**Senin rolün:** Referans sürüm/cihaz erişimini sağlamak ve gözlenen davranışa göre ürün kapsamını teyit etmek. Güncel mağaza politikası hakkında bu referans davranışından sonuç çıkarılmamalı.
+**2026-10-01 kararları:** Duyuru görsel karusel/büyük görsel davranışıyla, bildirim tercihi OS izin anahtarıyla sınırlandı. Eski kaynakta bulunmayan bildirim/deep-link hedef yönlendirmesi yeni sürüme eklenecek; yeni hedef/format sözleşmesi ve cihaz kanıtı gerekir. Portekizce duyuru görseli yoksa İngilizce görsel kullanılmaz. İkinci cihazdaki eski yerel kayıtlar hesap verisiyle çakışırsa hesapta bulunan kayıtlar korunur; benzersiz yerel kayıtların ele alınması OQ-3’te kalır. Yeni dillerin tester’dan herkese açılması CMS’den yönetilir. Mobil uygulama sürümünün kademeli dağıtımını kullanıcı bizzat onaylayıp mağaza panellerinden yönetecek; kohort/eşik/toparlanma planı yine OQ-10’da tamamlanacak. Güncel mağaza değerlendirmesi ayrıca yapılır.
 
-**Teknik işin sahibi:** Mobil geliştirici/QA. Matrise göre kapıyı ilk ihtiyaç duyan mevcut story’ye bağlamalı. Epic 4’te gerekiyorsa ortak kapı davranışı orada başlayabilir; Story 6.2 premium kullanımını genişletir. Alternatif olarak ilgili Epic 4 eyleminin kabulü, açıkça belirtilen sonraki entegrasyona bırakılabilir.
+**Teknik işin sahibi:** Mobil geliştirici/QA. Story 6.2 ortak kapıyı tanımlar; doğrudan paywall açan Epic 4 eylemlerinin kabulü bu entegrasyona bağlıdır. Promosyon kodu girişinde ikinci kapı eklenmez.
 
 **Tamamlanma ölçütü:** Etkilenen girişlerin sahibi ve kabul zamanı belli; hiçbir story henüz olmayan bir kapıya gizlice bağımlı değil. İptal/başarısızlık gerekli hedefi açmıyor ve alternatif girişler kapıyı atlayamıyor.
 
@@ -101,7 +103,7 @@ Mevcut kriterler kartların kilit durumunu ve başlatma yetkisini kontrol ediyor
 
 ## V5: Dil yapılandırması alınamazsa ne olacak?
 
-Doğru yapılandırmanın test/canlı dil görünürlüğü tanımlı. Yapılandırma alınamadığında veya bozuk olduğunda kullanılacak davranış açık değil. Bunu geliştiricinin varsayımına bırakmamalısın.
+Doğru yapılandırmanın test/canlı dil görünürlüğü tanımlı. Kullanıcının 2026-09-29 netleştirmesiyle Türkçe, İngilizce ve Portekizce sürekli kullanılabilir; uzaktan yapılandırma yalnız sonradan eklenen dillerin test/yayın görünürlüğünü yönetir. Hiçbir dil ayarına erişilemeyen ilk açılışta uygulama İngilizce başlar. Bu, erişilebilir kayıtlı tercihi silme veya İngilizce içeriği yayın/erişim kontrolünü atlayarak açma kararı değildir.
 
 **Yapılacak iş:** Aşağıdaki durumlar için sözleşme oluştur; Story 1.10’a kriterleri, Story 5.4’e test/canlı kitle doğrulamasını bağla.
 
@@ -111,19 +113,21 @@ Doğru yapılandırmanın test/canlı dil görünürlüğü tanımlı. Yapıland
 - Yeniden deneme ve yapılandırmanın sonradan düzelmesi.
 - Kayıtlı tercihin artık kullanıcıya açık olmayan bir dil olması.
 
-**Senin rolün:** Kullanıcının göreceği seçim, bekleme, hata veya yeniden deneme davranışında ürün tercihi gereken noktaları netleştirmek.
+**Senin rolün:** Temel dillerin kalıcı olduğunu, ayar yokluğunda İngilizce başlangıcı ve yeni test dilinin ağ kesintisinde yalnız aynı kullanıcı için önceden doğrulanmış, hâlâ geçerli yetkiyle görünmesini netleştirdin.
 
-**Teknik işin sahibi:** Backend/mobil. Daha önce alınan yapılandırmanın kullanımı, geçerlilik süresi, yetki kontrolü ve güvenli geri dönüş mekanizmasını teklif edip doğrulamak. Bu belge bir varsayılan dil veya saklama süresi seçmiyor.
+**Teknik işin sahibi:** Backend/mobil. Daha önce alınan yapılandırmanın kullanımı, geçerlilik süresi, yetki kontrolü ve güvenli geri dönüş mekanizmasını teklif edip doğrulamak. İngilizce UI başlangıcı seçildi; bu belge gelecekteki diller için cache geçerlilik süresi seçmiyor.
 
-**Tamamlanma ölçütü:** Hata senaryolarında beklenen kullanıcı sonucu açık. Test dilleri ve aday içerikler normal kullanıcılara sızmıyor; geçerli TR/EN/PT kararı korunuyor; cache veya hata yönetimi yetki kontrolünü atlamıyor.
+**Tamamlanma ölçütü:** Hata senaryolarında beklenen kullanıcı sonucu açık. Test dilleri ve aday içerikler normal kullanıcılara sızmıyor; kalıcı TR/EN/PT seçenekleri korunuyor; dil ayarı olmayan açılış İngilizce gerçekleşiyor; cache veya hata yönetimi yetki kontrolünü atlamıyor.
 
-## V1: Geliştirmeye hangi önkoşullarla başlayabilirsin?
+**2026-09-29 belge durumu:** Ürün kararı PRD FR-9 ve Stories 1.10/3.13/5.4’e işlendi. Cache geçerlilik süresi/doğrulama yöntemi ve entegrasyon kanıtı ilgili uygulama işi sırasında belirlenecek.
 
-V1 tek bir belge düzeltmesiyle kapanacak bir bulgu değil. Story’ler uygulanmadan önce yapılacak hazırlığın ve uygulandıktan sonra üretilecek kanıtın takip edilmesi gerekiyor. On dış bağımlılığın tamamını ilk gün kapatmak zorunda değilsin; ilk tüketen story için gerekli olan kısmı doğrulamalısın.
+## V1: Backend ve mobili aynı özellik diliminde nasıl tamamlayacağız?
+
+V1, eksik backend işinin epic planını veya story başlangıcını engellediği anlamına gelmez. İlgili backend/CMS işini tüketen story ile aynı çalışma diliminde veya bağlı ardışık görevde yap; sözleşmesini mobil entegrasyondan önce, sonucunu story kabulünden önce doğrula. On dış bağımlılığın tamamını ilk gün kapatmak zorunda değilsin.
 
 ### İlk çalışma paketi: 1.1, sonra 1.2
 
-**Story 1.1’den önce:**
+**Story 1.1 çalışmasının başında ve mobil entegrasyondan önce:**
 
 - Flutter/Dart ve ilgili BLoC, auto_route, DI, Freezed/JSON kod üreticilerinin uyumlu sürümlerini belirle ve sabitle. Kod üretimi/analyze sonucu ile Android API 24 ve iOS/iPadOS 15 desteğinin uyumluluk kanıtını kaydet.
 - Yetkili geliştirme/test erişimini mevcut güvenli imkanlarla belirle. Üretim yetkisini atlayan bir mekanizma veya uygulamaya gömülü test kimlik bilgisi oluşturma.
@@ -132,7 +136,7 @@ V1 tek bir belge düzeltmesiyle kapanacak bir bulgu değil. Story’ler uygulanm
 - Library’nin referans ekran/durumlarını ve uygulanacak telefon/tablet, dil, metin ölçeği ve erişilebilirlik kontrollerini belirle.
 - İşin sorumlusunu, kanıt yollarını ve kapanış sonucunu ilgili bağımlılık/story kaydına yaz.
 
-Bu hazırlık tamamlanınca **1.1 yalnız Library listeleme kapsamıyla** uygulanabilir. Detay ve okuyucu aynı çalışmaya eklenmemeli.
+Bu işleri yürütürken **1.1 yalnız Library listeleme kapsamıyla** uygulanır. Backend katalog API'si aynı feature diliminde geliştirilebilir; gerçek yanıtı doğrulanmadan mobil entegrasyon kabul edilmez. Detay ve okuyucu aynı çalışmaya eklenmemeli.
 
 **Story 1.2’den önce:** 1.1 kabul edilmiş olmalı. Detay sözleşmesi, doğru içerik/deneyim/dil kimliği, yükleme/hata/kullanılamayan içerik sonuçları, var/yok öneri örnekleri ve geri dönüş davranışı doğrulanmalı. Ardından seçilen kartın doğru hikâye detayına gitmesi uygulanır. Okuyucu Story 1.3’te başlar.
 
@@ -170,8 +174,8 @@ Uygulama sonrası kabul kanıtını hazırlanmış sözleşmeyle karıştırma. 
 
 İlk görev için şu talep kullanılabilir:
 
-> Son doğrulama raporundaki V2–V5 için gerekli belge ve kabul kriteri düzeltmelerini hazırla. Mevcut kararları koru; kanıt gerektiren davranışları varsayma. Açık ürün/teknik kararlarını sahibine ve etkilenen story’ye bağla. Ardından Story 1.1’in araç, yetkili test erişimi, EXT-CATALOG ve referans ekran önkoşullarını inceleyip hangilerinin doğrulandığını kanıtlarıyla kaydet. Uygulama koduna geçmeden önce kalan engelleri bildir.
+> Story 1.1'i başlat. Gerekli backend katalog API'sini aynı özellik diliminde veya bağlı ardışık görevde geliştir; yanıt sözleşmesini, yetkili test erişimini ve gerçek örnekleri doğrula. Ardından mobil Library listesini bağla ve yalnız bu story'nin kabul kriterlerini backend + mobil sonuçlarla kanıtla.
 
-Sonraki görev, 1.1’in önkoşulları doğrulanınca yalnız 1.1’i uygulamak olmalı. 1.1 kabul edildikten sonra 1.2 için aynı süreç izlenir.
+1.1 kabul edildikten sonra 1.2 için aynı süreç izlenir.
 
 V2–V5 düzeltmeleri tamamlandığında son doğrulama yeniden çalıştırılır. V1 ise ilgili story’lerin gerçek hazırlık kayıtlarıyla yeniden değerlendirilir. Sadece metin düzenlemek, açık sözleşmeleri veya AD-5 kanıtını tamamlanmış saydırmaz; workflow’un genel tamamlanma durumu ile belirli bir story’nin başlayabilirliği ayrı raporlanmalıdır.

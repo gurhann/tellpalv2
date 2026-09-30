@@ -5,6 +5,15 @@ status: final-validation-performed-remediation-required
 validationDate: 2026-09-29
 validationReport: "_bmad-output/planning-artifacts/epics-mobile-final-validation.md"
 inputDocuments:
+  - "_bmad-output/planning-artifacts/mobile-evidence/paywall-2026-09-30/revenuecat-paywall.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/rating-2026-09-30/01-rating-invitation.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/rating-2026-09-30/02-rating-unselected.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/rating-2026-09-30/03-rating-selected.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/rating-2026-09-30/04-rating-thanks.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/completion-2026-09-29/ios-legacy-return-rating-prompt.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/completion-2026-09-29/ios-legacy-story-completion.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/reader-controls-2026-09-29/ios-legacy-reader-controls.png"
+  - "_bmad-output/planning-artifacts/mobile-evidence/parental-gate-2026-09-29/ios-legacy-paywall-gate.png"
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-meditation-lullabies.jpg"
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/huzur-reading-listening.jpg"
   - "_bmad-output/planning-artifacts/mobile-evidence/search-2026-09-27/uykusuzlar.jpg"
@@ -32,7 +41,7 @@ inputDocuments:
 
 Story drafting is complete: 72 individually approved stories across seven epics (12 + 10 + 21 + 6 + 5 + 7 + 11). Final workflow validation was performed on 2026-09-29: all active requirements have story references, but acceptance precision, source reconciliation and unresolved readiness gates prevent an unconditional pass. See the [final validation report](./epics-mobile-final-validation.md). Step 4 remains open for remediation and revalidation. Scope approval does not establish implementation readiness or acceptance evidence. No application code is changed.
 
-The user approved applying all review recommendations on 2026-09-28. The updates clarify acceptance checks and delivery ownership; they do not close OQ gates or certify implementation. The current status is recorded here and in frontmatter; earlier progress snapshots are retained in [Planning history](#planning-history). Source-document reconciliation for the approved language and iOS parental-gate decisions remains an open validation finding.
+The user approved applying all review recommendations on 2026-09-28. The updates clarify acceptance checks and delivery ownership; they do not close OQ gates or certify implementation. The current status is recorded here and in frontmatter; earlier progress snapshots are retained in [Planning history](#planning-history). The current PRD now records the approved language, Flutter and iOS parental-gate decisions; historical source excerpts remain identified as superseded. External readiness and executable contract evidence remain open.
 
 New planning prose is English under repository policy. Canonical FR/NFR excerpts below retain their original Turkish wording to preserve requirements without translation drift. There are 28 active FRs, one withdrawn FR identifier, 9 NFRs and 25 extracted UX requirements.
 
@@ -60,15 +69,15 @@ The existing epics.md remains the CMS/backend plan. FR-22–25 must remain trace
 
 The user approved retaining all seven epics and 72 story identities. An epic is not a single implementation session. Final validation must assess individual story size and dependencies; split only an actual oversized story while preserving traceability. No acceptance criterion is removed by this review.
 
-Track scope approval, implementation readiness and acceptance evidence separately. An approved story is not automatically ready to implement. Each story below records these dimensions; its prerequisites identify outstanding decisions, dependencies and evidence. Readiness changes only after those prerequisites are verified. This planning session has not produced implementation acceptance evidence.
+Track scope approval, ability to start a story and acceptance evidence separately. An approved story can start with its required backend/CMS/provider companion work even when that capability does not yet exist. Each story below records outstanding decisions, dependencies and evidence; implement the applicable companion work in the same feature slice or linked sequential task, then verify its contract before mobile integration and acceptance. This planning session has not produced implementation acceptance evidence.
 
 #### Planning status definitions
 
-The local delivery-status line in every story records three separate dimensions: scope is approved for planning; implementation readiness is pending verification of that story's prerequisites; acceptance evidence is absent from this planning exercise. An approved scope is not an implementation or release acceptance. Update readiness and evidence only against recorded verification outcomes. The current global workflow status is in Overview; historical snapshots do not change it.
+The local delivery-status line in every story records three separate dimensions: scope is approved for planning; integration readiness is pending verification of that story's prerequisites; acceptance evidence is absent from this planning exercise. A pending prerequisite does not prohibit starting its companion backend/CMS/provider task. An approved scope is not implementation or release acceptance. Update integration readiness and evidence only against recorded verification outcomes. The current global workflow status is in Overview; historical snapshots do not change it.
 
 #### Shared readiness and acceptance checks
 
-Before Story 1.1, lock and verify a compatible Flutter/Dart, flutter_bloc, auto_route/generator, get_it/injectable/generator, Freezed, json_serializable and build_runner toolchain under ADR-0018 and the mobile spine. Record exact versions, successful code generation and analyze results, and compatibility with Android API 24 and iOS/iPadOS 15. Skill example versions are not compatibility evidence. Introduce only the bootstrap/composition needed by the first capability; do not create a separate technical epic or bulk-create future features.
+At the start of Story 1.1, lock and verify a compatible Flutter/Dart, flutter_bloc, auto_route/generator, get_it/injectable/generator, Freezed, json_serializable and build_runner toolchain under ADR-0018 and the mobile spine. Record exact versions, successful code generation and analyze results, and compatibility with Android API 24 and iOS/iPadOS 15 before relying on generated mobile code. Skill example versions are not compatibility evidence. Introduce only the bootstrap/composition needed by the first capability; do not create a separate technical epic or bulk-create future features.
 
 For every affected UI story, collect UX-DR24 evidence with the feature: localized text at agreed normal and enlarged text scales; reachable controls and safe areas; icon role/name/selected semantics using platform accessibility tools; at least 48dp touch targets; and measured contrast over representative actual artwork. Resolve the scale/device matrix and contrast acceptance criteria before the affected screen's acceptance without silently redesigning it. Record screen/state/device/language/content and outcomes. Failed checks block the affected screen's acceptance. Story 7.5 repeats these checks on the release candidate rather than deferring them until release.
 
@@ -76,7 +85,7 @@ For every affected UI story, collect UX-DR24 evidence with the feature: localize
 
 | Story | Conditions to establish readiness |
 | --- | --- |
-| 1.1 | Verify and lock the shared toolchain/generators with recorded generation, analyze and supported-platform compatibility evidence; then verify real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/fallback and empty/error states. Establish authorized development/test access and Library reference states. |
+| 1.1 | Begin with the toolchain check and the backend catalog companion task. Produce and verify the real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/fallback and empty/error states. Establish authorized development/test access and Library reference states before mobile integration acceptance. |
 | 1.2 | Accept 1.1; verify content/experience/language identity, detail payload and error fixtures, valid/absent detail recommendations, navigation/back behavior and detail reference states. Verify EXT-CATALOG closure. |
 
 AD-5 does not block this discovery package. Signed-upgrade and registered-session evidence can be collected independently; auth/migration development must still wait for AD-5 completion. Controlled access does not authorize production bypasses. Backend readiness is verified, not inferred from the separate CMS/backend plan.
@@ -87,9 +96,11 @@ AD-5 does not block this discovery package. Signed-upgrade and registered-sessio
 
 **Initial exposure versus rollout expansion:** OQ-2/OQ-10 must distinguish evidence required before the first limited distribution from observation evidence required to expand each platform's cohort. Record measurement source (including any controlled pre-release cohort), candidate version, sample/window, owner and decision for each gate. The >=99.5% crash-free user target is unchanged. This distinction does not waive pre-release criteria or authorize exposure with known blockers. Do not assume production samples exist before users receive a build; resolve measurement source and progression before rollout. Missing evidence blocks the gate to which it belongs. Stories 7.6 and 7.10 must use this same resolved gate mapping.
 
+**Rollout control separation (2026-10-01):** The user specified that promoting a newly added language from tester-only visibility to general availability is managed in CMS. CMS is the language decision/control surface; the verified backend/configuration contract must propagate that state to mobile while preserving tester separation and publication/access checks. The user personally approves and manages staged mobile application release through the store consoles. Cohort sizes, observation periods, expansion/stop thresholds, recovery and separate legacy-system shutdown still require OQ-10 plans and evidence. Neither decision authorizes an actual release in this planning review.
+
 ### External dependency register
 
-These records connect mobile consumers to separately delivered backend/CMS/provider capabilities. Module names describe the existing canonical ownership; they do not approve new backend designs. Accountable roles below must identify named assignees and link existing delivery work or explicitly assign missing work before the affected mobile story becomes ready. An unassigned item or a historical discovery/PoC document cannot satisfy that gate.
+These records connect mobile consumers to backend/CMS/provider companion work. Module names describe the existing canonical ownership; they do not approve new backend designs. Companion work may be created and completed while executing the consuming story, in the same feature slice or a linked sequential task. Name the assignee and link that work when execution starts; verify its contract and evidence before the affected mobile integration is accepted. An unassigned item or a historical discovery/PoC document cannot satisfy integration acceptance.
 
 Reference documents: [CMS/backend epics](./epics.md), [canonical backend architecture](../../architecture.md), [ADR-0017 experimental manifest scope](../../be/docs/adr/ADR-0017-story-page-media-manifests.md), [mobile architecture spine](./architecture/architecture-tellpalv2-2026-09-25/ARCHITECTURE-SPINE.md) and [historical contract extraction](./prds/prd-tellpalv2-2026-09-20/extract-contracts.md). These links establish context, not completion of the external delivery work.
 
@@ -102,13 +113,13 @@ For each record, the owner must record: exact external work link and status; nam
 | EXT-HISTORY | 1.5, 1.7, 2.8, 3.12 | Backend user owner with mobile persistence owner | No delivery story for durable progress/history is established by `epics.md`; link or assign it before the first producer. | Versioned duration/progress/completion, stable event identity and deduplication contracts; durable pending-record/process-restart tests and backend field-level outcomes. |
 | EXT-ACCOUNT | 3.3–3.13, 3.18–3.19 | Backend user owner with identity integration owner | `architecture.md` and PRD contract extraction are design/evidence references; assign or link verified Firebase UID/account/profile/session delivery work. | Verified UID resolution, provider and preference/profile fixtures, failure/retry and account-isolation evidence. AD-5 remains separate. |
 | EXT-MIGRATION | 3.14–3.17, 3.20–3.21, 7.7–7.8 | Backend user/migration owner with mobile local-data owner | Account migration, local import and deletion delivery work is not established by `epics.md`; link or assign it under OQ-3/6. | Source/target fields and identity maps, durable receipts/status, interruption/multi-device fixtures, deletion/tombstone/legacy-isolation outcomes. |
-| EXT-PUBLICATION | 5.1–5.4, 7.8 | Backend content/asset owner and CMS publication owner | `epics.md` processing/localization stories are partial inputs; link or assign candidate/live, approval invalidation, processing-error/retry and test-language delivery work. | Revision-specific readiness/approval, failed-candidate isolation, tester/subscriber/ordinary-user matrix and actual CMS/backend/mobile results. |
+| EXT-PUBLICATION | 5.1–5.4, 7.8 | Backend content/asset owner and CMS publication owner | `epics.md` processing/localization stories are partial inputs; link or assign candidate/live, approval invalidation, processing-error/retry and CMS-managed test-to-live language delivery work. | Revision-specific readiness/approval, failed-candidate isolation, tester/subscriber/ordinary-user matrix and actual CMS/backend/mobile results, including authorized CMS language promotion. |
 | EXT-RETENTION | 1.11–1.12, 2.9–2.10, 5.5 | Backend asset owner with mobile cache owner | ADR-0017 retains experiment revisions but does not establish production cleanup. Link or assign OQ-8 retention/withdrawal/revocation delivery work. | Actual retained file access for live/rollback/active sessions, cleanup safety and revision-addressed renewal/revocation tests. |
 | EXT-PURCHASE | 6.1–6.7, 7.4, 7.7–7.8 | Purchase/backend owner and store/RevenueCat integration owner | `architecture.md` purchase ownership is a reference, not store integration evidence; link or assign OQ-7/8 entitlement/reconciliation delivery work. | Store/provider-to-application identity and products/offerings contracts; real purchase/restore/conflict and backend-authoritative access outcomes. |
 | EXT-SUPPORT | 4.1–4.6, 7.9 | Support API/configuration owner and notification/provider integration owner | Assign or link OQ-9 feedback, localized documents, announcements, notification/link and rating configuration work; provider selection remains open. | Versioned limits/fallback/target/permission contracts; real service/provider fixtures and platform outcomes. |
 | EXT-EVENTS | 7.1–7.4 | Backend event owner with mobile event-delivery owner | `architecture.md` event ownership does not establish implemented ingestion/deduplication. Link or assign OQ-7 event delivery work. | Event fields/privacy/retention/retry contracts; real backend delivery and deduplication evidence tied to account and operation IDs. |
 
-All records currently have unverified closure and pending named-assignee/work/contract/evidence links. Update the affected records as prerequisite work is completed; do not mark all stories ready from this register's creation.
+All records currently have unverified closure and pending named-assignee/work/contract/evidence links. This does not prevent starting the related companion work. Update each affected record during execution and require its evidence before accepting the consuming mobile integration; do not mark all stories accepted from this register's creation.
 
 ## Requirements Inventory
 
@@ -136,7 +147,7 @@ Referans sürümün profil kurulum alanları, atlanabilir adımları, avatar ve 
 
 #### FR-5 — Hesap ve tercih yönetimi
 
-Çıkış, parola değiştirme, hesap silme, dil değiştirme ve bildirim tercihi mevcut işlevleriyle bulunur. Hesap değişiminde önceki hesabın özel verileri görünmez. Hesap silme yalnız yeni sistemdeki hesabı ve o sistemdeki kullanıcı verilerini kapsar. Eski sistemdeki kayıtlar ile eski uygulama sürümünü kullanan cihazlar etkilenmez. Kullanıcı bu kapsamı onaylamıştır.
+Çıkış, parola değiştirme, hesap silme, dil değiştirme ve bildirim tercihi mevcut işlevleriyle bulunur. Eski istemci bildirim iznini açılışta ertelenmiş görev olarak, OS durumu `denied` ise ister; profil anahtarı OS izin durumunu gösterir ve gerektiğinde cihaz ayarlarına yönlendirir. Bildirim tercihi referans kapsamda OS izin anahtarıdır; ayrı, hesap bazlı bir uygulama anahtarı eklenmez. Hesap değişiminde önceki hesabın özel verileri görünmez. Hesap silme yalnız yeni sistemdeki hesabı ve o sistemdeki kullanıcı verilerini kapsar. Eski sistemdeki kayıtlar ile eski uygulama sürümünü kullanan cihazlar etkilenmez. Kullanıcı bu kapsamı onaylamıştır.
 
 Paylaşılan Firebase kimliğiyle bu etkinin nasıl sınırlandırılacağı ve yeniden girişin silinen veriyi eski sistemden geri taşımamasının nasıl sağlanacağı OQ-6'da teknik doğrulama olarak tutulur. Hesap silme kararından mağaza aboneliğinin otomatik iptali sonucu çıkarılmaz; kullanıcıya açıklanan abonelik etkisi sözleşmede netleştirilecektir.
 
@@ -148,9 +159,9 @@ Liste yanıtları küçük içerik özetleridir; tam teslim/oynatma verisi detay
 
 Editör seçimi ve benzer içerik yüzeyleri referans envanterine dahildir; seçilen öneri doğru içerik/deneyime gider. Uygulanabilir içerik bulunmadığında bozuk kart veya geçersiz hedef gösterilmez.
 
-#### FR-7 — İçerik araması; tür kapsamı açık
+#### FR-7 — İçerik araması
 
-Arama kapsamı henüz kararlaştırılmamıştır. Eski uygulamada `/story/search` ve `StorySearchByCategoryType[]` yanıt modeli belgelenmiştir; endpoint adı ve bu model, gerçekte hangi içerik türlerinin döndüğünü tek başına kanıtlamaz. Önceki “yalnız hikâye” ifadesi doğrulanmış bulgu olarak kullanılmayacaktır. Discovery uygun içerik türleri arasında genel aramayı yönlendirir; sonraki kullanıcı kararı gereği gerçek legacy request/response örnekleri ve yeni backend hedef sözleşmesi incelenerek kapsam belirlenecektir. Sonuçlar bağımsız kişi kaydı değil içeriktir; içerik ve katkı sağlayıcı bilgileri eşleşmede kullanılabilir. Sonuçlar uygun olduğunda deneyim/türe göre gruplanır; boş sonuç ve ağ hatası birbirinden ayrılır. Karakter eşiği ve debounce davranışı referans kanıtıyla doğrulanacaktır.
+Kullanıcının eski uygulama ekran görüntüleri okuma hikâyesi, sesli hikâye, meditasyon ve ninni sonuçlarını doğrular. `/story/search` ve `StorySearchByCategoryType[]` istemci sözleşmesi bu grupları destekler; gerçek sunucu eşleşmesi ve alan kapsamı yine örnek yanıtlarla doğrulanacaktır. Önceki “yalnız hikâye” ifadesi geçerli kapsam değildir. Sonuçlar bağımsız kişi kaydı değil içeriktir; içerik ve katkı sağlayıcı bilgileri eşleşmede kullanılabilir. Sonuçlar uygun olduğunda deneyim/türe göre gruplanır; boş sonuç ve ağ hatası birbirinden ayrılır. Eski Flutter istemcisinde arama üç karakterden itibaren 500 ms beklemeyle başlar; yeni istemci bu görünür davranışı korur. Sunucu eşleşmesi, sıralama ve sayfalama gerçek yanıtlarla doğrulanacaktır.
 
 #### FR-8 — İçerik ve deneyim ayrımı
 
@@ -158,7 +169,9 @@ Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda gör�
 
 #### FR-9 — Dil ve fallback
 
-> **Superseded language-availability excerpt:** The Turkish source paragraph below records the earlier PRD decision. For current planning, apply the 2026-09-27 user decision: Turkish, English and Portuguese are usable; newly added languages may be enabled remotely for testing first and for live users afterward. German is not an automatically enabled launch language. Other FR-9 rules remain unchanged.
+> **Superseded language-availability excerpt:** The Turkish source paragraph below records the earlier PRD decision and is retained as planning history. The current PRD now carries the accepted decisions: Turkish, English and Portuguese are always usable; only newly added languages use remote test-then-live visibility; the application starts in English when no language setting can be accessed. German is not an automatically enabled launch language. Other FR-9 rules remain unchanged.
+
+The 2026-10-01 product decision makes CMS the control surface for changing a newly added language from tester-only to live availability after the required checks. The backend/configuration delivery and mobile audience checks remain implementation contracts; this is separate from mobile store-release rollout.
 
 Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Dil görünürlüğü referans sürümdeki gibidir: Türkçe, İngilizce ve Almanca açıktır; Portekizce yalnız mevcut uzaktan yapılandırma tarafından açıldığında görünür; İspanyolca kapalıdır. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Kullanıcı bu davranışı onaylamıştır.
 
@@ -182,7 +195,7 @@ Sayfa görseli ve anlatım sesi birlikte doğru sayfaya aittir. İlk sayfa hazı
 
 #### FR-13 — Hikâye kontrolleri ve tamamlanma
 
-Referans sürümdeki anlatım/müzik kontrolleri, otomatik ve manuel sayfa ilerletme ile tamamlanma davranışları korunur. Hızlı gezinme ile otomatik ilerlemenin çakışması yanlış sayfa veya çift ses üretmez. Tamamlanma ekranındaki değerlendirme, benzer içerik ve paywall girişleri envanterden doğrulanır. Etkileşimli hikâye dalları ve seçimleri replacement kapsamı dışındadır.
+Normal resimli hikâyelerdeki eski arka plan müziği özelliği artık kullanım dışıdır; yeni okuyucuda ayrı müzik kontrolü gereksinimi yoktur. Anlatım kontrolü, otomatik ve yalnız kaydırmayla yapılan manuel sayfa ilerletme ile tamamlanma davranışları korunur. Alttaki sayfa noktaları konum göstergesidir; dokunarak sayfa seçimi yapmaz. Normal sayfada görsele tek dokunuş üst/alt kontrol panellerinin görünürlüğünü değiştirir, sayfayı değiştirmez. Kullanıcının iPhone gözlemine göre okuyucudaki Ses kapatıldığında hikâye anlatımı durur, görseller görünür kalır ve sayfa geçişleri manuel yapılır; Ses yeniden açılınca aynı sayfanın anlatımı baştan başlar. Ses açıkken sayfanın anlatımı bitince bir sonraki sayfaya otomatik geçilir ve o sayfanın anlatımı başlar; kullanıcı kaydırarak sayfa değiştirirse önceki sayfanın sesi kesilir ve gidilen sayfanın anlatımı baştan oynar. Ses açıkken son sayfanın anlatımı bitince tamamlanma ekranı kendiliğinden açılır; Ses kapalıyken son sayfadan bir kez daha ileri kaydırıldığında açılır. Hızlı gezinme ile otomatik ilerlemenin çakışması yanlış sayfa veya çift ses üretmez. Tamamlanma ekranında benzer hikâyeler gösterilir. Hikayeler Ekranına Dön eyleminden sonra koşula bağlı olarak puanlama daveti gösterilebilir; otomatik paywall akışı yalnız Android’de başlayabilir ve öncesinde ayrı bir premium teklif penceresi yoktur. Hikâye tamamlanmadan okuyucudaki Çıkış seçildiğinde de aynı otomatik paywall yapılandırması yalnız Android’de, premium olmayan kullanıcı için uygulanır; anlatım durur ve hikâye bilgi ekranına dönülür. iOS’ta hikâye bitişi veya erken çıkış otomatik paywall tetiklemez; iOS’taki diğer doğrudan paywall girişleri her açılışta yeni çocuk kilidi gerektirir. Android’de çocuk kilidi gösterilmez. Android’de aynı dönüşte puanlama ve paywall koşulları birlikte sağlanırsa önce puanlama gösterilir ve paywall o dönüş için atlanır; akışlar üst üste veya art arda açılmaz. Eski kaynak kodundaki tetikleme dalları incelenmiştir; etkin Remote Config değerleri ve gerçek cihazdaki tüm sonuçlar henüz doğrulanmamıştır. Ekranı kaydırmak bu akışları başlatmaz. Etkileşimli hikâye dalları ve seçimleri replacement kapsamı dışındadır.
 
 #### FR-14 — Sesli oynatıcı
 
@@ -204,7 +217,7 @@ Kullanıcı kararıyla kapsam dışıdır; bu kimlik yeniden kullanılmaz. Eski 
 
 #### FR-18 — Destek ve iletişim
 
-Geri bildirim gönderimi, doğrulama ve mevcut sınırlar; yerelleştirilmiş yasal/yardım belgeleri; uygulama değerlendirme çağrısı ve sürüm bilgisi; duyuru, bildirim izni ve deep-link giriş noktaları korunur. Başarısız gönderim başarılı gösterilmez. Duyuru/bildirim ve deep-link hedefleri geçerli ekrana gider veya anlaşılır durum sunar. Kullanıcıya görünen bildirim/duyuru/deep-link davranışı referans sürümle aynı kalır; teknik sağlayıcı veya SDK seçimi mimari aşamasında değişebilir. Mevcut operasyonel yapılandırmanın görünür özellikleri, ücretsiz içerikleri, duyuruları ve paywall tetiklerini yönetme ihtiyaçları envantere dahildir; aynı Remote Config anahtarlarının kullanılması şart değildir.
+Geri bildirim gönderimi, doğrulama ve mevcut sınırlar; yerelleştirilmiş yasal/yardım belgeleri; uygulama değerlendirme çağrısı ve sürüm bilgisi; eski kaynaktan doğrulanan duyuru ve bildirim izni giriş noktaları korunur. Kullanıcı 2026-10-01 tarihinde bildirimden hedefe gitme ve deep-link açılışını eski uygulamada bulunmayan yeni sürüm özelliği olarak onaylamıştır; hedef/format ve güvenli yönlendirme sözleşmesi uygulama sırasında doğrulanacaktır. Kullanıcının iPhone gözlemine göre tamamlanma sonrası puanlama davetindeki X ana sayfaya döner; “Bizi Değerlendir” seçilince boş yıldızlı uygulama içi puanlama penceresi açılır; “Şimdi Değil” ana sayfaya döner. Yıldız seçilince mavi yıldızlı “Gönder” durumuna geçilir; bu durumdaki “Vazgeç” ana sayfaya döner. “Gönder”e basılınca “Yorum Yaz”/“Tamam” eylemleri olan teşekkür ekranı açılır. “Yorum Yaz” App Store’u açar; “Tamam” ana sayfaya döner. Mağazaya yönlendirme tek başına gönderilmiş değerlendirme kanıtı değildir. Başarısız gönderim başarılı gösterilmez. Onaylanan bildirim/deep-link hedefleri geçerli ekrana gider veya anlaşılır durum sunar; duyuru hedefi ancak ayrı bir ürün kararıyla eklenir. Eski kaynakta duyuru yalnız otomatik dönen görsel karusel ve kapatılabilir büyük görsel olarak doğrulanmıştır; hedefe yönlendiren duyuru veya bildirim/deep-link açılış işleyicisi aynı Flutter kaynak taramasında bulunmamıştır. Bu nedenle duyuru hikâyesinin referans kapsamı görsel karusel ve büyük görsel görüntülemedir; hedefe yönlendirme ancak ayrı bir ürün kararıyla eklenir. Portekizce duyuru görseli yoksa İngilizce görsel onun yerine gösterilmez; uygun görsel bulunmayan duyuru atlanır. Bildirim/deep-link yönlendirmesinin ürün kapsamı onaylıdır; hedef/format ve entegrasyon sözleşmesi gerekir. Teknik sağlayıcı veya SDK seçimi mimari aşamasında değişebilir. Mevcut operasyonel yapılandırmanın görünür özellikleri, ücretsiz içerikleri, duyuruları ve paywall tetiklerini yönetme ihtiyaçları envantere dahildir; aynı Remote Config anahtarlarının kullanılması şart değildir.
 
 #### FR-19 — Satın alma ve geri yükleme
 
@@ -212,7 +225,7 @@ RevenueCat üzerinden mevcut aboneliklerin tanınması, satın alma, geri yükle
 
 #### FR-20 — Promosyon ve paywall
 
-Referans sürümdeki promosyon kodu/teklif, paywall giriş ve kapatma, üyelik yönetimi işlevleri envanterden doğrulanarak korunur. Hatalı/geçersiz promosyon tanımlı hata sunar. RevenueCat ürün/teklif kimlikleri ile teknik tetikleme/entegrasyon ayrıntıları gerçek entegrasyon sözleşmesinde belirlenecektir. Kullanıcı bu yaklaşımı onaylamıştır.
+Referans sürümde promosyon kodu, aktif kod kaydındaki `offering_id` ile RevenueCat teklifini açar; aynı istemci yolunda doğrudan premium hak verme davranışı görülmemiştir. Paywall giriş ve kapatma ile üyelik yönetimi işlevleri envanterden doğrulanarak korunur. Hatalı/geçersiz promosyon tanımlı hata sunar. RevenueCat ürün/teklif kimlikleri ile teknik tetikleme/entegrasyon ayrıntıları gerçek entegrasyon sözleşmesinde belirlenecektir. Kullanıcı bu yaklaşımı onaylamıştır.
 
 #### FR-21 — Kullanıcı akışlarının backend kaydı
 
@@ -246,7 +259,7 @@ Korumalı medya backend erişim kontrolünden sonra kısa ömürlü URL'lerle su
 
 #### FR-27 — Kayıpsız ve yeniden denenebilir taşıma
 
-Eski/yeni içerik ve hesap kimlikleri doğru eşleşir. Tekrar deneme kayıt çoğaltmaz, daha yeni veriyi ezmez ve eksik eşleşmeleri sessizce atmaz. “Verileriniz taşınıyor” ve “Tekrar dene” deneyimleri uygulanır; tamamlanmamış migration boş profille normal kullanıma geçemez.
+Eski/yeni içerik ve hesap kimlikleri doğru eşleşir. Tekrar deneme kayıt çoğaltmaz, daha yeni veriyi ezmez ve eksik eşleşmeleri sessizce atmaz. Kullanıcının 2026-10-01 kararına göre ikinci cihazdaki eski yerel kayıtlarla çakışmada yeni sistem hesabında zaten bulunan kayıtlar korunur; yerel değerler bunların üzerine yazılmaz veya otomatik birleştirilmez. Hesapta karşılığı olmayan yerel kayıtların güvenli ele alınması OQ-3 sözleşmesinde belirlenir; sessizce silinmez. “Verileriniz taşınıyor” ve “Tekrar dene” deneyimleri uygulanır; tamamlanmamış migration boş profille normal kullanıma geçemez.
 
 #### FR-28 — Yerel anonim veri ve temizlik
 
@@ -272,19 +285,25 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 
 #### Evidence gates and unresolved decisions
 
+The [2026-09-30 legacy source audit](./epics-mobile-legacy-open-points-audit.md) inventories every gate below, separating source-fixed behavior from new backend/provider contracts, device evidence and product questions. The rows below remain execution gates; source characterization alone does not close them.
+
 | Gate | Current evidence / required closure | Timing |
 | --- | --- | --- |
 | AD-5 / FR-29 | Media PoC complete per user. Separate unmerged branch codex/ios-legacy-upgrade-probe, commit a807a9f, reports iOS Simulator preservation of is_anonymous=true, language=tr and first_run=false across install/relaunch. Name/read-list absent; no populated-profile/history proof. Legacy build 1.0.34+332 → probe 1.0.35+333 differs from visual baseline 1.0.35+333. No production signing or registered Firebase session proof. | Signed representative in-place updates on BOTH platforms, correct live IDs/signing/provisioning and retained local records/sessions must pass BEFORE auth/migration feature development. No merge performed by this planning task. |
-| OQ-1 | Complete reader/player controls and backend capability evidence; reference screenshots and redacted screen-to-API success/error fixtures. | Before finalizing affected epic scope and suitability. |
+| OQ-1 | Partially evidenced by a user-supplied legacy iPhone screenshot with reader controls visible: Exit, Sound, pagination dots and page count. Control actions, other states/player surfaces and backend capability evidence still require characterization; collect redacted screen-to-API success/error fixtures. | Before finalizing affected epic scope and suitability. |
 | OQ-2 | >=99.5% crash-free users per platform is fixed. Measurement window/sample, device/network matrix and memory/latency p50/p95 budgets remain open. | Measurement plan early; thresholds and sufficient evidence before release. |
-| OQ-3 + OQ-6 | Later-device unique local records, source/target fields and identity mapping, invalid/unmapped data, removed-content history, shared-Firebase deletion, tombstones and remigration prevention. | Resolve before migration acceptance criteria; deletion contract before deletion implementation. |
-| OQ-4 | Partially resolved by user screenshots: reading stories, audio stories, meditation and lullabies appear in legacy search. Real payloads, matching/ranking/group counts, threshold/debounce, lightweight catalog, pagination and errors remain open; see evidence update below. | Before finalizing the affected UX/API contracts or implementing the stories that depend on them. |
+| OQ-3 + OQ-6 | The user decided on 2026-10-01 that existing new-system account records win conflicts with older local records on a later device. Unique later-device records, source/target fields and identity mapping, invalid/unmapped data, removed-content history, shared-Firebase deletion, tombstones and remigration prevention still require contracts. | Resolve before migration acceptance criteria; deletion contract before deletion implementation. |
+| OQ-4 | User screenshots show reading stories, audio stories, meditation and lullabies. Legacy Flutter source fixes the client trigger at three characters and 500 ms debounce. Real payloads, matching/ranking/group counts, lightweight catalog, pagination and server errors remain open; see evidence update below. | Before finalizing the affected UX/API contracts or implementing the stories that depend on them. |
 | OQ-8 / AD-10 | Authorization matrix, shared content/experience/asset IDs, immutable manifest, start/fetch point, renewal/revocation, actual renditions/integrity, metadata-only approval, retention, bounded prefetch/cache and retry/resume semantics. Experimental PoC response is insufficient as production contract. | Resolve relevant contracts before catalog/reader/player publication stories. |
-| OQ-7 | RevenueCat products/offerings and event fields, retention, idempotency/retry contract; FR-21 event categories are already fixed. | Before late integration implementation; purchase/restore and events verified before release. |
-| OQ-9 | Notification/announcement/deep-link behavior, permissions, SDK/data scope and store audience declarations. | Before finalizing release flows and related integrations. |
-| OQ-10 / AD-11 | Rollout cohorts, expansion/stop thresholds, recovery and separate old-system shutdown decision. | Before rollout; backend compatibility precedes mobile cohorts. |
+| OQ-7 | Legacy promotion-code entry resolves an active code's `offering_id` and opens a RevenueCat offering; direct access is not evidenced in that path. Actual RevenueCat products/offerings and event fields, retention, idempotency/retry contracts remain open; FR-21 event categories are already fixed. | Before late integration implementation; purchase/restore and events verified before release. |
+| OQ-9 | Legacy source fixes notification permission request at deferred startup and confirms a profile OS-permission switch. Its announcement is an image carousel/zoom overlay, now the reference scope. The user approved notification/deep-link destination navigation as a new replacement feature and rejected English announcement artwork fallback for Portuguese. Provider, route formats, SDK/data scope and store audience declarations remain open. | Before finalizing release flows and related integrations. |
+| OQ-10 / AD-11 | CMS manages new-language tester-to-live promotion. The user personally approves and manages staged mobile application release through the store consoles. Mobile release cohort sizes, observation periods, expansion/stop thresholds, recovery and separate old-system shutdown decision remain open. | Before rollout; backend compatibility precedes mobile cohorts. |
 
 Supported minimums remain Android API 24 and iOS/iPadOS 15, phone and tablet. Known critical playback failure or memory termination on test devices blocks release. Do not infer production stability from an emulator run or insufficient crash-free samples.
+
+The [2026-09-29 legacy iPhone reader screenshot](./mobile-evidence/reader-controls-2026-09-29/ios-legacy-reader-controls.png) shows the controls over the first illustrated page: an upper Exit control, an upper Sound control, lower page dots and a localized current/total page indicator. It establishes the visible arrangement. The user reports that tapping Sound to disable story audio leaves the illustrations visible and makes page transitions manual. The user reports that re-enabling Sound restarts narration from the beginning of the current page. With Sound enabled, narration completion advances to the next page and begins its audio; a user swipe stops the current page audio and starts the destination page narration. Separate background music in normal illustrated stories is deprecated and out of scope. The user confirms that manual page changes use swipes only; the dots indicate position and are not page-selection controls. The inspected legacy source initializes the upper/lower control panels closed and toggles them on a page tap. The user confirms this ordinary-page tap behavior on the legacy iPhone from which the screenshots were taken; the still image alone does not demonstrate the interaction. The separate completion-boundary tap closes the panels in source and still needs device acceptance.
+
+The [2026-09-29 legacy iPhone completion screenshot](./mobile-evidence/completion-2026-09-29/ios-legacy-story-completion.png) shows a completion heading, the completed story cover, a return-to-stories action and a horizontal Similar Stories row containing locked cards. No rating or paywall action is visible in this captured state. The user reports that selecting Return to Stories can conditionally show a rating invitation or premium offer. Four later iPhone screenshots capture the [rating invitation](./mobile-evidence/rating-2026-09-30/01-rating-invitation.png), [unselected-star popup](./mobile-evidence/rating-2026-09-30/02-rating-unselected.png), [selected-star popup](./mobile-evidence/rating-2026-09-30/03-rating-selected.png) and [thank-you popup](./mobile-evidence/rating-2026-09-30/04-rating-thanks.png). The user confirms this order: “Bizi Değerlendir” opens empty stars, selecting a star shows blue selected stars and “Gönder,” and “Gönder” opens the thank-you popup with “Yorum Yaz” and “Tamam.” The user confirms that the initial invitation’s X, “Şimdi Değil” on the empty-star popup, “Vazgeç” after selecting stars and “Tamam” on the thank-you popup return to the home screen; “Yorum Yaz” opens the App Store. After inspecting the legacy source, the user chose its platform behavior for the replacement: the conditional completion paywall is Android-only and begins directly without an intermediate offer popup or parental gate. iOS completion does not automatically open a paywall; other direct iOS paywall entry points still require a fresh parental gate. The user confirms that closing the completion-triggered paywall with X opens the home screen. The inspected legacy branch gives the rating invitation precedence when both are eligible, skipping the paywall on that return rather than stacking the two prompts; the user chose the legacy behavior for the replacement. The inspected legacy branch shows the decision order: rating invitation first; otherwise the `auto_paywall_after_story_completed` flag, Android platform and non-premium status control the completion paywall. A separate reader Exit branch uses the same flag on Android before completion; the user chose to preserve it. Live Remote Config values remain unverified. The inspected legacy `StoryLastPageWidget` invokes its completion auto-paywall branch only on Android, matching the latest replacement decision. Store navigation alone is not evidence of a submitted review.
 
 DESIGN.md is verified-with-gaps; EXPERIENCE.md is marked final but remains historical evidence subject to PRD exclusions. COVERAGE.md has a stale blanket statement that tablet screenshots do not exist; its ending and TABLET.md describe emulated tablet captures. Treat these as screen-size evidence only. Images are indexed here and will be inspected for each relevant screen; this inventory does not claim fresh visual/runtime verification.
 
@@ -292,7 +311,9 @@ DESIGN.md is verified-with-gaps; EXPERIENCE.md is marked final but remains histo
 
 The user reports that Turkish, English and Portuguese content is currently loaded and directs that these languages be usable. This supersedes earlier PRD/design-source statements that enabled German and conditionally exposed Portuguese. This is a product decision and user-reported content status, not an independent audit of all content/experience readiness.
 
-New languages may first be enabled for test use through remote configuration and later enabled for live use. Plan distinct hidden, test-only and live visibility outcomes; exact configuration schema and test-audience selection remain contract work. Language visibility must not override candidate/live publication or protected-media authorization. A test-only language must not leak into ordinary users' choices or fallback results. Enabling a language does not mark unready media as ready.
+New languages are enabled for test use through remote configuration first, then for all users after the required checks are complete. Plan distinct hidden, test-only and live visibility outcomes; exact configuration schema and test-audience selection remain contract work. Language visibility must not override candidate/live publication or protected-media authorization. A test-only language must not leak into ordinary users' choices or fallback results. Enabling a language does not mark unready media as ready.
+
+The 2026-09-29 clarification makes Turkish, English and Portuguese permanently available language choices, independent of remote configuration for future languages. If no language setting is accessible at startup, the application UI starts in English. A failed remote fetch must not remove those three choices or silently overwrite an accessible persisted preference. The separate English content-fallback rule still requires published, authorized media. When remote configuration is unavailable, a future test-only language may remain visible to the same tester only through previously verified, still-valid cached eligibility. Missing, invalid, expired or other-account eligibility does not expose it. The cache validity period, verification evidence and recovery mechanics require a versioned implementation contract; this planning decision does not invent a TTL.
 
 E1 owns language consumption and safe configuration behavior for controlled test users, E2 applies it to listening, E3 owns persisted account preference/migration, and E5 verifies test-versus-live language exposure with authorized users. Story 1.10 is approved for planning; no implementation is authorized here. Existing FR-9 English fallback and language/revision continuity rules remain in force.
 
@@ -414,7 +435,7 @@ UX-DR11: **Search and category.** Keep focused query/keyboard, unsent query, emp
 
 UX-DR12: **Story detail.** Preserve hero, circular back button, duration/age pills, centered gradient start CTA, narration toggle, summary, credits and related content. Locked/free states remain distinct; opening details never starts audio. Source: SCREENS 14; FR-10, FR-11.
 
-UX-DR13: **Reader.** Preserve full-screen page illustration, narration/music controls, manual/automatic transitions and recoverable loading. Exclude branching choices and the fixed second-ZIP boundary; first-page readiness and bounded preparation follow FR-12–15. Source: SCREENS 15; FR-12–15.
+UX-DR13: **Reader.** Preserve full-screen page illustration, narration control, manual/automatic transitions and recoverable loading. Separate background music in normal illustrated stories is deprecated. Exclude branching choices and the fixed second-ZIP boundary; first-page readiness and bounded preparation follow FR-12–15. Source: SCREENS 15; FR-12–15.
 
 UX-DR14: **Completion.** Preserve completion message, rating, related-content and applicable paywall entry points. Capture a stable reference and actual action outcomes before accepting this surface. Source: SCREENS 16; FR-13, FR-16.
 
@@ -424,7 +445,7 @@ UX-DR16: **Listening details and player.** Meditation/audio-story details retain
 
 UX-DR17: **Profile and edit.** Preserve avatar/name, registered counters and verification reminder, anonymous membership variant and setting rows. Name/avatar editing must show real options and persist; missing avatar imagery in the reference capture is an evidence gap. Source: SCREENS 26–27; FR-4, FR-16.
 
-UX-DR18: **Language.** Preserve the reference language-selection presentation while applying the latest user decision: TR/EN/PT are usable. Newly added languages can be remotely enabled for test use first, then enabled live. Do not automatically expose DE or other languages merely because translation assets exist. Verify UI/content refresh and persistence without stale-language results. Source: user decision 2026-09-27, SCREENS 28 (presentation only), FR-9 as overridden above.
+UX-DR18: **Language.** Preserve the reference language-selection presentation while applying the latest user decisions: TR/EN/PT are always usable; when no language setting is accessible at startup, use English for the application UI. Newly added languages can be remotely enabled for test use first, then enabled live. Do not automatically expose DE or other languages merely because translation assets exist. Verify UI/content refresh and persistence without stale-language results. Source: user decisions 2026-09-27 and 2026-09-29, SCREENS 28 (presentation only), current FR-9.
 
 UX-DR19: **Account management.** Preserve settings rows, old/new password validation, logout confirmation and deletion warning/reauthentication presentation. Deletion semantics follow new-system-only FR-5/OQ-6, never destructive legacy defaults. Source: SCREENS 29–31, 33; FR-5.
 
@@ -566,7 +587,7 @@ Stories 1.1–1.12 are approved for planning. The first working package remains 
 
 ### Story 1.1: Discover eligible content on the Library home screen
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to see category rows and content previews appropriate to my language and access audience,
@@ -574,7 +595,7 @@ So that I can see what is available to read.
 
 **Requirements:** FR-6, FR-9, FR-10 (listing scope); NFR-5–8; UX-DR1–4, UX-DR10, UX-DR22–25.
 
-**Prerequisites:** Agreed home-list contract and redacted response examples covering category order, preview limits, language/fallback and audience eligibility; authorized development/test access; existing reference design assets. AD-5 does not block this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register). Verify the toolchain/generator gate and relevant UX-DR24 checks under Shared readiness and acceptance checks. This first shell consumer owns Library navigation; later destination capabilities extend the same shell without being claimed as complete here.
+**Prerequisites and sequence:** Start this feature slice by defining and implementing the required backend home-list contract and redacted response examples covering category order, preview limits, language/fallback and audience eligibility; establish authorized development/test access and use existing reference design assets. The backend companion work may be in this task or a linked sequential task; verify EXT-CATALOG before accepting the mobile listing. AD-5 does not block starting this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only. Verify the toolchain/generator gate and relevant UX-DR24 checks under Shared readiness and acceptance checks. This first shell consumer owns Library navigation; later destination capabilities extend the same shell without being claimed as complete here.
 
 **Acceptance Criteria:**
 
@@ -620,7 +641,7 @@ So that I can see what is available to read.
 
 ### Story 1.2: Open the selected story detail from Library
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to open the story I selected from Library and inspect its details,
@@ -673,7 +694,7 @@ So that I can decide whether to start reading it.
 
 ### Story 1.3: Start reading the selected story
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to open the first page of my selected story with my narration preference,
@@ -717,7 +738,7 @@ So that I can begin reading without waiting for the entire story to download.
 
 ### Story 1.4: Navigate story pages manually and automatically
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to change pages myself or advance automatically when narration ends,
@@ -727,16 +748,29 @@ So that I can follow the story at my preferred pace without mismatched pages or 
 
 **Prerequisites:** Story 1.3; characterized reference navigation/automatic-advance behavior and agreed bounded preparation parameters under OQ-1/8. The existing media coordinator owns transitions. Completion presentation and durable completion recording are subsequent scope; page navigation is independently testable.
 
+**Legacy source and replacement decision (2026-09-30):** `story_content.dart` has a separate reader Exit action that checks the same `auto_paywall_after_story_completed` Remote Config flag and invokes a paywall only on Android when the premium state does not resolve true, before leaving the reader. `_goBack()` stops story narration and pops back to the story information screen. This exit hook is distinct from Return to Stories on the completion screen. The user chose to retain the legacy Android-only exit hook in the replacement; implementation must avoid treating an unresolved premium state as verified non-premium access evidence.
+
 **Acceptance Criteria:**
 
 **Given** an admitted story and an active page,
-**When** the reader navigates forward or backward,
+**When** the reader swipes forward or backward,
 **Then** the requested valid page is displayed,
-**And** enabled narration corresponds to that page within the same admitted language/revision.
+**And** if Sound is enabled, the previous page's narration stops and the destination page's narration starts from its beginning within the same admitted language/revision.
 
-**Given** automatic advance is enabled and a following page exists,
+**Given** the lower page dots are visible,
+**When** the reader views or taps them,
+**Then** they indicate the active page but do not select another page,
+**And** manual page navigation remains swipe-only.
+
+**Given** Sound is enabled and a following page exists,
 **When** the active page narration ends,
-**Then** the reader advances exactly once using the reference transition animation.
+**Then** the reader advances exactly once using the reference transition animation,
+**And** narration for the new page starts from its beginning without overlapping the completed page's audio.
+
+**Given** story audio has been turned off with the reader Sound control,
+**When** the current page remains visible or its narration would otherwise complete,
+**Then** the illustrated page stays available without story audio,
+**And** page transitions require the reader's manual action rather than automatic narration completion.
 
 **Given** manual navigation and narration completion occur concurrently,
 **When** the coordinator processes them,
@@ -758,6 +792,26 @@ So that I can follow the story at my preferred pace without mismatched pages or 
 **Then** only the contracted bounded lookahead is prepared,
 **And** the reader does not speculatively download the entire story.
 
+**Given** reader controls are visible over an illustrated page,
+**When** the current page and total are rendered,
+**Then** the reference upper Exit and Sound controls and lower pagination dots and localized page counter are visible,
+**And** their displayed page position matches the active page without inferring the Sound action from a still image.
+
+**Given** an ordinary illustrated page is open,
+**When** the reader taps the page without swiping,
+**Then** the upper and lower control panels toggle between visible and hidden,
+**And** the active page does not change.
+
+**Given** the reader selects Exit on Android before completing a story, the configured automatic paywall is enabled and the user is confirmed non-premium,
+**When** the reader closes,
+**Then** the current narration stops, the story information screen becomes the return context and the direct RevenueCat paywall is requested without a parental gate,
+**And** closing that paywall with X leaves the user on the story information screen,
+**And** exiting early is not recorded as completing the story.
+
+**Given** the reader selects Exit on iOS, or the user is premium or the automatic paywall is disabled on Android,
+**When** the reader closes,
+**Then** the story information screen becomes the return context without this automatic paywall.
+
 **Given** the first or last page is active,
 **When** navigation requests movement outside the valid page range,
 **Then** no invalid page or asset request is made,
@@ -765,7 +819,7 @@ So that I can follow the story at my preferred pace without mismatched pages or 
 
 ### Story 1.5: Complete a story and preserve its completion record
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to see the completion screen when I finish a story and retain my reading record,
@@ -773,14 +827,24 @@ So that my completed reading is recognized reliably.
 
 **Requirements:** FR-13, FR-16; FR-6 (related content); NFR-4–7; UX-DR14, UX-DR21–25; AD-3, AD-7, AD-9.
 
-**Prerequisites:** Stories 1.2–1.4; characterized reference completion trigger for narrated and silent/manual reading, stable completion-screen evidence, evaluation/related-content contracts, and a durable idempotent completion/duration contract for the controlled test user. OQ-1 must settle the trigger before implementation. User approval of this story does not select a trigger: merely opening the last page is not assumed to complete reading. Production-account migration is Epic 3 scope; backend flow analytics is separate Epic 7 scope. Verify the applicable EXT-HISTORY closure records in the [external dependency register](#external-dependency-register). Resolve durable local pending-record persistence/recovery, stable account/session/event identities, acknowledgement and storage-failure handling before implementation; do not select a storage engine here. Business progress/history records remain distinct from evictable media and bounded flow telemetry. Characterize reading-duration rules for narrated/silent/manual reading, page-preparation waits and background/lock intervals with OQ-1 reference evidence and the backend history contract.
+**Prerequisites:** Stories 1.2–1.4; confirmed narrated completion when the final-page audio ends, confirmed silent/manual completion after an additional forward swipe from the final page, the linked legacy iPhone completion-screen evidence, verified return/recommendation behavior, and a durable idempotent completion/duration contract for the controlled test user. The user confirmed automatic completion after final-page narration ends and silent/manual completion after one additional forward swipe from the final page. Merely opening the last page does not complete silent reading. Other OQ-1 control and completion-screen evidence remains open. Production-account migration is Epic 3 scope; backend flow analytics is separate Epic 7 scope. Verify the applicable EXT-HISTORY closure records in the [external dependency register](#external-dependency-register). Resolve durable local pending-record persistence/recovery, stable account/session/event identities, acknowledgement and storage-failure handling before implementation; do not select a storage engine here. Business progress/history records remain distinct from evictable media and bounded flow telemetry. Characterize reading-duration rules for narrated/silent/manual reading, page-preparation waits and background/lock intervals with OQ-1 reference evidence and the backend history contract.
 
 **Acceptance Criteria:**
 
-**Given** the reference-defined completion condition for narrated or silent/manual reading,
-**When** that condition occurs,
+**Given** Sound is enabled on the final page,
+**When** that page's narration ends,
+**Then** the completion screen opens automatically exactly once,
+**And** simply opening the final page does not complete the story before its narration ends.
+
+**Given** Sound is disabled and silent/manual reading reaches the final page,
+**When** the reader swipes forward once more,
 **Then** the completion screen opens exactly once,
-**And** each reading mode is verified independently against the reference rather than assuming last-page visibility alone means completion.
+**And** merely viewing the final page does not complete the story.
+
+**Given** a completed illustrated story matching the captured reference state,
+**When** the completion screen is displayed,
+**Then** it shows the completion heading, completed-story cover, return-to-stories action and horizontal Similar Stories cards,
+**And** each visible recommendation's lock state reflects its authoritative access decision.
 
 **Given** a completed reading session,
 **When** its completion and duration are persisted or retried,
@@ -792,15 +856,38 @@ So that my completed reading is recognized reliably.
 **Then** the completion screen remains usable,
 **And** the record can be retried safely without claiming server-confirmed persistence before acknowledgement.
 
-**Given** the completion screen offers evaluation and related content,
-**When** those controls are displayed and used,
-**Then** their behavior matches the characterized reference,
-**And** a related-content selection opens its correct detail; no invalid card is shown when no eligible recommendation exists.
+**Given** eligible Similar Stories cards on the completion screen,
+**When** a card is selected,
+**Then** its correct detail opens under the normal access rules,
+**And** no invalid card is shown when no eligible recommendation exists.
 
-**Given** the reference includes a completion premium entry point,
-**When** completion is displayed,
-**Then** that entry point is retained in the screen scope,
-**And** actual paywall/purchase integration remains explicitly pending until Epic 6.
+**Given** the reader selects Return to Stories from completion,
+**When** the verified rating/premium eligibility configuration is evaluated,
+**Then** an applicable prompt may appear at that return action, as evidenced by the rating-modal screenshot,
+**And** simply displaying or scrolling the completion screen does not trigger those prompts.
+
+**Given** both the rating invitation and completion paywall are eligible on the same Android Return to Stories action,
+**When** that action is handled,
+**Then** the rating invitation takes precedence and the paywall is skipped for that return,
+**And** the two prompts are not stacked or shown in immediate succession.
+
+**Given** the verified configuration selects an automatic paywall after Return to Stories on Android,
+**When** that completion action is taken, the rating invitation is not eligible and the user is confirmed non-premium,
+**Then** the direct paywall flow starts without an intermediate premium-offer popup,
+**And** Android opens the paywall without a parental gate,
+**And** this conditional flow is not assumed to appear for every reader; actual paywall/purchase integration remains pending until Epic 6.
+
+**Given** the user is premium or the completion auto-paywall configuration is disabled on Android,
+**When** Return to Stories is selected and no rating invitation is eligible,
+**Then** the completion auto-paywall is not opened.
+
+**Given** the reader selects Return to Stories from completion on iOS,
+**When** the rating invitation is not eligible,
+**Then** this completion action does not automatically open a paywall.
+
+**Given** that completion-triggered paywall is open,
+**When** the user selects its X close control,
+**Then** the home screen opens without assuming a purchase.
 
 **Given** matching content, language and phone/tablet reference conditions,
 **When** completion appearance is compared,
@@ -823,49 +910,56 @@ So that my completed reading is recognized reliably.
 **And** excluded intervals and manual page jumps cannot inflate the total; elapsed wall-clock time is not assumed to equal eligible reading time.
 
 
-### Story 1.6: Control narration and music while reading
+### Story 1.6: Control narration while reading
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
-I want to change narration and music settings while reading,
+I want to control narration while reading,
 So that I can use the story audio controls as in the reference application.
 
 **Requirements:** FR-13; NFR-1, NFR-7; UX-DR13, UX-DR24–25; AD-3.
 
-**Prerequisites:** Stories 1.3–1.4; reference control inventory and OQ-1 characterization, including whether re-enabling narration starts the current page from the beginning or resumes its position. This planning approval does not select that unresolved behavior. Extend the existing media coordinator; do not add competing feature-local players.
+**Prerequisites:** Stories 1.3–1.4; reference control inventory and remaining OQ-1 characterization. The user confirmed that re-enabling Sound starts the current page narration from the beginning. Separate background music in normal illustrated stories is deprecated and is not an implementation prerequisite. Extend the existing media coordinator; do not add competing feature-local players.
 
 **Acceptance Criteria:**
 
 **Given** an active illustrated story,
 **When** its audio controls are shown and operated,
-**Then** narration and music controls preserve their reference appearance and function.
+**Then** the narration control preserves its reference appearance and function,
+**And** no separate background-music control is required for a normal illustrated story.
 
-**Given** narration and music have independently selected settings,
-**When** the reader disables either channel,
-**Then** the other channel setting remains unchanged.
+**Given** the reader control overlay is visible,
+**When** the Sound entry is displayed,
+**Then** its reference label and icon are present,
+**And** its visible state reflects whether story narration is enabled.
 
-**Given** the reader has selected audio settings,
+**Given** story audio is active in the illustrated reader,
+**When** the reader turns off the visible Sound control,
+**Then** narration stops while the illustrations remain visible,
+**And** page advancement becomes manual.
+
+**Given** the reader has selected a narration setting,
 **When** the active page changes,
-**Then** those selections remain effective,
-**And** a disabled channel does not spontaneously turn back on.
+**Then** that selection remains effective,
+**And** disabled narration does not spontaneously turn back on.
 
 **Given** narration has been disabled,
 **When** the reader enables it again,
-**Then** the current page narration is used,
-**And** its restart/resume position follows the characterized reference behavior.
+**Then** the current page narration starts from the beginning,
+**And** it does not resume from the previous position or start narration for a different page.
 
 **Given** rapid repeated changes to audio controls,
 **When** asynchronous commands and player callbacks resolve,
 **Then** no duplicate audio, wrong-page narration or unexpected page advance occurs.
 
-**Given** any narration/music playback state,
+**Given** any narration playback state,
 **When** controls render their visible and accessibility states,
-**Then** both accurately reflect the actual audio state.
+**Then** the Sound control accurately reflects the actual narration state.
 
 ### Story 1.7: Preserve reading sessions through interruptions
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to return from a brief interruption without losing my reading session,
@@ -913,7 +1007,7 @@ So that I can continue with consistent page, audio and progress state.
 
 ### Story 1.8: Browse all content in a category
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to browse all eligible content in a Library category and open a selected story,
@@ -955,7 +1049,7 @@ So that I can discover content beyond the home-screen previews.
 
 ### Story 1.9: Search content in grouped results
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to find content in clearly identified reading and listening result groups,
@@ -963,7 +1057,7 @@ So that I can choose the content and experience I am looking for.
 
 **Requirements:** FR-7–10; NFR-5–7; UX-DR4, UX-DR11, UX-DR24–25.
 
-**Prerequisites:** Stories 1.1–1.2; resolve OQ-4 matching, grouping/count, ranking, threshold/debounce, pagination and error contracts with real request/response evidence. User screenshots establish reading-story, audio-story, meditation and lullaby result coverage. Content name, description and contributor-name matching are user-recalled behavior requiring field-isolated validation; approval does not certify current backend support. Contributor matches return content, not person records. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Stories 1.1–1.2; resolve OQ-4 matching, grouping/count, ranking, pagination and error contracts with real request/response evidence. The legacy client starts a search after at least three typed characters and a 500 ms debounce; retain this visible trigger behavior. User screenshots establish reading-story, audio-story, meditation and lullaby result coverage. Content name, description and contributor-name matching are user-recalled behavior requiring field-isolated validation; approval does not certify current backend support. Contributor matches return content, not person records. Verify the applicable EXT-CATALOG closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -990,7 +1084,7 @@ So that I can choose the content and experience I am looking for.
 **Given** rapidly changing queries and out-of-order responses,
 **When** responses arrive,
 **Then** a stale response cannot replace results for the current query,
-**And** request triggering follows the verified character threshold and debounce behavior rather than invented defaults.
+**And** a request is triggered only after at least three typed characters and 500 ms without further typing, as in the inspected legacy client.
 
 **Given** a reading-story result,
 **When** the reader selects it and returns from detail,
@@ -1015,7 +1109,7 @@ So that I can choose the content and experience I am looking for.
 
 ### Story 1.10: Discover and read content in enabled languages
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want to use supported languages and see content consistently in my selected language,
@@ -1023,19 +1117,39 @@ So that I can discover and read appropriate content without mixed-language resul
 
 **Requirements:** FR-9 (latest user decision), FR-6–8, FR-25; NFR-5–7; UX-DR1–2, UX-DR18, UX-DR22–25; AD-8, AD-10.
 
-**Prerequisites:** Stories 1.1–1.4, 1.8–1.9; agreed remote language visibility/test-audience and fallback contracts. Turkish, English and Portuguese content availability is user-reported; verify actual readiness for the tested experiences. Implement controlled-user language consumption here, production profile persistence/migration in Epic 3, listening integration in Epic 2 and full authorized test/live verification in Epic 5. Tests of audience separation must not depend on implementing production auth in this story.
+**Prerequisites:** Stories 1.1–1.4, 1.8–1.9; agreed remote visibility/test-audience contract for future languages and eligible content-fallback contract. Turkish, English and Portuguese remain available independently of that remote contract; verify actual content readiness for the tested experiences. Define valid, unavailable and malformed remote-configuration handling without exposing test-only languages. Implement controlled-user language consumption here, production profile persistence/migration in Epic 3, listening integration in Epic 2 and full authorized test/live verification in Epic 5. Tests of audience separation must not depend on implementing production auth in this story.
 
 **Acceptance Criteria:**
 
 **Given** the currently enabled language set,
 **When** language choices are displayed,
-**Then** Turkish, English and Portuguese are usable,
+**Then** Turkish, English and Portuguese are usable even when remote language configuration is unavailable,
 **And** German or other languages are not automatically exposed because translation assets exist.
+
+**Given** no language setting can be accessed on startup,
+**When** the application resolves its initial UI language,
+**Then** it starts in English and still offers Turkish, English and Portuguese,
+**And** missing remote configuration does not enable a future test-only language or bypass content publication/access rules.
+
+**Given** an accessible persisted language preference,
+**When** remote configuration for future languages is unavailable,
+**Then** the existing preference remains effective if the user is entitled to that language,
+**And** the English startup default is not silently persisted over that preference.
 
 **Given** a newly added language and configured test audience,
 **When** remote configuration enables that language only for testing,
 **Then** it is available to the authorized test audience but absent from ordinary users' language choices, catalog results and fallback outcomes,
-**And** enabling it live subsequently makes it available to ordinary users without treating unready or unpublished media as accessible.
+**And** the CMS-authorized transition to live subsequently makes it available to ordinary users without treating unready or unpublished media as accessible.
+
+**Given** malformed or unavailable configuration for a newly added language,
+**When** language visibility is resolved or the request is retried,
+**Then** ordinary users cannot gain test-only visibility from that failure,
+**And** Turkish, English and Portuguese remain available.
+
+**Given** remote configuration cannot be fetched after a future language was enabled for a tester,
+**When** that tester's language choices are resolved,
+**Then** the future language remains visible only if previously verified cached eligibility is still valid for the same tester,
+**And** missing, invalid, expired or other-account eligibility hides it without overwriting the tester's saved language preference.
 
 **Given** a language change for the controlled test user,
 **When** Library, category, search and newly opened details load,
@@ -1057,7 +1171,7 @@ So that I can discover and read appropriate content without mixed-language resul
 
 ### Story 1.11: Renew media access without changing the active story revision
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want expired media access to be renewed for my current story session,
@@ -1108,7 +1222,7 @@ So that I can continue reading without mixing content versions or losing my posi
 
 ### Story 1.12: Read reliably through long and repeated sessions
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
 I want long reading sessions and repeated story visits to remain stable,
@@ -1179,7 +1293,7 @@ A controlled, authorized development/test user can discover listening experience
 
 ### Story 2.1: Discover listening content on the Sleep screen
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to see lullabies, meditations and audio stories in their respective sections,
@@ -1225,7 +1339,7 @@ So that I can discover content to listen to.
 
 ### Story 2.2: Start listening directly from a lullaby card
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to tap a lullaby card and enter its player directly,
@@ -1267,7 +1381,7 @@ So that I can begin listening without an intermediate detail screen.
 
 ### Story 2.3: Start meditation or audio-story playback from detail
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to inspect meditation or audio-story information and explicitly start listening,
@@ -1319,7 +1433,7 @@ So that I can choose content before audio begins.
 
 ### Story 2.4: Control listening and handle track endings
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to pause, resume and seek within audio,
@@ -1361,7 +1475,7 @@ So that I can control listening with the expected behavior when a track ends.
 
 ### Story 2.5: Listen in the background and use system media controls
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want playback to continue while the screen is locked or I use another application,
@@ -1405,7 +1519,7 @@ So that I can keep listening and control the same session from the operating sys
 
 ### Story 2.6: Switch safely between reading and listening sessions
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader or listener,
 I want only my selected content to play when I start a different experience,
@@ -1444,7 +1558,7 @@ So that changing stories or listening content does not produce competing playbac
 
 ### Story 2.7: Reach listening experiences from search and complete lists
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want content found in search or a complete category list to open the correct listening flow,
@@ -1491,7 +1605,7 @@ So that I can reach the intended experience from every supported discovery entry
 
 ### Story 2.8: Record listening progress and history accurately
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want my listening progress, duration and completion information to be preserved accurately,
@@ -1543,7 +1657,7 @@ So that my listening history reflects what I actually listened to.
 
 ### Story 2.9: Recover listening from connectivity and media-access failures
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want to recover from temporary connection failures without losing my listening position,
@@ -1591,7 +1705,7 @@ So that I can continue the same content safely.
 
 ### Story 2.10: Listen reliably through long sessions
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a listener,
 I want long listening sessions and repeated content changes to remain stable,
@@ -1660,7 +1774,7 @@ New users can enter through registered or anonymous identity flows, while existi
 
 ### Story 3.1: Prove a safe signed Android in-place update
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing Android user,
 I want the replacement to install as an update without losing my session or local records,
@@ -1701,7 +1815,7 @@ So that I can continue using my account and retained data.
 
 ### Story 3.2: Prove a safe signed iOS in-place update
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing iOS user,
 I want the replacement to update my installed application while retaining its session and local records,
@@ -1743,7 +1857,7 @@ So that adopting the replacement does not require starting again.
 
 ### Story 3.3: Start anonymously as a new user
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to continue without registration on first install,
@@ -1795,7 +1909,7 @@ So that I can begin using the application anonymously.
 
 ### Story 3.4: Create a new account with email and password
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to create an account using my email and password,
@@ -1841,7 +1955,7 @@ So that I can establish a registered identity in the application.
 
 ### Story 3.5: Sign in with email and password
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a registered user,
 I want to sign into my existing account,
@@ -1893,7 +2007,7 @@ So that I can access my own application data safely.
 
 ### Story 3.6: Sign in or register with Google
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign in or create an account using Google,
@@ -1937,7 +2051,7 @@ So that I can access the application through that identity provider.
 
 ### Story 3.7: Sign in or register with Apple
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign in or create an account using Apple,
@@ -1981,7 +2095,7 @@ So that I can access the application through that identity provider.
 
 ### Story 3.8: Verify an email address
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an email-account user,
 I want to use my verification link and see my verified status in the application,
@@ -2023,7 +2137,7 @@ So that the application accurately reflects my email verification.
 
 ### Story 3.9: Reset a forgotten password
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an email-account user,
 I want to set a new password after forgetting my old one,
@@ -2068,7 +2182,7 @@ So that I can regain access to the same account.
 
 ### Story 3.10: Set up a new user profile
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a new user,
 I want to enter profile information step by step or skip optional steps,
@@ -2114,7 +2228,7 @@ So that I can start using the application without providing optional profile dat
 
 ### Story 3.11: Edit the profile name and avatar
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to change my profile name and avatar,
@@ -2156,7 +2270,7 @@ So that my profile reflects my current choices.
 
 ### Story 3.12: View my reading and listening history and profile statistics
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to view my completed stories, reading/listening history and accumulated time,
@@ -2202,7 +2316,7 @@ So that I can see my own usage accurately.
 
 ### Story 3.13: Persist my language preference on my account
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want my chosen language to be retained for my account,
@@ -2210,7 +2324,7 @@ So that I see the same language after relaunch or sign-in on another device.
 
 **Requirements:** FR-5, FR-9; NFR-4–7; UX-DR18, UX-DR22–25; AD-6–8, AD-10.
 
-**Prerequisites:** AD-5 passed; Story 1.10 language consumption and Story 3.5 account resolution; verified profile preference and remote language-visibility contracts. The 2026-09-27 user decision supersedes older TR/EN/DE visibility text: Turkish, English and Portuguese are usable. New language test/live configuration applies. Migration of an existing stored preference remains separate scope.
+**Prerequisites:** AD-5 passed; Story 1.10 language consumption and Story 3.5 account resolution; verified profile preference and future-language remote visibility contracts. The latest user decisions supersede older TR/EN/DE visibility text: Turkish, English and Portuguese are always usable; English is the UI startup default only if no language setting can be accessed. New language test/live configuration applies. Migration of an existing stored preference remains separate scope.
 
 **Acceptance Criteria:**
 
@@ -2229,10 +2343,10 @@ So that I see the same language after relaunch or sign-in on another device.
 
 **Given** Turkish, English and Portuguese availability and remotely configured future languages,
 **When** choices are displayed,
-**Then** current languages are usable,
+**Then** the three current languages remain usable regardless of future-language configuration,
 **And** a new language follows its test-only then live audience visibility state.
 
-**Given** a stored language is no longer available to this user,
+**Given** a stored future language is no longer available to this user,
 **When** the preference is resolved,
 **Then** an understandable selection state is shown,
 **And** a different language is not silently persisted as the user's chosen preference.
@@ -2243,7 +2357,7 @@ So that I see the same language after relaunch or sign-in on another device.
 
 ### Story 3.14: Migrate a registered account once on its first transition
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing registered user,
 I want my account data preserved when I first adopt the replacement,
@@ -2289,7 +2403,7 @@ So that my profile, preferences, history and progress remain usable.
 
 ### Story 3.15: Preserve legacy anonymous device records during upgrade
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing anonymous user,
 I want my locally retained profile, preferences and history to survive the replacement update,
@@ -2334,7 +2448,7 @@ So that I can continue anonymously without losing my data.
 
 ### Story 3.16: Convert an anonymous account into a new registered account
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an anonymous user,
 I want to register without losing my existing application data,
@@ -2382,7 +2496,7 @@ So that my profile and usage history remain available after registration.
 
 ### Story 3.17: Upgrade a later device on an already migrated account
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with multiple devices,
 I want a later-upgraded device to use my existing new-system account,
@@ -2390,7 +2504,7 @@ So that migration is not repeated and current data remains intact.
 
 **Requirements:** FR-26–29; FR-4, FR-9, FR-16 (preservation); NFR-4–6; AD-4–6, AD-8, AD-11.
 
-**Prerequisites:** AD-5 passed; Story 3.14 account migration and applicable local-import boundaries from Story 3.15. Resolve OQ-3 later-device local-record disposition, duplicate/conflict precedence and identity mapping before finalizing field-level migration tests. This planning approval does not select a merge policy or authorize continuous synchronization. OQ-6 remigration prevention constraints also apply.
+**Prerequisites:** AD-5 passed; Story 3.14 account migration and applicable local-import boundaries from Story 3.15. The 2026-10-01 product decision makes existing new-system account records authoritative when a later device has conflicting older local records; they are not overwritten or merged over the account records. Resolve OQ-3 field/identity mapping and safe disposition of local records that have no account counterpart before finalizing field-level migration tests. OQ-6 remigration prevention constraints also apply. This decision does not authorize continuous synchronization or silent deletion of unique local records.
 
 **Acceptance Criteria:**
 
@@ -2400,7 +2514,8 @@ So that migration is not repeated and current data remains intact.
 
 **Given** newer profile, preferences and history exist in the new system,
 **When** the older device joins,
-**Then** its older values do not overwrite newer new-system data.
+**Then** the existing account values remain authoritative even when the later device carries conflicting local values,
+**And** the local values are not automatically merged over or used to overwrite the account records.
 
 **Given** legacy-server changes made after the first account migration,
 **When** another device upgrades,
@@ -2413,7 +2528,7 @@ So that migration is not repeated and current data remains intact.
 
 **Given** local records require import or conflict resolution,
 **When** their disposition is determined,
-**Then** the resolved OQ-3 policy is applied,
+**Then** account records win any conflict and the remaining OQ-3 policy is applied to records unique to the later device,
 **And** records are not silently deleted.
 
 **Given** a local-record operation is interrupted,
@@ -2426,7 +2541,7 @@ So that migration is not repeated and current data remains intact.
 
 ### Story 3.18: Sign out safely
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to sign out and allow another account to use the device safely,
@@ -2467,7 +2582,7 @@ So that my private data and playback are not exposed to the next user.
 
 ### Story 3.19: Change my password from account settings
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to set a new password using my current password,
@@ -2509,7 +2624,7 @@ So that I can update my account credentials safely.
 
 ### Story 3.20: Delete my new-system account
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to understand the consequences of deleting my account and complete the action safely,
@@ -2554,7 +2669,7 @@ So that my new-system account and its user data are removed within the agreed sc
 
 ### Story 3.21: Safely remove obsolete legacy media and caches
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an upgrading user,
 I want obsolete legacy downloads removed safely,
@@ -2623,7 +2738,7 @@ Users can send feedback, access localized legal/help documents, manage notificat
 
 ### Story 4.1: Send feedback
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to send feedback about the application and see its outcome,
@@ -2668,7 +2783,7 @@ So that I know whether my message was submitted successfully.
 
 ### Story 4.2: View help and legal documents
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want help and legal links to open the correct document,
@@ -2711,7 +2826,7 @@ So that I can read the information relevant to my application use.
 
 ### Story 4.3: Manage notification permission and preference
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to choose whether to receive notifications and see the actual current status,
@@ -2719,18 +2834,18 @@ So that notification behavior reflects my choice and device permissions.
 
 **Requirements:** FR-5, FR-18; NFR-4–7; UX-DR17, UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Epic 3 account context; OQ-9 reference permission timing, platform/provider configuration, device registration ownership and preference persistence contracts. Application preference and OS permission are distinct states; do not infer that changing one can override the other. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Epic 3 account context; OQ-9 platform/provider configuration and device registration ownership contracts. The inspected legacy splash flow schedules a non-blocking notification permission check/request during startup when OS status is `denied`; its profile switch reflects OS permission and can route to device settings. The replacement retains this OS-permission control as the reference notification preference; the inspected source does not support an additional persisted per-account switch. Actual notification delivery remains unverified. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
-**Given** the reference permission-request stage is reached,
+**Given** application startup reaches its deferred tasks and OS notification status is `denied`,
 **When** notification permission is requested,
-**Then** the request follows the reference flow,
+**Then** the request follows the legacy startup timing without blocking navigation,
 **And** refusal does not block normal application use.
 
-**Given** an application preference and current OS permission,
+**Given** the current OS notification permission,
 **When** the profile notification control is rendered,
-**Then** both are reflected accurately in the presented state.
+**Then** the control reflects the OS permission accurately without implying a second independent account preference.
 
 **Given** OS notification permission is disabled,
 **When** notification settings are shown or enabled from the app,
@@ -2740,11 +2855,6 @@ So that notification behavior reflects my choice and device permissions.
 **Given** the user changes notification permission in device settings,
 **When** the user returns to the app,
 **Then** the visible permission state refreshes.
-
-**Given** preference persistence fails,
-**When** the result is displayed,
-**Then** success is not claimed,
-**And** retry is possible.
 
 **Given** an account change,
 **When** device notification registration is updated,
@@ -2756,50 +2866,49 @@ So that notification behavior reflects my choice and device permissions.
 
 ### Story 4.4: Show applicable in-app announcements
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
-I want to see announcements relevant to me and reach their intended content,
-So that I can act on current application information.
+I want to see an announcement and inspect its full image,
+So that I can read current application information.
 
 **Requirements:** FR-18; NFR-1, NFR-5–7; UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Earlier content/account navigation and admission gates; OQ-9 verified announcement presentation, targeting, timing, dismissal/repetition and target contracts. App-internal announcement targets must use the authoritative route graph already established; external notification/link intake is the following story. Existing configuration keys and SDKs are not mandatory implementation choices. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Earlier home/catalog shell; OQ-9 verified announcement enablement, language-artwork selection/fallback and image-delivery contracts. The inspected legacy home announcement is a remotely enabled, automatically cycling image carousel. Tapping its image opens a larger-image overlay, not an internal route, external link or paywall. The replacement's reference scope is this image-viewing behavior. Existing configuration keys and SDKs are not mandatory implementation choices. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
-**Given** announcement configuration and user language/eligibility,
-**When** display conditions are evaluated,
-**Then** the announcement appears only when its configured conditions are satisfied.
+**Given** announcements are enabled and valid artwork is available for the selected language or approved fallback,
+**When** the home screen renders,
+**Then** it shows the announcement image carousel with automatic cycling and visible position indicators,
+**And** manual selection of an indicator moves to its image.
 
-**Given** an eligible announcement,
-**When** it is displayed and dismissed or acted upon,
-**Then** artwork, text, action and dismissal follow the reference behavior.
+**Given** announcements are disabled,
+**When** the home screen renders,
+**Then** no announcement carousel appears and ordinary content remains usable.
 
-**Given** announcement retrieval or artwork loading fails,
-**When** the failure occurs,
-**Then** application startup and normal use are not blocked.
+**Given** an announcement image with a valid full-size asset,
+**When** the user taps it,
+**Then** the larger image opens in a dismissible overlay over the home screen,
+**And** closing it returns to the same home context without starting a paywall or navigating away.
 
-**Given** a previously dismissed announcement,
-**When** its eligibility is evaluated again,
-**Then** redisplay follows verified reference/configured frequency rules.
+**Given** the full-size asset is missing or artwork retrieval fails,
+**When** the user opens or refreshes the announcement area,
+**Then** no broken destination or false success is shown,
+**And** startup and normal home use are not blocked.
 
-**Given** an announcement action,
-**When** the user selects it,
-**Then** the correct valid target opens,
-**And** an invalid or unavailable target produces an understandable outcome.
+**Given** the user closes the large-image overlay,
+**When** the home screen is revisited while announcements are enabled,
+**Then** the carousel may appear again; closing the overlay does not create a permanent dismissal state.
 
-**Given** a target requiring identity, completed migration or protected-content access,
-**When** it is reached from an announcement,
-**Then** existing admission and authorization rules remain enforced.
-
-**Given** targeting and timing requirements,
-**When** announcement behavior is accepted,
-**Then** it is validated against the resolved OQ-9 contract.
+**Given** Turkish, English or Portuguese is selected,
+**When** announcement artwork is resolved,
+**Then** artwork in the selected language is used when available,
+**And** if Portuguese artwork is unavailable, no English announcement artwork is shown as a substitute; the unavailable announcement is omitted without a broken card. This 2026-10-01 decision intentionally supersedes the legacy loader's English fallback for non-Turkish language codes.
 
 ### Story 4.5: Reach the correct destination from notifications and external links
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want notifications and supported links to take me to their intended application destination,
@@ -2807,7 +2916,7 @@ So that I can reach the relevant experience safely.
 
 **Requirements:** FR-18; FR-1, FR-8, FR-11, FR-25 (routing/access integration); NFR-1, NFR-5–7; UX-DR24–25; AD-6–9.
 
-**Prerequisites:** Epics 1–3 content destinations and authoritative session/migration gates; Story 4.3 notification registration; resolved OQ-9 platform link formats, notification targets and reference start behavior. Use the existing route graph and media coordinator. Retain the logical destination through admission rather than treating a link as authorization. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Epics 1–3 content destinations and authoritative session/migration gates; Story 4.3 notification registration; resolved OQ-9 platform link formats, notification targets and start behavior. On 2026-10-01 the user approved notification/deep-link destination navigation as a new replacement feature. The inspected legacy Flutter `lib/` source declares Firebase Messaging as a dependency but contains no located message-open, initial-message or deep-link destination handler; acceptance must use a new explicit route/notification contract rather than claim source-verified legacy parity. Use the existing route graph and media coordinator. Retain the logical destination through admission rather than treating a link as authorization. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2837,13 +2946,18 @@ So that I can reach the relevant experience safely.
 **When** a link requests it,
 **Then** the link cannot bypass authorization or expose another user's private data.
 
+**Given** a supported notification or external link that opens a paywall directly on iOS,
+**When** its destination is admitted,
+**Then** the Story 6.2 parental gate succeeds before the paywall opens,
+**And** routing, relaunch or repeated delivery cannot bypass that gate.
+
 **Given** supported Android and iOS notification/link paths,
 **When** integration is verified,
 **Then** each platform's formats and destinations match the resolved OQ-9 contract.
 
 ### Story 4.6: Rate the application and view its installed version
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to rate the application and see which version I am using,
@@ -2851,25 +2965,77 @@ So that I can provide store feedback and identify my installed release.
 
 **Requirements:** FR-18; NFR-6–7; UX-DR20, UX-DR24–25; AD-9.
 
-**Prerequisites:** Verified reference rating entry points, eligibility/frequency configuration, platform review/store behavior and correct application listing identity. Runtime version information must come from the installed build. OQ-9 provider/configuration verification applies; a review request is not proof of a submitted review. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Verified reference rating entry points, including the captured conditional prompt after Return to Stories from completion; eligibility/frequency configuration, platform review/store behavior and correct application listing identity. Runtime version information must come from the installed build. OQ-9 provider/configuration verification applies; a review request is not proof of a submitted review. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+
+**Legacy source characterization (2026-09-30):** In the sibling `tellpal` repository, `StoryLastPageWidget` calls `RateMyApp.init()` each time Return to Stories is pressed, then tests `shouldOpenDialog`. The package counts that initialization as a “launch,” so this call site advances the stored count per completion return, not per application start. The app sets `minDays: 0`, takes `minLaunches` and `remindDays` from Remote Config, and uses the same launch threshold for `remindLaunches`; local defaults are three and seven days, while the active remote values were not read. The invitation X emits `laterButtonPressed`, which moves the minimum date and subtracts the reminder launch count. Selecting “Bizi Değerlendir” requests the native in-app review dialog; if `InAppReview.isAvailable()` is true, the app first emits `rateButtonPressed`, and the package persists `doNotOpenAgain`. This occurs before any operating-system “Gönder” action, whose result the app does not observe. If native review is unavailable, this source path does not emit `rateButtonPressed`. These findings describe the inspected legacy source and package version 2.3.2, not a verified live Remote Config value or proof of a submitted store rating.
+
+**Replacement decision (2026-09-30):** Preserve the legacy effective counter: evaluate and advance rating eligibility on Return to Stories from a completed story, not on application launch. Preserve the configured threshold and reminder delay with documented local defaults when no remote override is available. Do not treat an operating-system review prompt or store navigation as proof that a rating was submitted.
 
 **Acceptance Criteria:**
 
-**Given** a reference rating entry point or verified display condition,
+**Given** the user selects Return to Stories after completing a story,
+**When** the verified rating eligibility conditions hold,
+**Then** the reference rating invitation may appear over completion with its artwork, close control and rating action,
+**And** those conditions are not inferred from one screenshot or triggered by scrolling the completion screen.
+
+**Given** both rating and paywall are eligible at that Android return action,
+**When** the rating invitation is shown,
+**Then** the paywall is skipped for that return rather than following the rating flow immediately.
+
+**Given** another reference rating entry point or verified display condition,
 **When** the rating call to action is presented,
 **Then** it follows those entry and eligibility rules.
 
-**Given** the rating invitation,
-**When** the user dismisses it or does not rate,
-**Then** normal application use remains available.
+**Given** the rating invitation is visible,
+**When** the user selects its X close control,
+**Then** the invitation closes and the home screen opens.
 
 **Given** a previously presented invitation,
-**When** display eligibility is evaluated again,
-**Then** configured repeat-frequency rules are respected rather than prompting on every launch without control.
+**When** Return to Stories is selected after a later story completion,
+**Then** the configured completion-return count and reminder delay determine eligibility,
+**And** opening the application without that return action does not advance this rating counter.
 
-**Given** a rating action,
+**Given** the user closes the invitation with X,
+**When** another completed story returns to the home screen,
+**Then** the configured reminder days and additional completion-return threshold are respected before the invitation can reappear.
+
+**Given** the user selects “Bizi Değerlendir” and native in-app review is available,
+**When** the operating-system review prompt is requested,
+**Then** the invitation is marked not to reappear before the operating-system “Gönder” outcome,
+**And** the app does not claim that a store rating was submitted.
+
+**Given** the completion rating invitation is visible on iOS,
+**When** the user selects “Bizi Değerlendir,”
+**Then** the native in-app rating popup opens with five unselected stars and “Şimdi Değil.”
+
+**Given** the popup shows unselected stars,
+**When** the user selects “Şimdi Değil,”
+**Then** the popup closes and the home screen opens.
+
+**Given** the popup shows unselected stars,
+**When** the user selects a rating,
+**Then** the selected stars appear blue with “Gönder” and “Vazgeç.”
+
+**Given** the popup shows selected stars,
+**When** the user selects “Vazgeç,”
+**Then** the popup closes and the home screen opens.
+
+**Given** the popup shows selected stars,
+**When** the user selects “Gönder,”
+**Then** the thank-you popup opens with “Yorum Yaz” and “Tamam.”
+
+**Given** the thank-you popup is visible,
+**When** the user selects “Yorum Yaz,”
+**Then** the App Store opens for the correct application listing,
+**And** store navigation is not counted as proof that a review was submitted.
+
+**Given** the thank-you popup is visible,
+**When** the user selects “Tamam,”
+**Then** the popup closes and the home screen opens.
+
+**Given** another supported rating action,
 **When** the user selects it,
-**Then** the correct platform store/review flow is requested for this application.
+**Then** the verified platform review/store flow is requested for this application.
 
 **Given** the store/review flow cannot open,
 **When** that outcome occurs,
@@ -2886,7 +3052,7 @@ Six stories have been individually approved for planning. FR-18 is covered by fe
 
 Operational configuration is traced across epics: language test/live visibility in 1.10/3.13 and Epic 5, category/free eligibility in Epics 1–2 with backend/CMS contracts, announcement rules in 4.4, rating rules in 4.6, and paywall trigger configuration in Epic 6. Preserve reference-visible controls while allowing replacement provider/configuration implementations. Their actual contracts remain prerequisites rather than presumed current backend capabilities.
 
-OQ-9 must resolve permission timing, SDK/data scope, provider configuration and link/announcement behavior before implementing the affected stories. Verify feedback daily limits, document fallback, announcement repetition and rating eligibility explicitly. Platform-specific runtime evidence, notification delivery and external-link admission must be checked end to end; planning approval is not runtime acceptance.
+OQ-9 must resolve permission timing, SDK/data scope, provider configuration and link/announcement behavior before implementing the affected stories. The 2026-09-29 product decision limits the iOS parental gate in this epic to actions that open a paywall directly; document, rating/store and other external destinations do not require it merely for leaving the app. After reviewing Apple's Kids Category 1.3 language about links out, the user explicitly deferred an additional external-link gate unless App Review rejects the app for this reason. This is a known submission risk, not a finding of policy compliance. Story 6.2 owns the shared paywall gate. Story 4.4 now contains only the source-verified image-viewing announcement, so it has no paywall action; any future approved direct-paywall destination in Story 4.5 depends on that gate. Verify feedback daily limits, document fallback, announcement repetition and rating eligibility explicitly. Platform-specific runtime evidence, notification delivery and external-link admission must be checked end to end; planning approval is not runtime acceptance.
 
 
 ## Epic 5: Test content safely before publication
@@ -2895,11 +3061,11 @@ Authorized testers can consume candidate content on devices and identify the exa
 
 **Scope:** FR-22–25; FR-9 new-language test/live visibility; NFR-4–7, NFR-9; AD-7–10. Stories 5.1–5.5 are approved for planning. The user approved proceeding to Epic 6 after the Epic 5 planning review; OQ-8 readiness gates remain open.
 
-**Planning constraints:** Use the production-shaped account/session and reader/listening boundaries from Epics 1–3. Resolve OQ-8 candidate/live authorization matrix, immutable manifest, readiness, approval invalidation, renewal/withdrawal and retention contracts before implementing the affected stories. Tester permission is independent of subscription. Do not duplicate the existing CMS/backend epic plan or introduce a mobile publish/approval UI without an explicit requirement; the mobile contribution is consumption, clear revision identification and device evidence. Ordinary-user candidate isolation must already be enforced in Epics 1–2; this epic adds authorized candidate use and full integration verification. Test-only language visibility follows the user's updated remote configuration decision.
+**Planning constraints:** Use the production-shaped account/session and reader/listening boundaries from Epics 1–3. Resolve OQ-8 candidate/live authorization matrix, immutable manifest, readiness, approval invalidation, renewal/withdrawal and retention contracts before implementing the affected stories. Tester permission is independent of subscription. Do not duplicate the existing CMS/backend epic plan or introduce a mobile publish/approval UI without an explicit requirement; the mobile contribution is consumption, clear revision identification and device evidence. Ordinary-user candidate isolation must already be enforced in Epics 1–2; this epic adds authorized candidate use and full integration verification. Test-only language visibility follows the user's CMS-managed language decision and its verified backend/configuration delivery contract.
 
 ### Story 5.1: Open an authorized candidate revision on device
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an authorized tester,
 I want to open candidate content and identify the revision under test,
@@ -2943,7 +3109,7 @@ So that I can verify the intended version on a device.
 
 ### Story 5.2: Preserve live content while a candidate is prepared
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user,
 I want to keep using published content while its next revision is prepared,
@@ -2984,7 +3150,7 @@ So that an unfinished or failed candidate does not interrupt my experience.
 
 ### Story 5.3: Verify ready candidate media and invalidate stale approval
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a tester,
 I want complete candidate media and revision-specific test evidence,
@@ -3027,7 +3193,7 @@ So that approval cannot silently apply to different or incomplete media.
 
 ### Story 5.4: Enable a new language for testing before live use
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a content team member,
 I want a new language verified by authorized test users before making it generally available,
@@ -3035,7 +3201,7 @@ So that language rollout can proceed without exposing unfinished experiences.
 
 **Requirements:** FR-9 (latest user decision), FR-22–25; NFR-5–7; AD-7–10.
 
-**Prerequisites:** Stories 1.10, 3.13 and 5.1–5.3; verified remote language visibility/audience and content publication/access contracts. Language audience eligibility and candidate-content permission are separate decisions. Existing Turkish, English and Portuguese availability follows the user's explicit decision.
+**Prerequisites:** Stories 1.10, 3.13 and 5.1–5.3; a CMS control for tester-only and live language states, with verified backend/configuration delivery to mobile and content publication/access contracts. The user assigned the test-to-live language decision to CMS on 2026-10-01. Language audience eligibility and candidate-content permission are separate decisions. Existing Turkish, English and Portuguese availability follows the user's explicit decision. The CMS language control is not a mobile store-release rollout approval.
 
 **Acceptance Criteria:**
 
@@ -3056,6 +3222,11 @@ So that language rollout can proceed without exposing unfinished experiences.
 **Then** the new language becomes visible,
 **And** only eligible published content is available to them.
 
+**Given** a new language has been available to designated test users,
+**When** an authorized CMS user considers enabling it for all users,
+**Then** the required language, content and device checks are completed and recorded before live visibility is enabled,
+**And** the live transition is performed and auditable from CMS; test-only availability alone is not treated as approval for general access.
+
 **Given** a language becomes visible to a broader audience,
 **When** content eligibility is evaluated,
 **Then** candidate revisions are not automatically published by that language change.
@@ -3065,12 +3236,22 @@ So that language rollout can proceed without exposing unfinished experiences.
 **Then** stale cache or responses cannot restore obsolete language visibility.
 
 **Given** Turkish, English and Portuguese are currently usable,
-**When** a new language is enabled,
+**When** a new language is enabled, disabled or its configuration cannot be fetched,
 **Then** their availability remains unaffected.
+
+**Given** unavailable or malformed remote configuration for a future test-only language,
+**When** an ordinary user opens language choices or requests content through a direct route or fallback,
+**Then** that configuration failure does not expose the test-only language or candidate media,
+**And** Turkish, English and Portuguese remain selectable.
+
+**Given** a tester previously received verified eligibility for a future language,
+**When** remote configuration is unavailable,
+**Then** a still-valid cached eligibility preserves that language for the same tester only,
+**And** expired, invalid or other-account eligibility cannot keep it visible or bypass publication and media authorization.
 
 ### Story 5.5: Protect required media revisions from cleanup
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader or listener,
 I want cleanup to preserve the media needed by my active experience,
@@ -3134,7 +3315,7 @@ Existing subscribers retain verified access; users can purchase, restore and use
 
 ### Story 6.1: Recognize an existing subscriber's access
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing subscriber,
 I want my subscription recognized by the replacement,
@@ -3182,7 +3363,7 @@ So that I can continue accessing eligible content after the update.
 
 ### Story 6.2: Open and dismiss premium offers with the required parental gate
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user considering premium access,
 I want to view the appropriate subscription offers through the reference access controls,
@@ -3190,19 +3371,22 @@ So that I can decide whether to continue with a purchase.
 
 **Requirements:** FR-10, FR-19; FR-13 completion entry integration; UX-DR21, UX-DR25; user clarification on 2026-09-28: preserve the legacy iOS parental gate. This gate remains in scope independently of the excluded parent-mode content feature.
 
-**Planning status:** Offer-screen and parental-gate criteria approved for planning. The user selected reference-app verification on 2026-09-29 rather than assigning unobserved entry points by assumption. The 1.0.35+333 legacy source calls `showChildProtectionDialog` in `SetUserTypeInformationService.showPaywall` on non-debug iOS, before `RevenueCatUI.presentPaywallIfNeeded`. The promotion-code path calls `RevenueCatUI.presentPaywallIfNeeded` directly; profile store-listing and story-completion review calls also do not invoke that shared gate in the inspected paths. These are source-code observations, not proof of release-build behavior or a decision to remove a gate from any entry. Verify the actual entry-point matrix, challenge and validity/reset behavior on a representative iOS build before assigning affected Epic 4/6 acceptance. This records a legacy behavior requirement, not a verified statement of current Apple review policy.
+**Planning status:** Offer-screen and parental-gate criteria approved for planning. On 2026-09-29 the user confirmed access to the legacy iPhone app and specified the product rule: every direct iOS paywall opening requires a new parental-gate completion, even after an earlier successful opening in the same session; Android does not show that gate. Promotion-code entry is the explicit exception: its entry screen serves the lock function on each use, so a separate parental gate is not shown between that screen and the resulting paywall. The [legacy iPhone screenshot](./mobile-evidence/parental-gate-2026-09-29/ios-legacy-paywall-gate.png) shows a modal titled “Ebeveyn Girişi,” four number words, four entry cells and “Vazgeç.” The user reports that entering the corresponding digits correctly opens the paywall automatically. On incorrect entry, the modal stays open and the paywall stays closed; the user deletes the entered digits and retries. The user also confirms that the displayed number sequence changes when the paywall gate is opened again; the screenshot alone does not establish the generation algorithm. The 1.0.35+333 legacy source calls `showChildProtectionDialog` in `SetUserTypeInformationService.showPaywall` on non-debug iOS, before `RevenueCatUI.presentPaywallIfNeeded`. The promotion-code path calls `RevenueCatUI.presentPaywallIfNeeded` directly; the user confirmed that no separate gate appears between the promotion-code popup and paywall on their iPhone. Profile store-listing and story-completion review calls also do not invoke the shared gate in inspected source paths; their device behavior remains unverified. Verify remaining direct paywall entry points and any unobserved challenge details on the available iPhone before implementation. The story-completion premium hook is Android-only and begins a direct paywall flow without an intermediate offer popup or parental gate. The inspected legacy `StoryLastPageWidget` restricts this branch to Android, and the user chose that behavior for the replacement. The separate reader Exit branch in `story_content.dart` uses the same Remote Config flag for an Android-only paywall; the user also chose to preserve this early-exit hook. Other direct iOS paywall entry points still require a fresh gate. The per-opening rule is the user's product decision; [current Apple guideline 1.3](https://developer.apple.com/app-store/review/guidelines/) requires Kids Category purchasing opportunities and links out to be behind a parental gate but does not prescribe this exact reset interval. The user deferred any additional link-out gate unless App Review rejects the app for that reason.
 
-**Prerequisites:** Story 6.1; verified OQ-7 offerings, store products, reference premium entry points and actual offer-screen evidence. Verify the legacy iOS gate UI, challenge, trigger points and validity/reset rules before implementation. Its coverage of purchase, restore, subscription management and external links must be mapped across Epics 4 and 6; do not infer these details from the excluded parent-mode feature or from simulator Billing errors.
+The user confirms that the iOS and Android paywall is managed through RevenueCat, with no separately coded paywall screen in the application. The [captured paywall](./mobile-evidence/paywall-2026-09-30/revenuecat-paywall.png) shows a close control, weekly/monthly/yearly choices, a subscribe action and restore/terms/privacy links. Its displayed prices, discount percentages and selected plan are observations from this capture, not fixed product or design requirements; current RevenueCat offerings and store products govern acceptance. The user confirms that X on a completion-triggered paywall returns to the home screen.
+
+**Prerequisites:** Story 6.1; verified OQ-7 RevenueCat-managed paywall, offerings, store products, reference premium entry points and actual offer-screen evidence. The user confirms that neither platform has a separately hard-coded application paywall UI. Verify the legacy iOS gate UI and challenge behavior before implementation; the replacement's repeat rule is already fixed as one gate completion per direct paywall opening. Map direct paywall entry points across Epics 4 and 6, including purchase, restore or management paths only when they open a paywall. Promotion-code entry uses its own lock screen and does not add a second gate. Do not infer challenge details from the excluded parent-mode feature or simulator Billing errors.
 
 **Acceptance Criteria — approved offer behavior:**
 
 **Given** a locked-content, profile membership or other reference premium entry point,
 **When** the user activates it and any required gate is satisfied,
-**Then** the correct premium offering screen opens.
+**Then** the correct RevenueCat-managed paywall opens without a separately hard-coded application paywall UI.
 
 **Given** available store/RevenueCat offerings,
 **When** options are displayed,
-**Then** product, price, currency and billing period match the actual offering.
+**Then** product, price, currency and billing period match the actual offering,
+**And** the captured prices and discounts are treated as time-specific reference data rather than hard-coded acceptance values.
 
 **Given** offerings are loading or cannot be retrieved,
 **When** the screen is displayed,
@@ -3214,24 +3398,83 @@ So that I can decide whether to continue with a purchase.
 **Then** they return to the originating context,
 **And** no purchase is assumed and no protected content starts.
 
+**Given** the paywall was opened by Return to Stories from completion,
+**When** the user selects its X close control,
+**Then** the home screen opens without assuming a purchase.
+
 **Given** repeated entry taps,
 **When** the offer flow is already opening or visible,
 **Then** duplicate offer screens are not stacked.
 
-**Given** premium hooks from earlier epics, including completion,
+**Given** premium hooks from earlier epics, including the conditionally eligible Android paywall after Return to Stories from completion,
 **When** integration is verified,
 **Then** their triggers and presentation match the reference behavior,
-**And** actual offer-screen evidence is used rather than a Billing error screenshot.
+**And** the Android completion hook starts the direct paywall flow without an intermediate premium-offer popup or parental gate,
+**And** iOS completion does not invoke that automatic paywall hook; other direct iOS paywall entry points still require a fresh parental gate,
+**And** actual offer-screen evidence is used rather than a Billing error screenshot; no offer is inferred from scrolling the completion screen.
+
+**Given** the Android reader Exit hook has its automatic paywall configuration enabled for a confirmed non-premium user,
+**When** the reader exits before completion,
+**Then** the direct RevenueCat paywall is requested without a parental gate,
+**And** closing it with X returns to the story information screen,
+**And** the corresponding iOS reader Exit does not invoke that automatic paywall hook.
+
+**Given** both the rating invitation and completion paywall are eligible at the same Android return action,
+**When** the rating invitation is shown,
+**Then** the paywall is skipped for that return and is not stacked behind the rating flow.
 
 **Acceptance Criteria — approved parental-gate behavior:**
 
-**Given** an iOS entry point that requires the reference parental gate,
+**Given** the iOS parental gate is presented,
+**When** the challenge is displayed,
+**Then** it shows four digits written as words with four corresponding input cells and a cancel action,
+**And** the displayed sequence is treated as a challenge, not a hard-coded example from the reference screenshot.
+
+**Given** Turkish, English or Portuguese is the selected application language,
+**When** the parental gate is displayed,
+**Then** its title, instructions, written-out digits and actions use that language,
+**And** the numeric answer matches the meaning of the displayed words in that language.
+
+**Given** the user enters the four digits represented by the displayed words correctly,
+**When** the fourth input completes the challenge,
+**Then** the intended paywall opens automatically without a separate confirmation action,
+**And** it opens only once for that gate completion.
+
+**Given** the four entered digits do not match the displayed number words,
+**When** the entry is evaluated,
+**Then** the parental-gate modal remains open and the paywall does not open,
+**And** the user can delete the entered digits and enter the correct sequence to continue.
+
+**Given** the parental-gate modal is open,
+**When** the user selects “Vazgeç,”
+**Then** the modal closes without opening the paywall,
+**And** the user remains on the originating screen.
+
+**Given** an iOS entry point that opens a paywall directly, other than promotion-code entry,
 **When** the user attempts to continue,
-**Then** the gate is shown before the gated destination or action is invoked.
+**Then** the parental gate is completed successfully before the paywall is invoked.
+
+**Given** a direct iOS paywall was opened after a successful gate completion,
+**When** the user closes it and opens a paywall again, including during the same application session,
+**Then** a new parental-gate completion is required with a different displayed four-digit sequence,
+**And** the earlier success or sequence cannot act as a session-wide or permanent unlock.
+
+**Given** the iOS promotion-code entry screen,
+**When** a supported promotion leads from that screen to a paywall,
+**Then** the promotion-code screen serves as the lock for that path,
+**And** it is used again for a subsequent promotion-code entry; no separate parental gate is shown between it and the paywall.
+
+**Given** an Android entry point that opens a paywall,
+**When** the user attempts to continue,
+**Then** the iOS parental gate is not shown.
+
+**Given** an Epic 4 document, rating/store or other external destination that does not open a paywall,
+**When** the user selects it on iOS,
+**Then** the parental gate is not shown solely for that destination.
 
 **Given** a displayed parental gate,
 **When** the challenge is failed, cancelled or dismissed,
-**Then** the gated offer, purchase or external destination does not open,
+**Then** the directly requested paywall does not open,
 **And** the user remains in or returns to the originating context.
 
 **Given** successful gate completion,
@@ -3239,15 +3482,15 @@ So that I can decide whether to continue with a purchase.
 **Then** only that intended action proceeds once,
 **And** gate completion is not treated as purchase success or premium entitlement.
 
-**Given** all applicable iOS entry points and a completed gate,
+**Given** all direct iOS paywall entry points and a completed gate,
 **When** navigation, repeated taps, background/foreground and relaunch cases are verified,
 **Then** no alternate entry bypasses a required gate,
-**And** validity and reset behavior follow the verified reference contract rather than an invented permanent unlock.
+**And** each new paywall opening requires a new gate completion regardless of an earlier success.
 
 
 ### Story 6.3: Purchase a subscription and receive verified premium access
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user choosing a subscription,
 I want my purchase completed and verified for the correct account,
@@ -3303,7 +3546,7 @@ So that I can access eligible premium content without paying again after an inte
 
 ### Story 6.4: Restore existing purchases
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with an existing purchase,
 I want to restore my eligible subscription,
@@ -3360,7 +3603,7 @@ So that I can recover verified premium access without purchasing again.
 
 ### Story 6.5: Redeem supported promotion codes and offers
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user with an eligible promotion,
 I want to redeem it through the supported reference flow,
@@ -3368,14 +3611,14 @@ So that I can receive its verified offer or access benefit on the correct accoun
 
 **Requirements:** FR-20, FR-25; NFR-4–6; UX-DR21, UX-DR25; approved iOS parental-gate clarification.
 
-**Prerequisites:** Stories 6.1–6.4 and Epic 3 account boundaries; resolve OQ-7 supported promotion types, eligibility, redemption identity, repeat-use constraints, interrupted-operation reconciliation and provider/backend responsibilities. Verify reference entry points and applicable iOS parental-gate behavior. Discounted purchase and direct access criteria below apply only if the respective promotion type is supported by the verified legacy integration; they do not introduce new promotion types.
+**Prerequisites:** Stories 6.1–6.4 and Epic 3 account boundaries; resolve OQ-7 code eligibility, offering identity, repeat-use constraints, interrupted-operation reconciliation and provider/backend responsibilities. Verify reference entry points and the promotion-code screen's lock behavior on iOS. The inspected legacy client reads a promotion record, checks `isActive`, resolves its `offering_id` in RevenueCat and presents that offering's paywall; no direct premium grant is visible in this path. A direct-access promotion is outside the source-verified parity scope unless separately approved.
 
 **Acceptance Criteria:**
 
 **Given** a supported promotion code or offer,
 **When** the user opens its reference entry point,
 **Then** the supported redemption flow is available,
-**And** the applicable iOS parental-gate behavior is preserved.
+**And** iOS promotion-code entry uses its own lock screen without a second parental gate before any resulting paywall.
 
 **Given** a submitted promotion,
 **When** redemption is evaluated,
@@ -3399,10 +3642,6 @@ So that I can receive its verified offer or access benefit on the correct accoun
 **Then** the offer price and duration are accurate,
 **And** purchase proceeds through Story 6.3.
 
-**Given** a supported promotion granting direct access,
-**When** redemption completes,
-**Then** premium access opens only after backend verification.
-
 **Given** a confirmed promotion outcome,
 **When** the result is applied,
 **Then** it belongs to the correct application account,
@@ -3411,7 +3650,7 @@ So that I can receive its verified offer or access benefit on the correct accoun
 
 ### Story 6.6: View membership status and manage a subscription
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a subscriber,
 I want to view my verified membership status and open the appropriate store management screen,
@@ -3431,7 +3670,7 @@ So that I can manage renewal and understand my remaining access.
 **Given** a subscription eligible for store management,
 **When** the user activates membership management,
 **Then** the correct management destination for that purchase opens,
-**And** the applicable iOS parental-gate control is applied.
+**And** a parental gate is required only if this action opens a paywall directly; an external management destination alone does not add a gate under the current product decision.
 
 **Given** the management destination cannot be opened,
 **When** navigation fails,
@@ -3462,7 +3701,7 @@ So that I can manage renewal and understand my remaining access.
 
 ### Story 6.7: Preserve subscription rights through account transitions
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an anonymous subscriber becoming a registered user,
 I want my verified subscription rights preserved through the account transition,
@@ -3516,7 +3755,7 @@ Seven stories have been individually approved for planning. They complete the pr
 | FR-20 | 6.2 paywall entry/dismissal; 6.5 supported promotions; 6.6 membership management. |
 | FR-13 premium integration | 6.2 connects the previously deferred reference completion paywall entry points. |
 | FR-25 paid-access integration | 6.1 and 6.3–6.7 retain backend-authoritative admission; candidate/test permissions remain independent under Epic 5. |
-| iOS parental-gate clarification | 6.2 defines the gate; 6.3–6.6 preserve applicable controls. Exact triggers, challenge and validity/reset behavior require legacy verification, including external-link entry points from Epic 4. |
+| iOS parental-gate clarification | 6.2 requires a fresh gate for every direct paywall opening; 6.5 preserves the promotion-code screen as the lock on each use without a second gate. The user deferred an additional gate for external links unless App Review rejects that behavior; record this known guideline 1.3 risk in Story 7.9. Challenge behavior still requires legacy verification. |
 
 OQ-7 remains a prerequisite for real RevenueCat/store product and offering identities, purchase/restore states, account association/conflict rules, supported promotion types and membership management fields/destinations. OQ-8 must resolve effects of revocation on active sessions. OQ-6 deletion/subscription consequences remain an integration prerequisite; this epic does not authorize deletion of a shared legacy Firebase identity or assume deleting an application account cancels a store subscription. Reference offer and parental-gate evidence must include applicable iOS phone/tablet behavior; emulator Billing failures are not acceptance evidence.
 
@@ -3534,7 +3773,7 @@ Users receive a replacement whose critical journeys, data continuity, platform b
 
 ### Story 7.1: Diagnose discovery journeys through backend flow records
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user browsing and searching the catalog,
 I want discovery failures to be traceable without blocking my use of the application,
@@ -3580,7 +3819,7 @@ So that problems can be investigated while I continue using available content.
 
 ### Story 7.2: Diagnose reading and listening journeys through backend flow records
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user reading or listening to content,
 I want playback and completion failures to be traceable without disrupting my session,
@@ -3629,7 +3868,7 @@ So that problems can be investigated without changing my recorded history or usa
 
 ### Story 7.3: Diagnose authentication and migration journeys through backend flow records
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user signing in, registering or carrying my data into the replacement,
 I want failures in these journeys to be traceable,
@@ -3679,7 +3918,7 @@ So that interrupted transitions can be investigated without exposing my credenti
 
 ### Story 7.4: Diagnose paywall, purchase and restore journeys through backend flow records
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user purchasing or restoring premium access,
 I want transaction-flow problems to be traceable with accurate outcomes,
@@ -3728,7 +3967,7 @@ So that delayed or failed confirmation can be investigated without charging me a
 
 ### Story 7.5: Verify reference screen and interaction parity on the release candidate
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user upgrading from the legacy application,
 I want the retained screens and interactions to remain familiar and usable,
@@ -3788,7 +4027,7 @@ So that I can continue my existing journeys without unintended visual or behavio
 
 ### Story 7.6: Verify stability and performance on real devices
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user reading and listening on a supported device,
 I want the replacement to remain stable and responsive during sustained use,
@@ -3836,7 +4075,7 @@ So that I can complete my sessions without crashes, freezes or memory-related te
 
 ### Story 7.7: Verify session and data continuity through a signed release-candidate upgrade
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As an existing user updating the legacy application,
 I want my session, preserved data and subscription to remain usable,
@@ -3885,7 +4124,7 @@ So that I can adopt the replacement without reinstalling or recreating my accoun
 
 ### Story 7.8: Verify account and content access boundaries on the release candidate
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user of the replacement,
 I want my account data and content permissions isolated correctly,
@@ -3936,7 +4175,7 @@ So that other users cannot access my data or content outside their authorized sc
 
 ### Story 7.9: Verify store-package permissions, privacy and production configuration
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user installing the store release,
 I want its permissions, privacy information and enabled capabilities to match its actual behavior,
@@ -3972,6 +4211,11 @@ So that I can make informed choices and use the intended production experience.
 **Then** the gate protects the required destinations,
 **And** alternate paths cannot bypass it.
 
+**Given** an iOS release candidate with an application-external destination that does not open a paywall,
+**When** its Kids Category review risk is assessed,
+**Then** the decision to defer an additional gate and the current Apple guideline 1.3 discrepancy are explicitly recorded,
+**And** no submission or release report claims this behavior has been confirmed compliant; an App Review rejection for this reason creates the gate remediation work before resubmission.
+
 **Given** production language configuration,
 **When** content languages are evaluated,
 **Then** Turkish, English and Portuguese are available,
@@ -3985,7 +4229,7 @@ So that I can make informed choices and use the intended production experience.
 
 ### Story 7.10: Expand or stop staged rollout based on verified evidence
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user receiving the replacement update,
 I want rollout to expand only when its critical outcomes are verified,
@@ -3993,7 +4237,7 @@ So that unresolved failures are contained before more users are exposed.
 
 **Requirements:** FR-29; release verification across active FRs and NFRs; AD-11.
 
-**Prerequisites:** Release evidence from earlier stories, verified backend compatibility and resolved OQ-10 platform cohorts, expansion stages, observation periods, stop thresholds and decision ownership, coordinated with OQ-2 sample/measurement requirements. Planning approval neither initiates deployment nor authorizes store rollout or legacy-system shutdown.
+**Prerequisites:** Release evidence from earlier stories, verified backend compatibility and resolved OQ-10 platform cohorts, expansion stages, observation periods and stop thresholds, coordinated with OQ-2 sample/measurement requirements. On 2026-10-01 the user assigned staged mobile application release approval and operation to themselves through the store consoles; CMS remains the control surface only for new-language tester-to-live promotion. Planning approval neither initiates deployment nor authorizes store rollout or legacy-system shutdown.
 
 **Acceptance Criteria:**
 
@@ -4004,7 +4248,8 @@ So that unresolved failures are contained before more users are exposed.
 
 **Given** Android and iOS rollout plans,
 **When** they are finalized,
-**Then** initial cohorts, expansion stages, observation periods and decision owners are specified for each platform.
+**Then** initial cohorts, expansion stages and observation periods are specified for each platform,
+**And** the user is recorded as the approval and store-console operation owner for each mobile release stage.
 
 **Given** a proposed rollout expansion,
 **When** its evidence is reviewed,
@@ -4026,7 +4271,7 @@ So that unresolved failures are contained before more users are exposed.
 
 **Given** a rollout decision,
 **When** it is recorded,
-**Then** version, platform, supporting evidence and decision owner are identified.
+**Then** version, platform, supporting evidence, the user's explicit approval/stop decision and the corresponding store-console action are identified.
 
 **Given** successful replacement rollout,
 **When** legacy-system continuity is considered,
@@ -4035,7 +4280,7 @@ So that unresolved failures are contained before more users are exposed.
 
 ### Story 7.11: Recover safely after a release problem
 
-**Delivery status:** Scope approved; readiness pending prerequisites; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
+**Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a user who has installed the replacement,
 I want release problems contained and corrected without losing my data or access rights,
@@ -4075,7 +4320,8 @@ So that I can resume reliable use after recovery.
 
 **Given** a proposed rollout resumption,
 **When** it is approved and recorded,
-**Then** recovery evidence and Story 7.10 thresholds have been satisfied.
+**Then** recovery evidence and Story 7.10 thresholds have been satisfied,
+**And** the user approves the resumed mobile release stage before operating it in the store console.
 
 **Given** the recovery plan before rollout,
 **When** readiness is assessed,
