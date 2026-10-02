@@ -77,6 +77,10 @@ The local delivery-status line in every story records three separate dimensions:
 
 #### Shared readiness and acceptance checks
 
+On 2026-10-02 the user approved determining numeric memory and launch/playback latency acceptance limits from measurements of the first working reading/listening flows in the approved test environments. Record representative content, environment, network/cache conditions and results, then establish the limits before accepting affected stories. Unexplained continuous memory growth, freezes and critical playback failures block acceptance. The measurement approach is decided; numeric limits and measurement evidence remain pending.
+
+The user approved an emulator/Simulator-first test matrix on 2026-10-02 because physical-device access is limited. Cover older/lower-capacity and current Android/iOS phone/tablet profiles virtually and use available physical devices for supplementary checks. Record host, virtual device/OS, build mode, network and cache context for memory/latency results; these results are not physical-device performance evidence. Signed store-upgrade, actual purchase and platform-specific evidence requirements remain separately tracked.
+
 At the start of Story 1.1, lock and verify a compatible Flutter/Dart, flutter_bloc, auto_route/generator, get_it/injectable/generator, Freezed, json_serializable and build_runner toolchain under ADR-0018 and the mobile spine. Record exact versions, successful code generation and analyze results, and compatibility with Android API 24 and iOS/iPadOS 15 before relying on generated mobile code. Skill example versions are not compatibility evidence. Introduce only the bootstrap/composition needed by the first capability; do not create a separate technical epic or bulk-create future features.
 
 For every affected UI story, collect UX-DR24 evidence with the feature: localized text at agreed normal and enlarged text scales; reachable controls and safe areas; icon role/name/selected semantics using platform accessibility tools; at least 48dp touch targets; and measured contrast over representative actual artwork. Resolve the scale/device matrix and contrast acceptance criteria before the affected screen's acceptance without silently redesigning it. Record screen/state/device/language/content and outcomes. Failed checks block the affected screen's acceptance. Story 7.5 repeats these checks on the release candidate rather than deferring them until release.
@@ -94,9 +98,9 @@ AD-5 does not block this discovery package. Signed-upgrade and registered-sessio
 
 **Epic 7 work types:** Stories 7.1–7.4 implement flow-event integrations; 7.5–7.9 consolidate release-candidate verification; 7.10–7.11 define and verify rollout/recovery operations. Keep their IDs and criteria. Verification stories are not all new product features, and an entire platform matrix need not execute in one work session.
 
-**Initial exposure versus rollout expansion:** OQ-2/OQ-10 must distinguish evidence required before the first limited distribution from observation evidence required to expand each platform's cohort. Record measurement source (including any controlled pre-release cohort), candidate version, sample/window, owner and decision for each gate. The >=99.5% crash-free user target is unchanged. This distinction does not waive pre-release criteria or authorize exposure with known blockers. Do not assume production samples exist before users receive a build; resolve measurement source and progression before rollout. Missing evidence blocks the gate to which it belongs. Stories 7.6 and 7.10 must use this same resolved gate mapping.
+**Initial exposure versus rollout expansion (2026-10-02):** On 2026-10-02 the user approved initial limited distribution after critical tests and other applicable release prerequisites pass. Evaluate the per-platform target of at least 99.5% crash-free users using actual usage data before expanding distribution. Define the observation window and sufficient user sample in the release plan. Successful emulator tests do not establish this user metric. This decision sets the gate mapping, not the numeric window/sample or present permission to publish. Record candidate version, measurement source, platform, sample/window, owner and decision. Critical tests and other applicable first-distribution gates remain mandatory; missing expansion evidence blocks expansion. Stories 7.6 and 7.10 follow this mapping.
 
-**Rollout control separation (2026-10-01):** The user specified that promoting a newly added language from tester-only visibility to general availability is managed in CMS. CMS is the language decision/control surface; the verified backend/configuration contract must propagate that state to mobile while preserving tester separation and publication/access checks. The user personally approves and manages staged mobile application release through the store consoles. Cohort sizes, observation periods, expansion/stop thresholds, recovery and separate legacy-system shutdown still require OQ-10 plans and evidence. Neither decision authorizes an actual release in this planning review.
+**Rollout control separation (2026-10-01):** The user specified that promoting a newly added language from tester-only visibility to general availability is managed in CMS. CMS is the language decision/control surface; the verified backend/configuration contract must propagate that state to mobile while preserving tester separation and publication/access checks. The user personally approves and manages staged mobile application release through the store consoles. Cohort sizes, observation periods, expansion/stop thresholds and recovery still require OQ-10 plans and evidence. On 2026-10-02 the user approved legacy shutdown only after staged rollout completes and migration/subscription stability is verified, followed by their separate explicit shutdown approval. No fixed shutdown date is set; keep the legacy system running until that approval. Neither decision authorizes an actual release in this planning review.
 
 ### External dependency register
 
@@ -221,7 +225,9 @@ Geri bildirim gönderimi, doğrulama ve mevcut sınırlar; yerelleştirilmiş ya
 
 #### FR-19 — Satın alma ve geri yükleme
 
-RevenueCat üzerinden mevcut aboneliklerin tanınması, satın alma, geri yükleme ve erişim yenileme yayın öncesinde tamamlanır. İptal edilmiş ama ücretli dönemi bitmemiş abonelik erişimi sürer. Mağaza hatası veya satın alma iptali erişim verilmiş gibi gösterilmez; anonim/kayıtlı kimlik tek başına premium hakkı yaratmaz.
+RevenueCat üzerinden mevcut aboneliklerin tanınması, satın alma, geri yükleme ve erişim yenileme yayın öncesinde tamamlanır. Kullanıcının 2026-10-02 onayına göre, eski uygulamadaki gibi hesap oluşturmadan abonelik satın alınabilir; satın alma öncesinde kayıt zorunlu tutulmaz. İptal edilmiş ama ücretli dönemi bitmemiş abonelik erişimi sürer. Mağaza hatası veya satın alma iptali erişim verilmiş gibi gösterilmez; anonim/kayıtlı kimlik tek başına premium hakkı yaratmaz.
+
+2026-10-02 restore kararı: RevenueCat için hedef davranış “Transfer to new App User ID” seçeneğidir. Aynı mağaza hesabının geçerli aboneliği farklı TellPal hesabından geri yüklendiğinde yeni hesap premium erişim kazanır ve önceki hesabın erişimi kaldırılır. İki ayrı özel RevenueCat kimliği arasında yalnız giriş yapmak aboneliği taşımaz. Profil ve okuma geçmişi bu işlemle birleştirilmez veya taşınmaz. Canlı/sandbox ayarı, mevcut kimlik/alias ilişkileri ve backend uzlaştırması entegrasyonda doğrulanır.
 
 #### FR-20 — Promosyon ve paywall
 
@@ -229,7 +235,9 @@ Referans sürümde promosyon kodu, aktif kod kaydındaki `offering_id` ile Reven
 
 #### FR-21 — Kullanıcı akışlarının backend kaydı
 
-Giriş/kayıt, migration, katalog-arama-detay görüntüleme, okuma/dinleme başlatma-tamamlama, paywall/satın alma/restore ve hata-yeniden deneme akışları release öncesinde backende kaydedilir. Olaylar içerik metni, medya URL'leri veya gereksiz kişisel veri içermez. Veri alanları, saklama süresi ve hata/tekrar politikası gerçek backend sözleşmesinde belirlenecektir. Kayıt başarısızlığı okuma/dinlemeyi durdurmamalı; yeniden deneme aynı olayı çoğaltmamalıdır. Crash tanılaması bu son entegrasyona bağımlı değildir.
+Giriş/kayıt, migration, katalog-arama-detay görüntüleme, okuma/dinleme başlatma-tamamlama, paywall/satın alma/restore ve hata-yeniden deneme akışları release öncesinde backende kaydedilir. Olaylar içerik metni, medya URL'leri veya gereksiz kişisel veri içermez. Veri alanları ve hata/tekrar politikası gerçek backend sözleşmesinde belirlenecektir; analiz olaylarının saklanmasında aşağıdaki onaylı karar geçerlidir. Kayıt başarısızlığı okuma/dinlemeyi durdurmamalı; yeniden deneme aynı olayı çoğaltmamalıdır. Crash tanılaması bu son entegrasyona bağımlı değildir.
+
+2026-10-02 analiz kararı: Google Analytics’teki mevcut verilere ek olarak backend olay kayıtları bağımsız bir kaynak olarak uzun dönemli ürün analizlerini destekler. Sunucuda kaydedilmiş analiz olayları için şimdilik otomatik silme veya yaşa bağlı süre sınırı uygulanmaz; 90 günlük öneri kabul edilmemiştir. Mevcut backend veritabanıyla başlanır. Analiz verilerinin uygulama/backend performansını olumsuz etkilediği ölçümlerle görülürse ayrı bir analiz veritabanı değerlendirilir; bu ayrıştırma ilk sürümün önkoşulu değildir. Mobil bekleyen olay kuyruğunun sınırları ve ayrıntılı teknik tanılama kayıtlarının kuralları ayrı sözleşmelerdir.
 
 #### FR-22 — Dil ve deneyim bazlı yayın
 
@@ -259,7 +267,7 @@ Korumalı medya backend erişim kontrolünden sonra kısa ömürlü URL'lerle su
 
 #### FR-27 — Kayıpsız ve yeniden denenebilir taşıma
 
-Eski/yeni içerik ve hesap kimlikleri doğru eşleşir. Tekrar deneme kayıt çoğaltmaz, daha yeni veriyi ezmez ve eksik eşleşmeleri sessizce atmaz. Kullanıcının 2026-10-01 kararına göre ikinci cihazdaki eski yerel kayıtlarla çakışmada yeni sistem hesabında zaten bulunan kayıtlar korunur; yerel değerler bunların üzerine yazılmaz veya otomatik birleştirilmez. Hesapta karşılığı olmayan yerel kayıtların güvenli ele alınması OQ-3 sözleşmesinde belirlenir; sessizce silinmez. “Verileriniz taşınıyor” ve “Tekrar dene” deneyimleri uygulanır; tamamlanmamış migration boş profille normal kullanıma geçemez.
+Eski/yeni içerik ve hesap kimlikleri doğru eşleşir. Tekrar deneme kayıt çoğaltmaz, daha yeni veriyi ezmez ve eksik eşleşmeleri sessizce atmaz. Kullanıcının 2026-10-02 kararına göre ikinci cihaz güncellendiğinde yeni sistemdeki mevcut hesap verisiyle devam eder. İkinci cihazdaki eski yerel kayıtlar, hesapta karşılığı bulunmasa da hesaba aktarılmaz veya birleştirilmez; hesap migration’ı tekrarlanmaz. Yerel temizlik ayrı kurallara tabidir. “Verileriniz taşınıyor” ve “Tekrar dene” deneyimleri uygulanır; tamamlanmamış migration boş profille normal kullanıma geçemez.
 
 #### FR-28 — Yerel anonim veri ve temizlik
 
@@ -276,7 +284,7 @@ Replacement mevcut uygulamanın üzerine güncelleme olarak kurulabilmelidir; ay
 - **NFR-3 — Akıcılık ve başlatma:** Soğuk/sıcak açılış, ilk sayfa/ilk ses, sayfa geçişi ve yeniden bağlanma ölçülür. Cihaz, ağ ve önbellek koşullarıyla p50/p95 hedefleri kararlaştırılır; eski performans kabul tavanı değildir.
 - **NFR-4 — Veri bütünlüğü:** Migration ve tekrar deneme testleri korunacak alanlar ve kimlik ilişkilerinde kayıp/çoğalma göstermemelidir. Başarı, yalnız taşınan kayıt sayısıyla değil alan/ilişki doğrulamasıyla değerlendirilir.
 - **NFR-5 — Erişim ve gizlilik:** Başka hesabın verisi veya yetkisiz revizyon/medya döndürülmez. Kimlik bilgileri, tokenlar ve özel medya URL'leri olay/crash kayıtlarına konmaz. Çocuk verisi, SDK kapsamı ve izinlerle ilgili mevcut davranışlar OQ-9 kapsamında doğrulanır.
-- **NFR-6 — Uyumluluk:** Onaylanmış minimum işletim sistemi ve telefon/tablet kapsamı korunur. Gerçek cihazlarda oynatma, migration ve arka plan davranışı doğrulanır; yalnız emülatör başarısı yeterli değildir.
+- **NFR-6 — Uyumluluk:** Onaylanmış minimum işletim sistemi ve telefon/tablet kapsamı korunur. Genel kalite matrisi onaylı emülatör/Simulator ortamlarında yürütülür; mevcut fiziksel cihazlarda tamamlayıcı oynatma/arka plan kontrolleri yapılır. İmzalı güncelleme ve fiziksel platform kanıtı gerektiren özel senaryolar ayrıca doğrulanır.
 - **NFR-7 — Görsel parite:** Kararlaştırılmış referans ekranlar aynı cihaz boyutu, dil ve içerik koşullarında karşılaştırılır. Onaylı değişiklikler hariç görünür sapmalar kapanmadan ilgili ekran kabul edilmez; görüntü sıkıştırma metin okunabilirliğini bozamaz.
 - **NFR-8 — Tanılama:** Crash, bellek kaynaklı sonlanma, donma ve oynatma hataları sürüm/platform/cihaz bağlamıyla araştırılabilir olmalıdır. Kullanıcı akış loglarıyla crash ölçümü ayrı veri amaçlarıdır.
 - **NFR-9 — Gelecekte offline kullanım için temel:** Revizyon/varlık kimliği sabit, bütünlük ve tamlık doğrulanabilir, indirmeye devam etmeye uygun bir medya temeli tasarlanır. Silinebilir oynatma önbelleği ile gelecekte kullanıcının açıkça saklayacağı offline içerik ayrılır. İlk sürüm kullanıcı kontrollü offline indirme ekranı veya tam hikâyenin offline hazır olduğu garantisi sunmaz; cache bütçesi, boşaltma ve devam semantiği OQ-8'de belirlenecektir.
@@ -292,12 +300,12 @@ The [2026-09-30 legacy source audit](./epics-mobile-legacy-open-points-audit.md)
 | AD-5 / FR-29 | Media PoC complete per user. Separate unmerged branch codex/ios-legacy-upgrade-probe, commit a807a9f, reports iOS Simulator preservation of is_anonymous=true, language=tr and first_run=false across install/relaunch. Name/read-list absent; no populated-profile/history proof. Legacy build 1.0.34+332 → probe 1.0.35+333 differs from visual baseline 1.0.35+333. No production signing or registered Firebase session proof. | Signed representative in-place updates on BOTH platforms, correct live IDs/signing/provisioning and retained local records/sessions must pass BEFORE auth/migration feature development. No merge performed by this planning task. |
 | OQ-1 | Partially evidenced by a user-supplied legacy iPhone screenshot with reader controls visible: Exit, Sound, pagination dots and page count. Control actions, other states/player surfaces and backend capability evidence still require characterization; collect redacted screen-to-API success/error fixtures. | Before finalizing affected epic scope and suitability. |
 | OQ-2 | >=99.5% crash-free users per platform is fixed. Measurement window/sample, device/network matrix and memory/latency p50/p95 budgets remain open. | Measurement plan early; thresholds and sufficient evidence before release. |
-| OQ-3 + OQ-6 | The user decided on 2026-10-01 that existing new-system account records win conflicts with older local records on a later device. Unique later-device records, source/target fields and identity mapping, invalid/unmapped data, removed-content history, shared-Firebase deletion, tombstones and remigration prevention still require contracts. | Resolve before migration acceptance criteria; deletion contract before deletion implementation. |
+| OQ-3 + OQ-6 | The user decided on 2026-10-01 that existing new-system account records win conflicts with older local records on a later device. The 2026-10-02 decision closes later-device import: use existing new-system account data without importing any old local records. Initial-migration source/target fields and identity mapping, invalid/unmapped data, shared-Firebase deletion, tombstones and remigration prevention still require contracts. | Resolve before migration acceptance criteria; deletion contract before deletion implementation. |
 | OQ-4 | User screenshots show reading stories, audio stories, meditation and lullabies. Legacy Flutter source fixes the client trigger at three characters and 500 ms debounce. Real payloads, matching/ranking/group counts, lightweight catalog, pagination and server errors remain open; see evidence update below. | Before finalizing the affected UX/API contracts or implementing the stories that depend on them. |
 | OQ-8 / AD-10 | Authorization matrix, shared content/experience/asset IDs, immutable manifest, start/fetch point, renewal/revocation, actual renditions/integrity, metadata-only approval, retention, bounded prefetch/cache and retry/resume semantics. Experimental PoC response is insufficient as production contract. | Resolve relevant contracts before catalog/reader/player publication stories. |
-| OQ-7 | Legacy promotion-code entry resolves an active code's `offering_id` and opens a RevenueCat offering; direct access is not evidenced in that path. Actual RevenueCat products/offerings and event fields, retention, idempotency/retry contracts remain open; FR-21 event categories are already fixed. | Before late integration implementation; purchase/restore and events verified before release. |
+| OQ-7 | Legacy promotion-code entry resolves an active code's `offering_id` and opens a RevenueCat offering; direct access is not evidenced in that path. Pre-registration purchasing and default restore transfer are approved. Stored analytics events have no automatic age-based deletion for now; start in the current backend database and consider separation only if performance measurements justify it. Actual products/offerings, production/sandbox identity and event field/idempotency/retry contracts remain unverified; FR-21 categories are fixed. | Before late integration implementation; purchase/restore and events verified before release. |
 | OQ-9 | Legacy source fixes notification permission request at deferred startup and confirms a profile OS-permission switch. Its announcement is an image carousel/zoom overlay, now the reference scope. The user approved notification/deep-link destination navigation as a new replacement feature and rejected English announcement artwork fallback for Portuguese. Provider, route formats, SDK/data scope and store audience declarations remain open. | Before finalizing release flows and related integrations. |
-| OQ-10 / AD-11 | CMS manages new-language tester-to-live promotion. The user personally approves and manages staged mobile application release through the store consoles. Mobile release cohort sizes, observation periods, expansion/stop thresholds, recovery and separate old-system shutdown decision remain open. | Before rollout; backend compatibility precedes mobile cohorts. |
+| OQ-10 / AD-11 | CMS manages new-language tester-to-live promotion. The user personally approves and manages staged mobile application release through the store consoles. Legacy shutdown requires completed staged rollout, verified migration/subscription stability and then the user’s separate explicit shutdown approval; no fixed date is set. Mobile release cohort sizes, observation periods, expansion/stop thresholds, stability evidence criteria and recovery remain open. | Before rollout; backend compatibility precedes mobile cohorts. |
 
 Supported minimums remain Android API 24 and iOS/iPadOS 15, phone and tablet. Known critical playback failure or memory termination on test devices blocks release. Do not infer production stability from an emulator run or insufficient crash-free samples.
 
@@ -401,7 +409,7 @@ Aligned on 2026-09-28 with ADR-0018 and the mobile architecture spine: BLoC/Cubi
 
 - **Binds:** Mobile release, backend routing/migration, RevenueCat and old-system operations.
 - **Prevents:** A store update exposing incompatible backend behavior to all users or retiring the old system before migration and entitlement evidence exists.
-- **Rule:** Keep old clients on the old system while new-version users migrate; deploy backend compatibility before exposing new mobile cohorts. Expand staged store rollout only against reference-parity, signed-upgrade, migration, purchase/restore, event, crash-free and performance evidence by platform. Product owner and operations retain an explicit stop/containment and recovery decision; do not equate a store rollback with restoration of migrated data. Old-system shutdown is a separate decision, never implied by new-version release.
+- **Rule:** Keep old clients on the old system while new-version users migrate; deploy backend compatibility before exposing new mobile cohorts. Expand staged store rollout only against reference-parity, signed-upgrade, migration, purchase/restore, event, crash-free and performance evidence by platform. Product owner and operations retain an explicit stop/containment and recovery decision; do not equate a store rollback with restoration of migrated data. Old-system shutdown requires completed staged rollout and verified migration/subscription stability, followed by the user’s separate explicit approval. Keep the old system running until approval; no fixed shutdown date is set.
 
 ##### AD-12 — One composition root with explicit disposal ownership [ADOPTED]
 
@@ -702,7 +710,7 @@ So that I can begin reading without waiting for the entire story to download.
 
 **Requirements:** FR-11–12, FR-13 (initial narration preference), FR-15, FR-25; NFR-2–3, NFR-5–8; UX-DR12–13, UX-DR22–25; AD-3, AD-7–10.
 
-**Prerequisites:** Story 1.2; agreed protected-start and immutable manifest contracts, actual first-page image/audio outputs with readiness/integrity evidence, and authorized development/test access. Resolve the relevant OQ-1/8 contracts before implementation. Introduce the application-scoped media coordinator for this first consuming capability; no dependency on the later listening epic. Numerical performance budgets remain subject to OQ-2 and are not invented here. Verify the applicable EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Story 1.2; agreed protected-start and immutable manifest contracts, actual first-page image/audio outputs with readiness/integrity evidence, and authorized development/test access. Resolve the relevant OQ-1/8 contracts before implementation. Introduce the application-scoped media coordinator for this first consuming capability; no dependency on the later listening epic. Under the 2026-10-02 OQ-2 decision, measure the first working reading/listening flows to establish numeric performance limits before affected acceptance; do not invent them before baseline measurement. Verify the applicable EXT-MEDIA closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -1252,10 +1260,10 @@ So that I can read without accumulating slowdown or unexpected application termi
 **When** media cache cleanup runs,
 **Then** those durable records and unacknowledged migration inputs are not deleted.
 
-**Given** representative supported devices including low-memory devices and agreed poor-network conditions,
+**Given** the approved emulator/Simulator-first matrix including virtual lower-capacity profiles, available physical devices and agreed poor-network conditions,
 **When** first-page preparation and page transitions are measured,
-**Then** the evidence records device/network/cache context and satisfies the agreed memory/latency budgets,
-**And** emulator evidence is not substituted for required physical-device results.
+**Then** the evidence records host, virtual/physical device, OS, build mode, network and cache context and satisfies the agreed environment-specific memory/latency budgets,
+**And** available physical devices provide supplementary checks; virtual measurements are identified as such and are not labeled physical-device performance evidence.
 
 **Given** memory or latency optimizations,
 **When** the optimized reader is compared with reference content,
@@ -1713,7 +1721,7 @@ So that I can keep listening without crashes, slowdown or competing audio.
 
 **Requirements:** FR-14–16, FR-25 (sustained listening scope); NFR-1–3, NFR-6–9; UX-DR16, UX-DR22–25; AD-3, AD-8–9.
 
-**Prerequisites:** Stories 2.2–2.9; representative audio and animated artwork, supported physical device/network matrix, OQ-2 test durations and memory/latency budgets, and OQ-8 cache/retention parameters. Quantitative acceptance requires agreed thresholds, not invented numbers. This story extends the diagnostics and bounded resource management already introduced by the consuming features and Epic 1.
+**Prerequisites:** Stories 2.2–2.9; representative audio and animated artwork, approved emulator/Simulator-first device/network matrix and available physical devices, OQ-2 test durations and memory/latency budgets, and OQ-8 cache/retention parameters. Quantitative acceptance requires agreed thresholds, not invented numbers. This story extends the diagnostics and bounded resource management already introduced by the consuming features and Epic 1.
 
 **Acceptance Criteria:**
 
@@ -1739,10 +1747,10 @@ So that I can keep listening without crashes, slowdown or competing audio.
 **When** playback startup and interruption recovery are measured,
 **Then** the results are recorded and assessed against the agreed latency and memory thresholds.
 
-**Given** representative supported physical Android and iOS devices,
+**Given** the approved Android/iOS emulator/Simulator-first matrix and available physical devices,
 **When** sustained listening verification completes,
-**Then** platform-specific results include test durations, memory and latency evidence under OQ-2,
-**And** emulator-only results are not used as substitutes for required real-device evidence.
+**Then** results include test durations and memory/latency evidence under OQ-2 with host, virtual/physical device, OS, build mode, network and cache context,
+**And** available physical devices provide supplementary checks; virtual results are identified as such and are not labeled physical-device evidence. Separately required platform lifecycle checks remain governed by Stories 1.7 and 2.5.
 
 ### Epic 2 planning review
 
@@ -1770,7 +1778,7 @@ New users can enter through registered or anonymous identity flows, while existi
 
 **Scope:** FR-1–5, FR-9, FR-16, FR-26–29; NFR-1, NFR-4–8; UX-DR5–9, UX-DR17–19, UX-DR22–25; AD-4–8, AD-11. Stories 3.1–3.21 are approved for planning. The user approved proceeding to Epic 4 after the Epic 3 planning review; AD-5 and unresolved contract gates remain open.
 
-**Planning constraints:** AD-5 is an evidence prerequisite before auth/migration feature development. Plan platform-specific signed-upgrade checks first, then admit identity/migration implementation only when both platforms satisfy that gate. The existing iOS anonymous-preference Simulator proof is partial evidence, not registered-session, populated-history or signed-device proof. Keep branch codex/ios-legacy-upgrade-probe at reported commit a807a9f as unmerged evidence unless separately verified; this planning task neither merges it nor modifies the probe. Resolve OQ-3/6 before migration acceptance criteria; unresolved local-record/removed-content/deletion semantics must not be silently selected. User approval to plan is not an assertion that these gates passed.
+**Planning constraints:** AD-5 is an evidence prerequisite before auth/migration feature development. Plan platform-specific signed-upgrade checks first, then admit identity/migration implementation only when both platforms satisfy that gate. The existing iOS anonymous-preference Simulator proof is partial evidence, not registered-session, populated-history or signed-device proof. Keep branch codex/ios-legacy-upgrade-probe at reported commit a807a9f as unmerged evidence unless separately verified; this planning task neither merges it nor modifies the probe. Resolve OQ-3/6 before migration acceptance criteria; unresolved initial-migration record/deletion semantics must not be silently selected. User approval to plan is not an assertion that these gates passed.
 
 ### Story 3.1: Prove a safe signed Android in-place update
 
@@ -2278,7 +2286,7 @@ So that I can see my own usage accurately.
 
 **Requirements:** FR-16, FR-4–5; NFR-4–7; UX-DR17, UX-DR22–25; AD-6–8.
 
-**Prerequisites:** AD-5 passed; Stories 3.5 and 3.10–3.11; verified backend history/statistics contracts and existing populated account fixtures. Completion and duration producers from Epics 1–2 are inputs. Historical records from migration are verified in later migration stories. Resolve OQ-3 before defining how removed-content history appears; this story must not infer deletion or a playable destination for removed experiences. Own completion of the Library/Sleep/Profile shell integration using the existing router/session/media ownership and verified tab/back reference behavior.
+**Prerequisites:** AD-5 passed; Stories 3.5 and 3.10–3.11; verified backend history/statistics contracts and existing populated account fixtures. Completion and duration producers from Epics 1–2 are inputs. Historical records from migration are verified in later migration stories. The 2026-10-02 decision requires removed-content records to remain visible in history and included in statistics; content that no longer exists cannot be opened. Verify this behavior with retained-history fixtures rather than deleting the entries. Own completion of the Library/Sleep/Profile shell integration using the existing router/session/media ownership and verified tab/back reference behavior.
 
 **Acceptance Criteria:**
 
@@ -2305,8 +2313,9 @@ So that I can see my own usage accurately.
 
 **Given** imported history or history referring to removed content,
 **When** it is displayed,
-**Then** imported entries are verified with the migration stories and removed-content presentation follows the resolved OQ-3 decision,
-**And** the absence of a currently playable feature does not authorize deleting historical records.
+**Then** imported entries are verified with the migration stories,
+**And** removed-content records remain visible in history and included in statistics,
+**And** content that no longer exists cannot be opened; its historical record is retained.
 
 **Given** the ready account's Library, Sleep and Profile tabs,
 **When** the user navigates within each tab, switches tabs and uses system back,
@@ -2365,7 +2374,7 @@ So that my profile, preferences, history and progress remain usable.
 
 **Requirements:** FR-26–27, FR-29; FR-4, FR-9, FR-16 (retained data); NFR-4–6; AD-4–6, AD-11.
 
-**Prerequisites:** AD-5 passed; earlier Epic 3 verified identity and session admission; resolved OQ-3 source/target identity and field mapping, exceptions and removed-content history treatment, plus OQ-6 deletion/tombstone/remigration prevention constraints. This is approved product-level planning, not finalized executable migration acceptance: refine field-level fixtures after those decisions close. Backend owns idempotency and persisted terminal status. Device-only inputs are separate subsequent scope; do not make them disappear through account migration. Verify the applicable EXT-MIGRATION closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** AD-5 passed; earlier Epic 3 verified identity and session admission; resolved OQ-3 source/target identity and field mapping, exceptions and fixtures verifying the approved retained-history/statistics behavior, plus OQ-6 deletion/tombstone/remigration prevention constraints. This is approved product-level planning, not finalized executable migration acceptance: refine field-level fixtures after those decisions close. Backend owns idempotency and persisted terminal status. Device-only inputs are separate subsequent scope; do not make them disappear through account migration. Verify the applicable EXT-MIGRATION closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -2504,7 +2513,7 @@ So that migration is not repeated and current data remains intact.
 
 **Requirements:** FR-26–29; FR-4, FR-9, FR-16 (preservation); NFR-4–6; AD-4–6, AD-8, AD-11.
 
-**Prerequisites:** AD-5 passed; Story 3.14 account migration and applicable local-import boundaries from Story 3.15. The 2026-10-01 product decision makes existing new-system account records authoritative when a later device has conflicting older local records; they are not overwritten or merged over the account records. Resolve OQ-3 field/identity mapping and safe disposition of local records that have no account counterpart before finalizing field-level migration tests. OQ-6 remigration prevention constraints also apply. This decision does not authorize continuous synchronization or silent deletion of unique local records.
+**Prerequisites:** AD-5 passed; Story 3.14 account migration and verified account/session resolution. The 2026-10-02 product decision requires this device to continue with existing new-system account data. No old local record is imported, merged or used to overwrite account data, including records with no account counterpart. Account migration is not repeated. OQ-6 remigration prevention constraints still apply; local cleanup remains separately governed by Story 3.21.
 
 **Acceptance Criteria:**
 
@@ -2522,18 +2531,10 @@ So that migration is not repeated and current data remains intact.
 **Then** those later legacy-server changes are not imported again,
 **And** continuous synchronization between the systems is not introduced.
 
-**Given** protected records unique to the later device's local storage,
-**When** that installation is examined,
-**Then** those records are identified and handled separately from account-wide migration.
-
-**Given** local records require import or conflict resolution,
-**When** their disposition is determined,
-**Then** account records win any conflict and the remaining OQ-3 policy is applied to records unique to the later device,
-**And** records are not silently deleted.
-
-**Given** a local-record operation is interrupted,
-**When** it is retried,
-**Then** it resumes safely without duplicating records.
+**Given** old local records on the later device, including records absent from the new-system account,
+**When** the updated device resolves the already migrated account,
+**Then** it displays and uses the current new-system account data without importing any of those old local records,
+**And** no local import operation is started; cleanup remains Story 3.21 scope.
 
 **Given** other devices have not upgraded,
 **When** the later device adopts the replacement,
@@ -2724,7 +2725,7 @@ Twenty-one stories have been individually approved for planning; this is not evi
 | FR-28 | 3.15/3.17 device-local preservation and 3.21 explicitly bounded cleanup. |
 | FR-29 | 3.1/3.2 signed platform upgrade evidence and 3.14–3.17 integration; release-cohort and store delivery verification remains Epic 7. |
 
-Migration stories currently state approved product outcomes. Resolve OQ-3 source/target fields and IDs, malformed/unmapped records, later-device local conflicts and removed-content history presentation before finalizing executable migration acceptance. Resolve OQ-6 shared-Firebase deletion, remigration prevention and subscription consequences before deletion implementation and migration acceptance. The content inventory must include all PRD-preserved data, including meaningful historical feedback/promotion records and their identity relationships; this review does not reduce it to visible profile fields.
+Migration stories currently state approved product outcomes. Resolve OQ-3 source/target fields and IDs, malformed/unmapped initial-migration records before finalizing executable migration acceptance. Verify the approved retention of removed-content history/statistics without a playable destination. Resolve OQ-6 shared-Firebase deletion, remigration prevention and subscription consequences before deletion implementation and migration acceptance. The content inventory must include all PRD-preserved data, including meaningful historical feedback/promotion records and their identity relationships; this review does not reduce it to visible profile fields.
 
 Real store purchase/restore and entitlement verification remain Epic 6 scope. Support/notification/deep-link surfaces belong to Epic 4; candidate/live test authorization belongs to Epic 5. Their drafted stories do not imply completed integration.
 
@@ -3502,6 +3503,11 @@ So that I can access eligible premium content without paying again after an inte
 
 **Acceptance Criteria:**
 
+**Given** an admitted anonymous user who has not created a registered account,
+**When** the user starts purchasing an eligible subscription,
+**Then** registration is not required to enter or complete the purchase flow,
+**And** verified entitlement is associated with that user's current identity under the resolved RevenueCat/backend contract; anonymous status alone grants no premium access.
+
 **Given** a selected subscription product,
 **When** the user starts purchasing,
 **Then** the store flow targets that product,
@@ -3554,7 +3560,7 @@ So that I can recover verified premium access without purchasing again.
 
 **Requirements:** FR-19, FR-25; NFR-4–6; UX-DR21, UX-DR25; AD-4, AD-7–10; approved iOS parental-gate clarification.
 
-**Prerequisites:** Stories 6.1–6.3 and Epic 3 account boundaries; resolved OQ-7 restore, store/application identity association, account-conflict and entitlement contracts, plus applicable OQ-8 admission behavior. Verify reference restore entry points and the applicable iOS parental gate before implementation. Cross-account transfer rules must be explicitly resolved, not inferred from store ownership or matching email addresses.
+**Prerequisites:** Stories 6.1–6.3 and Epic 3 account boundaries; resolved OQ-7 restore, store/application identity association, account-conflict and entitlement contracts, plus applicable OQ-8 admission behavior. Verify reference restore entry points and the applicable iOS parental gate before implementation. The user approved RevenueCat’s default transfer behavior on 2026-10-02: a user-triggered restore of an eligible subscription under a different TellPal account on the purchasing store account transfers premium access to the destination and removes it from the source. Verify production/sandbox configuration, receipt-owner identity/aliases and backend reconciliation; matching email alone is not proof.
 
 **Acceptance Criteria:**
 
@@ -3586,10 +3592,20 @@ So that I can recover verified premium access without purchasing again.
 **Then** the failure is not misrepresented as no purchase found,
 **And** the user can retry.
 
-**Given** a purchase associated with another application account,
-**When** restore encounters that purchase,
-**Then** it is not silently transferred,
-**And** the mismatch follows the verified account-conflict contract.
+**Given** an eligible subscription associated with account A and the purchasing store account,
+**When** the user restores it while using distinct TellPal account B,
+**Then** the approved RevenueCat transfer policy associates the subscription with B,
+**And** backend reconciliation grants B premium access and removes A's access to that transferred subscription,
+**And** profile and reading-history records remain with their original TellPal accounts.
+
+**Given** an interrupted restore or delayed transfer reconciliation,
+**When** processing resumes,
+**Then** both source and destination entitlement states are reconciled without duplicating the logical transfer or applying results to another account,
+**And** pending verification is not presented as confirmed access.
+
+**Given** an expired subscription restored under another identity,
+**When** receipt ownership is reconciled,
+**Then** transferring purchase history alone does not grant an active premium entitlement.
 
 **Given** successful restore and verified access,
 **When** the flow completes,
@@ -3723,10 +3739,15 @@ So that I can continue using my subscription without purchasing again.
 **Then** it can complete safely,
 **And** rights are neither duplicated nor associated with the wrong account.
 
-**Given** an anonymous user signing into an existing application account,
-**When** subscription identity is reconciled,
-**Then** subscriptions are not automatically merged,
-**And** the resolved OQ-7 account-association contract applies.
+**Given** an anonymous user identified to RevenueCat by a custom Firebase UID and signing into an existing account with a different custom UID,
+**When** the SDK changes the identified customer without a restore,
+**Then** that login alone does not transfer the previous customer's purchases,
+**And** a user-triggered restore follows Story 6.4's approved transfer policy.
+
+**Given** a RevenueCat-generated anonymous identity or existing billing aliases,
+**When** the identity is linked or restored,
+**Then** the verified RevenueCat alias contract is respected,
+**And** billing aliasing never merges TellPal profiles or reading histories.
 
 **Given** logout or an account switch,
 **When** the next account becomes active,
@@ -3757,7 +3778,7 @@ Seven stories have been individually approved for planning. They complete the pr
 | FR-25 paid-access integration | 6.1 and 6.3–6.7 retain backend-authoritative admission; candidate/test permissions remain independent under Epic 5. |
 | iOS parental-gate clarification | 6.2 requires a fresh gate for every direct paywall opening; 6.5 preserves the promotion-code screen as the lock on each use without a second gate. The user deferred an additional gate for external links unless App Review rejects that behavior; record this known guideline 1.3 risk in Story 7.9. Challenge behavior still requires legacy verification. |
 
-OQ-7 remains a prerequisite for real RevenueCat/store product and offering identities, purchase/restore states, account association/conflict rules, supported promotion types and membership management fields/destinations. OQ-8 must resolve effects of revocation on active sessions. OQ-6 deletion/subscription consequences remain an integration prerequisite; this epic does not authorize deletion of a shared legacy Firebase identity or assume deleting an application account cancels a store subscription. Reference offer and parental-gate evidence must include applicable iOS phone/tablet behavior; emulator Billing failures are not acceptance evidence.
+The 2026-10-02 decisions preserve purchases without registration and select the default RevenueCat transfer policy for restore. OQ-7 remains a prerequisite for real product/offer identities, verified production/sandbox configuration, identity/alias mapping, purchase/restore reconciliation, supported promotion types and membership management fields/destinations. OQ-8 must resolve effects of revocation on active sessions. OQ-6 deletion/subscription consequences remain an integration prerequisite; this epic does not authorize deletion of a shared legacy Firebase identity or assume deleting an application account cancels a store subscription. Reference offer and parental-gate evidence must include applicable iOS phone/tablet behavior; emulator Billing failures are not acceptance evidence.
 
 FR-21 backend flow-event integration and release-wide purchase/restore/account-transition regression evidence remain in Epic 7. Required financial-flow events must be verified before release alongside all other contracted event categories; no successful plan review substitutes for those checks.
 
@@ -3768,7 +3789,7 @@ Users receive a replacement whose critical journeys, data continuity, platform b
 
 **Scope:** FR-21, FR-29; release verification of all active FRs and NFR-1–9; UX-DR1–25; AD-5, AD-9–11. Stories 7.1–7.11 are approved for planning. Epic 7 coverage review is recorded below; final workflow validation has been performed and requires remediation as recorded in Overview and the linked report.
 
-**Planning constraints:** Build on Epics 1–6 and actual external backend/provider readiness. Flow-event integration is required before release; crash and performance diagnostics remain earlier feature responsibilities. Split event integration into bounded journey groups, beginning with catalog/search/detail events and their shared delivery behavior. Resolve applicable OQ-7 event schema, identity, retention, queue limits and retry/deduplication contracts and OQ-9 data/SDK scope before implementation. Complete OQ-2 measurement budgets and sufficient device/platform evidence, and OQ-10 rollout/containment/recovery decisions before release. AD-5 remains an earlier auth/migration development gate and must not be postponed to this epic. The existing anonymous iOS Simulator probe is partial evidence, not signed real-device or registered-session proof. No rollout or legacy shutdown is authorized by this planning review.
+**Planning constraints:** Build on Epics 1–6 and actual external backend/provider readiness. Flow-event integration is required before release; crash and performance diagnostics remain earlier feature responsibilities. Split event integration into bounded journey groups, beginning with catalog/search/detail events and their shared delivery behavior. Apply the approved no-automatic-expiration policy for persisted analytics events. Resolve applicable OQ-7 event schema, identity, queue limits and retry/deduplication contracts and OQ-9 data/SDK scope before implementation. Complete OQ-2 measurement budgets and sufficient device/platform evidence, and OQ-10 rollout/containment/recovery decisions before release. AD-5 remains an earlier auth/migration development gate and must not be postponed to this epic. The existing anonymous iOS Simulator probe is partial evidence, not signed real-device or registered-session proof. No rollout or legacy shutdown is authorized by this planning review.
 
 
 ### Story 7.1: Diagnose discovery journeys through backend flow records
@@ -3781,13 +3802,23 @@ So that problems can be investigated while I continue using available content.
 
 **Requirements:** FR-21; NFR-4–5, NFR-8; AD-7, AD-9.
 
-**Prerequisites:** Epic 1 discovery journeys and Epic 3 account boundaries; verified backend event ingestion and deduplication. Resolve OQ-7 event fields, identity, retention, bounded pending-record storage and retry/delivery rules, plus applicable OQ-9 privacy scope, before implementation. Shared delivery behavior is introduced for these consuming journeys and extended by later event stories; this story does not implement those later producers. Verify the applicable EXT-EVENTS closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Epic 1 discovery journeys and Epic 3 account boundaries; verified backend event ingestion and deduplication. Apply the approved no-automatic-expiration policy for persisted analytics events in the current backend database. Resolve OQ-7 event fields, identity, bounded pending-record storage and retry/delivery rules, plus applicable OQ-9 privacy scope, before implementation. Shared delivery behavior is introduced for these consuming journeys and extended by later event stories; this story does not implement those later producers. Verify the applicable EXT-EVENTS closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
 **Given** catalog, search or detail viewing,
 **When** a contracted view, error or retry event occurs,
 **Then** the event is recorded by the backend according to the agreed contract.
+
+**Given** analytics events durably recorded by the backend,
+**When** those records age or routine maintenance runs,
+**Then** no automatic age-based deletion or expiration removes them,
+**And** they remain available as a separate long-term analysis source alongside existing Google Analytics data.
+
+**Given** analytics storage or queries are suspected of affecting application performance,
+**When** measurements are reviewed,
+**Then** the current backend database remains the initial storage baseline,
+**And** a separate analysis database is considered only against demonstrated impact and a reviewed design, without silently discarding existing events.
 
 **Given** event delivery is unavailable,
 **When** the user browses or consumes available content,
@@ -3975,7 +4006,7 @@ So that I can continue my existing journeys without unintended visual or behavio
 
 **Requirements:** NFR-6–7; UX-DR1–25 for retained scope; reference-parity verification across active FRs; approved language and iOS parental-gate decisions.
 
-**Prerequisites:** Epics 1–6 and a representative release candidate; reference evidence for the retained scope, matched device dimensions, language, content and account conditions. Use feature-level evidence already collected; this story consolidates candidate acceptance rather than deferring visual checks until release. Missing real-device/tablet and actual premium-offer evidence remains a gap until supplied. Use the feature-level UX-DR24 matrix and recorded normal/enlarged text scales, device cases and contrast criteria from Shared readiness and acceptance checks; repeat verification on the candidate.
+**Prerequisites:** Epics 1–6 and a representative release candidate; reference evidence for the retained scope, matched device dimensions, language, content and account conditions. Use feature-level evidence already collected; this story consolidates candidate acceptance rather than deferring visual checks until release. Use the approved emulator/Simulator-first phone/tablet matrix and available physical devices for supplementary visual checks. Missing matched reference states and actual premium-offer evidence remain gaps until supplied; separately required physical platform and signed-upgrade evidence remain distinct. Use the feature-level UX-DR24 matrix and recorded normal/enlarged text scales, device cases and contrast criteria from Shared readiness and acceptance checks; repeat verification on the candidate.
 
 **Acceptance Criteria:**
 
@@ -3995,10 +4026,10 @@ So that I can continue my existing journeys without unintended visual or behavio
 **When** localized layouts are verified,
 **Then** overflow, clipping and readability are checked.
 
-**Given** Android/iOS phone and tablet coverage,
-**When** device acceptance is assessed,
-**Then** the applicable real-device evidence is available,
-**And** emulator screen-size overrides do not substitute for real tablet evidence.
+**Given** Android/iOS phone and tablet coverage in the approved emulator/Simulator-first matrix,
+**When** visual and interaction parity is assessed,
+**Then** configured phone/tablet profiles and available supplementary physical-device results are recorded under matching reference conditions,
+**And** evidence identifies the actual virtual/physical environment; a resized phone screenshot alone does not verify tablet layout, and emulated captures are not labeled physical-device evidence.
 
 **Given** applicable iOS parental-gate entry points,
 **When** parity is verified,
@@ -4025,7 +4056,7 @@ So that I can continue my existing journeys without unintended visual or behavio
 **And** evidence identifies the screen/state/device/language/content and failed checks block affected-screen acceptance. Reference screenshots alone do not prove accessibility.
 
 
-### Story 7.6: Verify stability and performance on real devices
+### Story 7.6: Verify stability and performance in the available test environments
 
 **Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
@@ -4035,13 +4066,15 @@ So that I can complete my sessions without crashes, freezes or memory-related te
 
 **Requirements:** NFR-1–3, NFR-5–6, NFR-8; AD-3, AD-9, AD-11.
 
-**Prerequisites:** Representative release candidate and diagnostics introduced with earlier features. Resolve OQ-2 device/network/cache matrix, device-class memory budgets, latency p50/p95 targets and crash-free observation window/sample before measurement. The fixed crash-free target is at least 99.5% of users per platform; this story does not invent the remaining thresholds. Resolve applicable OQ-9 diagnostic privacy scope. Prior feature evidence informs release verification but does not substitute for candidate-specific results.
+**Prerequisites:** Representative release candidate and diagnostics introduced with earlier features. Use the approved emulator/Simulator-first approach and record the exact device/network/cache matrix. Establish device-class memory budgets and latency p50/p95 limits from first-working-flow baseline measurements before acceptance verification. Resolve the crash-free observation window/sample before evaluating that target. The fixed crash-free target is at least 99.5% of users per platform; this story does not invent the remaining thresholds. Resolve applicable OQ-9 diagnostic privacy scope. Prior feature evidence informs release verification but does not substitute for candidate-specific results.
 
 **Acceptance Criteria:**
 
-**Given** the agreed supported-device matrix,
+**Given** the approved emulator/Simulator-first matrix and available physical devices,
 **When** candidate verification runs,
-**Then** it covers Android API 24 and iOS/iPadOS 15 minimums and the agreed phone, tablet and low-memory device classes.
+**Then** supported minimum and current OS phone/tablet profiles and lower-capacity configurations are covered where the toolchain supports them,
+**And** any unavailable minimum-OS profile or physical-only behavior is recorded as an evidence gap rather than silently counted as tested,
+**And** available physical devices provide supplementary checks without requiring a broad physical-device inventory.
 
 **Given** heavy content, sustained playback and repeated reading/listening sessions,
 **When** stability is assessed,
@@ -4054,11 +4087,11 @@ So that I can complete my sessions without crashes, freezes or memory-related te
 
 **Given** cold/warm launch, first page/audio, page transition and reconnection scenarios,
 **When** timings are measured,
-**Then** network and cache conditions are recorded,
+**Then** host, virtual/physical device, OS, build mode, network and cache conditions are recorded,
 **And** agreed p50/p95 targets are met.
 
-**Given** per-platform crash-free measurement,
-**When** the stability target is evaluated,
+**Given** per-platform actual usage data from limited distribution and the agreed sample/window,
+**When** expansion eligibility is evaluated,
 **Then** at least 99.5% crash-free users is demonstrated with the agreed sufficient sample and observation window,
 **And** a small set of successful tests is not treated as sufficient evidence.
 
@@ -4070,7 +4103,7 @@ So that I can complete my sessions without crashes, freezes or memory-related te
 **Given** candidate acceptance results,
 **When** release readiness is reviewed,
 **Then** results are tied to the candidate version,
-**And** failed criteria are resolved before release acceptance.
+**And** failed first-distribution criteria are resolved before limited release acceptance; crash-free sample/window evidence is required before expansion under the October 2 gate mapping.
 
 
 ### Story 7.7: Verify session and data continuity through a signed release-candidate upgrade
@@ -4083,7 +4116,7 @@ So that I can adopt the replacement without reinstalling or recreating my accoun
 
 **Requirements:** FR-29; Epic 3 migration/account-continuity and Epic 6 existing-subscription integration; NFR-4, NFR-6; AD-4–5, AD-9, AD-11.
 
-**Prerequisites:** Epics 3 and 6, signed representative release candidate and real Android/iOS devices. AD-5 evidence must already have been completed before auth/migration feature development; this story repeats end-to-end verification on the finished candidate rather than deferring that gate. Resolve applicable OQ-3 field/identity mappings and later-device local-record rules, OQ-6 migration/deletion boundaries and OQ-7 subscription identity contracts. The existing anonymous iOS Simulator probe is partial evidence only.
+**Prerequisites:** Epics 3 and 6, signed representative release candidate and real Android/iOS devices. AD-5 evidence must already have been completed before auth/migration feature development; this story repeats end-to-end verification on the finished candidate rather than deferring that gate. Resolve applicable OQ-3 initial-migration field/identity mappings and the decided no-import behavior on later devices, OQ-6 migration/deletion boundaries and OQ-7 subscription identity contracts. The existing anonymous iOS Simulator probe is partial evidence only.
 
 **Acceptance Criteria:**
 
@@ -4273,9 +4306,13 @@ So that unresolved failures are contained before more users are exposed.
 **When** it is recorded,
 **Then** version, platform, supporting evidence, the user's explicit approval/stop decision and the corresponding store-console action are identified.
 
-**Given** successful replacement rollout,
-**When** legacy-system continuity is considered,
-**Then** rollout success is not treated as authorization to shut down the legacy system.
+**Given** completed staged replacement rollout and verified migration/subscription stability,
+**When** legacy-system shutdown is considered,
+**Then** the user must give separate explicit shutdown approval based on the recorded evidence.
+
+**Given** that separate shutdown approval has not been given,
+**When** the replacement release continues operating,
+**Then** the legacy system remains running, and no fixed date or rollout success triggers automatic shutdown.
 
 
 ### Story 7.11: Recover safely after a release problem
