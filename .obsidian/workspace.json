@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_bmad-output/planning-artifacts/epics-mobile-eylem-plani.tr.md",
+                "file": "_bmad-output/planning-artifacts/epics-mobile-final-validation.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "epics-mobile-eylem-plani.tr"
+              "title": "epics-mobile-final-validation"
             }
           }
         ]
@@ -188,11 +188,18 @@
       "bases:Yeni taban oluştur": false
     }
   },
-  "active": "45e7daede588ffef",
+  "active": "8ec0530d011b7892",
   "lastOpenFiles": [
-    "_bmad-output/planning-artifacts/epics-mobile.md",
+    "_bmad-output/planning-artifacts/mobile-evidence/completion-2026-09-29/ios-legacy-return-rating-prompt.png",
+    "_bmad-output/planning-artifacts/mobile-evidence/completion-2026-09-29/ios-legacy-story-completion.png",
+    "_bmad-output/planning-artifacts/mobile-evidence/completion-2026-09-29",
+    "_bmad-output/planning-artifacts/mobile-evidence/reader-controls-2026-09-29/ios-legacy-reader-controls.png",
+    "_bmad-output/planning-artifacts/mobile-evidence/reader-controls-2026-09-29",
+    "_bmad-output/planning-artifacts/mobile-evidence/parental-gate-2026-09-29/ios-legacy-paywall-gate.png",
+    "_bmad-output/planning-artifacts/mobile-evidence/parental-gate-2026-09-29",
     "_bmad-output/planning-artifacts/epics-mobile-eylem-plani.tr.md",
     "_bmad-output/planning-artifacts/epics-mobile-final-validation.md",
+    "_bmad-output/planning-artifacts/epics-mobile.md",
     "_bmad/render/bmad-build-auto/tellpalv2-93c07998ae80/33de446b5c8a86001b4a/workflow.md",
     "_bmad-output/planning-artifacts/architecture/architecture-tellpalv2-2026-09-25/reviews/review-skill-alignment-triage-2026-09-28.md",
     "_bmad-output/planning-artifacts/architecture/architecture-tellpalv2-2026-09-25/reviews/review-skill-alignment-reality-2026-09-28.md",
