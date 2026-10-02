@@ -4,6 +4,10 @@ currentStep: step-04-final-validation
 status: final-validation-performed-remediation-required
 validationDate: 2026-09-29
 validationReport: "_bmad-output/planning-artifacts/epics-mobile-final-validation.md"
+sprintPlanningDate: 2026-10-02
+sprintReadiness: CONCERNS
+sprintReadinessReport: "_bmad-output/planning-artifacts/implementation-readiness-mobile-2026-10-02.md"
+sprintStatusFile: "_bmad-output/implementation-artifacts/mobile/sprint-status.yaml"
 inputDocuments:
   - "_bmad-output/planning-artifacts/mobile-evidence/paywall-2026-09-30/revenuecat-paywall.png"
   - "_bmad-output/planning-artifacts/mobile-evidence/rating-2026-09-30/01-rating-invitation.png"
@@ -46,6 +50,8 @@ The user approved applying all review recommendations on 2026-09-28. The updates
 New planning prose is English under repository policy. Canonical FR/NFR excerpts below retain their original Turkish wording to preserve requirements without translation drift. There are 28 active FRs, one withdrawn FR identifier, 9 NFRs and 25 extracted UX requirements.
 
 ## Planning scope and execution boundaries
+
+**Sprint tracking (2026-10-02):** The user invoked sprint planning after the remaining concerns and the separate mobile-backlog recommendation were disclosed. [Mobile sprint status](../implementation-artifacts/mobile/sprint-status.yaml) tracks this document only; the existing CMS/backend tracker remains separate. All seven epics and 72 stories initially remain backlog. The [refreshed readiness assessment](./implementation-readiness-mobile-2026-10-02.md) records CONCERNS and story-specific closure points. The first build work unit is Story 1.1; tracking creation neither passes the separate final-validation workflow nor verifies runtime acceptance. Supply the mobile source/tracker/story directory explicitly in subsequent build sessions.
 
 ### Scope and evidence precedence
 
