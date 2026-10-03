@@ -21,6 +21,6 @@ story directory: _bmad-output/implementation-artifacts/mobile/
 story: 1.1
 ```
 
-Begin with the compatible toolchain/generator check and required backend catalog companion contract. Establish authorized development/test access and verify redacted fixtures for category order, preview limits, language/fallback, audience/locks and empty/error cases before mobile listing integration acceptance. Story 1.2 follows accepted 1.1; do not include the reader or production auth/migration in this first work unit.
+Begin with the compatible toolchain/generator check and required backend catalog companion contract. Establish authorized development/test access and verify redacted fixtures for category order, preview limits, selected-language isolation and explicit different-language categories, audience/locks and empty/error cases before mobile listing integration acceptance. Story 1.2 follows accepted 1.1; do not include the reader or production auth/migration in this first work unit.
 
 AD-5 signed Android/iOS upgrades remain required before auth/migration feature development. Other external contracts, physical platform evidence and release gates close at their documented consumer/acceptance points. Sprint tracking does not waive them.

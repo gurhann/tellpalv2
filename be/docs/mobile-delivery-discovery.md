@@ -4,6 +4,8 @@ Status: Discovery baseline — agreed product direction and implementation quest
 
 Date: 2026-09-19
 
+Language decision update: 2026-10-03; current PRD FR-9 supersedes the earlier automatic English-content fallback direction.
+
 ## Purpose
 
 This document consolidates the decisions made while defining how the TellPal backend and a new mobile application should work together. It is intended to guide the next phase, where the legacy application's screens and endpoint traffic will be compared with the new API contract.
@@ -114,8 +116,8 @@ The backend must not issue protected full-media URLs merely because a locked ite
 - The selected language is stored on the account/profile.
 - Users can change the selected language.
 - Content publication and free-access selection can differ by language.
-- If the selected language is unavailable for a content item, English may be used as the fallback in the initial release.
-- Language fallback must not silently expose an unpublished or unauthorized experience.
+- Automatic content-language fallback is prohibited under the 2026-10-03 user decision. Ordinary categories expose only eligible content in the selected language; missing localization does not substitute English or another language.
+- CMS may deliberately expose a clearly labeled category such as “English Stories” to Turkish UI users. Its explicit content language is preserved through detail and playback without changing UI preference; language/test visibility, publication and access rules still apply. Contract the category presentation/curation/content-language mapping before implementation.
 
 ### 8. Access, free content, and subscription boundary
 
@@ -156,7 +158,7 @@ Before defining the implementation stories, collect from the legacy application:
 1. Screenshots of home, category, search, detail, player, login, paywall, language, and profile flows.
 2. The endpoint list used by each screen.
 3. Representative request/response payloads, including authentication headers and error responses.
-4. Examples of locked, free, test, unpublished, and language-fallback content.
+4. Examples of locked, free, test, unpublished, and selected-language isolation and explicitly different-language category content.
 5. Playback/cache behavior observed on both phone and tablet.
 
 Use these artifacts to produce the concrete mobile API contract, authorization matrix, manifest schema, and migration/coexistence plan.

@@ -2,7 +2,7 @@
 title: TellPal Mobile v1 Yeniden Yazım
 status: draft
 created: 2026-09-20
-updated: 2026-09-29
+updated: 2026-10-03
 ---
 
 # PRD: TellPal Mobile v1 Yeniden Yazım
@@ -180,6 +180,10 @@ Paylaşılan Firebase kimliğiyle bu etkinin nasıl sınırlandırılacağı ve 
 #### FR-6 — Ana ekran ve kategori
 Ana ekran CMS sıralı kategori satırları ve sınırlı önizleme içerikleri sunar; tam kategoriye geçiş vardır. Dil/erişim kitlesi için uygun içeriği olmayan kategori gösterilmez. Tam listede içeriklerin atlanmaması ve tekrarlanmaması sayfalama kabulüne dahildir.
 
+2026-10-03 tarihinde kullanıcı, canlı Library'de kategori başına 5 önizleme kullanıldığını doğruladı ve yeni Library için backend'den yapılandırılabilir başlangıç limitini 5 olarak onayladı. Limit uygunluk filtrelerinden sonra uygulanır; daha az uygun içerik varsa yalnız mevcut içerikler gösterilir, boş kategori gösterilmez. Bu doğrulama kullanıcı beyanıdır; bu görüşmede canlı backend/yapılandırma sorgusu çalıştırılmadı. Kategoriye özel limitler bu karara dahil değildir.
+
+2026-10-03 tarihinde kullanıcı, Library ana ekranındaki kategori satırlarının sırasını CMS'den değiştirme ve kaydetme yeteneğinin eklenmesini onayladı. Kategori satırı sırası dil bazında bağımsız yönetilebilir; bir dilin sırasını değiştirmek diğer dillerin sırasını değiştirmez. Backend bu sırayı kalıcı saklar ve seçilen dilin mobil yanıtında uygular; kategori satırı sırası, kategori içindeki kart sırasından ayrı yönetilir. Görünmeyen veya boş kategoriler elendiğinde kalan satırların göreli sırası korunur. Bu yetenek Story 1.1'in backend/CMS eşlikçi işine dahildir; veri modeli, yüzey kapsamı ve yönetim API'si uygulama sözleşmesinde netleştirilecektir.
+
 Liste yanıtları küçük içerik özetleridir; tam teslim/oynatma verisi detay veya başlatma akışında alınır. Ana ekran satır bileşimi, sayfalama ve hata sözleşmesi OQ-4'te belirlenecektir; CMS kategori sırası onaylı kuraldır.
 
 Editör seçimi ve benzer içerik yüzeyleri referans envanterine dahildir; seçilen öneri doğru içerik/deneyime gider. Uygulanabilir içerik bulunmadığında bozuk kart veya geçersiz hedef gösterilmez.
@@ -190,10 +194,12 @@ Kullanıcının eski uygulama ekran görüntüleri okuma hikâyesi, sesli hikây
 #### FR-8 — İçerik ve deneyim ayrımı
 Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda görünebilir. Seçilen deneyim doğru detay/oynatmayı açar; diğer deneyimin işleme hatası hazır deneyimi engellemez.
 
-#### FR-9 — Dil ve fallback
-Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Sonraki kullanıcı kararları gereği Türkçe, İngilizce ve Portekizce uygulamanın mevcut, sürekli kullanılabilir dilleridir; uzaktan yapılandırma bu üç dili kapatmaz. Almanca veya başka bir dil yalnız çeviri dosyası bulunduğu için kendiliğinden açılmaz. Yeni bir dil önce yetkili test kitlesine, gerekli kontroller tamamlandıktan sonra tüm kullanıcılara açılır. Kullanıcının 2026-10-01 kararına göre testten genel kullanıma geçiş CMS’den yönetilir; CMS durumunun backend/yapılandırma üzerinden mobile güvenli aktarımı uygulama sözleşmesinde doğrulanır. Bu karar mobil sürümün mağaza dağıtımını CMS’ye taşımaz. Teste özel dil normal kullanıcıya dil seçiminde, katalogda veya fallback sonucunda görünmez. Uzaktan yapılandırma alınamazsa yeni test dili yalnız aynı kullanıcıya ait önceden doğrulanmış ve hâlâ geçerli test yetkisi önbellekte varsa görünür; eksik, geçersiz, süresi dolmuş veya başka kullanıcıya ait yetki dili açmaz. Önbellek geçerlilik süresi ve doğrulama yöntemi uygulama sözleşmesinde belirlenecektir. Hiçbir dil ayarına erişilemiyorsa uygulama İngilizce başlar; uzaktan yapılandırma alınamadı diye mevcut üç dil kaybolmaz. Bu başlangıç kuralı, erişilebilir durumdaki kayıtlı kullanıcı tercihinin sessizce değiştirilmesi anlamına gelmez. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce içerik fallback'i yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir.
+#### FR-9 — Dil ve açık içerik dili seçimi
+Uygulama dili ve normal katalog içerik dili birlikte yönetilir, tercih profilde saklanır. Sonraki kullanıcı kararları gereği Türkçe, İngilizce ve Portekizce uygulamanın mevcut, sürekli kullanılabilir dilleridir; uzaktan yapılandırma bu üç dili kapatmaz. Almanca veya başka bir dil yalnız çeviri dosyası bulunduğu için kendiliğinden açılmaz. Yeni bir dil önce yetkili test kitlesine, gerekli kontroller tamamlandıktan sonra tüm kullanıcılara açılır. Kullanıcının 2026-10-01 kararına göre testten genel kullanıma geçiş CMS’den yönetilir; CMS durumunun backend/yapılandırma üzerinden mobile güvenli aktarımı uygulama sözleşmesinde doğrulanır. Bu karar mobil sürümün mağaza dağıtımını CMS’ye taşımaz. Teste özel dil normal kullanıcıya dil seçiminde, normal veya özel dil kategorilerinde ya da doğrudan içerik isteğinde görünmez. Uzaktan yapılandırma alınamazsa yeni test dili yalnız aynı kullanıcıya ait önceden doğrulanmış ve hâlâ geçerli test yetkisi önbellekte varsa görünür; eksik, geçersiz, süresi dolmuş veya başka kullanıcıya ait yetki dili açmaz. Önbellek geçerlilik süresi ve doğrulama yöntemi uygulama sözleşmesinde belirlenecektir. Hiçbir dil ayarına erişilemiyorsa uygulama İngilizce başlar; uzaktan yapılandırma alınamadı diye mevcut üç dil kaybolmaz. Bu başlangıç kuralı, erişilebilir durumdaki kayıtlı kullanıcı tercihinin sessizce değiştirilmesi anlamına gelmez. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez.
 
-Fallback, seçilen dilde içerik bulunmadığında değerlendirilir; İngilizce deneyimin kendisi yayınlı ve kullanıcı için erişilebilir olmalıdır. Fallback, yayınlanmamış veya yetkisiz bir deneyimi açamaz.
+2026-10-03 tarihinde kullanıcı otomatik içerik dili fallback'ini kesin olarak reddetti; bu karar önceki İngilizce içerik fallback iznini geçersiz kılar. Normal kategoriler yalnız seçilen dilde uygun ve yayınlı içerik gösterir. Örneğin 5 hikâyeden yalnız 3'ünün Türkçesi uygunsa Türkçe katalogda 3 kart gösterilir; diğer 2 hikâyenin İngilizcesi otomatik eklenmez. İlgili dilde uygun içerik kalmayan kategori gizlenir; detay/başlatma isteğinde eksik dil başka bir dille tamamlanmaz.
+
+CMS, Türkçe uygulama kullanan kişiye açıkça “İngilizce Hikâyeler” gibi ayrı bir kategori sunabilir. Böyle bir kategori kasıtlı olarak İngilizce içerik gösterir; karttan detay ve oynatmaya aynı açık içerik dili taşınır, uygulama dili/tercihi otomatik değişmez. Bu kategori normal kategorilerin eksik çevirilerini doldurmaz; görünürlük, yayın, test kitlesi ve erişim kontrolleri yine uygulanır. Uygulama/kategori sunum dili ile kategorinin açık içerik dili arasındaki eşleme uygulama sözleşmesinde tanımlanacaktır.
 
 #### FR-10 — Ücretsiz ve kilitli görünürlük
 Ücretsiz ve kilitli içerik katalogda görünür; kilitli içeriği başlatma paywall açar. Dil bazlı CMS ücretsiz seçimi STORY'nin okuma ve sesli deneyimlerine uygulanır. Abone olmayanlara özel kategori CMS sırasıyla yalnız o kitleye gösterilir; aktif aboneye gösterilmez.

@@ -95,7 +95,7 @@ For every affected UI story, collect UX-DR24 evidence with the feature: localize
 
 | Story | Conditions to establish readiness |
 | --- | --- |
-| 1.1 | Begin with the toolchain check and the backend catalog companion task. Produce and verify the real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/fallback and empty/error states. Establish authorized development/test access and Library reference states before mobile integration acceptance. |
+| 1.1 | Begin with the toolchain check and the backend catalog companion task. Produce and verify the real catalog contract and redacted fixtures: CMS order, preview limits, audience/lock eligibility, language/explicit category-language mapping and empty/error states. Establish authorized development/test access and Library reference states before mobile integration acceptance. |
 | 1.2 | Accept 1.1; verify content/experience/language identity, detail payload and error fixtures, valid/absent detail recommendations, navigation/back behavior and detail reference states. Verify EXT-CATALOG closure. |
 
 AD-5 does not block this discovery package. Signed-upgrade and registered-session evidence can be collected independently; auth/migration development must still wait for AD-5 completion. Controlled access does not authorize production bypasses. Backend readiness is verified, not inferred from the separate CMS/backend plan.
@@ -118,7 +118,7 @@ For each record, the owner must record: exact external work link and status; nam
 
 | Dependency ID | Mobile consumers | Accountable role | Existing work/reference and missing assignment | Required closure evidence |
 | --- | --- | --- | --- | --- |
-| EXT-CATALOG | 1.1–1.2, 1.8–1.10, 2.1, 2.3, 2.7 | Backend content/category owner | `epics.md` defers public read composition/filtering/pagination; link or assign mobile catalog/detail/search delivery work. OQ-4/8 remain open. | Versioned identity/language/audience/list/detail/search contracts, pagination/error fixtures and actual backend results, including detail recommendations. |
+| EXT-CATALOG | 1.1–1.2, 1.8–1.10, 2.1, 2.3, 2.7 | Backend content/category owner with CMS category owner for row-order management | `epics.md` defers public read composition/filtering/pagination; link or assign mobile catalog/detail/search delivery work. Story 1.1 companion work includes CMS editing and backend persistence of Library category row order, approved 2026-10-03. OQ-4/8 remain open. | Versioned identity/language/audience/list/detail/search contracts, pagination/error fixtures and actual backend results, including detail recommendations; Story 1.1 verifies saved CMS row order through backend/mobile independently from card order. |
 | EXT-MEDIA | 1.3–1.4, 1.11–1.12, 2.2–2.3, 2.9–2.10 | Backend content/asset owner | `epics.md` Stories 1.1–1.4 and 1.8 cover related processing/asset ownership; ADR-0017 describes experimental manifests only. Assign production start/manifest/renewal and interrupted-transfer delivery work. | OQ-8 admission/immutable identity/integrity/renewal/resume contract; actual generated files and authorized real-backend transfer evidence. |
 | EXT-HISTORY | 1.5, 1.7, 2.8, 3.12 | Backend user owner with mobile persistence owner | No delivery story for durable progress/history is established by `epics.md`; link or assign it before the first producer. | Versioned duration/progress/completion, stable event identity and deduplication contracts; durable pending-record/process-restart tests and backend field-level outcomes. |
 | EXT-ACCOUNT | 3.3–3.13, 3.18–3.19 | Backend user owner with identity integration owner | `architecture.md` and PRD contract extraction are design/evidence references; assign or link verified Firebase UID/account/profile/session delivery work. | Verified UID resolution, provider and preference/profile fixtures, failure/retry and account-isolation evidence. AD-5 remains separate. |
@@ -177,15 +177,17 @@ Kullanıcının eski uygulama ekran görüntüleri okuma hikâyesi, sesli hikây
 
 Hem okuma hem sesli hikâye deneyimi olan STORY ilgili iki keşif grubunda görünebilir. Seçilen deneyim doğru detay/oynatmayı açar; diğer deneyimin işleme hatası hazır deneyimi engellemez.
 
-#### FR-9 — Dil ve fallback
+#### FR-9 — Dil ve açık içerik dili seçimi
 
-> **Superseded language-availability excerpt:** The Turkish source paragraph below records the earlier PRD decision and is retained as planning history. The current PRD now carries the accepted decisions: Turkish, English and Portuguese are always usable; only newly added languages use remote test-then-live visibility; the application starts in English when no language setting can be accessed. German is not an automatically enabled launch language. Other FR-9 rules remain unchanged.
+> **Superseded language-availability and content-fallback excerpt:** The Turkish source paragraphs below record earlier PRD decisions and are retained as planning history. Current decisions make Turkish, English and Portuguese always usable, restrict new languages through test-then-live visibility and start the UI in English only when no language setting is accessible. German is not an automatically enabled launch language. The 2026-10-03 decision rejects automatic content-language fallback; the old English-fallback permission below no longer applies.
 
 The 2026-10-01 product decision makes CMS the control surface for changing a newly added language from tester-only to live availability after the required checks. The backend/configuration delivery and mobile audience checks remain implementation contracts; this is separate from mobile store-release rollout.
 
-Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Dil görünürlüğü referans sürümdeki gibidir: Türkçe, İngilizce ve Almanca açıktır; Portekizce yalnız mevcut uzaktan yapılandırma tarafından açıldığında görünür; İspanyolca kapalıdır. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Kullanıcı bu davranışı onaylamıştır.
+> Uygulama ve içerik dili birlikte yönetilir, tercih profilde saklanır. Dil görünürlüğü referans sürümdeki gibidir: Türkçe, İngilizce ve Almanca açıktır; Portekizce yalnız mevcut uzaktan yapılandırma tarafından açıldığında görünür; İspanyolca kapalıdır. Dil değişiminde önceki dile ait önbellek sonucu yeni dilmiş gibi gösterilmez. İngilizce fallback yalnız uygun yayın ve erişim koşulları sağlanırsa kullanılabilir. Kullanıcı bu davranışı onaylamıştır.
 
-Fallback, seçilen dilde içerik bulunmadığında değerlendirilir; İngilizce deneyimin kendisi yayınlı ve kullanıcı için erişilebilir olmalıdır. Fallback, yayınlanmamış veya yetkisiz bir deneyimi açamaz.
+> Fallback, seçilen dilde içerik bulunmadığında değerlendirilir; İngilizce deneyimin kendisi yayınlı ve kullanıcı için erişilebilir olmalıdır. Fallback, yayınlanmamış veya yetkisiz bir deneyimi açamaz.
+
+**Current content-language decision (2026-10-03):** Ordinary categories show only eligible published content in the selected language; missing localizations are never automatically replaced with English or another language. A row with three eligible Turkish items returns three, and a row without eligible content in its declared language is omitted. CMS may deliberately present a clearly labeled category such as “English Stories” to Turkish UI users. Its explicit English item language is preserved through detail and reading/listening without changing UI preference. Language/test visibility, publication and access rules still apply to that category. Contract its presentation/curation/content-language mapping before implementation. Missing detail/start localization yields an unavailable outcome, not language substitution. The English UI startup default and separate support-document/UI-artwork contracts remain in force.
 
 #### FR-10 — Ücretsiz ve kilitli görünürlük
 
@@ -325,11 +327,11 @@ DESIGN.md is verified-with-gaps; EXPERIENCE.md is marked final but remains histo
 
 The user reports that Turkish, English and Portuguese content is currently loaded and directs that these languages be usable. This supersedes earlier PRD/design-source statements that enabled German and conditionally exposed Portuguese. This is a product decision and user-reported content status, not an independent audit of all content/experience readiness.
 
-New languages are enabled for test use through remote configuration first, then for all users after the required checks are complete. Plan distinct hidden, test-only and live visibility outcomes; exact configuration schema and test-audience selection remain contract work. Language visibility must not override candidate/live publication or protected-media authorization. A test-only language must not leak into ordinary users' choices or fallback results. Enabling a language does not mark unready media as ready.
+New languages are enabled for test use through remote configuration first, then for all users after the required checks are complete. Plan distinct hidden, test-only and live visibility outcomes; exact configuration schema and test-audience selection remain contract work. Language visibility must not override candidate/live publication or protected-media authorization. A test-only language must not leak into ordinary users' choices or explicitly different-language category results. Enabling a language does not mark unready media as ready.
 
-The 2026-09-29 clarification makes Turkish, English and Portuguese permanently available language choices, independent of remote configuration for future languages. If no language setting is accessible at startup, the application UI starts in English. A failed remote fetch must not remove those three choices or silently overwrite an accessible persisted preference. The separate English content-fallback rule still requires published, authorized media. When remote configuration is unavailable, a future test-only language may remain visible to the same tester only through previously verified, still-valid cached eligibility. Missing, invalid, expired or other-account eligibility does not expose it. The cache validity period, verification evidence and recovery mechanics require a versioned implementation contract; this planning decision does not invent a TTL.
+The 2026-09-29 clarification makes Turkish, English and Portuguese permanently available language choices, independent of remote configuration for future languages. If no language setting is accessible at startup, the application UI starts in English. A failed remote fetch must not remove those three choices or silently overwrite an accessible persisted preference. The 2026-10-03 content-language decision supersedes the earlier English-fallback permission: ordinary content uses the selected language, and different-language content requires a deliberately curated, clearly labeled category and explicit item language. When remote configuration is unavailable, a future test-only language may remain visible to the same tester only through previously verified, still-valid cached eligibility. Missing, invalid, expired or other-account eligibility does not expose it. The cache validity period, verification evidence and recovery mechanics require a versioned implementation contract; this planning decision does not invent a TTL.
 
-E1 owns language consumption and safe configuration behavior for controlled test users, E2 applies it to listening, E3 owns persisted account preference/migration, and E5 verifies test-versus-live language exposure with authorized users. Story 1.10 is approved for planning; no implementation is authorized here. Existing FR-9 English fallback and language/revision continuity rules remain in force.
+E1 owns language consumption and safe configuration behavior for controlled test users, E2 applies it to listening, E3 owns persisted account preference/migration, and E5 verifies test-versus-live language exposure with authorized users. Story 1.10 is approved for planning; no implementation is authorized here. Apply the current FR-9 prohibition on automatic content-language fallback, explicit different-language category rule and language/revision continuity.
 
 #### Search evidence update — 2026-09-27
 
@@ -493,7 +495,7 @@ FR-7: E1: search against agreed OQ-4 scope; E2: listening result destinations wh
 
 FR-8: E1–E2: correct story reading/listening experience identity and destinations.
 
-FR-9: E1: language-aware catalog/reader and eligible fallback; E2: listening; E3: durable profile preference.
+FR-9: E1: language-aware catalog/reader, no automatic content-language substitution and explicit different-language categories; E2: listening; E3: durable profile preference.
 
 FR-10: E1–E2: visibility, free access and denial of unauthorized playback; E6: integrated paywall and subscriber audience verification.
 
@@ -609,24 +611,62 @@ So that I can see what is available to read.
 
 **Requirements:** FR-6, FR-9, FR-10 (listing scope); NFR-5–8; UX-DR1–4, UX-DR10, UX-DR22–25.
 
-**Prerequisites and sequence:** Start this feature slice by defining and implementing the required backend home-list contract and redacted response examples covering category order, preview limits, language/fallback and audience eligibility; establish authorized development/test access and use existing reference design assets. The backend companion work may be in this task or a linked sequential task; verify EXT-CATALOG before accepting the mobile listing. AD-5 does not block starting this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only. Verify the toolchain/generator gate and relevant UX-DR24 checks under Shared readiness and acceptance checks. This first shell consumer owns Library navigation; later destination capabilities extend the same shell without being claimed as complete here.
+**Preview limit decision (2026-10-03):** The user confirmed that the live Library uses 5 previews per category and adopted a server-configurable initial default of 5 eligible previews per category. Apply the limit after eligibility filtering; return fewer items when fewer qualify and omit empty categories. Per-category overrides are not adopted. This settles the initial value, not runtime acceptance; verify ordered identities and limit behavior through the Story 1.1 EXT-CATALOG slice.
+
+**CMS category-order decision (2026-10-03):** The user approved adding CMS editing and saving of Library category row order to this story's backend/CMS companion scope. Category row order is independent per language; editing one language's order must not change another's. Backend persists that order and returns the selected language's order to mobile independently from within-category card order. Filtering hidden or empty categories preserves the relative order of remaining rows. Settle storage, surface scope, existing-record initialization and tie behavior in the implementation contract; this approval is not implementation or acceptance evidence.
+
+**Content-language decision (2026-10-03):** The user rejected automatic English/other-language substitution. Ordinary Library rows contain only eligible content in the selected language. CMS may deliberately expose a clearly labeled different-language category, such as English stories in Turkish UI; return its explicit item language and contract its mapping independently from the UI language. Do not pad shorter ordinary rows with foreign-language versions. This changes the earlier fallback rule; it does not bypass publication, language visibility or access checks.
+
+**Prerequisites and sequence:** Start this feature slice by defining and implementing the required backend home-list contract and redacted response examples covering category order, within-category preview selection/order, preview limits, language/explicit category-language mapping and audience eligibility; establish authorized development/test access and use existing reference design assets. The backend companion work may be in this task or a linked sequential task; verify the Story 1.1 closure slice of EXT-CATALOG before accepting the mobile listing: home-list transport/error behavior, content/experience identity, category and preview selection/order/limits, language/explicit category-language mapping, audience/locks and real-backend evidence. Record this consumer-specific closure without claiming the whole EXT-CATALOG record is closed; detail, complete-category browsing and search contracts remain with their consuming stories. AD-5 does not block starting this story. Production auth/migration is excluded. Card destinations are implemented in the next story; this story accepts listing behavior only. Verify the toolchain/generator gate and relevant UX-DR24 checks under Shared readiness and acceptance checks. This first shell consumer owns Library navigation; later destination capabilities extend the same shell without being claimed as complete here.
+
+**Story 1.1 interaction scope:** Preserve the reference shell appearance and expose unavailable controls as disabled to accessibility services. The following states apply only to this controlled-test work unit; subsequent stories enable their destinations.
+
+| Visible control | State and tap outcome in Story 1.1 | Destination owner |
+| --- | --- | --- |
+| Library tab | Enabled and selected; reselecting retains its current stack and scroll position. | Story 1.1 |
+| Content preview card | Display-only; destination action disabled. Title, artwork and backend lock state remain visible. | Story 1.2 |
+| All-items action | Visible where required by the reference; disabled, with no navigation. | Story 1.8 |
+| Search entry | Reference appearance retained; disabled, with no input or search navigation. | Story 1.9 |
+| Premium banner action | Reference appearance retained for the applicable audience; disabled, with no paywall or purchase action. | Epic 6 |
+| Sleep tab | Reference unselected appearance retained; disabled, without changing the active tab. | Story 2.1 |
+| Profile tab | Reference unselected appearance retained; disabled, without changing the active tab. | Epic 3 |
 
 **Acceptance Criteria:**
 
 **Given** a real backend dataset with known eligible categories and preview items for a selected language/access audience,
 **When** the Library opens,
 **Then** it shows categories in CMS order with the contracted preview limits and matching content identities, titles, artwork and lock states,
-**And** categories with no eligible content are absent; the expected preview set is checked against the contract rather than assumed to be the entire catalog.
+**And** categories with no eligible content are absent; preview selection and within-category order match the backend contract, verified using expected ordered content identities rather than assuming the previews are the entire catalog.
+
+**Given** an authorized CMS editor changes and saves the Library category row order,
+**When** the saved order is reloaded from the backend and Library is fetched again,
+**Then** the persisted order is reflected in the mobile category rows, including a test order different from slug/ID sorting,
+**And** category row reordering does not change within-category card order; filtering hidden or empty categories preserves the relative order of the remaining rows.
+
+**Given** different saved category row orders for Turkish and English,
+**When** an authorized CMS editor changes and saves only the Turkish order,
+**Then** a fresh Turkish Library response reflects that change and a fresh English response retains its saved order,
+**And** within-category card ordering remains unchanged in both languages.
 
 **Given** content is loading,
 **When** the response or artwork has not arrived,
 **Then** reference-compatible loading placeholders retain card geometry,
 **And** content does not shift into collapsed artwork areas.
 
+**Given** a successful catalog response whose card artwork cannot be downloaded or decoded,
+**When** the artwork load fails,
+**Then** the card retains its geometry, title and backend lock indicator and shows the defined artwork-error placeholder,
+**And** other catalog items remain usable within this story's interaction scope; one artwork failure does not turn the successful catalog into a catalog error or empty state.
+
 **Given** the catalog request fails,
 **When** the Library displays its outcome,
 **Then** it shows a recoverable error distinct from an empty catalog,
 **And** retry displays the returned content when the request succeeds.
+
+**Given** a catalog request or artwork transfer that does not complete,
+**When** its documented waiting limit is reached,
+**Then** the catalog request exits loading into a recoverable error, or the affected artwork shows its defined error placeholder while preserving the remaining catalog,
+**And** retry can recover using the current language/access context; late results from a timed-out attempt cannot replace the current attempt's outcome. Set and record catalog/artwork waiting limits in the implementation contract before acceptance rather than inventing numeric limits in this story.
 
 **Given** a successful response contains no eligible categories/items,
 **When** the Library renders it,
@@ -637,10 +677,30 @@ So that I can see what is available to read.
 **Then** their lock indicators match backend access information,
 **And** listing visibility neither grants protected full-media access nor requires full playback payloads.
 
-**Given** selected-language and fallback cases in the agreed contract,
+**Given** the same language and real backend dataset containing a category restricted to non-subscribers, with authorized non-subscriber and active-subscriber test contexts,
+**When** Library listing is verified separately for both audiences,
+**Then** the restricted category appears only for the non-subscriber when it contains eligible previews and is absent for the active subscriber,
+**And** each audience's displayed lock indicators match its backend response; test access does not grant subscription rights or require implementing purchase/restore flows.
+
+**Given** selected-language and explicitly different-language category cases in the agreed contract,
 **When** the Library loads or its test language context changes,
-**Then** only eligible published language/fallback results appear,
+**Then** ordinary rows contain only eligible published content in the selected language, with no automatic substitution,
 **And** stale results from the previous language cannot replace the current result; production preference persistence remains in Epic 3.
+
+**Given** Turkish is selected and an ordinary row has three eligible Turkish items while two additional items have only English versions,
+**When** Library previews are selected with the initial limit of five,
+**Then** that row contains only the three Turkish items; English versions are not added to fill the limit,
+**And** an ordinary row with no eligible Turkish content is absent.
+
+**Given** CMS deliberately exposes a clearly labeled “English Stories” category to Turkish UI users,
+**When** that row is returned and displayed,
+**Then** its eligible English items carry explicit English content-language identity under the verified mapping,
+**And** the UI preference remains Turkish and language/test visibility, publication and audience/lock checks still apply; destination behavior is verified in the consuming detail/reading stories.
+
+**Given** overlapping catalog requests and artwork loads across a controlled-test language/access-context change,
+**When** previous-context success, error and artwork results complete after the current-context request, including deliberately reversed completion order,
+**Then** none of those stale results changes the current catalog, artwork, loading or error state,
+**And** current-context results alone determine the visible outcome; this verifies context isolation without implementing production account switching or preference persistence.
 
 **Given** matching reference device size, language and content,
 **When** phone and tablet-size Library surfaces are compared,
@@ -648,9 +708,18 @@ So that I can see what is available to read.
 **And** tablet layout uses its documented rules rather than uniform phone scaling; emulated evidence is not labeled real-device proof.
 
 **Given** the controlled-test Library shell,
-**When** its bottom navigation and back behavior are exercised,
+**When** its visible controls, bottom navigation, Library reselection and back behavior are exercised,
 **Then** the three reference navigation items preserve their layout and selected/unselected states,
+**And** each control follows the interaction scope table, including disabled accessibility semantics and the absence of destination actions for deferred controls,
 **And** Library owns its initial stack/scroll context; Sleep and Profile destinations remain explicitly incomplete until their consuming stories, without adding production-auth bypasses.
+
+
+**Story 1.1 verification checklist:**
+
+- Record the versioned home-list contract, backend build identifier, verification timestamp, test-data identities, language and authorized audience, and expected ordered category/preview identities alongside redacted request/response evidence. Compare the mobile result against the same dataset; if relevant CMS data changes during verification, establish a new baseline and repeat the affected comparison.
+- Record the Story 1.1 EXT-CATALOG slice's assignee, companion work, contract/fixture/evidence paths and closure decision under the external dependency register. Keep later consumers' closure outstanding.
+- Before UI implementation, establish matched reference cases for disabled shell controls, artwork-error placeholders and long localized titles on the agreed phone/tablet and normal/enlarged-text matrix. Preserve reference appearance and record expected accessibility semantics; compare acceptance evidence against that same matrix.
+- Record catalog/artwork waiting limits and execute timeout/retry and deliberately reordered success/error/artwork cases. Attach outcomes with the tested build and context; fixtures alone do not satisfy real-backend integration acceptance.
 
 
 ### Story 1.2: Open the selected story detail from Library
@@ -669,8 +738,12 @@ So that I can decide whether to start reading it.
 
 **Given** a story card in Library,
 **When** the reader taps it,
-**Then** the corresponding reading-experience detail opens in the correct selected or contractually eligible fallback language,
+**Then** the corresponding reading-experience detail opens in the explicit content language carried by the card: the selected language for an ordinary row or the deliberately configured language for a clearly labeled different-language category,
 **And** its cover, title, age, duration, summary and contributor information match the selected content and backend response.
+
+**Given** the selected card's explicit content language is unavailable when its detail is requested,
+**When** the detail outcome is displayed,
+**Then** the client presents the agreed unavailable/recovery state without automatically substituting another language.
 
 **Given** the detail opens successfully,
 **When** it is displayed without a start action,
@@ -1131,7 +1204,7 @@ So that I can discover and read appropriate content without mixed-language resul
 
 **Requirements:** FR-9 (latest user decision), FR-6–8, FR-25; NFR-5–7; UX-DR1–2, UX-DR18, UX-DR22–25; AD-8, AD-10.
 
-**Prerequisites:** Stories 1.1–1.4, 1.8–1.9; agreed remote visibility/test-audience contract for future languages and eligible content-fallback contract. Turkish, English and Portuguese remain available independently of that remote contract; verify actual content readiness for the tested experiences. Define valid, unavailable and malformed remote-configuration handling without exposing test-only languages. Implement controlled-user language consumption here, production profile persistence/migration in Epic 3, listening integration in Epic 2 and full authorized test/live verification in Epic 5. Tests of audience separation must not depend on implementing production auth in this story.
+**Prerequisites:** Stories 1.1–1.4, 1.8–1.9; agreed remote visibility/test-audience contract for future languages and explicit category/content-language mapping with no automatic fallback. Turkish, English and Portuguese remain available independently of that remote contract; verify actual content readiness for the tested experiences. Define valid, unavailable and malformed remote-configuration handling without exposing test-only languages. Implement controlled-user language consumption here, production profile persistence/migration in Epic 3, listening integration in Epic 2 and full authorized test/live verification in Epic 5. Tests of audience separation must not depend on implementing production auth in this story.
 
 **Acceptance Criteria:**
 
@@ -1152,7 +1225,7 @@ So that I can discover and read appropriate content without mixed-language resul
 
 **Given** a newly added language and configured test audience,
 **When** remote configuration enables that language only for testing,
-**Then** it is available to the authorized test audience but absent from ordinary users' language choices, catalog results and fallback outcomes,
+**Then** it is available to the authorized test audience but absent from ordinary users' language choices, catalog results and explicitly different-language categories,
 **And** the CMS-authorized transition to live subsequently makes it available to ordinary users without treating unready or unpublished media as accessible.
 
 **Given** malformed or unavailable configuration for a newly added language,
@@ -1167,13 +1240,18 @@ So that I can discover and read appropriate content without mixed-language resul
 
 **Given** a language change for the controlled test user,
 **When** Library, category, search and newly opened details load,
-**Then** they use the same selected-language context,
+**Then** they use the same selected UI/catalog-language context, preserving an explicitly selected different-language category item's content language through detail/reading,
 **And** delayed responses or cached results from the previous language cannot replace current-language results.
 
 **Given** content is unavailable in the selected language,
-**When** English fallback is evaluated,
-**Then** it is used only when the English experience satisfies the applicable publication and access rules,
-**And** fallback cannot expose test-only languages or unauthorized content.
+**When** an ordinary catalog row or detail/start request is resolved,
+**Then** the missing localization is omitted from the ordinary row or produces the agreed unavailable outcome for detail/start; no automatic English or other-language substitution occurs,
+**And** rows with no eligible content in their declared language are hidden.
+
+**Given** a clearly labeled different-language category deliberately curated in CMS,
+**When** a user selects its content while retaining their UI language,
+**Then** category, detail and reading use the explicit selected content language without changing the UI preference,
+**And** language/test visibility, publication and protected-media authorization still apply.
 
 **Given** an admitted reading session,
 **When** its page images and narration are consumed,
@@ -2798,7 +2876,7 @@ So that I can read the information relevant to my application use.
 
 **Requirements:** FR-18; FR-2 (registration document entry); NFR-6–7; UX-DR20, UX-DR24–25.
 
-**Prerequisites:** Reference document-entry inventory, localized document sources and agreed missing-translation fallback contract. Preserve existing registration/profile entry points. Localized document fallback is a separate contract from content playback fallback and must not be inferred from it. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
+**Prerequisites:** Reference document-entry inventory, localized document sources and agreed missing-translation fallback contract. Preserve existing registration/profile entry points. Localized document fallback is a separate contract from story/content-language selection and must not be inferred from it. Verify the applicable EXT-SUPPORT closure records in the [external dependency register](#external-dependency-register).
 
 **Acceptance Criteria:**
 
@@ -3217,7 +3295,7 @@ So that language rollout can proceed without exposing unfinished experiences.
 **Then** only the designated test users see it.
 
 **Given** an ordinary user and a test-only language,
-**When** that language is requested through selection, search, direct link or fallback,
+**When** that language is requested through selection, search, direct link or explicitly different-language categories,
 **Then** the user cannot access it through those paths.
 
 **Given** an eligible test user,
@@ -3247,7 +3325,7 @@ So that language rollout can proceed without exposing unfinished experiences.
 **Then** their availability remains unaffected.
 
 **Given** unavailable or malformed remote configuration for a future test-only language,
-**When** an ordinary user opens language choices or requests content through a direct route or fallback,
+**When** an ordinary user opens language choices or requests content through a direct route or explicitly different-language categories,
 **Then** that configuration failure does not expose the test-only language or candidate media,
 **And** Turkish, English and Portuguese remain selectable.
 

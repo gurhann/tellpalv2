@@ -110,7 +110,7 @@ Roll out by an explicit small-content allowlist and inspect generated objects be
 - Real image/audio fixtures through actual converters; verify dimensions, format, animation behavior, duration and decodability, not only mocks/registry rows.
 - Storage absence, partial upload, invalid format, excessive resource use and converter failure tests.
 - Testcontainers/PostgreSQL coverage for revisions, idempotency, retry, concurrency/lease fencing and migration compatibility; jqwik invariants where appropriate.
-- Authorization matrix for tester/non-tester, free/locked, unpublished/candidate/live, language fallback and expired credentials.
+- Authorization matrix for tester/non-tester, free/locked, unpublished/candidate/live, selected-language isolation, explicitly different-language categories and expired credentials. Current PRD FR-9 (2026-10-03) prohibits automatic content-language fallback.
 - Modulith boundary/cycle verification and API contract tests; same-revision manifest refresh and byte-range/seek integration checks.
 - Backend test/verification suite before implementation handoff; controlled real-storage checks only with configured isolation and explicit operational scope.
 

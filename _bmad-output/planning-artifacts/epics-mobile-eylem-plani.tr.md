@@ -131,7 +131,7 @@ V1, eksik backend işinin epic planını veya story başlangıcını engellediğ
 
 - Flutter/Dart ve ilgili BLoC, auto_route, DI, Freezed/JSON kod üreticilerinin uyumlu sürümlerini belirle ve sabitle. Kod üretimi/analyze sonucu ile Android API 24 ve iOS/iPadOS 15 desteğinin uyumluluk kanıtını kaydet.
 - Yetkili geliştirme/test erişimini mevcut güvenli imkanlarla belirle. Üretim yetkisini atlayan bir mekanizma veya uygulamaya gömülü test kimlik bilgisi oluşturma.
-- EXT-CATALOG’un bu story’ye gereken bölümünü doğrula: CMS sırası, önizleme sınırı, içerik kimliği, dil/fallback, ücretsiz/kilitli görünürlük, boş sonuç ve hata/yeniden deneme.
+- EXT-CATALOG’un bu story’ye gereken bölümünü doğrula: CMS sırası, önizleme sınırı, içerik kimliği, seçilen dilde içerik yalıtımı ve açıkça farklı dil sunan kategori eşlemesi, ücretsiz/kilitli görünürlük, boş sonuç ve hata/yeniden deneme. 2026-10-03 kararı otomatik içerik dili fallback'ini yasaklar.
 - Gerçek backend’den gizli değerleri temizlenmiş örnek yanıtları ve beklenen veri kümesini kaydet. Sabit test verisi tek başına gerçek entegrasyon kabulü değildir.
 - Library’nin referans ekran/durumlarını ve uygulanacak telefon/tablet, dil, metin ölçeği ve erişilebilirlik kontrollerini belirle.
 - İşin sorumlusunu, kanıt yollarını ve kapanış sonucunu ilgili bağımlılık/story kaydına yaz.

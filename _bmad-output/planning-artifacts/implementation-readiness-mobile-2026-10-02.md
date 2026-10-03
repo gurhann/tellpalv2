@@ -12,6 +12,15 @@ supersedesAssessment: implementation-readiness-mobile-2026-10-01.md
 
 # Mobile readiness assessment
 
+## Subsequent product clarification — 2026-10-03
+
+The user rejected automatic content-language fallback and allowed deliberately curated, clearly
+labeled different-language categories, such as English stories in Turkish UI. Current PRD FR-9
+and the updated mobile epic govern; this assessment's historical `language/fallback` references
+must not be read as authorizing automatic substitution. UI startup defaults and support-document/
+UI-artwork contracts remain separate. This clarification does not change the recorded CONCERNS
+verdict or establish runtime/integration evidence.
+
 ## Verdict and tracking decision
 
 CONCERNS. The seven-epic, 72-story plan supports incremental delivery starting with Story 1.1's toolchain and catalog companion work. It is not an unconditional implementation contract for all stories. Relevant integration contracts must be resolved before their consumers rely on them; runtime acceptance requires executed evidence.
