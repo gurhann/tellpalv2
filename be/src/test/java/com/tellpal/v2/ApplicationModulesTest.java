@@ -31,7 +31,7 @@ class ApplicationModulesTest {
         assertThat(directDependenciesOf("event")).containsExactly("content", "shared", "user");
         assertThat(directDependenciesOf("purchase")).containsExactly("content", "event", "shared", "user");
         assertThat(directDependenciesOf("shared")).isEmpty();
-        assertThat(directDependenciesOf("user")).containsExactly("asset", "shared");
+        assertThat(directDependenciesOf("user")).containsExactly("asset", "category", "shared");
     }
 
     private List<String> directDependenciesOf(String moduleName) {

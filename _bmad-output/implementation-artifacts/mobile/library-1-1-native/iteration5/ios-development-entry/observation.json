@@ -1,0 +1,138 @@
+{
+  "status": "loaded",
+  "language": "tr",
+  "attempt": 1,
+  "audience": "NON_SUBSCRIBER",
+  "rows": [
+    {
+      "categoryId": 3,
+      "contentLanguage": "en",
+      "items": [
+        {
+          "contentId": 9,
+          "contentLanguage": "en",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 70,
+          "tabletAssetId": 71
+        },
+        {
+          "contentId": 10,
+          "contentLanguage": "en",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 72,
+          "tabletAssetId": 73
+        }
+      ]
+    },
+    {
+      "categoryId": 2,
+      "contentLanguage": "tr",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "tr",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 28,
+          "tabletAssetId": 29
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 34,
+          "tabletAssetId": 35
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 40,
+          "tabletAssetId": 41
+        }
+      ]
+    },
+    {
+      "categoryId": 1,
+      "contentLanguage": "tr",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "tr",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 28,
+          "tabletAssetId": 29
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 34,
+          "tabletAssetId": 35
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 40,
+          "tabletAssetId": 41
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 46,
+          "tabletAssetId": 47
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 52,
+          "tabletAssetId": 53
+        }
+      ]
+    },
+    {
+      "categoryId": 4,
+      "contentLanguage": "tr",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "tr",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 28,
+          "tabletAssetId": 29
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 34,
+          "tabletAssetId": 35
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "catalog",
+      "language": "tr",
+      "milliseconds": 324,
+      "outcome": "loaded"
+    }
+  ],
+  "imageCacheBytes": 0,
+  "imageCacheEntries": 0
+}

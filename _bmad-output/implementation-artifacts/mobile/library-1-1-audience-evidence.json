@@ -1,0 +1,547 @@
+{
+  "verifiedAt": "2026-10-06T17:08:23.210301+00:00",
+  "reviewIteration": 6,
+  "backendJarSha256": "fd78a97314c3e88eaf4e8a5ca4d8851e026abed5600289c9b3ae823acb6fc8af",
+  "realFirebaseVerification": true,
+  "identity": "authorized-existing-account-redacted",
+  "audienceSource": "local-test server configuration, not production entitlement",
+  "audienceRecords": [
+    {
+      "timestamp": "2026-10-06T17:07:43.917527+00:00",
+      "identity": "same authorized existing Firebase account (redacted)",
+      "catalogs": [
+        {
+          "language": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "orderedRows": [
+            3,
+            2,
+            1,
+            4
+          ],
+          "locks": [
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 4,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 4,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "audience": "NON_SUBSCRIBER",
+          "orderedRows": [
+            1,
+            2,
+            4,
+            3
+          ],
+          "locks": [
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 4,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 4,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": true
+            }
+          ]
+        },
+        {
+          "language": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "orderedRows": [
+            1,
+            2,
+            4,
+            3
+          ],
+          "locks": [
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 4,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 4,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": true
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-06T16:58:33.747418+00:00",
+      "identity": "same authorized existing Firebase account (redacted)",
+      "catalogs": [
+        {
+          "language": "tr",
+          "audience": "SUBSCRIBER",
+          "orderedRows": [
+            3,
+            2,
+            1
+          ],
+          "locks": [
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": false
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "audience": "SUBSCRIBER",
+          "orderedRows": [
+            1,
+            2,
+            3
+          ],
+          "locks": [
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": false
+            }
+          ]
+        },
+        {
+          "language": "pt",
+          "audience": "SUBSCRIBER",
+          "orderedRows": [
+            1,
+            2,
+            3
+          ],
+          "locks": [
+            {
+              "categoryId": 1,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 5,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 1,
+              "contentId": 6,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 2,
+              "isFree": true,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 3,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 2,
+              "contentId": 4,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 3,
+              "contentId": 9,
+              "isFree": false,
+              "isLocked": false
+            },
+            {
+              "categoryId": 3,
+              "contentId": 10,
+              "isFree": false,
+              "isLocked": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "authRecords": [
+    {
+      "timestamp": "2026-10-06T17:07:30.017115+00:00",
+      "records": [
+        {
+          "case": "missing-token",
+          "status": 401,
+          "problemDetail": true,
+          "catalogDisclosed": false
+        },
+        {
+          "case": "invalid-token",
+          "status": 401,
+          "problemDetail": true,
+          "catalogDisclosed": false
+        },
+        {
+          "case": "invalid-language",
+          "status": 400,
+          "problemDetail": true,
+          "catalogDisclosed": false
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-06T17:07:37.500885+00:00",
+      "records": [
+        {
+          "case": "unlisted-existing-token",
+          "status": 403,
+          "problemDetail": true,
+          "catalogDisclosed": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "reviewIteration": 5,
+  "verifiedAt": "2026-10-06T15:18:27.908056+00:00",
+  "platform": "ios",
+  "entry": "lib/main_library_dev.dart",
+  "nativeEntryRendered": true,
+  "configured": true,
+  "tokenEntered": "ephemeral VM injection only",
+  "closedEntryScreenshot": "unconfigured.png",
+  "closedEntryManualInspectionPending": false,
+  "configuredCatalogLoaded": true,
+  "closedEntryManualInspection": "Root inspected captured screen: Library development harness required; no catalog before configuration"
+}

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "reviewIteration": 4,
+  "verifiedAt": "2026-10-06T07:49:56.032603+00:00",
+  "platform": "ios",
+  "entry": "lib/main_library_dev.dart",
+  "nativeEntryRendered": true,
+  "configured": false,
+  "tokenEntered": false,
+  "evidence": "Exact arm64 development entry compiled and actual Simulator screenshot inspected: closed harness-required notice"
+}

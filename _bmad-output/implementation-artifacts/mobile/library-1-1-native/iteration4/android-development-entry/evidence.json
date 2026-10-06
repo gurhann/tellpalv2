@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "reviewIteration": 4,
+  "verifiedAt": "2026-10-06T07:48:41.450899+00:00",
+  "platform": "android",
+  "entry": "lib/main_library_dev.dart",
+  "nativeEntryRendered": true,
+  "configured": false,
+  "tokenEntered": false,
+  "evidence": "Exact development entry compiled and actual UI hierarchy contains closed harness-required notice"
+}

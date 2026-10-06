@@ -17,13 +17,13 @@ include::module-asset.adoc[]
 plantuml::module-content.puml[,,format=svg]
 include::module-content.adoc[]
 
-== User
-plantuml::module-user.puml[,,format=svg]
-include::module-user.adoc[]
-
 == Category
 plantuml::module-category.puml[,,format=svg]
 include::module-category.adoc[]
+
+== User
+plantuml::module-user.puml[,,format=svg]
+include::module-user.adoc[]
 
 == Event
 plantuml::module-event.puml[,,format=svg]

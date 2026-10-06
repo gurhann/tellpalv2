@@ -145,10 +145,10 @@ Her modül mümkün olduğunca şu iç yapıyı izler:
 |---|---|---|---|
 | `shared` | Ortak teknik ve küçük domain yapı taşları | `languages`, ortak enum/value object'ler | Yok |
 | `admin` | Admin kullanıcıları, roller, refresh token zinciri, JWT auth | `admin_users`, `admin_roles`, `admin_user_roles`, `admin_refresh_tokens` | `shared` |
-| `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ninni playback/enstrüman seçimleri, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access`, `lullaby_playbacks`, `instrument_catalogs`, `instrument_catalog_localizations`, `lullaby_instruments` | `shared`, `asset.api` |
+| `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ninni playback/enstrüman seçimleri, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access`, `lullaby_playbacks`, `instrument_catalogs`, `instrument_catalog_localizations`, `lullaby_instruments` | `shared`, `asset.api`, `category.api` |
 | `category` | Kategori yaşam döngüsü ve dil bazlı kürasyon | `categories`, `category_localizations`, `category_contents` | `shared`, `content.api`, `asset.api` |
 | `asset` | Medya asset kaydı, Firebase Storage referansları, işleme/paketleme pipeline'ı | `media_assets`, `asset_processing` benzeri işlem kayıtları | `shared`, `content.api` |
-| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api` |
+| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api`, `category.api` |
 | `event` | İçerik ve uygulama event ingest, idempotency, batch sync | `content_events`, `app_events` | `shared`, `user.api`, `content.api` |
 | `purchase` | Ürün kataloğu, RevenueCat event ingest, attribution snapshot | `subscription_products`, `purchase_events`, `purchase_context_snapshots`, lookup tabloları | `shared`, `user.api`, `event.api`, `content.api` |
 
@@ -508,3 +508,12 @@ Bu backend için doğru mimari, tek deploy edilen ama modül sınırları sert o
 - async işleme kalıcı durum makinesi ile yürütülür
 
 Bu doküman, [tasks.md](./.kiro/specs/tellpal-v2-backend/tasks.md) içindeki uygulama planı için mimari referans olarak kullanılmalıdır.
+
+
+### Story 1.1 Library home contract (ADR-0019)
+
+`category` owns independent opt-in row configuration for each presentation language, including audience and an explicit content/curation-language mapping. One environment-configurable eligible preview limit defaults to five. Ordinary rows require the selected language; no implicit fallback exists. Configuration saves lock one language and atomically exchange occupied positions without editing within-category card order.
+
+`content::api` supplies bounded scalar STORY summaries; `asset::api` supplies only verified ready cover variants. `LISTING_COVER` preparation verifies actual stored JPEG bytes before an atomic two-variant ready manifest. Captured processing ID, attempt, lease, source and profile guard both completion and failure; stale callbacks cannot modify a replacement attempt. Queries never prepare artwork or expose full media.
+
+The approved `user` → `category::api` edge admits real verified Firebase identities through an empty-by-default local/test allowlist and a server subscriber-fixture subset. `/api/test/library` is unavailable in production profiles. This endpoint and its fixtures establish controlled listing behavior, not production entitlement or protected-media rights. See ADR-0019 and the Story 1.1 evidence artifact for the contract and acceptance limits.

@@ -191,7 +191,8 @@ public final class AssetProcessingCommands {
     /**
      * Requests completion of an in-flight processing entry.
      */
-    public record CompleteAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind) {
+    public record CompleteAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind, ListingCoverAttempt attempt) {
+        public CompleteAssetProcessingCommand(AssetProcessingTarget target, AssetProcessingKind kind) {this(target,kind,null);}
 
         public CompleteAssetProcessingCommand(AssetProcessingTarget target) {
             this(target, AssetProcessingKind.DELIVERY);
@@ -218,7 +219,12 @@ public final class AssetProcessingCommands {
             AssetProcessingTarget target,
             AssetProcessingKind kind,
             String errorCode,
-            String errorMessage) {
+            String errorMessage,
+            ListingCoverAttempt attempt) {
+
+        public FailAssetProcessingCommand(AssetProcessingTarget target,AssetProcessingKind kind,String errorCode,String errorMessage) {
+            this(target,kind,errorCode,errorMessage,null);
+        }
 
         public FailAssetProcessingCommand(
                 Long contentId,
@@ -281,7 +287,7 @@ public final class AssetProcessingCommands {
 
     private static Integer normalizePageCount(AssetProcessingKind kind,
             AssetProcessingContentType contentType, Integer pageCount) {
-        if (kind == AssetProcessingKind.STORY_NARRATION) {
+        if (kind == AssetProcessingKind.STORY_NARRATION || kind == AssetProcessingKind.LISTING_COVER) {
             if (pageCount != null && pageCount != 0) {
                 throw new IllegalArgumentException("Page count is not supported for story narration processing");
             }
@@ -314,7 +320,7 @@ public final class AssetProcessingCommands {
 
     private static void validateKindTarget(AssetProcessingKind kind, AssetProcessingTarget target,
             AssetProcessingContentType contentType) {
-        if (kind == AssetProcessingKind.STORY_NARRATION
+        if ((kind == AssetProcessingKind.STORY_NARRATION || kind == AssetProcessingKind.LISTING_COVER)
                 && (!target.isLocalization() || contentType != AssetProcessingContentType.STORY)) {
             throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
         }

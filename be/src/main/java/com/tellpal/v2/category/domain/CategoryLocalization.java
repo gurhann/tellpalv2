@@ -44,6 +44,24 @@ public class CategoryLocalization extends BaseJpaEntity {
     @Column(name = "published_at")
     private Instant publishedAt;
 
+    // Home fields are read-only to ORM; the home store owns atomic language-locked writes.
+    @Column(name = "home_display_order", insertable = false, updatable = false)
+    private Integer homeDisplayOrder;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "home_audience", nullable = false, length = 20, insertable = false, updatable = false)
+    private HomeAudience homeAudience = HomeAudience.ALL;
+
+    @Column(name = "home_content_language", length = 8, insertable = false, updatable = false)
+    private LanguageCode homeContentLanguage;
+
+    @Column(name = "home_version", nullable = false, insertable = false, updatable = false)
+    private long homeVersion;
+
+    public Integer getHomeDisplayOrder() { return homeDisplayOrder; }
+    public HomeAudience getHomeAudience() { return homeAudience; }
+    public LanguageCode getHomeContentLanguage() { return homeContentLanguage; }
+
     protected CategoryLocalization() {
     }
 

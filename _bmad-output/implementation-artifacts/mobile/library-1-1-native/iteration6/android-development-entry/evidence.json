@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "reviewIteration": 6,
+  "verifiedAt": "2026-10-06T17:06:52.341273+00:00",
+  "platform": "android",
+  "entry": "lib/main_library_dev.dart",
+  "nativeEntryRendered": true,
+  "configured": true,
+  "tokenEntered": "ephemeral VM injection only",
+  "closedEntryScreenshot": "unconfigured.png",
+  "closedEntryManualInspectionPending": false,
+  "configuredCatalogLoaded": true,
+  "closedEntryManualInspection": {
+    "passed": true,
+    "notice": "Library development harness required",
+    "inspectedAt": "2026-10-06T17:07:17.453879+00:00",
+    "configuredScreenshot": "catalog rendered; artwork still loading at capture"
+  }
+}

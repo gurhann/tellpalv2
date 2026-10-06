@@ -1,0 +1,31 @@
+{
+  "verifiedAt": "2026-10-06T07:50:57.961750+00:00",
+  "reviewIteration": 4,
+  "android": {
+    "minimumSdk": 24,
+    "targetSdk": 36,
+    "evidence": "aapt35 dump badging of current-source integration_test/library_live_test.dart APK",
+    "apkSha256": "adcb30cf24eeb16e7a05140fc1359c01e68094e6307fcb2767a2a0a2e93bca45",
+    "developmentEntry": "Exact main_library_dev.dart flutter run --no-resident completed; actual closed notice UI inspected",
+    "developmentApkSha256": "794a0c85f26683b4eb9e4c43c70431be5ac3be427725f8f379e74ff3d04c64bf"
+  },
+  "ios": {
+    "minimumOSVersion": "15.0",
+    "evidence": "PlistBuddy of compiled current arm64 Simulator Runner.app; device-selected live, fault and development entries passed",
+    "runtime": "iOS27.0",
+    "devices": [
+      "iPhone18Pro",
+      "iPadPro13-inch(M5)"
+    ],
+    "developmentEntry": "Exact flutter run --no-resident debug arm64 Simulator exit0; actual closed-notice capture inspected",
+    "developmentEntryMode": "Missing test configuration renders closed setup notice; no catalog credentials entered",
+    "developmentExecutableSha256": "52cd2376961b9bb6c7f326d50d8a2e1602f46e2896ddde56bd1cc5aff2fb8c4a"
+  },
+  "gaps": [
+    "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+    "Android API24 minimum compiled; available older runtime API30 and current API36 tested",
+    "Emulators/Simulators only; no physical-device performance claim",
+    "Generic universal Simulator acceptance is not established by current device-selected arm64 runs; see iteration3 historical inventory for the earlier lipo failure.",
+    "Later API36 phone startup after viewport switching hit raster-thread SIGILL before Dart test execution; same-source API30 phone fault passed, and API36 tablet matrix passed. Native SDK/renderer/signing configuration unchanged."
+  ]
+}

@@ -36,6 +36,7 @@ final class AssetProcessingMapper {
                 assetProcessing.getLastErrorCode(),
                 assetProcessing.getLastErrorMessage(),
                 assetProcessing.getCreatedAt(),
-                assetProcessing.getUpdatedAt());
+                assetProcessing.getUpdatedAt(),
+                assetProcessing.getListingProfileVersion());
     }
 }

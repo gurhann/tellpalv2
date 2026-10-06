@@ -1,0 +1,1391 @@
+{
+  "timestamp": "2026-10-06T17:07:44.555883+00:00",
+  "contractVersion": 1,
+  "backend": "isolated local 8082",
+  "storage": "real Firebase / local-library-1-1",
+  "identity": "authorized existing Firebase account (redacted)",
+  "catalogs": [
+    {
+      "httpStatus": 200,
+      "milliseconds": 103,
+      "catalog": {
+        "schemaVersion": 1,
+        "requestedLanguage": "tr",
+        "audience": "NON_SUBSCRIBER",
+        "previewLimit": 5,
+        "rows": [
+          {
+            "categoryId": 3,
+            "slug": "library-1-1-english",
+            "name": "İngilizce Hikâyeler",
+            "description": "Hayal gücünü keşfeden, birlikte okunacak hikâyeler.",
+            "displayOrder": 2,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 9,
+                "externalKey": "library-1-1-story-8",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 70,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 71,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 10,
+                "externalKey": "library-1-1-story-9",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 72,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 73,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 2,
+            "slug": "library-1-1-zeta",
+            "name": "Birlikte Okuyalım",
+            "description": "Hayal gücünü keşfeden, birlikte okunacak hikâyeler.",
+            "displayOrder": 3,
+            "contentLanguage": "tr",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 28,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 29,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 34,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 35,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 40,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 41,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 1,
+            "slug": "library-1-1-alpha",
+            "name": "Harika Maceralar",
+            "description": "Hayal gücünü keşfeden, birlikte okunacak hikâyeler.",
+            "displayOrder": 4,
+            "contentLanguage": "tr",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 28,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 29,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 34,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 35,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 40,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 41,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 5,
+                "externalKey": "library-1-1-story-4",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 5",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 46,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 47,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 6,
+                "externalKey": "library-1-1-story-5",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 6",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 52,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 53,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 4,
+            "slug": "library-1-1-promo",
+            "name": "Premium Hikâyeleri Keşfet",
+            "description": "Hayal gücünü keşfeden, birlikte okunacak hikâyeler.",
+            "displayOrder": 5,
+            "contentLanguage": "tr",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 28,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 29,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "tr",
+                "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 34,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 35,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "httpStatus": 200,
+      "milliseconds": 109,
+      "catalog": {
+        "schemaVersion": 1,
+        "requestedLanguage": "en",
+        "audience": "NON_SUBSCRIBER",
+        "previewLimit": 5,
+        "rows": [
+          {
+            "categoryId": 1,
+            "slug": "library-1-1-alpha",
+            "name": "Wonderful Adventures",
+            "description": "Stories to explore imagination and read together.",
+            "displayOrder": 0,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 30,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 31,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 36,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 37,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 42,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 43,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 5,
+                "externalKey": "library-1-1-story-4",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 5",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 48,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 49,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 6,
+                "externalKey": "library-1-1-story-5",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 6",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 54,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 55,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 2,
+            "slug": "library-1-1-zeta",
+            "name": "Read Together",
+            "description": "Stories to explore imagination and read together.",
+            "displayOrder": 2,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 30,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 31,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 36,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 37,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 42,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 43,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 9,
+                "externalKey": "library-1-1-story-8",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 70,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 71,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 10,
+                "externalKey": "library-1-1-story-9",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 72,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 73,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 4,
+            "slug": "library-1-1-promo",
+            "name": "Discover Premium Stories",
+            "description": "Stories to explore imagination and read together.",
+            "displayOrder": 3,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 30,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 31,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 36,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 37,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 3,
+            "slug": "library-1-1-english",
+            "name": "English Stories",
+            "description": "Stories to explore imagination and read together.",
+            "displayOrder": 4,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 9,
+                "externalKey": "library-1-1-story-8",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 70,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 71,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 10,
+                "externalKey": "library-1-1-story-9",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 72,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 73,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "httpStatus": 200,
+      "milliseconds": 150,
+      "catalog": {
+        "schemaVersion": 1,
+        "requestedLanguage": "pt",
+        "audience": "NON_SUBSCRIBER",
+        "previewLimit": 5,
+        "rows": [
+          {
+            "categoryId": 1,
+            "slug": "library-1-1-alpha",
+            "name": "Aventuras maravilhosas",
+            "description": "Histórias para explorar a imaginação e ler juntos.",
+            "displayOrder": 0,
+            "contentLanguage": "pt",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 32,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 33,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 38,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 39,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 44,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 45,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 5,
+                "externalKey": "library-1-1-story-4",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 5",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 50,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 51,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 6,
+                "externalKey": "library-1-1-story-5",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 6",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 56,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 57,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 2,
+            "slug": "library-1-1-zeta",
+            "name": "Vamos ler juntos",
+            "description": "Histórias para explorar a imaginação e ler juntos.",
+            "displayOrder": 2,
+            "contentLanguage": "pt",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 32,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 33,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 38,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 39,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 4,
+                "externalKey": "library-1-1-story-3",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 44,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 45,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 4,
+            "slug": "library-1-1-promo",
+            "name": "Descubra histórias Premium",
+            "description": "Histórias para explorar a imaginação e ler juntos.",
+            "displayOrder": 3,
+            "contentLanguage": "pt",
+            "items": [
+              {
+                "contentId": 2,
+                "externalKey": "library-1-1-story-1",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": true,
+                "isLocked": false,
+                "covers": {
+                  "phone": {
+                    "assetId": 32,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 33,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 3,
+                "externalKey": "library-1-1-story-2",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "pt",
+                "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 38,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 39,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "categoryId": 3,
+            "slug": "library-1-1-english",
+            "name": "Histórias em inglês",
+            "description": "Histórias para explorar a imaginação e ler juntos.",
+            "displayOrder": 4,
+            "contentLanguage": "en",
+            "items": [
+              {
+                "contentId": 9,
+                "externalKey": "library-1-1-story-8",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 70,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 71,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              },
+              {
+                "contentId": 10,
+                "externalKey": "library-1-1-story-9",
+                "type": "STORY",
+                "experienceType": "READING",
+                "contentLanguage": "en",
+                "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+                "ageRange": 5,
+                "durationMinutes": null,
+                "isFree": false,
+                "isLocked": true,
+                "covers": {
+                  "phone": {
+                    "assetId": 72,
+                    "kind": "THUMBNAIL_PHONE",
+                    "mimeType": "image/jpeg"
+                  },
+                  "tablet": {
+                    "assetId": 73,
+                    "kind": "THUMBNAIL_TABLET",
+                    "mimeType": "image/jpeg"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "artwork": [
+    {
+      "assetId": 70,
+      "mimeType": "image/jpeg",
+      "bytes": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 434
+    },
+    {
+      "assetId": 71,
+      "mimeType": "image/jpeg",
+      "bytes": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "milliseconds": 324
+    },
+    {
+      "assetId": 72,
+      "mimeType": "image/jpeg",
+      "bytes": 31220,
+      "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 305
+    },
+    {
+      "assetId": 73,
+      "mimeType": "image/jpeg",
+      "bytes": 62414,
+      "sha256": "9a5c0b517e70d6d57693f5df76062b91dadd63474de69222be73c624bf127e69",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 300
+    },
+    {
+      "assetId": 28,
+      "mimeType": "image/jpeg",
+      "bytes": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 475
+    },
+    {
+      "assetId": 29,
+      "mimeType": "image/jpeg",
+      "bytes": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "milliseconds": 316
+    },
+    {
+      "assetId": 34,
+      "mimeType": "image/jpeg",
+      "bytes": 33091,
+      "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 487
+    },
+    {
+      "assetId": 35,
+      "mimeType": "image/jpeg",
+      "bytes": 66434,
+      "sha256": "6b19ac2202e471c3237e935c8397c222993e385bec1460a37ba8e5b0a21c6b6c",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 447
+    },
+    {
+      "assetId": 40,
+      "mimeType": "image/jpeg",
+      "bytes": 22326,
+      "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 421
+    },
+    {
+      "assetId": 41,
+      "mimeType": "image/jpeg",
+      "bytes": 44943,
+      "sha256": "d66f7c0cc5aebfb55cc03ed17ad5e5dd2e5f40303fe75fafa898ca376a9b0930",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 290
+    },
+    {
+      "assetId": 46,
+      "mimeType": "image/jpeg",
+      "bytes": 37259,
+      "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 575
+    },
+    {
+      "assetId": 47,
+      "mimeType": "image/jpeg",
+      "bytes": 78843,
+      "sha256": "5c7cb31594ee13f0ae2aae39e595d948cba6192779f9fb8f2cfd36c5b52c1a2b",
+      "width": 451,
+      "height": 800,
+      "milliseconds": 484
+    },
+    {
+      "assetId": 52,
+      "mimeType": "image/jpeg",
+      "bytes": 25017,
+      "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 275
+    },
+    {
+      "assetId": 53,
+      "mimeType": "image/jpeg",
+      "bytes": 52421,
+      "sha256": "e01d313f52d8b6f6d46cba30608e887e3f830c14a70f0319349c6e8b3c37f06c",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 473
+    },
+    {
+      "assetId": 30,
+      "mimeType": "image/jpeg",
+      "bytes": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 459
+    },
+    {
+      "assetId": 31,
+      "mimeType": "image/jpeg",
+      "bytes": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "milliseconds": 435
+    },
+    {
+      "assetId": 36,
+      "mimeType": "image/jpeg",
+      "bytes": 31220,
+      "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 272
+    },
+    {
+      "assetId": 37,
+      "mimeType": "image/jpeg",
+      "bytes": 62414,
+      "sha256": "9a5c0b517e70d6d57693f5df76062b91dadd63474de69222be73c624bf127e69",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 481
+    },
+    {
+      "assetId": 42,
+      "mimeType": "image/jpeg",
+      "bytes": 22117,
+      "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 312
+    },
+    {
+      "assetId": 43,
+      "mimeType": "image/jpeg",
+      "bytes": 44969,
+      "sha256": "2f015f9529d2ccdf9e2a6cba7818b03a34076e79ff0b7493e7c0fef2b4bc67dc",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 435
+    },
+    {
+      "assetId": 48,
+      "mimeType": "image/jpeg",
+      "bytes": 37021,
+      "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 339
+    },
+    {
+      "assetId": 49,
+      "mimeType": "image/jpeg",
+      "bytes": 81255,
+      "sha256": "ad28d98f6840b5d514681f047acf450178c6378f541ffc9cf1ebf984850331cd",
+      "width": 451,
+      "height": 800,
+      "milliseconds": 527
+    },
+    {
+      "assetId": 54,
+      "mimeType": "image/jpeg",
+      "bytes": 25017,
+      "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 471
+    },
+    {
+      "assetId": 55,
+      "mimeType": "image/jpeg",
+      "bytes": 52421,
+      "sha256": "e01d313f52d8b6f6d46cba30608e887e3f830c14a70f0319349c6e8b3c37f06c",
+      "width": 493,
+      "height": 800,
+      "milliseconds": 562
+    },
+    {
+      "assetId": 32,
+      "mimeType": "image/jpeg",
+      "bytes": 33631,
+      "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 418
+    },
+    {
+      "assetId": 33,
+      "mimeType": "image/jpeg",
+      "bytes": 45837,
+      "sha256": "6e3fa1ffaa22a142b6f7792dd758f45c5a99e106de1ecb9e8c6002d72d7ad922",
+      "width": 428,
+      "height": 695,
+      "milliseconds": 313
+    },
+    {
+      "assetId": 38,
+      "mimeType": "image/jpeg",
+      "bytes": 25752,
+      "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 515
+    },
+    {
+      "assetId": 39,
+      "mimeType": "image/jpeg",
+      "bytes": 33011,
+      "sha256": "02e0afb40b513b26d459e311251cc0e4acb8f6246e34a6f1d59f11ea47adf94b",
+      "width": 428,
+      "height": 695,
+      "milliseconds": 473
+    },
+    {
+      "assetId": 44,
+      "mimeType": "image/jpeg",
+      "bytes": 33667,
+      "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c",
+      "width": 270,
+      "height": 480,
+      "milliseconds": 465
+    },
+    {
+      "assetId": 45,
+      "mimeType": "image/jpeg",
+      "bytes": 34945,
+      "sha256": "4555d99f8d8732b0e818428a33f1417cfc75a15ef995f5d8221a11788eb5d19e",
+      "width": 321,
+      "height": 570,
+      "milliseconds": 462
+    },
+    {
+      "assetId": 50,
+      "mimeType": "image/jpeg",
+      "bytes": 32033,
+      "sha256": "834c9be5926eb9b578702b6e399217e2eb6925637ca8d2be7a838d8530fa7283",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 473
+    },
+    {
+      "assetId": 51,
+      "mimeType": "image/jpeg",
+      "bytes": 43029,
+      "sha256": "949c330740c8125e7887d70a5e1e07a1da3b103a0a5cb0e437af18049ac41d65",
+      "width": 428,
+      "height": 695,
+      "milliseconds": 488
+    },
+    {
+      "assetId": 56,
+      "mimeType": "image/jpeg",
+      "bytes": 31412,
+      "sha256": "68c657e79ae33698814b0fb75796f0301247a3251b33df847b44b979c483bab1",
+      "width": 296,
+      "height": 480,
+      "milliseconds": 465
+    },
+    {
+      "assetId": 57,
+      "mimeType": "image/jpeg",
+      "bytes": 42273,
+      "sha256": "9e0b0813fc3aef8caa2a74234f715597199d79b5ac656eaa0129a6f842b4a4bd",
+      "width": 428,
+      "height": 695,
+      "milliseconds": 482
+    }
+  ],
+  "omittedFixtureCases": {
+    "empty": 5,
+    "hidden": 6,
+    "no-tr": 7,
+    "draft": 8
+  }
+}

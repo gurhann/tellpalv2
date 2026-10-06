@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "platform": "ios",
+  "nativeCatalogTransport": {
+    "headers": {
+      "requests": 1,
+      "releasedSockets": 1,
+      "passed": true
+    },
+    "body": {
+      "requests": 1,
+      "releasedSockets": 1,
+      "passed": true
+    },
+    "error": {
+      "requests": 1,
+      "releasedSockets": 1,
+      "passed": true
+    },
+    "trickle": {
+      "requests": 1,
+      "releasedSockets": 1,
+      "passed": true
+    },
+    "retry": {
+      "requests": 13,
+      "releasedSockets": 13,
+      "passed": true
+    },
+    "dispose": {
+      "requests": 1,
+      "releasedSockets": 1,
+      "passed": true
+    }
+  },
+  "network": "in-process loopback fault proxy to real authenticated backend and Firebase JPEGs",
+  "catalogWaitMilliseconds": 15000,
+  "catalogObservedWaitMilliseconds": 6240,
+  "catalogNativeHeaderWaitMilliseconds": 6000,
+  "catalogNativeBodyIdleWaitMilliseconds": 6000,
+  "catalogNativeTotalWaitMilliseconds": 12000,
+  "oldCoverUrlPermanentlyRejected": true,
+  "freshCoverUrlAndExpiryAdopted": true,
+  "selectedCoverVariant": "tablet",
+  "artworkWaitMilliseconds": 10000,
+  "artworkNativeHeaderWaitMilliseconds": 4000,
+  "artworkNativeBodyIdleWaitMilliseconds": 4000,
+  "artworkNativeTotalWaitMilliseconds": 8000,
+  "artworkAdmissionWaitMilliseconds": 2000,
+  "observedArtworkErrorCause": "native-header-deadline",
+  "catalogDelayMilliseconds": 16500,
+  "artworkDelayMilliseconds": 20000,
+  "artworkObservedWaitMilliseconds": 4164,
+  "catalogRequests": 7,
+  "artworkRequests": 44,
+  "lateCatalogCompletions": 1,
+  "lateArtworkCompletions": 10,
+  "disconnectedConsumers": 0,
+  "corruptCoverAssetId": 71,
+  "corruptTransfers": 1,
+  "corruptCoverRequestsBeforeRetry": 4,
+  "corruptCoverRequestsAfterRetry": 8,
+  "corruptRetryAttempt": 3,
+  "otherCoversLoaded": true,
+  "catalogRetryAttempt": 3,
+  "artworkRetryAttempt": 3,
+  "timedRetryRequestsBefore": 2,
+  "timedRetryRequestsAfter": 8,
+  "freshRetryStartedBeforeLateCompletion": true,
+  "freshRetryStartMilliseconds": 189,
+  "signedRefreshFailureRetainsCatalog": true,
+  "signedRefreshFailureRetainsGeometry": true,
+  "expiredCoverHttpStatus": 403,
+  "automaticRenewalHttpStatus": 503,
+  "explicitRenewalRetryRecovered": true,
+  "orderedRows": [
+    3,
+    2,
+    1,
+    4
+  ]
+}

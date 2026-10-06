@@ -70,6 +70,17 @@ public class ContentAdminController {
         this.clock = clock;
     }
 
+    @PostMapping("/{contentId}/localizations/{languageCode}/listing-cover-processing")
+    @Operation(summary="Prepare verified Library cover thumbnails",description="Uses the current localized reading cover source; the client cannot select an asset.")
+    @ApiResponses({@ApiResponse(responseCode="200",description="Existing ready revision reused"),@ApiResponse(responseCode="202",description="Preparation scheduled"),
+        @ApiResponse(responseCode="400",description="Invalid language (ProblemDetail)"),@ApiResponse(responseCode="401",description="Admin token missing or invalid (ProblemDetail)"),
+        @ApiResponse(responseCode="403",description="Insufficient permission (ProblemDetail)"),@ApiResponse(responseCode="404",description="Content/localization missing (ProblemDetail)"),
+        @ApiResponse(responseCode="409",description="Source missing or changed work already running (ProblemDetail)")})
+    public ResponseEntity<com.tellpal.v2.asset.api.LibraryCoverPreparationApi.Preparation> prepareListingCover(@PathVariable Long contentId,@PathVariable String languageCode) {
+        var result=contentManagementService.prepareListingCover(contentId,LanguageCode.from(languageCode));
+        return ResponseEntity.status(result.ready()?200:202).body(result);
+    }
+
     @GetMapping
     @Operation(
             summary = "List content",

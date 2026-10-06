@@ -51,6 +51,11 @@ public class JpaAssetProcessingRepositoryAdapter implements AssetProcessingRepos
     }
 
     @Override
+    public Optional<AssetProcessing> findByTargetAndKindForUpdate(AssetProcessingTarget target,AssetProcessingKind kind) {
+        return repository.lockLocalization(target.contentId(),target.languageCode(),kind);
+    }
+
+    @Override
     public Optional<AssetProcessing> findByContent(Long contentId) {
         return repository.findByTargetScopeAndContentId(AssetProcessingTargetScope.CONTENT, contentId);
     }

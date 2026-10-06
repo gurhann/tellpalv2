@@ -1,0 +1,141 @@
+{
+  "context": "debug native matrix, including screenshot/driver serialization; not a release performance budget",
+  "samples": [
+    {
+      "elapsedSeconds": 16.6,
+      "totalPssKiB": 172141
+    },
+    {
+      "elapsedSeconds": 20.6,
+      "totalPssKiB": 271145
+    },
+    {
+      "elapsedSeconds": 24.7,
+      "totalPssKiB": 290236
+    },
+    {
+      "elapsedSeconds": 28.8,
+      "totalPssKiB": 300621
+    },
+    {
+      "elapsedSeconds": 33.1,
+      "totalPssKiB": 313345
+    },
+    {
+      "elapsedSeconds": 37.3,
+      "totalPssKiB": 291617
+    },
+    {
+      "elapsedSeconds": 41.4,
+      "totalPssKiB": 302569
+    },
+    {
+      "elapsedSeconds": 45.5,
+      "totalPssKiB": 305905
+    },
+    {
+      "elapsedSeconds": 49.7,
+      "totalPssKiB": 309949
+    },
+    {
+      "elapsedSeconds": 53.8,
+      "totalPssKiB": 327809
+    },
+    {
+      "elapsedSeconds": 58.0,
+      "totalPssKiB": 515846
+    },
+    {
+      "elapsedSeconds": 62.1,
+      "totalPssKiB": 487014
+    },
+    {
+      "elapsedSeconds": 66.2,
+      "totalPssKiB": 487201
+    },
+    {
+      "elapsedSeconds": 70.3,
+      "totalPssKiB": 487234
+    },
+    {
+      "elapsedSeconds": 74.3,
+      "totalPssKiB": 487297
+    },
+    {
+      "elapsedSeconds": 78.4,
+      "totalPssKiB": 487302
+    },
+    {
+      "elapsedSeconds": 82.5,
+      "totalPssKiB": 487402
+    },
+    {
+      "elapsedSeconds": 86.6,
+      "totalPssKiB": 487570
+    },
+    {
+      "elapsedSeconds": 90.7,
+      "totalPssKiB": 487630
+    },
+    {
+      "elapsedSeconds": 94.8,
+      "totalPssKiB": 487645
+    },
+    {
+      "elapsedSeconds": 98.9,
+      "totalPssKiB": 487706
+    },
+    {
+      "elapsedSeconds": 103.1,
+      "totalPssKiB": 487774
+    },
+    {
+      "elapsedSeconds": 107.2,
+      "totalPssKiB": 487846
+    },
+    {
+      "elapsedSeconds": 111.3,
+      "totalPssKiB": 487933
+    },
+    {
+      "elapsedSeconds": 115.3,
+      "totalPssKiB": 487957
+    },
+    {
+      "elapsedSeconds": 119.4,
+      "totalPssKiB": 306690
+    },
+    {
+      "elapsedSeconds": 123.5,
+      "totalPssKiB": 306734
+    },
+    {
+      "elapsedSeconds": 127.5,
+      "totalPssKiB": 306768
+    },
+    {
+      "elapsedSeconds": 131.6,
+      "totalPssKiB": 306892
+    },
+    {
+      "elapsedSeconds": 135.7,
+      "totalPssKiB": 307248
+    },
+    {
+      "elapsedSeconds": 139.7,
+      "totalPssKiB": 307336
+    },
+    {
+      "elapsedSeconds": 143.8,
+      "totalPssKiB": 307424
+    },
+    {
+      "elapsedSeconds": 147.9,
+      "totalPssKiB": 307497
+    },
+    {
+      "elapsedSeconds": 151.9,
+      "totalPssKiB": 307553
+    }
+  ]
+}

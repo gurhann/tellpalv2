@@ -32,7 +32,19 @@ public record AssetProcessingRecord(
         String lastErrorCode,
         String lastErrorMessage,
         Instant createdAt,
-        Instant updatedAt) {
+        Instant updatedAt,
+        String listingProfileVersion) {
+
+    public AssetProcessingRecord(Long processingId, AssetProcessingTarget target, AssetProcessingKind kind,
+            AssetProcessingContentType contentType, String externalKey, Long coverSourceAssetId,
+            Long audioSourceAssetId, Integer pageCount, List<AssetProcessingPageSource> pageSources,
+            List<AssetProcessingPageSource> pageSourceFollowup, AssetProcessingState status, int attemptCount,
+            Instant nextAttemptAt, Instant leaseExpiresAt, Instant startedAt, Instant completedAt, Instant failedAt,
+            String lastErrorCode, String lastErrorMessage, Instant createdAt, Instant updatedAt) {
+        this(processingId,target,kind,contentType,externalKey,coverSourceAssetId,audioSourceAssetId,pageCount,
+                pageSources,pageSourceFollowup,status,attemptCount,nextAttemptAt,leaseExpiresAt,startedAt,
+                completedAt,failedAt,lastErrorCode,lastErrorMessage,createdAt,updatedAt,null);
+    }
 
     public AssetProcessingRecord(
             Long processingId,

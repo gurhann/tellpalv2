@@ -233,6 +233,9 @@ export function CategoriesIndexRoute() {
               />
               {copy.refresh}
             </Button>
+            <Button type="button" variant="outline" onClick={() => navigate("/categories/home?lang=tr")}>
+              {locale === "tr" ? "Kitaplık sırası" : "Library order"}
+            </Button>
             <Button type="button" onClick={() => setIsCreateDialogOpen(true)}>
               <CirclePlus className="size-4" />
               {copy.create}

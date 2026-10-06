@@ -73,6 +73,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Override
     @Transactional
     public AssetProcessingRecord schedule(ScheduleAssetProcessingCommand command) {
+        if (command.kind() == AssetProcessingKind.LISTING_COVER) throw new IllegalArgumentException("Use listing-cover preparation to capture the encoding profile");
         Optional<AssetProcessing> existingProcessing = assetProcessingRepository.findByTargetAndKind(command.target(), command.kind());
         if (existingProcessing.isPresent()) {
             return handleExistingSchedule(existingProcessing.get(), command);
@@ -151,6 +152,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord complete(CompleteAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
+        if (command.kind() == AssetProcessingKind.LISTING_COVER) assetProcessing.requireListingOwnership(command.attempt(),Instant.now(clock));
         assetProcessing.completeOrQueueFollowup(Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -164,6 +166,7 @@ public class AssetProcessingService implements AssetProcessingApi {
     @Transactional
     public AssetProcessingRecord fail(FailAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
+        if (command.kind() == AssetProcessingKind.LISTING_COVER) assetProcessing.requireListingOwnership(command.attempt(),Instant.now(clock));
         assetProcessing.failOrQueueFollowup(command.errorCode(), command.errorMessage(), Instant.now(clock));
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
@@ -215,6 +218,32 @@ public class AssetProcessingService implements AssetProcessingApi {
         return assetProcessingRepository.findRecent(sanitizeLimit(limit)).stream()
                 .map(AssetProcessingMapper::toRecord)
                 .toList();
+    }
+
+    /** Schedules a source/profile-bound listing job, preserving existing DELIVERY semantics. */
+    @Transactional
+    public AssetProcessingRecord scheduleListingCover(ScheduleAssetProcessingCommand command,String profile) {
+        if(command.kind()!=AssetProcessingKind.LISTING_COVER || command.coverSourceAssetId()==null)
+            throw new IllegalArgumentException("Listing cover requires a STORY cover source");
+        var existing=assetProcessingRepository.findByTargetAndKindForUpdate(command.target(),command.kind());
+        if(existing.isEmpty()) {
+            var created=AssetProcessing.schedule(command.target(),command.kind(),ProcessingContentType.STORY,command.externalKey(),
+                    command.coverSourceAssetId(),null,0,List.of(),Instant.now(clock));
+            created.setListingProfileVersion(profile);
+            var saved=saveNewProcessing(created);publishStatusChanged(saved);return AssetProcessingMapper.toRecord(saved);
+        }
+        var job=existing.get();
+        boolean same=java.util.Objects.equals(job.getCoverSourceAssetId(),command.coverSourceAssetId())
+                && java.util.Objects.equals(job.getListingProfileVersion(),profile);
+        if(job.getStatus()==AssetProcessingStatus.PROCESSING) {
+            if(same) return AssetProcessingMapper.toRecord(job);
+            throw new AssetProcessingAlreadyRunningException(job.getTarget());
+        }
+        if(job.getStatus()==AssetProcessingStatus.COMPLETED && same) return AssetProcessingMapper.toRecord(job);
+        job.refreshContext(ProcessingContentType.STORY,command.externalKey(),command.coverSourceAssetId(),null,0,List.of());
+        job.setListingProfileVersion(profile);
+        if(job.isTerminal()) job.reschedule(Instant.now(clock));
+        var saved=assetProcessingRepository.saveAndFlush(job);publishStatusChanged(saved);return AssetProcessingMapper.toRecord(saved);
     }
 
     private AssetProcessingRecord handleExistingSchedule(
@@ -285,7 +314,9 @@ public class AssetProcessingService implements AssetProcessingApi {
 
     private AssetProcessing loadProcessing(AssetProcessingTarget target, AssetProcessingKind kind) {
         AssetProcessingTarget requiredTarget = requireTarget(target);
-        return assetProcessingRepository.findByTargetAndKind(requiredTarget, requireKind(kind))
+        return (kind == AssetProcessingKind.LISTING_COVER
+                ? assetProcessingRepository.findByTargetAndKindForUpdate(requiredTarget,kind)
+                : assetProcessingRepository.findByTargetAndKind(requiredTarget, requireKind(kind)))
                 .orElseThrow(() -> new AssetProcessingNotFoundException(requiredTarget));
     }
 

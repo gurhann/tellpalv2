@@ -1,0 +1,151 @@
+{
+  "status": "loaded",
+  "language": "pt",
+  "attempt": 2,
+  "audience": "NON_SUBSCRIBER",
+  "rows": [
+    {
+      "categoryId": 1,
+      "contentLanguage": "pt",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "pt",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 32,
+          "tabletAssetId": 33
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 38,
+          "tabletAssetId": 39
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 44,
+          "tabletAssetId": 45
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 50,
+          "tabletAssetId": 51
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 56,
+          "tabletAssetId": 57
+        }
+      ]
+    },
+    {
+      "categoryId": 2,
+      "contentLanguage": "pt",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "pt",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 32,
+          "tabletAssetId": 33
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 38,
+          "tabletAssetId": 39
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 44,
+          "tabletAssetId": 45
+        }
+      ]
+    },
+    {
+      "categoryId": 4,
+      "contentLanguage": "pt",
+      "items": [
+        {
+          "contentId": 2,
+          "contentLanguage": "pt",
+          "isFree": true,
+          "isLocked": false,
+          "phoneAssetId": 32,
+          "tabletAssetId": 33
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 38,
+          "tabletAssetId": 39
+        }
+      ]
+    },
+    {
+      "categoryId": 3,
+      "contentLanguage": "en",
+      "items": [
+        {
+          "contentId": 9,
+          "contentLanguage": "en",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 70,
+          "tabletAssetId": 71
+        },
+        {
+          "contentId": 10,
+          "contentLanguage": "en",
+          "isFree": false,
+          "isLocked": true,
+          "phoneAssetId": 72,
+          "tabletAssetId": 73
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "catalog",
+      "language": "tr",
+      "milliseconds": 821,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "pt",
+      "milliseconds": 341,
+      "outcome": "loaded"
+    }
+  ],
+  "imageCacheBytes": 10967040,
+  "imageCacheEntries": 20,
+  "executedCommands": [
+    "configure",
+    "context pt scale1.3",
+    "observe",
+    "restore context tr scale1.0"
+  ],
+  "runtime": "Node22.23.2 native WebSocket and real iOS27 development entry"
+}

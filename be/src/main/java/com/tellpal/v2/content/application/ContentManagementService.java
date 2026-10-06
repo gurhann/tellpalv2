@@ -62,6 +62,24 @@ public class ContentManagementService {
         this.instrumentCatalogRepository = instrumentCatalogRepository;
     }
 
+    private com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public ContentManagementService(ContentRepository contents,ContentAssetReferenceValidator validator,AssetProcessingApi processing,
+            InstrumentCatalogRepository instruments,com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers) {
+        this(contents,validator,processing,instruments);this.listingCovers=listingCovers;
+    }
+
+    /** Schedules cover-only preparation from the current localized reading cover; publication is unchanged. */
+    @Transactional
+    public com.tellpal.v2.asset.api.LibraryCoverPreparationApi.Preparation prepareListingCover(Long id,LanguageCode language) {
+        Content content=loadContent(id);
+        if(content.getType()!=ContentType.STORY) throw new IllegalStateException("Listing preparation requires STORY content");
+        ContentLocalization localization=content.findLocalization(language).orElseThrow(()->new ContentLocalizationNotFoundException(id,language));
+        if(localization.getCoverMediaId()==null) throw new IllegalStateException("Localized reading cover source is missing");
+        return listingCovers.prepare(AssetProcessingTarget.localization(id,language),content.getExternalKey(),localization.getCoverMediaId());
+    }
+
     /**
      * Creates a new content aggregate with its stable identity fields.
      */

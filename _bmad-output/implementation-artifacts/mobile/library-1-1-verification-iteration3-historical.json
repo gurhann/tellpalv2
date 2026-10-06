@@ -1,0 +1,1309 @@
+{
+  "verifiedAt": "2026-10-05T17:00:48.117219+00:00",
+  "reviewIteration": 3,
+  "baselineCommit": "b372c60b53f828f2fcadff40eb1c212684ad3d51",
+  "backend": {
+    "surefireTotals": {
+      "tests": 364,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "documentationIntegrationTests": 1,
+    "relevantSuites": [
+      {
+        "suite": "com.tellpal.v2.user.application.LibraryHomeTestQueryServiceTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "subscriberFixturesMustBeAnAllowlistSubset",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsMissingInvalidAndUnlistedIdentityBeforeAnyCatalogCall",
+            "result": "passed"
+          },
+          {
+            "name": "selectsAudienceOnlyAfterVerifiedIdentityAndRejectsInvalidLanguage",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.LibraryHomeIntegrationTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+            "result": "passed"
+          },
+          {
+            "name": "staleDuplicateAndInvalidMappingWritesAreAtomicAndExistingRowsStartOptedOut",
+            "result": "passed"
+          },
+          {
+            "name": "theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile",
+            "result": "passed"
+          },
+          {
+            "name": "anAlreadyLoadedJpaLocalizationEditCannotOverwriteAtomicHomeConfiguration",
+            "result": "passed"
+          },
+          {
+            "name": "savedIndependentOrdersFilterBeforeFiveAndNeverPadTurkishWithEnglish",
+            "result": "passed"
+          },
+          {
+            "name": "realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.LibraryHomeProfileContextTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[1]",
+            "result": "passed"
+          },
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[2]",
+            "result": "passed"
+          },
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[3]",
+            "result": "passed"
+          },
+          {
+            "name": "localAndTestRegisterTheActualGuardedServiceAndController(String)[1]",
+            "result": "passed"
+          },
+          {
+            "name": "localAndTestRegisterTheActualGuardedServiceAndController(String)[2]",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.ListingCoverProcessingExecutorTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "storedMimeAndChecksumMismatchRejectReadyPublication",
+            "result": "passed"
+          },
+          {
+            "name": "generatedOnlyRegistryMetadataNeverMakesArtworkReady",
+            "result": "passed"
+          },
+          {
+            "name": "explicitStalePublicationDoesNotEnterFailureCallback",
+            "result": "passed"
+          },
+          {
+            "name": "secondUploadFailureNeverPublishesHalfReadyManifestAndCarriesCapturedAttempt",
+            "result": "passed"
+          },
+          {
+            "name": "rejectedCompletionCatchFailureStillUsesExpiredOwnershipAndCannotFailReplacement",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.LibraryHomeTestControllerTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "invalidTokenIsProblemDetailAndNeverQueriesCatalog",
+            "result": "passed"
+          },
+          {
+            "name": "verifiedUnlistedIdentityIsProblemDetailAndNeverQueriesCatalog",
+            "result": "passed"
+          },
+          {
+            "name": "unavailableLanguageIsProblemDetailAfterAuthorizedResolution",
+            "result": "passed"
+          },
+          {
+            "name": "missingTokenIsProblemDetailBeforeAnyCatalogQuery",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.ListingCoverRenditionProcessorTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "rejectsDeclaredMimeMismatchAndExcessPixelsBeforeDecode",
+            "result": "passed"
+          },
+          {
+            "name": "sourceProfilesAreCapturedAndRoundTrip",
+            "result": "passed"
+          },
+          {
+            "name": "fitsBothBoundsWithoutUpscalingAndCompositesAlphaWhite",
+            "result": "passed"
+          }
+        ]
+      }
+    ],
+    "command": "DOCKER_HOST=<existing Colima socket> TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 sh mvnw verify",
+    "unitAndPostgresqlTests": 364,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "outcome": "PASS",
+    "namedRegression": "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+    "log": "/private/tmp/library-loop2-backend-verify.log",
+    "reusedAfterFlutterOnlyDisposalCorrection": true,
+    "passedTests": 364,
+    "passedDocumentationIntegrationTests": 1,
+    "skipped": 0,
+    "focusedPassedTests": 11,
+    "productionAndDefaultProfileCases": 3,
+    "localAndTestProfileCases": 2,
+    "sameSourceTwoProfiles": "actual PostgreSQL scheduling, real byte preparation/publication, scalar catalog lookup, distinct immutable revisions and current covers passed",
+    "jarSha256": "e676fa52ec93b028b4c8556e689e165cb774e06150aaa6d98c49ddb84cab74b0"
+  },
+  "cms": {
+    "unitTestFiles": 89,
+    "passedTests": 371,
+    "build": "passed",
+    "sourceChangesThisIteration": false,
+    "actualCmsHttpAndAffectedVisualChecks": "PASS",
+    "unitFiles": 89,
+    "unitTests": 371,
+    "libraryAffectedVisualAndInteractionTests": 3,
+    "categoryRegistryAffectedVisualTests": 2,
+    "actualBackendCasesPerAudience": 2,
+    "actualBackendAudiences": [
+      "NON_SUBSCRIBER",
+      "SUBSCRIBER"
+    ],
+    "logs": [
+      "/private/tmp/tellpal-library-runtime/iteration3-cms-non-subscriber.log",
+      "/private/tmp/tellpal-library-runtime/iteration3-cms-subscriber.log",
+      "/private/tmp/tellpal-library-runtime/iteration3-cms-visual.log",
+      "/private/tmp/tellpal-library-runtime/iteration3-cms-toolbar.log"
+    ]
+  },
+  "flutter": {
+    "sdk": "3.41.1",
+    "dart": "3.11.0",
+    "pubGet": "passed offline; only file/http direct dependency ownership changed",
+    "generation": "passed; 5 outputs",
+    "analyze": "passed; no issues",
+    "passedTests": 61,
+    "failures": 0,
+    "portraitGoldens": {
+      "matched": 12,
+      "baselinesModified": false
+    },
+    "addedCoverage": {
+      "actualCacheManagerLoopbackTransport": 10,
+      "expiredSharedCacheActualDecodeReaderReuse": 1,
+      "shortLandscapeWidgetCases": 4
+    },
+    "catalogWaitDefaultSeconds": 15,
+    "artworkWaitDefaultSeconds": 10,
+    "headerWaitRatio": 0.4,
+    "bodyInactivityWaitRatio": 0.4,
+    "totalTransportWaitRatio": 0.8,
+    "queueWaitRatio": 0.2,
+    "defaultHeaderWaitSeconds": 4,
+    "defaultBodyInactivityWaitSeconds": 4,
+    "defaultTotalTransportWaitSeconds": 8,
+    "defaultQueueWaitSeconds": 2,
+    "concurrentPackageOperations": 10,
+    "maximumQueuedRequests": 80,
+    "diskObjectLimit": 80,
+    "diskLifetimeMinutes": 10,
+    "decodedImageLimit": 48,
+    "decodedBytesLimit": 33554432,
+    "visibleTests": 61,
+    "hiddenSuiteLoadEvents": 10,
+    "machineDone": {
+      "success": true,
+      "type": "done",
+      "time": 6880
+    },
+    "cases": [
+      {
+        "testID": 9,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1841,
+        "name": "accepts ordered image and audio grants from the protected response"
+      },
+      {
+        "testID": 12,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1844,
+        "name": "allows a page without audio"
+      },
+      {
+        "testID": 13,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1847,
+        "name": "rejects an unsupported schema and an invalid page order"
+      },
+      {
+        "testID": 14,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1849,
+        "name": "detects grants that expire inside the refresh window"
+      },
+      {
+        "testID": 11,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1884,
+        "name": "duplicate decoded transfers coalesce promotion and never rewrite a shared reader file"
+      },
+      {
+        "testID": 17,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1886,
+        "name": "warm immutable hit cannot promote unrelated stale transfer bytes"
+      },
+      {
+        "testID": 18,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1908,
+        "name": "corrupt warm hit is evicted on explicit retry; unrelated transfer failure preserves good shared file"
+      },
+      {
+        "testID": 19,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1912,
+        "name": "close drains promotion and package metadata write before emptying storage and declines new promotion"
+      },
+      {
+        "testID": 20,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 1917,
+        "name": "fresh current decode renews expired shared metadata without rewriting active readers; next owner reuses it"
+      },
+      {
+        "testID": 24,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2385,
+        "name": "real HTTP DTO requested language returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 27,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2398,
+        "name": "real HTTP DTO item language returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 29,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2409,
+        "name": "real HTTP DTO duplicate category returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 30,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2415,
+        "name": "real HTTP DTO preview overflow returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 34,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2504,
+        "name": "same-context retry rejects an earlier success and error in reversed order"
+      },
+      {
+        "testID": 35,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2506,
+        "name": "language and access context change reject obsolete responses and close rejects callbacks"
+      },
+      {
+        "testID": 36,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2525,
+        "name": "deadline leaves loading, retry has new attempt and expired completion is ignored"
+      },
+      {
+        "testID": 37,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2528,
+        "name": "expired signed artwork allows only one automatic refresh per current catalog"
+      },
+      {
+        "testID": 38,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2564,
+        "name": "background artwork refresh network retains the exact successful catalog"
+      },
+      {
+        "testID": 41,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2600,
+        "name": "background artwork refresh timeout retains the exact successful catalog"
+      },
+      {
+        "testID": 42,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2634,
+        "name": "background artwork refresh empty retains the exact successful catalog"
+      },
+      {
+        "testID": 43,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2669,
+        "name": "background artwork refresh invalid retains the exact successful catalog"
+      },
+      {
+        "testID": 44,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2672,
+        "name": "manual expired-cover retry remains recoverable after automatic failure and is single-flight"
+      },
+      {
+        "testID": 45,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2674,
+        "name": "obsolete automatic refresh cannot replace retry"
+      },
+      {
+        "testID": 46,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2675,
+        "name": "obsolete automatic refresh cannot replace context"
+      },
+      {
+        "testID": 47,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2676,
+        "name": "obsolete automatic refresh cannot replace disposal"
+      },
+      {
+        "testID": 40,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2696,
+        "name": "actual scheduled CacheStore cleanup after disposal never calls closed storage"
+      },
+      {
+        "testID": 49,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2707,
+        "name": "cleanup query admitted before disposal completes safely; late callbacks cannot reach closed storage"
+      },
+      {
+        "testID": 50,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2709,
+        "name": "disposal drains admitted read and write, declines new work and coalesces close"
+      },
+      {
+        "testID": 51,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2712,
+        "name": "admitted storage errors propagate and still release the close drain"
+      },
+      {
+        "testID": 48,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2724,
+        "name": "artwork attempt rejects old success, failure and timeout across retry, context and disposal"
+      },
+      {
+        "testID": 28,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3006,
+        "name": "landscape long-title artwork error fits tr at enlarged text"
+      },
+      {
+        "testID": 54,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3059,
+        "name": "landscape long-title artwork error fits en at enlarged text"
+      },
+      {
+        "testID": 55,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3104,
+        "name": "landscape long-title artwork error fits pt at enlarged text"
+      },
+      {
+        "testID": 56,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3273,
+        "name": "long titles, missing artwork and disabled semantics tr Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 59,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3359,
+        "name": "long titles, missing artwork and disabled semantics tr Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 62,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3441,
+        "name": "long titles, missing artwork and disabled semantics en Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 63,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3514,
+        "name": "long titles, missing artwork and disabled semantics en Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 64,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3586,
+        "name": "long titles, missing artwork and disabled semantics pt Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 61,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3610,
+        "name": "real CacheManager bounds headers and removes partial files before close"
+      },
+      {
+        "testID": 65,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3661,
+        "name": "long titles, missing artwork and disabled semantics pt Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 67,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3755,
+        "name": "long titles, missing artwork and disabled semantics tr Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 68,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3857,
+        "name": "long titles, missing artwork and disabled semantics tr Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 66,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3872,
+        "name": "real CacheManager bounds body and removes partial files before close"
+      },
+      {
+        "testID": 69,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3957,
+        "name": "long titles, missing artwork and disabled semantics en Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 71,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4052,
+        "name": "long titles, missing artwork and disabled semantics en Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 72,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4144,
+        "name": "long titles, missing artwork and disabled semantics pt Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 73,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4241,
+        "name": "long titles, missing artwork and disabled semantics pt Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 74,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4296,
+        "name": "loading, empty, failure and retry remain distinct and localized"
+      },
+      {
+        "testID": 58,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4314,
+        "name": "same-asset retry starts a separate provider transfer before old success completes"
+      },
+      {
+        "testID": 70,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4361,
+        "name": "real CacheManager bounds trickle and removes partial files before close"
+      },
+      {
+        "testID": 76,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4642,
+        "name": "same-asset retry rejects old transfer error after replacement loaded"
+      },
+      {
+        "testID": 78,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 4675,
+        "name": "short enlarged long-title error preserves lock and 48dp retry without overflow"
+      },
+      {
+        "testID": 77,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5192,
+        "name": "all ten occupied package slots release; current retry fetches independently"
+      },
+      {
+        "testID": 79,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5268,
+        "name": "resize 411.0 to 800.0 replaces asset owner and keeps timeout/retry current"
+      },
+      {
+        "testID": 81,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5890,
+        "name": "resize 800.0 to 411.0 replaces asset owner and keeps timeout/retry current"
+      },
+      {
+        "testID": 80,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6212,
+        "name": "explicit retry sends request before the old delayed headers and rejects its success"
+      },
+      {
+        "testID": 82,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6399,
+        "name": "close cancels headers plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 83,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6601,
+        "name": "close cancels body plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 84,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6800,
+        "name": "close cancels trickle plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 85,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6834,
+        "name": "close drains admitted package metadata and delayed file creation before cleanup"
+      },
+      {
+        "testID": 86,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 6868,
+        "name": "close drains actual package metadata publication before removing files and closing the repository"
+      }
+    ],
+    "machineLogSha256": "7a8c915f40f73747020c6486ccae403c5807bb11dbbf5c0cc6a90e6eed305fa5"
+  },
+  "sourceFiles": [
+    {
+      "path": "app/mobile/integration_test/library_deadline_live_test.dart",
+      "sha256": "1748d8eea18b23ce9314482323e26ef2f1d8e83623e87493444dddda93498ddc"
+    },
+    {
+      "path": "app/mobile/integration_test/library_live_test.dart",
+      "sha256": "5dc7f567663d9b720db26eec94efe8cdcc383a1dbd4d653e3a8645b9f95a420e"
+    },
+    {
+      "path": "app/mobile/lib/core/network/authenticated_transport.dart",
+      "sha256": "eece8b05a7aa47bde690d5aefafe8ad3488477a876a8cc6e680be51bbb6bd28a"
+    },
+    {
+      "path": "app/mobile/lib/core/network/draining_cache_info_repository.dart",
+      "sha256": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_cache_lifecycle.dart",
+      "sha256": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_image_cache.dart",
+      "sha256": "e1960977ef6f60d7861969344a24f3a08e8b9e8dd0f22a5e57168cac5fdd2d14"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_transfer_file_service.dart",
+      "sha256": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/library_cubit.dart",
+      "sha256": "5a9c214aad999482fd24e7e0b8e2e7c2de0f3f00d48700f9aeeaaee6d5360acd"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/widgets/library_card.dart",
+      "sha256": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8"
+    },
+    {
+      "path": "app/mobile/lib/main.dart",
+      "sha256": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+    },
+    {
+      "path": "app/mobile/lib/main_library_dev.dart",
+      "sha256": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30"
+    },
+    {
+      "path": "app/mobile/pubspec.lock",
+      "sha256": "34fb6117a750b7aea09200a0eb11f7b6966344a13fb132dba4dd23b8be28b491"
+    },
+    {
+      "path": "app/mobile/pubspec.yaml",
+      "sha256": "34c430ade4ca30d63a61ee333d1e4a1e952a08c7ec55123b9e76a29c5c474b76"
+    },
+    {
+      "path": "app/mobile/test/library/library_artwork_test.dart",
+      "sha256": "511efc1b674ff11539a20b723ca79241c4d80702676d9441c7c134bc499e971b"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_disposal_test.dart",
+      "sha256": "1a20fec0309ec5f046ac29be40fb3a74ac394a21f117fefabaf029bea00e7f47"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_promotion_test.dart",
+      "sha256": "273c7272876839fa6d850cbda561636292a87331b20df413a0db3a7dd7adeeec"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_transport_test.dart",
+      "sha256": "4f321e4fe21ee82a4ce8660cca468b4ce4e4272aedf103cf59afc3928c4f5ebe"
+    },
+    {
+      "path": "app/mobile/test/library/library_cubit_test.dart",
+      "sha256": "166d2e13530cccb15de290b745aafae2ed30d5ae20291f8c0122d04b889a6c32"
+    },
+    {
+      "path": "app/mobile/test/library/library_repository_test.dart",
+      "sha256": "53bbbf204c4d6adc3327be6429d3d4bbc67fbaeac0f796d67fda008a1d9f0845"
+    },
+    {
+      "path": "app/mobile/test/library/library_view_test.dart",
+      "sha256": "57fe4c1f80a0da0efe9f8044891aba9936fd60ca5f214e0edff2075b9c02dd65"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java",
+      "sha256": "2fcea508c0033f9df460e9ce61d8646e8e43ce11649b2b2b29c56dd20880157a"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/user/web/mobile/LibraryHomeProfileContextTest.java",
+      "sha256": "2b76d6f62e735fb7e5a35f99e8d2e9220df7245c2d030721eca10b1e142425b8"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.test.tsx",
+      "sha256": "477852578b81bd73fea0d5b911683be4dbee3889b34947f0de2de0808e4fdb36"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.tsx",
+      "sha256": "80e96d5a42e6cf36f258f72dfc6d75cd053f190b6355a9cad8bf7fd64e92bf78"
+    }
+  ],
+  "native": [
+    {
+      "artifact": "library-1-1-native/android-phone/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T16:32:54.851245+00:00",
+      "reviewIteration": 3,
+      "cases": 6,
+      "freshHttpComparison": true,
+      "viewportDp": {
+        "width": 411.0,
+        "height": 914.0
+      },
+      "maxDecodedCacheBytes": 26630400,
+      "maxDecodedCacheEntries": 48,
+      "audiences": [
+        "NON_SUBSCRIBER"
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/android-phone-subscriber/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T16:49:34.152862+00:00",
+      "reviewIteration": 3,
+      "cases": 6,
+      "freshHttpComparison": true,
+      "viewportDp": {
+        "width": 411.0,
+        "height": 914.0
+      },
+      "maxDecodedCacheBytes": 26380800,
+      "maxDecodedCacheEntries": 48,
+      "audiences": [
+        "SUBSCRIBER"
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/android-tablet/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T16:52:23.980144+00:00",
+      "reviewIteration": 3,
+      "cases": 6,
+      "freshHttpComparison": true,
+      "viewportDp": {
+        "width": 800.0,
+        "height": 1280.0
+      },
+      "maxDecodedCacheBytes": 33408680,
+      "maxDecodedCacheEntries": 26,
+      "audiences": [
+        "NON_SUBSCRIBER"
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/ios-phone/evidence.json",
+      "passed": true,
+      "platform": "ios",
+      "verifiedAt": "2026-10-05T16:55:29.825248+00:00",
+      "reviewIteration": 3,
+      "cases": 6,
+      "freshHttpComparison": true,
+      "viewportDp": {
+        "width": 402.0,
+        "height": 874.0
+      },
+      "maxDecodedCacheBytes": 26880000,
+      "maxDecodedCacheEntries": 48,
+      "audiences": [
+        "NON_SUBSCRIBER"
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/ios-tablet/evidence.json",
+      "passed": true,
+      "platform": "ios",
+      "verifiedAt": "2026-10-05T17:00:18.835063+00:00",
+      "reviewIteration": 3,
+      "cases": 6,
+      "freshHttpComparison": true,
+      "viewportDp": {
+        "width": 1032.0,
+        "height": 1376.0
+      },
+      "maxDecodedCacheBytes": 33497600,
+      "maxDecodedCacheEntries": 27,
+      "audiences": [
+        "NON_SUBSCRIBER"
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/android-phone-deadlines/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T16:35:06.367857+00:00",
+      "reviewIteration": 3,
+      "catalogWaitMilliseconds": 15000,
+      "catalogObservedWaitMilliseconds": 15015,
+      "artworkWaitMilliseconds": 10000,
+      "artworkNativeHeaderWaitMilliseconds": 4000,
+      "artworkNativeBodyIdleWaitMilliseconds": 4000,
+      "artworkNativeTotalWaitMilliseconds": 8000,
+      "artworkAdmissionWaitMilliseconds": 2000,
+      "observedArtworkErrorCause": "native-header-deadline",
+      "catalogDelayMilliseconds": 16500,
+      "artworkDelayMilliseconds": 20000,
+      "artworkObservedWaitMilliseconds": 4091,
+      "catalogRequests": 7,
+      "artworkRequests": 39,
+      "lateCatalogCompletions": 1,
+      "lateArtworkCompletions": 9,
+      "disconnectedConsumers": 0,
+      "corruptCoverAssetId": 70,
+      "corruptTransfers": 1,
+      "corruptCoverRequestsBeforeRetry": 4,
+      "corruptCoverRequestsAfterRetry": 7,
+      "corruptRetryAttempt": 3,
+      "otherCoversLoaded": true,
+      "catalogRetryAttempt": 3,
+      "artworkRetryAttempt": 3,
+      "timedRetryRequestsBefore": 2,
+      "timedRetryRequestsAfter": 7,
+      "freshRetryStartedBeforeLateCompletion": true,
+      "freshRetryStartMilliseconds": 170,
+      "signedRefreshFailureRetainsCatalog": true,
+      "signedRefreshFailureRetainsGeometry": true,
+      "expiredCoverHttpStatus": 403,
+      "automaticRenewalHttpStatus": 503,
+      "explicitRenewalRetryRecovered": true,
+      "orderedRows": [
+        3,
+        2,
+        1,
+        4
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/ios-phone-deadlines/evidence.json",
+      "passed": true,
+      "platform": "ios",
+      "verifiedAt": "2026-10-05T16:57:08.869662+00:00",
+      "reviewIteration": 3,
+      "catalogWaitMilliseconds": 15000,
+      "catalogObservedWaitMilliseconds": 15010,
+      "artworkWaitMilliseconds": 10000,
+      "artworkNativeHeaderWaitMilliseconds": 4000,
+      "artworkNativeBodyIdleWaitMilliseconds": 4000,
+      "artworkNativeTotalWaitMilliseconds": 8000,
+      "artworkAdmissionWaitMilliseconds": 2000,
+      "observedArtworkErrorCause": "native-header-deadline",
+      "catalogDelayMilliseconds": 16500,
+      "artworkDelayMilliseconds": 20000,
+      "artworkObservedWaitMilliseconds": 4089,
+      "catalogRequests": 7,
+      "artworkRequests": 39,
+      "lateCatalogCompletions": 1,
+      "lateArtworkCompletions": 9,
+      "disconnectedConsumers": 0,
+      "corruptCoverAssetId": 70,
+      "corruptTransfers": 1,
+      "corruptCoverRequestsBeforeRetry": 4,
+      "corruptCoverRequestsAfterRetry": 7,
+      "corruptRetryAttempt": 3,
+      "otherCoversLoaded": true,
+      "catalogRetryAttempt": 3,
+      "artworkRetryAttempt": 3,
+      "timedRetryRequestsBefore": 2,
+      "timedRetryRequestsAfter": 7,
+      "freshRetryStartedBeforeLateCompletion": true,
+      "freshRetryStartMilliseconds": 169,
+      "signedRefreshFailureRetainsCatalog": true,
+      "signedRefreshFailureRetainsGeometry": true,
+      "expiredCoverHttpStatus": 403,
+      "automaticRenewalHttpStatus": 503,
+      "explicitRenewalRetryRecovered": true,
+      "orderedRows": [
+        3,
+        2,
+        1,
+        4
+      ]
+    },
+    {
+      "artifact": "library-1-1-native/android-development-entry/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T16:39:59.871277+00:00",
+      "reviewIteration": 3,
+      "entry": "lib/main_library_dev.dart",
+      "mode": "debug",
+      "unconfiguredClosedNoticeRendered": true,
+      "catalogCredentialsEntered": false,
+      "apkSha256": "2a5d673d4835e44b559b603baa5b4ee04e656e72b0e9b971e7165f150de5f3bd",
+      "sourceHashes": {
+        "lib/main_library_dev.dart": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30",
+        "lib/features/library/presentation/widgets/library_card.dart": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8",
+        "lib/core/network/library_cache_lifecycle.dart": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d",
+        "lib/core/network/library_image_cache.dart": "e1960977ef6f60d7861969344a24f3a08e8b9e8dd0f22a5e57168cac5fdd2d14",
+        "lib/core/network/draining_cache_info_repository.dart": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319",
+        "lib/core/network/authenticated_transport.dart": "eece8b05a7aa47bde690d5aefafe8ad3488477a876a8cc6e680be51bbb6bd28a",
+        "lib/core/network/library_transfer_file_service.dart": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+      }
+    },
+    {
+      "artifact": "library-1-1-native/ios-development-entry/evidence.json",
+      "passed": true,
+      "platform": "ios",
+      "verifiedAt": "2026-10-05T16:58:13.426428+00:00",
+      "reviewIteration": 3,
+      "entry": "lib/main_library_dev.dart",
+      "mode": "debug arm64 Simulator",
+      "unconfiguredClosedNoticeRendered": true,
+      "catalogCredentialsEntered": false,
+      "minimumOSVersion": "15.0",
+      "executableSha256": "24c172201ac4f6c4f89b5d15c4e3307e6042d7ea91d21eb5190aab017e166bb3",
+      "sourceHashes": {
+        "lib/main_library_dev.dart": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30",
+        "lib/features/library/presentation/widgets/library_card.dart": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8",
+        "lib/core/network/library_cache_lifecycle.dart": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d",
+        "lib/core/network/library_image_cache.dart": "e1960977ef6f60d7861969344a24f3a08e8b9e8dd0f22a5e57168cac5fdd2d14",
+        "lib/core/network/draining_cache_info_repository.dart": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319",
+        "lib/core/network/authenticated_transport.dart": "eece8b05a7aa47bde690d5aefafe8ad3488477a876a8cc6e680be51bbb6bd28a",
+        "lib/core/network/library_transfer_file_service.dart": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+      },
+      "dartKernelSha256": "50b1122ff436ca43021dac082d5fe8298f3d35ed8fd7b471c4cbf1b2ff2fb0e2"
+    },
+    {
+      "artifact": "library-1-1-native/android-poc-entry/evidence.json",
+      "passed": true,
+      "platform": "android",
+      "verifiedAt": "2026-10-05T11:43:23.878460+00:00",
+      "reviewIteration": 2,
+      "nativeEntryRendered": true,
+      "entry": "lib/main.dart",
+      "protectedPlaybackExercised": false,
+      "tokenEntered": false,
+      "evidence": "Actual native UI hierarchy: TellPal Medya PoC / Haberci Nota and blank token field",
+      "sourceHashes": {
+        "lib/main.dart": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+      },
+      "reuseBasis": "Unchanged independent main.dart source/dependencies; original native entry pass and source hash remain valid. No duplicate native run was needed."
+    },
+    {
+      "artifact": "library-1-1-native/ios-poc-entry/evidence.json",
+      "passed": true,
+      "platform": "ios",
+      "verifiedAt": "2026-10-05T11:56:25.527010+00:00",
+      "reviewIteration": 2,
+      "nativeEntryRendered": true,
+      "entry": "lib/main.dart",
+      "protectedPlaybackExercised": false,
+      "tokenEntered": false,
+      "evidence": "Actual Simulator capture inspected: TellPal Medya PoC / Haberci Nota and blank token field",
+      "sourceHashes": {
+        "lib/main.dart": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+      },
+      "reuseBasis": "Unchanged independent main.dart source/dependencies; original native entry pass and source hash remain valid. No duplicate native run was needed."
+    }
+  ],
+  "limits": {
+    "catalogMilliseconds": 15000,
+    "artworkMilliseconds": 10000,
+    "decodedCacheBytes": 33554432,
+    "decodedCacheEntries": 48,
+    "accountDiskObjects": 80,
+    "accountDiskMinutes": 10,
+    "headerMilliseconds": 4000,
+    "bodyInactivityMilliseconds": 4000,
+    "totalTransferMilliseconds": 8000,
+    "admissionMilliseconds": 2000,
+    "activeTransfers": 10,
+    "maximumQueuedTransfers": 80
+  },
+  "platformBuildsArtifact": "library-1-1-platform-builds.json",
+  "realCmsArtifacts": [
+    "library-1-1-cms-real.json",
+    "library-1-1-cms-selections-non_subscriber.json",
+    "library-1-1-cms-selections-subscriber.json"
+  ],
+  "realHttpArtifact": "library-1-1-http-evidence.json",
+  "realAudienceArtifact": "library-1-1-audience-evidence.json",
+  "remainingGaps": [
+    "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+    "Android API24 minimum compiled; available older runtime API30 and current API36 tested",
+    "Emulators/Simulators only; no physical-device performance claim",
+    "Generic universal Simulator build failed in host lipo multi-architecture verification; device-selected arm64 development and integration builds passed. SDK/signing/project architecture settings unchanged.",
+    "Unrelated pre-existing CMS contents snapshots differ by 1\u201313 pixels in current system Chrome; preserved without broad refresh.",
+    "Native PoC entry smoke preserves rendering; protected playback was not exercised.",
+    "Provider authorization expiry was represented by a native loopback proxy forcing one signed-cover403 and a503 catalog renewal; real GCS JPEG decoding and explicit retry recovery passed. GCS expiry itself was not induced."
+  ],
+  "historicalIterations": {
+    "iteration1": {
+      "verifiedAt": "2026-10-04",
+      "tests": {
+        "backend": 357,
+        "cms": 368,
+        "flutter": 22
+      },
+      "cmsBroadVisualRun": {
+        "passed": 5,
+        "failed": 14,
+        "discrepancies": [
+          {
+            "name": "e2e/visual/category-home.visual.spec.ts:105:3 \u203a Library home order visual - laptop",
+            "differentPixels": 5651,
+            "scope": "new Home capture, resolved"
+          },
+          {
+            "name": "e2e/visual/category-home.visual.spec.ts:105:3 \u203a Library home order visual - desktop",
+            "differentPixels": 5651,
+            "scope": "new Home capture, resolved"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:145:3 \u203a contents registry toolbar visual - laptop",
+            "differentPixels": 1,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:178:3 \u203a contents mockup type tabs visual - laptop",
+            "differentPixels": 1,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:224:3 \u203a contents mockup detail visual - laptop",
+            "differentPixels": 11,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:250:5 \u203a contents mockup meditation detail visual - laptop",
+            "differentPixels": 4,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:250:5 \u203a contents mockup lullaby detail visual - laptop",
+            "differentPixels": 6,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:275:3 \u203a contents mockup meditation table visual - laptop",
+            "differentPixels": 3,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:145:3 \u203a contents registry toolbar visual - desktop",
+            "differentPixels": 1,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:178:3 \u203a contents mockup type tabs visual - desktop",
+            "differentPixels": 1,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:224:3 \u203a contents mockup detail visual - desktop",
+            "differentPixels": 13,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:250:5 \u203a contents mockup meditation detail visual - desktop",
+            "differentPixels": 4,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:250:5 \u203a contents mockup lullaby detail visual - desktop",
+            "differentPixels": 6,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          },
+          {
+            "name": "e2e/visual/registry-toolbar.visual.spec.ts:275:3 \u203a contents mockup meditation table visual - desktop",
+            "differentPixels": 4,
+            "scope": "unchanged pre-existing contents baseline, retained"
+          }
+        ]
+      },
+      "interactiveDevelopment": {
+        "artifact": "library-1-1-vm-cli-evidence.json",
+        "commands": [
+          "configure",
+          "context pt scale1.3",
+          "observe",
+          "restore tr scale1.0"
+        ],
+        "result": "passed",
+        "nodeWebSocket": "built-in Node.js22",
+        "actualObservedPtRows": [
+          1,
+          2,
+          4,
+          3
+        ]
+      },
+      "note": "These records identify the pre-review build and are historical. Current acceptance uses only reviewIteration2 source hashes and executed passing coverage above."
+    },
+    "iteration2": {
+      "verifiedAt": "2026-10-05T12:48:25.612425+00:00",
+      "tests": {
+        "backend": 358,
+        "cms": 371,
+        "flutter": 46
+      },
+      "note": "Native matrices/fault/entry and cache source hashes at iteration2 passed then became historical when iteration3 transport/cache/layout was re-derived. Exact original inventory preserved privately."
+    }
+  },
+  "reviewTriage": "library-1-1-review-triage-3.md"
+}

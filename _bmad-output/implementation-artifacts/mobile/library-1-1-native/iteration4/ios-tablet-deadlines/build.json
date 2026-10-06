@@ -1,0 +1,141 @@
+{
+  "verifiedAt": "2026-10-06T07:44:23.633490+00:00",
+  "reviewIteration": 4,
+  "sourceFiles": [
+    {
+      "path": "app/mobile/integration_test/library_deadline_live_test.dart",
+      "sha256": "a8ff1f332970c5bc85c58ec939dce03874527e4be729b009eff76229a91b86f5"
+    },
+    {
+      "path": "app/mobile/integration_test/library_live_test.dart",
+      "sha256": "5dc7f567663d9b720db26eec94efe8cdcc383a1dbd4d653e3a8645b9f95a420e"
+    },
+    {
+      "path": "app/mobile/integration_test/native_catalog_transport_probe.dart",
+      "sha256": "f2136955517f76fe8760a0c36a0ada111e457b234043c6fc02368639c10eb91f"
+    },
+    {
+      "path": "app/mobile/lib/app/library_app.dart",
+      "sha256": "9de133b4d7c2f9199ed1bb5f3b3d2e54241deb14d4d9a76d868ad62e7d2a24f1"
+    },
+    {
+      "path": "app/mobile/lib/app/library_dev_harness.dart",
+      "sha256": "3448129ca296dc3c9cad7cf12177431478f0c2f57354272ef5a6e71e49d11ed3"
+    },
+    {
+      "path": "app/mobile/lib/core/network/authenticated_transport.dart",
+      "sha256": "7711f49d85e98fe6f95675fbfb42d07f7273b5e5cfa757efe14b72138eaa8788"
+    },
+    {
+      "path": "app/mobile/lib/core/network/draining_cache_info_repository.dart",
+      "sha256": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_cache_lifecycle.dart",
+      "sha256": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_image_cache.dart",
+      "sha256": "5f8e90a76433c5318263768f993840e19b8820a523f01fa17d6f58b291231f52"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_transfer_file_service.dart",
+      "sha256": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/library_cubit.dart",
+      "sha256": "5a9c214aad999482fd24e7e0b8e2e7c2de0f3f00d48700f9aeeaaee6d5360acd"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/widgets/library_card.dart",
+      "sha256": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8"
+    },
+    {
+      "path": "app/mobile/lib/main.dart",
+      "sha256": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+    },
+    {
+      "path": "app/mobile/lib/main_library_dev.dart",
+      "sha256": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30"
+    },
+    {
+      "path": "app/mobile/pubspec.lock",
+      "sha256": "34fb6117a750b7aea09200a0eb11f7b6966344a13fb132dba4dd23b8be28b491"
+    },
+    {
+      "path": "app/mobile/pubspec.yaml",
+      "sha256": "34c430ade4ca30d63a61ee333d1e4a1e952a08c7ec55123b9e76a29c5c474b76"
+    },
+    {
+      "path": "app/mobile/test/library/library_app_test.dart",
+      "sha256": "e6f8480aa67bcc4a322d8d72734713130813376b3f01d1f7971c20a8d65e754e"
+    },
+    {
+      "path": "app/mobile/test/library/library_artwork_test.dart",
+      "sha256": "511efc1b674ff11539a20b723ca79241c4d80702676d9441c7c134bc499e971b"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_disposal_test.dart",
+      "sha256": "1a20fec0309ec5f046ac29be40fb3a74ac394a21f117fefabaf029bea00e7f47"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_promotion_test.dart",
+      "sha256": "c2f195311281ef4d2d6640112d572601c53d8e1e8c6e0e78ba09d6fbc4b482e2"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_transport_test.dart",
+      "sha256": "4f321e4fe21ee82a4ce8660cca468b4ce4e4272aedf103cf59afc3928c4f5ebe"
+    },
+    {
+      "path": "app/mobile/test/library/library_catalog_transport_test.dart",
+      "sha256": "ce86d54e7716fca895b825fa92f3fb126c19507a159ed6c3b4273c795d97cac0"
+    },
+    {
+      "path": "app/mobile/test/library/library_cubit_test.dart",
+      "sha256": "166d2e13530cccb15de290b745aafae2ed30d5ae20291f8c0122d04b889a6c32"
+    },
+    {
+      "path": "app/mobile/test/library/library_repository_test.dart",
+      "sha256": "53bbbf204c4d6adc3327be6429d3d4bbc67fbaeac0f796d67fda008a1d9f0845"
+    },
+    {
+      "path": "app/mobile/test/library/library_view_test.dart",
+      "sha256": "57fe4c1f80a0da0efe9f8044891aba9936fd60ca5f214e0edff2075b9c02dd65"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/web/admin/CategoryHomeAdminController.java",
+      "sha256": "c136ee3b3eba0f309ad8af78b17cacccfe5fc99d10dc48cb2a9e940b71353d55"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java",
+      "sha256": "32812551419da8d1e6522e4a546b57d6e5369f6da83f5c0a405cec464e9cc1c7"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/web/admin/CategoryHomeAdminIntegrationTest.java",
+      "sha256": "7cfdb8d4dab8e24e6cc9e3c97b7a2ea4e2e4dc492faa7ab476fe3aa71e62548a"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/user/web/mobile/LibraryHomeProfileContextTest.java",
+      "sha256": "2b76d6f62e735fb7e5a35f99e8d2e9220df7245c2d030721eca10b1e142425b8"
+    },
+    {
+      "path": "cms/e2e/library-real.spec.ts",
+      "sha256": "234eb70e333949ce5421ce819ee59faa7fe2fdf4359c5463d77b1570dd36da26"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.test.tsx",
+      "sha256": "695fd5dfbb329cbb73bf0587a9792c68cc200a73f663a8a8d8c6ad5289fcb367"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.tsx",
+      "sha256": "80e96d5a42e6cf36f258f72dfc6d75cd053f190b6355a9cad8bf7fd64e92bf78"
+    },
+    {
+      "path": "cms/src/features/categories/components/category-home-editor.tsx",
+      "sha256": "099237053700efb97a9c8ebcb177f8b12d5430a27583333155c3a3930ebc62d1"
+    }
+  ],
+  "buildArtifact": "app/mobile/build/ios/iphonesimulator/Runner.app/Runner",
+  "buildSha256": "f682598680849c12bacb9db97213564fd90ac07af3e9585dda6c9658633667e9",
+  "sourceHashesVerified": true
+}

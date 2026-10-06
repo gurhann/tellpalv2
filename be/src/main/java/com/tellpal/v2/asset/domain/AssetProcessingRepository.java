@@ -18,6 +18,9 @@ public interface AssetProcessingRepository {
 
     Optional<AssetProcessing> findByTargetAndKind(AssetProcessingTarget target, AssetProcessingKind kind);
 
+    /** Locks a localization job so ownership checks and transitions are one atomic operation. */
+    Optional<AssetProcessing> findByTargetAndKindForUpdate(AssetProcessingTarget target, AssetProcessingKind kind);
+
     Optional<AssetProcessing> findByContent(Long contentId);
 
     List<AssetProcessing> findPendingBefore(Instant referenceTime, int limit);

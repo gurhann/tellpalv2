@@ -1,0 +1,15 @@
+{
+  "verifiedAt": "2026-10-05T12:14:40.172455+00:00",
+  "assetId": 31,
+  "httpStatus": 200,
+  "mime": "image/jpeg",
+  "bytes": 58865,
+  "dimensions": [
+    451,
+    800
+  ],
+  "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+  "decode": "PASS",
+  "profile": "fits within600x800 without upscaling",
+  "credentialsOrSignedUrlRecorded": false
+}

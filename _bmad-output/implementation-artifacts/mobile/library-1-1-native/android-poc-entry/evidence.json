@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "verifiedAt": "2026-10-05T11:43:23.878460+00:00",
+  "reviewIteration": 2,
+  "platform": "android",
+  "nativeEntryRendered": true,
+  "entry": "lib/main.dart",
+  "protectedPlaybackExercised": false,
+  "tokenEntered": false,
+  "evidence": "Actual native UI hierarchy: TellPal Medya PoC / Haberci Nota and blank token field",
+  "sourceHashes": {
+    "lib/main.dart": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+  }
+}

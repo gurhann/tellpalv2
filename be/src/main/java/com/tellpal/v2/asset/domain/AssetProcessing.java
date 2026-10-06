@@ -51,6 +51,30 @@ public class AssetProcessing extends BaseJpaEntity {
     @Column(name = "cover_source_asset_id")
     private Long coverSourceAssetId;
 
+    @Column(name = "listing_profile_version", length = 180)
+    private String listingProfileVersion;
+
+    public String getListingProfileVersion() { return listingProfileVersion; }
+
+    /** Captures the immutable transformation profile before the worker acquires its lease. */
+    public void setListingProfileVersion(String profile) {
+        if (kind != AssetProcessingKind.LISTING_COVER || status == AssetProcessingStatus.PROCESSING)
+            throw new IllegalStateException("Listing profile can only change outside an active lease");
+        listingProfileVersion = requireText(profile,"Listing profile is required");
+    }
+
+    /** Rejects late callbacks before any job or ready-manifest mutation. */
+    public void requireListingOwnership(com.tellpal.v2.asset.api.ListingCoverAttempt attempt, Instant now) {
+        if (kind != AssetProcessingKind.LISTING_COVER || attempt == null
+                || status != AssetProcessingStatus.PROCESSING
+                || !java.util.Objects.equals(getId(),attempt.processingId())
+                || attemptCount != attempt.attemptCount()
+                || leaseExpiresAt == null || !leaseExpiresAt.equals(attempt.leaseExpiresAt()) || !leaseExpiresAt.isAfter(now)
+                || !java.util.Objects.equals(coverSourceAssetId,attempt.sourceAssetId())
+                || !java.util.Objects.equals(listingProfileVersion,attempt.profileVersion()))
+            throw new com.tellpal.v2.asset.api.StaleListingCoverAttemptException();
+    }
+
     @Column(name = "audio_source_asset_id")
     private Long audioSourceAssetId;
 
@@ -526,7 +550,7 @@ public class AssetProcessing extends BaseJpaEntity {
 
     private static void validateKindTarget(AssetProcessingKind kind, AssetProcessingTarget target,
             ProcessingContentType contentType) {
-        if (kind == AssetProcessingKind.STORY_NARRATION
+        if ((kind == AssetProcessingKind.STORY_NARRATION || kind == AssetProcessingKind.LISTING_COVER)
                 && (!target.isLocalization() || contentType != ProcessingContentType.STORY)) {
             throw new IllegalArgumentException("Story narration processing requires a STORY localization target");
         }
@@ -578,7 +602,7 @@ public class AssetProcessing extends BaseJpaEntity {
 
     private static Integer normalizePageCount(AssetProcessingKind kind,
             ProcessingContentType contentType, Integer pageCount) {
-        if (kind == AssetProcessingKind.STORY_NARRATION) {
+        if (kind == AssetProcessingKind.STORY_NARRATION || kind == AssetProcessingKind.LISTING_COVER) {
             if (pageCount != null && pageCount != 0) {
                 throw new IllegalArgumentException("Page count is not supported for story narration processing");
             }

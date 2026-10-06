@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-06T06:46:59.451056+00:00",
+  "worktree": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2",
+  "baselineCommit": "b372c60b53f828f2fcadff40eb1c212684ad3d51",
+  "snapshotBytes": 1358205,
+  "snapshotSha256": "9e2831c236ea8c5dd4e4b49e3ed24b97f6db47f52f839b46ce0327d336f1d9cc",
+  "frozenSha256": "823c288f70798cd26a0b73741e332de1960fa556bab92101b9364606a2d40187",
+  "trackedDiffMatchesSnapshot": true,
+  "untrackedFiles": 208,
+  "verificationSourceHashEntries": 24,
+  "verificationSourceHashMismatches": [],
+  "backendXmlTotals": {
+    "tests": 364,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "flutterRecordedCases": 61,
+  "testsRerunInThisSession": false,
+  "privateRuntimeDirectoryPresent": false
+}
