@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "verifiedAt": "2026-10-05T16:39:59.871277+00:00",
+  "reviewIteration": 3,
+  "platform": "android",
+  "entry": "lib/main_library_dev.dart",
+  "mode": "debug",
+  "unconfiguredClosedNoticeRendered": true,
+  "catalogCredentialsEntered": false,
+  "apkSha256": "2a5d673d4835e44b559b603baa5b4ee04e656e72b0e9b971e7165f150de5f3bd",
+  "sourceHashes": {
+    "lib/main_library_dev.dart": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30",
+    "lib/features/library/presentation/widgets/library_card.dart": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8",
+    "lib/core/network/library_cache_lifecycle.dart": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d",
+    "lib/core/network/library_image_cache.dart": "e1960977ef6f60d7861969344a24f3a08e8b9e8dd0f22a5e57168cac5fdd2d14",
+    "lib/core/network/draining_cache_info_repository.dart": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319",
+    "lib/core/network/authenticated_transport.dart": "eece8b05a7aa47bde690d5aefafe8ad3488477a876a8cc6e680be51bbb6bd28a",
+    "lib/core/network/library_transfer_file_service.dart": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+  }
+}

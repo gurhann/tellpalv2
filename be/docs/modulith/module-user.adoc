@@ -7,7 +7,8 @@
 
 * `c.t.v.u.api.UserResolutionApi`, `c.t.v.u.api.UserLookupApi` (via `c.t.v.u.application.UserResolutionService`)
 |Bean references
-|* `c.t.v.a.api.AssetRegistryApi` (in Asset)
+|* `c.t.v.c.api.LibraryHomeQueryApi` (in Category)
+* `c.t.v.a.api.AssetRegistryApi` (in Asset)
 * `c.t.v.a.api.StoryPageMediaManifestApi` (in Asset)
 * `c.t.v.a.api.AssetProcessingApi` (in Asset)
 |===

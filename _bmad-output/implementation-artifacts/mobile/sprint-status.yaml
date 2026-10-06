@@ -1,0 +1,129 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 10-02-2026 22:12
+last_updated: 2026-10-06
+project: tellpalv2
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts/mobile
+development_status:
+  epic-1: in-progress
+  1-1-discover-eligible-content-on-the-library-home-screen: done
+  1-2-open-the-selected-story-detail-from-library: backlog
+  1-3-start-reading-the-selected-story: backlog
+  1-4-navigate-story-pages-manually-and-automatically: backlog
+  1-5-complete-a-story-and-preserve-its-completion-record: backlog
+  1-6-control-narration-while-reading: backlog
+  1-7-preserve-reading-sessions-through-interruptions: backlog
+  1-8-browse-all-content-in-a-category: backlog
+  1-9-search-content-in-grouped-results: backlog
+  1-10-discover-and-read-content-in-enabled-languages: backlog
+  1-11-renew-media-access-without-changing-the-active-story-revisio: backlog
+  1-12-read-reliably-through-long-and-repeated-sessions: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-discover-listening-content-on-the-sleep-screen: backlog
+  2-2-start-listening-directly-from-a-lullaby-card: backlog
+  2-3-start-meditation-or-audio-story-playback-from-detail: backlog
+  2-4-control-listening-and-handle-track-endings: backlog
+  2-5-listen-in-the-background-and-use-system-media-controls: backlog
+  2-6-switch-safely-between-reading-and-listening-sessions: backlog
+  2-7-reach-listening-experiences-from-search-and-complete-lists: backlog
+  2-8-record-listening-progress-and-history-accurately: backlog
+  2-9-recover-listening-from-connectivity-and-media-access-failure: backlog
+  2-10-listen-reliably-through-long-sessions: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-prove-a-safe-signed-android-in-place-update: backlog
+  3-2-prove-a-safe-signed-ios-in-place-update: backlog
+  3-3-start-anonymously-as-a-new-user: backlog
+  3-4-create-a-new-account-with-email-and-password: backlog
+  3-5-sign-in-with-email-and-password: backlog
+  3-6-sign-in-or-register-with-google: backlog
+  3-7-sign-in-or-register-with-apple: backlog
+  3-8-verify-an-email-address: backlog
+  3-9-reset-a-forgotten-password: backlog
+  3-10-set-up-a-new-user-profile: backlog
+  3-11-edit-the-profile-name-and-avatar: backlog
+  3-12-view-my-reading-and-listening-history-and-profile-statistics: backlog
+  3-13-persist-my-language-preference-on-my-account: backlog
+  3-14-migrate-a-registered-account-once-on-its-first-transition: backlog
+  3-15-preserve-legacy-anonymous-device-records-during-upgrade: backlog
+  3-16-convert-an-anonymous-account-into-a-new-registered-account: backlog
+  3-17-upgrade-a-later-device-on-an-already-migrated-account: backlog
+  3-18-sign-out-safely: backlog
+  3-19-change-my-password-from-account-settings: backlog
+  3-20-delete-my-new-system-account: backlog
+  3-21-safely-remove-obsolete-legacy-media-and-caches: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-send-feedback: backlog
+  4-2-view-help-and-legal-documents: backlog
+  4-3-manage-notification-permission-and-preference: backlog
+  4-4-show-applicable-in-app-announcements: backlog
+  4-5-reach-the-correct-destination-from-notifications-and-externa: backlog
+  4-6-rate-the-application-and-view-its-installed-version: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-open-an-authorized-candidate-revision-on-device: backlog
+  5-2-preserve-live-content-while-a-candidate-is-prepared: backlog
+  5-3-verify-ready-candidate-media-and-invalidate-stale-approval: backlog
+  5-4-enable-a-new-language-for-testing-before-live-use: backlog
+  5-5-protect-required-media-revisions-from-cleanup: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-recognize-an-existing-subscriber-s-access: backlog
+  6-2-open-and-dismiss-premium-offers-with-the-required-parental-g: backlog
+  6-3-purchase-a-subscription-and-receive-verified-premium-access: backlog
+  6-4-restore-existing-purchases: backlog
+  6-5-redeem-supported-promotion-codes-and-offers: backlog
+  6-6-view-membership-status-and-manage-a-subscription: backlog
+  6-7-preserve-subscription-rights-through-account-transitions: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-diagnose-discovery-journeys-through-backend-flow-records: backlog
+  7-2-diagnose-reading-and-listening-journeys-through-backend-flow: backlog
+  7-3-diagnose-authentication-and-migration-journeys-through-backe: backlog
+  7-4-diagnose-paywall-purchase-and-restore-journeys-through-backe: backlog
+  7-5-verify-reference-screen-and-interaction-parity-on-the-releas: backlog
+  7-6-verify-stability-and-performance-in-the-available-test-envir: backlog
+  7-7-verify-session-and-data-continuity-through-a-signed-release: backlog
+  7-8-verify-account-and-content-access-boundaries-on-the-release: backlog
+  7-9-verify-store-package-permissions-privacy-and-production-conf: backlog
+  7-10-expand-or-stop-staged-rollout-based-on-verified-evidence: backlog
+  7-11-recover-safely-after-a-release-problem: backlog
+  epic-7-retrospective: optional

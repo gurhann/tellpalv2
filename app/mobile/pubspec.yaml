@@ -34,7 +34,20 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  just_audio: ^0.10.6
+  just_audio: 0.10.6
+  flutter_bloc: 9.1.1
+  auto_route: 10.3.0
+  get_it: 8.3.0
+  injectable: 2.7.1+4
+  freezed_annotation: 3.1.0
+  json_annotation: 4.11.0
+  dartz: 0.10.1
+  equatable: 2.1.0
+  cached_network_image: 3.4.1
+  flutter_cache_manager: 3.4.1
+  flutter_svg: 2.3.0
+  file: 7.0.1
+  http: 1.6.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +59,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  auto_route_generator: 10.3.1
+  injectable_generator: 2.12.1
+  freezed: 3.2.5
+  json_serializable: 6.13.0
+  build_runner: 2.15.1
+  flutter_driver:
+    sdk: flutter
   integration_test:
     sdk: flutter
 
@@ -59,6 +79,17 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/library/
+  fonts:
+    - family: Lexend
+      fonts:
+        - asset: assets/library/Lexend-Regular.ttf
+          weight: 400
+        - asset: assets/library/Lexend-Medium.ttf
+          weight: 500
+        - asset: assets/library/Lexend-SemiBold.ttf
+          weight: 600
 
   # To add assets to your application, add an assets section, like this:
   # assets:

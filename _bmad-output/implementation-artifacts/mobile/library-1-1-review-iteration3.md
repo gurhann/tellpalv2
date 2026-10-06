@@ -1,0 +1,31 @@
+# Story 1.1 — review iteration 3 and iteration 4 handoff
+
+Date: 2026-10-06. All three fresh-context reviewers completed against the full tracked/untracked baseline snapshot, SHA256 `9e2831c236ea8c5dd4e4b49e3ed24b97f6db47f52f839b46ce0327d336f1d9cc` (1,358,205 bytes, 208 untracked files). The exact substituted prompts remain in the primary checkout's implementation-artifacts directory. Each reviewer was launched before collecting results and used the inherited session capability. Snapshot content was supplied through those complete prompt files because of its size; reviewers read bounded chunks and returned independently. No staging or remote operation occurred.
+
+## Classified findings
+
+| ID | Sources | Severity | Route | Evidence and required action |
+| --- | --- | --- | --- | --- |
+| R1 | blind, edge | high | bad_spec | `AuthenticatedTransport.library` bounds connection setup only. Header wait, success body and non-200 draining survive the Cubit's timeout. Root loopback probe with three 100ms deadlines observed `requests=3 closedAfterDeadlines=0`. Bound and cancel actual per-request native transport, including stalled headers/body/error-body and continuously trickling data. Prove cleanup, independent retry and app disposal. Amend the non-frozen requirements; retain current identity checks. |
+| R2 | edge | medium | bad_spec | `LibraryImageCache._promote` renews an expired shared file's metadata after a different fresh file decodes, without validating the shared bytes. Root modified only the expired-cache regression's initial bytes to `[0,1,2]`; the next owner failed with `Invalid image data`. Require valid fresh bytes for renewed reuse; replace/invalidate corrupt shared data safely without overwriting active readers or leaking an unbounded file history. |
+| P1 | blind | medium | patch | `CategoryHomeAdminController` lacks `@AdminApiController`; the shared 400 handler is annotation-scoped and the category handler has no IllegalArgumentException mapping. Add the existing marker and real HTTP/ProblemDetail validation coverage for invalid order/audience/mapping and malformed input. Preserve 404/409/security behavior. |
+| P2 | blind | medium | patch | `LibraryApp` always substitutes the harness notifier's initial 1.0 for the platform text scaler. Use platform scaling unless a test explicitly enables an override. Test the real app composition with platform enlarged text and explicit override; retain all approved portrait references. |
+| P3 | edge | medium | patch | CMS opt-in computes max order plus one even when an accepted backend order is Integer.MAX_VALUE. Keep new positions in the signed 32-bit range while preserving configured relative order; exercise the boundary through checkbox/save/reload. |
+| V1 | verification | high | patch | Existing renewal assertions use coverless unit fixtures; native recovery removes rejection by asset, making old URLs usable again. Test phone/tablet URL and expiry adoption with the old URL permanently rejected and a distinct valid new URL; verify the actual provider requests and decoded image. |
+| V2 | verification | high | patch | Library PostgreSQL fixtures make contents active and their localizations PUBLISHED; inactive and DRAFT exclusions currently cover categories only. Add early inactive content and DRAFT content-localization candidates, then assert exclusion and the first eligible identities after filtering. |
+| V3 | verification | medium | patch | CMS tests do not toggle Show in Library. Exercise opt-in and opt-out, save/reload checkbox state and actual catalog visibility, preserving other languages/card order and restoring the fixture. |
+| V4 | verification | medium | patch | Library server tests use only previewLimit 5. Run a real configured Spring/PostgreSQL context with another positive limit (e.g. 2); assert response limit and filtered ordered identities. |
+
+Deduplicated only the shared catalog-transport claim. No intent_gap or defer finding. All nine unique findings have independent evidence; no severity was inherited from a reviewer. Lower patch findings survive the loopback. The frozen intent remains unchanged.
+
+## KEEP and scoped rollback
+
+Preserve every prior KEEP constraint in `library-1-1-review-triage-2.md` and `library-1-1-review-triage-3.md`: verified backend/asset contracts and fixtures, server identity/audience, independent CMS order/card curation, pinned CMS draft/revision, background catalog preservation and bounded renewal, request/context/catalog/image/owner identities, responsive artwork ownership, actual delivered provenance and coalesced promotion, valid warm immutable reuse, active-reader bytes, draining storage, finite 80-object/10-minute and 48-image/32MiB bounds, actual image transport limits/queue progress/closure, design tokens/reference goldens/48dp semantics, secret protection, PoC and unrelated source/processes.
+
+Only `app/mobile/lib/core/network/authenticated_transport.dart` and `app/mobile/lib/core/network/library_image_cache.dart` are rolled back for re-derivation. Exact pre-loop files are preserved under `/private/tmp/tellpal-library-review-loop4/` with their repository-relative paths. Preserve their public interfaces and all working behaviors while deriving the missing requirements. Other source remains in place. Patches P1–P3/V1–V4 remain required.
+
+## Verification and environment
+
+Before rollback, the recorded 24 source hashes matched; current Surefire XML totals were 364 tests with zero failure/error/skip; all 61 recorded Flutter cases passed. These previous results become historical for modified source. Native evidence files still exist. The old private `/private/tmp/tellpal-library-runtime/` directory and its auth/config helpers are absent; reconstruct the isolated local runtime safely if real acceptance requires it. Never print/copy secrets into retained artifacts and never substitute mocks for claimed real Firebase/native evidence.
+
+Re-run the spec's required verification after correction, refresh relevant source/build/fixture identities and the 13-row/10-AC audit, then run Step4 again with a fresh complete diff. Keep minimum-runtime/provider/physical limitations explicit. Do not claim Step4/human acceptance complete. Sprint status stays review; no commit/push/production operation is authorized by this handoff.

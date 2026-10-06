@@ -4,5 +4,6 @@ package com.tellpal.v2.asset.api;
 public enum AssetProcessingKind {
     DELIVERY,
     STORY_NARRATION,
+    LISTING_COVER,
     STORY_PAGE_MEDIA
 }

@@ -48,4 +48,36 @@ This audit reviews the legacy Flutter checkout at sibling repository `tellpal`, 
 
 ## Remaining decisions and evidence
 
-OQ-10 still needs stages, observation periods and stop/expand thresholds for the **mobile store release**, plus a separate legacy-system shutdown decision. The user is the mobile release approval/operator owner. OQ-3 still needs field-level treatment of records unique to a later device. OQ-6 deletion/remigration mechanics, OQ-9 provider/route formats and the other gates above require contracts and executed evidence rather than further assumptions from legacy source.
+OQ-10 still needs stages, observation periods and stop/expand thresholds for the **mobile store release**, plus stability evidence criteria and rehearsed recovery. The legacy-system shutdown condition was approved on 2026-10-02: completed staged rollout and verified migration/subscription stability, followed by separate explicit user approval, with no fixed date. The user is the mobile release approval/operator owner. The 2026-10-02 decision closes later-device record treatment: continue with current new-system account data without importing old local records, including unique records. Initial-migration mapping remains open; removed-content history/statistics retention with no unavailable-content opening was approved on 2026-10-02. OQ-6 deletion/remigration mechanics, OQ-9 provider/route formats and the other gates above require contracts and executed evidence rather than further assumptions from legacy source.
+
+## Product-decision update — 2026-10-02
+
+The user simplified later-device behavior: after updating and resolving an already migrated account, the device uses current new-system account data. No old local records are imported or merged, even when absent from that account. This supersedes the October 1 open question about unique later-device records. Initial-migration mapping, removed-content history and separately governed local cleanup remain distinct.
+
+### Removed-content history decision — 2026-10-02
+
+The user approved retaining removed-content records in visible history and statistics, while preventing opening content that no longer exists. This closes the product presentation question in OQ-3. Initial-migration mappings and executed retention/statistics evidence remain pending. Story 3.12 and the PRD now state this outcome explicitly.
+
+### Test-environment decision — 2026-10-02
+
+The user approved an emulator/Simulator-first test matrix on 2026-10-02 because physical-device access is limited. Cover older/lower-capacity and current Android/iOS phone/tablet profiles virtually and use available physical devices for supplementary checks. Record host, virtual device/OS, build mode, network and cache context for memory/latency results; these results are not physical-device performance evidence. Signed store-upgrade, actual purchase and platform-specific evidence requirements remain separately tracked. Exact profile availability, memory/latency budgets and crash-free sample/window remain open. The 99.5% per-platform target is unchanged.
+
+### Performance-limit approach — 2026-10-02
+
+On 2026-10-02 the user approved determining numeric memory and launch/playback latency acceptance limits from measurements of the first working reading/listening flows in the approved test environments. Record representative content, environment, network/cache conditions and results, then establish the limits before accepting affected stories. Unexplained continuous memory growth, freezes and critical playback failures block acceptance. The measurement approach is decided; numeric limits and measurement evidence remain pending.
+
+### Crash-free gate mapping — 2026-10-02
+
+On 2026-10-02 the user approved initial limited distribution after critical tests and other applicable release prerequisites pass. Evaluate the per-platform target of at least 99.5% crash-free users using actual usage data before expanding distribution. Define the observation window and sufficient user sample in the release plan. Successful emulator tests do not establish this user metric. This decision sets the gate mapping, not the numeric window/sample or present permission to publish.
+
+### Restore policy approved — 2026-10-02
+
+The user approved the default RevenueCat transfer policy on 2026-10-02. Pre-registration purchases remain supported; a restore under another TellPal account using the purchasing store account transfers the subscription access, and the source loses that transferred entitlement. Identified login alone does not transfer purchases, and billing operations do not merge TellPal profiles/history. Production/sandbox settings, historical identity/aliases and backend reconciliation still require verification; no dashboard change or runtime acceptance is claimed.
+
+### Analytics retention and storage decision — 2026-10-02
+
+On 2026-10-02 the user chose no automatic deletion or age-based expiry for persisted analytics events for now. Existing Google Analytics data remains available, and backend events provide an additional long-term source. Start in the current backend database; a separate analytics database is a conditional future response to measured application/backend performance impact, not an immediate prerequisite. Mobile pending-queue bounds and detailed diagnostic policies remain separate contracts.
+
+### Legacy-system shutdown decision — 2026-10-02
+
+The user approved shutting down the legacy system only after the replacement's staged rollout completes and migration/subscription stability is verified, followed by their separate explicit shutdown approval. No fixed shutdown date is set; keep the legacy system running until that approval. This closes the product shutdown condition in OQ-10 and Story 7.10. Stability evidence criteria, rollout thresholds and rehearsed recovery remain release/operations work. This planning decision is not present authorization to shut down the legacy system.

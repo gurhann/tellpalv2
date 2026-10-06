@@ -30,6 +30,16 @@ public class CategoryAdminExceptionHandler {
         this.problemDetailsFactory = problemDetailsFactory;
     }
 
+    @ExceptionHandler(com.tellpal.v2.category.application.CategoryHomeConfigurationService.Conflict.class)
+    ProblemDetail handleHomeConflict(RuntimeException e, HttpServletRequest request) {
+        return problemDetailsFactory.create(HttpStatus.CONFLICT,"Library configuration conflict",e.getMessage(),"library_home_conflict",request);
+    }
+
+    @ExceptionHandler(com.tellpal.v2.category.application.CategoryHomeConfigurationService.Missing.class)
+    ProblemDetail handleHomeMissing(RuntimeException e, HttpServletRequest request) {
+        return problemDetailsFactory.create(HttpStatus.NOT_FOUND,"Category localization missing",e.getMessage(),"category_localization_not_found",request);
+    }
+
     @ExceptionHandler(DuplicateCategorySlugException.class)
     ProblemDetail handleDuplicateSlug(DuplicateCategorySlugException exception, HttpServletRequest request) {
         return problemDetailsFactory.create(

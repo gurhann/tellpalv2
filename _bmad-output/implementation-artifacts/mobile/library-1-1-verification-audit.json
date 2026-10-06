@@ -1,0 +1,4392 @@
+{
+  "verifiedAt": "2026-10-06T18:42:46.469792+00:00",
+  "reviewIteration": 7,
+  "baselineCommit": "b372c60b53f828f2fcadff40eb1c212684ad3d51",
+  "backend": {
+    "surefireTotals": {
+      "tests": 371,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "documentationIntegrationTests": 1,
+    "relevantSuites": [
+      {
+        "suite": "com.tellpal.v2.ApplicationModulesTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "exposesExpectedModuleGraph",
+            "result": "passed"
+          },
+          {
+            "name": "verifiesModuleBoundaries",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.TellPalApplicationSmokeTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "contextLoads",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.application.AdminAuthenticationServiceTest",
+        "runner": "surefire",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "loginRejectsDisabledUsers",
+            "result": "passed"
+          },
+          {
+            "name": "logoutRevokesExistingRefreshToken",
+            "result": "passed"
+          },
+          {
+            "name": "refreshRotatesTokensAndRejectsReuse",
+            "result": "passed"
+          },
+          {
+            "name": "refreshRecordsFailureForInvalidTokens",
+            "result": "passed"
+          },
+          {
+            "name": "refreshStopsBeforeLookupWhenRateLimited",
+            "result": "passed"
+          },
+          {
+            "name": "loginIssuesAccessAndRefreshTokens",
+            "result": "passed"
+          },
+          {
+            "name": "loginRecordsFailuresForUnknownUsersAndWrongPasswords",
+            "result": "passed"
+          },
+          {
+            "name": "loginStopsBeforePasswordVerificationWhenRateLimited",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.application.AdminRoleManagementServiceTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "rejectsUnknownUsers",
+            "result": "passed"
+          },
+          {
+            "name": "assignsRequestedRoleToUser",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.infrastructure.security.AdminJwtServiceTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "issuesAndDecodesAccessTokens",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsMalformedTokens",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.infrastructure.security.AdminPasswordHasherTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "hashesAndVerifiesPasswords",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsBlankPasswords",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherPropertyTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "hashesNonBlankTokensToStableHex",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "hashesTokensDeterministically",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsBlankTokens",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.infrastructure.security.InMemoryAdminAuthenticationAttemptGuardTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "refreshFailuresAreTrackedByTokenHashAndIp",
+            "result": "passed"
+          },
+          {
+            "name": "blocksUsernameAfterFiveFailedLoginAttempts",
+            "result": "passed"
+          },
+          {
+            "name": "successfulLoginClearsUsernameFailures",
+            "result": "passed"
+          },
+          {
+            "name": "blocksDifferentUsernamesAfterIpLoginThreshold",
+            "result": "passed"
+          },
+          {
+            "name": "successfulRefreshClearsTokenHashFailures",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.web.admin.AdminAuthControllerTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "refreshReturnsAuthenticationPayload",
+            "result": "passed"
+          },
+          {
+            "name": "logoutReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "rateLimitedAuthenticationBecomesTooManyRequestsProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "invalidCredentialsBecomeUnauthorizedProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "loginReturnsAuthenticationPayload",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.admin.web.admin.AdminAuthIntegrationTest",
+        "runner": "surefire",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "loginRejectsDisabledAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "loginPreflightAllowsConfiguredLocalCmsOrigin",
+            "result": "passed"
+          },
+          {
+            "name": "refreshRotatesTokensAndRejectsReusedToken",
+            "result": "passed"
+          },
+          {
+            "name": "repeatedWrongPasswordsAreRateLimited",
+            "result": "passed"
+          },
+          {
+            "name": "logoutRevokesRefreshToken",
+            "result": "passed"
+          },
+          {
+            "name": "loginReturnsTokensAndPersistsRefreshTokenHash",
+            "result": "passed"
+          },
+          {
+            "name": "loginRejectsWrongPassword",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.AssetProcessingIntegrationTest",
+        "runner": "surefire",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "contentTargetIsIndependentFromLocalizationTargetsAndDoesNotChangeLocalizationStatus",
+            "result": "passed"
+          },
+          {
+            "name": "narrationSchemaEnforcesStoryParentUniquenessAndLocalizationCascade",
+            "result": "passed"
+          },
+          {
+            "name": "narrationRejectsNonAudioOrMissingSourceWithoutPersistingRows",
+            "result": "passed"
+          },
+          {
+            "name": "targetUniqueIndexesRejectDuplicateLocalizationAndContentRows",
+            "result": "passed"
+          },
+          {
+            "name": "updatingUnchangedNarrationDoesNotConflictWithRunningJob",
+            "result": "passed"
+          },
+          {
+            "name": "narrationCanBeRescheduledAfterCompletionWhenItsSourceChanges",
+            "result": "passed"
+          },
+          {
+            "name": "legacyProcessingInsertDefaultsToLocalizationScope",
+            "result": "passed"
+          },
+          {
+            "name": "failedStoryPageMediaProcessingCanRetryAfterSourceBytesAreRepaired",
+            "result": "passed"
+          },
+          {
+            "name": "expiredContentLeaseRecoversWithContentTargetAndLeavesLocalizationStatusUntouched",
+            "result": "passed"
+          },
+          {
+            "name": "storyProcessingGeneratesCoverVariantsAndStoryPackagesAndMarksLocalizationReady",
+            "result": "passed"
+          },
+          {
+            "name": "databaseRejectsInvalidTargetCombinationAndCascadesLocalizationProcessing",
+            "result": "passed"
+          },
+          {
+            "name": "missingLocalizationParentIsRejectedWithoutPersistingProcessingRow",
+            "result": "passed"
+          },
+          {
+            "name": "narrationsRemainIsolatedAcrossLanguages",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyPlaybackCanBeRescheduledAfterCompletionWhenItsSourceChanges",
+            "result": "passed"
+          },
+          {
+            "name": "storyNarrationHasIndependentProcessingAndProducesOnlyOptimizedAudio",
+            "result": "passed"
+          },
+          {
+            "name": "nonStoryProcessingGeneratesOptimizedAudioAndSinglePackage",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageMediaCreatesVerifiedImmutableRevisionsAndRetainsThePriorBytes",
+            "result": "passed"
+          },
+          {
+            "name": "missingPageImageFailsPersistentlyWithoutPublishingAManifest",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.AssetProcessingTargetTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "narrationScheduleDoesNotRequirePageCountButRequiresAudio",
+            "result": "passed"
+          },
+          {
+            "name": "contentTargetRejectsLanguage",
+            "result": "passed"
+          },
+          {
+            "name": "narrationRetryRejectsPageCount",
+            "result": "passed"
+          },
+          {
+            "name": "localizationTargetRequiresLanguage",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.AssetRegistryIntegrationTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "databaseRejectsDuplicateProviderAndObjectPath",
+            "result": "passed"
+          },
+          {
+            "name": "listRecentReturnsNewestAssetsFirstAndHonorsLimit",
+            "result": "passed"
+          },
+          {
+            "name": "processingPathsUseTheConfiguredStoragePrefix",
+            "result": "passed"
+          },
+          {
+            "name": "refreshDownloadUrlCacheStoresSignedUrlAndExpiryTimestamps",
+            "result": "passed"
+          },
+          {
+            "name": "registerPersistsAssetAndAllowsNullableMetadata",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.application.AssetProcessingFollowupSnapshotTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "pageMutationDuringProcessingQueuesLatestSnapshotAndDoesNotRejectSchedule",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.ListingCoverProcessingExecutorTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "storedMimeAndChecksumMismatchRejectReadyPublication",
+            "result": "passed"
+          },
+          {
+            "name": "generatedOnlyRegistryMetadataNeverMakesArtworkReady",
+            "result": "passed"
+          },
+          {
+            "name": "explicitStalePublicationDoesNotEnterFailureCallback",
+            "result": "passed"
+          },
+          {
+            "name": "secondUploadFailureNeverPublishesHalfReadyManifestAndCarriesCapturedAttempt",
+            "result": "passed"
+          },
+          {
+            "name": "rejectedCompletionCatchFailureStillUsesExpiredOwnershipAndCannotFailReplacement",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.ListingCoverRenditionProcessorTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "rejectsDeclaredMimeMismatchAndExcessPixelsBeforeDecode",
+            "result": "passed"
+          },
+          {
+            "name": "sourceProfilesAreCapturedAndRoundTrip",
+            "result": "passed"
+          },
+          {
+            "name": "fitsBothBoundsWithoutUpscalingAndCompositesAlphaWhite",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.PageImageRenditionProcessorTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "leavesSmallerInputAtSourceDimensions",
+            "result": "passed"
+          },
+          {
+            "name": "convertsGeneratedPngFixtureToBoundedDecodableJpegWithoutUpscaling",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsUnsupportedMimeAndCorruptInput",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.infrastructure.media.RegisteringAssetProcessingJobExecutorTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "replacingSourceAssetWithIdenticalBytesProducesDifferentRevisionWithoutDocker",
+            "result": "passed"
+          },
+          {
+            "name": "validSourcePublishesVerifiedRevisionWithoutDocker",
+            "result": "passed"
+          },
+          {
+            "name": "invalidSourceFailsWithoutPublishingWithoutDocker",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.web.admin.AssetAdminControllerTest",
+        "runner": "surefire",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "refreshDownloadUrlCacheReturnsUpdatedAsset",
+            "result": "passed"
+          },
+          {
+            "name": "getMissingAssetReturnsProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "proxyUploadReturnsRegisteredAsset",
+            "result": "passed"
+          },
+          {
+            "name": "registerAssetReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "backendUploadReturnsRegisteredAsset",
+            "result": "passed"
+          },
+          {
+            "name": "initiateUploadReturnsSignedRequest",
+            "result": "passed"
+          },
+          {
+            "name": "completeUploadReturnsRegisteredAsset",
+            "result": "passed"
+          },
+          {
+            "name": "streamContentPassesSingleRangeToApplicationService",
+            "result": "passed"
+          },
+          {
+            "name": "issueContentTokenReturnsBackendPreviewUrl",
+            "result": "passed"
+          },
+          {
+            "name": "issueContentTokenUsesForwardedProxyHeadersForBackendPreviewUrl",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateAssetBecomesConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "updateMetadataReturnsUpdatedAsset",
+            "result": "passed"
+          },
+          {
+            "name": "listRecentAssetsReturnsArray",
+            "result": "passed"
+          },
+          {
+            "name": "streamContentReturnsBackendMediaBytes",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.web.admin.AssetAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "assetCreateListUpdateAndRefreshWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateAssetRegistrationReturnsConflict",
+            "result": "passed"
+          },
+          {
+            "name": "proxiedFirebaseUploadWorksWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "backendUploadAndContentStreamingWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "initiateCompleteAndRefreshFirebaseUploadWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.asset.web.admin.AssetProcessingAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "contentScopedScheduleStatusAndRetryEndpointsWork",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryProcessingIsRejected",
+            "result": "passed"
+          },
+          {
+            "name": "contentScopedScheduleRejectsLanguageCode",
+            "result": "passed"
+          },
+          {
+            "name": "localizationScheduleRequiresLanguageCode",
+            "result": "passed"
+          },
+          {
+            "name": "scheduleStatusAndRetryEndpointsWorkForFailedProcessing",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.CategoryManagementIntegrationTest",
+        "runner": "surefire",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "curationRejectsContentTypeMismatch",
+            "result": "passed"
+          },
+          {
+            "name": "reorderContentsReplacesWholeLanguageLaneInOneTransaction",
+            "result": "passed"
+          },
+          {
+            "name": "createCategoryRejectsDuplicateSlug",
+            "result": "passed"
+          },
+          {
+            "name": "createLocalizationPersistsPublishedStatusAndImageReference",
+            "result": "passed"
+          },
+          {
+            "name": "curationScopesDisplayOrderByLanguageAndRejectsDuplicatesWithinSameLanguage",
+            "result": "passed"
+          },
+          {
+            "name": "addContentRejectsUnpublishedContentLocalization",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.LibraryHomeIntegrationTest",
+        "runner": "surefire",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+            "result": "passed"
+          },
+          {
+            "name": "staleDuplicateAndInvalidMappingWritesAreAtomicAndExistingRowsStartOptedOut",
+            "result": "passed"
+          },
+          {
+            "name": "theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile",
+            "result": "passed"
+          },
+          {
+            "name": "anAlreadyLoadedJpaLocalizationEditCannotOverwriteAtomicHomeConfiguration",
+            "result": "passed"
+          },
+          {
+            "name": "savedIndependentOrdersFilterBeforeFiveAndNeverPadTurkishWithEnglish",
+            "result": "passed"
+          },
+          {
+            "name": "processingListingCoverRejectsChangedSourceAndProfileWithoutMutatingAnyJobField",
+            "result": "passed"
+          },
+          {
+            "name": "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[1]",
+            "result": "passed"
+          },
+          {
+            "name": "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[2]",
+            "result": "passed"
+          },
+          {
+            "name": "realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.application.AdminCategoryCurationQueryServiceTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "listCategoryContentsHydratesStoredRowsWithLocalizedIdentity",
+            "result": "passed"
+          },
+          {
+            "name": "listCategoryContentsFallsBackWhenLocalizedIdentityCannotBeResolved",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.domain.CategoryDisplayOrderPropertyTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "duplicateDisplayOrderIsRejectedWithinSameLanguage",
+            "result": "passed"
+          },
+          {
+            "name": "sameDisplayOrderCanBeReusedAcrossLanguages",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.migration.CategoryTypeMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "blocksMigrationForLegacyContentCategoryWithMixedCuratedTypes",
+            "result": "passed"
+          },
+          {
+            "name": "migratesLegacyContentCategoryWhenAllCuratedContentSharesOneType",
+            "result": "passed"
+          },
+          {
+            "name": "blocksMigrationForLegacyParentGuidanceCategory",
+            "result": "passed"
+          },
+          {
+            "name": "blocksMigrationForLegacyContentCategoryWithoutCuratedContent",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.migration.LibraryHomeOptInMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "eligiblePublishedV32CurationRemainsIntactAndOptedOutAfterUpgradingLatest",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.web.admin.CategoryAdminControllerTest",
+        "runner": "surefire",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "addCuratedContentReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "deleteMissingCategoryReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "createCategoryReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listCategoryLocalizationsReturnsLookupResponses",
+            "result": "passed"
+          },
+          {
+            "name": "missingCategoryLocalizationsReturnNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "deleteCategoryReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "createLocalizationReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "unpublishedCategoryLocalizationBecomesConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "reorderCuratedContentReturnsUpdatedCollection",
+            "result": "passed"
+          },
+          {
+            "name": "missingCategoryReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "missingCategoryLocalizationInCurationReadReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "listCuratedContentReturnsOrderedResponses",
+            "result": "passed"
+          },
+          {
+            "name": "updateCuratedContentOrderReturnsUpdatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listCategoriesReturnsLookupResponses",
+            "result": "passed"
+          },
+          {
+            "name": "getCategoryReturnsLookupResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listEligibleCuratedContentReturnsCandidates",
+            "result": "passed"
+          },
+          {
+            "name": "contentTypeMismatchBecomesConflictProblemDetails",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.web.admin.CategoryAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "categoryLocalizationListReturnsPersistedSnapshotsForAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryCreateIsRejected",
+            "result": "passed"
+          },
+          {
+            "name": "categoryCrudLocalizationAndOrderingWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "curationReadRejectsMissingCategoryLocalization",
+            "result": "passed"
+          },
+          {
+            "name": "curationRejectsContentTypeMismatch",
+            "result": "passed"
+          },
+          {
+            "name": "curationRejectsUnpublishedCategoryLocalization",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryUpdateIsRejected",
+            "result": "passed"
+          },
+          {
+            "name": "eligibleCurationCandidatesFilterByTypeLanguagePublicationAndExistingLinks",
+            "result": "passed"
+          },
+          {
+            "name": "categoryLocalizationListReturnsEmptyArrayWhenCategoryHasNoLocalizations",
+            "result": "passed"
+          },
+          {
+            "name": "missingReadAndDeleteEndpointsReturnNotFoundForUnknownCategory",
+            "result": "passed"
+          },
+          {
+            "name": "categoryListReturnsActiveAndInactiveRecordsForAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "protectedCategoryEndpointsRequireAuthentication",
+            "result": "passed"
+          },
+          {
+            "name": "deleteCategoryDeactivatesAggregateAndPreservesAdminReadAccess",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.category.web.admin.CategoryHomeAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "nonDefaultConfiguredLimitIsAppliedAfterInactiveAndDraftCandidatesInPostgres",
+            "result": "passed"
+          },
+          {
+            "name": "invalidHomeWritesUseTheSharedProblemDetailHandlerAndPreserveSecurityAndConflicts",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.ContentFreeAccessServiceIntegrationTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "resolveFreeAccessFallsBackToDefaultOnlyWhenRequestedKeyIsUnknown",
+            "result": "passed"
+          },
+          {
+            "name": "grantRevokeAndDuplicateRulesRespectLocalizedEntries",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.ContentManagementIntegrationTest",
+        "runner": "surefire",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "publishedLocalizationBecomesVisibleOnlyAfterProcessingCompletes",
+            "result": "passed"
+          },
+          {
+            "name": "insertingAndRemovingStoryPagesKeepsPageNumbersContiguous",
+            "result": "passed"
+          },
+          {
+            "name": "listContributorsReturnsNewestFirstAndHonorsLimit",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyInstrumentSelectionPersistsStableCodesInZeroBasedOrderAndRollsBackInvalidChanges",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageOperationsKeepPageCountInSync",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRolesAndGeneratedNameRoundTripThroughJpa",
+            "result": "passed"
+          },
+          {
+            "name": "listContributorsSearchesDisplayNamesCaseInsensitively",
+            "result": "passed"
+          },
+          {
+            "name": "contributorAssignmentsArePersistedWithLanguageScopedOrdering",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.ContentPublicationServiceIntegrationTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "storyLocalizationRequiresAudioAndTextOnEveryPageBeforePublication",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyPublicationResponseUsesCompletedSharedProcessingStatus",
+            "result": "passed"
+          },
+          {
+            "name": "archiveLocalizationMarksPublishedLocalizationAsArchived",
+            "result": "passed"
+          },
+          {
+            "name": "stagedMeditationAcceptsBodyLaterButCannotPublishWithoutIt",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportServiceTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "createsZipWhenOnlyTextlessCoverIsAvailable",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsExportWhenNoTextlessImagesAreAvailable",
+            "result": "passed"
+          },
+          {
+            "name": "createsZipWithManifestAndTextlessImages",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.domain.ContentTest",
+        "runner": "surefire",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "unassignContributorCompactsTheRemainingRoleAndLanguageGroup",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyLocalizationProcessingStatusIsOwnedBySharedPlayback",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyInstrumentSelectionIsOrderedAndRejectsInvalidReplacementWithoutChangingCurrentLinks",
+            "result": "passed"
+          },
+          {
+            "name": "updateContributorKeepsGroupOrderAndNormalizesBlankCreditName",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyInstrumentsAreNotSupportedForOtherContentTypes",
+            "result": "passed"
+          },
+          {
+            "name": "unassignContributorRemovesOnlyTheExactLanguageScopedAssignment",
+            "result": "passed"
+          },
+          {
+            "name": "storyLocalizationOwnsOneReplaceableFullNarrationWithoutUsingPageAudioField",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyKeepsListingAndPlaybackCoversIndependent",
+            "result": "passed"
+          },
+          {
+            "name": "updateContributorRejectsUnknownLanguageAndDuplicateAssignment",
+            "result": "passed"
+          },
+          {
+            "name": "assignContributorAppendsAtTheServerOwnedEndOfItsRoleAndLanguageGroup",
+            "result": "passed"
+          },
+          {
+            "name": "assignContributorAllowsSameSortOrderAcrossDifferentLanguages",
+            "result": "passed"
+          },
+          {
+            "name": "storyLocalizationRejectsBodyTextAndSingleAudioReference",
+            "result": "passed"
+          },
+          {
+            "name": "updateContributorPreservesIdentityAndAppendsWhenMovingGroups",
+            "result": "passed"
+          },
+          {
+            "name": "assignContributorRejectsARoleThatTheContributorProfileDoesNotContain",
+            "result": "passed"
+          },
+          {
+            "name": "unassignContributorRejectsMissingExactMatch",
+            "result": "passed"
+          },
+          {
+            "name": "listingCoverIsRejectedForNonLullabyContent",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyLocalizationOwnsOnlyTitleAndPlaybackIsSharedAtContentLevel",
+            "result": "passed"
+          },
+          {
+            "name": "narrationIsOnlyAllowedForStoryAndValidatesSourceAndDuration",
+            "result": "passed"
+          },
+          {
+            "name": "meditationAllowsBodylessDraftOnlyAndPublicationRequiresBody",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyMusicianAssignmentMustBeGlobal",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.domain.ContributorTest",
+        "runner": "surefire",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "createAcceptsOneOrMultipleUniqueRoles",
+            "result": "passed"
+          },
+          {
+            "name": "updateProfileChangesNameAndRolesAtomically",
+            "result": "passed"
+          },
+          {
+            "name": "createTrimsDisplayNameAndKeepsProvidedRole",
+            "result": "passed"
+          },
+          {
+            "name": "rolesViewIsImmutable",
+            "result": "passed"
+          },
+          {
+            "name": "createRejectsNullEmptyOrNullContainingRoles",
+            "result": "passed"
+          },
+          {
+            "name": "createRejectsBlankDisplayName",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.domain.StoryPageCountPropertyTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "storyPageCountMatchesSequentiallyAddedPages",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.domain.StoryPublicationReadinessPolicyTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "reportsEveryMissingEditorialRequirementWithoutPrioritizingThem",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.infrastructure.persistence.JdbcContentRegistryReadRepositoryIntegrationTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "usesContentScopedLullabyDeliveryStatusInsteadOfLocalizationSentinel",
+            "result": "passed"
+          },
+          {
+            "name": "appliesReadinessFilteringAndPaginationBeforeLoadingSelectedPageSnapshots",
+            "result": "passed"
+          },
+          {
+            "name": "projectsMeditationLocalizationAndLullabyPlaybackDurations",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.migration.CanonicalAudioStoryTypeRemovalMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "blocksMigrationWhenCanonicalAudioStoryCategoryRemains",
+            "result": "passed"
+          },
+          {
+            "name": "blocksMigrationWhenCanonicalAudioStoryContentRemains",
+            "result": "passed"
+          },
+          {
+            "name": "existingCanonicalRowsSurviveCleanMigration",
+            "result": "passed"
+          },
+          {
+            "name": "blocksMigrationWhenCanonicalAudioStoryProcessingRemains",
+            "result": "passed"
+          },
+          {
+            "name": "cleanDatabaseRemovesAudioStoryFromCanonicalChecksAndKeepsScopedProcessingRules",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.migration.ContentCoverOwnershipMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "blocksV24WhenLegacyNonStorySourceCoversExist",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.migration.ContributorRoleMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "duplicatePreflightReportsEveryConflictingIdAndNameAndRollsBackSchemaChanges",
+            "result": "passed"
+          },
+          {
+            "name": "backfillsDistinctHistoricalRolesWithoutChangingAssignments",
+            "result": "passed"
+          },
+          {
+            "name": "generatedNormalizedNameRejectsNewTrimmedCaseInsensitiveDuplicate",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.migration.InstrumentCatalogMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "instrumentLinksRequireLullabyContentAndUniqueOrders",
+            "result": "passed"
+          },
+          {
+            "name": "seedsStableTurkishCatalogAndKeepsLabelsInSeparateRows",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.migration.LullabyPlaybackMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "blocksLegacyLullabyLocalizationFields",
+            "result": "passed"
+          },
+          {
+            "name": "blocksStaleExistingContentProcessingContext",
+            "result": "passed"
+          },
+          {
+            "name": "backfillsOneSharedPlaybackAndClearsLegacyLocalizationFields",
+            "result": "passed"
+          },
+          {
+            "name": "blocksConflictingLegacyPlaybackValues",
+            "result": "passed"
+          },
+          {
+            "name": "blocksLocalizedLullabyMusicianAssignments",
+            "result": "passed"
+          },
+          {
+            "name": "postMigrationRulesKeepLullabyFieldsAndMusicianGlobal",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ContentAdminControllerTest",
+        "runner": "surefire",
+        "tests": 21,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "addStoryPageReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "missingContentBecomesNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "updateContentStoresTextlessCoverReference",
+            "result": "passed"
+          },
+          {
+            "name": "deleteContentReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "getMissingContentReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "exportTextlessIllustrationsReturnsZipAttachment",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageStateConflictBecomesConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "createLocalizationReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "updateStoryPageStoresTextlessIllustrationReference",
+            "result": "passed"
+          },
+          {
+            "name": "publishLocalizationWithoutBodyUsesClockInstant",
+            "result": "passed"
+          },
+          {
+            "name": "deleteMissingContentReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "createContentReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listContentsReturnsMetadataAndLocalizationSnapshots",
+            "result": "passed"
+          },
+          {
+            "name": "getContentReturnsMetadataAndLocalizations",
+            "result": "passed"
+          },
+          {
+            "name": "getStoryPageReturnsMetadataAndLocalizedPayloads",
+            "result": "passed"
+          },
+          {
+            "name": "missingStoryPageReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageReadStateConflictBecomesConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "publishLocalizationReturnsUpdatedLocalization",
+            "result": "passed"
+          },
+          {
+            "name": "archiveLocalizationReturnsUpdatedLocalization",
+            "result": "passed"
+          },
+          {
+            "name": "listStoryPagesReturnsPageMetadataAndLocalizedPayloads",
+            "result": "passed"
+          },
+          {
+            "name": "processingPatchReturnsUpdatedLocalization",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ContentAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 21,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "getMissingStoryPageReturnsNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyListingCoverIsIndependentAndTypeScoped",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryCreateIsRejected",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyRegistryReportsSharedPlaybackDuration",
+            "result": "passed"
+          },
+          {
+            "name": "missingReadAndDeleteEndpointsReturnNotFoundForUnknownContent",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageReadEndpointsReturnNotFoundAndConflictWhenParentStateIsInvalid",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyInstrumentsUseLocaleCatalogLabelsAndPreserveSelectionOnInvalidUpdate",
+            "result": "passed"
+          },
+          {
+            "name": "meditationRegistryReportsMissingBodyAfterProcessingCompletes",
+            "result": "passed"
+          },
+          {
+            "name": "protectedContentEndpointsRequireAuthentication",
+            "result": "passed"
+          },
+          {
+            "name": "listAndGetStoryPagesReturnLocalizedPagePayloadsForStoryContent",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateExternalKeyReturnsConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "listeningCoverOwnershipIsEnforcedForLullabyAndMeditation",
+            "result": "passed"
+          },
+          {
+            "name": "deleteContentDeactivatesAggregateAndPreservesAdminReadAccess",
+            "result": "passed"
+          },
+          {
+            "name": "contentLevelListeningCoverIsSharedAcrossLocalizationsAndTypeScoped",
+            "result": "passed"
+          },
+          {
+            "name": "createUpdateLocalizationProcessingAndStoryPagesWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyPlaybackRejectsMissingAndNonAudioAssetsWithoutPersisting",
+            "result": "passed"
+          },
+          {
+            "name": "listAndGetContentReturnLocalizationSnapshotsForAdminReadFlows",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyUsesOneSharedPlaybackAcrossTitleOnlyLocalizations",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryRegistryFilterIsRejected",
+            "result": "passed"
+          },
+          {
+            "name": "narrationIsRejectedForNonStoryContent",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageLocalizationRequiresIllustrationMediaId",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ContentPublicationAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "publishAndArchiveEndpointsRespectPublicationRules",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ContributorAdminControllerTest",
+        "runner": "surefire",
+        "tests": 21,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "listContributorsRejectsNonPositiveLimit",
+            "result": "passed"
+          },
+          {
+            "name": "updateContributorAssignmentRequiresRole",
+            "result": "passed"
+          },
+          {
+            "name": "missingContributorBecomesNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryReturnsEnvelopeAndDelegatesFilters",
+            "result": "passed"
+          },
+          {
+            "name": "reorderContributorValidationRejectsMissingOrInvalidGroupInput",
+            "result": "passed"
+          },
+          {
+            "name": "renameContributorReturnsUpdatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "deleteContributorReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "assignContributorReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listContentContributorsReturnsAssignments",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateContributorNameReturnsExistingContributorId",
+            "result": "passed"
+          },
+          {
+            "name": "assignmentRuleFailuresExposeStableStatusAndErrorCodes",
+            "result": "passed"
+          },
+          {
+            "name": "contributorInUseBecomesConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryRejectsInvalidPagination",
+            "result": "passed"
+          },
+          {
+            "name": "unassignContributorReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "missingAssignmentBecomesNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "updateContributorAssignmentReturnsUpdatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "assignContributorAllowsGlobalScopeWhenLanguageCodeIsNull",
+            "result": "passed"
+          },
+          {
+            "name": "missingContentContributorBecomesNotFoundProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "createContributorReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "listContributorsTrimsSearchQueryBeforeDelegating",
+            "result": "passed"
+          },
+          {
+            "name": "listContributorsReturnsArray",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ContributorAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "globalContributorAssignmentWorksWithoutContentLocalizations",
+            "result": "passed"
+          },
+          {
+            "name": "contributorCreateListRenameAndAssignWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRolesAreRequiredNonEmptyAndUniqueWithoutWritingAProfile",
+            "result": "passed"
+          },
+          {
+            "name": "listAndUnassignContentContributorsRoundTripWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyMusicianAssignmentsMustBeGlobalAndReadBackAsOneCredit",
+            "result": "passed"
+          },
+          {
+            "name": "blankLanguageCodeIsRejectedWhenGlobalScopeIsRequestedIncorrectly",
+            "result": "passed"
+          },
+          {
+            "name": "concurrentAssignmentsSerializeAtTheContentAggregateAndProduceConsecutiveOrders",
+            "result": "passed"
+          },
+          {
+            "name": "contributorSortOrderMigrationNormalizesExistingGapsPerRoleAndLanguageGroup",
+            "result": "passed"
+          },
+          {
+            "name": "unassignMissingContributorAssignmentReturnsNotFoundProblemDetail",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryUsesDefaultMetadataEmptyTotalsAndIdTieBreak",
+            "result": "passed"
+          },
+          {
+            "name": "updateContentContributorPersistsExistingLocalizedScopeAndRejectsUnknownLanguage",
+            "result": "passed"
+          },
+          {
+            "name": "normalizedDuplicateNameReturnsExistingIdAndOwnRenameIsAllowed",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateAssignmentsFailButLegacyClientSortOrderIsIgnored",
+            "result": "passed"
+          },
+          {
+            "name": "sameContributorCanHaveGlobalAndLocalizedCreditsForTheSameRole",
+            "result": "passed"
+          },
+          {
+            "name": "updateContentContributorPreservesAssignmentIdAndAppendsToTheTargetRoleGroup",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryPagesAllMatchesAndAppliesRoleFilter",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryFiltersPaginatesAndReportsUsage",
+            "result": "passed"
+          },
+          {
+            "name": "contributorRegistryReportsUsageForEveryProfileRole",
+            "result": "passed"
+          },
+          {
+            "name": "contributorValidationReturnsProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "usedRoleCannotBeRemovedAndUnusedRoleCanBeRemoved",
+            "result": "passed"
+          },
+          {
+            "name": "deleteContributorRequiresAssignmentsToBeRemovedFirst",
+            "result": "passed"
+          },
+          {
+            "name": "contributorListCanSearchDisplayNamesWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "assignmentRejectsAProfileRoleMismatchWithoutWritingAnAssignment",
+            "result": "passed"
+          },
+          {
+            "name": "reorderRequiresAnExactGroupPermutationAndLeavesTheStoredOrderUntouchedWhenInvalid",
+            "result": "passed"
+          },
+          {
+            "name": "updateMissingContentContributorAssignmentReturnsNotFoundProblemDetail",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.FreeAccessAdminControllerTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "createFreeAccessReturnsCreatedResponse",
+            "result": "passed"
+          },
+          {
+            "name": "deleteFreeAccessReturnsNoContent",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateFreeAccessReturnsConflictProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "listFreeAccessEntriesReturnsArray",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.FreeAccessAdminIntegrationTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "grantListRevokeAndUnknownKeyFallbackWorkWithAuthenticatedAdmin",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateFreeAccessReturnsConflictProblemDetails",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.admin.ListingCoverAdminSourceIntegrationTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "authenticatedEnglishPreparationUsesItsCurrentLocalizedSourceAndPublishesEnglishCatalogCovers",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.content.web.mobile.PublicDeliveryIntegrationTest",
+        "runner": "surefire",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "contentEndpointsApplyLanguageVisibilityAndDefaultFreeKeyFallback",
+            "result": "passed"
+          },
+          {
+            "name": "storyPageMediaExperimentRequiresAllowlistedFirebaseIdentity",
+            "result": "passed"
+          },
+          {
+            "name": "canonicalAudioStoryFiltersAreRejected",
+            "result": "passed"
+          },
+          {
+            "name": "storyPagesResolveIllustrationPerRequestedLanguage",
+            "result": "passed"
+          },
+          {
+            "name": "categoryEndpointsReturnPublishedCategoriesAndPreserveCuratedOrder",
+            "result": "passed"
+          },
+          {
+            "name": "lullabyVisibilityUsesSharedContentProcessingStatus",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.event.application.EventTrackingServicePropertyTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "sameLegacyKeyWithinProfileIsRecordedOnlyOnce",
+            "result": "passed"
+          },
+          {
+            "name": "sameContentEventIdIsRecordedOnlyOnce",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.event.web.mobile.EventMobileControllerTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "recordAppEventReturnsBadRequestForUnknownContent",
+            "result": "passed"
+          },
+          {
+            "name": "invalidFirebaseTokenReturnsUnauthorizedProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "batchEndpointReturnsAggregateCounts",
+            "result": "passed"
+          },
+          {
+            "name": "recordContentEventReturnsReceipt",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.event.web.mobile.EventMobileIntegrationTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "batchEndpointProcessesMixedEventsAndReportsDuplicateCounts",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateContentEventIdReturnsDuplicateReceiptWithoutSecondInsert",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateLegacyEventKeyReturnsLegacyDuplicateReceipt",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.purchase.application.PurchaseAttributionServicePropertyTest",
+        "runner": "surefire",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "lockedContentClickWinsEvenWhenPaywallShownIsMoreRecent",
+            "result": "passed"
+          },
+          {
+            "name": "latestPaywallIsChosenWhenThereIsNoLockedContentClick",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.purchase.web.webhook.RevenueCatWebhookIntegrationTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "lockedContentClickTakesPrecedenceOverNewerPaywallShown",
+            "result": "passed"
+          },
+          {
+            "name": "unknownLookupValueReturnsUnprocessableEntity",
+            "result": "passed"
+          },
+          {
+            "name": "invalidAuthorizationHeaderReturnsUnauthorized",
+            "result": "passed"
+          },
+          {
+            "name": "duplicateRevenueCatEventIdReturnsDuplicateStatusWithoutSecondInsert",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.shared.LanguageSeedIntegrationTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "seedsSupportedLanguagesAsActiveRecords",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.application.LibraryHomeTestQueryServiceTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "subscriberFixturesMustBeAnAllowlistSubset",
+            "result": "passed"
+          },
+          {
+            "name": "rejectsMissingInvalidAndUnlistedIdentityBeforeAnyCatalogCall",
+            "result": "passed"
+          },
+          {
+            "name": "selectsAudienceOnlyAfterVerifiedIdentityAndRejectsInvalidLanguage",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.domain.AppUserPrimaryProfilePropertyTest",
+        "runner": "surefire",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "arbitraryProfileCreationSequenceKeepsExactlyOnePrimaryProfile",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.migration.FirebaseMigrationIntegrationTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "migrationJobsImportFixturesAndRemainIdempotentOnRepeatRuns",
+            "result": "passed"
+          },
+          {
+            "name": "userDryRunReadsFixturesWithoutWritingDatabaseRows",
+            "result": "passed"
+          },
+          {
+            "name": "eventDryRunReportsWouldCreateWhenProfilesAndContentsExist",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.LibraryHomeProfileContextTest",
+        "runner": "surefire",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[1]",
+            "result": "passed"
+          },
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[2]",
+            "result": "passed"
+          },
+          {
+            "name": "productionAndDefaultExcludeBothLibraryBeansAndTheMapping(String)[3]",
+            "result": "passed"
+          },
+          {
+            "name": "localAndTestRegisterTheActualGuardedServiceAndController(String)[1]",
+            "result": "passed"
+          },
+          {
+            "name": "localAndTestRegisterTheActualGuardedServiceAndController(String)[2]",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.LibraryHomeTestControllerTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "invalidTokenIsProblemDetailAndNeverQueriesCatalog",
+            "result": "passed"
+          },
+          {
+            "name": "verifiedUnlistedIdentityIsProblemDetailAndNeverQueriesCatalog",
+            "result": "passed"
+          },
+          {
+            "name": "unavailableLanguageIsProblemDetailAfterAuthorizedResolution",
+            "result": "passed"
+          },
+          {
+            "name": "missingTokenIsProblemDetailBeforeAnyCatalogQuery",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.ProfileMobileControllerTest",
+        "runner": "surefire",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "missingAuthorizationHeaderReturnsBadRequestProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "listProfilesReturnsProfilesForCurrentUser",
+            "result": "passed"
+          },
+          {
+            "name": "invalidFirebaseTokenReturnsUnauthorizedProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "updateProfileDelegatesToApplicationService",
+            "result": "passed"
+          },
+          {
+            "name": "updateProfileRejectsInvalidBody",
+            "result": "passed"
+          },
+          {
+            "name": "getProfileReturnsNotFoundProblemDetailsWhenProfileIsMissing",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.TestStoryPageMediaControllerTest",
+        "runner": "surefire",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "allowlistedUserGetsOrderedCurrentManifestWithRefreshedImageAndAudioUrls",
+            "result": "passed"
+          },
+          {
+            "name": "latestManifestIsDeniedWhileDifferentFollowupSnapshotIsPending",
+            "result": "passed"
+          },
+          {
+            "name": "latestManifestIsDeniedWhenCurrentSourceSnapshotChanged",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.user.web.mobile.UserProfileMobileIntegrationTest",
+        "runner": "surefire",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "databaseRejectsDuplicateFirebaseUid",
+            "result": "passed"
+          },
+          {
+            "name": "invalidStubTokenReturnsUnauthorizedProblemDetails",
+            "result": "passed"
+          },
+          {
+            "name": "firstProfileRequestCreatesDefaultProfileAndReusesItOnNextRequest",
+            "result": "passed"
+          },
+          {
+            "name": "updatingSecondaryProfileToPrimaryKeepsOnlyOnePrimaryProfile",
+            "result": "passed"
+          }
+        ]
+      },
+      {
+        "suite": "com.tellpal.v2.ApplicationModulesDocumentationIT",
+        "runner": "failsafe",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methods": [
+          {
+            "name": "writesModulithDocumentationDuringVerify",
+            "result": "passed"
+          }
+        ]
+      }
+    ],
+    "command": "DOCKER_HOST=<existing Colima socket> TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 sh mvnw verify",
+    "failures": 0,
+    "errors": 0,
+    "outcome": "PASS",
+    "namedRegression": "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+    "log": "/private/tmp/tellpal-library-runtime/iteration6-backend-verify.log",
+    "passedTests": 371,
+    "skipped": 0,
+    "productionAndDefaultProfileCases": 3,
+    "localAndTestProfileCases": 2,
+    "sameSourceTwoProfiles": "actual PostgreSQL scheduling, real byte preparation/publication, scalar catalog lookup, distinct immutable revisions and current covers passed",
+    "jarSha256": "fd78a97314c3e88eaf4e8a5ca4d8851e026abed5600289c9b3ae823acb6fc8af",
+    "runtime": "same newly compiled target/classes on owned isolated local8082; real Firebase verifier; PostgreSQL15 on5442; canonical NON_SUBSCRIBER restored",
+    "failsafeTotals": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "logSha256": "ba1bd02b16bd0e3fc49e35a09f9fa3767c1de0fff8c2f12f439d616d0660a2be",
+    "iteration6RegressionMethods": [
+      "authenticatedEnglishPreparationUsesItsCurrentLocalizedSourceAndPublishesEnglishCatalogCovers",
+      "processingListingCoverRejectsChangedSourceAndProfileWithoutMutatingAnyJobField",
+      "eligiblePublishedV32CurationRemainsIntactAndOptedOutAfterUpgradingLatest"
+    ],
+    "verificationScope": "previous371+1 retained on unchanged production sources; current focused10 PostgreSQL cases passed",
+    "focusedCurrentLibraryHomeIntegration": {
+      "privatePath": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2/be/target/surefire-reports/TEST-com.tellpal.v2.category.LibraryHomeIntegrationTest.xml",
+      "sha256": "f80c12d7c0d3c94b7c95970bf27893e755b10697fd1a9ca651a89856966fe4ec",
+      "methods": [
+        "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+        "staleDuplicateAndInvalidMappingWritesAreAtomicAndExistingRowsStartOptedOut",
+        "theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile",
+        "currentSecondVariantUploadFailurePersistsFailedWithoutPublishingAndExplicitRetrySucceeds",
+        "anAlreadyLoadedJpaLocalizationEditCannotOverwriteAtomicHomeConfiguration",
+        "savedIndependentOrdersFilterBeforeFiveAndNeverPadTurkishWithEnglish",
+        "processingListingCoverRejectsChangedSourceAndProfileWithoutMutatingAnyJobField",
+        "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[1]",
+        "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[2]",
+        "realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest"
+      ]
+    }
+  },
+  "cms": {
+    "unitTestFiles": 89,
+    "passedTests": 372,
+    "build": "passed",
+    "sourceChangesThisIteration": false,
+    "actualCmsHttpAndAffectedVisualChecks": "PASS",
+    "unitFiles": 89,
+    "unitTests": 372,
+    "libraryAffectedVisualAndInteractionTests": 3,
+    "categoryRegistryAffectedVisualTests": 2,
+    "actualBackendCasesPerAudience": 3,
+    "actualBackendAudiences": [
+      "NON_SUBSCRIBER",
+      "SUBSCRIBER"
+    ],
+    "logs": [
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-tests.log",
+        "sha256": "827aed90068c7268acb1f1ad0a58c61c6674dfa94378ede678f04bdd463a2a57"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-build.log",
+        "sha256": "73ea6ec007782b7a21c49623461e469fc99a4442fc1c1b7357e585c991c89f9b"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-home-visual.log",
+        "sha256": "c795dc45c4af640d6b2d74b049b7fd1e1fa49f5627d22dfb58cc21347c6f24b0"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-registry-visual.log",
+        "sha256": "5468036270fab698084b575880934d28b4548ae0597c8d195ad90a7890dc8034"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-real-non-sub.log",
+        "sha256": "9af20cd4c928a6d4ef681af47cde1578f77071f3a5644f2ebef1e118443e2189"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-runtime/iteration6-cms-real-sub.log",
+        "sha256": "ec8410826f3bc2d3325a16c269706204ea5836c139660503f98af725449ef5df"
+      }
+    ],
+    "productionBuildFiles": [
+      {
+        "path": "cms/dist/assets/geist-cyrillic-wght-normal-CHSlOQsW.woff2",
+        "sha256": "33d7ab460dff4e1fc586738d5d50e3e04bcb48e9bef7b94154cc7e07aeed6b66"
+      },
+      {
+        "path": "cms/dist/assets/geist-latin-ext-wght-normal-DMtmJ5ZE.woff2",
+        "sha256": "3640f9351b2a4631515dffea38092c24e70db9df2ef1e97c10cbdeb4163e6186"
+      },
+      {
+        "path": "cms/dist/assets/geist-latin-wght-normal-Dm3htQBi.woff2",
+        "sha256": "0cbbe6286a00f356e98980783cc950a9b693751e04aedfb97d9526ff6dc2b316"
+      },
+      {
+        "path": "cms/dist/assets/index-Ci_h_aEP.css",
+        "sha256": "cf5dd57db38f4c929cf39443f5daffe82da5480ec2a43f9569c44d079a1a7b62"
+      },
+      {
+        "path": "cms/dist/assets/index-DDBFApfS.js",
+        "sha256": "14416935fad16f1feb50d99eac3ae7f688dd28d85042d16f9164f2063a151dc5"
+      },
+      {
+        "path": "cms/dist/favicon.svg",
+        "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+      },
+      {
+        "path": "cms/dist/icons.svg",
+        "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+      },
+      {
+        "path": "cms/dist/index.html",
+        "sha256": "3255e6d76505f7ab8aea417676eb9c2664737351436cbcb0c49b3cc1da1e7d11"
+      }
+    ],
+    "unrelatedVisualAttempt": {
+      "scope": "Unrelated contents visual cases reached by an initial broader registry-toolbar run; excluded from required affected-scope acceptance",
+      "stoppedAfterScopeCorrection": true,
+      "observedDifferentPixelCounts": [
+        1,
+        3,
+        4,
+        6,
+        11,
+        13
+      ],
+      "existingBaselinesPreserved": true,
+      "requiredAffectedChecksPassed": 5,
+      "privateLogSha256": "966d92ac71b7281c1910dc17e1afccc028743f8bb2d5cfe95792ac87c946acfc"
+    },
+    "verificationScope": "retained prior tests/build/actual cases; CMS and backend production sources unchanged; not rerun"
+  },
+  "flutter": {
+    "sdk": "3.41.1",
+    "dart": "3.11.0",
+    "pubGet": "retained unchanged dependency files; no new pub_get required",
+    "generation": "retained unchanged annotations/generated files; no generation needed",
+    "analyze": "passed; no issues",
+    "passedTests": 112,
+    "failures": 0,
+    "portraitGoldens": {
+      "matched": 12,
+      "baselinesModified": false
+    },
+    "addedCoverage": {
+      "iteration6InitialPublicationOwnership": true,
+      "iteration6SettledActualPackageLookupError": true,
+      "iteration6ConfiguredFilesystemEviction": true,
+      "earlierCoveragePreserved": true,
+      "iteration6NthLookupErrors": "Actual CacheManager lookup #1/#2/#3/#4: original error, zero HTTP/bytes, independent retry, finite close; root call3 reproducer also passes"
+    },
+    "catalogWaitDefaultSeconds": 15,
+    "artworkWaitDefaultSeconds": 10,
+    "headerWaitRatio": 0.4,
+    "bodyInactivityWaitRatio": 0.4,
+    "totalTransportWaitRatio": 0.8,
+    "queueWaitRatio": 0.2,
+    "defaultHeaderWaitSeconds": 4,
+    "defaultBodyInactivityWaitSeconds": 4,
+    "defaultTotalTransportWaitSeconds": 8,
+    "defaultQueueWaitSeconds": 2,
+    "concurrentPackageOperations": 10,
+    "maximumQueuedRequests": 80,
+    "diskObjectLimit": 80,
+    "diskLifetimeMinutes": 10,
+    "decodedImageLimit": 48,
+    "decodedBytesLimit": 33554432,
+    "visibleTests": 109,
+    "hiddenSuiteLoadEvents": 13,
+    "machineDone": {
+      "success": true,
+      "type": "done",
+      "time": 14361
+    },
+    "cases": [
+      {
+        "testID": 9,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2908,
+        "name": "accepts ordered image and audio grants from the protected response"
+      },
+      {
+        "testID": 12,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2912,
+        "name": "allows a page without audio"
+      },
+      {
+        "testID": 13,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2916,
+        "name": "rejects an unsupported schema and an invalid page order"
+      },
+      {
+        "testID": 14,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2921,
+        "name": "detects grants that expire inside the refresh window"
+      },
+      {
+        "testID": 11,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2959,
+        "name": "real catalog 200 body 1048575-byte boundary releases its socket"
+      },
+      {
+        "testID": 17,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 2986,
+        "name": "real catalog 200 body 1048576-byte boundary releases its socket"
+      },
+      {
+        "testID": 18,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3018,
+        "name": "real catalog 200 body 1048577-byte boundary releases its socket"
+      },
+      {
+        "testID": 19,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3044,
+        "name": "real catalog 500 body 1048575-byte boundary releases its socket"
+      },
+      {
+        "testID": 20,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3073,
+        "name": "real catalog 500 body 1048576-byte boundary releases its socket"
+      },
+      {
+        "testID": 23,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3121,
+        "name": "real catalog 500 body 1048577-byte boundary releases its socket"
+      },
+      {
+        "testID": 22,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3122,
+        "name": "failed complete-file enumeration retains persisted ownership while closing repository; close retry never reads delegate"
+      },
+      {
+        "testID": 24,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3180,
+        "name": "eight native requests occupy admission; ninth opens no socket and released slot admits retry"
+      },
+      {
+        "testID": 26,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3294,
+        "name": "real catalog headers deadline closes the native socket"
+      },
+      {
+        "testID": 25,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3381,
+        "name": "retirement capacity retains transient failed ownership and bounds new transfer admission"
+      },
+      {
+        "testID": 27,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3408,
+        "name": "real catalog body deadline closes the native socket"
+      },
+      {
+        "testID": 28,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3506,
+        "name": "retirement capacity retains persistent failed ownership and bounds new transfer admission"
+      },
+      {
+        "testID": 29,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3522,
+        "name": "real catalog error deadline closes the native socket"
+      },
+      {
+        "testID": 30,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3561,
+        "name": "timer retirement failure is handled, keeps ownership and close retries it"
+      },
+      {
+        "testID": 32,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3566,
+        "name": "duplicate decoded transfers coalesce promotion and never rewrite a shared reader file"
+      },
+      {
+        "testID": 33,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3568,
+        "name": "warm immutable hit cannot promote unrelated stale transfer bytes"
+      },
+      {
+        "testID": 34,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3584,
+        "name": "corrupt warm hit is evicted on explicit retry; unrelated transfer failure preserves good shared file"
+      },
+      {
+        "testID": 35,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3586,
+        "name": "close drains promotion and package metadata write before emptying storage and declines new promotion"
+      },
+      {
+        "testID": 36,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3589,
+        "name": "fresh current decode renews expired shared metadata without rewriting active readers; next owner reuses it"
+      },
+      {
+        "testID": 37,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3592,
+        "name": "fresh decode recovers corrupt expired shared bytes without rewriting active reader; next owner has no refetch"
+      },
+      {
+        "testID": 38,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3595,
+        "name": "partial corrupt-expired metadata publication rolls back and close removes every delivered file"
+      },
+      {
+        "testID": 31,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 3733,
+        "name": "real catalog trickle deadline closes the native socket"
+      },
+      {
+        "testID": 41,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5078,
+        "name": "repeated expired catalog attempts release resources and current retry succeeds"
+      },
+      {
+        "testID": 42,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5094,
+        "name": "app disposal cancels simultaneous native requests and rejects new admission"
+      },
+      {
+        "testID": 46,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5534,
+        "name": "real HTTP DTO requested language returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 47,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5541,
+        "name": "real HTTP DTO item language returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 48,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5547,
+        "name": "real HTTP DTO duplicate category returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 49,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5554,
+        "name": "real HTTP DTO preview overflow returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 50,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5563,
+        "name": "real HTTP DTO fractional schemaVersion returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 51,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5568,
+        "name": "real HTTP DTO fractional previewLimit returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 52,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5573,
+        "name": "real HTTP DTO fractional categoryId returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 53,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5578,
+        "name": "real HTTP DTO fractional displayOrder returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 54,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5583,
+        "name": "real HTTP DTO fractional contentId returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 55,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5588,
+        "name": "real HTTP DTO fractional ageRange returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 56,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5592,
+        "name": "real HTTP DTO fractional durationMinutes returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 57,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5599,
+        "name": "real HTTP DTO fractional phone assetId returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 58,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 5604,
+        "name": "real HTTP DTO fractional tablet assetId returns invalidResponse and Cubit error"
+      },
+      {
+        "testID": 67,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7489,
+        "name": "partial cleanup retains transient failure and close retries deletion"
+      },
+      {
+        "testID": 65,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7491,
+        "name": "successful renewal pins changed editorial snapshot and adopts only matching row/language/content covers and expiry"
+      },
+      {
+        "testID": 69,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7493,
+        "name": "same-context retry rejects an earlier success and error in reversed order"
+      },
+      {
+        "testID": 70,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7495,
+        "name": "language and access context change reject obsolete responses and close rejects callbacks"
+      },
+      {
+        "testID": 71,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7514,
+        "name": "deadline leaves loading, retry has new attempt and expired completion is ignored"
+      },
+      {
+        "testID": 72,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7516,
+        "name": "expired signed artwork allows only one automatic refresh per current catalog"
+      },
+      {
+        "testID": 68,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7528,
+        "name": "persistent partial failures bound ownership and storage admission; closed cleanup can recover"
+      },
+      {
+        "testID": 73,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7550,
+        "name": "background artwork refresh network retains the exact successful catalog"
+      },
+      {
+        "testID": 75,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7586,
+        "name": "background artwork refresh timeout retains the exact successful catalog"
+      },
+      {
+        "testID": 76,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7621,
+        "name": "background artwork refresh empty retains the exact successful catalog"
+      },
+      {
+        "testID": 77,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7656,
+        "name": "background artwork refresh invalid retains the exact successful catalog"
+      },
+      {
+        "testID": 78,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7658,
+        "name": "manual expired-cover retry remains recoverable after automatic failure and is single-flight"
+      },
+      {
+        "testID": 79,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7660,
+        "name": "obsolete automatic refresh cannot replace retry"
+      },
+      {
+        "testID": 80,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7662,
+        "name": "obsolete automatic refresh cannot replace context"
+      },
+      {
+        "testID": 81,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7663,
+        "name": "obsolete automatic refresh cannot replace disposal"
+      },
+      {
+        "testID": 63,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7698,
+        "name": "landscape long-title artwork error fits tr at enlarged text"
+      },
+      {
+        "testID": 74,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7705,
+        "name": "enumeration failure closes repository and repeated close has no delegate access"
+      },
+      {
+        "testID": 82,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7711,
+        "name": "artwork attempt rejects old success, failure and timeout across retry, context and disposal"
+      },
+      {
+        "testID": 84,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7714,
+        "name": "file deletion failure still closes repository; retry keeps local ownership"
+      },
+      {
+        "testID": 85,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7723,
+        "name": "actual scheduled CacheStore cleanup after disposal never calls closed storage"
+      },
+      {
+        "testID": 88,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7729,
+        "name": "cleanup query admitted before disposal completes safely; late callbacks cannot reach closed storage"
+      },
+      {
+        "testID": 89,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7734,
+        "name": "disposal drains admitted read and write, declines new work and coalesces close"
+      },
+      {
+        "testID": 90,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7737,
+        "name": "admitted storage errors propagate and still release the close drain"
+      },
+      {
+        "testID": 83,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7771,
+        "name": "landscape long-title artwork error fits en at enlarged text"
+      },
+      {
+        "testID": 93,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 7828,
+        "name": "landscape long-title artwork error fits pt at enlarged text"
+      },
+      {
+        "testID": 94,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8042,
+        "name": "long titles, missing artwork and disabled semantics tr Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 95,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8198,
+        "name": "long titles, missing artwork and disabled semantics tr Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 96,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8282,
+        "name": "long titles, missing artwork and disabled semantics en Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 97,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8369,
+        "name": "long titles, missing artwork and disabled semantics en Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 98,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8445,
+        "name": "long titles, missing artwork and disabled semantics pt Size(411.0, 914.0) scale 1.0"
+      },
+      {
+        "testID": 99,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8542,
+        "name": "long titles, missing artwork and disabled semantics pt Size(411.0, 914.0) scale 1.3"
+      },
+      {
+        "testID": 102,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8646,
+        "name": "long titles, missing artwork and disabled semantics tr Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 103,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8747,
+        "name": "long titles, missing artwork and disabled semantics tr Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 104,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8851,
+        "name": "long titles, missing artwork and disabled semantics en Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 105,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 8953,
+        "name": "long titles, missing artwork and disabled semantics en Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 106,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 9047,
+        "name": "long titles, missing artwork and disabled semantics pt Size(800.0, 1280.0) scale 1.0"
+      },
+      {
+        "testID": 101,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 9119,
+        "name": "app composition uses platform enlarged text until an explicit harness override"
+      },
+      {
+        "testID": 107,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 9144,
+        "name": "long titles, missing artwork and disabled semantics pt Size(800.0, 1280.0) scale 1.3"
+      },
+      {
+        "testID": 110,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 9202,
+        "name": "loading, empty, failure and retry remain distinct and localized"
+      },
+      {
+        "testID": 115,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10168,
+        "name": "actual package admitted lookup #1 error rejects fallback before HTTP and permits independent retry"
+      },
+      {
+        "testID": 116,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10171,
+        "name": "actual package admitted lookup #2 error rejects fallback before HTTP and permits independent retry"
+      },
+      {
+        "testID": 117,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10175,
+        "name": "actual package admitted lookup #3 error rejects fallback before HTTP and permits independent retry"
+      },
+      {
+        "testID": 118,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10178,
+        "name": "actual package admitted lookup #4 error rejects fallback before HTTP and permits independent retry"
+      },
+      {
+        "testID": 119,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10184,
+        "name": "real initial immutable write failure owns partial file through cleanup and close"
+      },
+      {
+        "testID": 120,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10187,
+        "name": "real initial immutable metadata publication failure owns partial file through cleanup and close"
+      },
+      {
+        "testID": 121,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10224,
+        "name": "persistent failed initial writes retain at most 80 physical owners and reject further creation; close retry recovers"
+      },
+      {
+        "testID": 122,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10227,
+        "name": "actual package retrieval and download lookup errors settle with original error, independent retry succeeds and close is finite"
+      },
+      {
+        "testID": 123,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10229,
+        "name": "actual package removeFile failure retains physical owner after metadata deletion; close retries without delegate access"
+      },
+      {
+        "testID": 124,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10268,
+        "name": "repeated failed package removals bound physical ownership and storage admission"
+      },
+      {
+        "testID": 125,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10271,
+        "name": "accepted package lookup error during disposal settles consumer and finite close without late delegate access"
+      },
+      {
+        "testID": 126,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10273,
+        "name": "real package transfer metadata publication failure reaches consumer before FileInfo and close cleans bytes"
+      },
+      {
+        "testID": 127,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10355,
+        "name": "actual IOFileSystem eviction failures retain explicit files through metadata deletion and disposed retry"
+      },
+      {
+        "testID": 128,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 10487,
+        "name": "real IOFileSystem package removal, age/capacity cleanup and close delete configured physical paths"
+      },
+      {
+        "testID": 130,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11085,
+        "name": "real CacheManager bounds headers and removes partial files before close"
+      },
+      {
+        "testID": 113,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11185,
+        "name": "same-asset retry starts a separate provider transfer before old success completes"
+      },
+      {
+        "testID": 131,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11350,
+        "name": "real CacheManager bounds body and removes partial files before close"
+      },
+      {
+        "testID": 132,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11492,
+        "name": "same-asset retry rejects old transfer error after replacement loaded"
+      },
+      {
+        "testID": 134,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11527,
+        "name": "short enlarged long-title error preserves lock and 48dp retry without overflow"
+      },
+      {
+        "testID": 133,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 11842,
+        "name": "real CacheManager bounds trickle and removes partial files before close"
+      },
+      {
+        "testID": 135,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 12138,
+        "name": "resize 411.0 to 800.0 replaces asset owner and keeps timeout/retry current"
+      },
+      {
+        "testID": 136,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 12667,
+        "name": "all ten occupied package slots release; current retry fetches independently"
+      },
+      {
+        "testID": 137,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 12727,
+        "name": "resize 800.0 to 411.0 replaces asset owner and keeps timeout/retry current"
+      },
+      {
+        "testID": 138,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 13684,
+        "name": "explicit retry sends request before the old delayed headers and rejects its success"
+      },
+      {
+        "testID": 139,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 13878,
+        "name": "close cancels headers plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 140,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 14079,
+        "name": "close cancels body plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 141,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 14276,
+        "name": "close cancels trickle plus queued work; no late file or metadata publication"
+      },
+      {
+        "testID": 142,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 14313,
+        "name": "close drains admitted package metadata and delayed file creation before cleanup"
+      },
+      {
+        "testID": 143,
+        "result": "success",
+        "skipped": false,
+        "hidden": false,
+        "type": "testDone",
+        "time": 14347,
+        "name": "close drains actual package metadata publication before removing files and closing the repository"
+      }
+    ],
+    "machineLogSha256": "3b9b5a91e7ee277218e614aa4a6d093c575b2f8737279eb9a97b94420738453f",
+    "catalogHeaderSeconds": 6,
+    "catalogBodyIdleSeconds": 6,
+    "catalogTotalSeconds": 12,
+    "catalogConcurrentRequests": 8,
+    "machineLog": "/private/tmp/tellpal-library-runtime/iteration6-flutter-tests.jsonl",
+    "verificationScope": "current fullFlutter112",
+    "logs": [
+      {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-full.log",
+        "bytes": 22946,
+        "sha256": "3362b8456afa3a534b47e5b04a1b8fd314a3748aacd64dc6888e524884902927"
+      },
+      {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-analyze.log",
+        "bytes": 96,
+        "sha256": "45428a9689986c71eef3559da6df1bd4c3cc1df3d81dcafff631cfd829333844"
+      }
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "app/mobile/integration_test/library_deadline_live_test.dart",
+      "sha256": "a8ff1f332970c5bc85c58ec939dce03874527e4be729b009eff76229a91b86f5"
+    },
+    {
+      "path": "app/mobile/integration_test/library_live_test.dart",
+      "sha256": "5dc7f567663d9b720db26eec94efe8cdcc383a1dbd4d653e3a8645b9f95a420e"
+    },
+    {
+      "path": "app/mobile/integration_test/native_catalog_transport_probe.dart",
+      "sha256": "f2136955517f76fe8760a0c36a0ada111e457b234043c6fc02368639c10eb91f"
+    },
+    {
+      "path": "app/mobile/integration_test/story_media_resilience_test.dart",
+      "sha256": "4b82ba0649bc124ec87e5944e99e141ce58a9e360a3fd886f609f0f8171cba47"
+    },
+    {
+      "path": "app/mobile/integration_test/story_media_stress_test.dart",
+      "sha256": "d5476b1b92bd278113c866f0d2fb8dafa734aa1e0c37129c8f0d8e14df51e814"
+    },
+    {
+      "path": "app/mobile/integration_test/story_media_test.dart",
+      "sha256": "32db1a3b1ff984917bfe2da4909d6ddc45d386be79120beb6b1ec7d9d5070954"
+    },
+    {
+      "path": "app/mobile/lib/app/injection.config.dart",
+      "sha256": "46de125863ae4dc1823881c2e4d17ada8e4ec549975cfa16fc93c82346e85ef4"
+    },
+    {
+      "path": "app/mobile/lib/app/injection.dart",
+      "sha256": "dd0d67d58cfd7c45a22e3eb2ce656b66fd6adaf0373ccebfffe9669ca757e7b3"
+    },
+    {
+      "path": "app/mobile/lib/app/library_app.dart",
+      "sha256": "9de133b4d7c2f9199ed1bb5f3b3d2e54241deb14d4d9a76d868ad62e7d2a24f1"
+    },
+    {
+      "path": "app/mobile/lib/app/library_configuration.dart",
+      "sha256": "16452eb1757efdcf2da167b41aa61ccddc3b99dcb8313f428f3469999f20cca1"
+    },
+    {
+      "path": "app/mobile/lib/app/library_dev_harness.dart",
+      "sha256": "3448129ca296dc3c9cad7cf12177431478f0c2f57354272ef5a6e71e49d11ed3"
+    },
+    {
+      "path": "app/mobile/lib/app/router.dart",
+      "sha256": "6d845235deb2de685cfe7fb0227580be9b623fad3da70950d93a90277915d012"
+    },
+    {
+      "path": "app/mobile/lib/app/router.gr.dart",
+      "sha256": "75a18d7e74b3706e49e13fe2ebd0b6ba8b3f39b1bc2f3c77f99aa6b43929deb5"
+    },
+    {
+      "path": "app/mobile/lib/core/diagnostics/library_diagnostics.dart",
+      "sha256": "be9bbc830c05c967e76bfbfddba0dc0b17ec1d66e5779f810c287b5a36ceeaf4"
+    },
+    {
+      "path": "app/mobile/lib/core/error/failure.dart",
+      "sha256": "85301e5cd35adb10b5b5c12bf1fb783a8c34bb081aee361e7ea7ebf60d1ff825"
+    },
+    {
+      "path": "app/mobile/lib/core/network/authenticated_transport.dart",
+      "sha256": "7711f49d85e98fe6f95675fbfb42d07f7273b5e5cfa757efe14b72138eaa8788"
+    },
+    {
+      "path": "app/mobile/lib/core/network/draining_cache_info_repository.dart",
+      "sha256": "83ce15e9d121df9bc7b1ab6c023e6ff007dcfb86e6effa408a4912b83135b849"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_cache_lifecycle.dart",
+      "sha256": "ab968a838289d2b64abb16080f6572a240d93d903f5c8d9e5d63942565167735"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_cache_store.dart",
+      "sha256": "d811c0e72d5766ecbe451877a58270326952c963e8fd92d94e76d8a6fd6e1245"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_image_cache.dart",
+      "sha256": "9980401e6d2c42f6ee65f9a8db89b17c01d37a0f14781dc9a08f1003f1f3e4b5"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_transfer_file_service.dart",
+      "sha256": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8"
+    },
+    {
+      "path": "app/mobile/lib/core/theme/library_theme.dart",
+      "sha256": "f2d77b41b7705c05a9040708183a2f6e446caa03db41db3bb7a22725e3ff77c4"
+    },
+    {
+      "path": "app/mobile/lib/features/library/data/model/library_catalog_model.dart",
+      "sha256": "48d5fe8750ed99f612e07b8e17caa0c857fe8c2b00a1a61e3fce068751a2fb51"
+    },
+    {
+      "path": "app/mobile/lib/features/library/data/model/library_catalog_model.g.dart",
+      "sha256": "7cc56a37e0438e553c9d2772341e49f59de514c0a7323cdedb8960a1cd8d68b8"
+    },
+    {
+      "path": "app/mobile/lib/features/library/data/repository_impl/library_repository_impl.dart",
+      "sha256": "9f0bf1b0711d751ed99862d1b42777660573a08b6ef471dca6c25a31081a251d"
+    },
+    {
+      "path": "app/mobile/lib/features/library/domain/entity/library_catalog.dart",
+      "sha256": "c129edcebbdd5b15d8d03d92ea677bf43c66ac807ebeba1d49c3161dcbef21ca"
+    },
+    {
+      "path": "app/mobile/lib/features/library/domain/repository/library_repository.dart",
+      "sha256": "82e358b87c5c3fbdcc01faacbb37d49626b1391f6a48418ef35518a5858b564d"
+    },
+    {
+      "path": "app/mobile/lib/features/library/domain/use_case/get_library.dart",
+      "sha256": "c0bb7b1e27c30e131a4eec1ec255af94f7a5b3f278c70d3df831881fb99eafad"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/artwork_cubit.dart",
+      "sha256": "98619f5f8d5161fc53c3c149996095acd5387cfe833f29e21b07edd7211449f0"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/artwork_cubit.freezed.dart",
+      "sha256": "926500a75779e1891966fe5fe15c799397c8c62056a4fc2714ae9303a68260e0"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/library_cubit.dart",
+      "sha256": "5a9c214aad999482fd24e7e0b8e2e7c2de0f3f00d48700f9aeeaaee6d5360acd"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/library_state.dart",
+      "sha256": "56f65d87ed977f51c4dff93f175da2a0cd8ed4c31c6d60cfa54caaf4618f747f"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/cubit/library_state.freezed.dart",
+      "sha256": "3b833080d59f4591d6da1b27dab9f641c6a2d229f4b136435389e19e55bed5f3"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/library_strings.dart",
+      "sha256": "9a9597b953548c7577e924e0305e93827367069411f6616899472984913e4760"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/screen/library_screen.dart",
+      "sha256": "11031764ed127569c03bccb1bbf60aad4a1d38cfba102373e1163db9d610bddb"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/view/library_view.dart",
+      "sha256": "b34c3a61435a62191d3424845cd690d5747cddaef16fa701d9b7d6b6bf2be0df"
+    },
+    {
+      "path": "app/mobile/lib/features/library/presentation/widgets/library_card.dart",
+      "sha256": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8"
+    },
+    {
+      "path": "app/mobile/lib/main.dart",
+      "sha256": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380"
+    },
+    {
+      "path": "app/mobile/lib/main_library_dev.dart",
+      "sha256": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30"
+    },
+    {
+      "path": "app/mobile/lib/story_manifest.dart",
+      "sha256": "a6dd662a0a456c66fdbd71b5fa3c3a2941f61bd3007b066eb6c6f090dc59a2fd"
+    },
+    {
+      "path": "app/mobile/lib/story_manifest_client.dart",
+      "sha256": "3b743e42775b0b61e573b35a24b000e9eec3a34344680bce48bed4dddf3af32e"
+    },
+    {
+      "path": "app/mobile/lib/story_player_page.dart",
+      "sha256": "7049c42309a0e01fae0ae294b9c802b558825a4c86006111ab0e8940e5f0092b"
+    },
+    {
+      "path": "app/mobile/pubspec.lock",
+      "sha256": "34fb6117a750b7aea09200a0eb11f7b6966344a13fb132dba4dd23b8be28b491"
+    },
+    {
+      "path": "app/mobile/pubspec.yaml",
+      "sha256": "34c430ade4ca30d63a61ee333d1e4a1e952a08c7ec55123b9e76a29c5c474b76"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-en-411-1.0.png",
+      "sha256": "532a9c550544a55934a2a2c4a0fe214f45b4c5b8e9e75a7fe11e2fb3ef0428f6"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-en-411-1.3.png",
+      "sha256": "748ba24c46d3b7d95ded24800288d3ab5a8c8e78cf362de3cd592691ee16fa7c"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-en-800-1.0.png",
+      "sha256": "4b485e1cdcff79222dbcd55189386b5fc033dc0260b4a9e204cb016bca166610"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-en-800-1.3.png",
+      "sha256": "8d42e1c0e7bea5ee6035879502a795ef94ada9c67bf4c863d60fa55f165deb85"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-pt-411-1.0.png",
+      "sha256": "eb52d1af1868662b7f49c3b6e184d849b19c2a4adbfd60d10ac8e7e58aa648d1"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-pt-411-1.3.png",
+      "sha256": "0e8da8f7bfb09bfdf4361207acae583fa5474555019a1a721a49a8602ddbc3d1"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-pt-800-1.0.png",
+      "sha256": "16a42d6f1edb3455a9b9efb72e22045f98cd6ca75872d2d1ef7adf36d3f79b40"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-pt-800-1.3.png",
+      "sha256": "809c45fc8152d959b03a04264a99b5c3fdff17c3308c12f3054a5f453ac1b091"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-tr-411-1.0.png",
+      "sha256": "bf5463b2712a06b257bc9261c0c83ba421169ee579f392b340dd1d9d9f7cb637"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-tr-411-1.3.png",
+      "sha256": "ff751d9a0f9d732868e114adeda63dcc7e7a52ff2511aec260bd107a4509c8df"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-tr-800-1.0.png",
+      "sha256": "06d98490f0fe5236f795a23850900d05cb83348472d6389348a7f3ba6403ee58"
+    },
+    {
+      "path": "app/mobile/test/library/goldens/library-tr-800-1.3.png",
+      "sha256": "e557898734ccddfd9c2a7b3a48eb53e1fade83fb6f347c058163dd7417819358"
+    },
+    {
+      "path": "app/mobile/test/library/library_app_test.dart",
+      "sha256": "e6f8480aa67bcc4a322d8d72734713130813376b3f01d1f7971c20a8d65e754e"
+    },
+    {
+      "path": "app/mobile/test/library/library_artwork_test.dart",
+      "sha256": "511efc1b674ff11539a20b723ca79241c4d80702676d9441c7c134bc499e971b"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_disposal_test.dart",
+      "sha256": "dfbe8374d156913665ff639826c4200aa9cb3bbbe5c43b18ea6b45076700878d"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_package_failure_test.dart",
+      "sha256": "45a811056c7322f4775107dd2b630979dcf247383a9eb1bbd33e4983f5ae318f"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_promotion_test.dart",
+      "sha256": "db25d2b2df73307bb20d97a9728d9bbe799c6d9f8d34f592ed06abb53ce92e7c"
+    },
+    {
+      "path": "app/mobile/test/library/library_cache_transport_test.dart",
+      "sha256": "4f321e4fe21ee82a4ce8660cca468b4ce4e4272aedf103cf59afc3928c4f5ebe"
+    },
+    {
+      "path": "app/mobile/test/library/library_catalog_transport_test.dart",
+      "sha256": "4e74a35ef18df32856d85f2ad51b9d62a4fdfdb2aa704488a9d7e3d5e61f398b"
+    },
+    {
+      "path": "app/mobile/test/library/library_cubit_test.dart",
+      "sha256": "82b2a52a821bb14d46bf190b3f1bee70aec454ae80c855a4ee81fe3b97064e14"
+    },
+    {
+      "path": "app/mobile/test/library/library_fixture.dart",
+      "sha256": "279e6201fa21023b92237e69144df4aa0dc97a4a55ad3337ef4c7755406625a6"
+    },
+    {
+      "path": "app/mobile/test/library/library_repository_test.dart",
+      "sha256": "a685c43d70f0366c9689b41cb7a76bb9b70db3e6a6aab95eebbd5107b5e5cbbf"
+    },
+    {
+      "path": "app/mobile/test/library/library_view_test.dart",
+      "sha256": "57fe4c1f80a0da0efe9f8044891aba9936fd60ca5f214e0edff2075b9c02dd65"
+    },
+    {
+      "path": "app/mobile/test_driver/library_live_driver.dart",
+      "sha256": "3a0b86efd9077e20597a83280235f8f5b48c60714e771b56594e39b6048a5596"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/AssetProcessingCommands.java",
+      "sha256": "4af298f72faf343433b6fb92f02055ed16d52d04066b63daee9a44253c429deb"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/AssetProcessingKind.java",
+      "sha256": "ab2b26be88fdf353b69530e01ec10edacbe3bf31851b3b92d30b0493164704e1"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/AssetProcessingRecord.java",
+      "sha256": "0682cc7d75550c724061dfd87a2cb9b604277a921990c993777039fedbc2cdd7"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/LibraryCoverPreparationApi.java",
+      "sha256": "b6dcb7f50848a516979928e3994984f8c9c4eb5a479715c88d55c137deebd6d9"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/LibraryCoverQueryApi.java",
+      "sha256": "135c743944c5b2d3c646723ff468e0e20941cbec724accb3785fabf7146e6da4"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/ListingCoverAttempt.java",
+      "sha256": "a82c6ada2fc5516116481514629538b419d9eb55b26c15b50923f28cc40789b5"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/api/StaleListingCoverAttemptException.java",
+      "sha256": "ca4d20b57c52ffa427e796f8947c98a4b77c2091f6e88c9b638d8db0a11a1714"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/application/AssetProcessingMapper.java",
+      "sha256": "4e5c85ef4dd0512c06707c35c5b3828cd6317d6189e44ce85eda450aaf6b5a84"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/application/AssetProcessingService.java",
+      "sha256": "da62a43445e447810791efd68db8b42301a2a7e2f57886acb9282204c660ec22"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/application/LibraryCoverPreparationService.java",
+      "sha256": "7fad3d6457c4ed8fb13a86e8375ce0b182b90cba7b3b0c74b402869f598fa62a"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/application/LibraryCoverQueryService.java",
+      "sha256": "96237d4a1c24003b6166e367330481529b265d9f11de2d00dae7e6ab0d8eecab"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/application/ListingCoverRevisionStore.java",
+      "sha256": "d89e9c9d66da0bde78844e51eeaaf8a1dca82fa1bc943dd6fb3aad82cd45024b"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/domain/AssetProcessing.java",
+      "sha256": "c64e9bdec4bb8d4363aaec6be1072d04ea423c1aeb7db00ec51d306bbbc1bbfd"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/domain/AssetProcessingRepository.java",
+      "sha256": "14a23bf44f7f8e922e122ba5cfb9aff30fd30b5efff1f3843beef80ac6f6c8d1"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverProcessingExecutor.java",
+      "sha256": "4475a91f1375468a536333aafc8aefd3825e62957dc514ec280d76746e02450d"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverProfile.java",
+      "sha256": "b9c67792563f476102d8699517da6d2806787a1a9e837a6e047272f4812fc532"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverRenditionProcessor.java",
+      "sha256": "24d73ef67f80b9f540df0420f13073d34efc8d6fc9a9a9618ec95da2a8a4e015"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/RegisteringAssetProcessingJobExecutor.java",
+      "sha256": "94402d6b13eab4f73468eb7b6aa296cb93b51bb1c4c05fd7ebaa1db18488793d"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/persistence/JdbcListingCoverRevisionStore.java",
+      "sha256": "8bce3366cf73c5efb3058bebd7f02053af80e052f4c196d704d7428e580deca6"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/persistence/JpaAssetProcessingRepositoryAdapter.java",
+      "sha256": "328d0a9a7d15d92da0cbc5da441ec956dca28b66bf21f3ffd45e9ba9c52ebef6"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/asset/infrastructure/persistence/SpringDataAssetProcessingRepository.java",
+      "sha256": "b2c9feca9406b29ce70fce58965141e9431ca0c4933dcd0daaf05edb88def36b"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/api/LibraryHomeCatalog.java",
+      "sha256": "9e52593e3ba0320d667a77ceaba928f43767ad03336722e5473dfa5360243126"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/api/LibraryHomeQueryApi.java",
+      "sha256": "1b0d177877a5c6be0a7242f676fecb7ae10d87fef022e2ab718573e08054b0ab"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/application/CategoryHomeConfigurationService.java",
+      "sha256": "9348c465cc7fb127f7dbfde40b40e35ee73ed8bf413cbccb4e526af545315968"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/application/CategoryHomeStore.java",
+      "sha256": "2212cb7b1a58e5f06ce31eae1f03491465e4428dea102893c0a70fc73eda7201"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/application/query/LibraryHomeQueryService.java",
+      "sha256": "6d2bcc171c754c586077065a6c18acf94ac23d184f64086e30e8004a3feae5e7"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/domain/CategoryLocalization.java",
+      "sha256": "64e9bfa3509d40893467deee1de3618d8eb3ed430d9e6aa2247f40ba5d77ddc3"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/domain/HomeAudience.java",
+      "sha256": "b66c23a42039a28f4fcdb818e36f78297b31eadc35b4b68cd050afeb5c248e21"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/infrastructure/persistence/JdbcCategoryHomeStore.java",
+      "sha256": "6c92caaa6af66e95951da3723c8c3d731fb6629494157fa3153ca4a0f2739181"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/web/admin/CategoryAdminExceptionHandler.java",
+      "sha256": "f54c84bd7e629009f5be9728b42e646f9a083e37436bfdb667bccc80e67d14ed"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/category/web/admin/CategoryHomeAdminController.java",
+      "sha256": "c136ee3b3eba0f309ad8af78b17cacccfe5fc99d10dc48cb2a9e940b71353d55"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/api/ContentPreview.java",
+      "sha256": "1dd79bdf95bff5cd3339158c0b4b4661cdd2dfbc85fd4550b5ffd47f2397f9a3"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/api/ContentPreviewQueryApi.java",
+      "sha256": "aa28cc03a396e00570ef479da8f41a27e3f401293e4816c96fdaa649ee245cec"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/application/ContentManagementService.java",
+      "sha256": "ccef32f72d39116c735242e791aa1093fe2b413468f90a27ea6fb2b8f63a0dba"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/application/query/ContentPreviewQueryService.java",
+      "sha256": "3d6a4112af69df1d35d1fd79f229fe46a2d8fb8d01af6d1288921e381337a25f"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/application/query/ContentPreviewReadRepository.java",
+      "sha256": "17811c14ffa918bd5181db9eed08fdd13e3640d78d06c874ac6b5bdd75f96829"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/infrastructure/persistence/JdbcContentPreviewReadRepository.java",
+      "sha256": "09866a0b9a0c93ac32a7794f1db5c65a3ca871163d03d1d6bae26c69366aa766"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/content/web/admin/ContentAdminController.java",
+      "sha256": "a1e16ed0546fc71b78e84f52123027e9f0ddf568e6c65bbe1253451f527baa33"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/application/LibraryHomeTestQueryService.java",
+      "sha256": "3365d5eafbe6521c3391122aa89a940f3692178baf3ecc061f942fec5bf8bb20"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/package-info.java",
+      "sha256": "1b2aee61d3b9497e47512131bfb179c20e8d8955d8fb292ac1f80543169206f7"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/web/mobile/LibraryHomeTestController.java",
+      "sha256": "4767c79191153d3d83f19ef6381acc0b2d69daccca255e7a696ae46c8f5e6d70"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/web/mobile/LibraryHomeTestExceptionHandler.java",
+      "sha256": "34cd8da9fa3774c58872207d4f113b6aa4b013ea96b12e5201eab790c931e322"
+    },
+    {
+      "path": "be/src/main/resources/application.yml",
+      "sha256": "b241c460c0e8378b90c7bd3f3e632f5d24dde8764feed88d2845dbf2c1fa0ffb"
+    },
+    {
+      "path": "be/src/main/resources/db/migration/V33__category_home_configuration.sql",
+      "sha256": "e250829376bc94871a7b63ac8fb834600b20af10756e32bed5f8c262e9be71d8"
+    },
+    {
+      "path": "be/src/main/resources/db/migration/V34__listing_cover_revisions.sql",
+      "sha256": "5e584e66c0db21a8dd088d152844f845a19959660c2f743dec680dbedd216d2f"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/ApplicationModulesTest.java",
+      "sha256": "26cacdf8afc129f69f45bb410c34a33e97de9266db9ba32725e7aa642fa03d12"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverProcessingExecutorTest.java",
+      "sha256": "73c49af0f355034978bcec4b09c4a3a32ef0e127f8b3f1133ad8e0e448569fcb"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverRenditionProcessorTest.java",
+      "sha256": "736f18b2d238967695a6f3470ffad3329873fff45de7adc38d30f1ba3be0011f"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java",
+      "sha256": "8237b785b9dcaee5db2ae6fde342eaad4d36dd7d49cd74426701012607a6434f"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/migration/LibraryHomeOptInMigrationIntegrationTest.java",
+      "sha256": "50923233c1b652ca9669db4f038dcf742673a78483ce7251e57bf8b221b991ad"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/category/web/admin/CategoryHomeAdminIntegrationTest.java",
+      "sha256": "7cfdb8d4dab8e24e6cc9e3c97b7a2ea4e2e4dc492faa7ab476fe3aa71e62548a"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/content/migration/CanonicalAudioStoryTypeRemovalMigrationIntegrationTest.java",
+      "sha256": "6a391ceb6a6207770ce7fb98f656307571413939c338e7bba3e8fc648708e498"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/content/web/admin/ListingCoverAdminSourceIntegrationTest.java",
+      "sha256": "9160adad4c5f65565de3c19836de0235d11860ca686d327fb0345420aea1aa4f"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/user/application/LibraryHomeTestQueryServiceTest.java",
+      "sha256": "3d7b8d361132acd1b402102a617863087ceeee6ab2d27c0bd390065d67792255"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/user/web/mobile/LibraryHomeProfileContextTest.java",
+      "sha256": "2b76d6f62e735fb7e5a35f99e8d2e9220df7245c2d030721eca10b1e142425b8"
+    },
+    {
+      "path": "be/src/test/java/com/tellpal/v2/user/web/mobile/LibraryHomeTestControllerTest.java",
+      "sha256": "be508f3216ec4999b17fe43c1fe653299dd50ffbe70fc6240247de35503d7219"
+    },
+    {
+      "path": "cms/e2e/library-real.spec.ts",
+      "sha256": "234eb70e333949ce5421ce819ee59faa7fe2fdf4359c5463d77b1570dd36da26"
+    },
+    {
+      "path": "cms/e2e/visual/category-home.visual.spec.ts",
+      "sha256": "7f235e85716d217e653237bc7c0326eeff8d986f6b4ac4f0be69f6cadb545f98"
+    },
+    {
+      "path": "cms/e2e/visual/category-home.visual.spec.ts-snapshots/category-home-desktop-chromium-darwin.png",
+      "sha256": "acf58893a4d86665318a87753589c35a4ca4a8336a9ee25a512b58d464933394"
+    },
+    {
+      "path": "cms/e2e/visual/category-home.visual.spec.ts-snapshots/category-home-laptop-chromium-darwin.png",
+      "sha256": "024ebc82f11f29d55e7199c2117ef58c85da1907dbbeed6f44273082b5f94607"
+    },
+    {
+      "path": "cms/e2e/visual/registry-toolbar.visual.spec.ts-snapshots/categories-registry-toolbar-desktop-chromium-darwin.png",
+      "sha256": "5b73f7b985ce0683ea014302af1cf3f62194b909bad9ca14d6575697d996bce3"
+    },
+    {
+      "path": "cms/e2e/visual/registry-toolbar.visual.spec.ts-snapshots/categories-registry-toolbar-laptop-chromium-darwin.png",
+      "sha256": "c67903f4ad54f20cf644d594cec862b6b5f3e8c8cd5cb2e960be8b4faba991fb"
+    },
+    {
+      "path": "cms/src/app/router.tsx",
+      "sha256": "9b240d96f8bebf5f610b70bb176943410b7cf3f7f44e2859589092ff425a2df4"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.test.tsx",
+      "sha256": "695fd5dfbb329cbb73bf0587a9792c68cc200a73f663a8a8d8c6ad5289fcb367"
+    },
+    {
+      "path": "cms/src/app/routes/categories/home.tsx",
+      "sha256": "80e96d5a42e6cf36f258f72dfc6d75cd053f190b6355a9cad8bf7fd64e92bf78"
+    },
+    {
+      "path": "cms/src/app/routes/categories/index.tsx",
+      "sha256": "a0bfc644ecbb0edb924e45f0e4d707a20aabf2f01f189a00709321a2e0694aec"
+    },
+    {
+      "path": "cms/src/features/categories/api/category-home-admin.ts",
+      "sha256": "30b93d7a432372e853b100efa1402054ec46b06aa03d68dc6792f151fc5d3083"
+    },
+    {
+      "path": "cms/src/features/categories/components/category-home-editor.tsx",
+      "sha256": "099237053700efb97a9c8ebcb177f8b12d5430a27583333155c3a3930ebc62d1"
+    }
+  ],
+  "native": [
+    {
+      "name": "android-phone-fault-retry",
+      "passed": true,
+      "platform": "android",
+      "artifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/evidence.json",
+      "evidenceSha256": "23fd971390d3ee197469655041fd4f8524e7c1bc4f6812b57da472ba8fb8d34c",
+      "buildIdentityArtifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/build.json",
+      "buildIdentityArtifactSha256": "33f728f411a957d89c26509332586ec9a52bd9d50b6d477968fceb49ad7423b1",
+      "buildSha256": "ce7b3e1731c484a72d252913403f071192b658b9b7470e5693d9b2120b97b986",
+      "directBinaryCapture": true,
+      "sourceFilesUnchangedDuringRun": true,
+      "nativeTransport": {
+        "headers": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "body": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "error": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "trickle": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "retry": {
+          "requests": 13,
+          "releasedSockets": 13,
+          "passed": true
+        },
+        "dispose": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        }
+      },
+      "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+    },
+    {
+      "name": "ios-tablet-fault-retry",
+      "passed": true,
+      "platform": "ios",
+      "artifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/evidence.json",
+      "evidenceSha256": "b8687ac8bfa93ae2f9c0d365d62e8dc4070da178403d5fc6bdc5a55b14d55168",
+      "buildIdentityArtifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/build.json",
+      "buildIdentityArtifactSha256": "939a8ff3b88885e9db1a04506c6b2f9631df6939c432b194adafd89ee8b57bd3",
+      "buildSha256": "9c053154139a9eedd024264d3b6d6c98b445c5dd16766ac1468c1bcbb2d0a170",
+      "directBinaryCapture": true,
+      "sourceFilesUnchangedDuringRun": true,
+      "nativeTransport": {
+        "headers": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "body": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "error": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "trickle": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "retry": {
+          "requests": 13,
+          "releasedSockets": 13,
+          "passed": true
+        },
+        "dispose": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        }
+      },
+      "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+    }
+  ],
+  "limits": {
+    "catalogMilliseconds": 15000,
+    "artworkMilliseconds": 10000,
+    "decodedCacheBytes": 33554432,
+    "decodedCacheEntries": 48,
+    "accountDiskObjects": 80,
+    "accountDiskMinutes": 10,
+    "headerMilliseconds": 4000,
+    "bodyInactivityMilliseconds": 4000,
+    "totalTransferMilliseconds": 8000,
+    "admissionMilliseconds": 2000,
+    "activeTransfers": 10,
+    "maximumQueuedTransfers": 80,
+    "catalogHeaderMilliseconds": 6000,
+    "catalogBodyIdleMilliseconds": 6000,
+    "catalogTotalMilliseconds": 12000,
+    "catalogActiveRequests": 8,
+    "catalogBodyBytes": 1048576,
+    "scopeQualification": "Artwork getFileStream attempts capped before metadata, counting cancellation until actual settlement;10 active/80 queued transfer admission unchanged",
+    "wholeArtworkStreamAttemptOwners": 90
+  },
+  "platformBuildsArtifact": "library-1-1-platform-builds.json",
+  "realCmsArtifacts": [
+    "library-1-1-cms-real.json",
+    "library-1-1-cms-selections-non_subscriber.json",
+    "library-1-1-cms-selections-subscriber.json",
+    "library-1-1-cms-opt-in-non_subscriber.json",
+    "library-1-1-cms-opt-in-subscriber.json"
+  ],
+  "realHttpArtifact": "library-1-1-http-evidence.json",
+  "realAudienceArtifact": "library-1-1-audience-evidence.json",
+  "remainingGaps": [
+    "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+    "Emulators/Simulators only; no physical-device performance claim",
+    "Generic universal Simulator acceptance is not established by the current device-selected arm64 runs; earlier host lipo failure is recorded only in historicalIterations.",
+    "Unrelated pre-existing CMS contents snapshots differ by 1\u201313 pixels in current system Chrome; preserved without broad refresh.",
+    "Native PoC entry smoke preserves rendering; protected playback was not exercised.",
+    "Provider authorization expiry was represented by a native loopback proxy permanently rejecting the exact selected phone/tablet signed URLs with403 and forcing503 catalog renewal; real GCS JPEG decoding and explicit retry recovery passed. GCS expiry itself was not induced.",
+    "Android API24 minimum compiled, runtime unavailable. Current-source Android API30 phone/tablet acceptance passed. Iteration5 API36 tablet crashed before Dart tests with native wstring_convert/from_bytes error; current-source API36 runtime acceptance is unavailable. No renderer/SDK/signing workaround."
+  ],
+  "historicalIterations": [
+    "library-1-1-iteration6-before-targeted-closure-verification.json",
+    "library-1-1-native/iteration6",
+    "library-1-1-iteration5-historical-artifacts/library-1-1-verification-audit.json",
+    "library-1-1-native/iteration5",
+    "library-1-1-iteration4-historical-verification-audit.json",
+    "library-1-1-native/iteration4",
+    "library-1-1-verification-iteration3-historical.json"
+  ],
+  "reviewTriage": "library-1-1-targeted-closure.md",
+  "pocPreservation": {
+    "entrySha256": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380",
+    "entryMatchesRetainedNativeEvidence": true,
+    "dependencyHashesMatchIteration3": true,
+    "fullRunPoCTests": 4,
+    "protectedPlaybackExercised": false
+  },
+  "reviewCompletion": "Approved direct scoped review complete; R1/R2/V1 closed; three large reviews intentionally not repeated",
+  "nativeStartAttemptNotes": [
+    {
+      "platform": "android API36 tablet",
+      "outcome": "native wstring_convert/from_bytes crash before Dart acceptance",
+      "privateLogSha256": "41f662e0a2837efdd1e002bcefbe79f6b111ecf5720c552d326c8bb5cc5384e0",
+      "passed": false,
+      "alternativeCoverage": "Iteration6 current-source API30 tablet passed; API36 native pre-Dart crash was observed in iteration5 and its runtime acceptance remains unavailable; no new API36 run is claimed",
+      "historicalIteration": 5
+    }
+  ],
+  "metadataValidatedAt": "2026-10-06T17:08:58.065044+00:00",
+  "metadataValidation": {
+    "sourceFilesMatched": 136,
+    "buildCheckLogsMatched": 12,
+    "nativeRunnerLogsMatched": 9,
+    "nativeEvidenceAndDirectBinaryCapturesMatched": 9,
+    "backendJarMatched": true,
+    "sourceChangesPerformed": false
+  },
+  "acceptanceStatus": "Story1.1 accepted by human; tracker done; qualified targeted coverage and known platform/release gaps retained",
+  "nextReviewLoopIteration": 7,
+  "classifiedReview": {
+    "completedAt": "2026-10-06T17:50:28.036143+00:00",
+    "reviewedIteration": 6,
+    "nextLoopCounter": 7,
+    "status": "halted-awaiting-human-loop7-approval",
+    "roles": {
+      "blind-hunter": {
+        "role": "blind-hunter",
+        "requestSha256": "1c2dead6ccae0df04533d8625e1edee4d1874643d813780890751c5e15858617",
+        "requestBytes": 3036312,
+        "requestCharacters": 3027706,
+        "visibleReadCharacters": 3027706,
+        "nextContiguousOffset": 3027706,
+        "complete": true,
+        "updatedAt": "2026-10-06T17:43:02.326000+00:00",
+        "fullReadComplete": true,
+        "reviewChecksComplete": true,
+        "findingsCount": 1
+      },
+      "edge-case-hunter": {
+        "role": "edge-case-hunter",
+        "requestSha256": "d38f675f6b1c12aa2f14357ad7ff3447a517f2b4738ec1d7b9e26b24cb6c463a",
+        "requestBytes": 3036095,
+        "requestCharacters": 3027489,
+        "visibleReadCharacters": 3027489,
+        "nextContiguousOffset": 3027489,
+        "complete": true,
+        "updatedAt": "2026-10-06T17:39:51.504088+00:00",
+        "fullReadComplete": true,
+        "crossCheckComplete": true,
+        "step3Complete": true,
+        "step4Complete": true,
+        "findings": 1
+      },
+      "verification-gap": {
+        "role": "verification-gap",
+        "requestSha256": "23db3a9705849e6f5be0138b5859a63b92bcc5126d80ef51081336d588b63dcd",
+        "requestBytes": 3036095,
+        "requestCharacters": 3027489,
+        "visibleReadCharacters": 3027489,
+        "nextContiguousOffset": 3027489,
+        "complete": true,
+        "updatedAt": "2026-10-06T17:41:29.771139+00:00",
+        "fullReadComplete": true,
+        "independentCrossChecksComplete": true,
+        "finalEvidenceReopened": true,
+        "findings": 1
+      }
+    },
+    "snapshotSha256": "e4a67158f214c63dadf572b85979078cb5a6b36064f537452c5b7f37d5257aee",
+    "all509FilesMatchedBeforeClassification": true,
+    "classifications": {
+      "bad_spec": [
+        "R1",
+        "R2"
+      ],
+      "patch": [
+        "V1"
+      ],
+      "intent_gap": [],
+      "defer": [],
+      "reject": []
+    },
+    "rootProbes": {
+      "testSha256": "c2469407691003a3f96ba15434a5f1fd0289def242d3cf8121d88d0ebe878bd0",
+      "logSha256": "a6a7e788ee43d6d820cf6d0743005dc38596e6fb7e2fc2787cc4b8951cf1f2ed",
+      "testsPassed": 2,
+      "assertionMeaning": "Two reproduced defects; not fixed behavior"
+    },
+    "productSourcesChanged": false,
+    "implementationRolledBack": false,
+    "step5Entered": false,
+    "supersededByTargetedApproval": true,
+    "findingsClosed": [
+      "R1",
+      "R2",
+      "V1"
+    ]
+  },
+  "verificationScope": "human-approved targeted closure with explicitly qualified retained unchanged-component evidence",
+  "targetedClosure": {
+    "verifiedAt": "2026-10-06T18:42:46.469792+00:00",
+    "scope": "human-approved targeted closure; previous comprehensive checks retained only with their original source provenance",
+    "reviewLoopIteration": 7,
+    "baselineCommit": "b372c60b53f828f2fcadff40eb1c212684ad3d51",
+    "status": "implementation-complete; final Story acceptance remains human-owned",
+    "changedFiles": {
+      "app/mobile/lib/core/network/library_cache_store.dart": "d811c0e72d5766ecbe451877a58270326952c963e8fd92d94e76d8a6fd6e1245",
+      "app/mobile/lib/core/network/library_image_cache.dart": "9980401e6d2c42f6ee65f9a8db89b17c01d37a0f14781dc9a08f1003f1f3e4b5",
+      "app/mobile/test/library/library_cache_package_failure_test.dart": "45a811056c7322f4775107dd2b630979dcf247383a9eb1bbd33e4983f5ae318f",
+      "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java": "8237b785b9dcaee5db2ae6fde342eaad4d36dd7d49cd74426701012607a6434f"
+    },
+    "onlyFourApprovedSourceTestFilesChanged": true,
+    "backendProductionAndCmsSourcesUnchanged": true,
+    "checks": {
+      "packageRegression": 17,
+      "focusedCache": 46,
+      "fullFlutter": 112,
+      "flutterAnalyze": "No issues found",
+      "LibraryHomeIntegrationTest": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "result": "BUILD SUCCESS"
+      }
+    },
+    "backendCommand": "sh mvnw -Dtest=LibraryHomeIntegrationTest test",
+    "backendSurefireReport": {
+      "privatePath": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2/be/target/surefire-reports/TEST-com.tellpal.v2.category.LibraryHomeIntegrationTest.xml",
+      "sha256": "f80c12d7c0d3c94b7c95970bf27893e755b10697fd1a9ca651a89856966fe4ec",
+      "methods": [
+        "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+        "staleDuplicateAndInvalidMappingWritesAreAtomicAndExistingRowsStartOptedOut",
+        "theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile",
+        "currentSecondVariantUploadFailurePersistsFailedWithoutPublishingAndExplicitRetrySucceeds",
+        "anAlreadyLoadedJpaLocalizationEditCannotOverwriteAtomicHomeConfiguration",
+        "savedIndependentOrdersFilterBeforeFiveAndNeverPadTurkishWithEnglish",
+        "processingListingCoverRejectsChangedSourceAndProfileWithoutMutatingAnyJobField",
+        "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[1]",
+        "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[2]",
+        "realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest"
+      ]
+    },
+    "rootIndependentCorrectedReprobes": {
+      "passed": 2,
+      "testPrivatePath": "/private/tmp/tellpal-iteration6-root-package-probe/test/root_targeted_closure_probe_test.dart",
+      "testSha256": "b85b2ac1f80a446b9507d6a323ce1bd6865704a398860a9217360c9508e95217",
+      "log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/root-independent-probes.log",
+        "bytes": 297,
+        "sha256": "d50e7fa13d6caebb1741b1df13045d4c10c233c897004954bfb6c28cd2f2ed46"
+      }
+    },
+    "rootScopedSourceReview": {
+      "completed": true,
+      "scope": "all four changed files and actual relevant package seams/test assertions",
+      "findingsRemaining": 0,
+      "privateDiff": "/private/tmp/tellpal-library-targeted-closure/targeted-source.diff",
+      "diffSha256": "a73896d77fca10b14e95dfdeadf0ff255191b693928590908462b57bf86c5eb1"
+    },
+    "logs": {
+      "cache-new.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/cache-new.log",
+        "bytes": 2045,
+        "sha256": "eaaf126335105b8a83cd27344454802dc61c6e88e37d182a15d37e51b3950751"
+      },
+      "cache-focused.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/cache-focused.log",
+        "bytes": 9725,
+        "sha256": "352589ed507c2794ba88f7e9982ffdf18ebbb182274ec3665f3056b9a5bb7807"
+      },
+      "flutter-analyze.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-analyze.log",
+        "bytes": 96,
+        "sha256": "45428a9689986c71eef3559da6df1bd4c3cc1df3d81dcafff631cfd829333844"
+      },
+      "flutter-full.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-full.log",
+        "bytes": 22946,
+        "sha256": "3362b8456afa3a534b47e5b04a1b8fd314a3748aacd64dc6888e524884902927"
+      },
+      "library-home-postgres.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/library-home-postgres.log",
+        "bytes": 26290,
+        "sha256": "6fce5737ace86eebb04b3fc56f81316a80949c145d72651404b927a21a90af39"
+      },
+      "root-independent-probes.log": {
+        "privatePath": "/private/tmp/tellpal-library-targeted-closure/root-independent-probes.log",
+        "bytes": 297,
+        "sha256": "d50e7fa13d6caebb1741b1df13045d4c10c233c897004954bfb6c28cd2f2ed46"
+      }
+    },
+    "native": [
+      {
+        "name": "android-phone-fault-retry",
+        "passed": true,
+        "platform": "android",
+        "artifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/evidence.json",
+        "evidenceSha256": "23fd971390d3ee197469655041fd4f8524e7c1bc4f6812b57da472ba8fb8d34c",
+        "buildIdentityArtifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/build.json",
+        "buildIdentityArtifactSha256": "33f728f411a957d89c26509332586ec9a52bd9d50b6d477968fceb49ad7423b1",
+        "buildSha256": "ce7b3e1731c484a72d252913403f071192b658b9b7470e5693d9b2120b97b986",
+        "directBinaryCapture": true,
+        "sourceFilesUnchangedDuringRun": true,
+        "nativeTransport": {
+          "headers": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "body": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "error": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "trickle": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "retry": {
+            "requests": 13,
+            "releasedSockets": 13,
+            "passed": true
+          },
+          "dispose": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          }
+        },
+        "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+      },
+      {
+        "name": "ios-tablet-fault-retry",
+        "passed": true,
+        "platform": "ios",
+        "artifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/evidence.json",
+        "evidenceSha256": "b8687ac8bfa93ae2f9c0d365d62e8dc4070da178403d5fc6bdc5a55b14d55168",
+        "buildIdentityArtifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/build.json",
+        "buildIdentityArtifactSha256": "939a8ff3b88885e9db1a04506c6b2f9631df6939c432b194adafd89ee8b57bd3",
+        "buildSha256": "9c053154139a9eedd024264d3b6d6c98b445c5dd16766ac1468c1bcbb2d0a170",
+        "directBinaryCapture": true,
+        "sourceFilesUnchangedDuringRun": true,
+        "nativeTransport": {
+          "headers": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "body": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "error": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "trickle": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          },
+          "retry": {
+            "requests": 13,
+            "releasedSockets": 13,
+            "passed": true
+          },
+          "dispose": {
+            "requests": 1,
+            "releasedSockets": 1,
+            "passed": true
+          }
+        },
+        "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+      }
+    ],
+    "nativeReleasedSockets": 36,
+    "frozenIntentUnchanged": true,
+    "frozenSha256": "823c288f70798cd26a0b73741e332de1960fa556bab92101b9364606a2d40187",
+    "canonicalAdmissionUnchanged": true,
+    "admissionSha256": "1031a6cd0abd448be9b8c8a679be9043ad64f95fea6879feb6a4b5be8afd859f",
+    "portraitGoldensUnchanged": true,
+    "wholeArtworkStreamAttemptOwnerLimit": 90,
+    "previousFullVerificationArtifact": "library-1-1-iteration6-before-targeted-closure-verification.json",
+    "previousNativeMatrixSourceQualification": "The30-case native matrix/earlier exact entries identify predecessor Flutter sources; not rerun or relabeled as corrected-source acceptance. CMS/backend production and UI/reference/DTO sources are unchanged. Current corrected cache paths have fullFlutter112 and two fresh native fault/retry smokes.",
+    "notRerunByExplicitScopeApproval": [
+      "full CMS suite/actual CMS cases",
+      "full backendverify",
+      "all30 native matrix cases",
+      "three large independent reviewer prompts"
+    ],
+    "remainingGaps": [
+      "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+      "Emulators/Simulators only; no physical-device performance claim",
+      "Generic universal Simulator acceptance is not established by the current device-selected arm64 runs; earlier host lipo failure is recorded only in historicalIterations.",
+      "Unrelated pre-existing CMS contents snapshots differ by 1\u201313 pixels in current system Chrome; preserved without broad refresh.",
+      "Native PoC entry smoke preserves rendering; protected playback was not exercised.",
+      "Provider authorization expiry was represented by a native loopback proxy permanently rejecting the exact selected phone/tablet signed URLs with403 and forcing503 catalog renewal; real GCS JPEG decoding and explicit retry recovery passed. GCS expiry itself was not induced.",
+      "Android API24 minimum compiled, runtime unavailable. Current-source Android API30 phone/tablet acceptance passed. Iteration5 API36 tablet crashed before Dart tests with native wstring_convert/from_bytes error; current-source API36 runtime acceptance is unavailable. No renderer/SDK/signing workaround."
+    ],
+    "finalHumanAcceptanceGranted": false,
+    "localCommitCreated": false,
+    "productionAction": false
+  },
+  "previousFullVerificationArtifact": "library-1-1-iteration6-before-targeted-closure-verification.json",
+  "finalHumanAcceptance": {
+    "acceptedAt": "2026-10-06T18:57:28.264740+00:00",
+    "artifact": "library-1-1-final-acceptance.md",
+    "authorizedActions": [
+      "local commit",
+      "local merge into main"
+    ]
+  }
+}

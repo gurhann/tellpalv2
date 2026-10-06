@@ -14,6 +14,8 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 ## Active Architectural Decisions
 
+- `ADR-0019`: Story 1.1 Library home uses per-language opt-in category order and explicit content-language mapping, one preview default of five, lightweight module APIs, verified real LISTING_COVER revisions with captured attempt/lease/source/profile guards, and local/test Firebase UID admission. The approved public edge is `user` → `category::api`. CMS `/categories/home` preserves card order; the isolated Flutter entry follows ADR-0018 and retains the PoC. Runtime evidence and remaining gates live in `library-1-1-evidence.md`; test audience is not production authorization.
+
 - `ADR-0001`: the backend is a Spring Modulith-style modular monolith and modules interact through APIs, events, and IDs.
 - `ADR-0002`: each top-level module owns its `domain` and `infrastructure` packages and may expose only `api`.
 - `ADR-0003`: public contracts and use-case flows use concise English documentation.

@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { CategoryHomeRoute } from "@/app/routes/categories/home";
 import { CategoryDetailRoute } from "@/app/routes/categories/detail";
 import { CategoriesIndexRoute } from "@/app/routes/categories";
 import { ContentDetailRoute } from "@/app/routes/contents/detail";
@@ -132,6 +133,7 @@ export const cmsRoutes: RouteObject[] = [
             element: <MockupCategoryDetailRoute />,
           },
           { path: "/categories", element: <CategoriesIndexRoute /> },
+          { path: "/categories/home", element: <CategoryHomeRoute /> },
           { path: "/categories/:categoryId", element: <CategoryDetailRoute /> },
           { path: "/media", element: <MediaRoute /> },
           { path: "/media-processing", element: <MediaProcessingRoute /> },

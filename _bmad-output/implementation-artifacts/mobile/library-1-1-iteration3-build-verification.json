@@ -1,0 +1,157 @@
+{
+  "story": "1-1-discover-eligible-content-on-the-library-home-screen",
+  "reviewLoopIteration": 3,
+  "recordedAtUtc": "2026-10-05T16:33:07.243318+00:00",
+  "status": "source-verification-passed-native-and-real-fixture-acceptance-pending",
+  "projectRoot": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2",
+  "backend": {
+    "command": "DOCKER_HOST=<existing Colima socket> TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1 sh mvnw verify",
+    "passedTests": 364,
+    "passedDocumentationIntegrationTests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "focusedPassedTests": 11,
+    "productionAndDefaultProfileCases": 3,
+    "localAndTestProfileCases": 2,
+    "sameSourceTwoProfiles": "actual PostgreSQL scheduling, real byte preparation/publication, scalar catalog lookup, distinct immutable revisions and current covers passed"
+  },
+  "cms": {
+    "unitTestFiles": 89,
+    "passedTests": 371,
+    "build": "passed",
+    "sourceChangesThisIteration": false,
+    "actualCmsHttpAndAffectedVisualChecks": "pending root runner"
+  },
+  "flutter": {
+    "sdk": "3.41.1",
+    "dart": "3.11.0",
+    "pubGet": "passed offline; only file/http direct dependency ownership changed",
+    "generation": "passed; 5 outputs",
+    "analyze": "passed; no issues",
+    "passedTests": 61,
+    "failures": 0,
+    "portraitGoldens": {
+      "matched": 12,
+      "baselinesModified": false
+    },
+    "addedCoverage": {
+      "actualCacheManagerLoopbackTransport": 10,
+      "expiredSharedCacheActualDecodeReaderReuse": 1,
+      "shortLandscapeWidgetCases": 4
+    },
+    "catalogWaitDefaultSeconds": 15,
+    "artworkWaitDefaultSeconds": 10,
+    "headerWaitRatio": 0.4,
+    "bodyInactivityWaitRatio": 0.4,
+    "totalTransportWaitRatio": 0.8,
+    "queueWaitRatio": 0.2,
+    "defaultHeaderWaitSeconds": 4,
+    "defaultBodyInactivityWaitSeconds": 4,
+    "defaultTotalTransportWaitSeconds": 8,
+    "defaultQueueWaitSeconds": 2,
+    "concurrentPackageOperations": 10,
+    "maximumQueuedRequests": 80,
+    "diskObjectLimit": 80,
+    "diskLifetimeMinutes": 10,
+    "decodedImageLimit": 48,
+    "decodedBytesLimit": 33554432
+  },
+  "preserved": {
+    "vendorSources": true,
+    "mediaPoC": true,
+    "cmsPinnedSnapshot": true,
+    "backgroundCatalogPinning": true,
+    "currentAttemptAndResponsiveAssetOwnership": true,
+    "sharedFileBytesDuringRenewal": true,
+    "frozenIntent": true
+  },
+  "remainingAcceptance": [
+    "Root actual administered CMS/HTTP baseline comparison and affected visual/interaction checks",
+    "Root current-source Android/iOS bitmap/catalog/deadline/entry matrices",
+    "Root refresh of source hashes, 13-row/10-AC audit and EXT-CATALOG consumer closure",
+    "Step4 review and human acceptance"
+  ],
+  "sourceSha256": {
+    "app/mobile/lib/core/network/library_image_cache.dart": "e1960977ef6f60d7861969344a24f3a08e8b9e8dd0f22a5e57168cac5fdd2d14",
+    "app/mobile/lib/core/network/library_cache_lifecycle.dart": "fb8e11e8fd700c33387004a77d3ce3460d4281166f5d160daf638718156ced8d",
+    "app/mobile/lib/core/network/library_transfer_file_service.dart": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8",
+    "app/mobile/lib/features/library/presentation/widgets/library_card.dart": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8",
+    "app/mobile/test/library/library_cache_transport_test.dart": "4f321e4fe21ee82a4ce8660cca468b4ce4e4272aedf103cf59afc3928c4f5ebe",
+    "app/mobile/test/library/library_cache_promotion_test.dart": "273c7272876839fa6d850cbda561636292a87331b20df413a0db3a7dd7adeeec",
+    "app/mobile/test/library/library_artwork_test.dart": "511efc1b674ff11539a20b723ca79241c4d80702676d9441c7c134bc499e971b",
+    "app/mobile/test/library/library_view_test.dart": "57fe4c1f80a0da0efe9f8044891aba9936fd60ca5f214e0edff2075b9c02dd65",
+    "app/mobile/pubspec.yaml": "34c430ade4ca30d63a61ee333d1e4a1e952a08c7ec55123b9e76a29c5c474b76",
+    "app/mobile/pubspec.lock": "34fb6117a750b7aea09200a0eb11f7b6966344a13fb132dba4dd23b8be28b491",
+    "be/src/test/java/com/tellpal/v2/user/web/mobile/LibraryHomeProfileContextTest.java": "2b76d6f62e735fb7e5a35f99e8d2e9220df7245c2d030721eca10b1e142425b8",
+    "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java": "2fcea508c0033f9df460e9ce61d8646e8e43ce11649b2b2b29c56dd20880157a"
+  },
+  "privateLogProvenance": {
+    "backend-focused.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/backend-focused.log",
+      "sha256": "acdd991189d13402b52b4f4632be6dc32fab1b5a85eb671dab1bc95408dafdf6"
+    },
+    "backend-verify.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/backend-verify.log",
+      "sha256": "fc23446f720e671ffcffc1298ab4903fea10c5a39f6597dd5da1c34e9827db0f"
+    },
+    "cms-test.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/cms-test.log",
+      "sha256": "d7677a51ac46c980f1e2a4d1c289f9af8f3fdeb3a6ef216c704d74800212e200"
+    },
+    "cms-build.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/cms-build.log",
+      "sha256": "5a1f91a86bb56126b49cbb4c6dd1f099154187802e99a924ffe735834b649129"
+    },
+    "flutter-pub-get.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/flutter-pub-get.log",
+      "sha256": "cc1c19de9b2fe0b7945bb7a5de6ce92642866f0d4e1a458683d23224b7fae505"
+    },
+    "flutter-generation.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/flutter-generation.log",
+      "sha256": "dcfb2d5f4ec7c31943ac6219e7afc56f842f4e0c2c195a22225e70e5b51b27c6"
+    },
+    "flutter-analyze.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/flutter-analyze.log",
+      "sha256": "04cf17853755e492b494281e678f0c725496d540886f817a40270d63053ac75d"
+    },
+    "flutter-test.log": {
+      "path": "/private/tmp/tellpal-library-iteration3-build/flutter-test.log",
+      "sha256": "4a6c65bdce6ab9c5d8b16ce4afc999eefbd587cea0fcc373df9671dc54525c01"
+    }
+  },
+  "portraitGoldenSha256": {
+    "app/mobile/test/library/goldens/library-en-411-1.0.png": "532a9c550544a55934a2a2c4a0fe214f45b4c5b8e9e75a7fe11e2fb3ef0428f6",
+    "app/mobile/test/library/goldens/library-en-411-1.3.png": "748ba24c46d3b7d95ded24800288d3ab5a8c8e78cf362de3cd592691ee16fa7c",
+    "app/mobile/test/library/goldens/library-en-800-1.0.png": "4b485e1cdcff79222dbcd55189386b5fc033dc0260b4a9e204cb016bca166610",
+    "app/mobile/test/library/goldens/library-en-800-1.3.png": "8d42e1c0e7bea5ee6035879502a795ef94ada9c67bf4c863d60fa55f165deb85",
+    "app/mobile/test/library/goldens/library-pt-411-1.0.png": "eb52d1af1868662b7f49c3b6e184d849b19c2a4adbfd60d10ac8e7e58aa648d1",
+    "app/mobile/test/library/goldens/library-pt-411-1.3.png": "0e8da8f7bfb09bfdf4361207acae583fa5474555019a1a721a49a8602ddbc3d1",
+    "app/mobile/test/library/goldens/library-pt-800-1.0.png": "16a42d6f1edb3455a9b9efb72e22045f98cd6ca75872d2d1ef7adf36d3f79b40",
+    "app/mobile/test/library/goldens/library-pt-800-1.3.png": "809c45fc8152d959b03a04264a99b5c3fdff17c3308c12f3054a5f453ac1b091",
+    "app/mobile/test/library/goldens/library-tr-411-1.0.png": "bf5463b2712a06b257bc9261c0c83ba421169ee579f392b340dd1d9d9f7cb637",
+    "app/mobile/test/library/goldens/library-tr-411-1.3.png": "ff751d9a0f9d732868e114adeda63dcc7e7a52ff2511aec260bd107a4509c8df",
+    "app/mobile/test/library/goldens/library-tr-800-1.0.png": "06d98490f0fe5236f795a23850900d05cb83348472d6389348a7f3ba6403ee58",
+    "app/mobile/test/library/goldens/library-tr-800-1.3.png": "e557898734ccddfd9c2a7b3a48eb53e1fade83fb6f347c058163dd7417819358"
+  },
+  "frozenSpecPreservation": {
+    "startLine": 20,
+    "endLine": 54,
+    "beforeSha256": "823c288f70798cd26a0b73741e332de1960fa556bab92101b9364606a2d40187",
+    "afterSha256": "823c288f70798cd26a0b73741e332de1960fa556bab92101b9364606a2d40187",
+    "tasksStartLine": 84,
+    "tasksAndVerificationOutsideFrozenBlock": true,
+    "frontmatterStatusChanged": false,
+    "nativeAcceptanceTaskMarkedComplete": false
+  },
+  "rootAcceptanceFollowup": {
+    "verifiedAt": "2026-10-05T17:00:47.410818+00:00",
+    "status": "passed; Step4 review and human checkpoint pending",
+    "native": "five current six-case matrices, two current fault runs, two exact development entries; unchanged-source PoC iteration2 evidence reused",
+    "cms": "both audiences actual cases and five affected visual/interaction checks passed; baseline restored",
+    "http": "three real catalog responses and34 real JPEGs verified; current-jar auth/audience evidence refreshed",
+    "audit": "library-1-1-verification-audit.json",
+    "matrix": "library-1-1-matrix-audit.md",
+    "sourceCheckpointStatusAboveIsHistorical": true
+  }
+}

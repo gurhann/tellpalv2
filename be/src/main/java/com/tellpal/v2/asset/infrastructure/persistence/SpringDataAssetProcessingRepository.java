@@ -15,6 +15,12 @@ import com.tellpal.v2.asset.api.AssetProcessingKind;
 
 interface SpringDataAssetProcessingRepository extends JpaRepository<AssetProcessing, Long> {
 
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("select p from AssetProcessing p where p.contentId=:id and p.languageCode=:language and p.kind=:kind")
+    Optional<AssetProcessing> lockLocalization(@org.springframework.data.repository.query.Param("id") Long id,
+            @org.springframework.data.repository.query.Param("language") LanguageCode language,
+            @org.springframework.data.repository.query.Param("kind") AssetProcessingKind kind);
+
     Optional<AssetProcessing> findByContentIdAndLanguageCode(Long contentId, LanguageCode languageCode);
 
     Optional<AssetProcessing> findByTargetScopeAndContentId(AssetProcessingTargetScope targetScope, Long contentId);

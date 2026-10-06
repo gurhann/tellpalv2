@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-10-06T15:03:57.229Z",
+  "source": "actual CMS checkbox + persisted backend + real Firebase",
+  "audience": "NON_SUBSCRIBER",
+  "optOutHidden": true,
+  "optInVisible": true,
+  "reloadCheckboxRoundTrip": true,
+  "englishUnchanged": true,
+  "cardOrderUnchanged": true
+}

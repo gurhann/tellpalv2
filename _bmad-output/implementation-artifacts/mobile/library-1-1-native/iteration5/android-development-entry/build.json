@@ -1,0 +1,50 @@
+{
+  "reviewIteration": 5,
+  "sourceFiles": {
+    "app/mobile/lib/app/injection.config.dart": "46de125863ae4dc1823881c2e4d17ada8e4ec549975cfa16fc93c82346e85ef4",
+    "app/mobile/lib/app/injection.dart": "dd0d67d58cfd7c45a22e3eb2ce656b66fd6adaf0373ccebfffe9669ca757e7b3",
+    "app/mobile/lib/app/library_app.dart": "9de133b4d7c2f9199ed1bb5f3b3d2e54241deb14d4d9a76d868ad62e7d2a24f1",
+    "app/mobile/lib/app/library_configuration.dart": "16452eb1757efdcf2da167b41aa61ccddc3b99dcb8313f428f3469999f20cca1",
+    "app/mobile/lib/app/library_dev_harness.dart": "3448129ca296dc3c9cad7cf12177431478f0c2f57354272ef5a6e71e49d11ed3",
+    "app/mobile/lib/app/router.dart": "6d845235deb2de685cfe7fb0227580be9b623fad3da70950d93a90277915d012",
+    "app/mobile/lib/app/router.gr.dart": "75a18d7e74b3706e49e13fe2ebd0b6ba8b3f39b1bc2f3c77f99aa6b43929deb5",
+    "app/mobile/lib/core/diagnostics/library_diagnostics.dart": "be9bbc830c05c967e76bfbfddba0dc0b17ec1d66e5779f810c287b5a36ceeaf4",
+    "app/mobile/lib/core/error/failure.dart": "85301e5cd35adb10b5b5c12bf1fb783a8c34bb081aee361e7ea7ebf60d1ff825",
+    "app/mobile/lib/core/network/authenticated_transport.dart": "7711f49d85e98fe6f95675fbfb42d07f7273b5e5cfa757efe14b72138eaa8788",
+    "app/mobile/lib/core/network/draining_cache_info_repository.dart": "623d74c84028838156ddf7b1ff7caf44a5278b5221288eb4be0aff131e544319",
+    "app/mobile/lib/core/network/library_cache_lifecycle.dart": "3db45da68282b3b3f4b2c50ea97b4229ecb35df79853772a4d3770d8c80e3689",
+    "app/mobile/lib/core/network/library_image_cache.dart": "5579d213729ffdbac5dced6b1792cd88cbefca2bb7ef26f448587d7631202647",
+    "app/mobile/lib/core/network/library_transfer_file_service.dart": "da50c6595c80f8bcdc2348d5ca639a6fad1a7fbe7975397bd42d7318e836a8e8",
+    "app/mobile/lib/core/theme/library_theme.dart": "f2d77b41b7705c05a9040708183a2f6e446caa03db41db3bb7a22725e3ff77c4",
+    "app/mobile/lib/features/library/data/model/library_catalog_model.dart": "48d5fe8750ed99f612e07b8e17caa0c857fe8c2b00a1a61e3fce068751a2fb51",
+    "app/mobile/lib/features/library/data/model/library_catalog_model.g.dart": "7cc56a37e0438e553c9d2772341e49f59de514c0a7323cdedb8960a1cd8d68b8",
+    "app/mobile/lib/features/library/data/repository_impl/library_repository_impl.dart": "9f0bf1b0711d751ed99862d1b42777660573a08b6ef471dca6c25a31081a251d",
+    "app/mobile/lib/features/library/domain/entity/library_catalog.dart": "c129edcebbdd5b15d8d03d92ea677bf43c66ac807ebeba1d49c3161dcbef21ca",
+    "app/mobile/lib/features/library/domain/repository/library_repository.dart": "82e358b87c5c3fbdcc01faacbb37d49626b1391f6a48418ef35518a5858b564d",
+    "app/mobile/lib/features/library/domain/use_case/get_library.dart": "c0bb7b1e27c30e131a4eec1ec255af94f7a5b3f278c70d3df831881fb99eafad",
+    "app/mobile/lib/features/library/presentation/cubit/artwork_cubit.dart": "98619f5f8d5161fc53c3c149996095acd5387cfe833f29e21b07edd7211449f0",
+    "app/mobile/lib/features/library/presentation/cubit/artwork_cubit.freezed.dart": "926500a75779e1891966fe5fe15c799397c8c62056a4fc2714ae9303a68260e0",
+    "app/mobile/lib/features/library/presentation/cubit/library_cubit.dart": "5a9c214aad999482fd24e7e0b8e2e7c2de0f3f00d48700f9aeeaaee6d5360acd",
+    "app/mobile/lib/features/library/presentation/cubit/library_state.dart": "56f65d87ed977f51c4dff93f175da2a0cd8ed4c31c6d60cfa54caaf4618f747f",
+    "app/mobile/lib/features/library/presentation/cubit/library_state.freezed.dart": "3b833080d59f4591d6da1b27dab9f641c6a2d229f4b136435389e19e55bed5f3",
+    "app/mobile/lib/features/library/presentation/library_strings.dart": "9a9597b953548c7577e924e0305e93827367069411f6616899472984913e4760",
+    "app/mobile/lib/features/library/presentation/screen/library_screen.dart": "11031764ed127569c03bccb1bbf60aad4a1d38cfba102373e1163db9d610bddb",
+    "app/mobile/lib/features/library/presentation/view/library_view.dart": "b34c3a61435a62191d3424845cd690d5747cddaef16fa701d9b7d6b6bf2be0df",
+    "app/mobile/lib/features/library/presentation/widgets/library_card.dart": "c7ac287f5b3c135dea9394d96bbbcb32533b855864a60bfcfe7d4d1ae3b624f8",
+    "app/mobile/lib/main.dart": "6ca5b6d110cef64d19f131540df5a9667e2c17e155226b8eac4fac18433a3380",
+    "app/mobile/lib/main_library_dev.dart": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30",
+    "app/mobile/lib/story_manifest.dart": "a6dd662a0a456c66fdbd71b5fa3c3a2941f61bd3007b066eb6c6f090dc59a2fd",
+    "app/mobile/lib/story_manifest_client.dart": "3b743e42775b0b61e573b35a24b000e9eec3a34344680bce48bed4dddf3af32e",
+    "app/mobile/lib/story_player_page.dart": "7049c42309a0e01fae0ae294b9c802b558825a4c86006111ab0e8940e5f0092b"
+  },
+  "sourceFilesUnchangedDuringRun": true,
+  "compiledBinary": {
+    "path": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2/app/mobile/build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "34b087ea02625e2b074bd9d7077b3396b37fe26a867efbe00e72e631c87e82b6",
+    "directlyCapturedForThisRun": true
+  },
+  "evidence": {
+    "passed": true,
+    "sha256": "b5c3dd88d461029b5b08977c851c0c52e0c45ce7c53d88cc73281c1263af0db5"
+  }
+}

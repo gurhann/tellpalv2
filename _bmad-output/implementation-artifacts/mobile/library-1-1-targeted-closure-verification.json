@@ -1,0 +1,219 @@
+{
+  "verifiedAt": "2026-10-06T18:42:46.469792+00:00",
+  "scope": "human-approved targeted closure; previous comprehensive checks retained only with their original source provenance",
+  "reviewLoopIteration": 7,
+  "baselineCommit": "b372c60b53f828f2fcadff40eb1c212684ad3d51",
+  "status": "implementation-complete; final Story acceptance remains human-owned",
+  "changedFiles": {
+    "app/mobile/lib/core/network/library_cache_store.dart": "d811c0e72d5766ecbe451877a58270326952c963e8fd92d94e76d8a6fd6e1245",
+    "app/mobile/lib/core/network/library_image_cache.dart": "9980401e6d2c42f6ee65f9a8db89b17c01d37a0f14781dc9a08f1003f1f3e4b5",
+    "app/mobile/test/library/library_cache_package_failure_test.dart": "45a811056c7322f4775107dd2b630979dcf247383a9eb1bbd33e4983f5ae318f",
+    "be/src/test/java/com/tellpal/v2/category/LibraryHomeIntegrationTest.java": "8237b785b9dcaee5db2ae6fde342eaad4d36dd7d49cd74426701012607a6434f"
+  },
+  "onlyFourApprovedSourceTestFilesChanged": true,
+  "backendProductionAndCmsSourcesUnchanged": true,
+  "checks": {
+    "packageRegression": 17,
+    "focusedCache": 46,
+    "fullFlutter": 112,
+    "flutterAnalyze": "No issues found",
+    "LibraryHomeIntegrationTest": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "result": "BUILD SUCCESS"
+    }
+  },
+  "backendCommand": "sh mvnw -Dtest=LibraryHomeIntegrationTest test",
+  "backendSurefireReport": {
+    "privatePath": "/Users/gurhankucuk/.codex/worktrees/mobile-library/tellpalv2/be/target/surefire-reports/TEST-com.tellpal.v2.category.LibraryHomeIntegrationTest.xml",
+    "sha256": "f80c12d7c0d3c94b7c95970bf27893e755b10697fd1a9ca651a89856966fe4ec",
+    "methods": [
+      "eligibilityFilteringContinuesPastAFullHundredCandidateBatchBeforeTheLimit",
+      "staleDuplicateAndInvalidMappingWritesAreAtomicAndExistingRowsStartOptedOut",
+      "theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile",
+      "currentSecondVariantUploadFailurePersistsFailedWithoutPublishingAndExplicitRetrySucceeds",
+      "anAlreadyLoadedJpaLocalizationEditCannotOverwriteAtomicHomeConfiguration",
+      "savedIndependentOrdersFilterBeforeFiveAndNeverPadTurkishWithEnglish",
+      "processingListingCoverRejectsChangedSourceAndProfileWithoutMutatingAnyJobField",
+      "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[1]",
+      "persistedCallbacksAtAndAfterLeaseExpiryBeforeRecoveryPreserveTheExactJobAndReadyManifest(int)[2]",
+      "realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest"
+    ]
+  },
+  "rootIndependentCorrectedReprobes": {
+    "passed": 2,
+    "testPrivatePath": "/private/tmp/tellpal-iteration6-root-package-probe/test/root_targeted_closure_probe_test.dart",
+    "testSha256": "b85b2ac1f80a446b9507d6a323ce1bd6865704a398860a9217360c9508e95217",
+    "log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/root-independent-probes.log",
+      "bytes": 297,
+      "sha256": "d50e7fa13d6caebb1741b1df13045d4c10c233c897004954bfb6c28cd2f2ed46"
+    }
+  },
+  "rootScopedSourceReview": {
+    "completed": true,
+    "scope": "all four changed files and actual relevant package seams/test assertions",
+    "findingsRemaining": 0,
+    "privateDiff": "/private/tmp/tellpal-library-targeted-closure/targeted-source.diff",
+    "diffSha256": "a73896d77fca10b14e95dfdeadf0ff255191b693928590908462b57bf86c5eb1"
+  },
+  "logs": {
+    "cache-new.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/cache-new.log",
+      "bytes": 2045,
+      "sha256": "eaaf126335105b8a83cd27344454802dc61c6e88e37d182a15d37e51b3950751"
+    },
+    "cache-focused.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/cache-focused.log",
+      "bytes": 9725,
+      "sha256": "352589ed507c2794ba88f7e9982ffdf18ebbb182274ec3665f3056b9a5bb7807"
+    },
+    "flutter-analyze.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-analyze.log",
+      "bytes": 96,
+      "sha256": "45428a9689986c71eef3559da6df1bd4c3cc1df3d81dcafff631cfd829333844"
+    },
+    "flutter-full.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/flutter-full.log",
+      "bytes": 22946,
+      "sha256": "3362b8456afa3a534b47e5b04a1b8fd314a3748aacd64dc6888e524884902927"
+    },
+    "library-home-postgres.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/library-home-postgres.log",
+      "bytes": 26290,
+      "sha256": "6fce5737ace86eebb04b3fc56f81316a80949c145d72651404b927a21a90af39"
+    },
+    "root-independent-probes.log": {
+      "privatePath": "/private/tmp/tellpal-library-targeted-closure/root-independent-probes.log",
+      "bytes": 297,
+      "sha256": "d50e7fa13d6caebb1741b1df13045d4c10c233c897004954bfb6c28cd2f2ed46"
+    }
+  },
+  "native": [
+    {
+      "name": "android-phone-fault-retry",
+      "passed": true,
+      "platform": "android",
+      "artifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/evidence.json",
+      "evidenceSha256": "23fd971390d3ee197469655041fd4f8524e7c1bc4f6812b57da472ba8fb8d34c",
+      "buildIdentityArtifact": "library-1-1-native/targeted-closure/android-phone-fault-retry/build.json",
+      "buildIdentityArtifactSha256": "33f728f411a957d89c26509332586ec9a52bd9d50b6d477968fceb49ad7423b1",
+      "buildSha256": "ce7b3e1731c484a72d252913403f071192b658b9b7470e5693d9b2120b97b986",
+      "directBinaryCapture": true,
+      "sourceFilesUnchangedDuringRun": true,
+      "nativeTransport": {
+        "headers": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "body": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "error": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "trickle": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "retry": {
+          "requests": 13,
+          "releasedSockets": 13,
+          "passed": true
+        },
+        "dispose": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        }
+      },
+      "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+    },
+    {
+      "name": "ios-tablet-fault-retry",
+      "passed": true,
+      "platform": "ios",
+      "artifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/evidence.json",
+      "evidenceSha256": "b8687ac8bfa93ae2f9c0d365d62e8dc4070da178403d5fc6bdc5a55b14d55168",
+      "buildIdentityArtifact": "library-1-1-native/targeted-closure/ios-tablet-fault-retry/build.json",
+      "buildIdentityArtifactSha256": "939a8ff3b88885e9db1a04506c6b2f9631df6939c432b194adafd89ee8b57bd3",
+      "buildSha256": "9c053154139a9eedd024264d3b6d6c98b445c5dd16766ac1468c1bcbb2d0a170",
+      "directBinaryCapture": true,
+      "sourceFilesUnchangedDuringRun": true,
+      "nativeTransport": {
+        "headers": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "body": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "error": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "trickle": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        },
+        "retry": {
+          "requests": 13,
+          "releasedSockets": 13,
+          "passed": true
+        },
+        "dispose": {
+          "requests": 1,
+          "releasedSockets": 1,
+          "passed": true
+        }
+      },
+      "screenshotManualReview": "corrupt retry screenshot inspected; real covers and title/lock geometry present"
+    }
+  ],
+  "nativeReleasedSockets": 36,
+  "frozenIntentUnchanged": true,
+  "frozenSha256": "823c288f70798cd26a0b73741e332de1960fa556bab92101b9364606a2d40187",
+  "canonicalAdmissionUnchanged": true,
+  "admissionSha256": "1031a6cd0abd448be9b8c8a679be9043ad64f95fea6879feb6a4b5be8afd859f",
+  "portraitGoldensUnchanged": true,
+  "wholeArtworkStreamAttemptOwnerLimit": 90,
+  "previousFullVerificationArtifact": "library-1-1-iteration6-before-targeted-closure-verification.json",
+  "previousNativeMatrixSourceQualification": "The30-case native matrix/earlier exact entries identify predecessor Flutter sources; not rerun or relabeled as corrected-source acceptance. CMS/backend production and UI/reference/DTO sources are unchanged. Current corrected cache paths have fullFlutter112 and two fresh native fault/retry smokes.",
+  "notRerunByExplicitScopeApproval": [
+    "full CMS suite/actual CMS cases",
+    "full backendverify",
+    "all30 native matrix cases",
+    "three large independent reviewer prompts"
+  ],
+  "remainingGaps": [
+    "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+    "Emulators/Simulators only; no physical-device performance claim",
+    "Generic universal Simulator acceptance is not established by the current device-selected arm64 runs; earlier host lipo failure is recorded only in historicalIterations.",
+    "Unrelated pre-existing CMS contents snapshots differ by 1\u201313 pixels in current system Chrome; preserved without broad refresh.",
+    "Native PoC entry smoke preserves rendering; protected playback was not exercised.",
+    "Provider authorization expiry was represented by a native loopback proxy permanently rejecting the exact selected phone/tablet signed URLs with403 and forcing503 catalog renewal; real GCS JPEG decoding and explicit retry recovery passed. GCS expiry itself was not induced.",
+    "Android API24 minimum compiled, runtime unavailable. Current-source Android API30 phone/tablet acceptance passed. Iteration5 API36 tablet crashed before Dart tests with native wstring_convert/from_bytes error; current-source API36 runtime acceptance is unavailable. No renderer/SDK/signing workaround."
+  ],
+  "finalHumanAcceptanceGranted": false,
+  "localCommitCreated": false,
+  "productionAction": false,
+  "completeBaselineDiff": {
+    "privatePath": "/private/tmp/tellpal-library-targeted-closure/complete-baseline.diff",
+    "bytes": 544327545,
+    "sha256": "db7a35a60c593bd53241218be8aea726ff050bd2f4ff2a12b53a56f5608afbbc",
+    "untrackedFiles": 488
+  }
+}

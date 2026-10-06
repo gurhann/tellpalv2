@@ -54,6 +54,17 @@ class RegisteringAssetProcessingJobExecutor implements AssetProcessingJobExecuto
     private final AssetProcessingPathBuilder pathBuilder;
     private final Clock clock;
     private final int maxSourceBytes;
+    private ListingCoverProcessingExecutor listingCovers;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    RegisteringAssetProcessingJobExecutor(AssetRegistryApi assetRegistryApi,AssetProcessingApi assetProcessingApi,
+            ImageOptimizationAdapter images,AudioOptimizationAdapter audio,ZipPackagingAdapter zip,
+            AssetStorageClientRegistry storage,PageImageRenditionProcessor pages,StoryPageMediaManifestService manifests,
+            AssetProcessingPathBuilder paths,Clock clock,@Value("${tellpal.asset.story-page-media.max-source-bytes:20971520}") int maxBytes,
+            ListingCoverProcessingExecutor listingCovers) {
+        this(assetRegistryApi,assetProcessingApi,images,audio,zip,storage,pages,manifests,paths,clock,maxBytes);
+        this.listingCovers=listingCovers;
+    }
 
     RegisteringAssetProcessingJobExecutor(
             AssetRegistryApi assetRegistryApi,
@@ -83,6 +94,9 @@ class RegisteringAssetProcessingJobExecutor implements AssetProcessingJobExecuto
 
     @Override
     public void process(AssetProcessingRecord assetProcessingRecord) {
+        if(assetProcessingRecord.kind()==AssetProcessingKind.LISTING_COVER) {
+            listingCovers.process(assetProcessingRecord);return;
+        }
         try {
             if (assetProcessingRecord.kind() == AssetProcessingKind.STORY_PAGE_MEDIA) {
                 processStoryPageMedia(assetProcessingRecord);

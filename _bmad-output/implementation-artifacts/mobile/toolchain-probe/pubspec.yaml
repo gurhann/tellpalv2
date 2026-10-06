@@ -1,0 +1,30 @@
+name: tellpal_library_toolchain_probe
+publish_to: none
+environment:
+  sdk: ^3.11.0
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_bloc: ^9.1.1
+  just_audio: ^0.10.6
+  auto_route: ^10.3.0
+  get_it: ^8.0.3
+  injectable: ^2.5.0
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+  dartz: ^0.10.1
+  equatable: ^2.0.7
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.2.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  auto_route_generator: ^10.3.0
+  injectable_generator: ^2.5.0
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
+  build_runner: ^2.5.4

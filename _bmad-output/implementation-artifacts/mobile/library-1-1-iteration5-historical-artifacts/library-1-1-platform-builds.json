@@ -1,0 +1,34 @@
+{
+  "verifiedAt": "2026-10-06T15:19:38.268460+00:00",
+  "reviewIteration": 5,
+  "android": {
+    "minimumSdk": 24,
+    "targetSdk": 36,
+    "evidence": "aapt35 dump badging of current-source integration_test/library_live_test.dart APK",
+    "apkSha256": "f24a70ef4a9c807cc13a89db4549a03424461aee2a6f262f2b43898409a58085",
+    "developmentEntry": "Exact main_library_dev.dart compiled; closed notice screenshot inspected; ephemeral VM configuration loads real catalog",
+    "developmentApkSha256": "34b087ea02625e2b074bd9d7077b3396b37fe26a867efbe00e72e631c87e82b6",
+    "currentRuntimeAcceptance": "API30 phone/tablet; API36 pre-Dart native crash remains a gap"
+  },
+  "ios": {
+    "minimumOSVersion": "15.0",
+    "evidence": "PlistBuddy of compiled current arm64 Simulator Runner.app; device-selected live, fault and development entries passed",
+    "runtime": "iOS27.0",
+    "devices": [
+      "iPhone18Pro",
+      "iPadPro13-inch(M5)"
+    ],
+    "developmentEntry": "Exact main_library_dev.dart compiled; closed notice screenshot inspected; ephemeral VM configuration loads real catalog",
+    "developmentEntryMode": "Closed before ephemeral configuration; real authenticated catalog loaded after VM injection",
+    "developmentExecutableSha256": "b628bfcd50f5fbf3a6f208fc87b069d81582ea5687fe8792d44e7e954d9786fe"
+  },
+  "gaps": [
+    "Older iOS 26.x runtimes unavailable; iOS 15 runtime not installed",
+    "Emulators/Simulators only; no physical-device performance claim",
+    "Generic universal Simulator acceptance is not established by the current device-selected arm64 runs; earlier host lipo failure is recorded only in historicalIterations.",
+    "Unrelated pre-existing CMS contents snapshots differ by 1\u201313 pixels in current system Chrome; preserved without broad refresh.",
+    "Native PoC entry smoke preserves rendering; protected playback was not exercised.",
+    "Provider authorization expiry was represented by a native loopback proxy permanently rejecting the exact selected phone/tablet signed URLs with403 and forcing503 catalog renewal; real GCS JPEG decoding and explicit retry recovery passed. GCS expiry itself was not induced.",
+    "Android API24 minimum compiled, runtime unavailable. Current-source Android API30 phone/tablet acceptance passed. API36 tablet crashed before Dart tests with native wstring_convert/from_bytes error; current-source API36 runtime acceptance is unavailable. No renderer/SDK/signing workaround."
+  ]
+}

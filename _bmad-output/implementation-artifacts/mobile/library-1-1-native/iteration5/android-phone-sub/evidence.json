@@ -1,0 +1,804 @@
+{
+  "passed": true,
+  "platform": "android",
+  "size": {
+    "width": 411.0,
+    "height": 914.0
+  },
+  "matrix": [
+    {
+      "language": "tr",
+      "textScale": 1.0,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "tr",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+              "language": "tr",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 28,
+              "tabletAssetId": 29
+            },
+            {
+              "contentId": 3,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 34,
+              "tabletAssetId": 35
+            },
+            {
+              "contentId": 4,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 40,
+              "tabletAssetId": 41
+            }
+          ]
+        },
+        {
+          "categoryId": 1,
+          "contentLanguage": "tr",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+              "language": "tr",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 28,
+              "tabletAssetId": 29
+            },
+            {
+              "contentId": 3,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 34,
+              "tabletAssetId": 35
+            },
+            {
+              "contentId": 4,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 40,
+              "tabletAssetId": 41
+            },
+            {
+              "contentId": 5,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 5",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 46,
+              "tabletAssetId": 47
+            },
+            {
+              "contentId": 6,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 6",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 52,
+              "tabletAssetId": 53
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 19660800,
+      "imageCacheEntries": 36
+    },
+    {
+      "language": "tr",
+      "textScale": 1.3,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "tr",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+              "language": "tr",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 28,
+              "tabletAssetId": 29
+            },
+            {
+              "contentId": 3,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 34,
+              "tabletAssetId": 35
+            },
+            {
+              "contentId": 4,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 40,
+              "tabletAssetId": 41
+            }
+          ]
+        },
+        {
+          "categoryId": 1,
+          "contentLanguage": "tr",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 2",
+              "language": "tr",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 28,
+              "tabletAssetId": 29
+            },
+            {
+              "contentId": 3,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 3",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 34,
+              "tabletAssetId": 35
+            },
+            {
+              "contentId": 4,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 4",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 40,
+              "tabletAssetId": 41
+            },
+            {
+              "contentId": 5,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 5",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 46,
+              "tabletAssetId": 47
+            },
+            {
+              "contentId": 6,
+              "title": "Gökyüzüne Ulaşan Küçük Kahramanın Unutulmaz Macerası 6",
+              "language": "tr",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 52,
+              "tabletAssetId": 53
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 26181120,
+      "imageCacheEntries": 48
+    },
+    {
+      "language": "en",
+      "textScale": 1.0,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 1,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+              "language": "en",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 30,
+              "tabletAssetId": 31
+            },
+            {
+              "contentId": 3,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 36,
+              "tabletAssetId": 37
+            },
+            {
+              "contentId": 4,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 42,
+              "tabletAssetId": 43
+            },
+            {
+              "contentId": 5,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 5",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 48,
+              "tabletAssetId": 49
+            },
+            {
+              "contentId": 6,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 6",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 54,
+              "tabletAssetId": 55
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+              "language": "en",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 30,
+              "tabletAssetId": 31
+            },
+            {
+              "contentId": 3,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 36,
+              "tabletAssetId": 37
+            },
+            {
+              "contentId": 4,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 42,
+              "tabletAssetId": 43
+            },
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        },
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 26181120,
+      "imageCacheEntries": 48
+    },
+    {
+      "language": "en",
+      "textScale": 1.3,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 1,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+              "language": "en",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 30,
+              "tabletAssetId": 31
+            },
+            {
+              "contentId": 3,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 36,
+              "tabletAssetId": 37
+            },
+            {
+              "contentId": 4,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 42,
+              "tabletAssetId": 43
+            },
+            {
+              "contentId": 5,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 5",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 48,
+              "tabletAssetId": 49
+            },
+            {
+              "contentId": 6,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 6",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 54,
+              "tabletAssetId": 55
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 2",
+              "language": "en",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 30,
+              "tabletAssetId": 31
+            },
+            {
+              "contentId": 3,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 3",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 36,
+              "tabletAssetId": 37
+            },
+            {
+              "contentId": 4,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 4",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 42,
+              "tabletAssetId": 43
+            },
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        },
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 26131200,
+      "imageCacheEntries": 48
+    },
+    {
+      "language": "pt",
+      "textScale": 1.0,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 1,
+          "contentLanguage": "pt",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+              "language": "pt",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 32,
+              "tabletAssetId": 33
+            },
+            {
+              "contentId": 3,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 38,
+              "tabletAssetId": 39
+            },
+            {
+              "contentId": 4,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 44,
+              "tabletAssetId": 45
+            },
+            {
+              "contentId": 5,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 5",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 50,
+              "tabletAssetId": 51
+            },
+            {
+              "contentId": 6,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 6",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 56,
+              "tabletAssetId": 57
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "pt",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+              "language": "pt",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 32,
+              "tabletAssetId": 33
+            },
+            {
+              "contentId": 3,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 38,
+              "tabletAssetId": 39
+            },
+            {
+              "contentId": 4,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 44,
+              "tabletAssetId": 45
+            }
+          ]
+        },
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 26181120,
+      "imageCacheEntries": 48
+    },
+    {
+      "language": "pt",
+      "textScale": 1.3,
+      "freshHttpComparison": true,
+      "renderedCoverBitmapsVerified": true,
+      "audience": "SUBSCRIBER",
+      "rows": [
+        {
+          "categoryId": 1,
+          "contentLanguage": "pt",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+              "language": "pt",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 32,
+              "tabletAssetId": 33
+            },
+            {
+              "contentId": 3,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 38,
+              "tabletAssetId": 39
+            },
+            {
+              "contentId": 4,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 44,
+              "tabletAssetId": 45
+            },
+            {
+              "contentId": 5,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 5",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 50,
+              "tabletAssetId": 51
+            },
+            {
+              "contentId": 6,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 6",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 56,
+              "tabletAssetId": 57
+            }
+          ]
+        },
+        {
+          "categoryId": 2,
+          "contentLanguage": "pt",
+          "items": [
+            {
+              "contentId": 2,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 2",
+              "language": "pt",
+              "isFree": true,
+              "isLocked": false,
+              "phoneAssetId": 32,
+              "tabletAssetId": 33
+            },
+            {
+              "contentId": 3,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 3",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 38,
+              "tabletAssetId": 39
+            },
+            {
+              "contentId": 4,
+              "title": "A inesquecível aventura do pequeno herói que alcançou o céu 4",
+              "language": "pt",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 44,
+              "tabletAssetId": 45
+            }
+          ]
+        },
+        {
+          "categoryId": 3,
+          "contentLanguage": "en",
+          "items": [
+            {
+              "contentId": 9,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 9",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 70,
+              "tabletAssetId": 71
+            },
+            {
+              "contentId": 10,
+              "title": "The Little Hero's Unforgettable Adventure to the Sky 10",
+              "language": "en",
+              "isFree": false,
+              "isLocked": false,
+              "phoneAssetId": 72,
+              "tabletAssetId": 73
+            }
+          ]
+        }
+      ],
+      "imageCacheBytes": 26330880,
+      "imageCacheEntries": 48
+    }
+  ],
+  "diagnostics": [
+    {
+      "kind": "catalog",
+      "language": "tr",
+      "milliseconds": 732,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "tr",
+      "milliseconds": 511,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "tr",
+      "milliseconds": 510,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "en",
+      "milliseconds": 512,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "en",
+      "milliseconds": 508,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "pt",
+      "milliseconds": 510,
+      "outcome": "loaded"
+    },
+    {
+      "kind": "catalog",
+      "language": "pt",
+      "milliseconds": 510,
+      "outcome": "loaded"
+    }
+  ]
+}
