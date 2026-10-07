@@ -1,4 +1,11 @@
-enum FailureKind { network, timeout, unauthorized, forbidden, invalidResponse }
+enum FailureKind {
+  unavailable,
+  network,
+  timeout,
+  unauthorized,
+  forbidden,
+  invalidResponse,
+}
 
 class Failure {
   const Failure(this.kind);

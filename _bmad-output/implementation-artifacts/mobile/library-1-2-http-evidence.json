@@ -1,0 +1,650 @@
+{
+  "executed": true,
+  "recordedAt": "2026-10-07T06:50:55.737772+00:00",
+  "scope": "six_real_authenticated_http_cases_only",
+  "backendAddress": "http://127.0.0.1:8082",
+  "isolatedPostgresqlPort": 5442,
+  "accountVerification": {
+    "executed": true,
+    "recordedAt": "2026-10-07T06:48:36.868578Z",
+    "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+    "existingAccount": true,
+    "enabled": true,
+    "realIdTokenVerified": true,
+    "checkRevoked": true,
+    "accountRolesClaimsSubscriptionsChanged": false,
+    "tokenStoredOutsideRepository": true
+  },
+  "accountSelectionFile": "tools/mobile-test-account.json",
+  "backendJarSha256": "1371574d291773ff94c0115f6f483f9fb9eb28f4edf7ad070a024e443477911a",
+  "harnessSha256": "65ef373eec7565669347d97ac14e909c2fd1ad508ae58a58fcb529053332367b",
+  "cases": [
+    {
+      "case": "tr-free",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:49:43.331Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "tr",
+      "contentLanguage": "tr",
+      "categoryId": 1,
+      "contentId": 2,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": true,
+      "isLocked": false,
+      "title": "Kuki and Barky",
+      "ageRange": 5,
+      "durationMinutes": 8,
+      "summaryPresent": true,
+      "credits": [
+        {
+          "contributorId": 1,
+          "role": "AUTHOR",
+          "displayName": "Deniz Yılmaz"
+        },
+        {
+          "contributorId": 2,
+          "role": "NARRATOR",
+          "displayName": "Library Fixture Narrator"
+        },
+        {
+          "contributorId": 3,
+          "role": "ILLUSTRATOR",
+          "displayName": "Library Fixture Illustrator"
+        }
+      ],
+      "recommendations": [
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "tr",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 879,
+      "artwork": {
+        "assetId": 2,
+        "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+        "mimeType": "image/jpeg",
+        "byteSize": 73182,
+        "width": 512,
+        "height": 909,
+        "transferMs": 504
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    },
+    {
+      "case": "en-free",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:49:44.674Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "en",
+      "contentLanguage": "en",
+      "categoryId": 1,
+      "contentId": 2,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": true,
+      "isLocked": false,
+      "title": "Kuki and Barky",
+      "ageRange": 5,
+      "durationMinutes": 8,
+      "summaryPresent": true,
+      "credits": [
+        {
+          "contributorId": 1,
+          "role": "AUTHOR",
+          "displayName": "Deniz Yilmaz"
+        },
+        {
+          "contributorId": 2,
+          "role": "NARRATOR",
+          "displayName": "Library Fixture Narrator"
+        },
+        {
+          "contributorId": 3,
+          "role": "ILLUSTRATOR",
+          "displayName": "Library Fixture Illustrator"
+        }
+      ],
+      "recommendations": [
+        {
+          "contentId": 3,
+          "contentLanguage": "en",
+          "isLocked": true
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "en",
+          "isLocked": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "en",
+          "isLocked": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "en",
+          "isLocked": true
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "en",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 540,
+      "artwork": {
+        "assetId": 2,
+        "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+        "mimeType": "image/jpeg",
+        "byteSize": 73182,
+        "width": 512,
+        "height": 909,
+        "transferMs": 533
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    },
+    {
+      "case": "pt-free",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:49:42.810Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "pt",
+      "contentLanguage": "pt",
+      "categoryId": 1,
+      "contentId": 2,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": true,
+      "isLocked": false,
+      "title": "Minhoca 4 — Passeando Com A Denise",
+      "ageRange": 5,
+      "durationMinutes": 8,
+      "summaryPresent": true,
+      "credits": [
+        {
+          "contributorId": 1,
+          "role": "AUTHOR",
+          "displayName": "Deniz Yilmaz"
+        },
+        {
+          "contributorId": 2,
+          "role": "NARRATOR",
+          "displayName": "Library Fixture Narrator"
+        },
+        {
+          "contributorId": 3,
+          "role": "ILLUSTRATOR",
+          "displayName": "Library Fixture Illustrator"
+        }
+      ],
+      "recommendations": [
+        {
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "isLocked": true
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "pt",
+          "isLocked": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "pt",
+          "isLocked": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "pt",
+          "isLocked": true
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "pt",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 945,
+      "artwork": {
+        "assetId": 16,
+        "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+        "mimeType": "image/jpeg",
+        "byteSize": 25912,
+        "width": 428,
+        "height": 695,
+        "transferMs": 473
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    },
+    {
+      "case": "tr-locked",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:50:03.440Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "tr",
+      "contentLanguage": "tr",
+      "categoryId": 1,
+      "contentId": 3,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": false,
+      "isLocked": true,
+      "title": "Lavantamdaki Salyangoz",
+      "ageRange": 5,
+      "durationMinutes": 8,
+      "summaryPresent": true,
+      "credits": [
+        {
+          "contributorId": 1,
+          "role": "AUTHOR",
+          "displayName": "Deniz Yılmaz"
+        },
+        {
+          "contributorId": 2,
+          "role": "NARRATOR",
+          "displayName": "Library Fixture Narrator"
+        },
+        {
+          "contributorId": 3,
+          "role": "ILLUSTRATOR",
+          "displayName": "Library Fixture Illustrator"
+        }
+      ],
+      "recommendations": [
+        {
+          "contentId": 2,
+          "contentLanguage": "tr",
+          "isLocked": false
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "tr",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 777,
+      "artwork": {
+        "assetId": 3,
+        "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "mimeType": "image/jpeg",
+        "byteSize": 42692,
+        "width": 512,
+        "height": 831,
+        "transferMs": 285
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    },
+    {
+      "case": "tr-beyond-preview",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:50:03.864Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "tr",
+      "contentLanguage": "tr",
+      "categoryId": 1,
+      "contentId": 8,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": false,
+      "isLocked": true,
+      "title": "Küçük Balık Poli — Deniz Nerede?",
+      "ageRange": 5,
+      "durationMinutes": 8,
+      "summaryPresent": true,
+      "credits": [
+        {
+          "contributorId": 1,
+          "role": "AUTHOR",
+          "displayName": "Deniz Yılmaz"
+        },
+        {
+          "contributorId": 2,
+          "role": "NARRATOR",
+          "displayName": "Library Fixture Narrator"
+        },
+        {
+          "contributorId": 3,
+          "role": "ILLUSTRATOR",
+          "displayName": "Library Fixture Illustrator"
+        }
+      ],
+      "recommendations": [
+        {
+          "contentId": 2,
+          "contentLanguage": "tr",
+          "isLocked": false
+        },
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "tr",
+          "isLocked": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "tr",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 855,
+      "artwork": {
+        "assetId": 1,
+        "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+        "mimeType": "image/jpeg",
+        "byteSize": 50794,
+        "width": 512,
+        "height": 909,
+        "transferMs": 500
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    },
+    {
+      "case": "tr-mapped",
+      "executed": true,
+      "recordedAt": "2026-10-07T06:50:04.429Z",
+      "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+      "uiLanguage": "tr",
+      "contentLanguage": "en",
+      "categoryId": 3,
+      "contentId": 9,
+      "audience": "NON_SUBSCRIBER",
+      "isFree": false,
+      "isLocked": true,
+      "title": "Kuki and Barky",
+      "ageRange": 5,
+      "durationMinutes": null,
+      "summaryPresent": false,
+      "credits": [],
+      "recommendations": [
+        {
+          "contentId": 10,
+          "contentLanguage": "en",
+          "isLocked": true
+        }
+      ],
+      "metadataMs": 514,
+      "artwork": {
+        "assetId": 2,
+        "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+        "mimeType": "image/jpeg",
+        "byteSize": 73182,
+        "width": 512,
+        "height": 909,
+        "transferMs": 325
+      },
+      "faults": [
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "unavailable-story",
+          "status": 404,
+          "errorCode": "content_not_found"
+        }
+      ],
+      "native": null,
+      "notCovered": [
+        "verified-non-allowlisted-UID",
+        "both-server-audiences-unless-separately-run",
+        "withdrawn-localization-or-mapping",
+        "natural-URL-expiry",
+        "native-back-scroll-and-recommendation-interaction",
+        "matched-reference-captures",
+        "platform-accessibility-inspection",
+        "physical-device-memory-and-latency"
+      ]
+    }
+  ],
+  "prerequisiteGateComplete": false,
+  "nativeAcceptanceComplete": false,
+  "pending": [
+    "verified non-allowlisted admission using the same designated account",
+    "subscriber audience",
+    "withdrawn localization/category mapping",
+    "full prerequisite matrix",
+    "native/reference/platform/resource acceptance"
+  ]
+}

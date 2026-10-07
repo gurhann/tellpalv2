@@ -9,7 +9,7 @@ import com.tellpal.v2.category.api.*;
 class LibraryHomeTestQueryServiceTest {
     private final UserResolutionApi users=mock(UserResolutionApi.class);
     private final LibraryHomeQueryApi library=mock(LibraryHomeQueryApi.class);
-    private final LibraryHomeTestQueryService service=new LibraryHomeTestQueryService(users,library,"allowed,subscriber","subscriber");
+    private final LibraryHomeTestQueryService service=new LibraryHomeTestQueryService(users,library,org.mockito.Mockito.mock(com.tellpal.v2.category.api.LibraryStoryDetailQueryApi.class),"allowed,subscriber","subscriber");
     @Test void rejectsMissingInvalidAndUnlistedIdentityBeforeAnyCatalogCall() {
         assertThatThrownBy(()->service.query(null,"tr")).isInstanceOf(ResponseStatusException.class).hasMessageContaining("401");
         when(users.resolveOrCreateByIdToken("bad")).thenThrow(new UserAuthenticationException("Invalid token"));
@@ -26,6 +26,6 @@ class LibraryHomeTestQueryServiceTest {
         assertThatThrownBy(()->service.query("Bearer valid",null)).hasMessageContaining("400");
     }
     @Test void subscriberFixturesMustBeAnAllowlistSubset() {
-        assertThatThrownBy(()->new LibraryHomeTestQueryService(users,library,"","subscriber")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->new LibraryHomeTestQueryService(users,library,org.mockito.Mockito.mock(com.tellpal.v2.category.api.LibraryStoryDetailQueryApi.class),"","subscriber")).isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -39,31 +39,64 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
          ),
        );
 
+  /// Separate cache profiles share the verified package lifecycle without altering home defaults.
+  LibraryImageCache.profile(
+    Config configuration, {
+    Duration artworkWait = const Duration(seconds: 10),
+    http.Client Function()? clientFactory,
+    FileService? delegate,
+    int maximumOwnedAttempts = 4,
+    int maximumFiles = 20,
+    int maximumBytes = 104857600,
+    int maximumTransferBytes = 20971520,
+  }) : this._configured(
+         _withLifecycle(
+           configuration,
+           artworkWait,
+           delegate: delegate,
+           clientFactory: clientFactory,
+           maximumFiles: maximumFiles,
+           maximumBytes: maximumBytes,
+           maximumTransferBytes: maximumTransferBytes,
+         ),
+         maximumOwnedAttempts: maximumOwnedAttempts,
+         fileLimit: maximumFiles,
+       );
+
   // Explicit configuration couples the store and file lifecycle wrappers.
   // ignore: use_super_parameters
-  LibraryImageCache._configured(Config configuration)
-    : _repository = configuration.repo as DrainingCacheInfoRepository,
-      _files = configuration.fileSystem as LibraryCacheFiles,
-      _transport = configuration.fileService as LibraryTransferFileService,
-      _admission = LibraryCacheAdmission(
-        Duration(
-          microseconds:
-              (configuration.fileService as LibraryTransferFileService)
-                  .totalWait
-                  .inMicroseconds ~/
-              4,
-        ),
-      ),
-      // Package documents this public seam for custom stores; vendor sources stay intact.
-      // ignore: invalid_use_of_visible_for_testing_member
-      super.custom(configuration, cacheStore: LibraryCacheStore(configuration));
+  LibraryImageCache._configured(
+    Config configuration, {
+    int maximumOwnedAttempts = 90,
+    int fileLimit = 80,
+  }) : _maximumOwnedAttempts = maximumOwnedAttempts,
+       _fileLimit = fileLimit,
+       _repository = configuration.repo as DrainingCacheInfoRepository,
+       _files = configuration.fileSystem as LibraryCacheFiles,
+       _transport = configuration.fileService as LibraryTransferFileService,
+       _admission = LibraryCacheAdmission(
+         Duration(
+           microseconds:
+               (configuration.fileService as LibraryTransferFileService)
+                   .totalWait
+                   .inMicroseconds ~/
+               4,
+         ),
+       ),
+       // Package documents this public seam for custom stores; vendor sources stay intact.
+       // ignore: invalid_use_of_visible_for_testing_member
+       super.custom(
+         configuration,
+         cacheStore: LibraryCacheStore(configuration),
+       );
 
   final DrainingCacheInfoRepository _repository;
   final LibraryCacheFiles _files;
   final LibraryTransferFileService _transport;
   final LibraryCacheAdmission _admission;
   // Includes metadata, transfer, publication and cleanup, even after cancel.
-  static const _maximumOwnedAttempts = 90;
+  final int _maximumOwnedAttempts;
+  final int _fileLimit;
   final _operations = <_Operation>{};
 
   @visibleForTesting
@@ -85,16 +118,25 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     Duration artworkWait, {
     FileService? delegate,
     http.Client Function()? clientFactory,
+    int maximumFiles = 80,
+    int? maximumBytes,
+    int? maximumTransferBytes,
   }) => Config(
     configuration.cacheKey,
     stalePeriod: configuration.stalePeriod,
     maxNrOfCacheObjects: configuration.maxNrOfCacheObjects,
     repo: DrainingCacheInfoRepository(configuration.repo),
-    fileSystem: LibraryCacheFiles(configuration.fileSystem),
+    fileSystem: LibraryCacheFiles(
+      configuration.fileSystem,
+      capacity: maximumFiles,
+      maximumBytes: maximumBytes,
+      reservedFileBytes: maximumTransferBytes ?? 0,
+    ),
     fileService: LibraryTransferFileService(
       artworkWait: artworkWait,
       delegate: delegate,
       clientFactory: clientFactory,
+      maximumTransferBytes: maximumTransferBytes,
     ),
   );
 
@@ -147,8 +189,12 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
         final cached = await getFileFromCache(immutable);
         if (_closed || operation.cancelled.isCompleted) return;
         if (cached != null && cached.validTill.isAfter(DateTime.now())) {
+          await validateResponse(cached, key);
+          if (_closed || operation.cancelled.isCompleted) return;
           _warmHits[key] = (immutable, cached);
-          if (_warmHits.length > 80) _warmHits.remove(_warmHits.keys.first);
+          if (_warmHits.length > _fileLimit) {
+            _warmHits.remove(_warmHits.keys.first);
+          }
           operation.output.add(cached);
           return;
         }
@@ -176,11 +222,15 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
           await (store as LibraryCacheStore).drain();
           (store as LibraryCacheStore).rethrowFailure(operation.owner);
           if (_closed || operation.cancelled.isCompleted) continue;
+          await validateResponse(response, key);
+          if (_closed || operation.cancelled.isCompleted) continue;
         }
         if (response is FileInfo && split >= 0) {
           if (!response.validTill.isAfter(DateTime.now())) continue;
           _delivered[key] = response;
-          if (_delivered.length > 80) _delivered.remove(_delivered.keys.first);
+          if (_delivered.length > _fileLimit) {
+            _delivered.remove(_delivered.keys.first);
+          }
         }
         operation.output.add(response);
       }
@@ -213,6 +263,10 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       }
     }
   }
+
+  /// Profile validation shares the operation's slot until its actual file work settles.
+  @protected
+  Future<void> validateResponse(FileInfo response, String key) async {}
 
   @override
   Future<File> getSingleFile(
@@ -420,7 +474,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
         if (transferred == null || _closed || !isCurrent()) return;
         await _cleanupCapacity();
         if (_closed || !isCurrent()) return;
-        if (_retired.length + _retirementReservations >= 80) return;
+        if (_retired.length + _retirementReservations >= _fileLimit) return;
         _retirementReservations++;
         try {
           // Swap metadata ownership, never rewrite a file a decoder is reading.
@@ -516,12 +570,12 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
   }
 
   Future<void> _cleanupCapacity() async {
-    if (_promotionFiles.length >= 80) {
+    if (_promotionFiles.length >= _fileLimit) {
       throw StateError('Library image publication cleanup capacity reached');
     }
-    if (_retired.length + _retirementReservations >= 80) {
+    if (_retired.length + _retirementReservations >= _fileLimit) {
       if (_retired.isNotEmpty) await _releaseRetired(_retired.keys.first);
-      if (_retired.length + _retirementReservations >= 80) {
+      if (_retired.length + _retirementReservations >= _fileLimit) {
         throw StateError('Library image retirement capacity reached');
       }
     }

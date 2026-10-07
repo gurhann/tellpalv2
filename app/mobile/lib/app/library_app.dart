@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import '../core/theme/library_theme.dart';
 import 'injection.dart';
 import 'router.dart';
@@ -22,6 +23,6 @@ class LibraryApp extends StatelessWidget {
         child: child!,
       ),
     ),
-    routerConfig: libraryGetIt<LibraryRouter>().config(),
+    routerConfig: libraryGetIt<LibraryRouter>().config(navigatorObservers: () => [AutoRouteObserver()]),
   );
 }

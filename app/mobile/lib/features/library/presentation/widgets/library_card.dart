@@ -19,7 +19,11 @@ class LibraryCard extends StatelessWidget {
     required this.item,
     required this.state,
     required this.strings,
+    this.onTap,
+    this.onRefreshArtwork,
   });
+  final Future<void> Function()? onTap;
+  final Future<void> Function()? onRefreshArtwork;
   final LibraryPreview item;
   final LibraryState state;
   final LibraryStrings strings;
@@ -44,6 +48,8 @@ class LibraryCard extends StatelessWidget {
         cover: cover,
         identity: identity,
         strings: strings,
+        onTap: onTap,
+        onRefreshArtwork: onRefreshArtwork,
       ),
     );
   }
@@ -55,7 +61,11 @@ class _CardArtwork extends StatefulWidget {
     required this.cover,
     required this.identity,
     required this.strings,
+    this.onTap,
+    this.onRefreshArtwork,
   });
+  final Future<void> Function()? onTap;
+  final Future<void> Function()? onRefreshArtwork;
   final LibraryPreview item;
   final LibraryCover? cover;
   final ArtworkIdentity identity;
@@ -65,6 +75,17 @@ class _CardArtwork extends StatefulWidget {
 }
 
 class _CardArtworkState extends State<_CardArtwork> {
+  bool _navigating = false;
+  Future<void> _open() async {
+    if (_navigating || widget.onTap == null) return;
+    _navigating = true;
+    try {
+      await widget.onTap!();
+    } finally {
+      _navigating = false;
+    }
+  }
+
   static int _nextOwner = 0;
   final int _owner = ++_nextOwner;
   LibraryPreview get item => widget.item;
@@ -87,6 +108,14 @@ class _CardArtworkState extends State<_CardArtwork> {
 
   Future<void> _retryArtwork(BuildContext context) async {
     final artwork = context.read<ArtworkCubit>();
+    if (widget.onRefreshArtwork != null) {
+      await libraryGetIt<LibraryImageCache>().discardFailedTransfer(
+        _transferKey(artwork.state.attempt),
+      );
+      if (!context.mounted) return;
+      await widget.onRefreshArtwork!();
+      return;
+    }
     final catalog = context.read<LibraryCubit>();
     final capturedAttempt = artwork.state.attempt;
     if (artwork.state.identity != identity ||
@@ -131,73 +160,79 @@ class _CardArtworkState extends State<_CardArtwork> {
           label:
               '${item.title}, ${item.contentLanguage}${item.isLocked ? ', ${strings.locked}' : ''}',
           button: true,
-          enabled: false,
+          enabled: widget.onTap != null,
+          onTap: widget.onTap == null ? null : _open,
           child: ExcludeSemantics(
-            child: BlocBuilder<ArtworkCubit, ArtworkState>(
-              builder: (context, artwork) {
-                if (cover == null || artwork.status == ArtworkStatus.error) {
-                  return _ArtworkError(title: item.title);
-                }
-                final capturedAttempt = artwork.attempt;
-                return CachedNetworkImage(
-                  key: ValueKey(_transferKey(capturedAttempt)),
-                  imageUrl: cover!.url,
-                  cacheManager: libraryGetIt<LibraryImageCache>(),
-                  cacheKey: _transferKey(capturedAttempt),
-                  memCacheWidth: MediaQuery.sizeOf(context).shortestSide >= 600
-                      ? 600
-                      : 360,
-                  // Server-verified thumbnails already fit 360x480/600x800.
-                  fit: BoxFit.cover,
-                  placeholder: (_, _) =>
-                      const ColoredBox(color: AppColors.placeholder),
-                  imageBuilder: (context, provider) {
-                    scheduleMicrotask(() {
-                      if (context.mounted) {
-                        final artwork = context.read<ArtworkCubit>();
-                        if (!_current(artwork, capturedAttempt) ||
-                            artwork.state.status != ArtworkStatus.loading) {
+            child: GestureDetector(
+              onTap: widget.onTap == null ? null : _open,
+              child: BlocBuilder<ArtworkCubit, ArtworkState>(
+                builder: (context, artwork) {
+                  if (cover == null || artwork.status == ArtworkStatus.error) {
+                    return _ArtworkError(title: item.title);
+                  }
+                  final capturedAttempt = artwork.attempt;
+                  return CachedNetworkImage(
+                    key: ValueKey(_transferKey(capturedAttempt)),
+                    imageUrl: cover!.url,
+                    cacheManager: libraryGetIt<LibraryImageCache>(),
+                    cacheKey: _transferKey(capturedAttempt),
+                    memCacheWidth:
+                        MediaQuery.sizeOf(context).shortestSide >= 600
+                        ? 600
+                        : 360,
+                    // Server-verified thumbnails already fit 360x480/600x800.
+                    fit: BoxFit.cover,
+                    placeholder: (_, _) =>
+                        const ColoredBox(color: AppColors.placeholder),
+                    imageBuilder: (context, provider) {
+                      scheduleMicrotask(() {
+                        if (context.mounted) {
+                          final artwork = context.read<ArtworkCubit>();
+                          if (!_current(artwork, capturedAttempt) ||
+                              artwork.state.status != ArtworkStatus.loading) {
+                            return;
+                          }
+                          artwork.success(identity, capturedAttempt);
+                          unawaited(
+                            libraryGetIt<LibraryImageCache>().rememberValidated(
+                              _cacheKey,
+                              _transferKey(capturedAttempt),
+                              isCurrent: () =>
+                                  _current(artwork, capturedAttempt),
+                            ),
+                          );
+                        }
+                      });
+                      return Image(
+                        image: provider,
+                        fit: BoxFit.cover,
+                        excludeFromSemantics: true,
+                      );
+                    },
+                    errorWidget: (context, _, error) {
+                      scheduleMicrotask(() {
+                        if (!context.mounted) {
                           return;
                         }
-                        artwork.success(identity, capturedAttempt);
-                        unawaited(
-                          libraryGetIt<LibraryImageCache>().rememberValidated(
-                            _cacheKey,
-                            _transferKey(capturedAttempt),
-                            isCurrent: () => _current(artwork, capturedAttempt),
-                          ),
+                        final accepted = context.read<ArtworkCubit>().fail(
+                          identity,
+                          capturedAttempt,
                         );
-                      }
-                    });
-                    return Image(
-                      image: provider,
-                      fit: BoxFit.cover,
-                      excludeFromSemantics: true,
-                    );
-                  },
-                  errorWidget: (context, _, error) {
-                    scheduleMicrotask(() {
-                      if (!context.mounted) {
-                        return;
-                      }
-                      final accepted = context.read<ArtworkCubit>().fail(
-                        identity,
-                        capturedAttempt,
-                      );
-                      if (accepted) {
-                        libraryGetIt<LibraryDiagnostics>().error(error);
-                      }
-                      if (accepted &&
-                          !cover!.expiresAt.isAfter(DateTime.now().toUtc())) {
-                        context.read<LibraryCubit>().refreshExpiredArtwork(
-                          identity.catalogAttempt,
-                        );
-                      }
-                    });
-                    return _ArtworkError(title: item.title);
-                  },
-                );
-              },
+                        if (accepted) {
+                          libraryGetIt<LibraryDiagnostics>().error(error);
+                        }
+                        if (accepted &&
+                            !cover!.expiresAt.isAfter(DateTime.now().toUtc())) {
+                          context.read<LibraryCubit>().refreshExpiredArtwork(
+                            identity.catalogAttempt,
+                          );
+                        }
+                      });
+                      return _ArtworkError(title: item.title);
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ),

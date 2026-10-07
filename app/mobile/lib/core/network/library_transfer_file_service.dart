@@ -9,6 +9,7 @@ class LibraryTransferFileService extends FileService {
     required Duration artworkWait,
     FileService? delegate,
     http.Client Function()? clientFactory,
+    this.maximumTransferBytes,
   }) : totalWait = Duration(microseconds: artworkWait.inMicroseconds * 4 ~/ 5),
        headerWait = Duration(microseconds: artworkWait.inMicroseconds * 2 ~/ 5),
        idleWait = Duration(microseconds: artworkWait.inMicroseconds * 2 ~/ 5),
@@ -16,6 +17,7 @@ class LibraryTransferFileService extends FileService {
        _clientFactory = clientFactory ?? http.Client.new;
 
   static const ownershipHeader = 'x-library-local-transfer';
+  final int? maximumTransferBytes;
   final Duration totalWait;
   final Duration headerWait;
   final Duration idleWait;
@@ -71,11 +73,16 @@ class LibraryTransferFileService extends FileService {
         transfer.finish();
         _transfers.remove(owner);
       }
+      if (maximumTransferBytes != null &&
+          (response.contentLength ?? 0) > maximumTransferBytes!) {
+        throw StateError('Artwork exceeds encoded byte bound');
+      }
       return _Response(
         response,
         transfer,
         idleWait,
         () => _transfers.remove(owner),
+        maximumTransferBytes,
       );
     } catch (_) {
       transfer.finish();
@@ -102,7 +109,14 @@ class _Transfer {
 }
 
 class _Response implements FileServiceResponse {
-  _Response(this._response, this._transfer, this._idleWait, this._finished);
+  _Response(
+    this._response,
+    this._transfer,
+    this._idleWait,
+    this._finished,
+    this._maximumBytes,
+  );
+  final int? _maximumBytes;
   final FileServiceResponse _response;
   final _Transfer _transfer;
   final Duration _idleWait;
@@ -112,6 +126,7 @@ class _Response implements FileServiceResponse {
     late StreamController<List<int>> controller;
     StreamSubscription<List<int>>? subscription;
     bool ended = false;
+    int received = 0;
     Future<void> finish([Object? error, StackTrace? stack]) async {
       if (ended) return;
       ended = true;
@@ -131,7 +146,17 @@ class _Response implements FileServiceResponse {
         subscription = _response.content
             .timeout(_idleWait)
             .listen(
-              controller.add,
+              (chunk) {
+                received += chunk.length;
+                if (_maximumBytes != null && received > _maximumBytes) {
+                  _transfer.cancel();
+                  unawaited(
+                    finish(StateError('Artwork exceeds encoded byte bound')),
+                  );
+                } else if (!ended) {
+                  controller.add(chunk);
+                }
+              },
               onError: (Object error, StackTrace stack) => unawaited(
                 finish(
                   _transfer.cancelled.isCompleted

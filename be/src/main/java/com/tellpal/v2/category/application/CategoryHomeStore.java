@@ -14,5 +14,6 @@ public interface CategoryHomeStore {
     boolean localizationExists(long categoryId, String language);
     boolean languageEnabled(String language);
     boolean localizationPublished(long categoryId,String language);
+    boolean member(long categoryId, long contentId, String language);
     List<Long> candidates(long categoryId, String language, int offset, int limit);
 }

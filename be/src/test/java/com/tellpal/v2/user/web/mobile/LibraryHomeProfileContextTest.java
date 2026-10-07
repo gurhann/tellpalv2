@@ -92,6 +92,7 @@ class LibraryHomeProfileContextTest {
     @Import({LibraryHomeTestController.class, LibraryHomeTestQueryService.class, LibraryHomeTestExceptionHandler.class})
     static class LibraryMvc {
         @Bean UserResolutionApi users() { return mock(UserResolutionApi.class); }
+        @Bean com.tellpal.v2.category.api.LibraryStoryDetailQueryApi details() { return mock(com.tellpal.v2.category.api.LibraryStoryDetailQueryApi.class); }
         @Bean LibraryHomeQueryApi library() { return mock(LibraryHomeQueryApi.class); }
     }
 }

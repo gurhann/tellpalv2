@@ -51,6 +51,11 @@ working on deployment and archived tasks only for relevant history (ADR-0015).
 
 ## Build and Test Commands
 
+For real authenticated development and QA flows, always use Firebase UID
+`jLRypTmoBrhhX21HsDJojurcKTC3` unless the user explicitly changes it. The canonical
+selection is `tools/mobile-test-account.json` (ADR-0019). Keep session tokens outside
+the repository; this default does not enable production access or replace synthetic unit fixtures.
+
 Use the Maven wrapper from `be/`:
 
 - `docker compose up -d postgres`: local database.

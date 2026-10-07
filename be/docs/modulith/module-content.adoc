@@ -11,12 +11,14 @@
 * `c.t.v.c.api.ContentLookupApi`, `c.t.v.c.api.ContentLocalizationLookupApi`, `c.t.v.c.api.LocalizedContentIdentityLookupApi` (via `c.t.v.c.application.ContentLookupService`)
 * `c.t.v.c.api.ContentPreviewQueryApi` (via `c.t.v.c.application.query.ContentPreviewQueryService`)
 * `c.t.v.c.api.PublicContentQueryApi` (via `c.t.v.c.application.query.PublicContentQueryService`)
+* `c.t.v.c.api.StoryDetailMetadataQueryApi` (via `c.t.v.c.application.query.StoryDetailMetadataQueryService`)
 |Bean references
 |* `c.t.v.a.api.AssetProcessingApi` (in Asset)
 * `c.t.v.a.api.AssetRegistryApi` (in Asset)
 * `c.t.v.a.api.LibraryCoverPreparationApi` (in Asset)
 * `c.t.v.a.api.LibraryCoverQueryApi` (in Asset)
 * `c.t.v.a.api.ContentAssetBundleApi` (in Asset)
+* `c.t.v.a.api.StoryDetailHeroQueryApi` (in Asset)
 * `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)
 |Events listened to
 |* `c.t.v.a.api.AssetProcessingStatusChangedEvent` 

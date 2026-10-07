@@ -1,0 +1,770 @@
+{
+  "timestamp": "2026-10-07T06:15:46.593388+00:00",
+  "storage": "Existing local-library-1-1 Firebase test objects; read-only listing/download. No new remote upload/write.",
+  "method": "Actual original download SHA-256 equals local source; actual thumbnails equal the current ListingCoverRenditionProcessor JPEG bytes for each exact source/profile.",
+  "sources": [
+    {
+      "language": "tr",
+      "source": "story1.jpg",
+      "byteSize": 50794,
+      "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Küçük Balık Poli — Deniz Nerede?"
+    },
+    {
+      "language": "tr",
+      "source": "story2.jpg",
+      "byteSize": 73182,
+      "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Kuki and Barky",
+      "languageParityLimit": "Original Turkish-folder source contains English baked lettering; cannot establish localized Turkish artwork parity."
+    },
+    {
+      "language": "tr",
+      "source": "story3.jpg",
+      "byteSize": 42692,
+      "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Lavantamdaki Salyangoz"
+    },
+    {
+      "language": "tr",
+      "source": "story4.jpg",
+      "byteSize": 20826,
+      "sha256": "b639fcdb2a29c3643c69c48882798a5a19c397dbc5db7c3a895de3d39f4e1233",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Toprak Solucanı 2 — Çiftlikte İlk Gün"
+    },
+    {
+      "language": "tr",
+      "source": "story5.jpg",
+      "byteSize": 42338,
+      "sha256": "1ba5e6d027f4950c96e94a9d5592efd0895a56fb4886e18532b179419e623290",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Koca Dağın Zirvesi"
+    },
+    {
+      "language": "tr",
+      "source": "story6.jpg",
+      "byteSize": 37433,
+      "sha256": "77f8a600e04681dca4b81f8252ba52816f2a70ffa67ed926cfa7c7c9e014f125",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Melody — The Messenger Sparrow",
+      "languageParityLimit": "Original Turkish-folder source contains English baked lettering; cannot establish localized Turkish artwork parity."
+    },
+    {
+      "language": "tr",
+      "source": "story7.jpg",
+      "byteSize": 54284,
+      "sha256": "3fcf0d7802ae37b1d419441ff71aae0b682a6936a5dfae4592c365a55c7cccd9",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Gökkuşağının Renkleri"
+    },
+    {
+      "language": "en",
+      "source": "story1.jpg",
+      "byteSize": 67055,
+      "sha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Polly the Little Fish — Where is the Sea?"
+    },
+    {
+      "language": "en",
+      "source": "story2.jpg",
+      "byteSize": 73182,
+      "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Kuki and Barky"
+    },
+    {
+      "language": "en",
+      "source": "story3.jpg",
+      "byteSize": 28681,
+      "sha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Snail in My Lavender"
+    },
+    {
+      "language": "en",
+      "source": "story4.jpg",
+      "byteSize": 28761,
+      "sha256": "82bd38a2b4a6fe18ebe136bdeed01c55ab941930c577692865196f93be8aef97",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Earthworm 2 — First Day on the Farm"
+    },
+    {
+      "language": "en",
+      "source": "story5.jpg",
+      "byteSize": 61245,
+      "sha256": "98725a1fc0c9719d0f3592dcf6e1d171caa2df8eda866d992250fa0525537160",
+      "width": 512,
+      "height": 909,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "The Top of Big Mountain"
+    },
+    {
+      "language": "en",
+      "source": "story6.jpg",
+      "byteSize": 37433,
+      "sha256": "77f8a600e04681dca4b81f8252ba52816f2a70ffa67ed926cfa7c7c9e014f125",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Melody — The Messenger Sparrow"
+    },
+    {
+      "language": "en",
+      "source": "story7.jpg",
+      "byteSize": 55719,
+      "sha256": "60551aef18af1ed8b960a99d67fb52b29ea49352760ec1810cf4395c062445d9",
+      "width": 512,
+      "height": 831,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "The Colors of the Rainbow"
+    },
+    {
+      "language": "pt",
+      "source": "story1.jpg",
+      "byteSize": 16053,
+      "sha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+      "width": 428,
+      "height": 695,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Melody — A Pardal Mensageira"
+    },
+    {
+      "language": "pt",
+      "source": "story2.jpg",
+      "byteSize": 25912,
+      "sha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+      "width": 428,
+      "height": 695,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Minhoca 4 — Passeando Com A Denise"
+    },
+    {
+      "language": "pt",
+      "source": "story3.jpg",
+      "byteSize": 18786,
+      "sha256": "0f6ea3c641a95c1ba43bee931b49e2691d5ed8a17aaaf99301eb753fe3f650b1",
+      "width": 428,
+      "height": 695,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Minhoca 2 — Primeiro Dia Na Fazenda"
+    },
+    {
+      "language": "pt",
+      "source": "story4.jpg",
+      "byteSize": 19875,
+      "sha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75",
+      "width": 321,
+      "height": 570,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Uma jornada com um Chapéu"
+    },
+    {
+      "language": "pt",
+      "source": "story5.jpg",
+      "byteSize": 24223,
+      "sha256": "fa1bcebec3261f8c62267562fc5af5059ba7ddc74395cc4f21a6ee9f1188cfce",
+      "width": 428,
+      "height": 695,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Ping-pong com manchas rosadas"
+    },
+    {
+      "language": "pt",
+      "source": "story6.jpg",
+      "byteSize": 24051,
+      "sha256": "c925020c737055b97474b5e191def92c05fc8b6f695b9aa9e57113499c5f6e1c",
+      "width": 428,
+      "height": 695,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "Vamos sonhar juntos"
+    },
+    {
+      "language": "pt",
+      "source": "story7.jpg",
+      "byteSize": 20841,
+      "sha256": "9e15373210fba23cda7a2448d4eb77acfc9fca14913492cf6fa610388a33401e",
+      "width": 321,
+      "height": 570,
+      "sourceWithinBounds": true,
+      "existingFirebaseBytesMatched": true,
+      "inspectedArtworkTitle": "As Meias da Flora"
+    }
+  ],
+  "uniqueOriginalChecksums": 19,
+  "renditions": [
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 43864,
+      "sha256": "1e680813777efec5b968006c309cd6da0da050cb929199e20f7786fd7c9fc0e8",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 89549,
+      "sha256": "7a91b6a69e15276fa8b70313981fcaee0b978c51180f49b023a30f710a225ae2",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 23706,
+      "sha256": "8745deca14c9ecf19b0ab0271e523d79ef9032fb2d2fc7fac890b5d65566b66f",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 29640,
+      "sha256": "42ac90d05988a92d0f5617534fe73a7496aba30c0a6c50ec6759ff5248b5be6b",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 46007,
+      "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-0",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 92483,
+      "sha256": "382e38c3a1d5eededb12b97e5446ef750904546316564636154e6516b2ac93ea",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 33631,
+      "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 45837,
+      "sha256": "6e3fa1ffaa22a142b6f7792dd758f45c5a99e106de1ecb9e8c6002d72d7ad922",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-1",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 31220,
+      "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 62414,
+      "sha256": "9a5c0b517e70d6d57693f5df76062b91dadd63474de69222be73c624bf127e69",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 25752,
+      "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 33011,
+      "sha256": "02e0afb40b513b26d459e311251cc0e4acb8f6246e34a6f1d59f11ea47adf94b",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 33091,
+      "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-2",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 66434,
+      "sha256": "6b19ac2202e471c3237e935c8397c222993e385bec1460a37ba8e5b0a21c6b6c",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 22117,
+      "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 44969,
+      "sha256": "2f015f9529d2ccdf9e2a6cba7818b03a34076e79ff0b7493e7c0fef2b4bc67dc",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 33667,
+      "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 34945,
+      "sha256": "4555d99f8d8732b0e818428a33f1417cfc75a15ef995f5d8221a11788eb5d19e",
+      "width": 321,
+      "height": 570,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 22326,
+      "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-3",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 44943,
+      "sha256": "d66f7c0cc5aebfb55cc03ed17ad5e5dd2e5f40303fe75fafa898ca376a9b0930",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 37021,
+      "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 81255,
+      "sha256": "ad28d98f6840b5d514681f047acf450178c6378f541ffc9cf1ebf984850331cd",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 32033,
+      "sha256": "834c9be5926eb9b578702b6e399217e2eb6925637ca8d2be7a838d8530fa7283",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 43029,
+      "sha256": "949c330740c8125e7887d70a5e1e07a1da3b103a0a5cb0e437af18049ac41d65",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 37259,
+      "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-4",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 78843,
+      "sha256": "5c7cb31594ee13f0ae2aae39e595d948cba6192779f9fb8f2cfd36c5b52c1a2b",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 25017,
+      "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 52421,
+      "sha256": "e01d313f52d8b6f6d46cba30608e887e3f830c14a70f0319349c6e8b3c37f06c",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 31412,
+      "sha256": "68c657e79ae33698814b0fb75796f0301247a3251b33df847b44b979c483bab1",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 42273,
+      "sha256": "9e0b0813fc3aef8caa2a74234f715597199d79b5ac656eaa0129a6f842b4a4bd",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 25017,
+      "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-5",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 52421,
+      "sha256": "e01d313f52d8b6f6d46cba30608e887e3f830c14a70f0319349c6e8b3c37f06c",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 17381,
+      "sha256": "2db730715d9f72bdea91f00ce9eafabd90cbd188cbdf9e360beace5383eee09c",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 36538,
+      "sha256": "bf126aa77ea0885695a3035a8b8def46f6d227d4238981af8791996f891734d6",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 35035,
+      "sha256": "4bd9577e428fb9f893743e5001cca2010e828f82f660ce2c24f8de2e4bbbb812",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 36532,
+      "sha256": "2078b10ed87e5899d8a30638aa65a3adad853bd763a56a0499660aa375797b82",
+      "width": 321,
+      "height": 570,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 16513,
+      "sha256": "903bde6b077a2ff16eab6a292025357096482c7f58e61ce8f84f770fc8723ad3",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-6",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 35636,
+      "sha256": "a08e37686d96e00218f1e7b343e60690da20ff0a40ecee46b72728b19912e874",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 43864,
+      "sha256": "1e680813777efec5b968006c309cd6da0da050cb929199e20f7786fd7c9fc0e8",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 89549,
+      "sha256": "7a91b6a69e15276fa8b70313981fcaee0b978c51180f49b023a30f710a225ae2",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "pt",
+      "profile": "phone",
+      "byteSize": 23706,
+      "sha256": "8745deca14c9ecf19b0ab0271e523d79ef9032fb2d2fc7fac890b5d65566b66f",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "pt",
+      "profile": "tablet",
+      "byteSize": 29640,
+      "sha256": "42ac90d05988a92d0f5617534fe73a7496aba30c0a6c50ec6759ff5248b5be6b",
+      "width": 428,
+      "height": 695,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "tr",
+      "profile": "phone",
+      "byteSize": 46007,
+      "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-7",
+      "language": "tr",
+      "profile": "tablet",
+      "byteSize": 92483,
+      "sha256": "382e38c3a1d5eededb12b97e5446ef750904546316564636154e6516b2ac93ea",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-8",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "width": 270,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-8",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "width": 451,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-9",
+      "language": "en",
+      "profile": "phone",
+      "byteSize": 31220,
+      "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+      "width": 296,
+      "height": 480,
+      "exactSourceAndEncoderBytesMatched": true
+    },
+    {
+      "externalKey": "library-1-1-story-9",
+      "language": "en",
+      "profile": "tablet",
+      "byteSize": 62414,
+      "sha256": "9a5c0b517e70d6d57693f5df76062b91dadd63474de69222be73c624bf127e69",
+      "width": 493,
+      "height": 800,
+      "exactSourceAndEncoderBytesMatched": true
+    }
+  ],
+  "scope": "Storage provenance/source envelope only; does not establish authenticated detail endpoint, native decoding, memory or visual acceptance.",
+  "fixtureTitles": "Disposable PostgreSQL titles transcribed from actual baked cover lettering; existing Story 1.1 golden source/tests are unchanged.",
+  "referenceLimits": [
+    "The legacy free Turkish Haberci hero is not present among these exact Turkish originals.",
+    "Some language folders contain English baked text or different stories; exact source-byte identity does not certify linguistic/legacy parity.",
+    "Native/contrast/visual comparison and authenticated detail HTTP remain pending."
+  ]
+}

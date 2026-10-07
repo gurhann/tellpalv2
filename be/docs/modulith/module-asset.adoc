@@ -10,6 +10,7 @@
 * `c.t.v.a.api.ContentAssetBundleApi` (via `c.t.v.a.application.ContentAssetBundleService`)
 * `c.t.v.a.api.LibraryCoverPreparationApi` (via `c.t.v.a.application.LibraryCoverPreparationService`)
 * `c.t.v.a.api.LibraryCoverQueryApi` (via `c.t.v.a.application.LibraryCoverQueryService`)
+* `c.t.v.a.api.StoryDetailHeroQueryApi` (via `c.t.v.a.application.StoryDetailHeroQueryService`)
 * `c.t.v.a.api.StoryPageMediaManifestApi` (via `c.t.v.a.application.StoryPageMediaManifestService`)
 |Bean references
 |* `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)

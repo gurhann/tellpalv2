@@ -82,6 +82,7 @@ and broadly reusable (ADR-0001, ADR-0002, ADR-0004).
 
 ## Local Development Defaults
 
+- Always use existing Firebase UID `jLRypTmoBrhhX21HsDJojurcKTC3` for real authenticated development and QA unless the user explicitly changes the selection. Read `tools/mobile-test-account.json`; verify existence/enabled status before obtaining temporary sessions and store tokens outside the repository. This user-approved default does not change production access, account claims/subscriptions, synthetic unit fixtures, or the backend's empty-by-default test allowlist (ADR-0019).
 - The backend does not auto-seed sample CMS content for local environments.
 - `be/docs/admin-api-rules.md` is the canonical CMS admin validation and precondition reference for frontend and local seed work.
 - When preparing local CMS sample data, create records through admin APIs or controlled SQL and follow the content localization validation rules documented in `be/docs/bootstrap-notes.md`.

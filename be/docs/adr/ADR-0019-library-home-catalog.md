@@ -10,6 +10,7 @@ The media PoC and aggregate catalog endpoints do not provide independent CMS row
 
 ## Decision
 
+- On 2026-10-07, the user designated existing Firebase UID `jLRypTmoBrhhX21HsDJojurcKTC3` as the persistent default for real authenticated development and QA flows. `tools/mobile-test-account.json` records the selection. Verify that this exact account exists and is enabled before obtaining a temporary session; use no replacement identity without an explicit user instruction. Keep tokens and credentials outside the repository. The preference does not change production configuration, account roles/custom claims/subscriptions, synthetic unit fixtures, or the empty-by-default backend test allowlist. Audience variants use isolated server fixture configuration with this same identity.
 - `category` owns opt-in home positions, `ALL` / `NON_SUBSCRIBER` audience and nullable explicit content/curation language on each category localization. V33 leaves existing rows opted out. Occupied-position swaps use a complete per-language snapshot, revision precondition, transaction, advisory language lock and deferred uniqueness constraint. Single-row updates reject occupied positions. Home fields are read-only to ORM so existing category-localization edits cannot flush a stale snapshot over the JDBC-owned atomic configuration. Curation order remains in `category_contents` and is never rewritten by home configuration.
 - `LibraryHomeQueryApi` composes category rows with `content::api` lightweight scalar previews and `asset::api` ready artwork. Filter active/published categories and exact declared-language, active/published/processed STORY localizations before the single server preview limit, initially five. Empty rows disappear without changing remaining order. Ordinary rows never substitute another language. A deliberately labeled mapped row uses its explicit published category localization/curation lane.
 - Extend only the approved public module edge `user` → `category::api`. The local/test-only `/api/test/library` entry resolves real Firebase identity before the catalog read-only transaction. Its empty-by-default UID allowlist and subscriber-fixture subset remain server configuration. Listing locks do not authorize protected media. No production test controller, client premium selector or bearer credential UI is introduced.
@@ -36,6 +37,7 @@ The test audience is not a production entitlement contract. Detail, category pag
 ## Related Files or Modules
 
 - `architecture.md`, `be/docs/project-memory.md`, ADR-0001/0002/0018
+- `AGENTS.md`, `tools/mobile-test-account.json`, `tools/library-1-2/README.md`
 - `category`, `content`, `asset`, `user`, `cms/src/features/categories/`, `app/mobile/`
 - `_bmad-output/implementation-artifacts/mobile/library-home-contract.md`
 - `_bmad-output/implementation-artifacts/mobile/library-1-1-evidence.md`

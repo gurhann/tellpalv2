@@ -21,7 +21,26 @@ class AuthenticatedTransport {
   );
   Duration get idleWait => headerWait;
 
-  Future<Map<String, dynamic>> library(String language) async {
+  Future<Map<String, dynamic>> library(String language) =>
+      _get('/api/test/library', {'lang': language});
+
+  Future<Map<String, dynamic>> storyDetail({
+    required int categoryId,
+    required int contentId,
+    required String uiLanguage,
+    required String contentLanguage,
+    required String experience,
+  }) => _get('/api/test/library/stories/$contentId', {
+    'categoryId': '$categoryId',
+    'lang': uiLanguage,
+    'contentLang': contentLanguage,
+    'experience': experience,
+  });
+
+  Future<Map<String, dynamic>> _get(
+    String path,
+    Map<String, String> parameters,
+  ) async {
     if (_closed) throw StateError('Library transport is closed');
     if (_requests.length >= 8) {
       throw StateError('Library transport admission is full');
@@ -35,8 +54,8 @@ class AuthenticatedTransport {
             operation.client
                 .getUrl(
                   _configuration.baseUrl
-                      .resolve('/api/test/library')
-                      .replace(queryParameters: {'lang': language}),
+                      .resolve(path)
+                      .replace(queryParameters: parameters),
                 )
                 .then((request) {
                   operation.request = request;

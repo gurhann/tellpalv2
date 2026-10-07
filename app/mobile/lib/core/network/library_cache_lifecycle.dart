@@ -4,7 +4,15 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// Tracks package-created partial files as well as completed cache entries.
 class LibraryCacheFiles implements FileSystem {
-  LibraryCacheFiles(this.delegate);
+  LibraryCacheFiles(
+    this.delegate, {
+    this.capacity = 80,
+    this.maximumBytes,
+    this.reservedFileBytes = 0,
+  });
+  final int capacity;
+  final int? maximumBytes;
+  final int reservedFileBytes;
   final FileSystem delegate;
   static final ownerKey = Object();
   final _files = <String, Map<String, File>>{};
@@ -19,8 +27,24 @@ class LibraryCacheFiles implements FileSystem {
       _pending.length +
       _metadataFailures.length;
 
+  Future<void> _admissionTail = Future.value();
   @override
-  Future<File> createFile(String name) async {
+  Future<File> createFile(String name) {
+    if (maximumBytes == null) return _createFile(name);
+    final completion = Completer<void>();
+    final previous = _admissionTail;
+    _admissionTail = completion.future;
+    return (() async {
+      await previous;
+      try {
+        return await _createFile(name);
+      } finally {
+        completion.complete();
+      }
+    })();
+  }
+
+  Future<File> _createFile(String name) async {
     if (_closed) throw StateError('Library image storage is closed');
     final owner = Zone.current[ownerKey] as String?;
     final known =
@@ -28,9 +52,32 @@ class LibraryCacheFiles implements FileSystem {
         _files.values.map((f) => f[name]).whereType<File>().firstOrNull;
     if (known != null) return known;
     if (owner != null && !_pending.containsKey(name)) {
-      if (_ownedCount >= 80) await _retryFailed();
-      if (_ownedCount >= 80) {
+      if (_ownedCount >= capacity) await _retryFailed();
+      if (_ownedCount >= capacity) {
         throw StateError('Library image cleanup capacity reached');
+      }
+      if (maximumBytes != null) {
+        final retained = <String, File>{..._metadata};
+        for (final files in _files.values) {
+          retained.addAll(files);
+        }
+        if (retained.length + _pending.length >= capacity) {
+          throw StateError('Artwork retained file capacity reached');
+        }
+        var bytes = _pending.length * reservedFileBytes;
+        for (final entry in retained.entries) {
+          final owned = _files.values.any(
+            (files) => files.containsKey(entry.key),
+          );
+          bytes += owned
+              ? reservedFileBytes
+              : await entry.value.exists()
+              ? await entry.value.length()
+              : 0;
+        }
+        if (bytes + reservedFileBytes > maximumBytes!) {
+          throw StateError('Artwork disk admission is full');
+        }
       }
       // Reserve ownership before the delegate can physically create anything.
       _pending[name] = owner;

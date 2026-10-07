@@ -41,6 +41,9 @@ class JdbcCategoryHomeStore implements CategoryHomeStore {
         return List.of("tr","en","pt").contains(language) && Boolean.TRUE.equals(jdbc.queryForObject(
                 "select exists(select 1 from languages where code=? and is_active)", Boolean.class, language));
     }
+    @Override public boolean member(long categoryId,long contentId,String language) {
+        return Boolean.TRUE.equals(jdbc.queryForObject("select exists(select 1 from category_contents where category_id=? and content_id=? and language_code=?)",Boolean.class,categoryId,contentId,language));
+    }
     @Override public List<Long> candidates(long id, String language, int offset, int limit) {
         return jdbc.query("select content_id from category_contents where category_id=? and language_code=? order by display_order,id limit ? offset ?",
                 (r,n)->r.getLong(1),id,language,limit,offset);

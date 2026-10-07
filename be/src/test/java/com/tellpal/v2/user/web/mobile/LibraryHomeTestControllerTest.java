@@ -21,7 +21,7 @@ class LibraryHomeTestControllerTest {
     private MockMvc mvc;
 
     @BeforeEach void configure() {
-        var service = new LibraryHomeTestQueryService(users, library, "allowed", "");
+        var service = new LibraryHomeTestQueryService(users, library,org.mockito.Mockito.mock(com.tellpal.v2.category.api.LibraryStoryDetailQueryApi.class), "allowed", "");
         mvc = MockMvcBuilders.standaloneSetup(new LibraryHomeTestController(service))
                 .setControllerAdvice(new LibraryHomeTestExceptionHandler()).build();
     }

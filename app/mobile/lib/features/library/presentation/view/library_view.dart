@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
+import '../../../../app/router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/library_theme.dart';
@@ -8,8 +10,41 @@ import '../cubit/library_state.dart';
 import '../library_strings.dart';
 import '../widgets/library_card.dart';
 
-class LibraryView extends StatelessWidget {
-  const LibraryView({super.key});
+class LibraryView extends StatefulWidget {
+  const LibraryView({super.key, this.detailEnabled = false});
+  final bool detailEnabled;
+  @override
+  State<LibraryView> createState() => _LibraryViewState();
+}
+
+class _LibraryViewState extends State<LibraryView> {
+  bool _navigating = false;
+  Future<void> _open(
+    LibraryState state,
+    LibraryRow row,
+    LibraryPreview item,
+  ) async {
+    if (_navigating ||
+        !widget.detailEnabled ||
+        state.status != LibraryStatus.loaded) {
+      return;
+    }
+    _navigating = true;
+    try {
+      await context.router.push(
+        StoryDetailRoute(
+          categoryId: row.categoryId,
+          contentId: item.contentId,
+          uiLanguage: state.context.language,
+          contentLanguage: item.contentLanguage,
+          experience: item.experienceType,
+        ),
+      );
+    } finally {
+      _navigating = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) => BlocBuilder<LibraryCubit, LibraryState>(
     builder: (context, state) {
@@ -39,6 +74,10 @@ class LibraryView extends StatelessWidget {
                   row: state.catalog!.rows[index - 2],
                   state: state,
                   strings: strings,
+                  onOpen: widget.detailEnabled
+                      ? (item) =>
+                            _open(state, state.catalog!.rows[index - 2], item)
+                      : null,
                 );
               }
               return _CatalogOutcome(state: state, strings: strings);
@@ -156,7 +195,9 @@ class _LibraryRow extends StatelessWidget {
     required this.row,
     required this.state,
     required this.strings,
+    this.onOpen,
   });
+  final Future<void> Function(LibraryPreview)? onOpen;
   final LibraryRow row;
   final LibraryState state;
   final LibraryStrings strings;
@@ -214,6 +255,9 @@ class _LibraryRow extends StatelessWidget {
                   item: row.items[index],
                   state: state,
                   strings: strings,
+                  onTap: onOpen == null
+                      ? null
+                      : () => onOpen!(row.items[index]),
                 ),
               ),
             ),

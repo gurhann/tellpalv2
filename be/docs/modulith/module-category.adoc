@@ -8,6 +8,7 @@
 * `c.t.v.c.api.AdminCategoryCurationQueryApi` (via `c.t.v.c.application.AdminCategoryCurationQueryService`)
 * `c.t.v.c.api.CategoryLookupApi` (via `c.t.v.c.application.CategoryLookupService`)
 * `c.t.v.c.api.LibraryHomeQueryApi` (via `c.t.v.c.application.query.LibraryHomeQueryService`)
+* `c.t.v.c.api.LibraryStoryDetailQueryApi` (via `c.t.v.c.application.query.LibraryStoryDetailQueryService`)
 * `c.t.v.c.api.PublicCategoryQueryApi` (via `c.t.v.c.application.query.PublicCategoryQueryService`)
 |Bean references
 |* `c.t.v.c.api.EligibleContentQueryApi` (in Content)
@@ -16,6 +17,7 @@
 * `c.t.v.c.api.ContentLookupApi` (in Content)
 * `c.t.v.c.api.ContentLocalizationLookupApi` (in Content)
 * `c.t.v.c.api.ContentPreviewQueryApi` (in Content)
+* `c.t.v.c.api.StoryDetailMetadataQueryApi` (in Content)
 * `c.t.v.c.api.PublicContentQueryApi` (in Content)
 * `c.t.v.s.web.admin.AdminProblemDetailsFactory` (in Shared)
 |===

@@ -4,56 +4,49 @@
 
 ## Goal
 
-Enable authorized test users to discover real-backend content and complete illustrated stories with reference visuals and durable progress. Deliver listing, detail and reading separately. Scope approval is not integration acceptance.
+Enable an authorized development/test user to discover eligible TellPal content and complete illustrated reading journeys with reference visuals, reliable progress, and recoverable behavior. Epic 1 separates discovery, detail, reading, completion, language, media continuity, and sustained-session concerns so each can be contracted and accepted independently. Scope approval does not constitute implementation or integration acceptance; every consuming flow requires verified backend/provider contracts, representative evidence, and explicit readiness records.
 
 ## Stories
 
-- Story 1.1: Discover eligible Library content
-- Story 1.2: Open selected story details
-- Story 1.3: Start story reading
-- Story 1.4: Navigate pages manually and automatically
-- Story 1.5: Complete stories with durable records
-- Story 1.6: Control narration
-- Story 1.7: Preserve interrupted reading sessions
-- Story 1.8: Browse complete categories
+- Story 1.1: Discover eligible content on the Library home screen
+- Story 1.2: Open the selected story detail from Library
+- Story 1.3: Start reading the selected story
+- Story 1.4: Navigate story pages manually and automatically
+- Story 1.5: Complete a story and preserve its completion record
+- Story 1.6: Control narration while reading
+- Story 1.7: Preserve reading sessions through interruptions
+- Story 1.8: Browse all content in a category
 - Story 1.9: Search grouped content
 - Story 1.10: Read in enabled languages
-- Story 1.11: Renew access within the active revision
+- Story 1.11: Renew access within the active story revision
 - Story 1.12: Sustain long and repeated reading sessions
 
 ## Requirements & Constraints
 
-- Library uses CMS category order, contracted preview selection/within-category order, bounded previews, audience eligibility and backend locks; verify ordered content identities and omit empty categories. Verify non-subscriber-only categories separately with authorized non-subscriber and active-subscriber contexts. Listings carry summaries, not playback payloads. Complete browsing must not skip/duplicate items; recommendations must have valid destinations or be absent.
-- Group reading/audio stories, meditations and lullabies in search. Preserve three-character/500 ms triggering. Verify matching, ranking, counts and pagination with real responses; contributor matches return content.
-- Turkish/English/Portuguese remain available. New languages require verified tester/general visibility; configuration failure cannot grant test access. Default UI to English only without accessible settings. No automatic content-language fallback: ordinary rows use the selected language; CMS may deliberately curate a clearly labeled different-language category whose explicit item language reaches detail/reading/listening without changing UI preference. Publication/access and language/test visibility still apply. Reject stale account/language/query results. Story 1.1 verifies reversed completion of previous controlled-test context successes, errors and artwork loads; no stale result may alter current loading/error/catalog/artwork state. Document catalog/artwork waiting limits, timeout outcomes and current-context retry before acceptance.
-- Visibility never authorizes playback. Ordinary users receive eligible live revisions; tester and subscription permissions differ. Reading/audio publication is independent. Canonical types are STORY/MEDITATION/LULLABY; AUDIO_STORY is an experience.
-- Start explicitly when first-page image/narration is ready; bound preparation, align page/audio identity and recover failures. Persist duration/progress/completion without duplication. Exclude branching, reading background music, fixed ZIP boundaries and offline-download management.
-- Support Android API 24+ and iOS/iPadOS 15+, phones/tablets. Use the approved emulator/Simulator-first older/lower-capacity and current profiles, supplemented by available physical devices. Record host, device/OS, build, network/cache context. Virtual results cannot replace required physical lifecycle, signed-upgrade or actual-purchase evidence.
-- Add crash/memory/latency diagnostics with each feature; exclude credentials/private URLs. Derive numeric budgets from first-working-flow measurements before affected acceptance. Unexplained continuous memory growth, freezes and critical playback failures block acceptance.
+Discovery must use CMS editorial ordering, bounded previews, exact publication/readiness eligibility, audience visibility, and backend-provided lock state. Empty categories disappear without disturbing remaining order; complete browsing and search must preserve identity, ordering, pagination, grouping, and access rules. Metadata visibility never grants protected media access.
+
+The approved language rule is explicit: ordinary rows use the selected language with no automatic substitution. A CMS-curated, clearly labeled different-language category may carry its own content language while the UI preference remains unchanged. Turkish, English, and Portuguese remain independently available; future languages require verified visibility and tester configuration. Stale language, account, query, or media results must not replace the current context.
+
+Reading starts only through an explicit action after bounded first-page image and narration preparation. Page and audio identity must remain aligned, transitions must avoid duplicate or stale effects, and failures must offer recovery. Completion, duration, progress, and interruption behavior require durable, idempotent contracts and must remain distinct from evictable media or telemetry. Offline-download management, branching, and normal-story background music are outside this epic.
+
+Support Android API 24+ and iOS/iPadOS 15+ across phone and tablet profiles. Record device/OS, build, network, cache, and host context. Establish memory and latency budgets from first-working-flow measurements before quantitative acceptance; crashes, freezes, unexplained memory growth, and critical playback failures block acceptance. Do not treat emulator evidence as physical-device or production-provider evidence.
 
 ## Technical Decisions
 
-- Evolve `app/mobile` as the sole feature-first Clean Architecture client: presentation calls domain; data implements its repositories; domain excludes Flutter/infrastructure. Use BLoC/Cubit, Freezed state, `auto_route`, constructor injection through `get_it` + `injectable`, and `Either<Failure, T>` repositories.
-- Lock verified Flutter/Dart, BLoC, router/DI generators, Freezed, JSON and build_runner versions at the first story. Record generation, analysis and minimum-platform compatibility; examples are not evidence. Add infrastructure incrementally.
-- The composition root owns shared session/router/media disposal; route/tab providers own feature state. Routes pass IDs and scalar experience/language/revision context, preserve independent tab stacks and recheck session admission. Backend authorization remains authoritative.
-- Use one authenticated transport and typed adapters. One media coordinator serializes source changes and rejects stale commands/completions; feature closure cannot dispose playback. Adopt just_audio/audio_service/audio_session when playback begins.
-- Admit one immutable revision; renewal preserves it and rechecks access. Cache only complete, verified assets; bound images/media, retain active assets and isolate private cache by account/access. Preserve unacknowledged migration inputs separately.
-- Backend content/category/asset modules collaborate through public APIs/events/IDs, never internal entities. Experimental manifests/defaults are not production contracts. Keep configuration environment-driven and development access out of production binaries.
+Use the feature-first Clean Architecture client with presentation, domain, and data separation; BLoC/Cubit state, Freezed models, `auto_route`, and constructor-injected `get_it`/`injectable` dependencies are required. Repository boundaries use typed results such as `Either<Failure, T>`, and generated code/tool versions must be recorded.
+
+The composition root owns shared session, router, and media lifecycle. Feature routes own their state, pass scalar content/experience/language/revision identity, and reject obsolete callbacks. One application-scoped media coordinator serializes source changes. Admit and renew one immutable revision while rechecking access; cache only complete verified assets with bounded, account/access-isolated storage.
+
+Backend modules collaborate through public APIs, events, and IDs. Content/category/asset ownership and authorization remain server-side; experimental manifests and local test access are not production contracts. Configuration, credentials, domains, and storage prefixes remain environment-driven.
 
 ## UX & Interaction Patterns
 
-Story 1.1 preview decision (2026-10-03): the user confirmed the live Library value of 5 and adopted a server-configurable initial default of 5 eligible previews per category. Apply the limit after eligibility filtering, return fewer when fewer qualify and omit empty categories. Per-category overrides are not adopted; backend/mobile verification remains required.
+Preserve the approved reference shell, typography, color tokens, spacing, cover geometry, locks, horizontal category rows, navigation states, and accessibility semantics. Use distinct loading, error, empty, unavailable, and artwork-error states while retaining layout geometry. Apply documented tablet rules rather than uniform phone scaling, and verify safe areas, enlarged text, semantic labels/roles, target sizes, and artwork contrast against matched reference cases.
 
-Story 1.1 category-order decision (2026-10-03): add CMS editing/saving and backend persistence of Library category row order independently per language to the backend/CMS companion scope. Editing one language must not change another's saved order. Keep row order separate from within-category card order; preserve remaining row order after hidden/empty-category filtering. Verify different Turkish/English orders and a saved/reloaded order different from slug/ID sorting through backend and mobile. Storage, surface scope, existing-record initialization and tie behavior remain implementation-contract decisions.
-
-Story 1.1 content-language decision (2026-10-03): an ordinary Turkish row with three eligible Turkish stories returns three even if two English versions exist. Omit a row with no eligible content in its declared language. “English Stories” may be an explicitly curated/labeled English-content row in Turkish UI; define its presentation/curation/content-language mapping. Do not substitute missing detail/start localization with another language. This supersedes earlier English content-fallback permission.
-
-Preserve reference 1.0.35+333 with approved changes: actual assets, Lexend/color tokens, 16dp gutters, 3:4 covers, rounded frames/locks, vertical sections/horizontal rows, greeting, banner, search and three equal tabs; omit parent mode. Distinguish loading/error/empty states; retain artwork geometry. Failed card artwork uses a defined error placeholder while preserving the title/lock and the remaining catalog. Story 1.1 retains the current Library stack/scroll on reselection; card destinations, all-items, search, premium actions and Sleep/Profile tabs remain disabled with matching accessibility semantics until their consuming stories, as specified in its interaction scope table. Extend one shell. Details never auto-start audio; preserve reader controls and manual/automatic transitions.
-
-Before Story 1.1 UI implementation, establish reference cases for disabled shell controls, artwork-error placeholders and long localized titles using the agreed phone/tablet and normal/enlarged-text matrix; reuse that matrix at acceptance. Apply documented tablet rules, not uniform phone scaling. Compare matched dimensions/language/content/state. Verify safe areas, normal/enlarged localized text, semantic roles/names/selection, 48dp targets and actual-artwork contrast; settle parameters before screen acceptance.
+Library owns its stack and scroll context. Deferred destinations remain visibly disabled until their consuming stories. Detail must not auto-start narration or reading; reader controls and manual/automatic page transitions follow the characterized reference behavior.
 
 ## Cross-Story Dependencies
 
-Start catalog companion work with Story 1.1 despite missing capabilities. Assign and record EXT-CATALOG contracts, redacted success/error fixtures and real-backend evidence before listing acceptance; fixtures alone are insufficient. Close only the Story 1.1 home-list slice (transport/errors, identity, selection/order/limits, language/explicit category-language mapping and audience/locks) for its acceptance; detail, complete-category and search consumers remain outstanding. Record contract version, backend build, timestamp, test-data identities, language/audience and expected ordered identities with redacted real responses, and compare mobile results against that same dataset; relevant CMS changes require a refreshed baseline. EXT-MEDIA/EXT-RETENTION close admission, renewal, integrity, cache and interrupted-transfer contracts before consumers; EXT-HISTORY closes durable progress/deduplication before its first producer.
+Story 1.1 is the entry point for the shared catalog transport and controlled access flow. Its 2026-10-06 human acceptance closed only the home-list EXT-CATALOG consumer slice under qualified evidence; it did not close detail, complete-category, search, media, retention, history, or production release dependencies. Detail contract, error fixtures, and valid/absent related-content evidence remain required for Story 1.2.
 
-E1/E2 use authorized test access and free content. AD-5 signed upgrades gate E3 auth/migration. E3 owns production session/preferences, E5 candidate testing, E6 purchase/paywall/subscriber journeys. E2 finishes listening destinations; E7 consolidates evidence. Preserve separate mobile/CMS/backend tracking.
+Stories 1.3–1.4 depend on detail plus protected-start and immutable-media contracts. Stories 1.5 and 1.7 depend on durable history, progress, duration, interruption, and deduplication contracts. Stories 1.8–1.10 extend catalog consumers and exact-language behavior. Stories 1.11–1.12 depend on media renewal, integrity, cache, retention, and measured resource budgets. Controlled access supports Epic 1; production authentication/migration belongs to Epic 3, purchase/paywall integration to Epic 6, and release-wide verification to Epic 7.

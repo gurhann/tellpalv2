@@ -11,6 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestControllerAdvice(assignableTypes = LibraryHomeTestController.class)
 @Profile({"local", "test"})
 public class LibraryHomeTestExceptionHandler {
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    ProblemDetail handleInvalidScalar(HttpServletRequest request) {
+        return handleRejectedRequest(new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST,"Reading detail request is invalid"),request);
+    }
     @ExceptionHandler(ResponseStatusException.class)
     ProblemDetail handleRejectedRequest(ResponseStatusException exception, HttpServletRequest request) {
         ProblemDetail problem = exception.getBody();
@@ -18,7 +22,8 @@ public class LibraryHomeTestExceptionHandler {
         problem.setProperty("errorCode", switch (exception.getStatusCode().value()) {
             case 401 -> "firebase_auth_error";
             case 403 -> "library_test_access_denied";
-            case 400 -> "library_language_invalid";
+            case 400 -> request.getRequestURI().contains("/stories/") ? "invalid_request" : "library_language_invalid";
+            case 404 -> "content_not_found";
             default -> "library_request_rejected";
         });
         return problem;

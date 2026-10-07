@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-10-07T06:12:34.607060+00:00",
+  "backend": "isolated local 8082",
+  "negativeAuthentication": [
+    {
+      "identity": "missing",
+      "httpStatus": 401
+    },
+    {
+      "identity": "invalid",
+      "httpStatus": 401
+    }
+  ],
+  "jarSha256": "1371574d291773ff94c0115f6f483f9fb9eb28f4edf7ad070a024e443477911a",
+  "scope": "Actual local detail endpoint rejects missing and invalid bearer tokens; verified authorized/unlisted/audience cases remain pending."
+}
