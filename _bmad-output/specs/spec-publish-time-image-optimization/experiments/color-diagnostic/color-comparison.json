@@ -1,0 +1,488 @@
+{
+  "experiment": "p0-small-jpeg-color-diagnostic-2026-10-08",
+  "scope": "Seven real legacy small cover JPEGs; no-resize pre-encode sample proof only.",
+  "notEstablished": [
+    "human appearance approval",
+    "retained Display P3 gamut",
+    "general ICC/PNG behavior",
+    "EXIF rotation",
+    "alpha",
+    "animation",
+    "post-JPEG quality",
+    "production image profile"
+  ],
+  "versions": {
+    "python": "3.14.6",
+    "pillow": "12.3.0",
+    "littlecms": "2.19",
+    "java": {
+      "version": "25.0.2",
+      "vendor": "Homebrew",
+      "vmName": "OpenJDK 64-Bit Server VM"
+    }
+  },
+  "helpers": {
+    "ColorProbe.java": "793a1d9ef19f9816729365e51c4a13e87ff786529a3600275fb2ad95c90dad70",
+    "run_color_diagnostic.py": "eb8082bc02a9a924ff5750934c8ef514448853e680c5e60fe06f912d2da4b807",
+    "ColorProbe.class": "ce1f983266d1573ed9b0974c8d5e23a011fab7b999fb49d6ea1dd4bdecc1efbd"
+  },
+  "corpusSha256": "07bcd9f64546022bd348a3c6b44f77534d3289cb9ea78cc209f7300b39b266ba",
+  "sourceIntegrity": {
+    "verifiedBefore": true,
+    "verifiedAfter": true,
+    "hashes": [
+      {
+        "relativeSource": "tr/story1.jpg",
+        "beforeSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+        "afterSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af"
+      },
+      {
+        "relativeSource": "en/story1.jpg",
+        "beforeSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+        "afterSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a"
+      },
+      {
+        "relativeSource": "pt/story1.jpg",
+        "beforeSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+        "afterSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673"
+      },
+      {
+        "relativeSource": "en/story2.jpg",
+        "beforeSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+        "afterSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d"
+      },
+      {
+        "relativeSource": "tr/story3.jpg",
+        "beforeSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "afterSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565"
+      },
+      {
+        "relativeSource": "pt/story4.jpg",
+        "beforeSha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75",
+        "afterSha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75"
+      },
+      {
+        "relativeSource": "en/story11.jpg",
+        "beforeSha256": "bb24c527c769343a1c7cea04309106b053fd67b4560bd9b71d4525c93ce7e45e",
+        "afterSha256": "bb24c527c769343a1c7cea04309106b053fd67b4560bd9b71d4525c93ce7e45e"
+      }
+    ]
+  },
+  "referenceMethod": "Pillow JPEG decode; explicit embedded ICC to generated sRGB with LCMS relative-colorimetric and perceptual intents. Untagged sources remain unmanaged RGB controls. No EXIF transpose, resizing, alpha or lossy re-encoding.",
+  "javaMethod": "Exact current converter reader.setInput(input,true,true)/read(0), then white TYPE_INT_RGB drawing with bicubic/quality hints at unchanged dimensions. RGB dumps use getRGB, so compare Java's sRGB pixel values.",
+  "metricQualification": "8-bit channel absolute differences, not perceptual quality thresholds. JPEG implementations and color rounding may differ. ICC removal alone does not establish ignored profiles; sRGB normalization does not retain all P3 gamut.",
+  "cases": [
+    {
+      "id": "tr-story1",
+      "relativeSource": "tr/story1.jpg",
+      "sourceSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+      "sourceBytes": 50794,
+      "sourceMime": "image/jpeg",
+      "width": 512,
+      "height": 909,
+      "orientationTag": null,
+      "embeddedIccBytes": 456,
+      "embeddedIccSha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+      "javaDecodedObservation": {
+        "width": 512,
+        "height": 909,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "2e080cd98ef37929927f943dc3d1d1220128e52c8f5be3cef2d24ebb8a6561e1",
+        "drawnRgbSha256": "2e080cd98ef37929927f943dc3d1d1220128e52c8f5be3cef2d24ebb8a6561e1",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 0.000699028236156949,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 1,
+        "exactPixelFraction": 0.9979029152915292
+      },
+      "embeddedIccDescription": "sRGB",
+      "references": {
+        "relativeColorimetric": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0002986626787678768,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9991040119636964
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0009976909149248259,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 2,
+            "exactPixelFraction": 0.997447400990099
+          },
+          "referenceRgbSha256": "63ce821640a0ee07076efa633056a101d55e449355201163dec93c744a8e58cd"
+        },
+        "perceptual": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0002986626787678768,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9991040119636964
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0009976909149248259,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 2,
+            "exactPixelFraction": 0.997447400990099
+          },
+          "referenceRgbSha256": "63ce821640a0ee07076efa633056a101d55e449355201163dec93c744a8e58cd"
+        }
+      }
+    },
+    {
+      "id": "en-story1",
+      "relativeSource": "en/story1.jpg",
+      "sourceSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+      "sourceBytes": 67055,
+      "sourceMime": "image/jpeg",
+      "width": 512,
+      "height": 909,
+      "orientationTag": null,
+      "embeddedIccBytes": 0,
+      "embeddedIccSha256": null,
+      "javaDecodedObservation": {
+        "width": 512,
+        "height": 909,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "2eedd2d2d7c283a1c1b8f3d3d089a40120ce5502e6248dabae3a72ab07e6485f",
+        "drawnRgbSha256": "2eedd2d2d7c283a1c1b8f3d3d089a40120ce5502e6248dabae3a72ab07e6485f",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      }
+    },
+    {
+      "id": "pt-story1",
+      "relativeSource": "pt/story1.jpg",
+      "sourceSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+      "sourceBytes": 16053,
+      "sourceMime": "image/jpeg",
+      "width": 428,
+      "height": 695,
+      "orientationTag": null,
+      "embeddedIccBytes": 456,
+      "embeddedIccSha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+      "javaDecodedObservation": {
+        "width": 428,
+        "height": 695,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "6fc9d329d7c5bcb1d438bbfe5ac50d5c568720c9362115fbe444b209d907de25",
+        "drawnRgbSha256": "6fc9d329d7c5bcb1d438bbfe5ac50d5c568720c9362115fbe444b209d907de25",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 6.723593088146305e-06,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 1,
+        "exactPixelFraction": 0.9999798292207356
+      },
+      "embeddedIccDescription": "sRGB",
+      "references": {
+        "relativeColorimetric": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 6.723593088146305e-06,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9999798292207356
+          },
+          "referenceRgbSha256": "66a94d5f62948164c33e09a97e6a64c1e13cb7a107375471161fa0c099c2ec36"
+        },
+        "perceptual": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 6.723593088146305e-06,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9999798292207356
+          },
+          "referenceRgbSha256": "66a94d5f62948164c33e09a97e6a64c1e13cb7a107375471161fa0c099c2ec36"
+        }
+      }
+    },
+    {
+      "id": "en-story2",
+      "relativeSource": "en/story2.jpg",
+      "sourceSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+      "sourceBytes": 73182,
+      "sourceMime": "image/jpeg",
+      "width": 512,
+      "height": 909,
+      "orientationTag": null,
+      "embeddedIccBytes": 0,
+      "embeddedIccSha256": null,
+      "javaDecodedObservation": {
+        "width": 512,
+        "height": 909,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "7227aea71b5624a6f0188625cb15323dd767e6b5611efed07d5b98cf6bbbcf9d",
+        "drawnRgbSha256": "7227aea71b5624a6f0188625cb15323dd767e6b5611efed07d5b98cf6bbbcf9d",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      }
+    },
+    {
+      "id": "tr-story3",
+      "relativeSource": "tr/story3.jpg",
+      "sourceSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+      "sourceBytes": 42692,
+      "sourceMime": "image/jpeg",
+      "width": 512,
+      "height": 831,
+      "orientationTag": null,
+      "embeddedIccBytes": 0,
+      "embeddedIccSha256": null,
+      "javaDecodedObservation": {
+        "width": 512,
+        "height": 831,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "d3a8bd495747d0b646c8bc61233819646e7de5e2710f36db573c278083477adf",
+        "drawnRgbSha256": "d3a8bd495747d0b646c8bc61233819646e7de5e2710f36db573c278083477adf",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      }
+    },
+    {
+      "id": "pt-story4",
+      "relativeSource": "pt/story4.jpg",
+      "sourceSha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75",
+      "sourceBytes": 19875,
+      "sourceMime": "image/jpeg",
+      "width": 321,
+      "height": 570,
+      "orientationTag": null,
+      "embeddedIccBytes": 456,
+      "embeddedIccSha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+      "javaDecodedObservation": {
+        "width": 321,
+        "height": 570,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "bddc724683813d10b57d64abcca579711bdc6ef5133f8e9d66531c6f02822757",
+        "drawnRgbSha256": "bddc724683813d10b57d64abcca579711bdc6ef5133f8e9d66531c6f02822757",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "embeddedIccDescription": "sRGB",
+      "references": {
+        "relativeColorimetric": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "referenceRgbSha256": "bddc724683813d10b57d64abcca579711bdc6ef5133f8e9d66531c6f02822757"
+        },
+        "perceptual": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.0,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 0,
+            "exactPixelFraction": 1.0
+          },
+          "referenceRgbSha256": "bddc724683813d10b57d64abcca579711bdc6ef5133f8e9d66531c6f02822757"
+        }
+      }
+    },
+    {
+      "id": "en-story11-p3",
+      "relativeSource": "en/story11.jpg",
+      "sourceSha256": "bb24c527c769343a1c7cea04309106b053fd67b4560bd9b71d4525c93ce7e45e",
+      "sourceBytes": 174427,
+      "sourceMime": "image/jpeg",
+      "width": 512,
+      "height": 909,
+      "orientationTag": null,
+      "embeddedIccBytes": 536,
+      "embeddedIccSha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab",
+      "javaDecodedObservation": {
+        "width": 512,
+        "height": 909,
+        "bufferedImageType": 5,
+        "colorSpaceClass": "java.awt.color.ICC_ColorSpace",
+        "isCsSrgb": true,
+        "decodedIccSha256": "87e382b9336e6a0417a4d860173109ab319a029cf2972e19833a3327c65bd7e4",
+        "readerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "providerClass": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+        "providerVendor": "Oracle Corporation",
+        "providerVersion": "0.5",
+        "decodedRgbSha256": "2d2e326a6831945d825b153a45d93650f563480880c771c6a33af12ac7456591",
+        "drawnRgbSha256": "2d2e326a6831945d825b153a45d93650f563480880c771c6a33af12ac7456591",
+        "readerSeekForwardOnly": true,
+        "readerIgnoreMetadata": true
+      },
+      "javaDrawVsJavaDecoded": {
+        "meanAbsoluteChannelError0to255": 0.0,
+        "p95AbsoluteChannelError0to255": 0,
+        "maximumAbsoluteChannelError0to255": 0,
+        "exactPixelFraction": 1.0
+      },
+      "javaDrawVsPillowUnmanagedRgb": {
+        "meanAbsoluteChannelError0to255": 5.478285002979464,
+        "p95AbsoluteChannelError0to255": 11,
+        "maximumAbsoluteChannelError0to255": 24,
+        "exactPixelFraction": 6.445957095709571e-06
+      },
+      "embeddedIccDescription": "Display P3",
+      "references": {
+        "relativeColorimetric": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 5.4646202901540155,
+            "p95AbsoluteChannelError0to255": 11,
+            "maximumAbsoluteChannelError0to255": 24,
+            "exactPixelFraction": 6.445957095709571e-06
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.014528471076274294,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9580905356160616
+          },
+          "referenceRgbSha256": "f36fcf2364f3ffcbb555251c8f5099e9df7d8ae59b21d0b5f631ee4a3f84ec16"
+        },
+        "perceptual": {
+          "pillowUnmanagedVsReference": {
+            "meanAbsoluteChannelError0to255": 5.4646202901540155,
+            "p95AbsoluteChannelError0to255": 11,
+            "maximumAbsoluteChannelError0to255": 24,
+            "exactPixelFraction": 6.445957095709571e-06
+          },
+          "javaDrawVsReference": {
+            "meanAbsoluteChannelError0to255": 0.014528471076274294,
+            "p95AbsoluteChannelError0to255": 0,
+            "maximumAbsoluteChannelError0to255": 1,
+            "exactPixelFraction": 0.9580905356160616
+          },
+          "referenceRgbSha256": "f36fcf2364f3ffcbb555251c8f5099e9df7d8ae59b21d0b5f631ee4a3f84ec16"
+        }
+      }
+    }
+  ]
+}

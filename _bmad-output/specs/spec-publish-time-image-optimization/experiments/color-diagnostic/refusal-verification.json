@@ -1,0 +1,21 @@
+{
+  "experiment": "p0-small-jpeg-color-diagnostic-safety-2026-10-08",
+  "scope": "Fresh private replay plus explicit refusal checks; no production mutation or quality approval.",
+  "helpers": {
+    "ColorProbe.java": "793a1d9ef19f9816729365e51c4a13e87ff786529a3600275fb2ad95c90dad70",
+    "run_color_diagnostic.py": "eb8082bc02a9a924ff5750934c8ef514448853e680c5e60fe06f912d2da4b807",
+    "ColorProbe.class": "ce1f983266d1573ed9b0974c8d5e23a011fab7b999fb49d6ea1dd4bdecc1efbd"
+  },
+  "reportSha256BeforeRefusal": "213281a45a214f8aefc4e8101866ae2b006552d9c5342f715f923471b8f0ca11",
+  "reportSha256AfterRefusal": "213281a45a214f8aefc4e8101866ae2b006552d9c5342f715f923471b8f0ca11",
+  "freshReplayExit": 0,
+  "existingOutputRefusalExit": 2,
+  "existingOutputFilesUnchanged": true,
+  "sourceRootDescendantRefusalExit": 2,
+  "sourceRootDescendantCreated": false,
+  "repositoryDescendantRefusalExit": 2,
+  "repositoryDescendantCreated": false,
+  "javaExistingPixelRootRefusalExit": 1,
+  "javaExistingPixelFilesUnchanged": true,
+  "all7SourceHashesVerifiedBeforeAndAfter": true
+}

@@ -1,0 +1,18 @@
+{
+  "experiment": "p0-small-jpeg-2026-10-08",
+  "scope": "Legacy small cover controls, not high-resolution masters or reader pages",
+  "source_root_argument": "Legacy TellPal repository assets/images/landing",
+  "samples": [
+    {"id": "tr-story1", "path": "tr/story1.jpg", "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af", "provenance": "Story1.2 source-byte evidence", "focus": "Turkish lettering, accents, colorful fine lines"},
+    {"id": "en-story1", "path": "en/story1.jpg", "sha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a", "provenance": "Story1.2 source-byte evidence", "focus": "English title and detailed illustration"},
+    {"id": "pt-story1", "path": "pt/story1.jpg", "sha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673", "provenance": "Story1.2 source-byte evidence", "focus": "Already-small JPEG, small subtitle and gradients"},
+    {"id": "en-story2", "path": "en/story2.jpg", "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d", "provenance": "Story1.2 source-byte evidence", "focus": "English lettering, contrasting edges"},
+    {"id": "tr-story3", "path": "tr/story3.jpg", "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565", "provenance": "Story1.2 source-byte evidence", "focus": "Turkish cover at different aspect ratio"},
+    {"id": "pt-story4", "path": "pt/story4.jpg", "sha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75", "provenance": "Story1.2 source-byte evidence", "focus": "Smallest pixel dimensions, no tablet upscale"},
+    {"id": "en-story11-p3", "path": "en/story11.jpg", "sha256": "bb24c527c769343a1c7cea04309106b053fd67b4560bd9b71d4525c93ce7e45e", "provenance": "Local legacy file only; no Firebase identity claimed", "focus": "Display P3 ICC, subtle texture and pink/red gradients"}
+  ],
+  "listing": {"phone": [360, 480], "tablet": [600, 800], "qualities": [75, 80, 85], "control_quality": 85},
+  "source_resolution": {"processor_edge": 960, "qualities": [80, 85, 90], "detail_edge_aliases": [960, 1440, 1920], "page_edge_aliases": [1080, 1440, 1920], "limitation": "No reader-page source; identical no-upscale geometry does not qualify page or high-DPR quality"},
+  "timing": {"boundary": "Complete source bytes available through processor return", "warmups_per_candidate": 2, "observations_per_candidate": 5, "shuffle_seed": 20261008, "cache_claim": "In-process warmed converter only; OS cache uncontrolled", "excluded": ["cold run", "encoding-only", "worker memory", "source I/O", "upload", "job latency", "mobile performance"]},
+  "pending": ["high-resolution originals", "reader pages", "alpha", "EXIF rotation", "animation", "WebP encoder/runtime qualification", "native device quality and resource budgets"]
+}

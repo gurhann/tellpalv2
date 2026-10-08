@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "support": "Decoded images and pixel memory",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/widgets/Image-class.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 2,
+    "support": "Logical/physical pixel definition",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/dart-ui/FlutterView/devicePixelRatio.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 3,
+    "support": "Fit/crop algorithm",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/painting/applyBoxFit.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 4,
+    "support": "Exact versus aspect-preserving fit",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/painting/ResizeImagePolicy.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 5,
+    "support": "LRU/live/pending ownership",
+    "publisher": "Flutter upstream",
+    "url": "https://github.com/flutter/flutter/blob/main/packages/flutter/lib/src/painting/image_cache.dart",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 6,
+    "support": "Clear and retained live owners",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/painting/ImageCache/clear.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 7,
+    "support": "Precache failure,retention and pinning",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/widgets/precacheImage.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 8,
+    "support": "Exact v3.4.1 provider identity",
+    "publisher": "Baseflow",
+    "url": "https://github.com/Baseflow/flutter_cached_network_image/blob/v3.4.1/cached_network_image/lib/src/image_provider/cached_network_image_provider.dart",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 9,
+    "support": "Exact v3.4.1 disk resize path",
+    "publisher": "Baseflow",
+    "url": "https://github.com/Baseflow/flutter_cache_manager/blob/v3.4.1/flutter_cache_manager/lib/src/cache_managers/image_cache_manager.dart",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 10,
+    "support": "Portable format list and decode targets",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/dart-ui/instantiateImageCodec.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 11,
+    "support": "WebP quality,metadata and runtime controls",
+    "publisher": "Google WebP",
+    "url": "https://developers.google.com/speed/webp/docs/cwebp",
+    "pub_date": null,
+    "observed_update": "2025-08-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 12,
+    "support": "Equal-SSIM comparison; historical study limits",
+    "publisher": "Google WebP",
+    "url": "https://developers.google.com/speed/webp/docs/webp_study",
+    "pub_date": null,
+    "observed_update": "2025-08-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 13,
+    "support": "Alpha,color and animation container",
+    "publisher": "Google WebP",
+    "url": "https://developers.google.com/speed/webp/docs/riff_container",
+    "pub_date": null,
+    "observed_update": "2025-08-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 14,
+    "support": "Android platform codec floors",
+    "publisher": "Android Developers",
+    "url": "https://developer.android.com/media/platform/supported-formats",
+    "pub_date": null,
+    "observed_update": "2026-10-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 15,
+    "support": "JPEG/PNG properties; web/native boundary",
+    "publisher": "Apple WWDC23",
+    "url": "https://developer.apple.com/videos/play/wwdc2023/10122/",
+    "pub_date": "2023",
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 16,
+    "support": "Reader/writer provider availability",
+    "publisher": "Oracle",
+    "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/imageio/ImageIO.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 17,
+    "support": "Read-time subsampling and optional render size",
+    "publisher": "Oracle",
+    "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/imageio/ImageReadParam.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 18,
+    "support": "Subsampling decimation semantics",
+    "publisher": "Oracle",
+    "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/imageio/IIOParam.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 19,
+    "support": "Heap/native/raster/RSS and sampling",
+    "publisher": "Flutter",
+    "url": "https://docs.flutter.dev/tools/devtools/memory",
+    "pub_date": null,
+    "observed_update": "2026-07-31",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 20,
+    "support": "LowRAM classification and memory class",
+    "publisher": "Android Developers",
+    "url": "https://developer.android.com/reference/android/app/ActivityManager",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 21,
+    "support": "API34/35 pressure signal changes",
+    "publisher": "Android Developers",
+    "url": "https://developer.android.com/reference/android/content/ComponentCallbacks2",
+    "pub_date": null,
+    "observed_update": "2026-09-24",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 22,
+    "support": "PSS/native/graphics process snapshots",
+    "publisher": "Android Developers",
+    "url": "https://developer.android.com/tools/dumpsys",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 23,
+    "support": "Memory termination diagnostics",
+    "publisher": "Apple",
+    "url": "https://developer.apple.com/documentation/xcode/identifying-high-memory-use-with-jetsam-event-reports",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 24,
+    "support": "Best-effort memory warnings",
+    "publisher": "Apple",
+    "url": "https://developer.apple.com/documentation/xcode/responding-to-low-memory-warnings",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 25,
+    "support": "Physical release/background validation",
+    "publisher": "Apple",
+    "url": "https://developer.apple.com/documentation/xcode/testing-a-release-build",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 26,
+    "support": "Physical-device profile mode",
+    "publisher": "Flutter",
+    "url": "https://docs.flutter.dev/perf/ui-performance",
+    "pub_date": null,
+    "observed_update": "2026-07-31",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 27,
+    "support": "Flutter cache response to pressure",
+    "publisher": "Flutter",
+    "url": "https://api.flutter.dev/flutter/painting/PaintingBinding/handleMemoryPressure.html",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 28,
+    "support": "Built-in cache prerequisites",
+    "publisher": "Google Cloud",
+    "url": "https://docs.cloud.google.com/storage/docs/caching",
+    "pub_date": null,
+    "observed_update": "2026-10-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 29,
+    "support": "Object metadata,ETag and HTTP response policy",
+    "publisher": "Google Cloud",
+    "url": "https://docs.cloud.google.com/storage/docs/metadata",
+    "pub_date": null,
+    "observed_update": "2026-10-07",
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 30,
+    "support": "Independent HTTP cache directive semantics",
+    "publisher": "IETF",
+    "url": "https://datatracker.ietf.org/doc/html/rfc9111",
+    "pub_date": "2022-06",
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 31,
+    "support": "Exact v3.4.1 memory/disk configuration",
+    "publisher": "Baseflow",
+    "url": "https://github.com/Baseflow/flutter_cached_network_image/blob/v3.4.1/cached_network_image/lib/src/cached_image_widget.dart",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  },
+  {
+    "id": 32,
+    "support": "Resize key identity fields",
+    "publisher": "Flutter upstream",
+    "url": "https://github.com/flutter/flutter/blob/main/packages/flutter/lib/src/painting/image_provider.dart",
+    "pub_date": null,
+    "observed_update": null,
+    "accessed": "2026-10-08",
+    "confidence": "high for direct source; independent status in ledger"
+  }
+]

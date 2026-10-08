@@ -1,0 +1,14 @@
+[
+  {
+    "claim": "Before implementation, recheck pinned Flutter/Baseflow/Android/tooling compatibility and runtime codecs",
+    "class": "compatibility-review",
+    "pub_date": "2026-10-08",
+    "date_basis": "retrieval/verification date; NOT publication date"
+  },
+  {
+    "claim": "Recheck Cloud Storage integration guidance",
+    "class": "integration-review",
+    "pub_date": "2026-10-07",
+    "date_basis": "observed documentation update; NOT original publication"
+  }
+]

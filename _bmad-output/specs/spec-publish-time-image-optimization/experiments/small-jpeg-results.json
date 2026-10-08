@@ -1,0 +1,3959 @@
+{
+  "experiment": "p0-small-jpeg-2026-10-08",
+  "scope": "Legacy small cover controls, not high-resolution masters or reader pages",
+  "environment": {
+    "python": "3.14.6",
+    "pillow": "12.3.0",
+    "java_heap_cap": "512m; configuration only, not measured memory",
+    "imageio.cache_directory": "default_system_temporary_directory",
+    "imageio.use_cache": "true",
+    "java.awt.headless": "true",
+    "java.runtime.version": "25.0.2",
+    "java.vendor": "Homebrew",
+    "java.version": "25.0.2",
+    "java.vm.name": "OpenJDK 64-Bit Server VM",
+    "os.arch": "aarch64",
+    "os.name": "Mac OS X",
+    "os.version": "27.0.1",
+    "reader.en-story1.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.en-story1.format": "JPEG",
+    "reader.en-story1.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.en-story1.vendor": "Oracle Corporation",
+    "reader.en-story1.version": "0.5",
+    "reader.en-story11-p3.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.en-story11-p3.format": "JPEG",
+    "reader.en-story11-p3.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.en-story11-p3.vendor": "Oracle Corporation",
+    "reader.en-story11-p3.version": "0.5",
+    "reader.en-story2.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.en-story2.format": "JPEG",
+    "reader.en-story2.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.en-story2.vendor": "Oracle Corporation",
+    "reader.en-story2.version": "0.5",
+    "reader.pt-story1.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.pt-story1.format": "JPEG",
+    "reader.pt-story1.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.pt-story1.vendor": "Oracle Corporation",
+    "reader.pt-story1.version": "0.5",
+    "reader.pt-story4.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.pt-story4.format": "JPEG",
+    "reader.pt-story4.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.pt-story4.vendor": "Oracle Corporation",
+    "reader.pt-story4.version": "0.5",
+    "reader.tr-story1.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.tr-story1.format": "JPEG",
+    "reader.tr-story1.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.tr-story1.vendor": "Oracle Corporation",
+    "reader.tr-story1.version": "0.5",
+    "reader.tr-story3.class": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "reader.tr-story3.format": "JPEG",
+    "reader.tr-story3.spi": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "reader.tr-story3.vendor": "Oracle Corporation",
+    "reader.tr-story3.version": "0.5",
+    "writer.class": "com.sun.imageio.plugins.jpeg.JPEGImageWriter",
+    "writer.compression_supported": "true",
+    "writer.metadata_policy": "null stream and image metadata; default JPEG sampling/progressive parameters",
+    "writer.spi": "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
+    "writer.vendor": "Oracle Corporation",
+    "writer.version": "0.5"
+  },
+  "provenance": {
+    "corpus_sha256": "07bcd9f64546022bd348a3c6b44f77534d3289cb9ea78cc209f7300b39b266ba",
+    "source_files": [
+      {
+        "file": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/ListingCoverRenditionProcessor.java",
+        "sha256": "24d73ef67f80b9f540df0420f13073d34efc8d6fc9a9a9618ec95da2a8a4e015"
+      },
+      {
+        "file": "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/PageImageRenditionProcessor.java",
+        "sha256": "06e8b75f80c7759674d9490b01e715666ad4d47590a864183353faa22d14e92b"
+      },
+      {
+        "file": "_bmad-output/specs/spec-publish-time-image-optimization/experiments/SmallJpegExperiment.java",
+        "sha256": "e66bec212eabc30864060875c7c1b7d3099b70a4645cc0c7a520539461db882d"
+      }
+    ],
+    "python_harness_sha256": "75ed17fc148d7413b2cf1d3bd8768082fd352d73e788d2449f305c789d96381c",
+    "compile_dependencies": [
+      {
+        "artifact": "spring-beans-7.0.5.jar",
+        "sha256": "6179d615d24354ddb7bfa45af86e6947853fde62e26c2198539ebdea0ff3920b"
+      },
+      {
+        "artifact": "spring-context-7.0.5.jar",
+        "sha256": "40cd97a508401b791dd6dd0f5f0a4154d5650ed7a52058bf3dcc1c3df55c32a4"
+      }
+    ],
+    "java_binary_sha256": "370ef109f74f859afc8cfe0300b2da782d60698160b8a48f19731d6d2e3012ea",
+    "javac_binary_sha256": "1ab18c0f8f3c3bf5faca20690e0ed559f4e6ad6e64d0a05e9fc34a4a4c942cf3",
+    "compilation": "Isolated current source compilation; no application/container/cloud service started",
+    "compiled_classes": [
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/ListingCoverRenditionProcessor$ProcessedPageImage.class",
+        "sha256": "3e23c2d68bda702d611a4598a5d42bf37d0f00f4fccb69238bd1c70c49582547"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/ListingCoverRenditionProcessor.class",
+        "sha256": "6399e4fd12be6b9946a501e90818c5949d03432cea988c531c8d18353ce09ae7"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/PageImageRenditionProcessor$ProcessedPageImage.class",
+        "sha256": "3957397f000af1fa78c5c62de0dae7f8a9de325c473271361633a240c3fec7af"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/PageImageRenditionProcessor.class",
+        "sha256": "ad4ddb647af33387ca6cb1ea68311b1a827e1b603242ca30002712c230e6f0ee"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/SmallJpegExperiment$Call.class",
+        "sha256": "0cfcdf0c5ed14345d108f7b44613fdc2b7838bfcfbfad547b08a0264383f1b38"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/SmallJpegExperiment$Candidate.class",
+        "sha256": "e42ad3d3466d3ce5411bdd8e75237ebc9ffed969f629a751dbd659cf66a7f825"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/SmallJpegExperiment$Encoded.class",
+        "sha256": "48efb895bf2ee82261d383cd235c781806ffa4b69cff9dc1ddfe164569a57b28"
+      },
+      {
+        "file": "com/tellpal/v2/asset/infrastructure/media/SmallJpegExperiment.class",
+        "sha256": "fcc181c64c6125067b2936f1a183134fd328be7a4fc7a15f301201165745aa45"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "tr-story1",
+      "file": "originals/tr-story1.jpg",
+      "bytes": 50794,
+      "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "Turkish lettering, accents, colorful fine lines",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": true,
+          "bytes": 456,
+          "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+          "description": "sRGB"
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      }
+    },
+    {
+      "id": "en-story1",
+      "file": "originals/en-story1.jpg",
+      "bytes": 67055,
+      "sha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "English title and detailed illustration",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": true,
+          "bytes": 74,
+          "sha256": "77fe745a2881855c1ca8d60fa93083c0c19f8a5d19760b5433154ce076f7dc35",
+          "orientation": null,
+          "tag_count": 1
+        }
+      }
+    },
+    {
+      "id": "pt-story1",
+      "file": "originals/pt-story1.jpg",
+      "bytes": 16053,
+      "sha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "Already-small JPEG, small subtitle and gradients",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": true,
+          "bytes": 456,
+          "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+          "description": "sRGB"
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      }
+    },
+    {
+      "id": "en-story2",
+      "file": "originals/en-story2.jpg",
+      "bytes": 73182,
+      "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "English lettering, contrasting edges",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      }
+    },
+    {
+      "id": "tr-story3",
+      "file": "originals/tr-story3.jpg",
+      "bytes": 42692,
+      "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "Turkish cover at different aspect ratio",
+      "width": 512,
+      "height": 831,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": true,
+          "bytes": 74,
+          "sha256": "7009f245013061b29b342c0a0b6c454886e70d91abc13cdf46df50a651c55de3",
+          "orientation": null,
+          "tag_count": 1
+        }
+      }
+    },
+    {
+      "id": "pt-story4",
+      "file": "originals/pt-story4.jpg",
+      "bytes": 19875,
+      "sha256": "3048aeb7f6be2fa05dc83d60840dbf2841711ccbfb26f42d1f570f6dff66ec75",
+      "provenance": "Story1.2 source-byte evidence",
+      "focus": "Smallest pixel dimensions, no tablet upscale",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": true,
+          "bytes": 456,
+          "sha256": "12afb4d9953adee0607d347daee5b78b18d6b3cab2d572b88970703f5edb37bc",
+          "description": "sRGB"
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      }
+    },
+    {
+      "id": "en-story11-p3",
+      "file": "originals/en-story11-p3.jpg",
+      "bytes": 174427,
+      "sha256": "bb24c527c769343a1c7cea04309106b053fd67b4560bd9b71d4525c93ce7e45e",
+      "provenance": "Local legacy file only; no Firebase identity claimed",
+      "focus": "Display P3 ICC, subtle texture and pink/red gradients",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": true,
+          "bytes": 536,
+          "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab",
+          "description": "Display P3"
+        },
+        "exif": {
+          "present": true,
+          "bytes": 126,
+          "sha256": "996a4d63d61e1648b7267f33db49c3505516f00bc4c953bf6512603de44ea8ac",
+          "orientation": null,
+          "tag_count": 5
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 32722,
+      "sha256": "3bdcb6271e4d22a917bc444610f274d5673f4077b03f0c069ef475c0ca6b2733",
+      "file": "outputs/en-story1--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 34333,
+      "source_saved_percent": 51.201252703005,
+      "transform_ms": [
+        9.122166,
+        8.907708,
+        8.865708,
+        9.0055,
+        8.747583
+      ],
+      "transform_ms_median": 8.907708,
+      "transform_ms_min": 8.747583,
+      "transform_ms_max": 9.122166,
+      "measured_sequence": [
+        66,
+        175,
+        187,
+        205,
+        297
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 11142,
+      "control_saved_percent": 25.40124019697246
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 37353,
+      "sha256": "a647ad47c9707668af524f4a3d6d9edf798a46b03c077425e3e07cdb49b66365",
+      "file": "outputs/en-story1--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 29702,
+      "source_saved_percent": 44.29498173141451,
+      "transform_ms": [
+        9.073416,
+        10.559375,
+        9.0495,
+        8.531917,
+        8.774625
+      ],
+      "transform_ms_median": 9.0495,
+      "transform_ms_min": 8.531917,
+      "transform_ms_max": 10.559375,
+      "measured_sequence": [
+        22,
+        176,
+        185,
+        237,
+        239
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 6511,
+      "control_saved_percent": 14.843607514134598
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 43864,
+      "sha256": "1e680813777efec5b968006c309cd6da0da050cb929199e20f7786fd7c9fc0e8",
+      "file": "outputs/en-story1--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 23191,
+      "source_saved_percent": 34.58504212959511,
+      "transform_ms": [
+        8.8685,
+        9.024,
+        9.0315,
+        8.643875,
+        9.337416
+      ],
+      "transform_ms_median": 9.024,
+      "transform_ms_min": 8.643875,
+      "transform_ms_max": 9.337416,
+      "measured_sequence": [
+        147,
+        192,
+        233,
+        242,
+        293
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 67327,
+      "sha256": "ea23daca56fda4eb603625c26a8e91b898137bbc3a80ccfb123cdd4ea1005a89",
+      "file": "outputs/en-story1--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -272,
+      "source_saved_percent": -0.4056371635224815,
+      "transform_ms": [
+        25.263292,
+        19.003,
+        18.641042,
+        19.043625,
+        19.148333
+      ],
+      "transform_ms_median": 19.043625,
+      "transform_ms_min": 18.641042,
+      "transform_ms_max": 25.263292,
+      "measured_sequence": [
+        113,
+        138,
+        149,
+        274,
+        304
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 22222,
+      "control_saved_percent": 24.815464159287096
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 76558,
+      "sha256": "17bec411e61bc0eb219f66ce4b98df7f0001d317dc494c2e354a90936570fdd5",
+      "file": "outputs/en-story1--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -9503,
+      "source_saved_percent": -14.171948400566698,
+      "transform_ms": [
+        18.85925,
+        21.673875,
+        20.502042,
+        18.690542,
+        18.697208
+      ],
+      "transform_ms_median": 18.85925,
+      "transform_ms_min": 18.690542,
+      "transform_ms_max": 21.673875,
+      "measured_sequence": [
+        63,
+        86,
+        107,
+        273,
+        277
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 12991,
+      "control_saved_percent": 14.507141341611854
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 89549,
+      "sha256": "7a91b6a69e15276fa8b70313981fcaee0b978c51180f49b023a30f710a225ae2",
+      "file": "outputs/en-story1--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -22494,
+      "source_saved_percent": -33.54559689806875,
+      "transform_ms": [
+        19.883542,
+        20.514167,
+        20.117875,
+        18.959791,
+        18.590916
+      ],
+      "transform_ms_median": 19.883542,
+      "transform_ms_min": 18.590916,
+      "transform_ms_max": 20.514167,
+      "measured_sequence": [
+        69,
+        100,
+        108,
+        150,
+        263
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 87450,
+      "sha256": "dba0f23d3f695b883b2d063c667e5a8f446846436fc9b2e6d14f981a3370ce8b",
+      "file": "outputs/en-story1--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -20395,
+      "source_saved_percent": -30.415330698680187,
+      "transform_ms": [
+        18.059209,
+        8.130792,
+        8.229958,
+        7.814917,
+        7.833542
+      ],
+      "transform_ms_median": 8.130792,
+      "transform_ms_min": 7.814917,
+      "transform_ms_max": 18.059209,
+      "measured_sequence": [
+        38,
+        129,
+        134,
+        289,
+        311
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 94570,
+      "sha256": "b29d7650891d1225e7e304df83702063ffaa45ac41160550953f7086baa495ba",
+      "file": "outputs/en-story1--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -27515,
+      "source_saved_percent": -41.033479979121616,
+      "transform_ms": [
+        7.931209,
+        7.994208,
+        7.6715,
+        7.823417,
+        8.101666
+      ],
+      "transform_ms_median": 7.931209,
+      "transform_ms_min": 7.6715,
+      "transform_ms_max": 8.101666,
+      "measured_sequence": [
+        142,
+        145,
+        246,
+        290,
+        302
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story1",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 111051,
+      "sha256": "63801281c4dd3bef86ae2cbd0a3223a27542240fca5ac21e05676523ac698502",
+      "file": "outputs/en-story1--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -43996,
+      "source_saved_percent": -65.61181119976139,
+      "transform_ms": [
+        8.514333,
+        8.012875,
+        10.858208,
+        7.982666,
+        8.153708
+      ],
+      "transform_ms_median": 8.153708,
+      "transform_ms_min": 7.982666,
+      "transform_ms_max": 10.858208,
+      "measured_sequence": [
+        14,
+        91,
+        97,
+        133,
+        209
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 21049,
+      "sha256": "d448eb2f74a660f4ab9dfd17126120b55a8ba317972ac86ca552bcc865e1a1fc",
+      "file": "outputs/en-story11-p3--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 153378,
+      "source_saved_percent": 87.93248751626756,
+      "transform_ms": [
+        17.221666,
+        16.569583,
+        16.300083,
+        16.363791,
+        17.724
+      ],
+      "transform_ms_median": 16.569583,
+      "transform_ms_min": 16.300083,
+      "transform_ms_max": 17.724,
+      "measured_sequence": [
+        37,
+        47,
+        130,
+        155,
+        288
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 7361,
+      "control_saved_percent": 25.909890883491727
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 24090,
+      "sha256": "2e807584f64b7edc4e6c7825fbc05877d8f07309ea345cad37bfd4fe804002f3",
+      "file": "outputs/en-story11-p3--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 150337,
+      "source_saved_percent": 86.18906476634925,
+      "transform_ms": [
+        23.692791,
+        18.010292,
+        16.672458,
+        16.555166,
+        16.475083
+      ],
+      "transform_ms_median": 16.672458,
+      "transform_ms_min": 16.475083,
+      "transform_ms_max": 23.692791,
+      "measured_sequence": [
+        41,
+        115,
+        169,
+        190,
+        251
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 4320,
+      "control_saved_percent": 15.205913410770854
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 28410,
+      "sha256": "9f4d74f5282b75bbbcc91c52e2d83d4a4097baf00fba0316b1fd510f70995dad",
+      "file": "outputs/en-story11-p3--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 146017,
+      "source_saved_percent": 83.71238397725122,
+      "transform_ms": [
+        16.165916,
+        16.35875,
+        16.220917,
+        16.500875,
+        16.315625
+      ],
+      "transform_ms_median": 16.315625,
+      "transform_ms_min": 16.165916,
+      "transform_ms_max": 16.500875,
+      "measured_sequence": [
+        8,
+        17,
+        156,
+        193,
+        240
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 46153,
+      "sha256": "8e8e02ea7c30f9f44d01b2c93568b449825a869479f860cfa0a0606cf33a4fb2",
+      "file": "outputs/en-story11-p3--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 128274,
+      "source_saved_percent": 73.54022026406463,
+      "transform_ms": [
+        27.485917,
+        26.652042,
+        27.397792,
+        26.139625,
+        26.362125
+      ],
+      "transform_ms_median": 26.652042,
+      "transform_ms_min": 26.139625,
+      "transform_ms_max": 27.485917,
+      "measured_sequence": [
+        28,
+        78,
+        84,
+        94,
+        247
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 16867,
+      "control_saved_percent": 26.764519200253886
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 53291,
+      "sha256": "68386920a2fd20af6d3ddd3b14298d97e845f6eb6b63493101902969f262a03a",
+      "file": "outputs/en-story11-p3--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 121136,
+      "source_saved_percent": 69.44796390467071,
+      "transform_ms": [
+        29.722416,
+        25.765209,
+        26.85175,
+        26.824084,
+        26.155208
+      ],
+      "transform_ms_median": 26.824084,
+      "transform_ms_min": 25.765209,
+      "transform_ms_max": 29.722416,
+      "measured_sequence": [
+        43,
+        148,
+        186,
+        200,
+        252
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 9729,
+      "control_saved_percent": 15.437956204379562
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 63020,
+      "sha256": "6e7e50ee2c3608a7258ae3044c42d8bd61fae21b66d81125d4a6f21cb849d8b4",
+      "file": "outputs/en-story11-p3--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 111407,
+      "source_saved_percent": 63.870272377556226,
+      "transform_ms": [
+        26.360542,
+        26.0805,
+        27.542375,
+        30.48675,
+        28.517334
+      ],
+      "transform_ms_median": 27.542375,
+      "transform_ms_min": 26.0805,
+      "transform_ms_max": 30.48675,
+      "measured_sequence": [
+        87,
+        95,
+        189,
+        298,
+        300
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 66067,
+      "sha256": "87fafacd6e00709dfc337e3418acf397f2b2b76b8ca0139e8b9a48f8d965ee4f",
+      "file": "outputs/en-story11-p3--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 108360,
+      "source_saved_percent": 62.12340979320862,
+      "transform_ms": [
+        16.554666,
+        17.30625,
+        15.224042,
+        15.463584,
+        15.161958
+      ],
+      "transform_ms_median": 15.463584,
+      "transform_ms_min": 15.161958,
+      "transform_ms_max": 17.30625,
+      "measured_sequence": [
+        44,
+        51,
+        83,
+        255,
+        310
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 81093,
+      "sha256": "8af378da9a6aa2373c4ccbda314617729edb53eb3d302fecff74ffa2140169b0",
+      "file": "outputs/en-story11-p3--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 93334,
+      "source_saved_percent": 53.50891777075797,
+      "transform_ms": [
+        15.422458,
+        15.654125,
+        15.563833,
+        16.278875,
+        15.229917
+      ],
+      "transform_ms_median": 15.563833,
+      "transform_ms_min": 15.229917,
+      "transform_ms_max": 16.278875,
+      "measured_sequence": [
+        1,
+        61,
+        72,
+        207,
+        296
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story11-p3",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 100118,
+      "sha256": "8e768638dfed50e553b92ff3e895e220bc59d3d61b9e69ece6101a75560edaea",
+      "file": "outputs/en-story11-p3--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 74309,
+      "source_saved_percent": 42.601776101176995,
+      "transform_ms": [
+        15.541334,
+        15.74925,
+        15.387625,
+        15.443917,
+        17.579334
+      ],
+      "transform_ms_median": 15.541334,
+      "transform_ms_min": 15.387625,
+      "transform_ms_max": 17.579334,
+      "measured_sequence": [
+        77,
+        163,
+        266,
+        272,
+        294
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 19550,
+      "sha256": "82fec575e7f42734ddc9ac1ddb5fede574085323a9a9da971f3573e893049b93",
+      "file": "outputs/en-story2--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 53632,
+      "source_saved_percent": 73.28578065644557,
+      "transform_ms": [
+        9.774334,
+        8.680416,
+        8.954708,
+        9.751583,
+        9.139541
+      ],
+      "transform_ms_median": 9.139541,
+      "transform_ms_min": 8.680416,
+      "transform_ms_max": 9.774334,
+      "measured_sequence": [
+        31,
+        33,
+        174,
+        194,
+        212
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 7370,
+      "control_saved_percent": 27.37741456166419
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 22613,
+      "sha256": "66b33ce9bfbb626fbeaa6bbda3bbe04137ae1d7d3752817e11073ea02f33d84e",
+      "file": "outputs/en-story2--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 50569,
+      "source_saved_percent": 69.10032521658331,
+      "transform_ms": [
+        9.041417,
+        9.386417,
+        8.952416,
+        8.576125,
+        8.649542
+      ],
+      "transform_ms_median": 8.952416,
+      "transform_ms_min": 8.576125,
+      "transform_ms_max": 9.386417,
+      "measured_sequence": [
+        40,
+        85,
+        184,
+        250,
+        260
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 4307,
+      "control_saved_percent": 15.99925705794948
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 26920,
+      "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561",
+      "file": "outputs/en-story2--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 46262,
+      "source_saved_percent": 63.2149982236069,
+      "transform_ms": [
+        9.292708,
+        8.8985,
+        10.8015,
+        9.776667,
+        9.345083
+      ],
+      "transform_ms_median": 9.345083,
+      "transform_ms_min": 8.8985,
+      "transform_ms_max": 10.8015,
+      "measured_sequence": [
+        34,
+        141,
+        164,
+        206,
+        248
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 42991,
+      "sha256": "ae08bdc063fafbd64d39707df93413544bdb7dddabfd953eb71a6edef652554e",
+      "file": "outputs/en-story2--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 30191,
+      "source_saved_percent": 41.25468011259599,
+      "transform_ms": [
+        18.532333,
+        18.714041,
+        18.822584,
+        19.032,
+        19.898583
+      ],
+      "transform_ms_median": 18.822584,
+      "transform_ms_min": 18.532333,
+      "transform_ms_max": 19.898583,
+      "measured_sequence": [
+        13,
+        24,
+        35,
+        62,
+        68
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 15874,
+      "control_saved_percent": 26.96678841416801
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 49584,
+      "sha256": "fb89dfba515c1aec790b1bf6a031136ccf566ade5483ba383c7dd651a991d42e",
+      "file": "outputs/en-story2--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 23598,
+      "source_saved_percent": 32.24563417233746,
+      "transform_ms": [
+        31.616292,
+        18.811166,
+        19.102458,
+        19.735917,
+        18.407042
+      ],
+      "transform_ms_median": 19.102458,
+      "transform_ms_min": 18.407042,
+      "transform_ms_max": 31.616292,
+      "measured_sequence": [
+        42,
+        137,
+        229,
+        267,
+        268
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 9281,
+      "control_saved_percent": 15.76658455788669
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 58865,
+      "sha256": "b9b73418ed9bca28101ebb32f105397008660dc8315429b11e47605a29c43316",
+      "file": "outputs/en-story2--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 14317,
+      "source_saved_percent": 19.563553879369245,
+      "transform_ms": [
+        19.7075,
+        18.871708,
+        18.810375,
+        18.563542,
+        20.906875
+      ],
+      "transform_ms_median": 18.871708,
+      "transform_ms_min": 18.563542,
+      "transform_ms_max": 20.906875,
+      "measured_sequence": [
+        99,
+        153,
+        256,
+        281,
+        292
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 68129,
+      "sha256": "907b73ee6d350e8e01ab6c5b98be1fd364f95271fd0244f61ee252b2109d1493",
+      "file": "outputs/en-story2--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 5053,
+      "source_saved_percent": 6.904703342351945,
+      "transform_ms": [
+        8.142417,
+        8.691667,
+        8.579458,
+        7.966542,
+        7.644666
+      ],
+      "transform_ms_median": 8.142417,
+      "transform_ms_min": 7.644666,
+      "transform_ms_max": 8.691667,
+      "measured_sequence": [
+        2,
+        112,
+        170,
+        221,
+        282
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 73759,
+      "sha256": "f4e3cd4b1240e149c96d28871b322bdfe1a763f2fd9e9b0bec872fb9aed073eb",
+      "file": "outputs/en-story2--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -577,
+      "source_saved_percent": -0.7884452460987674,
+      "transform_ms": [
+        8.066792,
+        9.329958,
+        8.704208,
+        7.780709,
+        7.8645
+      ],
+      "transform_ms_median": 8.066792,
+      "transform_ms_min": 7.780709,
+      "transform_ms_max": 9.329958,
+      "measured_sequence": [
+        58,
+        111,
+        124,
+        136,
+        249
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "en-story2",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 87031,
+      "sha256": "89b5b0beeae9220e80d69fd3f7ba1b37b2d19f9678080baf4ef4345c453e108a",
+      "file": "outputs/en-story2--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13849,
+      "source_saved_percent": -18.924052362602826,
+      "transform_ms": [
+        8.341833,
+        8.26575,
+        7.869792,
+        10.2225,
+        7.749583
+      ],
+      "transform_ms_median": 8.26575,
+      "transform_ms_min": 7.749583,
+      "transform_ms_max": 10.2225,
+      "measured_sequence": [
+        53,
+        57,
+        278,
+        286,
+        307
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 17338,
+      "sha256": "143992db342798a5d1f2c22e50f169ec10a4b004e1450ffe0b0fe6f1f2916e1f",
+      "file": "outputs/pt-story1--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -1285,
+      "source_saved_percent": -8.004734317573039,
+      "transform_ms": [
+        13.307584,
+        13.286667,
+        13.2655,
+        14.329083,
+        13.288958
+      ],
+      "transform_ms_median": 13.288958,
+      "transform_ms_min": 13.2655,
+      "transform_ms_max": 14.329083,
+      "measured_sequence": [
+        7,
+        23,
+        219,
+        275,
+        308
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 6368,
+      "control_saved_percent": 26.862397705222307
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 19963,
+      "sha256": "7c237a2010e362775413a15b559e2b7f60840af75bfc4d983d4acb36e5dca4c5",
+      "file": "outputs/pt-story1--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -3910,
+      "source_saved_percent": -24.3568180402417,
+      "transform_ms": [
+        14.824416,
+        13.651458,
+        13.292167,
+        13.449,
+        13.2805
+      ],
+      "transform_ms_median": 13.449,
+      "transform_ms_min": 13.2805,
+      "transform_ms_max": 14.824416,
+      "measured_sequence": [
+        117,
+        131,
+        151,
+        222,
+        287
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 3743,
+      "control_saved_percent": 15.789251666244832
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 23706,
+      "sha256": "8745deca14c9ecf19b0ab0271e523d79ef9032fb2d2fc7fac890b5d65566b66f",
+      "file": "outputs/pt-story1--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -7653,
+      "source_saved_percent": -47.67333208746029,
+      "transform_ms": [
+        13.306209,
+        13.148958,
+        13.790417,
+        13.132458,
+        13.65225
+      ],
+      "transform_ms_median": 13.306209,
+      "transform_ms_min": 13.132458,
+      "transform_ms_max": 13.790417,
+      "measured_sequence": [
+        73,
+        143,
+        259,
+        264,
+        312
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 23701,
+      "sha256": "261736c96587895369ea8599ffc0e68aacaa6d5f4ca0f845ecb8bf1d8d4782ec",
+      "file": "outputs/pt-story1--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -7648,
+      "source_saved_percent": -47.64218526132187,
+      "transform_ms": [
+        10.338708,
+        10.131458,
+        10.097625,
+        10.592458,
+        9.949625
+      ],
+      "transform_ms_median": 10.131458,
+      "transform_ms_min": 9.949625,
+      "transform_ms_max": 10.592458,
+      "measured_sequence": [
+        27,
+        50,
+        269,
+        291,
+        315
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 5939,
+      "control_saved_percent": 20.03711201079622
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 24467,
+      "sha256": "c36ddbea677d78bc7839afd824838b64e13895f89b53ad71a0b168ba438bf3cc",
+      "file": "outputs/pt-story1--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -8414,
+      "source_saved_percent": -52.413879025727276,
+      "transform_ms": [
+        10.834541,
+        10.085709,
+        11.510792,
+        10.082375,
+        9.991291
+      ],
+      "transform_ms_median": 10.085709,
+      "transform_ms_min": 9.991291,
+      "transform_ms_max": 11.510792,
+      "measured_sequence": [
+        55,
+        76,
+        118,
+        198,
+        204
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 5173,
+      "control_saved_percent": 17.452766531713902
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 29640,
+      "sha256": "42ac90d05988a92d0f5617534fe73a7496aba30c0a6c50ec6759ff5248b5be6b",
+      "file": "outputs/pt-story1--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13587,
+      "source_saved_percent": -84.63838534853298,
+      "transform_ms": [
+        10.141125,
+        10.273084,
+        10.058875,
+        9.945875,
+        10.028416
+      ],
+      "transform_ms_median": 10.058875,
+      "transform_ms_min": 9.945875,
+      "transform_ms_max": 10.273084,
+      "measured_sequence": [
+        48,
+        89,
+        161,
+        227,
+        258
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 24467,
+      "sha256": "c36ddbea677d78bc7839afd824838b64e13895f89b53ad71a0b168ba438bf3cc",
+      "file": "outputs/pt-story1--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -8414,
+      "source_saved_percent": -52.413879025727276,
+      "transform_ms": [
+        11.080292,
+        10.235125,
+        10.068292,
+        10.242625,
+        9.820333
+      ],
+      "transform_ms_median": 10.235125,
+      "transform_ms_min": 9.820333,
+      "transform_ms_max": 11.080292,
+      "measured_sequence": [
+        39,
+        88,
+        197,
+        234,
+        279
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 29640,
+      "sha256": "42ac90d05988a92d0f5617534fe73a7496aba30c0a6c50ec6759ff5248b5be6b",
+      "file": "outputs/pt-story1--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13587,
+      "source_saved_percent": -84.63838534853298,
+      "transform_ms": [
+        10.021833,
+        10.577083,
+        10.579166,
+        10.177,
+        10.370708
+      ],
+      "transform_ms_median": 10.370708,
+      "transform_ms_min": 10.021833,
+      "transform_ms_max": 10.579166,
+      "measured_sequence": [
+        4,
+        46,
+        122,
+        165,
+        276
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story1",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 31642,
+      "sha256": "2785a68781b6e369beef13618f483730e631c21316fc7f3524b83169869d8a5b",
+      "file": "outputs/pt-story1--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 428,
+      "height": 695,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -15589,
+      "source_saved_percent": -97.10957453435495,
+      "transform_ms": [
+        9.9865,
+        10.178042,
+        10.167583,
+        9.949458,
+        9.834583
+      ],
+      "transform_ms_median": 9.9865,
+      "transform_ms_min": 9.834583,
+      "transform_ms_max": 10.178042,
+      "measured_sequence": [
+        9,
+        92,
+        166,
+        180,
+        261
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 25596,
+      "sha256": "bf2ed9182670960b549f3a3219b551d5634463517b368d9223f26b6f6c87e830",
+      "file": "outputs/pt-story4--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -5721,
+      "source_saved_percent": -28.78490566037736,
+      "transform_ms": [
+        11.924083,
+        11.847875,
+        12.306,
+        11.89375,
+        12.292541
+      ],
+      "transform_ms_median": 11.924083,
+      "transform_ms_min": 11.847875,
+      "transform_ms_max": 12.306,
+      "measured_sequence": [
+        3,
+        5,
+        16,
+        132,
+        285
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 8071,
+      "control_saved_percent": 23.973029970000297
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 28975,
+      "sha256": "76b947a2cf7cfabe88b8e12bf02db7268dcfe00ed6042d068cb09d73a2421f2e",
+      "file": "outputs/pt-story4--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -9100,
+      "source_saved_percent": -45.78616352201258,
+      "transform_ms": [
+        12.19275,
+        12.678334,
+        12.063542,
+        11.834167,
+        12.093125
+      ],
+      "transform_ms_median": 12.093125,
+      "transform_ms_min": 11.834167,
+      "transform_ms_max": 12.678334,
+      "measured_sequence": [
+        90,
+        101,
+        199,
+        223,
+        265
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 4692,
+      "control_saved_percent": 13.936495678260611
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 33667,
+      "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c",
+      "file": "outputs/pt-story4--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13792,
+      "source_saved_percent": -69.3937106918239,
+      "transform_ms": [
+        11.882709,
+        12.222708,
+        12.920583,
+        14.428667,
+        11.819583
+      ],
+      "transform_ms_median": 12.222708,
+      "transform_ms_min": 11.819583,
+      "transform_ms_max": 14.428667,
+      "measured_sequence": [
+        6,
+        36,
+        59,
+        104,
+        262
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 27703,
+      "sha256": "14b85e524f517905709f684313a9765147c38e540950708c2d6dda192b2e4268",
+      "file": "outputs/pt-story4--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -7828,
+      "source_saved_percent": -39.38616352201258,
+      "transform_ms": [
+        8.2095,
+        8.11025,
+        8.45825,
+        8.257542,
+        8.372916
+      ],
+      "transform_ms_median": 8.257542,
+      "transform_ms_min": 8.11025,
+      "transform_ms_max": 8.45825,
+      "measured_sequence": [
+        11,
+        60,
+        79,
+        98,
+        173
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 7242,
+      "control_saved_percent": 20.723994849048506
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 29034,
+      "sha256": "d7c615c4750e7bbdc66da1b4bdc4f0e5c3a5e8f91742093f61de1060a5432370",
+      "file": "outputs/pt-story4--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -9159,
+      "source_saved_percent": -46.08301886792453,
+      "transform_ms": [
+        10.192125,
+        8.07325,
+        8.737333,
+        8.117375,
+        8.158583
+      ],
+      "transform_ms_median": 8.158583,
+      "transform_ms_min": 8.07325,
+      "transform_ms_max": 10.192125,
+      "measured_sequence": [
+        45,
+        74,
+        82,
+        140,
+        162
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 5911,
+      "control_saved_percent": 16.915152382315068
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 34945,
+      "sha256": "4555d99f8d8732b0e818428a33f1417cfc75a15ef995f5d8221a11788eb5d19e",
+      "file": "outputs/pt-story4--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -15070,
+      "source_saved_percent": -75.82389937106919,
+      "transform_ms": [
+        8.337125,
+        8.124,
+        8.431625,
+        8.386958,
+        8.12825
+      ],
+      "transform_ms_median": 8.337125,
+      "transform_ms_min": 8.124,
+      "transform_ms_max": 8.431625,
+      "measured_sequence": [
+        18,
+        30,
+        144,
+        210,
+        243
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 29034,
+      "sha256": "d7c615c4750e7bbdc66da1b4bdc4f0e5c3a5e8f91742093f61de1060a5432370",
+      "file": "outputs/pt-story4--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -9159,
+      "source_saved_percent": -46.08301886792453,
+      "transform_ms": [
+        8.620917,
+        9.227333,
+        9.482375,
+        8.152208,
+        8.045709
+      ],
+      "transform_ms_median": 8.620917,
+      "transform_ms_min": 8.045709,
+      "transform_ms_max": 9.482375,
+      "measured_sequence": [
+        109,
+        116,
+        139,
+        183,
+        244
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 34945,
+      "sha256": "4555d99f8d8732b0e818428a33f1417cfc75a15ef995f5d8221a11788eb5d19e",
+      "file": "outputs/pt-story4--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -15070,
+      "source_saved_percent": -75.82389937106919,
+      "transform_ms": [
+        8.424333,
+        8.499542,
+        8.561292,
+        8.421417,
+        8.375041
+      ],
+      "transform_ms_median": 8.424333,
+      "transform_ms_min": 8.375041,
+      "transform_ms_max": 8.561292,
+      "measured_sequence": [
+        10,
+        81,
+        123,
+        195,
+        196
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "pt-story4",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 38329,
+      "sha256": "7019d3b07d6475928bb8ceb1b457cd2fa02e832b345900b7a8959ba6c6ab2e05",
+      "file": "outputs/pt-story4--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 321,
+      "height": 570,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -18454,
+      "source_saved_percent": -92.8503144654088,
+      "transform_ms": [
+        8.288958,
+        9.1785,
+        8.655834,
+        8.1805,
+        8.496542
+      ],
+      "transform_ms_median": 8.496542,
+      "transform_ms_min": 8.1805,
+      "transform_ms_max": 9.1785,
+      "measured_sequence": [
+        19,
+        102,
+        214,
+        253,
+        271
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 34484,
+      "sha256": "028d4eb5e095320616b8d02319c0ae787763b62bb31f481a9cd323b25af0683d",
+      "file": "outputs/tr-story1--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 16310,
+      "source_saved_percent": 32.11009174311926,
+      "transform_ms": [
+        14.928334,
+        14.768833,
+        14.903042,
+        14.818291,
+        14.677625
+      ],
+      "transform_ms_median": 14.818291,
+      "transform_ms_min": 14.677625,
+      "transform_ms_max": 14.928334,
+      "measured_sequence": [
+        127,
+        159,
+        231,
+        305,
+        314
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 11523,
+      "control_saved_percent": 25.046188623470343
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 39236,
+      "sha256": "a835a066686b76ce5a6183adedcb6465b33ab1b9f40d203d4a062a42d0384808",
+      "file": "outputs/tr-story1--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 11558,
+      "source_saved_percent": 22.754656061739574,
+      "transform_ms": [
+        14.914834,
+        17.59575,
+        14.716917,
+        14.733709,
+        18.904875
+      ],
+      "transform_ms_median": 14.914834,
+      "transform_ms_min": 14.716917,
+      "transform_ms_max": 18.904875,
+      "measured_sequence": [
+        49,
+        119,
+        235,
+        257,
+        299
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 6771,
+      "control_saved_percent": 14.71732562436151
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 46007,
+      "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3",
+      "file": "outputs/tr-story1--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 270,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 4787,
+      "source_saved_percent": 9.424341457652478,
+      "transform_ms": [
+        15.959917,
+        14.669209,
+        14.916667,
+        15.402958,
+        15.113208
+      ],
+      "transform_ms_median": 15.113208,
+      "transform_ms_min": 14.669209,
+      "transform_ms_max": 15.959917,
+      "measured_sequence": [
+        56,
+        65,
+        70,
+        71,
+        172
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 70069,
+      "sha256": "7d1ebb450ae0d8c4ddd65facbc1f99b807ba6726c4aa772734590fcddfab1911",
+      "file": "outputs/tr-story1--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -19275,
+      "source_saved_percent": -37.94739536165689,
+      "transform_ms": [
+        25.220917,
+        24.870375,
+        25.80875,
+        24.709792,
+        24.656667
+      ],
+      "transform_ms_median": 24.870375,
+      "transform_ms_min": 24.656667,
+      "transform_ms_max": 25.80875,
+      "measured_sequence": [
+        15,
+        181,
+        208,
+        245,
+        295
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 22414,
+      "control_saved_percent": 24.235805499389077
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 79426,
+      "sha256": "29c0d2d281ebb0e54227b1061a0eefb65e0871a6c8317e472c7722f4ed5fdc63",
+      "file": "outputs/tr-story1--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -28632,
+      "source_saved_percent": -56.36886246407056,
+      "transform_ms": [
+        29.389125,
+        26.601417,
+        25.292292,
+        25.049583,
+        26.039166
+      ],
+      "transform_ms_median": 26.039166,
+      "transform_ms_min": 25.049583,
+      "transform_ms_max": 29.389125,
+      "measured_sequence": [
+        105,
+        121,
+        125,
+        146,
+        157
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 13057,
+      "control_saved_percent": 14.118270384827483
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 92483,
+      "sha256": "382e38c3a1d5eededb12b97e5446ef750904546316564636154e6516b2ac93ea",
+      "file": "outputs/tr-story1--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 451,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -41689,
+      "source_saved_percent": -82.0746544867504,
+      "transform_ms": [
+        25.4425,
+        25.91575,
+        25.471834,
+        25.017,
+        25.05175
+      ],
+      "transform_ms_median": 25.4425,
+      "transform_ms_min": 25.017,
+      "transform_ms_max": 25.91575,
+      "measured_sequence": [
+        25,
+        64,
+        120,
+        152,
+        226
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 75743,
+      "sha256": "e77aace63454fd6daa4b6dd7a296e3bdfda353249f489c63667eba84e3b143b1",
+      "file": "outputs/tr-story1--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -24949,
+      "source_saved_percent": -49.118006063708314,
+      "transform_ms": [
+        14.139,
+        14.080667,
+        14.965375,
+        14.229625,
+        13.925333
+      ],
+      "transform_ms_median": 14.139,
+      "transform_ms_min": 13.925333,
+      "transform_ms_max": 14.965375,
+      "measured_sequence": [
+        128,
+        191,
+        213,
+        224,
+        236
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 90738,
+      "sha256": "675b17ffb82e24b1cac324ea8291093c1340e361eb55d5da86e239d1d73b1c43",
+      "file": "outputs/tr-story1--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -39944,
+      "source_saved_percent": -78.63920935543568,
+      "transform_ms": [
+        16.056083,
+        14.120375,
+        14.27925,
+        13.826209,
+        13.85075
+      ],
+      "transform_ms_median": 14.120375,
+      "transform_ms_min": 13.826209,
+      "transform_ms_max": 16.056083,
+      "measured_sequence": [
+        103,
+        158,
+        217,
+        220,
+        309
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story1",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 99549,
+      "sha256": "f1a2a86f5a9f356dbfa63ddd7e48c51b61345460d52e804ec3938a66ec1ef0db",
+      "file": "outputs/tr-story1--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 512,
+      "height": 909,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -48755,
+      "source_saved_percent": -95.98574634799385,
+      "transform_ms": [
+        15.79,
+        16.525459,
+        16.278916,
+        14.586459,
+        14.185541
+      ],
+      "transform_ms_median": 15.79,
+      "transform_ms_min": 14.185541,
+      "transform_ms_max": 16.525459,
+      "measured_sequence": [
+        54,
+        80,
+        106,
+        177,
+        225
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "bytes": 24554,
+      "sha256": "36d11b572520539bbf0222da6eb767e47da2c1b16508f2e0a2ea21bd36a41520",
+      "file": "outputs/tr-story3--listing-phone-q75.jpg",
+      "processor_profile": "listing-bounds-360x480-q75-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 18138,
+      "source_saved_percent": 42.485711608732316,
+      "transform_ms": [
+        8.8465,
+        8.750875,
+        8.713625,
+        8.980333,
+        11.938834
+      ],
+      "transform_ms_median": 8.8465,
+      "transform_ms_min": 8.713625,
+      "transform_ms_max": 11.938834,
+      "measured_sequence": [
+        32,
+        93,
+        154,
+        188,
+        232
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 8537,
+      "control_saved_percent": 25.798555498473906
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "bytes": 28051,
+      "sha256": "247e6574e24ce94681c98f2d90d02f2a7420a881b2497bbc01bdbc8361fa22aa",
+      "file": "outputs/tr-story3--listing-phone-q80.jpg",
+      "processor_profile": "listing-bounds-360x480-q80-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 14641,
+      "source_saved_percent": 34.29448140166776,
+      "transform_ms": [
+        9.263,
+        8.763417,
+        11.188208,
+        8.943125,
+        8.736
+      ],
+      "transform_ms_median": 8.943125,
+      "transform_ms_min": 8.736,
+      "transform_ms_max": 11.188208,
+      "measured_sequence": [
+        110,
+        171,
+        301,
+        303,
+        306
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 5040,
+      "control_saved_percent": 15.230727388111571
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "bytes": 33091,
+      "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd",
+      "file": "outputs/tr-story3--listing-phone-q85.jpg",
+      "processor_profile": "listing-bounds-360x480-q85-maxpixels-40000000-white",
+      "width": 296,
+      "height": 480,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": 9601,
+      "source_saved_percent": 22.48899091164621,
+      "transform_ms": [
+        15.946042,
+        9.195167,
+        9.307458,
+        8.878,
+        9.489917
+      ],
+      "transform_ms_median": 9.307458,
+      "transform_ms_min": 8.878,
+      "transform_ms_max": 15.946042,
+      "measured_sequence": [
+        114,
+        179,
+        211,
+        218,
+        283
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-phone-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "bytes": 49559,
+      "sha256": "70540a73fb79d9950296d6cf716876aab48fa15f5cfa6a545fd057e23202bd5d",
+      "file": "outputs/tr-story3--listing-tablet-q75.jpg",
+      "processor_profile": "listing-bounds-600x800-q75-maxpixels-40000000-white",
+      "width": 493,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -6867,
+      "source_saved_percent": -16.08498079265436,
+      "transform_ms": [
+        19.994583,
+        19.687542,
+        19.717125,
+        19.837958,
+        20.34925
+      ],
+      "transform_ms_median": 19.837958,
+      "transform_ms_min": 19.687542,
+      "transform_ms_max": 20.34925,
+      "measured_sequence": [
+        26,
+        182,
+        203,
+        216,
+        284
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 16875,
+      "control_saved_percent": 25.40115001354728
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "bytes": 56634,
+      "sha256": "c58def16b3d9b2a8caf2570477fb05d0352f0b02630a88e147dee050897d9c8b",
+      "file": "outputs/tr-story3--listing-tablet-q80.jpg",
+      "processor_profile": "listing-bounds-600x800-q80-maxpixels-40000000-white",
+      "width": 493,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13942,
+      "source_saved_percent": -32.657172303944535,
+      "transform_ms": [
+        19.666208,
+        19.361792,
+        20.071584,
+        21.667625,
+        19.277584
+      ],
+      "transform_ms_median": 19.666208,
+      "transform_ms_min": 19.277584,
+      "transform_ms_max": 21.667625,
+      "measured_sequence": [
+        20,
+        75,
+        201,
+        230,
+        238
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 9800,
+      "control_saved_percent": 14.751482674534124
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "bytes": 66434,
+      "sha256": "6b19ac2202e471c3237e935c8397c222993e385bec1460a37ba8e5b0a21c6b6c",
+      "file": "outputs/tr-story3--listing-tablet-q85.jpg",
+      "processor_profile": "listing-bounds-600x800-q85-maxpixels-40000000-white",
+      "width": 493,
+      "height": 800,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -23742,
+      "source_saved_percent": -55.61229270120866,
+      "transform_ms": [
+        20.18125,
+        19.65425,
+        19.787542,
+        20.227958,
+        19.518958
+      ],
+      "transform_ms_median": 19.787542,
+      "transform_ms_min": 19.518958,
+      "transform_ms_max": 20.227958,
+      "measured_sequence": [
+        52,
+        167,
+        168,
+        202,
+        270
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": "listing-tablet-q85",
+      "control_saved_bytes": 0,
+      "control_saved_percent": 0.0
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "bytes": 56146,
+      "sha256": "882fee9b25e91d9850d8ca1407bf5e973bac6afe1860849330f5a6020c2a206f",
+      "file": "outputs/tr-story3--source-resolution-edge960-q80.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-80",
+      "width": 512,
+      "height": 831,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -13454,
+      "source_saved_percent": -31.51410100252975,
+      "transform_ms": [
+        7.028417,
+        6.941584,
+        7.253875,
+        6.826375,
+        6.833458
+      ],
+      "transform_ms_median": 6.941584,
+      "transform_ms_min": 6.826375,
+      "transform_ms_max": 7.253875,
+      "measured_sequence": [
+        21,
+        135,
+        228,
+        241,
+        313
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "bytes": 60066,
+      "sha256": "f24b7649c106323be4fc756d4e30063bc89cc4aa85c0a8d01572c885ef2456ba",
+      "file": "outputs/tr-story3--source-resolution-edge960-q85.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-85",
+      "width": 512,
+      "height": 831,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -17374,
+      "source_saved_percent": -40.6961491614354,
+      "transform_ms": [
+        8.449417,
+        7.047791,
+        6.976792,
+        6.713375,
+        6.739125
+      ],
+      "transform_ms_median": 6.976792,
+      "transform_ms_min": 6.713375,
+      "transform_ms_max": 8.449417,
+      "measured_sequence": [
+        12,
+        29,
+        67,
+        254,
+        280
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    },
+    {
+      "sample_id": "tr-story3",
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "bytes": 70744,
+      "sha256": "28762b14cd874807c1917dc45cf639ae2c132332728f51852668d633cee02f97",
+      "file": "outputs/tr-story3--source-resolution-edge960-q90.jpg",
+      "processor_profile": "story-page-jpeg-v1-edge-960-quality-90",
+      "width": 512,
+      "height": 831,
+      "metadata": {
+        "format": "JPEG",
+        "mime": "image/jpeg",
+        "mode": "RGB",
+        "frames": 1,
+        "has_alpha": false,
+        "icc": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "description": null
+        },
+        "exif": {
+          "present": false,
+          "bytes": 0,
+          "sha256": null,
+          "orientation": null,
+          "tag_count": 0
+        }
+      },
+      "source_saved_bytes": -28052,
+      "source_saved_percent": -65.70786095755645,
+      "transform_ms": [
+        6.976625,
+        6.924125,
+        6.784834,
+        7.950042,
+        7.135083
+      ],
+      "transform_ms_median": 6.976625,
+      "transform_ms_min": 6.784834,
+      "transform_ms_max": 7.950042,
+      "measured_sequence": [
+        96,
+        126,
+        160,
+        178,
+        215
+      ],
+      "deterministic_repeat_count": 7,
+      "control_candidate_id": null,
+      "control_saved_bytes": null,
+      "control_saved_percent": null
+    }
+  ],
+  "aliases": {
+    "processor_edge": 960,
+    "equivalent_no_upscale_detail_edges": [
+      960,
+      1440,
+      1920
+    ],
+    "equivalent_no_upscale_page_edges": [
+      1080,
+      1440,
+      1920
+    ],
+    "condition": "All frozen sources fit each edge; geometry only, not separately encoded aliases or page qualification"
+  },
+  "aggregate": [
+    {
+      "candidate_id": "listing-phone-q75",
+      "role": "listing_phone",
+      "quality": 75,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 175293,
+      "source_saved_bytes": 268785,
+      "source_saved_percent": 60.52652912326213,
+      "source_size_regressions": 2,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "listing-phone-q80",
+      "role": "listing_phone",
+      "quality": 80,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 200281,
+      "source_saved_bytes": 243797,
+      "source_saved_percent": 54.89958971171731,
+      "source_size_regressions": 2,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "listing-phone-q85",
+      "role": "listing_phone",
+      "quality": 85,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 235665,
+      "source_saved_bytes": 208413,
+      "source_saved_percent": 46.93162012078959,
+      "source_size_regressions": 2,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "listing-tablet-q75",
+      "role": "listing_tablet",
+      "quality": 75,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 327503,
+      "source_saved_bytes": 116575,
+      "source_saved_percent": 26.251018965136755,
+      "source_size_regressions": 5,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "listing-tablet-q80",
+      "role": "listing_tablet",
+      "quality": 80,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 368994,
+      "source_saved_bytes": 75084,
+      "source_saved_percent": 16.90784051450421,
+      "source_size_regressions": 5,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "listing-tablet-q85",
+      "role": "listing_tablet",
+      "quality": 85,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 434936,
+      "source_saved_bytes": 9142,
+      "source_saved_percent": 2.0586473547439863,
+      "source_size_regressions": 5,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "source-resolution-edge960-q80",
+      "role": "source_resolution_proxy",
+      "quality": 80,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 407036,
+      "source_saved_bytes": 37042,
+      "source_saved_percent": 8.341327424461468,
+      "source_size_regressions": 5,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "source-resolution-edge960-q85",
+      "role": "source_resolution_proxy",
+      "quality": 85,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 464811,
+      "source_saved_bytes": -20733,
+      "source_saved_percent": -4.668774404496507,
+      "source_size_regressions": 6,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    },
+    {
+      "candidate_id": "source-resolution-edge960-q90",
+      "role": "source_resolution_proxy",
+      "quality": 90,
+      "samples": 7,
+      "source_bytes": 444078,
+      "output_bytes": 538464,
+      "source_saved_bytes": -94386,
+      "source_saved_percent": -21.254374231553918,
+      "source_size_regressions": 6,
+      "accounting": "One local output per frozen source for this candidate; not observed network traffic or combined device-variant savings"
+    }
+  ],
+  "validation": {
+    "sources": 7,
+    "outputs": 63,
+    "warmups": 126,
+    "measured_calls": 315,
+    "deterministic_calls": 441,
+    "source_hashes_unchanged": true,
+    "copied_original_hashes_match": true,
+    "independent_pillow_reread_decode_mime_dimensions_bytes_sha": true,
+    "no_upscale": true,
+    "overwrites_refused": true,
+    "measured_boundary": "Complete source bytes available through processor return",
+    "shuffle_seed": 20261008,
+    "timing_claim": "In-process warmed converter only; source I/O/file writes/hashes/independent validation excluded; OS cache uncontrolled",
+    "human_visual_approval": false,
+    "native_device_approval": false,
+    "production_profile_approval": false
+  },
+  "limitations": [
+    "high-resolution originals",
+    "reader pages",
+    "alpha",
+    "EXIF rotation",
+    "animation",
+    "WebP encoder/runtime qualification",
+    "native device quality and resource budgets",
+    "No mobile transfer/paint/memory, worker memory, cold-run, Firebase storage or publication/readiness measurement",
+    "Java converters use white matte and null metadata; no explicit EXIF/ICC normalization or animation preservation",
+    "Profile aliases are geometry equivalence; no actual reader-page sources were processed",
+    "Local file-size deltas are not measured network savings; retained storage can increase"
+  ]
+}

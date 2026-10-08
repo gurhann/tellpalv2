@@ -4519,7 +4519,7 @@ The approved detail contract is implemented under the existing module edges and 
 
 ### Post-Story 1.2 planning follow-up — image optimization
 
-The human requested that cover and content images be optimized when content is published, rather than serving raw uploaded images. Plan this after Story1.2; evaluate resolution reduction and compression with measurable size/quality/publication criteria. [Recorded planning note](post-story-1-2-image-optimization.md) preserves the scope. This is a separate future plan; no image optimization or raw-media replacement is implemented by the iOS native screenshot-envelope exception.
+The human requested that cover and content images be optimized when content is published, rather than serving raw uploaded images. Planning started on2026-10-08: [draft contract and implementation phases](../specs/spec-publish-time-image-optimization/SPEC.md) record current pipeline gaps, profile experiments, publication/readiness gates and controlled transition. [Original follow-up](post-story-1-2-image-optimization.md) preserves the requested scope. The human selected new-publication enforcement first and existing content through a separate controlled transition. The [first bounded JPEG experiment](../specs/spec-publish-time-image-optimization/p0-small-jpeg-findings.md) records 63 local output pairs and small-source size regressions. Full representative/native evaluation, numeric profiles and readiness details remain open; this experiment and the iOS native screenshot-envelope exception do not change production publication/delivery behavior.
 
 ### Story1.2 current implementation verification — 2026-10-08
 

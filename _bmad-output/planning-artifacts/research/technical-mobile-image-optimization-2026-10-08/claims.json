@@ -1,0 +1,107 @@
+[
+  {
+    "ref": 1,
+    "status": "verified",
+    "claim": "Compressed transfer bytes and decoded32bit pixel payload are distinct; Apple release-testing source independently corroborates Flutter.",
+    "class": "pixel-memory",
+    "pub_date": null
+  },
+  {
+    "ref": 3,
+    "status": "verified",
+    "claim": "Full-source contain uses minimum scale and cover maximum; independent recomputation confirms illustration arithmetic.",
+    "class": "mathematical-geometry",
+    "pub_date": null
+  },
+  {
+    "ref": 5,
+    "status": "unverified",
+    "claim": "Flutter LRU counters do not include all live/process allocations; authoritative source inspected but no independent publisher verifies internals.",
+    "class": "framework-implementation",
+    "pub_date": null
+  },
+  {
+    "ref": 7,
+    "status": "unverified",
+    "claim": "Precache Future completes after availability or failure,not proof of success/paint/retention; single primary publisher.",
+    "class": "framework-implementation",
+    "pub_date": null
+  },
+  {
+    "ref": 8,
+    "status": "unverified",
+    "claim": "Baseflow exact v3.4.1 provider key uses cacheKey-or-URL,scale,maxima; tag verified,distribution archive/device behavior not independently tested.",
+    "class": "version-compatibility",
+    "pub_date": null
+  },
+  {
+    "ref": 9,
+    "status": "unverified",
+    "claim": "Baseflow v3.4.1 disk resize first obtains/decodes original,not first-transfer or transient-memory guarantee; single primary publisher.",
+    "class": "version-compatibility",
+    "pub_date": null
+  },
+  {
+    "ref": 10,
+    "status": "unverified",
+    "claim": "Portable Flutter format list excludes AVIF; platform fallback conditional; sole common AVIF output not justified at API24/iOS15 floor.",
+    "class": "version-compatibility",
+    "pub_date": null
+  },
+  {
+    "ref": 11,
+    "status": "unverified",
+    "claim": "WebP lossy/lossless q semantics and metadata defaults are mode-specific; no TellPal savings or q setting established.",
+    "class": "encoder-controls",
+    "pub_date": null
+  },
+  {
+    "ref": 16,
+    "status": "unverified",
+    "claim": "ImageIO runtime providers must be inspected and round-trip tested; no deployed WebP provider was demonstrated.",
+    "class": "runtime-codec",
+    "pub_date": null
+  },
+  {
+    "ref": 19,
+    "status": "unverified",
+    "claim": "DevTools heap/native/raster/RSS categories and sampling are source documented; shipped tooling still needs calibration.",
+    "class": "tooling",
+    "pub_date": null
+  },
+  {
+    "ref": 21,
+    "status": "unverified",
+    "claim": "Android old foreground trim levels stop arriving fromAPI34 and are deprecatedAPI35; embedding behavior remains untested.",
+    "class": "version-compatibility",
+    "pub_date": null
+  },
+  {
+    "ref": 24,
+    "status": "unverified",
+    "claim": "Apple memory warning delivery is best effort; rapid allocation can precede cleanup; single primary source.",
+    "class": "platform-memory",
+    "pub_date": null
+  },
+  {
+    "ref": 25,
+    "status": "verified",
+    "claim": "Physical profile/release/device validation supported independently by Apple and Flutter; no finite matrix proves universal crash freedom.",
+    "class": "measurement-method",
+    "pub_date": null
+  },
+  {
+    "ref": 28,
+    "status": "unverified",
+    "claim": "Cloud Storage built-in edge cache has public-access prerequisites; actual project storage policy not inspected.",
+    "class": "integration",
+    "pub_date": null
+  },
+  {
+    "ref": 30,
+    "status": "verified",
+    "claim": "IETF private/no-cache/no-store semantics independently corroborate Google guidance; application/library compliance unmeasured.",
+    "class": "http-semantics",
+    "pub_date": "2022-06"
+  }
+]

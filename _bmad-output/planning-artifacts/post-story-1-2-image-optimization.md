@@ -1,6 +1,6 @@
 # Publish-time image optimization follow-up
 
-Status: recorded for planning after mobile Story 1.2 is complete.
+Status: planning started on 2026-10-08; [draft specification and implementation phases](../specs/spec-publish-time-image-optimization/SPEC.md) are available for discussion. The human approved new-publication enforcement first and existing content through a separate controlled transition. Numeric profiles and the readiness contract remain open.
 Requested by the human on 2026-10-07; implementation is outside Story 1.2.
 
 Published content must use optimized cover and content images rather than serving raw uploaded image files to consumers. Plan optimization as part of content publication. Evaluate resolution reduction and image compression, with separate quality and size targets appropriate to covers and content pages, including phone and tablet use.
@@ -9,4 +9,4 @@ The planning work must establish representative before/after file sizes, rendere
 
 No numeric resolution, quality target, implementation architecture or delivery date is selected by this note. No existing media is changed. The approved iOS native-test capture envelope increase from 8 to 16 MiB only enables unmodified SDK screenshot evidence; it does not implement or satisfy content-image optimization.
 
-Track this follow-up from [mobile epics](epics-mobile.md) and [Story 1.2](../implementation-artifacts/mobile/spec-1-2-open-the-selected-story-detail-from-library.md). After Story 1.2, turn it into a separately reviewed implementation plan with measurable quality, size and publication acceptance criteria.
+Track this follow-up from [mobile epics](epics-mobile.md) and [Story 1.2](../implementation-artifacts/mobile/spec-1-2-open-the-selected-story-detail-from-library.md). The draft records current pipeline gaps, representative evaluation, verification criteria and phased rollout. The approved [first local JPEG experiment](../specs/spec-publish-time-image-optimization/p0-small-jpeg-findings.md) produced 63 source/output pairs: source-resolution q85 increases the six matched control files' total bytes by 42.30%, so forced re-encoding is not an accepted optimization policy. High-resolution/page sources, native quality/resource measurements and small-source/readiness decisions remain open before long implementation. No production profile or delivery behavior changed.
