@@ -12,6 +12,7 @@ abstract class StoryDetailState with _$StoryDetailState {
   const factory StoryDetailState({
     StoryDetailIdentity? identity,
     @Default(0) int attempt,
+    @Default(0) int metadataAttempt,
     @Default(StoryDetailStatus.loading) StoryDetailStatus status,
     StoryDetail? detail,
     Failure? failure,

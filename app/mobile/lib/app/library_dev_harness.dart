@@ -20,10 +20,21 @@ class LibraryDevHarness {
   }
 
   static final scaleNotifier = ValueNotifier<double?>(null);
+  static LibraryCubit? _libraryCubit;
+  static LibraryDiagnostics? _libraryDiagnostics;
+  static bool _libraryExtensionsInstalled = false;
   static void bind(LibraryCubit cubit, LibraryDiagnostics diagnostics) {
     if (kReleaseMode) return;
+    _libraryCubit = cubit;
+    _libraryDiagnostics = diagnostics;
     bindDetail(null);
+    if (_libraryExtensionsInstalled) return;
+    _libraryExtensionsInstalled = true;
     registerExtension('ext.tellpal.library.observe', (_, parameters) async {
+      final cubit = _libraryCubit;
+      if (cubit == null || cubit.isClosed) {
+        return ServiceExtensionResponse.result(jsonEncode({'status': null}));
+      }
       final state = cubit.state;
       return ServiceExtensionResponse.result(
         jsonEncode({
@@ -51,7 +62,7 @@ class LibraryDevHarness {
                 },
               )
               .toList(),
-          'diagnostics': diagnostics.events,
+          'diagnostics': _libraryDiagnostics?.events,
           'imageCacheBytes':
               PaintingBinding.instance.imageCache.currentSizeBytes,
           'imageCacheEntries': PaintingBinding.instance.imageCache.currentSize,
@@ -59,9 +70,12 @@ class LibraryDevHarness {
       );
     });
     registerExtension('ext.tellpal.library.context', (_, parameters) async {
+      final cubit = _libraryCubit;
       final language = parameters['language'];
       final scale = double.tryParse(parameters['textScale'] ?? '1');
-      if (!['tr', 'en', 'pt'].contains(language) ||
+      if (cubit == null ||
+          cubit.isClosed ||
+          !['tr', 'en', 'pt'].contains(language) ||
           ![1.0, 1.3].contains(scale)) {
         return ServiceExtensionResponse.result(jsonEncode({'changed': false}));
       }

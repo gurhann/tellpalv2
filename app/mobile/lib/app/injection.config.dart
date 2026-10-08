@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:tellpal_mobile_poc/app/library_configuration.dart' as _i863;
 import 'package:tellpal_mobile_poc/app/router.dart' as _i785;
+import 'package:tellpal_mobile_poc/core/artwork/artwork_cubit.dart' as _i360;
 import 'package:tellpal_mobile_poc/core/diagnostics/library_diagnostics.dart'
     as _i240;
 import 'package:tellpal_mobile_poc/core/network/authenticated_transport.dart'
@@ -28,8 +29,6 @@ import 'package:tellpal_mobile_poc/features/library/domain/repository/library_re
     as _i431;
 import 'package:tellpal_mobile_poc/features/library/domain/use_case/get_library.dart'
     as _i274;
-import 'package:tellpal_mobile_poc/features/library/presentation/cubit/artwork_cubit.dart'
-    as _i1069;
 import 'package:tellpal_mobile_poc/features/library/presentation/cubit/library_cubit.dart'
     as _i489;
 import 'package:tellpal_mobile_poc/features/story_detail/data/datasource/story_detail_datasource.dart'
@@ -66,8 +65,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i881.AuthenticatedTransport(gh<_i863.LibraryConfiguration>()),
       dispose: (i) => i.close(),
     );
-    gh.factory<_i1069.ArtworkCubit>(
-      () => _i1069.ArtworkCubit(gh<_i863.LibraryConfiguration>()),
+    gh.factory<_i360.ArtworkCubit>(
+      () => _i360.ArtworkCubit(gh<_i863.LibraryConfiguration>()),
     );
     gh.factory<_i431.LibraryRepository>(
       () => _i486.LibraryRepositoryImpl(gh<_i881.AuthenticatedTransport>()),

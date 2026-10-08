@@ -1,0 +1,188 @@
+{
+  "recordedAt": "2026-10-07T17:32:01.488164+00:00",
+  "label": "story12-final-ios27-tablet-nonsub-a16",
+  "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+  "sourceInstalledBinaryDatasetMatched": true,
+  "proofSha256": "764ce808fff0604ce2c3f79f0487f9d3539a984bd617680fb1f8149286f4ca5b",
+  "logSha256": "f41fca376653175158db6de5f63762bbdd59f7d952273bb57a21d6263e469419",
+  "passed": false,
+  "completedJourneys": 0,
+  "acknowledgedCaptures": 0,
+  "failure": "NativeCaptureProtocol byte bound rejects less than8 or greater than8MiB; actual native byte count/PNG dimensions not retained",
+  "qualification": "Actual first real card route/metadata/Hero and both current recommendation decodes observed before first capture; no accepted native raster or matrix result. No later tablet target or temporary SQL mutation started. Original failed capture remains unaccepted. Separate scalar-only unchanged-SDK diagnostic prepared; all original limits/captures/assertions preserved.",
+  "separateScalarDiagnostic": {
+    "label": "story12-diagnostic-ios27-tablet-capture-a17",
+    "proofSha256": "3523967f13f521bfdded35e0f1b6235c41dffc9e9cb18b5aebe10073e7706cb8",
+    "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+    "sourceInstalledBinaryDatasetMatched": true,
+    "diagnosticOnly": true,
+    "acknowledgedAcceptanceCaptures": 0,
+    "report": {
+      "passed": true,
+      "nativeCaptureScalarDiagnostic": {
+        "diagnosticOnly": true,
+        "acceptanceCapturePublished": false,
+        "setup": "development route; original matrix proves its real card tap",
+        "categoryId": 2,
+        "contentId": 2,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "logicalWidth": 834.0,
+        "logicalHeight": 1210.0,
+        "devicePixelRatio": 2.0,
+        "nativeByteSize": 3921011,
+        "pngSignatureMatches": true,
+        "withinOriginal8MiBBound": true,
+        "pngWidth": 1668,
+        "pngHeight": 2420,
+        "pngBitDepth": 16,
+        "pngColorType": 6,
+        "pngInterlace": 0,
+        "originalBoundsChanged": false,
+        "nativePixelsOrBytesAltered": false
+      },
+      "hostCaptureReceipts": []
+    },
+    "qualification": "Separate SDK capture is within existing byte bounds; this does not recover the original failure byte count or prove its cause, and is not the original card/matrix acceptance target."
+  },
+  "originalTargetDebuggerDiagnostic": {
+    "label": "story12-diagnostic-ios27-tablet-original-capture-debug-a19",
+    "scalarDiagnosticSha256": "a5bb44444f0bd95e31df5bb5f5b3a628c2f47963073d9f131b6f65dbdf937ade",
+    "proofSha256": "87407a1dac399010bea4ac1adae8bf5f2071287e8d9c5fdef4de4097529f051a",
+    "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+    "sourceInstalledBinaryDatasetMatched": true,
+    "diagnosticOnly": true,
+    "observations": [
+      {
+        "instanceRefKind": "PlainInstance",
+        "instanceRefLengthField": 0,
+        "actualByteSize": null,
+        "qualification": "InstanceRef.length for PlainInstance counts fields, not list bytes; original watcher interpreted this field incorrectly. No empty/oversized byte conclusion from this measurement."
+      }
+    ],
+    "originalTargetExitCode": 1,
+    "acknowledgedAcceptanceCaptures": 0,
+    "qualification": "Fresh original unchanged baseline again failed its first native byte bound. Breakpoint removed and isolate resumed. Watcher captured InstanceRef.kind PlainInstance/length0, which does not prove bytes.length; raw private diagnostic retained with explicit measurement interpretation invalidation. Original A16 byte count remains unknown. Diagnostic-only replay not accepted baseline."
+  },
+  "retainedNativeImageInspection": {
+    "method": "Read-only Objective-C accessors and CGImage scalar getters through LLDB after the failed run; existing SDK-retained UIImage only; no draw/PNG encode/pixel edit; detached afterward",
+    "logSha256": "1a0701d56ea7e2824486190316110d36e64de12a5f466a9d1a47536172289750",
+    "uiImagePresent": true,
+    "cgImagePresent": true,
+    "scale": 2,
+    "cgImageWidth": 1668,
+    "cgImageHeight": 2420,
+    "bitsPerComponent": 16,
+    "bitsPerPixel": 64,
+    "bitmapInfo": 4353,
+    "colorSpaceModel": 1,
+    "qualification": "Actual SDK-retained native UIImage/CGImage exists; its properties do not establish actual encoded byte length or nil conversion. Both byte-bound branches remain possible. Apple documents PNG conversion may return nil for unsupported data, but that general possibility is not instance proof.",
+    "primaryReference": "https://developer.apple.com/documentation/uikit/uiimage/pngdata%28%29?changes=_3&language=objc"
+  },
+  "alternateAvailableTabletRun": {
+    "model": "iPad Air11-inch (M4)",
+    "deviceId": "4CE2D919-3713-4B8C-A76D-BE1A245D133E",
+    "iteration": "a17",
+    "status": "failed first original native byte bound;0acknowledged PNG/0complete journeys; remaining fault/empty/natural targets not started",
+    "qualification": "Another available native tablet profile; original iPad Pro failure remains unaccepted, not relabeled fixed.",
+    "proofSha256": "f253c0a407770c3db943e6f48d48958a49da75944e08a1384b5996707bf6a9a1",
+    "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+    "sourceInstalledBinaryDatasetMatched": true
+  },
+  "repeatedHealthyScalarDiagnostic": {
+    "label": "story12-diagnostic-ios27-tablet-capture-a20",
+    "proofSha256": "772d580db868cb8bc070cb9623c441183c47da137832633084f15a063f28d52c",
+    "diagnosticOnly": true,
+    "report": {
+      "passed": true,
+      "nativeCaptureScalarDiagnostic": {
+        "diagnosticOnly": true,
+        "acceptanceCapturePublished": false,
+        "setup": "development route; original matrix proves its real card tap",
+        "categoryId": 2,
+        "contentId": 2,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "logicalWidth": 834.0,
+        "logicalHeight": 1210.0,
+        "devicePixelRatio": 2.0,
+        "nativeByteSize": 3921011,
+        "pngSignatureMatches": true,
+        "withinOriginal8MiBBound": true,
+        "pngWidth": 1668,
+        "pngHeight": 2420,
+        "pngBitDepth": 16,
+        "pngColorType": 6,
+        "pngInterlace": 0,
+        "originalBoundsChanged": false,
+        "nativePixelsOrBytesAltered": false
+      },
+      "hostCaptureReceipts": []
+    },
+    "retainedCgImagePropertyLogSha256": "9eb70e9a3015f08f45f2fd8140774915775afbfe03fb1a4aa8aea9fb385f844b",
+    "retainedCgImagePropertiesMatchFailedRun": true,
+    "qualification": "Valid3921011-byte PNG; same dimensions/bit depth/bitmapInfo as SDK-retained original-failure image. Bitmap scalar properties alone do not distinguish byte-envelope failure."
+  },
+  "interpretationCorrection": "Earlier empty0byte inference from PlainInstance.length field was invalid. Later exact bytes.length failure-message measurement proves10825915-byte oversized SDK output in the diagnostic replay. Healthy scalar diagnostic and original full matrix are different rendering setups; no root cause is inferred from their shared CGImage scalar properties.",
+  "actualFailureByteGetterDiagnostic": {
+    "label": "story12-diagnostic-ios27-tablet-actual-byte-message-a23",
+    "scalarSha256": "fe84065d3767319a34edae772e1857232fe54ad61c7fcf29e71d4ca19a6e7add",
+    "proofSha256": "a0e8efad94bb0d47f329127b4f5e8c91a0a93c298bd813dfca4b6828aaddfe92",
+    "method": "Actual bytes.length interpolation at the original unchanged less-than8/greater-than8MiB rejection; only diagnostic message changed temporarily; no debugger",
+    "actualRejectedByteSizes": [
+      10825915
+    ],
+    "maximumBytes": 8388608,
+    "diagnosticOnly": true,
+    "sourceAggregateSha256DuringTemporaryMessageInstrumentation": "192a483db366e3278f3ff38c22964a488213c9893efeaf1d90a222192295e956",
+    "originalSourceSha256Restored": "66174c424cdbc3a8fa446c0d6b96c677087609f0ecbaec0402d56e1a053e4d86",
+    "originalSealRestored": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+    "sourceInstalledDatasetMatchedDuringDiagnostic": true,
+    "qualification": "Actual original rejection branch measured10825915 bytes (>8388608). Only failure message was instrumented temporarily, then protocol file and original89-file source seal restored byte-identically. No capture, pixels, SDK, encoding, limits, timers or assertions changed. Diagnostic run is not acceptance. This establishes oversize branch in this replay; original A16 byte count was not retained, and underlying compression/content format contribution remains unproven."
+  },
+  "standardIpadRuns": [
+    {
+      "label": "story12-final-ios27-tablet-nonsub-a25",
+      "device": "iPad (A16)",
+      "audience": "NON_SUBSCRIBER",
+      "passed": false,
+      "acknowledgedCaptures": 0,
+      "proofSha256": "5a72ae2609fd20535c7682b9bb7389d8b100ac3ee9cdd7854aa08155824b4256",
+      "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+      "sourceInstalledDatasetMatched": true,
+      "qualification": "First original byte bound rejected;0complete journeys/0accepted rasters; no remaining non-subscriber target started. Exact bytes measured separately on Pro diagnostic; not inferred for this run."
+    },
+    {
+      "label": "story12-final-ios27-tablet-sub-a25",
+      "device": "iPad (A16)",
+      "audience": "SUBSCRIBER",
+      "passed": false,
+      "acknowledgedCaptures": 0,
+      "proofSha256": "d19a3e380dcb6b9cc8fbd946917520a4ab3ad659d71f288792c6ec4daf7db67e",
+      "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+      "sourceInstalledDatasetMatched": true,
+      "qualification": "First original byte bound rejected;0complete journeys/0accepted rasters; no remaining non-subscriber target started. Exact bytes measured separately on Pro diagnostic; not inferred for this run."
+    }
+  ],
+  "proposedIosOnlyCaptureBound": {
+    "applied": true,
+    "defaultAndroidMiB": 8,
+    "proposedIosMiB": 16,
+    "singlePendingPng": true,
+    "chunkKiB": 256,
+    "acknowledgementSeconds": 60,
+    "proposalPatchSha256": "3ababde76d59668376845cf70f0a6d4e6dbef859666dc7c866bf6fc83f6bb3e3",
+    "proposalAnalysisPassed": true,
+    "proposalSyntheticTransportProbePassed": true,
+    "nativeAcceptanceProven": true,
+    "humanApprovalPending": false,
+    "productionCacheNetworkDecodeBoundsChange": false,
+    "humanApprovalReceived": true,
+    "approvalDate": "2026-10-07",
+    "sourceNativeReplayPending": false,
+    "optimizationFollowUp": "_bmad-output/planning-artifacts/post-story-1-2-image-optimization.md",
+    "nativeAcceptanceScope": "All20 required current native phone/tablet Android/iOS NON_SUBSCRIBER baseline/fault/empty/natural-provider and SUBSCRIBER baseline targets pass with exact installed binary/source/dataset proof and strictly unchanged selected compiled closures. Qualified explicit recovery is retained where observed. Separate reference/platformAX/BMad review gates remain open; original8MiB failures remain unaccepted.",
+    "approvedReplayFollowupSummarySha256": "93d79a7ca9c20f404a84d164a55d56fe6c184a2f4428fc261a4db206f314cd13",
+    "originalAudienceRestored": true
+  }
+}

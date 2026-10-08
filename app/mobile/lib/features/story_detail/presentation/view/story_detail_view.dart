@@ -2,14 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../app/router.dart';
 import '../../../../app/library_configuration.dart';
 import '../../../../app/injection.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/theme/library_theme.dart';
-import '../../../library/presentation/library_strings.dart';
-import '../../../library/presentation/cubit/library_state.dart';
-import '../../../library/presentation/widgets/library_card.dart';
+import '../../../../core/preview/domain/entity/library_preview.dart';
+import '../../../../core/artwork/artwork_cubit.dart';
+import '../../../../core/network/library_image_cache.dart';
+import '../../../../core/diagnostics/library_diagnostics.dart';
+import '../../../../core/preview/presentation/widgets/preview_card.dart';
 import '../../domain/entity/story_detail.dart';
 import '../cubit/story_detail_cubit.dart';
 import '../cubit/story_detail_state.dart';
@@ -346,7 +349,31 @@ class _Narration extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(strings.narration, style: AppTypography.section),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: SvgPicture.asset(
+                    'assets/library/story_detail_narration_wave.svg',
+                    width: 32,
+                    height: 32,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.storyNarrationAccent,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: ExcludeSemantics(
+                    child: Text(
+                      strings.narration,
+                      style: AppTypography.section,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Semantics(
               label: strings.narration,
               child: Switch(
@@ -374,10 +401,7 @@ class _Credit extends StatelessWidget {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  strings.role(credit.role),
-                  style: AppTypography.description,
-                ),
+                _CreditRoleLabel(credit: credit, strings: strings),
                 Text(
                   credit.displayName,
                   style: AppTypography.description.copyWith(
@@ -390,10 +414,7 @@ class _Credit extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
-                    strings.role(credit.role),
-                    style: AppTypography.description,
-                  ),
+                  child: _CreditRoleLabel(credit: credit, strings: strings),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -411,6 +432,41 @@ class _Credit extends StatelessWidget {
   );
 }
 
+class _CreditRoleLabel extends StatelessWidget {
+  const _CreditRoleLabel({required this.credit, required this.strings});
+  final StoryCredit credit;
+  final StoryDetailStrings strings;
+  @override
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ExcludeSemantics(
+        child: SvgPicture.asset(
+          'assets/library/story_detail_${switch (credit.role) {
+            'AUTHOR' => 'pen',
+            'NARRATOR' => 'microphone',
+            'ILLUSTRATOR' => 'palette',
+            _ => 'music_notes',
+          }}.svg',
+          width: 24,
+          height: 24,
+          colorFilter: const ColorFilter.mode(
+            AppColors.primary,
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: Text(
+          strings.role(credit.role),
+          style: AppTypography.description,
+        ),
+      ),
+    ],
+  );
+}
+
 class _Recommendations extends StatelessWidget {
   const _Recommendations({
     required this.state,
@@ -424,9 +480,9 @@ class _Recommendations extends StatelessWidget {
   Widget build(BuildContext context) {
     final detail = state.detail!;
     final height = MediaQuery.sizeOf(context).height * .230 + 16;
-    final libraryState = LibraryState(
-      context: libraryGetIt<LibraryConfiguration>().context,
-      attempt: state.attempt,
+    final artworkContext = LibraryContext(
+      state.identity!.uiLanguage,
+      libraryGetIt<LibraryConfiguration>().context.accessIdentity,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,10 +501,16 @@ class _Recommendations extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: 16),
             itemBuilder: (context, index) => SizedBox(
               width: height * .75,
-              child: LibraryCard(
+              child: PreviewCard(
                 item: detail.recommendations[index],
-                state: libraryState,
-                strings: LibraryStrings(state.identity!.uiLanguage),
+                artworkContext: artworkContext,
+                // Retained descriptors keep their owner until fresh metadata commits.
+                metadataAttempt: state.metadataAttempt,
+                lockedLabel: strings.locked,
+                retryArtworkLabel: strings.retryArtwork,
+                createArtwork: () => libraryGetIt<ArtworkCubit>(),
+                cache: () => libraryGetIt<LibraryImageCache>(),
+                diagnostics: () => libraryGetIt<LibraryDiagnostics>(),
                 onTap: () => onOpen(detail.recommendations[index].contentId),
                 onRefreshArtwork: () => context.read<StoryDetailCubit>().load(
                   state.identity!,

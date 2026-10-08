@@ -1,0 +1,1235 @@
+{
+  "recordedAt": "2026-10-08T10:51:40.414692+00:00",
+  "status": "Current review-patch reference verification complete.",
+  "currentSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+  "currentProductionReplayPending": false,
+  "currentReferenceVisualInspectionComplete": true,
+  "reviewPatchVerification": {
+    "status": "Current original raster/reference inspection complete within approved development scope.",
+    "previousSourceSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+    "qualification": "Current source/binary-matched development evidence closes the approved scope. Historical proofs and failed/unaccepted attempts retain their original scope. Android tablet baselines include two NON_SUBSCRIBER and three SUBSCRIBER qualified cover recoveries; their exact underlying causes remain unproven. CUA physical viewport scrolling remains tool-limited; original native targets independently prove SDK drag/card/Back/scroll retention. Controlled local faults are not provider outages. Physical devices, minimum/older OS and production quantitative memory/latency remain release gaps under the approved emulator-first scope.",
+    "review": "library-1-2-review.md",
+    "currentSourceSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+    "fullFlutterTestsPassed": 223,
+    "backendSurefirePassed": 385,
+    "backendFailsafePassed": 1,
+    "currentReferenceCheckpoint": {
+      "recordedAt": "2026-10-08T09:46:49.371566+00:00",
+      "currentSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+      "inspectedOriginalRasters": [
+        {
+          "runLabel": "story12-final-android36-phone-nonsub-a42",
+          "capture": "detail-tr-1.0-free-2-loaded.png",
+          "sha256": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+          "inspection": "Decoded original Hero, visible Back/age/duration/deferredCTA/narration and readable metadata.",
+          "qualification": "Complete original baseline target passed with49captures and zero cover recoveries."
+        },
+        {
+          "runLabel": "story12-final-android36-phone-nonsub-fault-a42",
+          "capture": "detail-injected-en-metadata_timeout.png",
+          "sha256": "947108806186b88dfc8d65e17103bb144ce4f464b559741c7f20203e162b2f7b",
+          "inspection": "Settled localized metadata error and visible retry/Back.",
+          "qualification": "Complete original fault target passed24cases/51captures; explicit controlled injection."
+        },
+        {
+          "runLabel": "story12-final-android36-phone-nonsub-fault-a42",
+          "capture": "detail-injected-en-hero_corrupt.png",
+          "sha256": "60511613f149555adffdaf2aaee75afa78b3afec79c5968d22cb348d14151a4c",
+          "inspection": "Retained readable Hero title, separate Retry cover, age/duration and metadata at enlarged scale.",
+          "qualification": "Complete original fault target passed24cases/51captures; explicit corrupt-source fixture."
+        },
+        {
+          "runLabel": "story12-final-android36-tablet-nonsub-a42",
+          "capture": "detail-tr-1.0-free-2-metadata.png",
+          "sha256": "245054f58f81a626d8483573c7293cecc9dbfb450e98031c8859a09ac33172c3",
+          "inspection": "Actual scrolled tablet raster shows readable full credits/summary, localized recommendations and two rendered original covers.",
+          "qualification": "Complete original baseline target now passed with53captures and two distinctly qualified real-control cover recoveries; this raster is only a visual observation and does not independently prove platform AX."
+        },
+        {
+          "runLabel": "story12-final-ios27-phone-nonsub-a42",
+          "capture": "detail-tr-1.3-locked-3-loaded.png",
+          "sha256": "37bd7dcb48018bf0a75572a445a6717372b4b0dced7dd198cec05cbd7ab5e021",
+          "inspection": "Actual iPhone enlarged locked raster: decoded blurred cover, visible Back/lock/age/duration, localized Premium CTA, narration and wrapped summary.",
+          "qualification": "Complete original current iPhone baseline target passed16journeys/49captures with zero explicit cover recoveries and all five installed binary parts matched. This raster remains a scoped visual observation; actual platform AX roles are separately pending."
+        },
+        {
+          "capture": "detail-pt-1.3-locked-3-loaded.png",
+          "sha256": "a85523485b556aa19c1f33c65e71525d37165fa4460f8f098ed27190b98e7af7",
+          "sourceAggregateSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+          "proofSha256": "14c6b27910cbcaea1a26a2b5d361fc014e12b73a3d6ca6288150527865fa27c5",
+          "runLabel": "story12-final-ios27-tablet-nonsub-a42",
+          "inspection": "Original iPad PT scale1.3 locked detail raster inspected: decoded blurred Hero with visible Back/lock/age/duration, centered Premium action and narration switch, readable wrapped summary and credits. Tool preview resize does not alter original SDK PNG; original target49 captures passed without explicit cover recovery. Actual platform AX remains separate.",
+          "qualification": "Current original49-capture baseline passes without explicit cover recovery; inspected original remains unchanged. Actual platform AX is independently pending."
+        },
+        {
+          "runLabel": "story12-final-ios27-tablet-nonsub-fault-a42",
+          "capture": "detail-injected-en-hero_corrupt.png",
+          "sha256": "36a83b5f17789a009693bbd1c61a69de62260b932d9ce6ea5ac3f839b10a5c61",
+          "inspection": "Original settled iPad enlarged EN corrupt-Hero raster inspected: title, cover unavailable text and Retry cover fit inside Hero; Back/age/duration, narration, summary and credits remain visible. No underlying Library route strip.",
+          "qualification": "Controlled local actual-corrupt source fault, not real provider outage. Original24-case51-capture target passes; actual platform AX is separate.",
+          "proofSha256": "f8fe3cd22aebe9fe9fcb9e49476787d2b8c0c4fbbd8c83ec33786be26fa51583"
+        },
+        {
+          "runLabel": "story12-final-android36-phone-sub-a42",
+          "capture": "detail-pt-1.3-mapped-9-loaded.png",
+          "sha256": "19455e1a663b85d23e8c2ebdc7eac8d7cb7247bdb0e95220344e992b991629b2",
+          "inspection": "Original Android subscriber phone PT1.3 mapped-reading raster inspected: actual decoded unblurred Hero, localized Back/start/narration/age, similar section and decoded partially visible recommendation. Missing optional duration/summary/credits are omitted.",
+          "qualification": "Original subscriber31-capture target passes with zero explicit cover recoveries. Deferred start remains disabled by separately checked state/semantics; raster alone does not prove enabled state or platform roles.",
+          "proofSha256": "52f142069c4053f1cfe68d24e473a53914a34da621c1dfa48628cb1769bf2f88"
+        },
+        {
+          "runLabel": "story12-final-android36-tablet-sub-a42",
+          "capture": "detail-pt-2-cover-retry-2-recovered.png",
+          "sha256": "f324693f73061eaa08ff2424fe04c5d762f1b9c7fbd6c711a2fe27f42e157ae0",
+          "inspection": "Original Android subscriber tablet PT recovery raster inspected: decoded unblurred Hero, localized start/narration, readable wrapped summary and ordered credits, similar section and three whole plus one partial decoded cover.",
+          "qualification": "Actual real-control qualified recovery from an observed current error, not uninterrupted healthy source loading. Original target37captures passed with three distinct per-check recoveries and unchanged assertions; platform roles separately pending."
+        },
+        {
+          "runLabel": "story12-final-ios27-phone-sub-a42",
+          "capture": "detail-pt-1.3-mapped-9-loaded.png",
+          "sha256": "da2b0daef9cdf10c0f7634336df1a00b066f0465aca67b7b86d87bbc2e2b2af5",
+          "inspection": "Original iPhone subscriber PT1.3 mapped-reading raster inspected: decoded unblurred Hero, visible Back/age/start/narration, localized similar section and a decoded partially visible recommendation. Optional duration/summary/credits correctly absent.",
+          "qualification": "Original subscriber31-capture target passed without explicit cover recovery. Tool preview resized; original PNG unchanged. Visual observation does not independently prove enabled state or native AX.",
+          "proofSha256": "dfb6394468a398423916b055dc698c36f73b7d60a2fa9dd41de914abcfccdbee"
+        },
+        {
+          "runLabel": "story12-final-ios27-tablet-sub-a42",
+          "capture": "detail-en-1.3-free-2-metadata.png",
+          "sha256": "b3350d3df06c94d0a568ec8d9e7342907b39c0834cbc6affa4e2041c975f81fc",
+          "inspection": "Original scrolled iPad subscriber EN1.3 raster inspected: decoded Hero lower area/age/duration, centered localized start/narration, readable wrapped summary and ordered credits, similar section with three whole and one partial decoded recommendation covers.",
+          "qualification": "Original subscriber31-capture target passed without explicit cover recovery. Tool preview resized; original PNG unchanged. Visual observation does not independently prove enabled state or native AX.",
+          "proofSha256": "c0290381bf941d88f79cd578e5d95f51850b71b87fdaaf9c1255c54d5a6c8733"
+        }
+      ],
+      "currentColorReport": {
+        "recordedAt": "2026-10-08T09:42:11.966401+00:00",
+        "classification": "Read-only actual original current-source PNG color-presence counts plus sRGB opaque-token and257-sample CTA interpolation calculation. No original image changes, artwork-text contrast or physical-display calibration. Initial exploratory exact-token assertion across iOS failed because the encoded Display P3 pixels are not sRGB code values; preserved as an invalid cross-profile measurement, not an application failure. Opaque contrast calculation uses actual current source tokens, independently of P3 raster counts.",
+        "currentSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+        "themeSourceSha256": "6b4bb225d91969bc01735aa51efbef8650bdb70782a72aaaa9b05a72a808687c",
+        "captures": [
+          {
+            "runLabel": "story12-final-android36-phone-nonsub-a42",
+            "capture": "detail-tr-1.0-free-2-loaded.png",
+            "sha256": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+            "pixels": [
+              822,
+              1828
+            ],
+            "rawExactSrgbTokenPixelCounts": {
+              "canvas": 597244,
+              "primary": 8977,
+              "ink": 3460,
+              "muted": 18085,
+              "placeholder": 65608,
+              "white": 4847,
+              "waveform": 361,
+              "gradientEnd": 150
+            },
+            "embeddedProfile": "unprofiled",
+            "exactTokenPresenceAccepted": true,
+            "qualification": "Android exact sRGB token presence verified. iOS Display P3 raw code values differ; raw counts do not certify sRGB token presence or raster contrast."
+          },
+          {
+            "runLabel": "story12-final-android36-tablet-nonsub-a42",
+            "capture": "detail-tr-1.0-free-2-metadata.png",
+            "sha256": "245054f58f81a626d8483573c7293cecc9dbfb450e98031c8859a09ac33172c3",
+            "pixels": [
+              1600,
+              2560
+            ],
+            "rawExactSrgbTokenPixelCounts": {
+              "canvas": 1881107,
+              "primary": 10641,
+              "ink": 6841,
+              "muted": 18129,
+              "placeholder": 67109,
+              "white": 7239,
+              "waveform": 359,
+              "gradientEnd": 151
+            },
+            "embeddedProfile": "unprofiled",
+            "exactTokenPresenceAccepted": true,
+            "qualification": "Android exact sRGB token presence verified. iOS Display P3 raw code values differ; raw counts do not certify sRGB token presence or raster contrast."
+          },
+          {
+            "runLabel": "story12-final-ios27-phone-sub-a42",
+            "capture": "detail-pt-1.3-mapped-9-loaded.png",
+            "sha256": "da2b0daef9cdf10c0f7634336df1a00b066f0465aca67b7b86d87bbc2e2b2af5",
+            "pixels": [
+              1206,
+              2622
+            ],
+            "rawExactSrgbTokenPixelCounts": {
+              "canvas": 1,
+              "primary": 0,
+              "ink": 0,
+              "muted": 0,
+              "placeholder": 0,
+              "white": 57729,
+              "waveform": 0,
+              "gradientEnd": 0
+            },
+            "embeddedProfile": "Display P3",
+            "exactTokenPresenceAccepted": false,
+            "qualification": "Android exact sRGB token presence verified. iOS Display P3 raw code values differ; raw counts do not certify sRGB token presence or raster contrast."
+          },
+          {
+            "runLabel": "story12-final-ios27-tablet-sub-a42",
+            "capture": "detail-en-1.3-free-2-metadata.png",
+            "sha256": "b3350d3df06c94d0a568ec8d9e7342907b39c0834cbc6affa4e2041c975f81fc",
+            "pixels": [
+              1640,
+              2360
+            ],
+            "rawExactSrgbTokenPixelCounts": {
+              "canvas": 1,
+              "primary": 0,
+              "ink": 0,
+              "muted": 0,
+              "placeholder": 0,
+              "white": 9624,
+              "waveform": 0,
+              "gradientEnd": 0
+            },
+            "embeddedProfile": "Display P3",
+            "exactTokenPresenceAccepted": false,
+            "qualification": "Android exact sRGB token presence verified. iOS Display P3 raw code values differ; raw counts do not certify sRGB token presence or raster contrast."
+          }
+        ],
+        "contrastPairs": [
+          {
+            "foreground": "primary",
+            "background": "canvas",
+            "ratio": 4.679479643283266,
+            "requiredRatio": 4.5,
+            "passed": true
+          },
+          {
+            "foreground": "ink",
+            "background": "canvas",
+            "ratio": 11.959251614032592,
+            "requiredRatio": 4.5,
+            "passed": true
+          },
+          {
+            "foreground": "muted",
+            "background": "canvas",
+            "ratio": 7.587365309221462,
+            "requiredRatio": 4.5,
+            "passed": true
+          },
+          {
+            "foreground": "waveform",
+            "background": "placeholder",
+            "ratio": 4.022976681629525,
+            "requiredRatio": 3,
+            "passed": true
+          },
+          {
+            "foreground": "primary",
+            "background": "placeholder",
+            "ratio": 4.228251702492592,
+            "requiredRatio": 3,
+            "passed": true
+          },
+          {
+            "foreground": "white",
+            "background": "primary",
+            "ratio": 5.025339845968547,
+            "requiredRatio": 4.5,
+            "passed": true
+          },
+          {
+            "foreground": "white",
+            "background": "gradientEnd",
+            "ratio": 6.819878027078547,
+            "requiredRatio": 4.5,
+            "passed": true
+          }
+        ],
+        "ctaGradient": {
+          "samples": 257,
+          "minimumRatio": 5.025339845968547,
+          "requiredRatio": 4.5,
+          "passed": true
+        }
+      },
+      "currentColorReportSha256": "6e589ed7c6c349844aa5c5ba667578a39ad5b375eb7fd7a887db94b4d7bf38e0",
+      "settledUnavailableReplayPending": false,
+      "qualification": "Only explicitly named original current-source rasters are claimed inspected. Android exact opaque-token presence and source-token contrast are verified; iOS raw Display P3 values are not certified as exact sRGB raster codes. Legacy structural/new-state agreement, not matched-content pixel parity.",
+      "currentSettledUnavailableEvidence": {
+        "artifact": "library-1-2-settled-unavailable-evidence.json",
+        "runs": 2,
+        "cases": 12,
+        "originalPngs": 12,
+        "actualInspectedEnlargedRasters": 6,
+        "currentSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04"
+      }
+    },
+    "currentReferenceVisualInspectionComplete": true
+  },
+  "historicalPreReviewEvidence": {
+    "classification": "actual current Android raster color-presence verification plus sRGB relative-luminance calculation for opaque UI surfaces; not artwork text or physical-display calibration",
+    "captures": [
+      {
+        "capture": "detail-tr-1.0-free-2-loaded.png",
+        "sha256": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+        "pixels": [
+          822,
+          1828
+        ],
+        "actualExactColorPixelCounts": {
+          "canvas": 597244,
+          "primary": 8977,
+          "ink": 3460,
+          "muted": 18085,
+          "placeholder": 65608,
+          "white": 4847,
+          "waveform": 361
+        }
+      },
+      {
+        "capture": "detail-tr-1.0-free-2-metadata.png",
+        "sha256": "34df48a24d4aa708ba1a663de4c775752a12a2c7fa8662a632575bf216fc32a8",
+        "pixels": [
+          822,
+          1828
+        ],
+        "actualExactColorPixelCounts": {
+          "canvas": 884719,
+          "primary": 10641,
+          "ink": 6840,
+          "muted": 18085,
+          "placeholder": 67115,
+          "white": 7001,
+          "waveform": 357
+        }
+      },
+      {
+        "capture": "detail-tr-1.0-locked-3-loaded.png",
+        "sha256": "a0bec797eb2b6e9bca3c3e00760db01d77537e9bb0d9e472302657b8d2f98568",
+        "pixels": [
+          822,
+          1828
+        ],
+        "actualExactColorPixelCounts": {
+          "canvas": 603488,
+          "primary": 9395,
+          "ink": 3460,
+          "muted": 18085,
+          "placeholder": 65608,
+          "white": 4436,
+          "waveform": 361
+        }
+      }
+    ],
+    "contrastPairs": [
+      {
+        "foreground": "primary",
+        "background": "canvas",
+        "ratio": 4.6795
+      },
+      {
+        "foreground": "ink",
+        "background": "canvas",
+        "ratio": 11.9593
+      },
+      {
+        "foreground": "muted",
+        "background": "canvas",
+        "ratio": 7.5874
+      },
+      {
+        "foreground": "waveform",
+        "background": "placeholder",
+        "ratio": 4.023
+      },
+      {
+        "foreground": "primary",
+        "background": "placeholder",
+        "ratio": 4.2283
+      },
+      {
+        "foreground": "white",
+        "background": "primary",
+        "ratio": 5.0253
+      }
+    ],
+    "story": "1.2",
+    "recordedAt": "2026-10-07T17:40:57.007934+00:00",
+    "sourceAggregateSha256": "5b79235e18c57f3ec9afaac36b2e18efc8c26d4f928d2f579d69680e01da0a0f",
+    "nativeRun": "story12-final-android36-phone-nonsub-a11",
+    "nativeRunAccepted": false,
+    "inspection": "Actual TR free loaded/metadata and locked loaded rasters inspected. Legacy structural arrangement retained; current content, opaque tokens and typography are approved new state, not matched-content/pixel parity. Required decoded recommendation covers are visible in the TR metadata raster; unrelated later PT failure keeps full native run unaccepted.",
+    "privateReportSha256": "7f8a95ec07bc3be54e77a2f6b2f70c67aa54fcbc8e07e91ee5dce82cd18bd135",
+    "currentPassingNative": {
+      "label": "story12-final-android36-phone-nonsub-a12",
+      "sourceAggregateSha256": "5261b36b198d94c9e8560f7b2f8f03d46002de9f7380318ecff943115bf6afd6",
+      "proofSha256": "4b8d61525f9b77e3cc0185e379e2cb486fc30e096e9d0a5ff5af88cb3a77660d",
+      "cases": 16,
+      "captures": 51,
+      "realUnavailable": true,
+      "explicitRecoveryCount": 1,
+      "qualification": "One observed PT asset36 error then real localized control/fresh metadataAttempt1-to2/same-context independent HTTP/decoded Hero and all originally required visible/partial covers. This is qualified recovery, not uninterrupted healthy baseline. Remaining device/audience/fault/reference/platform AX gates stay open."
+    },
+    "naturalProviderA14RasterQualification": {
+      "label": "story12-final-android36-phone-nonsub-natural-a14",
+      "functionalNativeResult": "passed",
+      "actualProviderExpiredTokenAndRealRenewal": "passed",
+      "errorRaster": "inspected and matches actual artwork-only error/retained metadata",
+      "recoveredRaster": "inspected placeholder despite actually decoded512x831 frame; not accepted recovered-artwork visual proof",
+      "captureHashes": {
+        "detail-real-provider-expired-tr-ui-1.3-error.png": "b59756715a891fe39f452830cc597e5d382167a7fc8a9f2e9b653f3f4b608596",
+        "detail-real-provider-expired-tr-ui-1.3-recovered.png": "bb0f8935786883aca9498bd2c3dfe7c01b0bc63c23b447dd0d7097290d52ba58"
+      },
+      "sourceAggregateSha256": "ed355f226bafe4b61eb2e39bc4aa51bc77a847fd86eff35ec7e823a0b20dfea4",
+      "requiredFollowUp": "Require all decoded RawImage ancestor opacities1 within the original60s wait, then existing8-frame screenshot flush; rerun natural target and inspect real recovered PNG. No production/shared source, timers, limits or assertions changed."
+    },
+    "currentNaturalProviderRecoveryInspection": {
+      "label": "story12-final-android36-phone-nonsub-natural-a16",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "proofSha256": "641f23557ff4a671ae60dabd5f56fdea7ced9c4195445155b76017fc2c6d794b",
+      "functionalResult": "passed",
+      "inspectedActualRecoveredRaster": "Actual real original-cover art visibly rendered with server locked blur/opaque lock, retained TR metadata and enlarged1.3 layout; error raster preserves title and real localized artwork retry. Previous A14 placeholder remains separately qualified.",
+      "nativeProviderRecovery": {
+        "platform": "android",
+        "operatingSystemVersion": "BE2A.250530.026.D1",
+        "textScale": 1.3,
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "categoryId": 2,
+        "contentId": 3,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "experience": "READING",
+        "audience": "NON_SUBSCRIBER",
+        "assetId": 3,
+        "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "byteSize": 42692,
+        "providerStatus": 400,
+        "providerErrorCode": "ExpiredToken",
+        "providerResponseSimulated": false,
+        "initialMetadataHeroOnlySubstituted": true,
+        "isolatedEmptyHeroProfile": true,
+        "existingHomeAndDetailCachesReset": false,
+        "realCardTap": true,
+        "actualRenderedArtworkError": true,
+        "metadataRetained": true,
+        "realRetry": true,
+        "retryMetadataRequests": 2,
+        "freshSameContextHttpStatus": 200,
+        "freshHeroHttpStatus": 200,
+        "freshHeroSourceChecksumMatched": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 831
+        },
+        "renderedHeroOpacityVerified": true,
+        "captureFramesFlushed": 8,
+        "closedDetailAfterBack": true,
+        "ownedHeroAttemptsAfterBack": 0,
+        "independentUpstreamClientsSettled": true,
+        "platformAccessibilityInspection": "not executed by this target"
+      },
+      "captureHashes": {
+        "detail-real-provider-expired-tr-ui-1.3-error.png": "b59756715a891fe39f452830cc597e5d382167a7fc8a9f2e9b653f3f4b608596",
+        "detail-real-provider-expired-tr-ui-1.3-recovered.png": "dcced873be08ae01685d05c5e2340f1b3a4e75ba676c7c4d4966242b71befd79"
+      },
+      "sourceBinaryDatasetMatched": true
+    },
+    "currentProductionReplayPending": false,
+    "currentSourceSeal": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+    "currentA16InProgressVisualInspection": {
+      "recordedAt": "2026-10-07T15:05:36.104738+00:00",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "nativeRunAccepted": true,
+      "classification": "Actual current-source acknowledged PNGs inspected; completed normal baseline passes with exactly one qualified real-control recovery. Separate remaining target/profile/AX gates remain open.",
+      "captures": {
+        "detail-tr-1.0-free-2-loaded.png": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+        "detail-tr-1.0-free-2-metadata.png": "34df48a24d4aa708ba1a663de4c775752a12a2c7fa8662a632575bf216fc32a8",
+        "detail-tr-1.3-locked-3-loaded.png": "dcced873be08ae01685d05c5e2340f1b3a4e75ba676c7c4d4966242b71befd79",
+        "detail-tr-2-cover-retry-0-error.png": "f502ef5d6ad41abe3c74f62fe35549886c193cff2607914d56280c614b9e7a6b",
+        "detail-tr-2-cover-retry-0-recovered.png": "0f0d32765e2cf49a3f62000a4c1dc4158840408f9f26291c9bddab4b3c36f854",
+        "detail-en-1.3-free-2-loaded.png": "c0fa998e67e85063b3a99d7bc57e2ed62db027b9e4dc8072bfc4d39f67ebaa93",
+        "detail-pt-1.0-free-2-metadata.png": "913083ac9e477a6d2926ef167a32724a50608f381d3c30c04c88d21eafb21ee1"
+      },
+      "observations": [
+        "Real Poli artwork, half-height rounded Hero, opaque back/duration/age controls, centered gradient deferred CTA and unchanged narration panel are visible.",
+        "TR1.3 locked art blur/lock, enlarged wrapping summary and reachable back match the approved current state.",
+        "Metadata capture contains actual decoded recommendation art, ordered credits and readable names rather than loading placeholders.",
+        "Observed cover error capture preserves selected metadata and exposes actual localized per-card retry controls. Distinct recovery capture visibly restores both originally visible covers and preserves metadata/narration preference; full decoded partial-card assertions remain part of running test.",
+        "Actual EN1.3 free Hero/CTA/narration/long summary and PT1.0 ordered credits/three visible or partial decoded recommendation covers inspected; localized controls and wrapping remain readable. Both are verified fixture art/content states, not old Haberci parity."
+      ],
+      "proofSha256": "c8f891a0d27410a94bd06728cc8c5389dd4ae912d64511552d333a309fafb8d5"
+    },
+    "currentA16OpaqueContrastInspection": {
+      "recordedAt": "2026-10-07T15:08:34.140179+00:00",
+      "classification": "Read-only actual acknowledged raster color-presence counts and sRGB relative luminance for opaque UI tokens; no image alteration or physical calibration; current native matrix still running. Gradient endpoints used; all intermediate colors require separate qualification.",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "captures": [
+        {
+          "capture": "detail-tr-1.0-free-2-loaded.png",
+          "sha256": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+          "pixels": [
+            822,
+            1828
+          ],
+          "actualExactColorPixelCounts": {
+            "canvas": 597244,
+            "primary": 8977,
+            "ink": 3460,
+            "muted": 18085,
+            "placeholder": 65608,
+            "white": 4847,
+            "waveform": 361,
+            "gradientEnd": 150,
+            "switchOffThumb": 0,
+            "switchOffTrack": 0
+          }
+        },
+        {
+          "capture": "detail-tr-1.0-free-2-metadata.png",
+          "sha256": "34df48a24d4aa708ba1a663de4c775752a12a2c7fa8662a632575bf216fc32a8",
+          "pixels": [
+            822,
+            1828
+          ],
+          "actualExactColorPixelCounts": {
+            "canvas": 884719,
+            "primary": 10641,
+            "ink": 6840,
+            "muted": 18085,
+            "placeholder": 67115,
+            "white": 7001,
+            "waveform": 357,
+            "gradientEnd": 150,
+            "switchOffThumb": 1767,
+            "switchOffTrack": 3895
+          }
+        },
+        {
+          "capture": "detail-tr-1.3-locked-3-loaded.png",
+          "sha256": "dcced873be08ae01685d05c5e2340f1b3a4e75ba676c7c4d4966242b71befd79",
+          "pixels": [
+            822,
+            1828
+          ],
+          "actualExactColorPixelCounts": {
+            "canvas": 573901,
+            "primary": 4372,
+            "ink": 6244,
+            "muted": 31020,
+            "placeholder": 82385,
+            "white": 6475,
+            "waveform": 360,
+            "gradientEnd": 162,
+            "switchOffThumb": 0,
+            "switchOffTrack": 2
+          }
+        },
+        {
+          "capture": "detail-en-1.3-free-2-loaded.png",
+          "sha256": "c0fa998e67e85063b3a99d7bc57e2ed62db027b9e4dc8072bfc4d39f67ebaa93",
+          "pixels": [
+            822,
+            1828
+          ],
+          "actualExactColorPixelCounts": {
+            "canvas": 582515,
+            "primary": 3696,
+            "ink": 5284,
+            "muted": 30259,
+            "placeholder": 71355,
+            "white": 21638,
+            "waveform": 392,
+            "gradientEnd": 162,
+            "switchOffThumb": 0,
+            "switchOffTrack": 0
+          }
+        },
+        {
+          "capture": "detail-pt-1.0-free-2-metadata.png",
+          "sha256": "913083ac9e477a6d2926ef167a32724a50608f381d3c30c04c88d21eafb21ee1",
+          "pixels": [
+            822,
+            1828
+          ],
+          "actualExactColorPixelCounts": {
+            "canvas": 875111,
+            "primary": 10501,
+            "ink": 7174,
+            "muted": 18240,
+            "placeholder": 57831,
+            "white": 7437,
+            "waveform": 392,
+            "gradientEnd": 150,
+            "switchOffThumb": 1767,
+            "switchOffTrack": 3895
+          }
+        }
+      ],
+      "contrastPairs": [
+        {
+          "foreground": "primary",
+          "background": "canvas",
+          "ratio": 4.6795,
+          "requiredRatio": 4.5,
+          "passed": true
+        },
+        {
+          "foreground": "ink",
+          "background": "canvas",
+          "ratio": 11.9593,
+          "requiredRatio": 4.5,
+          "passed": true
+        },
+        {
+          "foreground": "muted",
+          "background": "canvas",
+          "ratio": 7.5874,
+          "requiredRatio": 4.5,
+          "passed": true
+        },
+        {
+          "foreground": "waveform",
+          "background": "placeholder",
+          "ratio": 4.023,
+          "requiredRatio": 3,
+          "passed": true
+        },
+        {
+          "foreground": "primary",
+          "background": "placeholder",
+          "ratio": 4.2283,
+          "requiredRatio": 3,
+          "passed": true
+        },
+        {
+          "foreground": "white",
+          "background": "primary",
+          "ratio": 5.0253,
+          "requiredRatio": 4.5,
+          "passed": true
+        },
+        {
+          "foreground": "white",
+          "background": "gradientEnd",
+          "ratio": 6.8199,
+          "requiredRatio": 4.5,
+          "passed": true
+        },
+        {
+          "foreground": "switchOffThumb",
+          "background": "switchOffTrack",
+          "ratio": 3.4657,
+          "requiredRatio": 3,
+          "passed": true
+        }
+      ],
+      "privateReportSha256": "dd191c4b12e9130fe697ec2cfed95a649afeba5fbeef89b6dc22fc8cd0bf23df"
+    },
+    "currentA16TabletInProgressVisualInspection": {
+      "recordedAt": "2026-10-07T15:27:37.976865+00:00",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "nativeRunAccepted": true,
+      "physicalPixels": [
+        1600,
+        2560
+      ],
+      "logicalPixels": [
+        800,
+        1280
+      ],
+      "captures": {
+        "detail-tr-1.0-free-2-loaded.png": "abb5f3893d66409c43d2cb2a3b6bafa546e38f9788a70e7e43aaad5dffc3a846",
+        "detail-tr-1.0-free-2-metadata.png": "245054f58f81a626d8483573c7293cecc9dbfb450e98031c8859a09ac33172c3",
+        "detail-en-1.3-free-2-loaded.png": "d484941c119eb79446f75e2a28653d8554d2d6844563a05bb307c74f1e83615d",
+        "detail-pt-1.3-locked-3-loaded.png": "f287326a310d49ee9308bac70f368e8072ef46f2222d0f69d12d9a1752585906"
+      },
+      "observations": [
+        "Actual800x1280 tablet TR free loaded/metadata candidate rasters inspected while native matrix continues; root viewer resized only display to1248x1996, original acknowledged PNG remains1600x2560.",
+        "Hero remains clipped/adaptive, centered fixed343dp CTA/narration retain scale while body/credit rows use tablet width. Actual ordered decoded recommendation covers visible in metadata raster; initial loaded capture has partial loading cards and is not decoded-cover reference proof.",
+        "Long summary/credits remain readable and opaque back/age/duration controls stay reachable. Actual fixture content differs from old Haberci reference; approved new state structural comparison only.",
+        "Actual enlarged EN1.3 tablet free raster inspected: fixed CTA, Voiceover and wrapping body are readable; credits remain separate left-role/right-name rows with room for enlarged fixture names. Native matrix still in progress.",
+        "Actual PT1.3 locked tablet raster inspected: blurred real cover/opaque lock and back, enlarged localized premium/narration/summary, readable credits and fixed centered CTA. Partial loading recommendation cards in this loaded capture do not establish decoded-cover reference proof; metadata captures/test assertions remain required."
+      ],
+      "proofSha256": "493a205197c69f0cc25032469c8aab404d45385babf114cf5b8fd0c67cea5be7",
+      "currentCompleteJourneys": 16,
+      "currentCaptureCount": 55,
+      "qualifiedExplicitRecoveryCount": 3,
+      "qualification": "Matched current source/installedAPK/dataset; original16journeys/unavailable+49required captures retained plus6 qualified error/recovered captures. Not uninterrupted healthy baseline; remaining fault/empty/natural/tabletAX/iOS/subscriber/review gates open."
+    },
+    "currentTabletNaturalProviderRecovery": {
+      "label": "story12-final-android36-tablet-nonsub-natural-a16",
+      "proofSha256": "01fd829f107bd031b55b8dbdce91257dccb921b8ed4e0427cb9cfa7ca5f0d0c2",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "sourceInstalledBinaryDatasetMatched": true,
+      "nativeProviderRecovery": {
+        "platform": "android",
+        "operatingSystemVersion": "BE2A.250530.026.D1",
+        "textScale": 1.3,
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "categoryId": 2,
+        "contentId": 3,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "experience": "READING",
+        "audience": "NON_SUBSCRIBER",
+        "assetId": 3,
+        "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "byteSize": 42692,
+        "providerStatus": 400,
+        "providerErrorCode": "ExpiredToken",
+        "providerResponseSimulated": false,
+        "initialMetadataHeroOnlySubstituted": true,
+        "isolatedEmptyHeroProfile": true,
+        "existingHomeAndDetailCachesReset": false,
+        "realCardTap": true,
+        "actualRenderedArtworkError": true,
+        "metadataRetained": true,
+        "realRetry": true,
+        "retryMetadataRequests": 2,
+        "freshSameContextHttpStatus": 200,
+        "freshHeroHttpStatus": 200,
+        "freshHeroSourceChecksumMatched": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 831
+        },
+        "renderedHeroOpacityVerified": true,
+        "captureFramesFlushed": 8,
+        "closedDetailAfterBack": true,
+        "ownedHeroAttemptsAfterBack": 0,
+        "independentUpstreamClientsSettled": true,
+        "platformAccessibilityInspection": "not executed by this target"
+      },
+      "captureHashes": {
+        "detail-real-provider-expired-tr-ui-1.3-error.png": "b4221f6732d97d94544aa80f6ba0e98c195a364e4f0ba7f757ed67f5e2934ab4",
+        "detail-real-provider-expired-tr-ui-1.3-recovered.png": "ef71f1f70bfd34303aff19a8b5eb437c6e666bf3a4e3b5d259566229a0ca86b4"
+      },
+      "visualInspection": "Actual acknowledged tablet error/recovered rasters inspected. Missing-artwork state has readable retained title/error/real retry; recovered raster visibly displays actual original source with server locked blur/opaque lock, unchanged enlarged TR metadata/CTA/narration/credits. Original1600x2560 PNGs retained; viewer-only resize does not modify them."
+    },
+    "currentA16IosPhoneInProgressVisualInspection": {
+      "recordedAt": "2026-10-07T15:44:07.485047+00:00",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "nativeRunAccepted": true,
+      "captureHashes": {
+        "detail-tr-1.3-locked-3-loaded.png": "37bd7dcb48018bf0a75572a445a6717372b4b0dced7dd198cec05cbd7ab5e021"
+      },
+      "observations": [
+        "Actual iOS phone TR1.3 locked candidate raster inspected while native matrix continues: real blurred Hero/opaque back+lock, readable pills, enlarged localized deferred premium/narration/body. Back respects the observed top safe-area; bottom body remains scrollable through original native checks.",
+        "Current fixture structural new state, not matched old Haberci content/pixel parity. Actual platform AX remains pending manual Mac unlock; screenshot/widget semantics do not replace it."
+      ],
+      "proofSha256": "7a18df8ff58870086f9a05cc2925e89f67c42a633608c6726cbd9cb005aefc14",
+      "currentCompleteJourneys": 16,
+      "currentCaptureCount": 49,
+      "qualifiedExplicitRecoveryCount": 0,
+      "qualification": "Current iOS27 phone source and all five built/installed binary parts plus dataset match;16 journeys/unavailable/49 original captures pass without explicit cover recovery. Remaining iOS faults/empty/natural/tablet/subscriber/platformAX/review gates stay open."
+    },
+    "currentIosPhoneNaturalProviderRecovery": {
+      "label": "story12-final-ios27-phone-nonsub-natural-a16",
+      "proofSha256": "2978242fc3839c3041ccddb058e65a94a72fefbb389f33ddb995d051e097172e",
+      "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+      "sourceInstalledBinaryDatasetMatched": true,
+      "nativeProviderRecovery": {
+        "platform": "ios",
+        "operatingSystemVersion": "Version 27.0 (Build 24A434)",
+        "textScale": 1.3,
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "categoryId": 2,
+        "contentId": 3,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "experience": "READING",
+        "audience": "NON_SUBSCRIBER",
+        "assetId": 3,
+        "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "byteSize": 42692,
+        "providerStatus": 400,
+        "providerErrorCode": "ExpiredToken",
+        "providerResponseSimulated": false,
+        "initialMetadataHeroOnlySubstituted": true,
+        "isolatedEmptyHeroProfile": true,
+        "existingHomeAndDetailCachesReset": false,
+        "realCardTap": true,
+        "actualRenderedArtworkError": true,
+        "metadataRetained": true,
+        "realRetry": true,
+        "retryMetadataRequests": 2,
+        "freshSameContextHttpStatus": 200,
+        "freshHeroHttpStatus": 200,
+        "freshHeroSourceChecksumMatched": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 831
+        },
+        "renderedHeroOpacityVerified": true,
+        "captureFramesFlushed": 8,
+        "closedDetailAfterBack": true,
+        "ownedHeroAttemptsAfterBack": 0,
+        "independentUpstreamClientsSettled": true,
+        "platformAccessibilityInspection": "not executed by this target"
+      },
+      "captureHashes": {
+        "detail-real-provider-expired-tr-ui-1.3-error.png": "05991afc829a70bda432c95068152c425ec36b66d1b6bc7e0047d28970196f27",
+        "detail-real-provider-expired-tr-ui-1.3-recovered.png": "37bd7dcb48018bf0a75572a445a6717372b4b0dced7dd198cec05cbd7ab5e021"
+      },
+      "visualInspection": "Actual current acknowledged iOS phone error and recovered rasters inspected. Error shows full retained TR title, artwork message and real localized retry; recovered raster visibly displays actual original cover with server locked blur/opaque lock, unchanged enlarged metadata/CTA/narration/body. Observed back/lock respect the top safe area. Original1206x2622 retained; tool viewer resized display only."
+    },
+    "additionalCurrentFailureAndAbsentAreaInspection": {
+      "recordedAt": "2026-10-07T16:34:08.767521+00:00",
+      "captures": [
+        {
+          "label": "story12-final-ios27-phone-nonsub-fault-a16",
+          "capture": "detail-injected-tr-loading.png",
+          "sha256": "e90afd3de062e74279d964ad5e97a1fcfbde78cda83dae9f09b53a99e34e649a",
+          "actualInspectedState": "TR loading",
+          "observation": "Native raster contains localized loading/spinner/reachable back. A narrow left-edge Library strip remains visible during route transition; qualifies transitional loading only, not fully settled full-frame layout parity.",
+          "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+          "sourceInstalledDatasetMatched": true,
+          "pixelEdits": false,
+          "qualification": "Tool viewer automatically rescales display only; original native PNG bytes/hash retained. This inspection does not certify all unviewed captures/platform AX."
+        },
+        {
+          "label": "story12-final-ios27-phone-nonsub-fault-a16",
+          "capture": "detail-injected-pt-metadata_503.png",
+          "sha256": "0a299e6e83e523467450e96bf58c20fc99257c833d386c8d070f2b339e8b8ca6",
+          "actualInspectedState": "PT enlarged503",
+          "observation": "Localized wrapped error and retry/back are readable. Narrow left-edge underlying Library strip is visible during route transition; qualifies transitional error, not fully settled full-frame reference parity. Controlled503, not actual provider failure.",
+          "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+          "sourceInstalledDatasetMatched": true,
+          "pixelEdits": false,
+          "qualification": "Tool viewer automatically rescales display only; original native PNG bytes/hash retained. This inspection does not certify all unviewed captures/platform AX."
+        },
+        {
+          "label": "story12-final-android36-tablet-nonsub-empty-a16",
+          "capture": "detail-empty-mapped-en-tr-ui-1.3-no-credit-or-recommendation-area.png",
+          "sha256": "f58f28009681557e81eedfbdc1e8b3794865917523fe56b7629dd8614570ca1f",
+          "actualInspectedState": "Tablet mapped EN/TR UI empty areas",
+          "observation": "Actual locked Kuki/Barky original hero rendered with accepted blur/lock,5+age/no missing duration placeholder,343dp centered deferredPremium CTA,localized narration panel; contributor/recommendation areas omitted without fabricated rows.",
+          "sourceAggregateSha256": "a811f053b0c4668fba424baf446fabb8ca21ebcb09c59de8de05152ce6b4d1bb",
+          "sourceInstalledDatasetMatched": true,
+          "pixelEdits": false,
+          "qualification": "Tool viewer automatically rescales display only; original native PNG bytes/hash retained. This inspection does not certify all unviewed captures/platform AX."
+        },
+        {
+          "label": "story12-final-ios27-tablet-nonsub-fault-a28",
+          "capture": "detail-injected-pt-metadata_503.png",
+          "sha256": "c264655dbd63731218d76a673bf94f385599251a17f1e440dba2785d2be4d68e",
+          "actualInspectedState": "iOS tablet enlarged PT503",
+          "observation": "Readable localized503/retry/back, with narrow left-edge underlying Library strip during route transition. This remains transitional, not fully settled full-frame reference parity.",
+          "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "pixelEdits": false
+        },
+        {
+          "label": "story12-final-ios27-tablet-nonsub-empty-a28",
+          "capture": "detail-empty-mapped-en-tr-ui-1.3-no-credit-or-recommendation-area.png",
+          "sha256": "ebb3daf9ce75f1f60e7ca2e8a4eb53ccc900d878f5e67ad323c639a781dad617",
+          "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "actualInspectedState": "Current iOS tablet mapped EN content/TR UI empty contributor/recommendation areas",
+          "observation": "Original locked Kuki/Barky artwork, top safe-area back/lock,5+age only, centered343dp deferred Premium CTA and narration remain readable. Missing duration/summary/credits/recommendations are omitted without fabricated placeholders, headings or rows. Native empty fixture is restored and source/five installed parts/dataset matched.",
+          "pixelEdits": false,
+          "qualification": "Actual1640x2360 SDK raster; display-only viewer resize. Does not establish platformAX/physical/legacy matched-content parity."
+        }
+      ],
+      "fullySettledIosFailureReferencePending": false
+    },
+    "currentSubscriberVisualInspection": {
+      "recordedAt": "2026-10-07T17:40:57.007934+00:00",
+      "records": [
+        {
+          "label": "story12-final-android36-phone-sub-a27",
+          "proofSha256": "eab84d60f46a756f55f9de22d9e70d16e12bc5d22c887e0f30bd8d3c7dd17209",
+          "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+          "sourceInstalledBinaryDatasetMatched": true,
+          "completeJourneys": 10,
+          "captureCount": 35,
+          "qualifiedExplicitRecoveryCount": 2,
+          "captureHashes": {
+            "detail-tr-1.3-free-2-metadata.png": "3377fe8c6c997d6a8c33343c46d1edbcc73319035464c3e61c8cd1b345b1ee7e",
+            "detail-tr-2-cover-retry-0-recovered.png": "b25aeb735d5b76c0596312d87e856459983c295035174e8062b34a4509b263e5"
+          },
+          "observations": [
+            "Actual enlarged TR metadata raster inspected: localized narration control, wrapping summary and stacked ordered contributor names remain readable; both originally required recommendation covers visibly render unlocked original artwork.",
+            "Actual distinct TR recovery raster inspected: retained selected metadata, narration OFF, readable role/name rows and both original decoded covers. This follows an observed error and real same-context retry, not uninterrupted healthy baseline."
+          ],
+          "qualification": "Original SDK PNG bytes and SHA retained; viewer display scaling only. Approved fixture/current-layout state, not matched old Haberci content/pixel parity or actual platform AX proof."
+        },
+        {
+          "label": "story12-final-android36-tablet-sub-a25",
+          "proofSha256": "96f1a1e88e7a08cb73b3e87d53247b152470e103cfb832be59424a4ab2ece0d1",
+          "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+          "sourceInstalledBinaryDatasetMatched": true,
+          "completeJourneys": 10,
+          "captureCount": 37,
+          "qualifiedExplicitRecoveryCount": 3,
+          "captureHashes": {
+            "detail-en-1.3-free-2-loaded.png": "d484941c119eb79446f75e2a28653d8554d2d6844563a05bb307c74f1e83615d"
+          },
+          "observations": [
+            "Actual EN1.3 tablet loaded raster inspected: unlocked Kuki/Barky original art, duration/age pills, centered343dp deferred Start Story, Voiceover and wrapped summary/credits. Partial initial recommendation placeholders in this loaded raster do not close the decoded-cover visual gate."
+          ],
+          "qualification": "Original SDK PNG bytes and SHA retained; viewer display scaling only. Approved fixture/current-layout state, not matched old Haberci content/pixel parity or actual platform AX proof."
+        },
+        {
+          "label": "story12-final-ios27-phone-sub-a25",
+          "proofSha256": "58f3011ecc6ada85e18213c638c9dbb94fdd4330f8b075881f63d7862af90f38",
+          "sourceAggregateSha256": "ccc639a4d8bf0a7f360ef4895aadb5116119584abfd0debf92b1933417cbef36",
+          "sourceInstalledBinaryDatasetMatched": true,
+          "completeJourneys": 10,
+          "captureCount": 31,
+          "qualifiedExplicitRecoveryCount": 0,
+          "captureHashes": {
+            "detail-pt-1.3-free-2-metadata.png": "9a49343d9df7fee4846c3e28cbbed9d5991bbbe2e653dbad46c0d8a694a62d0e"
+          },
+          "observations": [
+            "Actual PT1.3 metadata raster inspected: intentionally scrolled narration OFF is clipped at top; wrapped summary, stacked ordered localized contributor roles/backend names and Similares heading remain readable. All three required visible/partial decoded covers render, without text overlap."
+          ],
+          "qualification": "Original SDK PNG bytes and SHA retained; viewer display scaling only. Approved fixture/current-layout state, not matched old Haberci content/pixel parity or actual platform AX proof."
+        }
+      ]
+    },
+    "approvedIos16TabletVisualInspection": {
+      "recordedAt": "2026-10-07T18:31:21.883944+00:00",
+      "label": "story12-final-ios27-tablet-nonsub-a28",
+      "proofSha256": "9401c809b636dd1387fd843e67ae14c0fa1ddc4205910d59c549d1e6eb945754",
+      "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+      "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+      "nativePassed": true,
+      "completeJourneys": 16,
+      "captureCount": 49,
+      "qualifiedExplicitRecoveryCount": 0,
+      "actualProfile": {
+        "width": 820.0,
+        "height": 1180.0
+      },
+      "actualPhysicalPixels": {
+        "width": 1640.0,
+        "height": 2360.0
+      },
+      "captureHashes": {
+        "detail-en-1.0-free-2-metadata.png": "b00717c0dcadea98184f09fb45cef0fd1453f534bca1e2bab3e5e8a5977062a2",
+        "detail-en-1.3-free-2-loaded.png": "014029bc7a4cafeef2190dbf12991c9e3e8adeb1499dd24745edd5fb500df769"
+      },
+      "observations": [
+        "Actual EN1.0 scrolled metadata raster inspected: original free Kuki/Barky cover, duration/age pills, centered343dp deferred CTA, Voiceover OFF, wrapped summary, ordered separate role/name rows and all originally required visible/partial decoded locked recommendation covers. Top back is intentionally outside this scrolled raster; this is not a back reachability observation.",
+        "Actual EN1.3 loaded raster inspected: safe-area back, half-height clipped original cover, readable enlarged pills, fixed centered deferred CTA, Voiceover ON and wrapping summary/credit names. Bottom content scrollability remains proved by original native journeys."
+      ],
+      "qualification": "Actual standard iPadA16/iOS27 logical820x1180/pixels1640x2360 new approved available profile; not exact old800x1280/Haberci content parity. Tool viewer only rescales display; original SDK PNG bytes/checksums preserved. Does not certify actual iOS platformAX, physical or older OS."
+    },
+    "currentIosTabletNaturalProviderRecovery": {
+      "label": "story12-final-ios27-tablet-nonsub-natural-a28",
+      "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+      "sourceInstalledBinaryDatasetMatched": true,
+      "proofSha256": "e6b9346dd6c58251b5a50c814921ef91ad0730f41251de92b4d4335ac57e53e1",
+      "captureHashes": {
+        "detail-real-provider-expired-tr-ui-1.3-error.png": "a502b56c46f6b210cebb565b746c37ce08c7b3cbccae56470092169f1f454fec",
+        "detail-real-provider-expired-tr-ui-1.3-recovered.png": "f4242d3b1960a47fbae0dd3fa1721391259f8e49c93394b53f1d14d179d47d78"
+      },
+      "nativeProviderRecovery": {
+        "platform": "ios",
+        "operatingSystemVersion": "Version 27.0 (Build 24A434)",
+        "textScale": 1.3,
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "categoryId": 2,
+        "contentId": 3,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "experience": "READING",
+        "audience": "NON_SUBSCRIBER",
+        "assetId": 3,
+        "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+        "byteSize": 42692,
+        "providerStatus": 400,
+        "providerErrorCode": "ExpiredToken",
+        "providerResponseSimulated": false,
+        "initialMetadataHeroOnlySubstituted": true,
+        "isolatedEmptyHeroProfile": true,
+        "existingHomeAndDetailCachesReset": false,
+        "realCardTap": true,
+        "actualRenderedArtworkError": true,
+        "metadataRetained": true,
+        "realRetry": true,
+        "retryMetadataRequests": 2,
+        "freshSameContextHttpStatus": 200,
+        "freshHeroHttpStatus": 200,
+        "freshHeroSourceChecksumMatched": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 831
+        },
+        "renderedHeroOpacityVerified": true,
+        "captureFramesFlushed": 8,
+        "closedDetailAfterBack": true,
+        "ownedHeroAttemptsAfterBack": 0,
+        "independentUpstreamClientsSettled": true,
+        "platformAccessibilityInspection": "not executed by this target"
+      },
+      "visualInspection": "Actual acknowledged recovered SDK PNG inspected: original locked Snail cover visibly renders with accepted blur/opaque lock, top safe-area back, duration/age, fixed centered deferred Premium CTA, retained localized narration preference, wrapping enlarged TR summary and readable contributor labels/names. Original1640x2360 bytes preserved; tool resized display only. Error/retry/fresh actual provider/source/metadata/back behavior remains in native report; this raster is not platformAX. Actual paired error raster also inspected: full retained story title, artwork-only error and localized retry, duration/age/CTA/narration/summary and credits; reachable safe-area back, no underlying Library strip in this settled provider-error state."
+    },
+    "currentIos16PhoneVisualInspection": {
+      "recordedAt": "2026-10-07T19:15:43.049541+00:00",
+      "label": "story12-final-ios27-phone-nonsub-a28",
+      "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+      "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+      "proofSha256": "7ee6a310ecfeb147ae9c8c0a7a615f0c05d22d3d3722e1864a491e0f6f79b24b",
+      "captureHashes": {
+        "detail-pt-1.3-locked-3-metadata.png": "465fde1c3ebff60dc30acd298598fab45603f59c6ff51fa516cd374444a485d5"
+      },
+      "observations": [
+        "Actual enlarged PT scrolled metadata raster inspected: narration OFF partially clipped intentionally at top, wrapped summary, stacked ordered localized contributor roles/backend names and readable recommendation heading. Every required visible/partial cover renders actual decoded artwork with the expected individual server lock. No text overlap or fabricated names."
+      ],
+      "qualification": "Original1206x2622 SDK PNG unchanged; tool display only rescales. Existing fixture/current-layout state, not old Haberci matched-content/pixel parity or platformAX/physical proof."
+    },
+    "currentAndroidIos16ReplayVisualInspection": {
+      "recordedAt": "2026-10-07T19:24:42.203241+00:00",
+      "byteIdenticalPreviouslyInspectedRasters": [
+        {
+          "currentLabel": "story12-final-android36-phone-nonsub-a28",
+          "previousInspectedLabel": "story12-final-android36-phone-nonsub-a16",
+          "currentProofSha256": "d15dfee5325b152d739c560969ae65e415f37ad0be39edbf16f2cc6f8aa719ba",
+          "currentSourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "exactOriginalPngByteMatches": {
+            "detail-tr-1.0-free-2-loaded.png": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+            "detail-en-1.3-free-2-loaded.png": "c0fa998e67e85063b3a99d7bc57e2ed62db027b9e4dc8072bfc4d39f67ebaa93"
+          },
+          "qualification": "Read-only SHA equality after native source/installedAPK/dataset matched; earlier actual visual inspection applies only to these exact PNG bytes. No match/inspection inferred for other captures."
+        },
+        {
+          "currentLabel": "story12-final-android36-tablet-nonsub-a28",
+          "previousInspectedLabel": "story12-final-android36-tablet-nonsub-a16",
+          "currentProofSha256": "a1b0cdcaad128c3d042167b92aefab682774029642e89bbb620a2d01829cfd42",
+          "currentSourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "exactOriginalPngByteMatches": {
+            "detail-tr-1.0-free-2-loaded.png": "abb5f3893d66409c43d2cb2a3b6bafa546e38f9788a70e7e43aaad5dffc3a846",
+            "detail-tr-1.0-free-2-metadata.png": "245054f58f81a626d8483573c7293cecc9dbfb450e98031c8859a09ac33172c3",
+            "detail-en-1.3-free-2-loaded.png": "d484941c119eb79446f75e2a28653d8554d2d6844563a05bb307c74f1e83615d"
+          },
+          "qualification": "Read-only SHA equality after native source/installedAPK/dataset matched; earlier actual visual inspection applies only to these exact PNG bytes. No match/inspection inferred for other captures."
+        }
+      ],
+      "additionalActualPhoneMetadataInspection": {
+        "label": "story12-final-android36-phone-nonsub-a28",
+        "captureHashes": {
+          "detail-tr-1.0-free-2-metadata.png": "359cc9a2e37f05b9c13933b41d44a08efee396873a5171362e2e87a5cebe1f88"
+        },
+        "observation": "Actual TR1.0 scrolled metadata PNG inspected: readable centered CTA/narration OFF, wrapping summary, separate role/name credit rows and both required original locked recommendation covers visibly rendered. No placeholder cover accepted; original822x1828 bytes preserved.",
+        "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23"
+      }
+    },
+    "settledIosFaultReferenceInspection": {
+      "records": [
+        {
+          "recordedAt": "2026-10-07T19:44:26.064167+00:00",
+          "label": "story12-final-ios27-tablet-nonsub-fault-a30",
+          "sourceAggregateSha256": "c626454bddd9cc4c7f0b080d14a69b3de18764591518fa415ab6465b55e8da33",
+          "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+          "proofSha256": "8c87a2844b3ed90672b865fc6d45780d57c5dc434b6065c7b437aa9a7176de02",
+          "nativeFaultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptureCount": 51,
+          "everyActualRouteAnimationCompleted": true,
+          "everyActualHorizontalOriginWithin0_001dp": true,
+          "everyCaptureRetains8FrameFlush": true,
+          "inspectedCaptureHashes": {
+            "detail-injected-pt-metadata_503.png": "5af5d0d02856cb578252ba9dc93467de3b62174ad72cece30c554be51fc84073",
+            "detail-injected-tr-loading.png": "3724497ea767899df0269bdd8efb2ff2a381c2efce013679196ad848e8bde2de"
+          },
+          "observation": "Actual PT1.3 controlled503 SDK PNG inspected: fully settled full-frame canvas/error/retry/back; previous left-edge underlying Library strip is absent. Readable localized text and actual current role geometry preserved. Previous A28 transitional raster remains historical and explicitly qualified. Actual TR loading original SDK raster additionally inspected: full settled canvas, safe-area back and localized spinner/text; no left Library strip.",
+          "qualification": "No PNG/vendor/production/wait/bytebound edits. Viewer display-only resize; original1640x2360 PNG retained. This is controlled503/current Library failure treatment, not natural-provider or platformAX/physical proof."
+        },
+        {
+          "recordedAt": "2026-10-07T19:54:16.321986+00:00",
+          "label": "story12-final-ios27-phone-nonsub-fault-a30",
+          "sourceAggregateSha256": "c626454bddd9cc4c7f0b080d14a69b3de18764591518fa415ab6465b55e8da33",
+          "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+          "proofSha256": "b3946187657542f636244371f015a2afaced2e6fef56e6ce736614513191dfe4",
+          "nativeFaultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptureCount": 51,
+          "everyActualRouteAnimationCompleted": true,
+          "everyActualHorizontalOriginWithin0_001dp": true,
+          "everyCaptureRetains8FrameFlush": true,
+          "inspectedCaptureHashes": {
+            "detail-injected-tr-loading.png": "8de2bdd1adaabb0b6d7ee04fec6bedb0f8998763cf24025aa5946973d26d9b64",
+            "detail-injected-pt-metadata_503.png": "cd740972f9f10bcee55b2f8b48e8fa6548b2b0a5b21a54c956fb4be5cfa7d81a"
+          },
+          "observation": "Actual TR loading and PT1.3 controlled503 original SDK PNGs inspected: fully settled full-frame canvas, safe-area back, localized spinner/loading or readable wrapped error/retry. The prior left-edge underlying Library strip is absent in both captures. Earlier transitional rasters remain qualified historical evidence.",
+          "qualification": "No original PNG edits; actual1206x2622 SDK raster retained and viewer display-only resize. Route records cover51 captures, visual inspection covers only the two named images. Does not establish platformAX or the separate real unavailable state."
+        }
+      ],
+      "iosPhonePending": false
+    },
+    "settledUnavailableReferenceQualification": {
+      "recordedAt": "2026-10-07T19:54:16.325826+00:00",
+      "label": "story12-final-ios27-phone-nonsub-a28",
+      "capture": "detail-pt-unavailable-real-http.png",
+      "sha256": "1de957d3feea0f90629d314182d2ac9cdb166c6730d024769953a29cac6dc79a",
+      "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+      "actualInspectedState": "PT real HTTP unavailable",
+      "observation": "Localized unavailable message and back are readable, but a narrow left-edge underlying Library strip is still visible during the route transition. This is a transitional unavailable reference only. The later settled fault capture gate applies to the separate controlled fault target and does not establish a settled real-unavailable reference.",
+      "fullySettledUnavailableReferencePending": false,
+      "pixelEdits": false,
+      "supersedingReferenceArtifact": "library-1-2-settled-unavailable-evidence.json"
+    },
+    "currentSourceSealQualification": "Current90-file source. Every prior accepted native target retains its original source/binary/dataset proof; current compatibility is strictly unchanged selected local Dart dependency closure/lib/assets/pubspec/driver. Only unused integration targets differ.",
+    "approvedEnvelopeSubscriberReferenceInspection": {
+      "recordedAt": "2026-10-07T19:55:17.538246+00:00",
+      "records": [
+        {
+          "label": "story12-final-ios27-phone-sub-a28",
+          "capture": "detail-pt-1.3-mapped-9-metadata.png",
+          "sha256": "c90afea4f8d330863a49d6ff062df40d690c17dfd599a1acaeed70f54d038955",
+          "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "sourceInstalledDatasetMatched": true,
+          "actualInspectedObservation": "Enlarged PT UI with mapped EN Kuki/Barky content: actual unlocked original cover, age only, localized Start Story CTA and narration off, no fabricated summary/credits, one decoded Snail recommendation. Visible wrapping/readability preserved; top controls are deliberately above this scrolled metadata viewport.",
+          "pixelEdits": false,
+          "qualification": "Actual unmodified SDK PNG inspected; viewer display-only resize. Newly agreed canonical fixture state, not matched-content legacy parity. No platformAX/physical or unviewed-state certification."
+        },
+        {
+          "label": "story12-final-ios27-tablet-sub-a28",
+          "capture": "detail-pt-1.3-free-2-metadata.png",
+          "sha256": "5e78fff7597dcdcc3ae0c2cb26e7b26889ca8b2ed9de5aee411a632bec92ccab",
+          "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "sourceInstalledDatasetMatched": true,
+          "actualInspectedObservation": "Actual PT enlarged tablet original train art/duration/age, centered fixed-width CTA, narration off, wrapped summary and ordered three contributor rows. Three whole and one partially visible recommendation covers decoded. Metadata viewport deliberately excludes top back/title.",
+          "pixelEdits": false,
+          "qualification": "Actual unmodified SDK PNG inspected; viewer display-only resize. Newly agreed canonical fixture state, not matched-content legacy parity. No platformAX/physical or unviewed-state certification."
+        },
+        {
+          "label": "story12-final-android36-phone-sub-a28",
+          "capture": "detail-en-1.0-free-2-metadata.png",
+          "sha256": "8fe86dfa33e27c754315695d5f583d23cfb4a6c4a3cc59e375d33752b2779ca5",
+          "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+          "sourceInstalledDatasetMatched": true,
+          "actualInspectedObservation": "Actual EN phone original Kuki/Barky art/pills, centered CTA, narration off, summary and ordered localized three contributor roles with wrapped long names. Two whole and one partial recommendation covers visibly decoded; top back/title deliberately above metadata viewport.",
+          "pixelEdits": false,
+          "qualification": "Actual unmodified SDK PNG inspected; viewer display-only resize. Newly agreed canonical fixture state, not matched-content legacy parity. No platformAX/physical or unviewed-state certification."
+        },
+        {
+          "label": "story12-final-android36-tablet-sub-a30",
+          "capture": "detail-pt-1.3-free-2-metadata.png",
+          "sha256": "dbb11082939ed87e03340605f019ee401caacd1b2d8932cbdbeb3f1f1064ab7d",
+          "sourceAggregateSha256": "c626454bddd9cc4c7f0b080d14a69b3de18764591518fa415ab6465b55e8da33",
+          "sourceInstalledDatasetMatched": true,
+          "actualInspectedObservation": "Actual enlarged PT tablet original train art/duration/age, centered343dpCTA, narration off, readable wrapped summary and ordered three contributor roles. Three whole and one partial original recommendation covers visibly decoded. Top back/title deliberately above metadata viewport.10journeys/unavailable33PNGs pass with one qualified real-control fresh same-context cover recovery; not uninterrupted healthy baseline.",
+          "pixelEdits": false,
+          "qualification": "Unmodified1600x2560 SDK PNG inspected; viewer display-only resize. Newly agreed fixture state, not matched-content legacy parity. Original A28 failure preserved; later pass does not establish its cause or a production fix."
+        }
+      ],
+      "androidTabletSubscriberPending": false
+    },
+    "settledFaultCaptureMatrixVerification": {
+      "recordedAt": "2026-10-07T19:56:47.548003+00:00",
+      "records": [
+        {
+          "label": "story12-final-ios27-phone-nonsub-fault-a30",
+          "faultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptures": 51,
+          "allRouteAnimationCompleted": true,
+          "allHorizontalOriginsWithin0_001dp": true,
+          "allOriginal8FrameFlush": true
+        },
+        {
+          "label": "story12-final-ios27-tablet-nonsub-fault-a30",
+          "faultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptures": 51,
+          "allRouteAnimationCompleted": true,
+          "allHorizontalOriginsWithin0_001dp": true,
+          "allOriginal8FrameFlush": true
+        },
+        {
+          "label": "story12-final-android36-phone-nonsub-fault-a30",
+          "faultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptures": 51,
+          "allRouteAnimationCompleted": true,
+          "allHorizontalOriginsWithin0_001dp": true,
+          "allOriginal8FrameFlush": true
+        },
+        {
+          "label": "story12-final-android36-tablet-nonsub-fault-a30",
+          "faultCasesPassed": 24,
+          "originalCaptureNamesRetained": true,
+          "settledRouteCaptures": 51,
+          "allRouteAnimationCompleted": true,
+          "allHorizontalOriginsWithin0_001dp": true,
+          "allOriginal8FrameFlush": true
+        }
+      ],
+      "qualification": "Actual route scalars and original capture-name inventory verified for all four profiles. Visual inspection remains limited to explicitly listed actual PNGs; this does not certify platformAX."
+    },
+    "settledUnavailableReferenceInspection": {
+      "recordedAt": "2026-10-07T20:14:11.347853+00:00",
+      "artifact": "library-1-2-settled-unavailable-evidence.json",
+      "records": [
+        {
+          "label": "story12-reference-ios27-phone-unavailable-a31",
+          "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+          "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+          "inspectedCaptureHashes": {
+            "detail-settled-en-1.3-unavailable-real-http.png": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+            "detail-settled-pt-1.3-unavailable-real-http.png": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+            "detail-settled-tr-1.3-unavailable-real-http.png": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4"
+          },
+          "observation": "Actual enlarged TR/EN/PT SDK PNGs inspected: fully settled full-frame current Library canvas, safe-area back, localized readable unavailable message; no underlying left-edge Library strip, stale content or retry. Native six-case assertions additionally verify independent real upstream404, route completion/origin, original8frame flush,48dp back and same Library owner after actual back.",
+          "qualification": "Visual inspection covers the three named1.3 captures only; six1.0/1.3 native cases passed. Original unmodified1206x2622 phone/1640x2360 tablet SDK PNGs retained; viewer display-only resize. New contract-derived unavailable state, not legacy pixel parity or platformAX/physical proof."
+        },
+        {
+          "label": "story12-reference-ios27-tablet-unavailable-a31",
+          "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+          "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+          "inspectedCaptureHashes": {
+            "detail-settled-en-1.3-unavailable-real-http.png": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+            "detail-settled-pt-1.3-unavailable-real-http.png": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+            "detail-settled-tr-1.3-unavailable-real-http.png": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da"
+          },
+          "observation": "Actual enlarged TR/EN/PT SDK PNGs inspected: fully settled full-frame current Library canvas, safe-area back, localized readable unavailable message; no underlying left-edge Library strip, stale content or retry. Native six-case assertions additionally verify independent real upstream404, route completion/origin, original8frame flush,48dp back and same Library owner after actual back.",
+          "qualification": "Visual inspection covers the three named1.3 captures only; six1.0/1.3 native cases passed. Original unmodified1206x2622 phone/1640x2360 tablet SDK PNGs retained; viewer display-only resize. New contract-derived unavailable state, not legacy pixel parity or platformAX/physical proof."
+        }
+      ],
+      "sixCasesEachPhoneTabletPassed": true,
+      "fullySettledUnavailableReferencePending": false
+    },
+    "currentDevelopmentReferenceAcceptance": {
+      "recordedAt": "2026-10-08T07:29:15.710436+00:00",
+      "currentSourceSeal": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+      "availableProfileMatrixComplete": true,
+      "originalCurrentNativeTargets": 20,
+      "finalBmadReviewPending": true,
+      "qualification": "Approved canonical fixture states and structural legacy comparison; not matched-content Haberci pixel equality. Actual inspected PNGs remain limited to named records. Original20 source compatibility is exact selected compiled closure, never relabeled source/binary identity. Settled failure/unavailable and subscriber references supersede explicitly transitional historical rasters. Platform AX is separately recorded."
+    },
+    "additionalCtaGradientContrastCalculation": {
+      "recordedAt": "2026-10-08T06:59:19.479059+00:00",
+      "method": "257 scalar sRGB interpolations between actual unchanged opaque CTA tokens; no image alteration or physical-display calibration",
+      "startRgb": [
+        84,
+        98,
+        222
+      ],
+      "endRgb": [
+        100,
+        32,
+        246
+      ],
+      "minimumSampledContrastWithWhite": 5.025339845968547,
+      "minimumAtT": 0.0,
+      "requiredRatio": 4.5,
+      "passed": true,
+      "sourceSha256": "5fd00e42f636fb040a61bffc952ea504546c1428cd0c348ceb7861b94c66aa65",
+      "qualification": "Calculation augments previously inspected actual raster color-presence and opaque surface contrast evidence. This is not a new full raster inspection or physical-device contrast certification.",
+      "privateReportSha256": "e00f20e1c52e4cc2184289b1eb205dbad5ef838e0a2f415e83c3510641e5ab69"
+    },
+    "additionalAndroidBeyondViewportRasterInspection": {
+      "recordedAt": "2026-10-08T07:29:15.710436+00:00",
+      "profile": "phone",
+      "label": "story12-ax-android36-phone-nonsub-a37",
+      "captures": {
+        "detail-tr-1.0-free-2-metadata.png": "359cc9a2e37f05b9c13933b41d44a08efee396873a5171362e2e87a5cebe1f88",
+        "detail-pt-1.3-free-2-metadata.png": "f3b7b96f8d9c772b0cba0bf4313e00197711494fed9aaa220fd71348234cb9b8"
+      },
+      "observation": "Actual original TR1.0 and PT1.3 phone metadata PNGs inspected: localized section, readable summary/ordered wrapped credits and original decoded visible recommendation covers; the enlarged PT viewport includes two whole and one partial card. Top controls are deliberately above this scrolled metadata viewport. No image edits or physical-display/legacy pixel parity claim."
+    }
+  }
+}

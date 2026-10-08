@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:file/file.dart' as files;
 import 'package:file/local.dart';
@@ -8,6 +9,16 @@ import 'package:http/io_client.dart';
 import 'package:tellpal_mobile_poc/core/network/library_image_cache.dart';
 
 class _RealHttp extends HttpOverrides {}
+
+class _TrackedClient extends IOClient {
+  _TrackedClient(super.client);
+  bool closed = false;
+  @override
+  void close() {
+    closed = true;
+    super.close();
+  }
+}
 
 class _Files implements FileSystem {
   _Files(this.directory);
@@ -85,6 +96,8 @@ class _Harness {
   final _Files files;
   final LibraryImageCache cache;
   final requests = <String>[];
+  final clients = <_TrackedClient>[];
+  bool recoverHeaders = false;
   final progress = <String, int>{};
   final arrived = StreamController<String>.broadcast();
   final timers = <Timer>[];
@@ -98,6 +111,7 @@ class _Harness {
     );
     final repository = _Repository();
     final files = _Files(directory);
+    late _Harness harness;
     final cache = LibraryImageCache.forTesting(
       Config(
         'real-transfer',
@@ -107,18 +121,22 @@ class _Harness {
         maxNrOfCacheObjects: 80,
       ),
       artworkWait: wait,
-      clientFactory: () => IOClient(
-        HttpOverrides.runWithHttpOverrides(() => HttpClient(), _RealHttp()),
-      ),
+      clientFactory: () {
+        final client = _TrackedClient(
+          HttpOverrides.runWithHttpOverrides(() => HttpClient(), _RealHttp()),
+        );
+        harness.clients.add(client);
+        return client;
+      },
     );
-    final harness = _Harness(server, directory, repository, files, cache);
+    harness = _Harness(server, directory, repository, files, cache);
     server.listen((request) async {
       final path = request.uri.path;
       harness.requests.add(path);
       harness.arrived.add(path);
       expect(request.headers.value('x-library-local-transfer'), isNull);
       try {
-        if (path.startsWith('/headers')) return;
+        if (path.startsWith('/headers') && !harness.recoverHeaders) return;
         request.response.bufferOutput = false;
         request.response.headers.contentType = ContentType('image', 'jpeg');
         request.response.headers.set('cache-control', 'max-age=600');
@@ -179,17 +197,204 @@ class _Harness {
 }
 
 void main() {
+  test(
+    'shared actual cold header failure reaches both current consumers and explicit same-key retry owns one fresh source',
+    () async {
+      final harness = await _Harness.create();
+      final observations = <Map<String, Object?>>[];
+      harness.cache.failureObserver = observations.add;
+      try {
+        final first = harness.load('headers-shared', 'first');
+        final second = harness.load('headers-shared', 'second');
+        await Future.wait([
+          expectLater(first, throwsA(isA<TimeoutException>())),
+          expectLater(second, throwsA(isA<TimeoutException>())),
+        ]);
+        expect(harness.requests, ['/headers-shared']);
+        expect(harness.clients, hasLength(1));
+        expect(harness.clients.single.closed, true);
+        await harness.cache.discardFailedTransfer(
+          LibraryImageCache.transferKey('account:en:content:asset', 'first'),
+        );
+        await harness.cache.discardFailedTransfer(
+          LibraryImageCache.transferKey('account:en:content:asset', 'second'),
+        );
+        expect(harness.cache.ownedAttemptCount, 0);
+        expect(observations, hasLength(2));
+        expect(
+          observations.map((e) => e['transferSha256']).toSet(),
+          hasLength(2),
+        );
+        expect(
+          observations.map((e) => e['producerSha256']).toSet(),
+          hasLength(1),
+        );
+        expect(
+          observations.every((e) => e['transportPhase'] == 'response-headers'),
+          true,
+        );
+        expect(harness.directory.listSync(recursive: true), isEmpty);
+        await harness.cache.discardFailedTransfer(
+          LibraryImageCache.transferKey('account:en:content:asset', 'first'),
+        );
+        harness.recoverHeaders = true;
+        final recovered = await harness.load('headers-shared', 'first');
+        final file = recovered.whereType<FileInfo>().single;
+        expect(await file.file.readAsBytes(), [1, 2, 3, 4]);
+        expect(harness.requests, ['/headers-shared', '/headers-shared']);
+        expect(harness.clients, hasLength(2));
+        expect(harness.clients.every((c) => c.closed), true);
+        expect(harness.cache.ownedAttemptCount, 0);
+      } finally {
+        await harness.dispose();
+      }
+    },
+  );
+
+  test(
+    'last shared consumer cancellation closes one actual silent socket and settles both owned slots',
+    () async {
+      final harness = await _Harness.create(wait: const Duration(seconds: 2));
+      try {
+        final key1 = LibraryImageCache.transferKey(
+          'account:en:content:asset',
+          'first',
+        );
+        final key2 = LibraryImageCache.transferKey(
+          'account:en:content:asset',
+          'second',
+        );
+        final first = harness.cache
+            .getFileStream(harness.url('headers-shared').toString(), key: key1)
+            .listen((_) {}, onError: (Object _) {});
+        final second = harness.cache
+            .getFileStream(harness.url('headers-shared').toString(), key: key2)
+            .listen((_) {}, onError: (Object _) {});
+        await harness.arrived.stream.first;
+        expect(harness.requests, ['/headers-shared']);
+        expect(harness.clients, hasLength(1));
+        await first.cancel();
+        expect(harness.clients.single.closed, false);
+        expect(harness.cache.ownedAttemptCount, 2);
+        await second.cancel();
+        await harness.cache.discardFailedTransfer(key1, failed: false);
+        await harness.cache.discardFailedTransfer(key2, failed: false);
+        expect(harness.clients.single.closed, true);
+        expect(harness.cache.ownedAttemptCount, 0);
+        expect(harness.repository.objects, isEmpty);
+        expect(harness.directory.listSync(recursive: true), isEmpty);
+      } finally {
+        await harness.dispose();
+      }
+    },
+  );
+
+  test(
+    'same actual URL never shares across account, asset, headers or progress contracts',
+    () async {
+      final harness = await _Harness.create(wait: const Duration(seconds: 2));
+      try {
+        final uri = harness.url('ok').toString();
+        final responses = await Future.wait([
+          harness.cache
+              .getFileStream(
+                uri,
+                key: LibraryImageCache.transferKey(
+                  'account:en:content:asset',
+                  'one',
+                ),
+              )
+              .toList(),
+          harness.cache
+              .getFileStream(
+                uri,
+                key: LibraryImageCache.transferKey(
+                  'another-account:en:content:asset',
+                  'two',
+                ),
+              )
+              .toList(),
+          harness.cache
+              .getFileStream(
+                uri,
+                key: LibraryImageCache.transferKey(
+                  'account:en:content:another-asset',
+                  'three',
+                ),
+              )
+              .toList(),
+          harness.cache
+              .getFileStream(
+                uri,
+                key: LibraryImageCache.transferKey(
+                  'account:en:content:asset',
+                  'four',
+                ),
+                headers: {'x-test-source': 'different'},
+              )
+              .toList(),
+          harness.cache
+              .getFileStream(
+                uri,
+                key: LibraryImageCache.transferKey(
+                  'account:en:content:asset',
+                  'five',
+                ),
+                withProgress: true,
+              )
+              .toList(),
+        ]);
+        expect(harness.requests, hasLength(5));
+        expect(harness.clients, hasLength(5));
+        for (final response in responses) {
+          expect(
+            await response.whereType<FileInfo>().single.file.readAsBytes(),
+            [1, 2, 3, 4],
+          );
+        }
+        expect(harness.clients.every((c) => c.closed), true);
+        expect(harness.cache.ownedAttemptCount, 0);
+      } finally {
+        await harness.dispose();
+      }
+    },
+  );
+
   for (final path in ['headers', 'body', 'trickle']) {
     test(
       'real CacheManager bounds $path and removes partial files before close',
       () async {
         final harness = await _Harness.create();
+        final observations = <Map<String, Object?>>[];
+        harness.cache.failureObserver = (event) {
+          observations.add(event);
+          if (path == 'headers') throw StateError('Test observer failure');
+        };
         final stopwatch = Stopwatch()..start();
         await expectLater(
           harness.load(path, path),
           throwsA(isA<TimeoutException>()),
         );
         expect(stopwatch.elapsed, lessThan(const Duration(seconds: 2)));
+        expect(observations, hasLength(1));
+        expect(observations.single['phase'], 'package-source');
+        expect(observations.single['transportPhase'], switch (path) {
+          'headers' => 'response-headers',
+          'body' => 'response-body-idle',
+          _ => 'total',
+        });
+        expect(
+          observations.single['transportLimitMilliseconds'],
+          path == 'trickle' ? 480 : 240,
+        );
+        expect(observations.single['transportMilliseconds'], isA<int>());
+        expect(observations.single['failureClass'], 'TimeoutException');
+        expect(
+          observations.single['identitySha256'],
+          LibraryImageCache.failureIdentitySha256('account:en:content:asset'),
+        );
+        expect(jsonEncode(observations), isNot(contains('account:en')));
+        expect(jsonEncode(observations), isNot(contains('http://')));
         if (path == 'body') {
           expect(harness.progress[path], greaterThanOrEqualTo(1));
         }
@@ -211,6 +416,8 @@ void main() {
     'all ten occupied package slots release; current retry fetches independently',
     () async {
       final harness = await _Harness.create(wait: const Duration(seconds: 2));
+      final observations = <Map<String, Object?>>[];
+      harness.cache.failureObserver = observations.add;
       final errors = <Future<void>>[];
       for (var i = 0; i < 10; i++) {
         errors.add(
@@ -226,6 +433,19 @@ void main() {
       final queued = harness.load('ok', 'queued');
       final queuedError = expectLater(queued, throwsA(isA<TimeoutException>()));
       await queuedError;
+      final queuedObservation = observations.singleWhere(
+        (event) =>
+            event['transferSha256'] ==
+            LibraryImageCache.failureIdentitySha256(
+              LibraryImageCache.transferKey(
+                'account:en:content:asset',
+                'queued',
+              ),
+            ),
+      );
+      expect(queuedObservation['phase'], 'admission');
+      expect(queuedObservation['failureClass'], 'TimeoutException');
+      expect(queuedObservation['timeoutMilliseconds'], 400);
       await Future.wait(errors);
       final result = await harness.load('ok', 'retry');
       expect(result.whereType<FileInfo>(), hasLength(1));

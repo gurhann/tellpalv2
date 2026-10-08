@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io' as io;
+import 'package:file/file.dart' as files;
 import 'package:file/file.dart' show File;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -21,71 +24,83 @@ class LibraryCacheFiles implements FileSystem {
   final _metadata = <String, File>{};
   final _pending = <String, String>{};
   final _metadataFailures = <String>{};
-
-  int get _ownedCount =>
-      _files.values.fold<int>(0, (n, f) => n + f.length) +
-      _pending.length +
-      _metadataFailures.length;
+  Future<void> Function(String name)? beforeWrite;
+  Set<String> Function()? protectedPaths;
+  Set<String> get writingNames =>
+      _files.values.expand((files) => files.keys).toSet();
+  int get physicalOwnerCount => {
+    ..._metadata.keys,
+    ...writingNames,
+    ..._pending.keys,
+    ..._metadataFailures,
+  }.length;
+  bool ownsName(String name) =>
+      _metadata.containsKey(name) ||
+      writingNames.contains(name) ||
+      _pending.containsKey(name);
 
   Future<void> _admissionTail = Future.value();
   @override
   Future<File> createFile(String name) {
-    if (maximumBytes == null) return _createFile(name);
+    // The package also resolves absent old paths for fire-and-forget deletion.
+    // A path handle is not a disk write and cannot consume transfer admission.
+    return (() async {
+      final file = await delegate.createFile(name);
+      if (!_closed && await file.exists()) {
+        _metadata.putIfAbsent(name, () => file);
+      } else {
+        _metadata.remove(name);
+      }
+      return _AdmittedArtworkFile(
+        file,
+        this,
+        name,
+        Zone.current[ownerKey] as String?,
+      );
+    })();
+  }
+
+  Future<void> _admitWrite(String name, File file, String? owner) {
     final completion = Completer<void>();
     final previous = _admissionTail;
     _admissionTail = completion.future;
     return (() async {
       await previous;
       try {
-        return await _createFile(name);
-      } finally {
-        completion.complete();
-      }
-    })();
-  }
-
-  Future<File> _createFile(String name) async {
-    if (_closed) throw StateError('Library image storage is closed');
-    final owner = Zone.current[ownerKey] as String?;
-    final known =
-        _metadata[name] ??
-        _files.values.map((f) => f[name]).whereType<File>().firstOrNull;
-    if (known != null) return known;
-    if (owner != null && !_pending.containsKey(name)) {
-      if (_ownedCount >= capacity) await _retryFailed();
-      if (_ownedCount >= capacity) {
-        throw StateError('Library image cleanup capacity reached');
-      }
-      if (maximumBytes != null) {
+        if (_closed) throw StateError('Library image storage is closed');
+        if (owner == null) throw StateError('Artwork write owner required');
+        if (_files[owner]?.containsKey(name) == true) return;
+        await _retryFailed();
+        await beforeWrite?.call(name);
         final retained = <String, File>{..._metadata};
         for (final files in _files.values) {
           retained.addAll(files);
         }
-        if (retained.length + _pending.length >= capacity) {
+        if (!retained.containsKey(name) &&
+            retained.length + _pending.length >= capacity) {
           throw StateError('Artwork retained file capacity reached');
         }
         var bytes = _pending.length * reservedFileBytes;
         for (final entry in retained.entries) {
-          final owned = _files.values.any(
+          if (entry.key == name) continue;
+          final writing = _files.values.any(
             (files) => files.containsKey(entry.key),
           );
-          bytes += owned
+          bytes += writing
               ? reservedFileBytes
               : await entry.value.exists()
               ? await entry.value.length()
               : 0;
         }
-        if (bytes + reservedFileBytes > maximumBytes!) {
+        if (maximumBytes != null && bytes + reservedFileBytes > maximumBytes!) {
           throw StateError('Artwork disk admission is full');
         }
+        // Admission is serialized and recorded before the underlying writer opens.
+        (_files[owner] ??= {})[name] = file;
+      } finally {
+        completion.complete();
       }
-      // Reserve ownership before the delegate can physically create anything.
-      _pending[name] = owner;
-    }
-    final file = await delegate.createFile(name);
-    final reserved = _pending.remove(name);
-    if (reserved != null) (_files[reserved] ??= {})[name] = file;
-    return file;
+    })();
   }
 
   Future<void> release(String owner, Set<String?> retained) async {
@@ -110,8 +125,9 @@ class LibraryCacheFiles implements FileSystem {
       try {
         if (retained.contains(entry.key)) {
           _metadata[entry.key] = entry.value;
-        } else if (await entry.value.exists()) {
-          await entry.value.delete();
+        } else {
+          if (await entry.value.exists()) await entry.value.delete();
+          _metadata.remove(entry.key);
         }
         files!.remove(entry.key);
         _failed.remove(entry.value.path);
@@ -179,6 +195,7 @@ class LibraryCacheFiles implements FileSystem {
         if (!_failed.contains(entry.value.path)) continue;
         try {
           if (await entry.value.exists()) await entry.value.delete();
+          _metadata.remove(entry.key);
           files.remove(entry.key);
           _failed.remove(entry.value.path);
         } catch (_) {
@@ -188,6 +205,159 @@ class LibraryCacheFiles implements FileSystem {
     }
     _files.removeWhere((_, files) => files.isEmpty);
   }
+}
+
+/// Defers physical file/byte admission to the package's awaited write channel.
+class _AdmittedArtworkFile
+    extends files.ForwardingFileSystemEntity<File, io.File>
+    with files.ForwardingFile {
+  _AdmittedArtworkFile(this.delegate, this.lifecycle, this.name, this.owner);
+  @override
+  final File delegate;
+  final LibraryCacheFiles lifecycle;
+  final String name;
+  final String? owner;
+  @override
+  files.FileSystem get fileSystem => delegate.fileSystem;
+  @override
+  File wrapFile(io.File file) =>
+      _AdmittedArtworkFile(file as File, lifecycle, name, owner);
+  @override
+  files.Directory wrapDirectory(io.Directory directory) =>
+      fileSystem.directory(directory.path);
+  @override
+  files.Link wrapLink(io.Link link) => fileSystem.link(link.path);
+  @override
+  io.IOSink openWrite({
+    io.FileMode mode = io.FileMode.write,
+    Encoding encoding = utf8,
+  }) {
+    if (mode != io.FileMode.write) {
+      throw UnsupportedError('Artwork append writes are not supported');
+    }
+    return io.IOSink(_ArtworkWriteConsumer(this, mode, encoding));
+  }
+
+  @override
+  Future<File> writeAsBytes(
+    List<int> bytes, {
+    io.FileMode mode = io.FileMode.write,
+    bool flush = false,
+  }) async {
+    if (mode != io.FileMode.write) {
+      throw UnsupportedError('Artwork append writes are not supported');
+    }
+    if (lifecycle.maximumBytes != null &&
+        bytes.length > lifecycle.reservedFileBytes) {
+      throw StateError('Artwork exceeds encoded byte bound');
+    }
+    await lifecycle._admitWrite(name, delegate, owner);
+    await delegate.writeAsBytes(bytes, mode: mode, flush: flush);
+    return this;
+  }
+
+  @override
+  Future<File> writeAsString(
+    String contents, {
+    io.FileMode mode = io.FileMode.write,
+    Encoding encoding = utf8,
+    bool flush = false,
+  }) => writeAsBytes(encoding.encode(contents), mode: mode, flush: flush);
+  @override
+  void writeAsBytesSync(
+    List<int> bytes, {
+    io.FileMode mode = io.FileMode.write,
+    bool flush = false,
+  }) => throw UnsupportedError('Artwork synchronous writes are not supported');
+  @override
+  void writeAsStringSync(
+    String contents, {
+    io.FileMode mode = io.FileMode.write,
+    Encoding encoding = utf8,
+    bool flush = false,
+  }) => throw UnsupportedError('Artwork synchronous writes are not supported');
+  @override
+  Future<File> create({bool recursive = false, bool exclusive = false}) async {
+    await lifecycle._admitWrite(name, delegate, owner);
+    await delegate.create(recursive: recursive, exclusive: exclusive);
+    return this;
+  }
+
+  @override
+  void createSync({bool recursive = false, bool exclusive = false}) =>
+      throw UnsupportedError('Artwork synchronous creation is not supported');
+  @override
+  Future<files.RandomAccessFile> open({io.FileMode mode = io.FileMode.read}) {
+    if (mode != io.FileMode.read) {
+      throw UnsupportedError('Artwork random writes are not supported');
+    }
+    return delegate.open(mode: mode);
+  }
+
+  @override
+  files.RandomAccessFile openSync({io.FileMode mode = io.FileMode.read}) {
+    if (mode != io.FileMode.read) {
+      throw UnsupportedError('Artwork random writes are not supported');
+    }
+    return delegate.openSync(mode: mode);
+  }
+
+  @override
+  Future<File> copy(String newPath) async =>
+      throw UnsupportedError('Artwork copying is not supported');
+  @override
+  File copySync(String newPath) =>
+      throw UnsupportedError('Artwork copying is not supported');
+  @override
+  Future<File> rename(String newPath) async =>
+      throw UnsupportedError('Artwork renaming is not supported');
+  @override
+  File renameSync(String newPath) =>
+      throw UnsupportedError('Artwork renaming is not supported');
+
+  @override
+  Future<File> delete({bool recursive = false}) async {
+    await delegate.delete(recursive: recursive);
+    lifecycle._metadata.remove(name);
+    lifecycle._metadataFailures.remove(name);
+    lifecycle._failed.remove(delegate.path);
+    for (final owned in lifecycle._files.values) {
+      owned.remove(name);
+    }
+    lifecycle._files.removeWhere((_, owned) => owned.isEmpty);
+    return this;
+  }
+}
+
+class _ArtworkWriteConsumer implements StreamConsumer<List<int>> {
+  _ArtworkWriteConsumer(this.file, this.mode, this.encoding);
+  final _AdmittedArtworkFile file;
+  final io.FileMode mode;
+  final Encoding encoding;
+  @override
+  Future<void> addStream(Stream<List<int>> stream) async {
+    try {
+      await file.lifecycle._admitWrite(file.name, file.delegate, file.owner);
+    } catch (_) {
+      // Release the actual response/socket even when no physical writer was admitted.
+      await stream.listen(null).cancel();
+      rethrow;
+    }
+    var received = 0;
+    await stream
+        .map((chunk) {
+          received += chunk.length;
+          if (file.lifecycle.maximumBytes != null &&
+              received > file.lifecycle.reservedFileBytes) {
+            throw StateError('Artwork exceeds encoded byte bound');
+          }
+          return chunk;
+        })
+        .pipe(file.delegate.openWrite(mode: mode, encoding: encoding));
+  }
+
+  @override
+  Future<void> close() async {}
 }
 
 /// Keeps package download admission finite without replacing its storage pipeline.

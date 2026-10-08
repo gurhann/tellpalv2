@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:file/file.dart' show File;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -88,7 +90,15 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
        super.custom(
          configuration,
          cacheStore: LibraryCacheStore(configuration),
-       );
+       ) {
+    _transport.failureObserver = (owner, event) {
+      if (failureObserver != null) _transportFailures[owner] = event;
+    };
+    _files.protectedPaths = () => {
+      ..._protectedReaderPaths,
+      ..._failedFiles.values.map((failure) => failure.$1.path),
+    };
+  }
 
   final DrainingCacheInfoRepository _repository;
   final LibraryCacheFiles _files;
@@ -98,14 +108,60 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
   final int _maximumOwnedAttempts;
   final int _fileLimit;
   final _operations = <_Operation>{};
+  final _transportFailures = <String, Map<String, Object?>>{};
+  final _flights = <(String, String, String, bool), _SharedRead>{};
 
   @visibleForTesting
   int get ownedAttemptCount => _operations.length;
+
+  /// Native tests may observe failure stage without changing admission or errors.
+  /// Raw identities, sources, messages and response bodies never enter the event.
+  @visibleForTesting
+  void Function(Map<String, Object?>)? failureObserver;
+
+  @visibleForTesting
+  static String failureIdentitySha256(String identity) =>
+      sha256.convert(utf8.encode(identity)).toString();
+
+  void _observeFailure(
+    String key,
+    String phase,
+    Object error,
+    Stopwatch elapsed, {
+    Map<String, Object?> transport = const {},
+  }) {
+    final observer = failureObserver;
+    if (observer == null) return;
+    final split = key.lastIndexOf(_separator);
+    try {
+      observer(
+        Map.unmodifiable({
+          'transferSha256': failureIdentitySha256(key),
+          'identitySha256': failureIdentitySha256(
+            split < 0 ? key : key.substring(0, split),
+          ),
+          'phase': phase,
+          'failureClass': error.runtimeType.toString(),
+          'operationMilliseconds': elapsed.elapsedMilliseconds,
+          ...transport,
+          if (error is TimeoutException && error.duration != null)
+            'timeoutMilliseconds': error.duration!.inMilliseconds,
+          if (error is HttpExceptionWithStatus) 'httpStatus': error.statusCode,
+        }),
+      );
+    } catch (_) {
+      // Test observation must never replace the actual consumer failure.
+    }
+  }
+
   final _delivered = <String, FileInfo>{};
+  final _pendingSharedFiles = <String, FileInfo>{};
   final _warmHits = <String, (String, FileInfo)>{};
   final _promotions = <String, Future<void>>{};
   final _storage = <Future<void>>{};
   final _promotionFiles = <File>{};
+  final _decodingFiles = <File>{};
+  final _failedFiles = <String, (File, Object, StackTrace)>{};
   final _retired = <String, (File, Timer)>{};
   final _retirementCleanup = <String, Future<void>>{};
   int _retirementReservations = 0;
@@ -160,10 +216,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       return Stream.error(StateError('Library image attempt capacity reached'));
     }
     final operation = _Operation(key ?? url, '${++_nextOwner}');
-    operation.output.onCancel = () {
-      operation.cancel();
-      _transport.cancel(operation.owner);
-    };
+    operation.output.onCancel = () => _cancelOperation(operation);
     _operations.add(operation);
     operation.finished = runZoned(
       () => _read(operation, url, headers, withProgress),
@@ -172,24 +225,156 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     return operation.output.stream;
   }
 
-  Future<void> _read(
+  Future<void> _shareCold(
     _Operation operation,
     String url,
     Map<String, String>? headers,
     bool withProgress,
   ) async {
+    final split = operation.key.lastIndexOf(_separator);
+    final sortedHeaders = Map.fromEntries(
+      (headers ?? const <String, String>{}).entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key)),
+    );
+    // Warm reads validate independently. Only an exact unfinished cold source
+    // shares package IO; renewed URLs and another namespace cannot join it.
+    final identity = (
+      operation.key.substring(0, split),
+      url,
+      jsonEncode(sortedHeaders),
+      withProgress,
+    );
+    var shared = _flights[identity];
+    if (shared == null || shared.source.cancelled.isCompleted) {
+      shared = _SharedRead(
+        identity,
+        _Operation(operation.key, operation.owner),
+      );
+      _flights[identity] = shared;
+      shared.consumers.add(operation);
+      operation.shared = shared;
+      final selected = shared;
+      shared.source.failureKeys = () => selected.consumers
+          .where((consumer) => !consumer.cancelled.isCompleted)
+          .map((consumer) => consumer.key);
+      shared.source.output.stream.listen(
+        (response) => _publishShared(selected, response),
+        onError: (Object error, StackTrace stack) {
+          for (final consumer in selected.consumers) {
+            if (!consumer.cancelled.isCompleted) {
+              consumer.output.addError(error, stack);
+            }
+          }
+        },
+        onDone: () => unawaited(_settleShared(selected)),
+      );
+      shared.source.finished = runZoned(
+        () => _read(
+          selected.source,
+          url,
+          headers,
+          withProgress,
+          sharedProducer: true,
+        ),
+        zoneValues: {LibraryCacheFiles.ownerKey: selected.source.owner},
+      );
+    } else {
+      shared.consumers.add(operation);
+      operation.shared = shared;
+      if (shared.latest != null) {
+        _publishConsumer(shared, operation, shared.latest!);
+      }
+    }
+    await shared.settled.future;
+  }
+
+  void _cancelOperation(_Operation operation) {
+    operation.cancel();
+    final shared = operation.shared;
+    if (shared == null) {
+      _transport.cancel(operation.owner);
+    } else if (shared.consumers.every(
+      (consumer) => consumer.cancelled.isCompleted,
+    )) {
+      shared.source.cancel();
+      _transport.cancel(shared.source.owner);
+    }
+  }
+
+  void _publishShared(_SharedRead shared, FileResponse response) {
+    shared.latest = response;
+    for (final consumer in shared.consumers) {
+      _publishConsumer(shared, consumer, response);
+    }
+  }
+
+  void _publishConsumer(
+    _SharedRead shared,
+    _Operation consumer,
+    FileResponse response,
+  ) {
+    if (consumer.cancelled.isCompleted) return;
+    if (response is FileInfo) {
+      // Each decoder owns its own callback key, even when cold IO is shared.
+      _delivered[consumer.key] = response;
+      while (_delivered.length > _fileLimit) {
+        _delivered.remove(_delivered.keys.first);
+      }
+    }
+    consumer.output.add(response);
+  }
+
+  Future<void> _settleShared(_SharedRead shared) async {
+    await shared.source.finished;
+    if (identical(_flights[shared.identity], shared)) {
+      _flights.remove(shared.identity);
+    }
+    if (!shared.settled.isCompleted) shared.settled.complete();
+  }
+
+  void _observeOperationFailure(
+    _Operation operation,
+    String phase,
+    Object error,
+    Stopwatch elapsed,
+  ) {
+    for (final key in operation.failureKeys?.call() ?? [operation.key]) {
+      _observeFailure(
+        key,
+        phase,
+        error,
+        elapsed,
+        transport: {
+          ...?_transportFailures[operation.owner],
+          if (operation.failureKeys != null)
+            'producerSha256': failureIdentitySha256(operation.key),
+        },
+      );
+    }
+  }
+
+  Future<void> _read(
+    _Operation operation,
+    String url,
+    Map<String, String>? headers,
+    bool withProgress, {
+    bool sharedProducer = false,
+  }) async {
     bool admitted = false;
+    var phase = 'warm-lookup';
+    final elapsed = Stopwatch()..start();
     try {
       final key = operation.key;
       final split = key.lastIndexOf(_separator);
       _delivered.remove(key);
       _warmHits.remove(key);
-      if (split >= 0) {
+      if (split >= 0 && !sharedProducer) {
         final immutable = key.substring(0, split);
         final cached = await getFileFromCache(immutable);
         if (_closed || operation.cancelled.isCompleted) return;
         if (cached != null && cached.validTill.isAfter(DateTime.now())) {
-          await validateResponse(cached, key);
+          phase = 'warm-validation';
+          await _validateFile(cached, key, immutable);
           if (_closed || operation.cancelled.isCompleted) return;
           _warmHits[key] = (immutable, cached);
           if (_warmHits.length > _fileLimit) {
@@ -201,13 +386,23 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       }
       // Surface an admitted lookup failure before CacheManager's fallback path
       // can silently treat its failed first lookup as a miss.
-      await getFileFromCache(key);
-      if (_closed || operation.cancelled.isCompleted) return;
-      await _cleanupCapacity();
+      if (!sharedProducer) {
+        phase = 'attempt-lookup';
+        await getFileFromCache(key);
+        if (_closed || operation.cancelled.isCompleted) return;
+        if (split >= 0) {
+          await _shareCold(operation, url, headers, withProgress);
+          return;
+        }
+      }
+      phase = 'capacity-cleanup';
+      await _cleanupCapacity(reserveFile: true);
+      phase = 'admission';
       await _admission.enter(operation.cancelled.future);
       admitted = true;
       if (_closed || operation.cancelled.isCompleted) return;
       // The ownership marker is stripped by FileService before the HTTP request.
+      phase = 'package-source';
       await for (final response in super.getFileStream(
         url,
         key: key,
@@ -219,24 +414,42 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       )) {
         if (_closed || operation.cancelled.isCompleted) continue;
         if (response is FileInfo) {
+          phase = 'file-publication';
           await (store as LibraryCacheStore).drain();
           (store as LibraryCacheStore).rethrowFailure(operation.owner);
           if (_closed || operation.cancelled.isCompleted) continue;
-          await validateResponse(response, key);
+          // A stale attempt is an unavailable source, not a current hero. Let
+          // the package finish its bounded renewal before checksum validation.
+          if (split >= 0 &&
+              response.source == FileSource.Cache &&
+              !response.validTill.isAfter(DateTime.now())) {
+            phase = 'package-source';
+            continue;
+          }
+          phase = 'file-validation';
+          await _validateFile(response, key, key);
           if (_closed || operation.cancelled.isCompleted) continue;
         }
         if (response is FileInfo && split >= 0) {
           if (!response.validTill.isAfter(DateTime.now())) continue;
-          _delivered[key] = response;
-          if (_delivered.length > _fileLimit) {
-            _delivered.remove(_delivered.keys.first);
+          if (sharedProducer) {
+            // Protect publication before async fan-out, without inventing a
+            // decoder owner for a consumer that has already cancelled.
+            _pendingSharedFiles[operation.owner] = response;
+          } else {
+            _delivered[key] = response;
+            if (_delivered.length > _fileLimit) {
+              _delivered.remove(_delivered.keys.first);
+            }
           }
         }
         operation.output.add(response);
+        phase = 'package-source';
       }
     } catch (error, stack) {
       (store as LibraryCacheStore).discardReportedFailure(operation.owner);
       if (!_closed && !operation.cancelled.isCompleted) {
+        _observeOperationFailure(operation, phase, error, elapsed);
         operation.output.addError(error, stack);
       }
     } finally {
@@ -252,14 +465,91 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
               .map((entry) => entry.relativePath)
               .toSet(),
         );
+        if (!_closed) await _cleanupFailedFiles();
       } catch (error, stack) {
         if (!_closed && !operation.cancelled.isCompleted) {
+          _observeOperationFailure(operation, 'settlement', error, elapsed);
           operation.output.addError(error, stack);
         }
       } finally {
         if (admitted) _admission.leave();
+        _transportFailures.remove(operation.owner);
+        _pendingSharedFiles.remove(operation.owner);
+        operation.shared?.consumers.remove(operation);
+        operation.shared = null;
         _operations.remove(operation);
         unawaited(operation.output.close());
+      }
+    }
+  }
+
+  Future<void> _validateFile(
+    FileInfo response,
+    String key,
+    String cacheKey,
+  ) async {
+    final failure = _failedFiles[cacheKey];
+    if (failure?.$1.path == response.file.path) {
+      Error.throwWithStackTrace(failure!.$2, failure.$3);
+    }
+    _decodingFiles.add(response.file);
+    try {
+      await validateResponse(response, key);
+    } catch (error, stack) {
+      // Keep physical ownership until all admitted readers/writers have settled.
+      _failedFiles[cacheKey] = (response.file, error, stack);
+      rethrow;
+    } finally {
+      _decodingFiles.remove(response.file);
+    }
+  }
+
+  Set<String> get _protectedReaderPaths => {
+    ..._delivered.values.map((value) => value.file.path),
+    ..._pendingSharedFiles.values.map((value) => value.file.path),
+    ..._warmHits.values.map((value) => value.$2.file.path),
+    ..._decodingFiles.map((value) => value.path),
+    ..._promotionFiles.map((value) => value.path),
+    ..._retired.values.map((value) => value.$1.path),
+  };
+
+  Future<void> _cleanupFailedFiles() async {
+    for (final entry in _failedFiles.entries.toList()) {
+      final file = entry.value.$1;
+      if (_protectedReaderPaths.contains(file.path) ||
+          _files.writingNames.any((name) => file.path.endsWith('/$name'))) {
+        continue;
+      }
+      final objects = await _repository.getAllObjects();
+      final current = objects
+          .where((object) => object.key == entry.key)
+          .firstOrNull;
+      if (current != null && file.path.endsWith('/${current.relativePath}')) {
+        // Recheck after asynchronous metadata enumeration; another admitted
+        // reader may still own the same physical source.
+        if (_protectedReaderPaths.contains(file.path) ||
+            _files.writingNames.contains(current.relativePath)) {
+          continue;
+        }
+        final shared = objects.any(
+          (object) =>
+              object.key != entry.key &&
+              object.relativePath == current.relativePath,
+        );
+        if (shared) {
+          await (store as LibraryCacheStore).removeCachedReference(current);
+        } else {
+          await (store as LibraryCacheStore).removeCachedFile(current);
+        }
+      } else if (!_protectedReaderPaths.contains(file.path) &&
+          !_files.writingNames.any((name) => file.path.endsWith('/$name')) &&
+          !objects.any(
+            (object) => file.path.endsWith('/${object.relativePath}'),
+          )) {
+        if (await file.exists()) await file.delete();
+      }
+      if (identical(_failedFiles[entry.key], entry.value)) {
+        _failedFiles.remove(entry.key);
       }
     }
   }
@@ -365,6 +655,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     return _trackStorage(
       () => runZoned(() async {
         try {
+          await _restoreProfileFiles();
           final file = await operation();
           await (store as LibraryCacheStore).drain();
           (store as LibraryCacheStore).rethrowFailure(owner);
@@ -420,26 +711,40 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     }
   }
 
-  /// Retry cancels its old transfer and evicts only the failed warm file it read.
-  Future<void> discardFailedTransfer(String key) {
+  /// Retry settles its old writer and evicts only the failed source it read.
+  Future<void> discardFailedTransfer(String key, {bool failed = true}) {
     if (_closed) return Future.value();
-    return _trackStorage(() => _discardFailedTransfer(key));
+    return _trackStorage(() => _discardFailedTransfer(key, failed: failed));
   }
 
-  Future<void> _discardFailedTransfer(String key) async {
-    _delivered.remove(key);
-    for (final operation
-        in _operations.where((entry) => entry.key == key).toList()) {
-      operation.cancel();
-      _transport.cancel(operation.owner);
+  Future<void> _discardFailedTransfer(
+    String key, {
+    required bool failed,
+  }) async {
+    final operations = _operations.where((entry) => entry.key == key).toList();
+    for (final operation in operations) {
+      _cancelOperation(operation);
+    }
+    // A cancelled package writer must settle before same-key retry can publish.
+    await Future.wait(operations.map((operation) => operation.finished));
+    if (_closed) return;
+    final delivered = _delivered.remove(key);
+    if (failed && delivered != null) {
+      _failedFiles[key] = (
+        delivered.file,
+        StateError('Artwork decoding failed'),
+        StackTrace.current,
+      );
     }
     final hit = _warmHits.remove(key);
-    if (_closed || hit == null) return;
-    final current = await getFileFromCache(hit.$1);
-    if (!_closed && current?.file.path == hit.$2.file.path) {
-      await removeFile(hit.$1);
-      if (await current!.file.exists()) await current.file.delete();
+    if (failed && hit != null) {
+      _failedFiles[hit.$1] = (
+        hit.$2.file,
+        StateError('Artwork decoding failed'),
+        StackTrace.current,
+      );
     }
+    await _cleanupFailedFiles();
   }
 
   Future<void> _promote(
@@ -447,8 +752,12 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     FileInfo delivered,
     bool Function() isCurrent,
   ) async {
+    _decodingFiles.add(delivered.file);
+    File? previousFile;
     try {
       final shared = await getFileFromCache(immutableKey);
+      previousFile = shared?.file;
+      if (previousFile != null) _decodingFiles.add(previousFile);
       if (_closed || !isCurrent()) return;
       final bytes = await delivered.file.readAsBytes();
       if (_closed || !isCurrent()) return;
@@ -539,6 +848,9 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       await _repository.whenIdle();
     } catch (_) {
       // Promotion cannot turn successfully decoded artwork into a display error.
+    } finally {
+      _decodingFiles.remove(delivered.file);
+      if (previousFile != null) _decodingFiles.remove(previousFile);
     }
   }
 
@@ -569,15 +881,25 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     }
   }
 
-  Future<void> _cleanupCapacity() async {
+  Future<void> _cleanupCapacity({bool reserveFile = false}) async {
+    await _cleanupFailedFiles();
+    await _restoreProfileFiles();
     if (_promotionFiles.length >= _fileLimit) {
       throw StateError('Library image publication cleanup capacity reached');
     }
-    if (_retired.length + _retirementReservations >= _fileLimit) {
+    if (_retired.length + _retirementReservations >= _fileLimit ||
+        (reserveFile && _files.physicalOwnerCount >= _fileLimit)) {
       if (_retired.isNotEmpty) await _releaseRetired(_retired.keys.first);
       if (_retired.length + _retirementReservations >= _fileLimit) {
         throw StateError('Library image retirement capacity reached');
       }
+    }
+  }
+
+  Future<void> _restoreProfileFiles() async {
+    // Account for persisted profile bytes across app restarts before any new write.
+    for (final object in await _repository.getAllObjects()) {
+      await _files.createFile(object.relativePath);
     }
   }
 
@@ -621,7 +943,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
       _warmHits.clear();
       _admission.close();
       for (final operation in _operations) {
-        operation.cancel();
+        _cancelOperation(operation);
       }
       _transport.close();
       (store as LibraryCacheStore).stopCleanup();
@@ -690,7 +1012,18 @@ class _Operation {
   final cancelled = Completer<void>();
   final output = StreamController<FileResponse>();
   late Future<void> finished;
+  _SharedRead? shared;
+  Iterable<String> Function()? failureKeys;
   void cancel() {
     if (!cancelled.isCompleted) cancelled.complete();
   }
+}
+
+class _SharedRead {
+  _SharedRead(this.identity, this.source);
+  final (String, String, String, bool) identity;
+  final _Operation source;
+  final consumers = <_Operation>[];
+  final settled = Completer<void>();
+  FileResponse? latest;
 }

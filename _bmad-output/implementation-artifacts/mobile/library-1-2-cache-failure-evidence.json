@@ -1,0 +1,4401 @@
+{
+  "story12-a3-pre-fix-app_flutter": {
+    "snapshotSha256": "1bcb689a30b7d4e95cbb80d64aadec0c953d303d1060665cb384973500d4a509",
+    "files": 4,
+    "bytes": 73702931,
+    "directories": {
+      "flutter_assets": 3,
+      "res_timestamp-1-1791362286185": 1
+    },
+    "directoryBytes": {
+      "flutter_assets": 73702931,
+      "res_timestamp-1-1791362286185": 0
+    }
+  },
+  "story12-a3-pre-fix-cache": {
+    "snapshotSha256": "34677a70151a3c470f53d829dc38602ccca503ab7c45088d99bcc967dd9644a1",
+    "files": 27,
+    "bytes": 865721,
+    "directories": {
+      "library-157117387": 19,
+      "detail-hero-157117387": 8
+    },
+    "directoryBytes": {
+      "library-157117387": 617375,
+      "detail-hero-157117387": 248346
+    }
+  },
+  "story12-a3-pre-fix-files": {
+    "snapshotSha256": "7e0e8da7a73dba49ef3d3c2914ec0225ec408e8dfc0b8da32fb0c82790beb567",
+    "files": 5,
+    "bytes": 61464,
+    "directories": {
+      "profileInstalled": 1,
+      "library-157117387.db": 1,
+      "library-157117387.db-journal": 1,
+      "detail-hero-157117387.db": 1,
+      "detail-hero-157117387.db-journal": 1
+    },
+    "directoryBytes": {
+      "profileInstalled": 24,
+      "library-157117387.db": 36864,
+      "library-157117387.db-journal": 0,
+      "detail-hero-157117387.db": 24576,
+      "detail-hero-157117387.db-journal": 0
+    }
+  },
+  "scope": "Read-only private debug-app device filesystem snapshot after native capacity failure; raw archives retain database URLs privately and are not published",
+  "recordedAt": "2026-10-07T10:19:13.190820+00:00",
+  "cacheCleared": false,
+  "sourceRepair": {
+    "status": "source fixed; same-device unchanged-cache Android phone detail acceptance passed; home retained-file count audit pending",
+    "focusedTestsPassed": 28,
+    "fullFlutterTestsPassed": 175,
+    "testLogSha256": "1c8f694096fb591777815d695007c40e99d19e2fed77b49d572a5d51e9893950",
+    "nativeSourceAggregateSha256": "01fd10bb6564593490c359466b5594a3ae093bba1f2ae4190b574e464c403d42",
+    "limitsChanged": false,
+    "cacheCleared": false,
+    "sameDeviceNativeAcceptance": {
+      "recordedAt": "2026-10-07T09:03:05.554402+00:00",
+      "cacheCleared": false,
+      "beforeFiles": 27,
+      "afterFiles": 94,
+      "afterBytes": 2980089,
+      "preExistingUnchangedFilesRetained": 16,
+      "preExistingDetailFilesRetained": 2,
+      "preExistingHomeFilesRetained": 14,
+      "beforeArchiveSha256": "34677a70151a3c470f53d829dc38602ccca503ab7c45088d99bcc967dd9644a1",
+      "afterArchiveSha256": "1e958f38f1b7e15f2d7ae00d316af6dda0582af16c6c66098c25647db196d597",
+      "nativeRun": "story12-final-android36-phone-nonsub-a4",
+      "postRunProfiles": {
+        "library-157117387": {
+          "files": 82,
+          "bytes": 2499995
+        },
+        "detail-hero-157117387": {
+          "files": 12,
+          "bytes": 480094
+        }
+      },
+      "detailRetainedDiskEnvelopePassed": true,
+      "homeRetainedDiskEnvelopePassed": null,
+      "homeAudit": "82 physical files observed after A4; active/metadata/orphan/settling classification pending"
+    }
+  },
+  "homeRetainedFileAudit": {
+    "recordedAt": "2026-10-07T09:07:24.778839+00:00",
+    "scope": "Read-only A4 home physical archive matched against later fault-start private SQLite; no source/native/cache mutation",
+    "temporalQualification": {
+      "physical": "A4 end",
+      "metadata": "subsequent controlled fault start; detail rows already cleared by that target, home mapping unchanged"
+    },
+    "archives": {
+      "story12-a4-post-fix-cache.tar": "1e958f38f1b7e15f2d7ae00d316af6dda0582af16c6c66098c25647db196d597",
+      "story12-a4-followup-files.tar": "d6486419fb70bc29ed93a24b5e3e17edfc0921c05ebb2ce3258a6a62a6ffe2ab"
+    },
+    "homePhysicalFiles": 82,
+    "homePhysicalBytes": 2499995,
+    "homeMetadataRows": 82,
+    "uniqueMetadataPaths": 82,
+    "metadataKinds": {
+      "transfer": 52,
+      "immutable": 30
+    },
+    "physicalWithoutLaterMetadata": 0,
+    "laterMetadataWithoutA4Physical": 0,
+    "transfersWithDeclaredLengthMatchingActual": 52,
+    "immutableLengthNull": 30,
+    "bytesRange": {
+      "minimum": 22117,
+      "maximum": 46007
+    },
+    "actualSQLAtProofTime": {
+      "referenceUTC": "2026-10-07T09:02:13.063992+00:00",
+      "eligibleTouchedBeforeOneDay": 0,
+      "packageOverCapacityResultWithOffset80": 0,
+      "eligibleTouchedBeforeTenMinutes": 0,
+      "rowsAboveStrict80RetainedLimit": 2
+    },
+    "sourceFinding": {
+      "package": "CacheObjectProvider.getObjectsOverCapacity filters touched<now-1day before offset capacity; LibraryCacheStore relies on that query",
+      "homeAdmission": "LibraryCacheFiles._ownedCount counts active files/pending/failed metadata only, omits successful retained _metadata; per-attempt release moves files to retained metadata",
+      "completedWriteEvidence": "All82 paths represented in persistent cache rows; WebHelper publishes after complete stream save, putFile publishes after awaited writeAsBytes; 52 transfer length fields match physical bytes exactly",
+      "activeOwnershipQualification": "Archive/SQLite do not expose live _operations/_files maps. Cannot prove active count zero at tar time, but all82 persisted rows are retained metadata, so active-only explanation does not close strict80 gap"
+    },
+    "sourceFreeze": {
+      "expectedAggregate": "01fd10bb6564593490c359466b5594a3ae093bba1f2ae4190b574e464c403d42",
+      "checkedFiles": 81,
+      "mismatches": []
+    },
+    "strictHomeRetainedEnvelopePassed": false,
+    "remediation": "Requires coordinated source change and real package/SQLite regression; no source mutation before parent release; do not increase budgets/reset disk/vendor patch"
+  },
+  "currentNativeA5Diagnostic": {
+    "run": "story12-final-android36-phone-nonsub-a5",
+    "classification": "unaccepted current-source native run; actual error established through read-only retained Dart VM",
+    "sourceAggregateSha256": "4f57f88a3defdb215885d6d9bb7d3edf627000032f6ad7475088d598ba325cb2",
+    "readOnlyVmEvidenceSha256": "6899bd4aee5d6ba10ae7dfd7a95b0636b06cbcc6a33260f03566087a9b95f9c2",
+    "actualHeroError": {
+      "type": "FormatException",
+      "message": "Hero checksum differs from admitted source",
+      "stack": [
+        "StoryDetailImageCache.validateResponse:45",
+        "LibraryImageCache._read:234"
+      ],
+      "observedVia": "MultiImageStreamCompleter._currentError -> FlutterErrorDetails.exception and actualStack"
+    },
+    "separateHomeErrors": {
+      "count": 8,
+      "type": "TimeoutException",
+      "durationMicroseconds": 2000000,
+      "stack": [
+        "LibraryCacheAdmission.enter:380",
+        "LibraryImageCache._read:216"
+      ]
+    },
+    "postFailureSnapshot": {
+      "detailFiles": 0,
+      "detailMetadataRows": 0,
+      "homeFiles": 14,
+      "homeMetadataRows": 14,
+      "homeOrphans": 0,
+      "homeMissingFiles": 0,
+      "classification": "later unchanged-disk snapshot; not the bytes of the FileInfo which failed SHA validation"
+    },
+    "independentHostRead": {
+      "metadataStatus": 200,
+      "sourceStatus": 200,
+      "sourceByteSize": 50794,
+      "sourceChecksumMatched": true,
+      "classification": "host read; not proof of emulator request or cached-response origin"
+    },
+    "diagnosticPending": "Current-source Android phone baseline passed; remaining native matrices/reference/platform accessibility and separate home admission characterization stay open",
+    "nativeAcceptance": false,
+    "responseOriginProven": false,
+    "firstFailingFileInfoAvailableAfterTeardown": false,
+    "consistentButUnprovenOrigin": "Earlier injected 100-byte corrupt hero, reusable transfer attempt keys, validation-before-expired-response filtering and later native cleanup are consistent with a stale cached response; its first bytes were not recovered.",
+    "verifiedSourceGaps": [
+      "Attempt-specific expired FileInfo is SHA-validated before being ignored",
+      "discardFailedTransfer does not evict a failed non-warm transfer record"
+    ],
+    "sourceRegressionReproduced": {
+      "testFile": "app/mobile/test/story_detail/story_detail_expired_cache_test.dart",
+      "storage": "actual CacheObjectProvider SQLite and IOFileSystem reopened after persisted corrupt transfer",
+      "beforeRepair": "both regressions failed",
+      "beforeRepairLogSha256": "e62f0e80d3c850ad5c7798f0cd08d705df14c7d2bc0b0ce2950a410b1e577dee",
+      "cases": [
+        "expired corrupt attempt fails checksum before healthy source renewal",
+        "current corrupt attempt remains in metadata after failed-transfer cleanup"
+      ],
+      "originalNativeByteOriginProven": false,
+      "initialRepairResult": "two reproduced regressions passed; broader owner/alias/process-reopen and full suite pending",
+      "initialGreenLogSha256": "8b3957134dc4f50ebbffffa7b0ce213e44d09323107c34f091769737ffafd57d",
+      "unchangedDeviceBeforeNextRun": {
+        "readOnlyAuditSha256": "5b192527ee5c434b761db0112f6bbe5a6056b11a00f6bc90c8dcb753f3157ca4",
+        "cacheReset": false,
+        "homePhysicalFiles": 14,
+        "homeMetadataRows": 14,
+        "detailPhysicalFiles": 0,
+        "detailMetadataRows": 0,
+        "homeOrphans": 0,
+        "homeMissingFiles": 0
+      }
+    },
+    "sourceRepair": {
+      "nativeSourceAggregateSha256": "211e015585b88a692759a77d2b8f8bff93d2c37dd1adf2d8ac236c54d15d8f2a",
+      "testFile": "app/mobile/test/story_detail/story_detail_expired_cache_test.dart",
+      "realSQLiteIoHttpCodecRegressions": 5,
+      "fullFlutterTestsPassed": 185,
+      "fullTestLogSha256": "4c850a49848fcaa988c684d2481a540175a2d82e55bbfc9e0a15d4db1a59b2ba",
+      "generatedOutputs": "6 same outputs; codegen passed",
+      "analyzer": "clean",
+      "flutterBuildEvidenceSha256": "d558fcb7ecd4b0725ddf9526837e039bb542b6441cbb0149a7c847cd3b1f0e89",
+      "originalA5ByteOriginProven": false,
+      "currentNativeAccepted": true,
+      "boundsOrVendorVersionsChanged": false,
+      "separateHomeAdmissionWaitChanged": false,
+      "nativeAcceptanceScope": "Android API36 phone NON_SUBSCRIBER baseline; remaining platform/profile/audience/fault/reference/accessibility gates open"
+    },
+    "nativeA6": {
+      "run": "story12-final-android36-phone-nonsub-a6",
+      "sourceAggregateSha256": "211e015585b88a692759a77d2b8f8bff93d2c37dd1adf2d8ac236c54d15d8f2a",
+      "exitCode": 0,
+      "reportPassed": true,
+      "journeys": 16,
+      "unavailableCase": true,
+      "acknowledgedCaptures": 49,
+      "installedBinaryMatched": true,
+      "sourceAndDatasetUnchanged": true,
+      "readOnlyCacheAuditSha256": "e415c575b7fdff86d76a9ca6c06835cae3c33a24761df9f58a28d301a1d74925",
+      "cacheReset": false,
+      "homeFiles": 68,
+      "homeBytes": 2061760,
+      "homeRows": 68,
+      "detailFiles": 12,
+      "detailBytes": 480094,
+      "detailRows": 12,
+      "orphanFiles": 0,
+      "missingFiles": 0,
+      "knownMetadataLengthsMatch": true,
+      "unknownOptionalMetadataLengths": {
+        "home": 22,
+        "detail": 6
+      },
+      "byteIdenticalHomeFilesFromPrior": 11,
+      "nativeTransientPeakMeasured": false
+    }
+  },
+  "nativeFaultA6": {
+    "run": "story12-final-android36-phone-nonsub-fault-a6",
+    "sourceAggregateSha256": "211e015585b88a692759a77d2b8f8bff93d2c37dd1adf2d8ac236c54d15d8f2a",
+    "exitCode": 1,
+    "accepted": false,
+    "acknowledgedCaptures": 14,
+    "completedInjectedCases": 6,
+    "failedCase": "TR hero_silent recovery",
+    "assertion": "metadataRequests expected 2, observed 1 after hero loaded assertion",
+    "proofSha256": "bda82a2b85e1cde562bd06195aef634d6f069c654aefc98c047abd26130e0380",
+    "sourceUnchanged": true,
+    "installedBinaryMatched": true,
+    "datasetUnchanged": true,
+    "emptyAndNaturalTargetsStarted": false,
+    "diagnosticPending": "Retained old hero provider during pending fresh metadata; do not weaken the renewal contract",
+    "sourceRegressionReproduced": {
+      "beforeRepairLogSha256": "1f54c059d479adf37982e5eb841296e830722af760f791cdd026997410c51350",
+      "beforeRepair": "pending-metadata current-attempt image callback was accepted and a second provider opened against the retained old URL",
+      "originalAssertionsPreserved": true,
+      "freshMetadataRenewalRequired": true,
+      "completionRaceOnlyFixSufficient": false
+    },
+    "additionalSourceRegressions": {
+      "pendingMetadataAndActualProviderRecovery": {
+        "redLogSha256": "fee31432fea847a61b09c9808e64866823cc024aa82e652244001e1694b9c196",
+        "observedProviderLoads": 3,
+        "expectedInitialPlusFreshLoads": 2,
+        "cause": "Returned original image provider differs from the admitted bounded ResizeImage key."
+      },
+      "existingLibraryCardActualDecode": {
+        "redLogSha256": "5d161fa96a910b38f8253677a24ea00168f12ce91a2adc80ff010131c7426586",
+        "observedProviderLoads": 2,
+        "expectedLoads": 1,
+        "cause": "Same app-owned returned-provider key mismatch is independently reproduced in the existing LibraryCard.",
+        "originalA5HomeTimeoutCauseEstablished": false
+      },
+      "repairAcceptance": "pending full updated source verification and coordinated current-source native rerun; bounds, geometry and golden references unchanged"
+    },
+    "followingRunCacheBaseline": {
+      "auditSha256": "0942fe7e9c0f4f2eada0216c8e3b3a7d895f045c072b63efaf37519f2aff315e",
+      "profiles": {
+        "library-157117387": {
+          "physical": {
+            "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 22326,
+              "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+            },
+            "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 46007,
+              "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+            },
+            "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 22326,
+              "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+            },
+            "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 46007,
+              "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+            },
+            "d230c180-c232-11f1-afd7-c944af045c00.jpg": {
+              "byteSize": 46007,
+              "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+            },
+            "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "d2924270-c232-11f1-afd7-c944af045c00.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "8a6ccfa0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg": {
+              "byteSize": 37259,
+              "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+            },
+            "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 46007,
+              "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+            },
+            "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22326,
+              "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+            },
+            "87666d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37259,
+              "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+            },
+            "8a9e8e00-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22326,
+              "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+            },
+            "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33091,
+              "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+            },
+            "8aada930-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 46007,
+              "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+            },
+            "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22326,
+              "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+            },
+            "a35e2810-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "ae2ba8d0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37259,
+              "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+            },
+            "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37259,
+              "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+            },
+            "d1853080-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "d18b9920-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "d1ad7900-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "d1d4fe30-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "d1d59a70-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22117,
+              "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+            },
+            "d1d65dc0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "d3b2bee0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "d41e2ae0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "d6976840-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22117,
+              "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+            },
+            "d7a38110-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "d7a79fc0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37021,
+              "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+            },
+            "d7c36520-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "dadd7660-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "dae390e0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "db444e80-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "dc0a0f80-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "dc30aa50-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37021,
+              "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+            },
+            "dc33b790-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22117,
+              "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+            },
+            "dd4c7a90-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "ddf0d0e0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "df36be60-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "df850570-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "e1948480-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 37021,
+              "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+            },
+            "e19547d0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22117,
+              "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+            },
+            "eae920e0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "eae9e430-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 22117,
+              "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+            },
+            "f11a8440-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "f18aab30-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25017,
+              "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+            },
+            "f6b61040-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "f84d03f0-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "fb983750-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33631,
+              "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5"
+            },
+            "fbc73690-c238-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25752,
+              "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+            },
+            "002d01b0-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33631,
+              "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5"
+            },
+            "0ee29210-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "0ee81050-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "11efab00-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 26920,
+              "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+            },
+            "1222c8f0-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 31220,
+              "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+            },
+            "19571d60-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33667,
+              "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c"
+            },
+            "1960e160-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25752,
+              "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+            },
+            "1ba1d0b0-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 33667,
+              "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c"
+            },
+            "1d58cf80-c239-11f1-99c8-6d0513d9636f.jpg": {
+              "byteSize": 25752,
+              "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+            }
+          },
+          "metadata": [
+            {
+              "keySha256": "b9ee06bb8e6127daf33fa612b636e8249f34ae6b6a80b95c5ab90226c8cd5c3f",
+              "kind": "transfer",
+              "relativePath": "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 22326,
+              "touched": 1791368348215,
+              "validTill": 1791368948214
+            },
+            {
+              "keySha256": "4d517841fe33fd7c72d768b380500d00712b236fa571046df314250c534060da",
+              "kind": "transfer",
+              "relativePath": "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 26920,
+              "touched": 1791368347736,
+              "validTill": 1791368947735
+            },
+            {
+              "keySha256": "662970645e8bcd1683d8286d1a9f63f7d1ab6407c553da9ffec1be70bfeb906d",
+              "kind": "transfer",
+              "relativePath": "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 22326,
+              "touched": 1791368347751,
+              "validTill": 1791368947747
+            },
+            {
+              "keySha256": "0d7131f6dd40881cc865e4de68b551a5222d0add070a860fc99417b4f9b9182f",
+              "kind": "transfer",
+              "relativePath": "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 31220,
+              "touched": 1791368347745,
+              "validTill": 1791368947743
+            },
+            {
+              "keySha256": "58835d0b2e7700b83f8b766b110a8d031218a90adeef600209bef5bd2ff96d38",
+              "kind": "transfer",
+              "relativePath": "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 33091,
+              "touched": 1791368347852,
+              "validTill": 1791368947851
+            },
+            {
+              "keySha256": "59a5e1b6bdc9d810dde89472bce0c41a37bdb9644f1f1a5f7e077bdf8ed7844a",
+              "kind": "transfer",
+              "relativePath": "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 33091,
+              "touched": 1791368347726,
+              "validTill": 1791368947723
+            },
+            {
+              "keySha256": "2e9da2384d3b8351d99d5fba9c96dec717153ddd122c408e4e57fc75b65d485f",
+              "kind": "transfer",
+              "relativePath": "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg",
+              "length": 46007,
+              "touched": 1791368349497,
+              "validTill": 1791368949496
+            },
+            {
+              "keySha256": "1d63ecb792245e8fefd98c30b314d21ea50930cd976f3b49f01931fd1c484277",
+              "kind": "transfer",
+              "relativePath": "d230c180-c232-11f1-afd7-c944af045c00.jpg",
+              "length": 46007,
+              "touched": 1791368350098,
+              "validTill": 1791368950096
+            },
+            {
+              "keySha256": "98f3133d41217e276821150ea637fceb5ec418804bb2353a0733f28eaf54a597",
+              "kind": "transfer",
+              "relativePath": "d2924270-c232-11f1-afd7-c944af045c00.jpg",
+              "length": 33091,
+              "touched": 1791368349963,
+              "validTill": 1791368949959
+            },
+            {
+              "keySha256": "f426cbb07f15c532544856bec23ddb70ca6214d57c8465448b0553951ec789c7",
+              "kind": "transfer",
+              "relativePath": "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg",
+              "length": 26920,
+              "touched": 1791368350003,
+              "validTill": 1791368950002
+            },
+            {
+              "keySha256": "4837c85d08f473397196d63488cd52563820f8d9c4064aa29e4e1a73ea0b535d",
+              "kind": "transfer",
+              "relativePath": "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg",
+              "length": 37259,
+              "touched": 1791368349498,
+              "validTill": 1791368949498
+            },
+            {
+              "keySha256": "3e197628c6645eee4e3bd3b8f5bbe2b965e76de3613377271c04ded44d8ed399",
+              "kind": "transfer",
+              "relativePath": "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 46007,
+              "touched": 1791368350087,
+              "validTill": 1791368946248
+            },
+            {
+              "keySha256": "3a0ddf23f1c3f83159f47470150cd97fa73088f31740363fd92373024aaf929e",
+              "kind": "transfer",
+              "relativePath": "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 22326,
+              "touched": 1791368351621,
+              "validTill": 1791368946956
+            },
+            {
+              "keySha256": "91f7b1eae148cce1766be1ab7ce4daa77f86155d51b8e16ebfcfd5579a68efaf",
+              "kind": "transfer",
+              "relativePath": "87666d70-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 33091,
+              "touched": 1791368353444,
+              "validTill": 1791368947079
+            },
+            {
+              "keySha256": "770e8353b152bbd49493863006fe727b4f7a9984abb0e6d2d8fbcbb79bb93773",
+              "kind": "transfer",
+              "relativePath": "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 37259,
+              "touched": 1791368354042,
+              "validTill": 1791368947335
+            },
+            {
+              "keySha256": "a20003fa1146fb23865ff59c3fb9f8d7a675aadf1f73bce3aae63a4dd673fcba",
+              "kind": "transfer",
+              "relativePath": "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 46007,
+              "touched": 1791368354659,
+              "validTill": 1791368950108
+            },
+            {
+              "keySha256": "35a66bb40f3c02a325e60229aca27d0c086c565182c09706b4c02c39f9b654a1",
+              "kind": "transfer",
+              "relativePath": "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 33091,
+              "touched": 1791368355047,
+              "validTill": 1791368950940
+            },
+            {
+              "keySha256": "ed6e2590ece1540aea34e8280195c085c7ef315a5d694b0c0d3b60a6c603339d",
+              "kind": "transfer",
+              "relativePath": "8a6ccfa0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 33091,
+              "touched": 1791368355311,
+              "validTill": 1791368952154
+            },
+            {
+              "keySha256": "1c237379846c2c67f97c84d361df04d28a79b40da60c8eeae8202152545301b1",
+              "kind": "transfer",
+              "relativePath": "8a9e8e00-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 22326,
+              "touched": 1791368355441,
+              "validTill": 1791368952481
+            },
+            {
+              "keySha256": "cf4a0f5590c2072dcfa14eac1b1694cdf369fdf01de55f4f56885cafdf3cf58c",
+              "kind": "immutable",
+              "relativePath": "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368355554,
+              "validTill": 1791368952500
+            },
+            {
+              "keySha256": "d55f73df31f0510d32e4695da0f3ab523725b6c19289b787ca051cca07b9f29f",
+              "kind": "immutable",
+              "relativePath": "8aada930-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368355694,
+              "validTill": 1791368952579
+            },
+            {
+              "keySha256": "5dc043de1aa6f3d31c960eaaaaf443d6f5324b5a2b379b30e0bc406bd5197f8e",
+              "kind": "immutable",
+              "relativePath": "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368355814,
+              "validTill": 1791368952608
+            },
+            {
+              "keySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+              "kind": "immutable",
+              "relativePath": "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368355962,
+              "validTill": 1791368953267
+            },
+            {
+              "keySha256": "054e5fa17963cacba86d4d5f91df1ba11cbc0e9976ac4c8dd46e8358fb8dd234",
+              "kind": "transfer",
+              "relativePath": "a35e2810-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368394595,
+              "validTill": 1791368994001
+            },
+            {
+              "keySha256": "924cd95c93b0207405f358399a7c0f149fad88be303a0f9e86b5bc6dc10f918f",
+              "kind": "immutable",
+              "relativePath": "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368395057,
+              "validTill": 1791368994994
+            },
+            {
+              "keySha256": "54fed36d81a8ac952fe8a28ad4a8a9a8ca707282bafe75c9efc5434f4f6f821a",
+              "kind": "transfer",
+              "relativePath": "ae2ba8d0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 37259,
+              "touched": 1791368412661,
+              "validTill": 1791369012125
+            },
+            {
+              "keySha256": "5675e8b03a38d9de5468c27913c383fba0591c90c795e757e203c51cada55448",
+              "kind": "immutable",
+              "relativePath": "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368413198,
+              "validTill": 1791369013027
+            },
+            {
+              "keySha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac",
+              "kind": "transfer",
+              "relativePath": "d1853080-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368472849,
+              "validTill": 1791369071433
+            },
+            {
+              "keySha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062",
+              "kind": "transfer",
+              "relativePath": "d18b9920-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368474411,
+              "validTill": 1791369071474
+            },
+            {
+              "keySha256": "383b0e8ac3422bd99e4cb0c68bfa611c515df7fca5b459ee6de7bb8c1bfb84f5",
+              "kind": "transfer",
+              "relativePath": "d1ad7900-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368476002,
+              "validTill": 1791369071696
+            },
+            {
+              "keySha256": "497f6de7c327a4a991a9529e30b4e475b7b4712b0fc6740c7b713c62604f5f16",
+              "kind": "transfer",
+              "relativePath": "d1d4fe30-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368477323,
+              "validTill": 1791369071955
+            },
+            {
+              "keySha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8",
+              "kind": "transfer",
+              "relativePath": "d1d59a70-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 22117,
+              "touched": 1791368478317,
+              "validTill": 1791369071959
+            },
+            {
+              "keySha256": "433a14e7325823707bd4c98d79243d079ac1cb57579a15cca9d047b5a85bc072",
+              "kind": "transfer",
+              "relativePath": "d1d65dc0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368478982,
+              "validTill": 1791369071964
+            },
+            {
+              "keySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+              "kind": "immutable",
+              "relativePath": "d3b2bee0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368483698,
+              "validTill": 1791369075087
+            },
+            {
+              "keySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+              "kind": "immutable",
+              "relativePath": "d41e2ae0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368485147,
+              "validTill": 1791369075791
+            },
+            {
+              "keySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+              "kind": "immutable",
+              "relativePath": "d6976840-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368485748,
+              "validTill": 1791369079941
+            },
+            {
+              "keySha256": "43499a00fb5e066ee5cbf4be76ed7ad45dc69063d6e2bb52e15ec92548ec2d74",
+              "kind": "transfer",
+              "relativePath": "d7a38110-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368486688,
+              "validTill": 1791369081697
+            },
+            {
+              "keySha256": "af84168ce4fb0a0cbd817846425a00c8b22e76d8647b819817f551010dc5166c",
+              "kind": "transfer",
+              "relativePath": "d7a79fc0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 37021,
+              "touched": 1791368488138,
+              "validTill": 1791369081725
+            },
+            {
+              "keySha256": "eb6039e00548ec7e6217ba959f29b415da3ec8b4c70c0f28792a1ceb1429c7cb",
+              "kind": "transfer",
+              "relativePath": "d7c36520-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25017,
+              "touched": 1791368489127,
+              "validTill": 1791369081906
+            },
+            {
+              "keySha256": "a55b6d7ca875f9168ef0c8ad5599113ed6cab09abc3af4634454d39b8f37d20a",
+              "kind": "transfer",
+              "relativePath": "dadd7660-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368490366,
+              "validTill": 1791369087110
+            },
+            {
+              "keySha256": "16c88ad0d1bef67513662d71caaaf8c37b55cd6702201977bcb4a72e01130eb6",
+              "kind": "transfer",
+              "relativePath": "dae390e0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368491546,
+              "validTill": 1791369087150
+            },
+            {
+              "keySha256": "7620c446e12ac7502146371437ebe9d5b069f0073538fd0a202afea053d1832b",
+              "kind": "transfer",
+              "relativePath": "db444e80-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25017,
+              "touched": 1791368492472,
+              "validTill": 1791369087784
+            },
+            {
+              "keySha256": "edb65f805e49e12bcb5ca32ea5db58eff94c780c40b7708c1994949d26a9c1e6",
+              "kind": "transfer",
+              "relativePath": "dc0a0f80-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368493128,
+              "validTill": 1791369089080
+            },
+            {
+              "keySha256": "6f7616b666a636441dbae88456625898fb1cadc636ccebea581a4f8e52b19aa1",
+              "kind": "transfer",
+              "relativePath": "dc30aa50-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 37021,
+              "touched": 1791368495694,
+              "validTill": 1791369089333
+            },
+            {
+              "keySha256": "c4fbfe6b48c74f362a8347d5370f4cf0794447518bfd1e37c855fdee0cc111aa",
+              "kind": "transfer",
+              "relativePath": "dc33b790-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 22117,
+              "touched": 1791368496182,
+              "validTill": 1791369089353
+            },
+            {
+              "keySha256": "fef574fbf5915696ef8400a7e3694beb9e921774f1c57382b73a04fa03c6c885",
+              "kind": "immutable",
+              "relativePath": "dd4c7a90-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368499425,
+              "validTill": 1791369091194
+            },
+            {
+              "keySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+              "kind": "immutable",
+              "relativePath": "ddf0d0e0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368501773,
+              "validTill": 1791369092270
+            },
+            {
+              "keySha256": "3f4503b20e749eb45f7497dc6547f9f8e3f5fa80098979c6910fa06dc6bd1119",
+              "kind": "immutable",
+              "relativePath": "df36be60-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368503576,
+              "validTill": 1791369094406
+            },
+            {
+              "keySha256": "df32615b6b6e2d5f21d79f01dc89a4fdcb0c00dbc900f6a48f6db860331af1a5",
+              "kind": "immutable",
+              "relativePath": "df850570-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368504780,
+              "validTill": 1791369094919
+            },
+            {
+              "keySha256": "966767b1dbeafce49782ad27f9283a8a1f80206ea695a0cd308c104f21d9a3cc",
+              "kind": "immutable",
+              "relativePath": "e1948480-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368512034,
+              "validTill": 1791369098377
+            },
+            {
+              "keySha256": "1a5601c1bfd6bfd054db5638bc599217574f15d21606cbb772d325688466f3a5",
+              "kind": "immutable",
+              "relativePath": "e19547d0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368513120,
+              "validTill": 1791369098381
+            },
+            {
+              "keySha256": "1d4eeff5bcb78a1ff2cffa67e4f202ea708034030c7fe5fe1b4030e793194e57",
+              "kind": "transfer",
+              "relativePath": "eae920e0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25017,
+              "touched": 1791368518582,
+              "validTill": 1791369114030
+            },
+            {
+              "keySha256": "8a84c04b96a83809461b58b59ebef6177fccb6fd876fde5fd55a48ad65178a62",
+              "kind": "transfer",
+              "relativePath": "eae9e430-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 22117,
+              "touched": 1791368519142,
+              "validTill": 1791369114035
+            },
+            {
+              "keySha256": "6b39fa7c3e03224514faa75bbb3da23371a2c884d630f89ad1a8666b27d08610",
+              "kind": "transfer",
+              "relativePath": "f11a8440-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25017,
+              "touched": 1791368524687,
+              "validTill": 1791369124420
+            },
+            {
+              "keySha256": "4069735a54f55f29ea6ae1271105e8290ce46f99522e782217633b62bfcde543",
+              "kind": "immutable",
+              "relativePath": "f18aab30-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368525443,
+              "validTill": 1791369125156
+            },
+            {
+              "keySha256": "7f07f56bb7834dec53197835e05c68f4f48c0f08dc678269282a686d53cfd1b0",
+              "kind": "transfer",
+              "relativePath": "f6b61040-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368534703,
+              "validTill": 1791369133828
+            },
+            {
+              "keySha256": "cdfc0f1b864a54efb869ef2d3e2a1e338488c537da299e1ca0be9da42da7e722",
+              "kind": "immutable",
+              "relativePath": "f84d03f0-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368536882,
+              "validTill": 1791369136495
+            },
+            {
+              "keySha256": "d3f8f5e041405824469278cff51273a5bf0f42a775f268d2a3c201b3111c2856",
+              "kind": "transfer",
+              "relativePath": "fb983750-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 33631,
+              "touched": 1791368546517,
+              "validTill": 1791369142021
+            },
+            {
+              "keySha256": "a632081bc39bf32df17e926ae2dd842ccc6e0b113f043b07e132ce67bee02c9a",
+              "kind": "transfer",
+              "relativePath": "fbc73690-c238-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25752,
+              "touched": 1791368549367,
+              "validTill": 1791369142329
+            },
+            {
+              "keySha256": "28408422b61d7901fde789d3bc87bc2b2cd6640fc1f13539b741f99ccf61f87b",
+              "kind": "immutable",
+              "relativePath": "002d01b0-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368566222,
+              "validTill": 1791369149708
+            },
+            {
+              "keySha256": "0c6c9ef8ea58090b95e386fbea3c3ea9c16e178bacfc417e56c711b343110cdb",
+              "kind": "transfer",
+              "relativePath": "0ee29210-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": 26920,
+              "touched": 1791368578075,
+              "validTill": 1791369174385
+            },
+            {
+              "keySha256": "0841b52d9d3946e22d75a9518a9c32b1c61fec29bfc7a159020453c08cb02cec",
+              "kind": "transfer",
+              "relativePath": "0ee81050-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": 31220,
+              "touched": 1791368578872,
+              "validTill": 1791369174421
+            },
+            {
+              "keySha256": "f50140470db60b9c620470b27cec3efa4ac9640814e45bed7e40e31cd2d7d857",
+              "kind": "immutable",
+              "relativePath": "11efab00-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368580288,
+              "validTill": 1791369179506
+            },
+            {
+              "keySha256": "1637d34dc0eab24c0c6b5bdb260c3d04f0aa32478aab7c8e05cc3b8f84a4feac",
+              "kind": "immutable",
+              "relativePath": "1222c8f0-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368580705,
+              "validTill": 1791369179840
+            },
+            {
+              "keySha256": "6e448c58f6d367072f022a12ca823ed82ca7cdc77b464f5700a56be5f4118173",
+              "kind": "transfer",
+              "relativePath": "19571d60-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": 33667,
+              "touched": 1791368594428,
+              "validTill": 1791369191926
+            },
+            {
+              "keySha256": "dc52bb494e01aa3829146dfa7680592d0bb7a7358d99290253bf3a173df72103",
+              "kind": "transfer",
+              "relativePath": "1960e160-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": 25752,
+              "touched": 1791368596757,
+              "validTill": 1791369191990
+            },
+            {
+              "keySha256": "2e3a6b1f75fc1d7c9b35bc19bcd480c365e6a764ec91487cc0af7b208da884ca",
+              "kind": "immutable",
+              "relativePath": "1ba1d0b0-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368610890,
+              "validTill": 1791369195771
+            },
+            {
+              "keySha256": "490576a83210aaf304be36ba9030fae4158ad3bcc7a78def7b6e3af3eee5b10c",
+              "kind": "immutable",
+              "relativePath": "1d58cf80-c239-11f1-99c8-6d0513d9636f.jpg",
+              "length": null,
+              "touched": 1791368613758,
+              "validTill": 1791369198648
+            }
+          ],
+          "physicalFileCount": 68,
+          "physicalBytes": 2061760,
+          "metadataRowCount": 68,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 80,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 22,
+          "knownMetadataLengthsMatch": true
+        },
+        "detail-hero-157117387": {
+          "physical": {},
+          "metadata": [],
+          "physicalFileCount": 0,
+          "physicalBytes": 0,
+          "metadataRowCount": 0,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 20,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 0,
+          "knownMetadataLengthsMatch": true,
+          "withinDiskByteBound": true
+        }
+      },
+      "unchangedFilesFromPrior": {
+        "library-157117387": 11,
+        "detail-hero-157117387": 0
+      },
+      "qualification": "Read-only baseline before A7: parent did not reset disk. Earlier A6 fault cases intentionally closed their detail-only cache profile between injections; home disk remained retained. Detail is empty at this baseline, so this is retained-home evidence rather than pre-existing warm-detail proof."
+    },
+    "sourceRepairVerification": {
+      "testsPassed": 193,
+      "testLogSha256": "777675b81f20251cea09b3dd0e639723974a22418811c75636e0a0d840f44beb",
+      "generation": "passed, five unchanged outputs",
+      "analysis": "clean",
+      "currentNativeSourceSeal": "e87cf5d4e6999a3755eadb1240bf72c9bd01f513e1a36013d0dd9822f92b2bbf",
+      "narrowRepair": "Renewal metadata first; pending/stale artwork callbacks and timer ignored; Hero and LibraryCard return the same bounded ResizeImage provider key. Actual decoded recommendation cover capture is required.",
+      "nativeRerunAccepted": false,
+      "boundsWaitsGeometryGoldensChanged": false
+    }
+  },
+  "nativeBaselineA7": {
+    "exitCode": 1,
+    "nativeReportPassed": false,
+    "completedCases": 6,
+    "capturesAcknowledged": 19,
+    "sourceSeal": "e87cf5d4e6999a3755eadb1240bf72c9bd01f513e1a36013d0dd9822f92b2bbf",
+    "sourceUnchanged": true,
+    "installedBinaryComparison": true,
+    "datasetUnchanged": true,
+    "proofSha256": "692838a827a426107dd55f83ce0e6b3f92e0df43c37a263cbb14aac3c6128834",
+    "logSha256": "b8ed3062eed709fd16a072858e1e2e79040eeab9d7d2fe01cd92f451f5a592b9",
+    "failure": "EN1.0 free content2: loadedRecommendationCovers timed out waiting for an actual descendant RawImage; selected detail hero had loaded. Cause under read-only inspection; no assertion/wait/cache policy relaxation.",
+    "postFailureCacheAuditSha256": "1717b8e2d8951e33b9b97b007f120b9505d2cd0efb9d31a0226ac1c684dedb52",
+    "postFailureRetainedProfiles": {
+      "library-157117387": {
+        "physical": {
+          "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "d230c180-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "d2924270-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "8a6ccfa0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "87666d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "8a9e8e00-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "8aada930-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "21e28410-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "21e6c9d0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "21f6cf60-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "220e7610-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "22166550-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "221db850-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "22297820-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "2233d860-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "223537f0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "22f66510-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "231a40c0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "237cd320-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "23a36df0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "240c9000-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "242c25f0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "24aa0880-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "266f1110-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "27984ed0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "280dccf0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "2851b3c0-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "e390b060-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "e3d61dd0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "e474ced0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          }
+        },
+        "metadata": [
+          {
+            "keySha256": "b9ee06bb8e6127daf33fa612b636e8249f34ae6b6a80b95c5ab90226c8cd5c3f",
+            "kind": "transfer",
+            "relativePath": "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 22326,
+            "touched": 1791370649722,
+            "validTill": 1791371249721
+          },
+          {
+            "keySha256": "4d517841fe33fd7c72d768b380500d00712b236fa571046df314250c534060da",
+            "kind": "transfer",
+            "relativePath": "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 26920,
+            "touched": 1791370649425,
+            "validTill": 1791371249420
+          },
+          {
+            "keySha256": "662970645e8bcd1683d8286d1a9f63f7d1ab6407c553da9ffec1be70bfeb906d",
+            "kind": "transfer",
+            "relativePath": "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 22326,
+            "touched": 1791370650073,
+            "validTill": 1791371250073
+          },
+          {
+            "keySha256": "0d7131f6dd40881cc865e4de68b551a5222d0add070a860fc99417b4f9b9182f",
+            "kind": "transfer",
+            "relativePath": "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 31220,
+            "touched": 1791370649671,
+            "validTill": 1791371249671
+          },
+          {
+            "keySha256": "58835d0b2e7700b83f8b766b110a8d031218a90adeef600209bef5bd2ff96d38",
+            "kind": "transfer",
+            "relativePath": "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 33091,
+            "touched": 1791370649768,
+            "validTill": 1791371249767
+          },
+          {
+            "keySha256": "59a5e1b6bdc9d810dde89472bce0c41a37bdb9644f1f1a5f7e077bdf8ed7844a",
+            "kind": "transfer",
+            "relativePath": "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 33091,
+            "touched": 1791370649993,
+            "validTill": 1791371249993
+          },
+          {
+            "keySha256": "2e9da2384d3b8351d99d5fba9c96dec717153ddd122c408e4e57fc75b65d485f",
+            "kind": "transfer",
+            "relativePath": "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 46007,
+            "touched": 1791370649726,
+            "validTill": 1791371249726
+          },
+          {
+            "keySha256": "1d63ecb792245e8fefd98c30b314d21ea50930cd976f3b49f01931fd1c484277",
+            "kind": "transfer",
+            "relativePath": "d230c180-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 46007,
+            "touched": 1791370650954,
+            "validTill": 1791371250954
+          },
+          {
+            "keySha256": "98f3133d41217e276821150ea637fceb5ec418804bb2353a0733f28eaf54a597",
+            "kind": "transfer",
+            "relativePath": "d2924270-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 33091,
+            "touched": 1791370651263,
+            "validTill": 1791371251263
+          },
+          {
+            "keySha256": "f426cbb07f15c532544856bec23ddb70ca6214d57c8465448b0553951ec789c7",
+            "kind": "transfer",
+            "relativePath": "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 26920,
+            "touched": 1791370650687,
+            "validTill": 1791371250686
+          },
+          {
+            "keySha256": "4837c85d08f473397196d63488cd52563820f8d9c4064aa29e4e1a73ea0b535d",
+            "kind": "transfer",
+            "relativePath": "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 37259,
+            "touched": 1791370650092,
+            "validTill": 1791371250092
+          },
+          {
+            "keySha256": "3e197628c6645eee4e3bd3b8f5bbe2b965e76de3613377271c04ded44d8ed399",
+            "kind": "transfer",
+            "relativePath": "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 46007,
+            "touched": 1791370651582,
+            "validTill": 1791371251582
+          },
+          {
+            "keySha256": "3a0ddf23f1c3f83159f47470150cd97fa73088f31740363fd92373024aaf929e",
+            "kind": "transfer",
+            "relativePath": "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 22326,
+            "touched": 1791370651622,
+            "validTill": 1791371251620
+          },
+          {
+            "keySha256": "91f7b1eae148cce1766be1ab7ce4daa77f86155d51b8e16ebfcfd5579a68efaf",
+            "kind": "transfer",
+            "relativePath": "87666d70-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 33091,
+            "touched": 1791370651267,
+            "validTill": 1791371251267
+          },
+          {
+            "keySha256": "770e8353b152bbd49493863006fe727b4f7a9984abb0e6d2d8fbcbb79bb93773",
+            "kind": "transfer",
+            "relativePath": "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 37259,
+            "touched": 1791370651502,
+            "validTill": 1791371251500
+          },
+          {
+            "keySha256": "a20003fa1146fb23865ff59c3fb9f8d7a675aadf1f73bce3aae63a4dd673fcba",
+            "kind": "transfer",
+            "relativePath": "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 46007,
+            "touched": 1791370651848,
+            "validTill": 1791371251847
+          },
+          {
+            "keySha256": "35a66bb40f3c02a325e60229aca27d0c086c565182c09706b4c02c39f9b654a1",
+            "kind": "transfer",
+            "relativePath": "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 33091,
+            "touched": 1791370651869,
+            "validTill": 1791371251869
+          },
+          {
+            "keySha256": "ed6e2590ece1540aea34e8280195c085c7ef315a5d694b0c0d3b60a6c603339d",
+            "kind": "transfer",
+            "relativePath": "8a6ccfa0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 33091,
+            "touched": 1791370652389,
+            "validTill": 1791371252389
+          },
+          {
+            "keySha256": "1c237379846c2c67f97c84d361df04d28a79b40da60c8eeae8202152545301b1",
+            "kind": "transfer",
+            "relativePath": "8a9e8e00-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 22326,
+            "touched": 1791370652783,
+            "validTill": 1791371252783
+          },
+          {
+            "keySha256": "cf4a0f5590c2072dcfa14eac1b1694cdf369fdf01de55f4f56885cafdf3cf58c",
+            "kind": "immutable",
+            "relativePath": "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370652034,
+            "validTill": 1791371252034
+          },
+          {
+            "keySha256": "d55f73df31f0510d32e4695da0f3ab523725b6c19289b787ca051cca07b9f29f",
+            "kind": "immutable",
+            "relativePath": "8aada930-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370651357,
+            "validTill": 1791371251357
+          },
+          {
+            "keySha256": "5dc043de1aa6f3d31c960eaaaaf443d6f5324b5a2b379b30e0bc406bd5197f8e",
+            "kind": "immutable",
+            "relativePath": "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370651979,
+            "validTill": 1791371251979
+          },
+          {
+            "keySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+            "kind": "immutable",
+            "relativePath": "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370652373,
+            "validTill": 1791371252373
+          },
+          {
+            "keySha256": "924cd95c93b0207405f358399a7c0f149fad88be303a0f9e86b5bc6dc10f918f",
+            "kind": "immutable",
+            "relativePath": "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370654465,
+            "validTill": 1791371254465
+          },
+          {
+            "keySha256": "5675e8b03a38d9de5468c27913c383fba0591c90c795e757e203c51cada55448",
+            "kind": "immutable",
+            "relativePath": "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791370652369,
+            "validTill": 1791371252369
+          },
+          {
+            "keySha256": "75a3075dc3442f359e91cff4bf6b7eb5a9c22e2d83e2afae095cea1e51e7a217",
+            "kind": "transfer",
+            "relativePath": "e390b060-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 46007,
+            "touched": 1791370652834,
+            "validTill": 1791371249190
+          },
+          {
+            "keySha256": "f910438a605d3e2f03e4431be759f8e27471f4aff9015a285d3569d5dbfda193",
+            "kind": "transfer",
+            "relativePath": "e3d61dd0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370653354,
+            "validTill": 1791371249645
+          },
+          {
+            "keySha256": "4660ad4ae825c540a73f550926120f3111f86b84745d43b637b17d1fa24b4bff",
+            "kind": "transfer",
+            "relativePath": "e474ced0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 22326,
+            "touched": 1791370653713,
+            "validTill": 1791371250685
+          },
+          {
+            "keySha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac",
+            "kind": "transfer",
+            "relativePath": "21e28410-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370754894,
+            "validTill": 1791371353745
+          },
+          {
+            "keySha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8",
+            "kind": "transfer",
+            "relativePath": "21e6c9d0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 22117,
+            "touched": 1791370756000,
+            "validTill": 1791371353773
+          },
+          {
+            "keySha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062",
+            "kind": "transfer",
+            "relativePath": "21f6cf60-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 26920,
+            "touched": 1791370757016,
+            "validTill": 1791371353878
+          },
+          {
+            "keySha256": "497f6de7c327a4a991a9529e30b4e475b7b4712b0fc6740c7b713c62604f5f16",
+            "kind": "transfer",
+            "relativePath": "220e7610-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370757855,
+            "validTill": 1791371354033
+          },
+          {
+            "keySha256": "433a14e7325823707bd4c98d79243d079ac1cb57579a15cca9d047b5a85bc072",
+            "kind": "transfer",
+            "relativePath": "22166550-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 26920,
+            "touched": 1791370758723,
+            "validTill": 1791371354085
+          },
+          {
+            "keySha256": "383b0e8ac3422bd99e4cb0c68bfa611c515df7fca5b459ee6de7bb8c1bfb84f5",
+            "kind": "transfer",
+            "relativePath": "221db850-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370759520,
+            "validTill": 1791371354133
+          },
+          {
+            "keySha256": "2c752520a1fe581a444927df83617f235245c6b4ddff3bf2ac0137155e79bc9c",
+            "kind": "transfer",
+            "relativePath": "22297820-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 22117,
+            "touched": 1791370760215,
+            "validTill": 1791371354210
+          },
+          {
+            "keySha256": "e286e4782ce001fbe132742ff48badf272af52c63596c076ebc7beb72d992daf",
+            "kind": "transfer",
+            "relativePath": "2233d860-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 37021,
+            "touched": 1791370760928,
+            "validTill": 1791371354278
+          },
+          {
+            "keySha256": "669a55e0e53921f524d8299176fdfb9ed61fc0036372f8e3e6938f1aa35728f1",
+            "kind": "transfer",
+            "relativePath": "223537f0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370761526,
+            "validTill": 1791371354287
+          },
+          {
+            "keySha256": "2a262b52bf77c27f97258e46151e76fc97a6ddf7046541ae068b026151f3812f",
+            "kind": "transfer",
+            "relativePath": "22f66510-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 26920,
+            "touched": 1791370762233,
+            "validTill": 1791371355553
+          },
+          {
+            "keySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+            "kind": "immutable",
+            "relativePath": "231a40c0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370762556,
+            "validTill": 1791371355788
+          },
+          {
+            "keySha256": "311b7be4ee51aed4076a56ecccb9ad6bceae35604bc5bfb713b9041545470c5e",
+            "kind": "transfer",
+            "relativePath": "237cd320-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370763027,
+            "validTill": 1791371356434
+          },
+          {
+            "keySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+            "kind": "immutable",
+            "relativePath": "23a36df0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370763386,
+            "validTill": 1791371356687
+          },
+          {
+            "keySha256": "52e7b44c3cefbddd05d1fa80b65867e47633aa5d065ff5bd651950c4f2c6b7b5",
+            "kind": "transfer",
+            "relativePath": "240c9000-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791370763726,
+            "validTill": 1791371357376
+          },
+          {
+            "keySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+            "kind": "immutable",
+            "relativePath": "242c25f0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370764112,
+            "validTill": 1791371357583
+          },
+          {
+            "keySha256": "8cdc024c995898a6217110dcbb8f6496b7d5a0baa1e645a2afc6e8ef2c3117d8",
+            "kind": "transfer",
+            "relativePath": "24aa0880-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": 22117,
+            "touched": 1791370764280,
+            "validTill": 1791371358408
+          },
+          {
+            "keySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+            "kind": "immutable",
+            "relativePath": "266f1110-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370764394,
+            "validTill": 1791371361377
+          },
+          {
+            "keySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+            "kind": "immutable",
+            "relativePath": "27984ed0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370764577,
+            "validTill": 1791371363325
+          },
+          {
+            "keySha256": "cdfc0f1b864a54efb869ef2d3e2a1e338488c537da299e1ca0be9da42da7e722",
+            "kind": "immutable",
+            "relativePath": "280dccf0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370764710,
+            "validTill": 1791371364095
+          },
+          {
+            "keySha256": "1a5601c1bfd6bfd054db5638bc599217574f15d21606cbb772d325688466f3a5",
+            "kind": "immutable",
+            "relativePath": "2851b3c0-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370764900,
+            "validTill": 1791371364540
+          }
+        ],
+        "physicalFileCount": 48,
+        "physicalBytes": 1501119,
+        "metadataRowCount": 48,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 13,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physical": {
+          "e37a1b20-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 50794,
+            "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af"
+          },
+          "e4c6e670-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 50794,
+            "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af"
+          },
+          "e9cb89a0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 42692,
+            "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565"
+          },
+          "ea1feb30-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 42692,
+            "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565"
+          },
+          "fbb0fd30-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 73182,
+            "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d"
+          },
+          "fbf9c600-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 73182,
+            "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d"
+          },
+          "fff4c160-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 28681,
+            "sha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6"
+          },
+          "00208c50-c23e-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 28681,
+            "sha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6"
+          }
+        },
+        "metadata": [
+          {
+            "keySha256": "6ca129b648932fdbfdd9cfdaf30423129e1f73870f8b428f7ed9766d7013f7e7",
+            "kind": "transfer",
+            "relativePath": "e37a1b20-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 50794,
+            "touched": 1791370650163,
+            "validTill": 1791371249043
+          },
+          {
+            "keySha256": "f201ec6636bd886b63e72776167dbc15df7f0005113b9ac974850211050aeb6a",
+            "kind": "immutable",
+            "relativePath": "e4c6e670-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370651389,
+            "validTill": 1791371251223
+          },
+          {
+            "keySha256": "f3056efe726a52613de10ce03d1c32071a7e6b143849dcf8b4e3e8e56161bd83",
+            "kind": "transfer",
+            "relativePath": "e9cb89a0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 42692,
+            "touched": 1791370659848,
+            "validTill": 1791371259642
+          },
+          {
+            "keySha256": "bbe5bbe827eed8e64696579b337a214ba6d0c3c97d73001db48a307b899ad9e9",
+            "kind": "immutable",
+            "relativePath": "ea1feb30-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370660287,
+            "validTill": 1791371260196
+          },
+          {
+            "keySha256": "4525278ba59570901b14eaa23c2ddd2822d7b5091be91bac24f16af20eb61f51",
+            "kind": "transfer",
+            "relativePath": "fbb0fd30-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 73182,
+            "touched": 1791370690027,
+            "validTill": 1791371289667
+          },
+          {
+            "keySha256": "0cf69e467599d1dc3e3df0436c6cbe3197adb74c72180e1182c64f7132b33cfb",
+            "kind": "immutable",
+            "relativePath": "fbf9c600-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370690165,
+            "validTill": 1791371290144
+          },
+          {
+            "keySha256": "00dfdf5b8cfab63600ab971fc29b84c1c6478b33219e0c1eccabe8685f86f010",
+            "kind": "transfer",
+            "relativePath": "fff4c160-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 28681,
+            "touched": 1791370696945,
+            "validTill": 1791371296822
+          },
+          {
+            "keySha256": "91f9abdb5d842e7cf7598a236d8a9c73d5958822f7586bf84266fa788a75a823",
+            "kind": "immutable",
+            "relativePath": "00208c50-c23e-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791370697208,
+            "validTill": 1791371297109
+          }
+        ],
+        "physicalFileCount": 8,
+        "physicalBytes": 390698,
+        "metadataRowCount": 8,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 4,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "notStarted": [
+      "fault",
+      "empty",
+      "natural"
+    ],
+    "cacheResetByParent": false,
+    "acceptedNative": false,
+    "readOnlyVmFollowUp": {
+      "diagnosticSha256": "ecec86c0f61f7c424daf617b37cec10e957813bf3897b98722b3a07caae773af",
+      "retainedImageStreamCompleters": 48,
+      "actualRetainedImageStreamErrors": 0,
+      "flutterErrorDetailsCount": 0,
+      "retainedArtworkStates": [
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "2",
+          "assetId": "28"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "9",
+          "assetId": "70"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "1",
+          "language": "tr",
+          "contentId": "4",
+          "assetId": "40"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "10",
+          "assetId": "72"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "3",
+          "assetId": "34"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "10",
+          "assetId": "72"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "2",
+          "assetId": "28"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "5",
+          "assetId": "46"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "2",
+          "assetId": "28"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "3",
+          "assetId": "34"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "4",
+          "assetId": "40"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "9",
+          "assetId": "70"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "4",
+          "assetId": "40"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "4",
+          "language": "en",
+          "contentId": "3",
+          "assetId": "34"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "1",
+          "language": "tr",
+          "contentId": "5",
+          "assetId": "46"
+        },
+        {
+          "status": "loaded",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "1",
+          "language": "tr",
+          "contentId": "3",
+          "assetId": "34"
+        },
+        {
+          "status": "error",
+          "closed": "",
+          "attempt": "1",
+          "catalogAttempt": "1",
+          "language": "tr",
+          "contentId": "6",
+          "assetId": "52"
+        }
+      ],
+      "qualification": "After test teardown, these states can include unreachable/obsolete objects; exact blocked card and failure cause remain unproven. No retained ImageStream exception was found. Some recommendation state contexts retain initial configuration UI language; this is observed separately from actual selected content language.",
+      "invalidNullRefDiagnosticRejected": true
+    },
+    "independentHostRecommendationSources": {
+      "proofSha256": "b7602232db45c16893de4b6a0e8b52eef6a9960177b1c50f56d6e2b3caea215d",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "categoryId": 1,
+      "contentId": 2,
+      "uiLanguage": "en",
+      "contentLanguage": "en",
+      "audience": "NON_SUBSCRIBER",
+      "recommendationSources": [
+        {
+          "contentId": 3,
+          "contentLanguage": "en",
+          "assetId": 34,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 31220,
+          "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 335
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "en",
+          "assetId": 40,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 22117,
+          "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 289
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "en",
+          "assetId": 46,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 37021,
+          "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f",
+          "registeredProvenanceMatches": true,
+          "width": 270,
+          "height": 480,
+          "elapsedMs": 489
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "en",
+          "assetId": 52,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 25017,
+          "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 516
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "en",
+          "assetId": 58,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 17381,
+          "sha256": "2db730715d9f72bdea91f00ce9eafabd90cbd188cbdf9e360beace5383eee09c",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 506
+        }
+      ],
+      "qualification": "Independent current host backend/provider read; does not establish A7 emulator source response or exact failed card."
+    },
+    "finderHypothesisCorrection": "Local widget regression: default skipOffstage=true excludes a fully offscreen cache-extent card. Earlier all-mounted/offscreen-wait explanation is unproven; native exact blocked visible/partial card remains to be recorded."
+  },
+  "nativeBaselineA8": {
+    "exitCode": 1,
+    "nativeReportPassed": false,
+    "completedCases": 10,
+    "capturesAcknowledged": 31,
+    "sourceSeal": "0835f5beab5fc57ddca281deb84585207781169d191a08276e8631cb9c0e9061",
+    "sourceUnchanged": true,
+    "installedBinaryComparison": true,
+    "datasetUnchanged": true,
+    "proofSha256": "911e4725791ef80285963c1230f31aafb77ab8aefa5a2aaa05fc667c69d68f08",
+    "logSha256": "5f7beee47300dda72982c413275dfa469b7894edfdd7d53c9ac99bb590ce55fd",
+    "actualNativeCoverDeadline": {
+      "phase": "wait-deadline",
+      "elapsedMilliseconds": 229176,
+      "detailContentId": 2,
+      "uiLanguage": "pt",
+      "contentLanguage": "pt",
+      "detailAttempt": 1,
+      "globalCardCount": 3,
+      "scopeCount": 1,
+      "scopedCardCount": 3,
+      "mountedCardCount": 4,
+      "waitingContentId": 4,
+      "waitingContentLanguage": "pt",
+      "waitingPhoneAssetId": 42,
+      "waitingTabletAssetId": 43,
+      "waitingTargetCount": 1,
+      "cards": [
+        {
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "phoneAssetId": 36,
+          "tabletAssetId": 37,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "loaded",
+          "networkImageCount": 1,
+          "rawImageCount": 1,
+          "decodedImageCount": 1,
+          "decodedImages": [
+            {
+              "width": 296,
+              "height": 480
+            }
+          ],
+          "bounds": [
+            16.0,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "pt",
+          "phoneAssetId": 42,
+          "tabletAssetId": 43,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            201.665,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "pt",
+          "phoneAssetId": 48,
+          "tabletAssetId": 49,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            387.33,
+            639.7799999999999,
+            169.66500000000002,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "pt",
+          "phoneAssetId": 54,
+          "tabletAssetId": 55,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            572.995,
+            639.7799999999999,
+            169.66499999999996,
+            226.22000000000003
+          ],
+          "intersectsViewports": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "kind": "catalog",
+          "language": "en",
+          "milliseconds": 92,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "catalog",
+          "language": "pt",
+          "milliseconds": 90,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        }
+      ]
+    },
+    "postFailureCacheAuditSha256": "7f11c16dc2e52b123961ef90ddc81127bf4328e5c89f20760438d9c83c714745",
+    "postFailureRetainedProfiles": {
+      "library-157117387": {
+        "physical": {
+          "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "d230c180-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "d2924270-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "022e87f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "87666d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "02434870-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 33091,
+            "sha256": "dbaf84bed9b9023d3cc17e286d0539035097938945efbf42dab767397ed58bdd"
+          },
+          "8aada930-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          },
+          "024e9310-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "02541150-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg": {
+            "byteSize": 37259,
+            "sha256": "34d022cc84600640c62ff3f44aa8204e3c8ee98c1dfdc6521e2bd34935443f91"
+          },
+          "02630570-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "02710f30-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "02850c60-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "0289ee60-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "028d70d0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "0367f250-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "03d18990-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "03dfe170-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "03ee6060-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "044fba40-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "0455d4c0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "04c363a0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "07cef5f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "08505af0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 22117,
+            "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e"
+          },
+          "088e4e50-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "0a18e5f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "0a2282e0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25017,
+            "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+          },
+          "0b014a20-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "0b036d00-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25017,
+            "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+          },
+          "0d2896f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "0d290c20-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "0d75a580-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25017,
+            "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+          },
+          "0e139330-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "0ec1fba0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25017,
+            "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a"
+          },
+          "0ec222b0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 26920,
+            "sha256": "08b0c7d42fa081c389837dfceb30090dc5990112b43f027044eb43d12a26f561"
+          },
+          "15dfe1e0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "16357bf0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 37021,
+            "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f"
+          },
+          "2bfd0bb0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 33631,
+            "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5"
+          },
+          "2c0289f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25752,
+            "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+          },
+          "2c0919a0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 33667,
+            "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c"
+          },
+          "2e39b540-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25752,
+            "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+          },
+          "2e6754f0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 33631,
+            "sha256": "135d289ffe817fa5cf7546b1c28e0faaa5c99bff331bc333fc37d7ebc56915e5"
+          },
+          "2fbef5b0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25752,
+            "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+          },
+          "30453cb0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 33667,
+            "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c"
+          },
+          "31cfd450-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25752,
+            "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe"
+          },
+          "e390b060-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 46007,
+            "sha256": "6ddbe96915d7a3519e9c832f988c273bd9f378d98b1ffd004f7482cff6d765a3"
+          },
+          "e3d61dd0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 31220,
+            "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5"
+          },
+          "e474ced0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 22326,
+            "sha256": "8bf48d4af0f84a4af77a9101c7f4c18fb5739a2f2ec868cc749e8569edb7580c"
+          }
+        },
+        "metadata": [
+          {
+            "keySha256": "b9ee06bb8e6127daf33fa612b636e8249f34ae6b6a80b95c5ab90226c8cd5c3f",
+            "kind": "transfer",
+            "relativePath": "1a20a990-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 22326,
+            "touched": 1791372332849,
+            "validTill": 1791372932849
+          },
+          {
+            "keySha256": "4d517841fe33fd7c72d768b380500d00712b236fa571046df314250c534060da",
+            "kind": "transfer",
+            "relativePath": "19e32b60-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 26920,
+            "touched": 1791372332805,
+            "validTill": 1791372932805
+          },
+          {
+            "keySha256": "662970645e8bcd1683d8286d1a9f63f7d1ab6407c553da9ffec1be70bfeb906d",
+            "kind": "transfer",
+            "relativePath": "1a2b57f0-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 22326,
+            "touched": 1791372333153,
+            "validTill": 1791372933153
+          },
+          {
+            "keySha256": "0d7131f6dd40881cc865e4de68b551a5222d0add070a860fc99417b4f9b9182f",
+            "kind": "transfer",
+            "relativePath": "1a2bf430-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 31220,
+            "touched": 1791372332624,
+            "validTill": 1791372932623
+          },
+          {
+            "keySha256": "58835d0b2e7700b83f8b766b110a8d031218a90adeef600209bef5bd2ff96d38",
+            "kind": "transfer",
+            "relativePath": "1a216ce0-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 33091,
+            "touched": 1791372332813,
+            "validTill": 1791372932813
+          },
+          {
+            "keySha256": "59a5e1b6bdc9d810dde89472bce0c41a37bdb9644f1f1a5f7e077bdf8ed7844a",
+            "kind": "transfer",
+            "relativePath": "1a30fd40-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 33091,
+            "touched": 1791372333092,
+            "validTill": 1791372933092
+          },
+          {
+            "keySha256": "2e9da2384d3b8351d99d5fba9c96dec717153ddd122c408e4e57fc75b65d485f",
+            "kind": "transfer",
+            "relativePath": "1a2c6960-c226-11f1-b5f0-37356366f2ea.jpg",
+            "length": 46007,
+            "touched": 1791372332813,
+            "validTill": 1791372932813
+          },
+          {
+            "keySha256": "1d63ecb792245e8fefd98c30b314d21ea50930cd976f3b49f01931fd1c484277",
+            "kind": "transfer",
+            "relativePath": "d230c180-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 46007,
+            "touched": 1791372333409,
+            "validTill": 1791372933409
+          },
+          {
+            "keySha256": "98f3133d41217e276821150ea637fceb5ec418804bb2353a0733f28eaf54a597",
+            "kind": "transfer",
+            "relativePath": "d2924270-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 33091,
+            "touched": 1791372333202,
+            "validTill": 1791372933202
+          },
+          {
+            "keySha256": "f426cbb07f15c532544856bec23ddb70ca6214d57c8465448b0553951ec789c7",
+            "kind": "transfer",
+            "relativePath": "d4ce28b0-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 26920,
+            "touched": 1791372333087,
+            "validTill": 1791372933087
+          },
+          {
+            "keySha256": "4837c85d08f473397196d63488cd52563820f8d9c4064aa29e4e1a73ea0b535d",
+            "kind": "transfer",
+            "relativePath": "d4ebe9e0-c232-11f1-afd7-c944af045c00.jpg",
+            "length": 37259,
+            "touched": 1791372332848,
+            "validTill": 1791372932848
+          },
+          {
+            "keySha256": "3e197628c6645eee4e3bd3b8f5bbe2b965e76de3613377271c04ded44d8ed399",
+            "kind": "transfer",
+            "relativePath": "86e7a080-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 46007,
+            "touched": 1791372333709,
+            "validTill": 1791372933709
+          },
+          {
+            "keySha256": "3a0ddf23f1c3f83159f47470150cd97fa73088f31740363fd92373024aaf929e",
+            "kind": "transfer",
+            "relativePath": "8753a8c0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 22326,
+            "touched": 1791372333709,
+            "validTill": 1791372933709
+          },
+          {
+            "keySha256": "91f7b1eae148cce1766be1ab7ce4daa77f86155d51b8e16ebfcfd5579a68efaf",
+            "kind": "transfer",
+            "relativePath": "87666d70-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 33091,
+            "touched": 1791372333483,
+            "validTill": 1791372933483
+          },
+          {
+            "keySha256": "770e8353b152bbd49493863006fe727b4f7a9984abb0e6d2d8fbcbb79bb93773",
+            "kind": "transfer",
+            "relativePath": "878d7d70-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 37259,
+            "touched": 1791372334292,
+            "validTill": 1791372934292
+          },
+          {
+            "keySha256": "a20003fa1146fb23865ff59c3fb9f8d7a675aadf1f73bce3aae63a4dd673fcba",
+            "kind": "transfer",
+            "relativePath": "89349dc0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 46007,
+            "touched": 1791372334320,
+            "validTill": 1791372934320
+          },
+          {
+            "keySha256": "35a66bb40f3c02a325e60229aca27d0c086c565182c09706b4c02c39f9b654a1",
+            "kind": "transfer",
+            "relativePath": "89b391c0-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": 33091,
+            "touched": 1791372334296,
+            "validTill": 1791372934296
+          },
+          {
+            "keySha256": "cf4a0f5590c2072dcfa14eac1b1694cdf369fdf01de55f4f56885cafdf3cf58c",
+            "kind": "immutable",
+            "relativePath": "8aa19b40-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372333959,
+            "validTill": 1791372933959
+          },
+          {
+            "keySha256": "d55f73df31f0510d32e4695da0f3ab523725b6c19289b787ca051cca07b9f29f",
+            "kind": "immutable",
+            "relativePath": "8aada930-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372333961,
+            "validTill": 1791372933961
+          },
+          {
+            "keySha256": "5dc043de1aa6f3d31c960eaaaaf443d6f5324b5a2b379b30e0bc406bd5197f8e",
+            "kind": "immutable",
+            "relativePath": "8ab21600-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372333958,
+            "validTill": 1791372933958
+          },
+          {
+            "keySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+            "kind": "immutable",
+            "relativePath": "8b16a430-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372333957,
+            "validTill": 1791372933957
+          },
+          {
+            "keySha256": "924cd95c93b0207405f358399a7c0f149fad88be303a0f9e86b5bc6dc10f918f",
+            "kind": "immutable",
+            "relativePath": "a3f5ad20-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372333911,
+            "validTill": 1791372933911
+          },
+          {
+            "keySha256": "5675e8b03a38d9de5468c27913c383fba0591c90c795e757e203c51cada55448",
+            "kind": "immutable",
+            "relativePath": "aeb52420-c238-11f1-99c8-6d0513d9636f.jpg",
+            "length": null,
+            "touched": 1791372334419,
+            "validTill": 1791372934419
+          },
+          {
+            "keySha256": "75a3075dc3442f359e91cff4bf6b7eb5a9c22e2d83e2afae095cea1e51e7a217",
+            "kind": "transfer",
+            "relativePath": "e390b060-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 46007,
+            "touched": 1791372333111,
+            "validTill": 1791372933111
+          },
+          {
+            "keySha256": "f910438a605d3e2f03e4431be759f8e27471f4aff9015a285d3569d5dbfda193",
+            "kind": "transfer",
+            "relativePath": "e3d61dd0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 31220,
+            "touched": 1791372333062,
+            "validTill": 1791372933062
+          },
+          {
+            "keySha256": "4660ad4ae825c540a73f550926120f3111f86b84745d43b637b17d1fa24b4bff",
+            "kind": "transfer",
+            "relativePath": "e474ced0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 22326,
+            "touched": 1791372333420,
+            "validTill": 1791372933420
+          },
+          {
+            "keySha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062",
+            "kind": "transfer",
+            "relativePath": "022e87f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372419944,
+            "validTill": 1791373018543
+          },
+          {
+            "keySha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac",
+            "kind": "transfer",
+            "relativePath": "02434870-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372420989,
+            "validTill": 1791373018679
+          },
+          {
+            "keySha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8",
+            "kind": "transfer",
+            "relativePath": "024e9310-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 22117,
+            "touched": 1791372421623,
+            "validTill": 1791373018753
+          },
+          {
+            "keySha256": "383b0e8ac3422bd99e4cb0c68bfa611c515df7fca5b459ee6de7bb8c1bfb84f5",
+            "kind": "transfer",
+            "relativePath": "02541150-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372422314,
+            "validTill": 1791373018789
+          },
+          {
+            "keySha256": "2a262b52bf77c27f97258e46151e76fc97a6ddf7046541ae068b026151f3812f",
+            "kind": "transfer",
+            "relativePath": "02630570-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372422799,
+            "validTill": 1791373018887
+          },
+          {
+            "keySha256": "433a14e7325823707bd4c98d79243d079ac1cb57579a15cca9d047b5a85bc072",
+            "kind": "transfer",
+            "relativePath": "02710f30-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372423888,
+            "validTill": 1791373018979
+          },
+          {
+            "keySha256": "814df76eb818d1b584ff2c1a9395775f4630fa966f68c020445764e8d7de1b36",
+            "kind": "transfer",
+            "relativePath": "02850c60-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372424800,
+            "validTill": 1791373019110
+          },
+          {
+            "keySha256": "497f6de7c327a4a991a9529e30b4e475b7b4712b0fc6740c7b713c62604f5f16",
+            "kind": "transfer",
+            "relativePath": "0289ee60-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372425419,
+            "validTill": 1791373019142
+          },
+          {
+            "keySha256": "2c752520a1fe581a444927df83617f235245c6b4ddff3bf2ac0137155e79bc9c",
+            "kind": "transfer",
+            "relativePath": "028d70d0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 22117,
+            "touched": 1791372425980,
+            "validTill": 1791373019165
+          },
+          {
+            "keySha256": "669a55e0e53921f524d8299176fdfb9ed61fc0036372f8e3e6938f1aa35728f1",
+            "kind": "transfer",
+            "relativePath": "0367f250-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372426872,
+            "validTill": 1791373020597
+          },
+          {
+            "keySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+            "kind": "immutable",
+            "relativePath": "03d18990-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372427200,
+            "validTill": 1791373021289
+          },
+          {
+            "keySha256": "52e7b44c3cefbddd05d1fa80b65867e47633aa5d065ff5bd651950c4f2c6b7b5",
+            "kind": "transfer",
+            "relativePath": "03dfe170-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372427633,
+            "validTill": 1791373021383
+          },
+          {
+            "keySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+            "kind": "immutable",
+            "relativePath": "03ee6060-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372427876,
+            "validTill": 1791373021478
+          },
+          {
+            "keySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+            "kind": "immutable",
+            "relativePath": "044fba40-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372428203,
+            "validTill": 1791373022116
+          },
+          {
+            "keySha256": "8cdc024c995898a6217110dcbb8f6496b7d5a0baa1e645a2afc6e8ef2c3117d8",
+            "kind": "transfer",
+            "relativePath": "0455d4c0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 22117,
+            "touched": 1791372428539,
+            "validTill": 1791373022156
+          },
+          {
+            "keySha256": "6733de8445ae6f82cc8f4c9a62fde185d816a4a45412cc6fbd67a4ebc6d34e78",
+            "kind": "transfer",
+            "relativePath": "04c363a0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 37021,
+            "touched": 1791372428937,
+            "validTill": 1791373022874
+          },
+          {
+            "keySha256": "cdfc0f1b864a54efb869ef2d3e2a1e338488c537da299e1ca0be9da42da7e722",
+            "kind": "immutable",
+            "relativePath": "07cef5f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372429260,
+            "validTill": 1791373027983
+          },
+          {
+            "keySha256": "1a5601c1bfd6bfd054db5638bc599217574f15d21606cbb772d325688466f3a5",
+            "kind": "immutable",
+            "relativePath": "08505af0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372429422,
+            "validTill": 1791373028832
+          },
+          {
+            "keySha256": "966767b1dbeafce49782ad27f9283a8a1f80206ea695a0cd308c104f21d9a3cc",
+            "kind": "immutable",
+            "relativePath": "088e4e50-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372429571,
+            "validTill": 1791373029238
+          },
+          {
+            "keySha256": "43499a00fb5e066ee5cbf4be76ed7ad45dc69063d6e2bb52e15ec92548ec2d74",
+            "kind": "transfer",
+            "relativePath": "0a18e5f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372432375,
+            "validTill": 1791373031823
+          },
+          {
+            "keySha256": "eb6039e00548ec7e6217ba959f29b415da3ec8b4c70c0f28792a1ceb1429c7cb",
+            "kind": "transfer",
+            "relativePath": "0a2282e0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 25017,
+            "touched": 1791372432591,
+            "validTill": 1791373031886
+          },
+          {
+            "keySha256": "df32615b6b6e2d5f21d79f01dc89a4fdcb0c00dbc900f6a48f6db860331af1a5",
+            "kind": "immutable",
+            "relativePath": "0b014a20-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372433619,
+            "validTill": 1791373033346
+          },
+          {
+            "keySha256": "4069735a54f55f29ea6ae1271105e8290ce46f99522e782217633b62bfcde543",
+            "kind": "immutable",
+            "relativePath": "0b036d00-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372433756,
+            "validTill": 1791373033360
+          },
+          {
+            "keySha256": "16c88ad0d1bef67513662d71caaaf8c37b55cd6702201977bcb4a72e01130eb6",
+            "kind": "transfer",
+            "relativePath": "0d2896f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 31220,
+            "touched": 1791372437677,
+            "validTill": 1791373036960
+          },
+          {
+            "keySha256": "a55b6d7ca875f9168ef0c8ad5599113ed6cab09abc3af4634454d39b8f37d20a",
+            "kind": "transfer",
+            "relativePath": "0d290c20-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 26920,
+            "touched": 1791372438073,
+            "validTill": 1791373036962
+          },
+          {
+            "keySha256": "7620c446e12ac7502146371437ebe9d5b069f0073538fd0a202afea053d1832b",
+            "kind": "transfer",
+            "relativePath": "0d75a580-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 25017,
+            "touched": 1791372438642,
+            "validTill": 1791373037464
+          },
+          {
+            "keySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+            "kind": "immutable",
+            "relativePath": "0e139330-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372438768,
+            "validTill": 1791373038499
+          },
+          {
+            "keySha256": "3f4503b20e749eb45f7497dc6547f9f8e3f5fa80098979c6910fa06dc6bd1119",
+            "kind": "immutable",
+            "relativePath": "0ec1fba0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372439782,
+            "validTill": 1791373039642
+          },
+          {
+            "keySha256": "fef574fbf5915696ef8400a7e3694beb9e921774f1c57382b73a04fa03c6c885",
+            "kind": "immutable",
+            "relativePath": "0ec222b0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372439958,
+            "validTill": 1791373039644
+          },
+          {
+            "keySha256": "3e6cb3c0511d37b8121a6a0c657a34afe155222e1349ba29ae7fbb5ec028d64d",
+            "kind": "transfer",
+            "relativePath": "15dfe1e0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 37021,
+            "touched": 1791372451877,
+            "validTill": 1791373051582
+          },
+          {
+            "keySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+            "kind": "immutable",
+            "relativePath": "16357bf0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372452343,
+            "validTill": 1791373052143
+          },
+          {
+            "keySha256": "d3f8f5e041405824469278cff51273a5bf0f42a775f268d2a3c201b3111c2856",
+            "kind": "transfer",
+            "relativePath": "2bfd0bb0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 33631,
+            "touched": 1791372491774,
+            "validTill": 1791373088684
+          },
+          {
+            "keySha256": "a632081bc39bf32df17e926ae2dd842ccc6e0b113f043b07e132ce67bee02c9a",
+            "kind": "transfer",
+            "relativePath": "2c0289f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 25752,
+            "touched": 1791372493264,
+            "validTill": 1791373088719
+          },
+          {
+            "keySha256": "03406e3dce1f3027fd730c3efe82dad194912eb36d9a1673fdf55bd55f60be20",
+            "kind": "transfer",
+            "relativePath": "2c0919a0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 33667,
+            "touched": 1791372495170,
+            "validTill": 1791373088763
+          },
+          {
+            "keySha256": "d7f87ccb56978e00156f930244ac754b4cc421104a1dcc0e8f25229e736c7d6d",
+            "kind": "transfer",
+            "relativePath": "2e39b540-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 25752,
+            "touched": 1791372498079,
+            "validTill": 1791373092436
+          },
+          {
+            "keySha256": "28408422b61d7901fde789d3bc87bc2b2cd6640fc1f13539b741f99ccf61f87b",
+            "kind": "immutable",
+            "relativePath": "2e6754f0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372498446,
+            "validTill": 1791373092735
+          },
+          {
+            "keySha256": "490576a83210aaf304be36ba9030fae4158ad3bcc7a78def7b6e3af3eee5b10c",
+            "kind": "immutable",
+            "relativePath": "2fbef5b0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372498674,
+            "validTill": 1791373094988
+          },
+          {
+            "keySha256": "2e3a6b1f75fc1d7c9b35bc19bcd480c365e6a764ec91487cc0af7b208da884ca",
+            "kind": "immutable",
+            "relativePath": "30453cb0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372498887,
+            "validTill": 1791373095867
+          },
+          {
+            "keySha256": "aa4c2fad1889366bbfed2b1e6b727e8fed1ef3846df1c0d94b17b9d8d189267f",
+            "kind": "immutable",
+            "relativePath": "31cfd450-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372499073,
+            "validTill": 1791373098453
+          }
+        ],
+        "physicalFileCount": 65,
+        "physicalBytes": 1992016,
+        "metadataRowCount": 65,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 22,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physical": {
+          "e37a1b20-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 50794,
+            "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af"
+          },
+          "e4c6e670-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 50794,
+            "sha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af"
+          },
+          "e9cb89a0-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 42692,
+            "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565"
+          },
+          "ea1feb30-c23d-11f1-9695-9bf187c1449a.jpg": {
+            "byteSize": 42692,
+            "sha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565"
+          },
+          "df7b0440-c241-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 73182,
+            "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d"
+          },
+          "df9e91d0-c241-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 73182,
+            "sha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d"
+          },
+          "e2264e20-c241-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 28681,
+            "sha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6"
+          },
+          "e23c2010-c241-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 28681,
+            "sha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6"
+          },
+          "2d1cfaa0-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25912,
+            "sha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d"
+          },
+          "2dc4ac50-c242-11f1-a53b-d3b4905e5032.jpg": {
+            "byteSize": 25912,
+            "sha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d"
+          }
+        },
+        "metadata": [
+          {
+            "keySha256": "6ca129b648932fdbfdd9cfdaf30423129e1f73870f8b428f7ed9766d7013f7e7",
+            "kind": "transfer",
+            "relativePath": "e37a1b20-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 50794,
+            "touched": 1791372337160,
+            "validTill": 1791372937160
+          },
+          {
+            "keySha256": "f201ec6636bd886b63e72776167dbc15df7f0005113b9ac974850211050aeb6a",
+            "kind": "immutable",
+            "relativePath": "e4c6e670-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791372337526,
+            "validTill": 1791372937526
+          },
+          {
+            "keySha256": "f3056efe726a52613de10ce03d1c32071a7e6b143849dcf8b4e3e8e56161bd83",
+            "kind": "transfer",
+            "relativePath": "e9cb89a0-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": 42692,
+            "touched": 1791372342358,
+            "validTill": 1791372942358
+          },
+          {
+            "keySha256": "bbe5bbe827eed8e64696579b337a214ba6d0c3c97d73001db48a307b899ad9e9",
+            "kind": "immutable",
+            "relativePath": "ea1feb30-c23d-11f1-9695-9bf187c1449a.jpg",
+            "length": null,
+            "touched": 1791372342482,
+            "validTill": 1791372942481
+          },
+          {
+            "keySha256": "4525278ba59570901b14eaa23c2ddd2822d7b5091be91bac24f16af20eb61f51",
+            "kind": "transfer",
+            "relativePath": "df7b0440-c241-11f1-a53b-d3b4905e5032.jpg",
+            "length": 73182,
+            "touched": 1791372360468,
+            "validTill": 1791372960324
+          },
+          {
+            "keySha256": "0cf69e467599d1dc3e3df0436c6cbe3197adb74c72180e1182c64f7132b33cfb",
+            "kind": "immutable",
+            "relativePath": "df9e91d0-c241-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372360564,
+            "validTill": 1791372960557
+          },
+          {
+            "keySha256": "00dfdf5b8cfab63600ab971fc29b84c1c6478b33219e0c1eccabe8685f86f010",
+            "kind": "transfer",
+            "relativePath": "e2264e20-c241-11f1-a53b-d3b4905e5032.jpg",
+            "length": 28681,
+            "touched": 1791372364838,
+            "validTill": 1791372964802
+          },
+          {
+            "keySha256": "91f9abdb5d842e7cf7598a236d8a9c73d5958822f7586bf84266fa788a75a823",
+            "kind": "immutable",
+            "relativePath": "e23c2010-c241-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372364953,
+            "validTill": 1791372964945
+          },
+          {
+            "keySha256": "3f108019f736fc9e0aa938868a67b8d25ba5098ad1c055ec5740d55f12b1685b",
+            "kind": "transfer",
+            "relativePath": "2d1cfaa0-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": 25912,
+            "touched": 1791372491178,
+            "validTill": 1791373090570
+          },
+          {
+            "keySha256": "b597d528dd1a7e1c9c5add8519ec02b3d199541ed33d53585c4f11b482aa70e5",
+            "kind": "immutable",
+            "relativePath": "2dc4ac50-c242-11f1-a53b-d3b4905e5032.jpg",
+            "length": null,
+            "touched": 1791372492056,
+            "validTill": 1791373091669
+          }
+        ],
+        "physicalFileCount": 10,
+        "physicalBytes": 442522,
+        "metadataRowCount": 10,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 5,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "readOnlyVmProofSha256": "d4497ea51b4e518e600f8aed90bfe41f3cb860fec4e2994d6479e636ea9d912c",
+    "postTeardownVmQualification": "No retained ImageStream errors, FlutterErrorDetails or TimeoutException objects remain. Both cache admission active/queue counters and cache operations are zero. Recorded native TimeoutException events are real, but their exact wait duration/stack cannot now be recovered.",
+    "candidateSourceFinding": "Recommendation LibraryState uses initial immutable configuration context (tr) while actual PT detail identity and home context are pt. Potential wrong namespace/warm-reuse duplication needs a meaningful real-widget/cache regression, not assumed native-cause attribution.",
+    "notStarted": [
+      "fault",
+      "empty",
+      "natural"
+    ],
+    "cacheResetByParent": false,
+    "acceptedNative": false,
+    "independentHostRecommendationSources": {
+      "recordedAt": "2026-10-07T11:42:29.410772+00:00",
+      "probeSha256": "c5083e6e78972f5c20e51fb470f45a2a30ab0a6063714bf0ec6a041d74f9599a",
+      "sourceProof": {
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "categoryId": 1,
+        "contentId": 2,
+        "uiLanguage": "pt",
+        "contentLanguage": "pt",
+        "audience": "NON_SUBSCRIBER",
+        "recommendationSources": [
+          {
+            "contentId": 3,
+            "contentLanguage": "pt",
+            "assetId": 36,
+            "status": 200,
+            "mimeType": "image/jpeg",
+            "bytes": 25752,
+            "sha256": "76d0dbd8311444b746691fcf2d80bfc2d2ab7a94a13d5e33efb9f0db9e0082fe",
+            "registeredProvenanceMatches": true,
+            "width": 296,
+            "height": 480,
+            "elapsedMs": 520
+          },
+          {
+            "contentId": 4,
+            "contentLanguage": "pt",
+            "assetId": 42,
+            "status": 200,
+            "mimeType": "image/jpeg",
+            "bytes": 33667,
+            "sha256": "9707d663cdd60c961a7c4ce68ffe1ecee1ba8850563fb3156710a29bf303bf1c",
+            "registeredProvenanceMatches": true,
+            "width": 270,
+            "height": 480,
+            "elapsedMs": 528
+          },
+          {
+            "contentId": 5,
+            "contentLanguage": "pt",
+            "assetId": 48,
+            "status": 200,
+            "mimeType": "image/jpeg",
+            "bytes": 32033,
+            "sha256": "834c9be5926eb9b578702b6e399217e2eb6925637ca8d2be7a838d8530fa7283",
+            "registeredProvenanceMatches": true,
+            "width": 296,
+            "height": 480,
+            "elapsedMs": 523
+          },
+          {
+            "contentId": 6,
+            "contentLanguage": "pt",
+            "assetId": 54,
+            "status": 200,
+            "mimeType": "image/jpeg",
+            "bytes": 31412,
+            "sha256": "68c657e79ae33698814b0fb75796f0301247a3251b33df847b44b979c483bab1",
+            "registeredProvenanceMatches": true,
+            "width": 296,
+            "height": 480,
+            "elapsedMs": 489
+          },
+          {
+            "contentId": 7,
+            "contentLanguage": "pt",
+            "assetId": 60,
+            "status": 200,
+            "mimeType": "image/jpeg",
+            "bytes": 35035,
+            "sha256": "4bd9577e428fb9f893743e5001cca2010e828f82f660ce2c24f8de2e4bbbb812",
+            "registeredProvenanceMatches": true,
+            "width": 270,
+            "height": 480,
+            "elapsedMs": 599
+          }
+        ],
+        "qualification": "Independent current host backend/provider read; does not establish the failed emulator source response or exact failed card."
+      },
+      "qualification": "Current independent host reads verify available registered PT sources. They do not establish the failed A8 emulator request response, timeout phase, or timeout duration."
+    }
+  },
+  "architecturePreflight": {
+    "recordedAt": "2026-10-07T12:02:03.545532+00:00",
+    "reportSha256": "be1d11e8a25193103139c10772b3e188f9e94122c4dcaf5b62206b7416aec489",
+    "scope": "Required Flutter architecture source preflight before the remaining current-source native matrix",
+    "finding": "StoryDetail domain/model/view imports Library feature internals; shared card reads home-only LibraryCubit. Actual expired recommendation regression reproduced ProviderNotFoundException. The callback guard repairs that path; shared/core extraction is required by existing ADR-0018 policy.",
+    "policyDeviation": false,
+    "sourceRepairInProgress": false,
+    "nativeAcceptanceImplied": false,
+    "sourceRepairVerified": true,
+    "sourceVerification": {
+      "fullFlutterTestsPassed": 203,
+      "skippedTests": false,
+      "executedFrozenMatrixRows": 9,
+      "buildSourceFilesMatched": 99,
+      "nonGeneratedSourceFilesInspected": 48,
+      "coreToFeatureEdges": 0,
+      "crossFeatureInternalEdges": 0,
+      "nativeSourceFiles": 88,
+      "nativeSourceSeal": "4ec9555ee0609b98498a9e63eff7cbfac6ade4b3ba695a9cc2fefe2e6d74c767"
+    },
+    "resolution": "Shared pure preview/cover/context and DTO contracts, ArtworkCubit and PreviewCard now reside in core. Library adapter retains home automatic expiry; StoryDetail uses its own explicit fresh metadata callback and committed metadata attempt. Actual error-card cleanup failure is observed and leaves retryable metadata. Lazy cache/diagnostic factories preserve coverless lifecycle. Existing Library exports retain type identity. Native acceptance is separate."
+  },
+  "nativeBaselineA9": {
+    "recordedAt": "2026-10-07T12:24:08.979005+00:00",
+    "exitCode": 1,
+    "nativeReportPassed": false,
+    "completedCases": 6,
+    "capturesAcknowledged": 19,
+    "sourceSeal": "4ec9555ee0609b98498a9e63eff7cbfac6ade4b3ba695a9cc2fefe2e6d74c767",
+    "sourceUnchanged": true,
+    "installedBinaryComparison": true,
+    "datasetUnchanged": true,
+    "proofSha256": "1697abeba362a7308ca5bd3711bde7cd65276e1b56facf37a2cf4cf827d96f14",
+    "logSha256": "3d1d61442ac787827ee36bee50c056c417a2d8b120c31c1b2a31007d8b64294c",
+    "actualNativeCoverDeadline": {
+      "phase": "wait-deadline",
+      "elapsedMilliseconds": 195626,
+      "detailContentId": 2,
+      "uiLanguage": "en",
+      "contentLanguage": "en",
+      "detailAttempt": 1,
+      "metadataAttempt": 1,
+      "globalCardCount": 3,
+      "scopeCount": 1,
+      "scopedCardCount": 3,
+      "mountedCardCount": 4,
+      "waitingContentId": 5,
+      "waitingContentLanguage": "en",
+      "waitingPhoneAssetId": 46,
+      "waitingTabletAssetId": 47,
+      "waitingTargetCount": 1,
+      "cards": [
+        {
+          "cacheIdentitySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+          "contentId": 3,
+          "contentLanguage": "en",
+          "phoneAssetId": 34,
+          "tabletAssetId": 35,
+          "contextLanguage": "en",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "loaded",
+          "networkImageCount": 1,
+          "rawImageCount": 1,
+          "decodedImageCount": 1,
+          "decodedImages": [
+            {
+              "width": 296,
+              "height": 480
+            }
+          ],
+          "bounds": [
+            16.0,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+          "contentId": 4,
+          "contentLanguage": "en",
+          "phoneAssetId": 40,
+          "tabletAssetId": 41,
+          "contextLanguage": "en",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "loaded",
+          "networkImageCount": 1,
+          "rawImageCount": 1,
+          "decodedImageCount": 1,
+          "decodedImages": [
+            {
+              "width": 296,
+              "height": 480
+            }
+          ],
+          "bounds": [
+            201.665,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+          "contentId": 5,
+          "contentLanguage": "en",
+          "phoneAssetId": 46,
+          "tabletAssetId": 47,
+          "contextLanguage": "en",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            387.33,
+            639.7799999999999,
+            169.66500000000002,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "3f4503b20e749eb45f7497dc6547f9f8e3f5fa80098979c6910fa06dc6bd1119",
+          "contentId": 6,
+          "contentLanguage": "en",
+          "phoneAssetId": 52,
+          "tabletAssetId": 53,
+          "contextLanguage": "en",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            572.995,
+            639.7799999999999,
+            169.66499999999996,
+            226.22000000000003
+          ],
+          "intersectsViewports": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "kind": "catalog",
+          "language": "en",
+          "milliseconds": 107,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        }
+      ]
+    },
+    "boundedActualCacheFailures": [
+      {
+        "transferSha256": "f0e97bb1da6fc364d68b41d7df1fa688ab7de31139ad5ee7938c68e0d1be06ea",
+        "identitySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2934,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "0af07ec1e2fe0c254bcbf141293bc43ccaefdd24bf746521d47c97dee756f5a9",
+        "identitySha256": "fef574fbf5915696ef8400a7e3694beb9e921774f1c57382b73a04fa03c6c885",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2451,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "311b7be4ee51aed4076a56ecccb9ad6bceae35604bc5bfb713b9041545470c5e",
+        "identitySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2470,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "6cd35940da971acc66710e72d1aa0d10404e24949c27a5e3b93b0e2dc16ddd83",
+        "identitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2948,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "735cc50b220f104075c0323f80809ab7601e13314af931dfaacd231255e61991",
+        "identitySha256": "3f4503b20e749eb45f7497dc6547f9f8e3f5fa80098979c6910fa06dc6bd1119",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2949,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "497f6de7c327a4a991a9529e30b4e475b7b4712b0fc6740c7b713c62604f5f16",
+        "identitySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9150
+      },
+      {
+        "transferSha256": "e286e4782ce001fbe132742ff48badf272af52c63596c076ebc7beb72d992daf",
+        "identitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9449
+      },
+      {
+        "transferSha256": "669a55e0e53921f524d8299176fdfb9ed61fc0036372f8e3e6938f1aa35728f1",
+        "identitySha256": "290f6b6bbea316eed0f59def121e7418c9d9aa946cc6ebb05ce59aa8d9540bf0",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 10113
+      }
+    ],
+    "blockedCardIdentityMatchedCacheFailures": [
+      {
+        "transferSha256": "6cd35940da971acc66710e72d1aa0d10404e24949c27a5e3b93b0e2dc16ddd83",
+        "identitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 2948,
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "e286e4782ce001fbe132742ff48badf272af52c63596c076ebc7beb72d992daf",
+        "identitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9449
+      }
+    ],
+    "timeoutQualification": "Actual A9 immutable-identity correlated events distinguish admission TimeoutException with duration2000ms and package-source TimeoutException. Different transfer hashes share the blocked immutable key; route/owner attribution and exact package header/body/total-expiry phase remain unproven. These observations do not retrospectively prove A5/A7/A8 causes.",
+    "postFailureCacheAuditSha256": "88babe48e2d2901b8030ebbfa18cd5d66ae25d8d5ae500d22d6c6281a0aa083a",
+    "postFailureRetainedProfiles": {
+      "library-157117387": {
+        "physicalFileCount": 42,
+        "physicalBytes": 1302700,
+        "metadataRowCount": 42,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 9,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physicalFileCount": 8,
+        "physicalBytes": 390698,
+        "metadataRowCount": 8,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 4,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "unchangedFilesFromPrior": {
+      "library-157117387": 26,
+      "detail-hero-157117387": 2
+    },
+    "cacheReset": false,
+    "nextNativeTargetsStarted": false,
+    "temporarySqlMutation": false,
+    "independentHostRecommendationSources": {
+      "reportSha256": "d96d7bfbb1893235f68bca4b833b70ebde2fd0df854777b723f2f0fb8782a26f",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "categoryId": 1,
+      "contentId": 2,
+      "uiLanguage": "en",
+      "contentLanguage": "en",
+      "audience": "NON_SUBSCRIBER",
+      "recommendationSources": [
+        {
+          "contentId": 3,
+          "contentLanguage": "en",
+          "assetId": 34,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 31220,
+          "sha256": "ade1cce3fca0692a0045c33f8b4d50db0a08ea966bd7d300bdec6628dbf038c5",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 390
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "en",
+          "assetId": 40,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 22117,
+          "sha256": "541794da9ee7a64b0eab0ee1bc1d49ab7d8c7852d1588bb40f679008bad3870e",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 523
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "en",
+          "assetId": 46,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 37021,
+          "sha256": "56b47e4678ac266dd70ff140ad911c1647c619eff1d1b8971ece122490d8223f",
+          "registeredProvenanceMatches": true,
+          "width": 270,
+          "height": 480,
+          "elapsedMs": 512
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "en",
+          "assetId": 52,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 25017,
+          "sha256": "660d5d4d2d24b9f4ab9d02fb371d6fd853d8864a501f58e10cfce7b8275b3c2a",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 455
+        },
+        {
+          "contentId": 7,
+          "contentLanguage": "en",
+          "assetId": 58,
+          "status": 200,
+          "mimeType": "image/jpeg",
+          "bytes": 17381,
+          "sha256": "2db730715d9f72bdea91f00ce9eafabd90cbd188cbdf9e360beace5383eee09c",
+          "registeredProvenanceMatches": true,
+          "width": 296,
+          "height": 480,
+          "elapsedMs": 453
+        }
+      ],
+      "qualification": "Independent current host backend/provider read; does not establish the failed emulator source response or exact failed card."
+    },
+    "postTeardownReadonlyVm": {
+      "reportSha256": "b8ed6eee1177e87b4625e88c7459befec64a5733aaba7658d60e65229183f95b",
+      "retainedImageStreamCompleters": 48,
+      "retainedArtworkCubits": 17,
+      "actualCurrentErrors": 0,
+      "retainedFlutterErrorDetails": 0,
+      "retainedTimeoutExceptions": 0,
+      "qualification": "Read-only post-teardown VM instance inspection found no retained actual errors; it cannot reconstruct the failed transfer or identify its transport subphase."
+    }
+  },
+  "nextCurrentNativePreflight": {
+    "recordedAt": "2026-10-07T12:54:46.266484+00:00",
+    "label": "story12-a10-before",
+    "auditSha256": "32866f9ded2d36abc1d3646a0cc929409e5375ab407bbceeb37f01ff1c382a08",
+    "cacheReset": false,
+    "classification": "Read-only pre-run snapshot; source verification and current native execution pending.",
+    "retainedProfiles": {
+      "library-157117387": {
+        "physicalFileCount": 42,
+        "physicalBytes": 1302700,
+        "metadataRowCount": 42,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 9,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physicalFileCount": 8,
+        "physicalBytes": 390698,
+        "metadataRowCount": 8,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 4,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "unchangedFilesFromA9Failure": {
+      "library-157117387": 42,
+      "detail-hero-157117387": 8
+    },
+    "sourceSeal": "954b22eb174db2146619fbea9650841f3cc1f9dcc447576dadab85e100a3cdf5",
+    "nativeSourceFiles": 88,
+    "independentlyMatchedBuildSourceFiles": 99,
+    "fullTestsPassed": 208,
+    "executedMatrixRows": 9,
+    "approvedFrozenIntentUnchanged": true,
+    "sourceBoundaryAuditSha256": "26236e18903a461aacb704f688377ac688e6c5ad8d8560da6548cd76ff9cc461",
+    "nativeRunLabel": "story12-final-android36-phone-nonsub-a10",
+    "nativeRunStatus": "failed; no subsequent targets executed"
+  },
+  "currentSourceSharingRepair": {
+    "classification": "Actual loopback/package/IO/engine regressions prove application duplicate cold reads; they do not establish the exact A9 failed emulator transfer subphase.",
+    "sourceSeal": "954b22eb174db2146619fbea9650841f3cc1f9dcc447576dadab85e100a3cdf5",
+    "fullTestsPassed": 208,
+    "buildEvidenceSha256": "dbd24bb81a601b38c5f6e8c089382a7dffdd735d119e35a4be2ca7308dd4da30",
+    "sharingScope": "Only identical immutable identity, exact URL, headers and progress; warm validation remains independent. Per-consumer current attempts, owned slots and cancellation settle independently; only final cancellation closes shared source.",
+    "preserved": "All original cache/network/source/decode limits, waits, partial-visible cover requirements, captures, frozen intent and home goldens. No disk reset.",
+    "transportObservations": "Optional bounded header/idle/total scalar and hashed producer/consumer observations; no raw keys, URLs, messages or credentials.",
+    "qualifiedPriorWarmAssertion": "An earlier focused actual TR/EN warm-file assertion returned null after healthy decode. Original test/log retained by build evidence; later isolated/focused/full passes do not establish its uncaptured cause."
+  },
+  "nativeBaselineA10": {
+    "recordedAt": "2026-10-07T13:12:34.484109+00:00",
+    "exitCode": 1,
+    "nativeReportPassed": false,
+    "completedCases": 0,
+    "capturesAcknowledged": 1,
+    "sourceSeal": "954b22eb174db2146619fbea9650841f3cc1f9dcc447576dadab85e100a3cdf5",
+    "sourceUnchanged": true,
+    "installedBinaryComparison": true,
+    "datasetUnchanged": true,
+    "proofSha256": "211cd88b71ebcffa991af461ec4945014db294568eb6e0cb86a9e3db92c5695c",
+    "logSha256": "5b915fc054fb1471ebb821cd2cfff0500057934ab0eb549b7a3b752ad8d1941f",
+    "actualNativeCoverDeadline": {
+      "phase": "wait-deadline",
+      "elapsedMilliseconds": 81189,
+      "detailContentId": 2,
+      "uiLanguage": "tr",
+      "contentLanguage": "tr",
+      "detailAttempt": 1,
+      "metadataAttempt": 1,
+      "globalCardCount": 2,
+      "scopeCount": 1,
+      "scopedCardCount": 2,
+      "mountedCardCount": 2,
+      "waitingContentId": 3,
+      "waitingContentLanguage": "tr",
+      "waitingPhoneAssetId": 38,
+      "waitingTabletAssetId": 39,
+      "waitingTargetCount": 1,
+      "cards": [
+        {
+          "cacheIdentitySha256": "cf4a0f5590c2072dcfa14eac1b1694cdf369fdf01de55f4f56885cafdf3cf58c",
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "phoneAssetId": 38,
+          "tabletAssetId": 39,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            16.0,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "phoneAssetId": 44,
+          "tabletAssetId": 45,
+          "contextLanguage": "tr",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            201.665,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "kind": "catalog",
+          "language": "tr",
+          "milliseconds": 1998,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "catalog",
+          "language": "tr",
+          "milliseconds": 188,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "PathNotFoundException",
+          "osErrorCode": 2
+        },
+        {
+          "kind": "error",
+          "type": "PathNotFoundException",
+          "osErrorCode": 2
+        }
+      ]
+    },
+    "boundedActualCacheFailures": [
+      {
+        "transferSha256": "4660ad4ae825c540a73f550926120f3111f86b84745d43b637b17d1fa24b4bff",
+        "identitySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 4917,
+        "producerSha256": "4660ad4ae825c540a73f550926120f3111f86b84745d43b637b17d1fa24b4bff",
+        "timeoutMilliseconds": 2000
+      },
+      {
+        "transferSha256": "3a0ddf23f1c3f83159f47470150cd97fa73088f31740363fd92373024aaf929e",
+        "identitySha256": "352661d0453273f83938841e743d5c07b7bb64174bec8358d81e309fee6526c2",
+        "phase": "admission",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 4923,
+        "producerSha256": "4660ad4ae825c540a73f550926120f3111f86b84745d43b637b17d1fa24b4bff",
+        "timeoutMilliseconds": 2000
+      }
+    ],
+    "qualification": "Selected TR content2 hero decoded; first visible recommendation3/TR/asset38 error and second4/TR/asset44 error. Two shared-source admission2s events correlate to asset44. Global diagnostics also report two PathNotFoundException/osError2; exact card/file/stack attribution is unavailable. Do not infer A9/A5 cause or claim current sharing repair accepted.",
+    "postFailureCacheAuditSha256": "3b14aa2eb12b17043c922e827485ec27bb8f2114c623f2fbdbe3b081e70696fd",
+    "postFailureRetainedProfiles": {
+      "library-157117387": {
+        "physicalFileCount": 13,
+        "physicalBytes": 450418,
+        "metadataRowCount": 13,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 2,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physicalFileCount": 2,
+        "physicalBytes": 101588,
+        "metadataRowCount": 2,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 1,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "unchangedFilesFromPrior": {
+      "library-157117387": 11,
+      "detail-hero-157117387": 2
+    },
+    "cacheReset": false,
+    "nextNativeTargetsStarted": false,
+    "temporarySqlMutation": false,
+    "postTeardownReadonlyVm": {
+      "reportSha256": "9f668cc1495e5da30ddc72e867ae01b5c63eb5916121228c5823cf794d790897",
+      "actualImageStreamErrors": 0,
+      "retainedFlutterErrorDetails": 0,
+      "retainedTimeoutExceptions": 0,
+      "qualification": "No retained actual error after SDK teardown; cannot reconstruct first missing file or decoder path."
+    },
+    "postTeardownFileExceptionInspection": {
+      "reportSha256": "b60b6e8777e0e84dbd81fe2446de09e9db90dcae083ff77af0419e98bc9fc0c0",
+      "PathNotFoundException": 0,
+      "FileSystemException": 0,
+      "qualification": "Actual class-instance inspection found no retained file exception. No exact path or decoder stack was recovered; hashed path observations were never fabricated."
+    }
+  },
+  "currentTimerOwnershipRepair": {
+    "recordedAt": "2026-10-07T13:36:17.639161+00:00",
+    "result": "source-verified-native-pending",
+    "testsPassed": 210,
+    "newActualRegressions": 2,
+    "redLogSha256": "a8fa794a558655f0373705cfeb43f71f4a82c9cc6fdf3addacd025f4fe5146bd",
+    "greenLogSha256": "1c0b14730cafefcaf8c51dd85d02f9aa277e9f1a1c07dd454101b9f9b78f2221",
+    "exactA10MissingFileProvenance": "unproven",
+    "scope": "A10 ownership follow-up: real SQLite/IO/HTTP regression showed timed cleanup deleting a shared delivered file while a second decoder or gated warm validator still owned it. Timer eviction now checks existing physical owners and unchanged metadata selection. Two actual RED-to-GREEN regressions and all 210 source tests pass. Exact original A10 missing-file/card provenance remains unproven; native/reference/platform AX acceptance remains open."
+  },
+  "nativeBaselineA11": {
+    "label": "story12-final-android36-phone-nonsub-a11",
+    "result": "failed-unaccepted",
+    "sourceAggregateSha256": "5b79235e18c57f3ec9afaac36b2e18efc8c26d4f928d2f579d69680e01da0a0f",
+    "completeCases": 10,
+    "acknowledgedCaptureCount": 31,
+    "proofSha256": "857d626186aef84fc562370233a80c675dcdfedd8bb2a6f01263ae6afe074f2c",
+    "sourceBinaryDatasetMatched": true,
+    "cacheReset": false,
+    "currentDeadlineObservation": {
+      "phase": "wait-deadline",
+      "elapsedMilliseconds": 300275,
+      "detailContentId": 2,
+      "uiLanguage": "pt",
+      "contentLanguage": "pt",
+      "detailAttempt": 1,
+      "metadataAttempt": 1,
+      "globalCardCount": 3,
+      "scopeCount": 1,
+      "scopedCardCount": 3,
+      "mountedCardCount": 4,
+      "waitingContentId": 3,
+      "waitingContentLanguage": "pt",
+      "waitingPhoneAssetId": 36,
+      "waitingTabletAssetId": 37,
+      "waitingTargetCount": 1,
+      "cards": [
+        {
+          "cacheIdentitySha256": "490576a83210aaf304be36ba9030fae4158ad3bcc7a78def7b6e3af3eee5b10c",
+          "contentId": 3,
+          "contentLanguage": "pt",
+          "phoneAssetId": 36,
+          "tabletAssetId": 37,
+          "contextLanguage": "pt",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            16.0,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "2e3a6b1f75fc1d7c9b35bc19bcd480c365e6a764ec91487cc0af7b208da884ca",
+          "contentId": 4,
+          "contentLanguage": "pt",
+          "phoneAssetId": 42,
+          "tabletAssetId": 43,
+          "contextLanguage": "pt",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            201.665,
+            639.7799999999999,
+            169.665,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "4e0409394f669aac872b1a5dcc3bb395437f26f1d1fb14af1d19c0cd96358e2c",
+          "contentId": 5,
+          "contentLanguage": "pt",
+          "phoneAssetId": 48,
+          "tabletAssetId": 49,
+          "contextLanguage": "pt",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            387.33,
+            639.7799999999999,
+            169.66500000000002,
+            226.22000000000003
+          ],
+          "intersectsViewports": true
+        },
+        {
+          "cacheIdentitySha256": "bb2640c423b24a0abb01005efb20c04c5e3185b63b042bc29a56d10d5e2aec87",
+          "contentId": 6,
+          "contentLanguage": "pt",
+          "phoneAssetId": 54,
+          "tabletAssetId": 55,
+          "contextLanguage": "pt",
+          "catalogAttempt": 1,
+          "artworkAttempt": 1,
+          "artworkStatus": "error",
+          "networkImageCount": 0,
+          "rawImageCount": 0,
+          "decodedImageCount": 0,
+          "decodedImages": [],
+          "bounds": [
+            572.995,
+            639.7799999999999,
+            169.66499999999996,
+            226.22000000000003
+          ],
+          "intersectsViewports": false
+        }
+      ],
+      "diagnostics": [
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "catalog",
+          "language": "en",
+          "milliseconds": 100,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "catalog",
+          "language": "pt",
+          "milliseconds": 105,
+          "outcome": "loaded"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        },
+        {
+          "kind": "error",
+          "type": "TimeoutException"
+        }
+      ]
+    },
+    "actualFailureEvents": [
+      {
+        "transferSha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062",
+        "identitySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5043,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4263,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062"
+      },
+      {
+        "transferSha256": "433a14e7325823707bd4c98d79243d079ac1cb57579a15cca9d047b5a85bc072",
+        "identitySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5045,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4263,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062"
+      },
+      {
+        "transferSha256": "814df76eb818d1b584ff2c1a9395775f4630fa966f68c020445764e8d7de1b36",
+        "identitySha256": "cd0394840cba625098be81e7bbad2d125eca9c4044f824d09069a469388ef6c4",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5045,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4263,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "54aa889452913120e2e0b46bac053f4fdb6aeef157ec2755984aac59c9753062"
+      },
+      {
+        "transferSha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac",
+        "identitySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5046,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4287,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac"
+      },
+      {
+        "transferSha256": "383b0e8ac3422bd99e4cb0c68bfa611c515df7fca5b459ee6de7bb8c1bfb84f5",
+        "identitySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5046,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4287,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac"
+      },
+      {
+        "transferSha256": "497f6de7c327a4a991a9529e30b4e475b7b4712b0fc6740c7b713c62604f5f16",
+        "identitySha256": "fcad6b4f6e6af3499fd46e5341e335d4063f0323a7db16e68ff8a7293856722b",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5046,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4287,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "cbe44f06b22fba618fa05e5ea7e8728c9bf66d19be822a0aad9a43c04cdf38ac"
+      },
+      {
+        "transferSha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8",
+        "identitySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5047,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4296,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8"
+      },
+      {
+        "transferSha256": "2c752520a1fe581a444927df83617f235245c6b4ddff3bf2ac0137155e79bc9c",
+        "identitySha256": "a5433dc0c4e66a4ee0f39e641ff4b28d2cef357f41f89cd91728c7cb46220955",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5047,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4296,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "3d01625c044bb509d289d31158fef249d545182f4760060e038a3ecdfda9c0b8"
+      },
+      {
+        "transferSha256": "e286e4782ce001fbe132742ff48badf272af52c63596c076ebc7beb72d992daf",
+        "identitySha256": "e7c280bcbdde329d20e3ad5364c3bb1db7f459d2c5a2c2418fc19fcf74801155",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 5047,
+        "transportPhase": "response-headers",
+        "transportMilliseconds": 4305,
+        "transportLimitMilliseconds": 4000,
+        "producerSha256": "e286e4782ce001fbe132742ff48badf272af52c63596c076ebc7beb72d992daf"
+      },
+      {
+        "transferSha256": "e923a52fea41e0450a3f99a06684748c80941c91f096a924c4cbafec8df2f85d",
+        "identitySha256": "1637d34dc0eab24c0c6b5bdb260c3d04f0aa32478aab7c8e05cc3b8f84a4feac",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9862,
+        "transportPhase": "total",
+        "transportMilliseconds": 8010,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "e923a52fea41e0450a3f99a06684748c80941c91f096a924c4cbafec8df2f85d"
+      },
+      {
+        "transferSha256": "54913c3bed0611df060d0837f405ce887c409fac19ccef0c928e0967531647c2",
+        "identitySha256": "1637d34dc0eab24c0c6b5bdb260c3d04f0aa32478aab7c8e05cc3b8f84a4feac",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9863,
+        "transportPhase": "total",
+        "transportMilliseconds": 8010,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "e923a52fea41e0450a3f99a06684748c80941c91f096a924c4cbafec8df2f85d"
+      },
+      {
+        "transferSha256": "957c2d776448a6042f899462fda293244e3d02647194416c26d2fe9de00c42a1",
+        "identitySha256": "4e0409394f669aac872b1a5dcc3bb395437f26f1d1fb14af1d19c0cd96358e2c",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 10764,
+        "transportPhase": "total",
+        "transportMilliseconds": 8020,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "957c2d776448a6042f899462fda293244e3d02647194416c26d2fe9de00c42a1"
+      },
+      {
+        "transferSha256": "6c7eedce16ef307f8d3618db51b1b4681bf47f01550bf7948346f5873e2f372d",
+        "identitySha256": "f50140470db60b9c620470b27cec3efa4ac9640814e45bed7e40e31cd2d7d857",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 11490,
+        "transportPhase": "total",
+        "transportMilliseconds": 8015,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "6c7eedce16ef307f8d3618db51b1b4681bf47f01550bf7948346f5873e2f372d"
+      },
+      {
+        "transferSha256": "fec83970d9464217b4749eacacb22cc39cff75832f6d92ed04dbac5a93f4df35",
+        "identitySha256": "f50140470db60b9c620470b27cec3efa4ac9640814e45bed7e40e31cd2d7d857",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 11490,
+        "transportPhase": "total",
+        "transportMilliseconds": 8015,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "6c7eedce16ef307f8d3618db51b1b4681bf47f01550bf7948346f5873e2f372d"
+      },
+      {
+        "transferSha256": "81adcaf15f0544ae93b82af8bc6856bb23da2bb3871d227e0b33be0ab1284b27",
+        "identitySha256": "bb2640c423b24a0abb01005efb20c04c5e3185b63b042bc29a56d10d5e2aec87",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 12275,
+        "transportPhase": "total",
+        "transportMilliseconds": 8008,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "81adcaf15f0544ae93b82af8bc6856bb23da2bb3871d227e0b33be0ab1284b27"
+      },
+      {
+        "transferSha256": "4fb8fe57e4abf6a9e58590fa5a7d0a322dfc10ba23e958f5baa48033372d56fc",
+        "identitySha256": "490576a83210aaf304be36ba9030fae4158ad3bcc7a78def7b6e3af3eee5b10c",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9562,
+        "transportPhase": "total",
+        "transportMilliseconds": 8018,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "4fb8fe57e4abf6a9e58590fa5a7d0a322dfc10ba23e958f5baa48033372d56fc"
+      },
+      {
+        "transferSha256": "4ba8efca1377381321f8e7ad7d25d01d464e464d38cc168301704da55445993f",
+        "identitySha256": "2e3a6b1f75fc1d7c9b35bc19bcd480c365e6a764ec91487cc0af7b208da884ca",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 9871,
+        "transportPhase": "total",
+        "transportMilliseconds": 8008,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "4ba8efca1377381321f8e7ad7d25d01d464e464d38cc168301704da55445993f"
+      },
+      {
+        "transferSha256": "441ba13571f6f28953c3341bfef6befd45e81e3298fe0f30d82d1ffd866f7ae2",
+        "identitySha256": "bb2640c423b24a0abb01005efb20c04c5e3185b63b042bc29a56d10d5e2aec87",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 10068,
+        "transportPhase": "total",
+        "transportMilliseconds": 8010,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "441ba13571f6f28953c3341bfef6befd45e81e3298fe0f30d82d1ffd866f7ae2"
+      },
+      {
+        "transferSha256": "1e3b3f3c9f8a3762896f466ad4462a788fb0def6eb29e699305202a88a3b26da",
+        "identitySha256": "4e0409394f669aac872b1a5dcc3bb395437f26f1d1fb14af1d19c0cd96358e2c",
+        "phase": "package-source",
+        "failureClass": "TimeoutException",
+        "operationMilliseconds": 10237,
+        "transportPhase": "total",
+        "transportMilliseconds": 8025,
+        "transportLimitMilliseconds": 8000,
+        "producerSha256": "1e3b3f3c9f8a3762896f466ad4462a788fb0def6eb29e699305202a88a3b26da"
+      }
+    ],
+    "cacheProfiles": {
+      "library-157117387": {
+        "physicalFileCount": 40,
+        "physicalBytes": 1232856,
+        "metadataRowCount": 40,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 80,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 16,
+        "knownMetadataLengthsMatch": true
+      },
+      "detail-hero-157117387": {
+        "physicalFileCount": 10,
+        "physicalBytes": 442522,
+        "metadataRowCount": 10,
+        "duplicatePathRows": 0,
+        "orphanFiles": [],
+        "missingFiles": [],
+        "limit": 20,
+        "withinRetainedFileBound": true,
+        "unknownMetadataLengths": 5,
+        "knownMetadataLengthsMatch": true,
+        "withinDiskByteBound": true
+      }
+    },
+    "unchangedFilesFromPrior": {
+      "library-157117387": 10,
+      "detail-hero-157117387": 2
+    },
+    "qualification": "First PT content2 metadata cover wait failed after10 TR/EN complete journeys/31 captures. All visible PT content3/4/5 assets36/42/48 failed; matching actual transport total8s timeout events are recorded, and earlier distinct response-headers4s failures are retained. No PathNotFound was recorded in bounded observations; this does not establish absence globally or causally prove the timer fix resolved the original A10 issue. Fault/empty/natural not started; dataset unchanged."
+  },
+  "nativeNaturalExpiryA12": {
+    "label": "story12-final-android36-phone-nonsub-natural-a12",
+    "result": "failed-unaccepted",
+    "captures": 0,
+    "sourceAggregateSha256": "5261b36b198d94c9e8560f7b2f8f03d46002de9f7380318ecff943115bf6afd6",
+    "proofSha256": "5dbf4f19ab0507e0fbfe6d100f87e2b68d915c7821ba43f4fc7459503681afa7",
+    "sourceBinaryDatasetMatched": true,
+    "actualRetainedDetailStates": [
+      {
+        "status": "error",
+        "heroStatus": "loading",
+        "attempt": "1",
+        "metadataAttempt": "0",
+        "heroAttempt": "1",
+        "visible": "true",
+        "recoveringArtwork": "false",
+        "failureKind": "network",
+        "identity": {
+          "categoryId": "2",
+          "contentId": "3",
+          "uiLanguage": "tr",
+          "contentLanguage": "tr",
+          "experience": "READING"
+        }
+      }
+    ],
+    "vmReportSha256": "d0343651429fdeb18797c6f4df71029d82fe10b43394689be6ba78c46530e917",
+    "qualification": "Real provider ExpiredToken read/assertions preceded failure. Actual selected identity is2/3/TR/READING, metadataAttempt0/statuserror/failureKindnetwork/heroStatusloading, no instantiated StoryDetailImageCache. Initial metadata/proxy delivery failed; exact phase unproven. Existing combined wait hid metadata failure until60s deadline. Test-only finite scalar callback observations and separately awaited existing loaded metadata assertion preserve every provider/UI/retry/byte/resource expectation; no production source/limit change."
+  },
+  "nativeNaturalExpiryA13": {
+    "label": "story12-final-android36-phone-nonsub-natural-a13",
+    "result": "failed-unaccepted",
+    "captureCount": 0,
+    "sourceAggregateSha256": "ca7e26b33442a16ad5dde0bdc8b4d12a5c5c7b0df5b54bfeec907f6d1785eca6",
+    "proofSha256": "77251c755daf3c39d05d4d9e4b27ee0b98170eeea35d45198651132d8aeaff96",
+    "actualSetupDiagnostics": {
+      "phase": "selected-metadata-settled",
+      "providerStatus": 400,
+      "providerCode": "ExpiredToken",
+      "status": "error",
+      "heroStatus": "loading",
+      "failureKind": "network",
+      "metadataRequests": 0
+    },
+    "actualProxyDiagnostics": [
+      {
+        "phase": "received",
+        "categoryId": 2,
+        "contentId": 3,
+        "requestedLanguageMatches": true,
+        "contentLanguageMatches": true,
+        "experienceMatches": true,
+        "failureClass": "FlutterError"
+      }
+    ],
+    "sourceBinaryDatasetMatched": true,
+    "scope": "Correct inbound2/3/TR/READING received; first guarded Flutter expect in the server callback throws FlutterError before upstream call. SDK widget_tester.expect calls TestAsyncUtils.guardSync; SDK explicitly offers expectSync for callbacks running while an awaited widget pump is guarded. Replace only synchronous helper/server matchers with expectSync; all values/matchers/provider/UI/source/resource expectations unchanged. Production/shared/other targets unchanged."
+  }
+}

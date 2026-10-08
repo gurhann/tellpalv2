@@ -193,6 +193,42 @@ class _Response implements FileServiceResponse {
   String get fileExtension => '.png';
 }
 
+class _DelayedOldPathFiles implements FileSystem {
+  _DelayedOldPathFiles(this.delegate);
+  final FileSystem delegate;
+  final oldPaths = Completer<void>();
+  int pendingOldPaths = 0;
+  @override
+  Future<files.File> createFile(String name) async {
+    if (name.endsWith('.file')) {
+      pendingOldPaths++;
+      await oldPaths.future;
+    }
+    return delegate.createFile(name);
+  }
+}
+
+class _HeldBodyResponse extends _Response {
+  final listened = Completer<void>();
+  late final body = StreamController<List<int>>(
+    onListen: () => listened.complete(),
+  );
+  @override
+  Stream<List<int>> get content => body.stream;
+}
+
+class _HeldBodyService extends _Service {
+  final response = _HeldBodyResponse();
+  @override
+  Future<FileServiceResponse> get(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
+    requests++;
+    return response;
+  }
+}
+
 LibraryImageCache _cache(
   _Repository repo,
   FileSystem fs, [
@@ -211,6 +247,248 @@ LibraryImageCache _cache(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  for (final cancel in [false, true]) {
+    test(
+      'real detail package late old-path cleanup after ${cancel ? 'cancellation and ' : ''}close has no uncaught error',
+      () async {
+        final directory = await io.Directory.systemTemp.createTemp(
+          'detail-late-cleanup-',
+        );
+        const channel = MethodChannel('plugins.flutter.io/path_provider');
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async => directory.path);
+        final repo = _Repository();
+        final fs = _DelayedOldPathFiles(IOFileSystem('late-detail-paths'));
+        final held = _HeldBodyService();
+        final service = cancel ? held : _Service();
+        final cache = LibraryImageCache.profile(
+          Config(
+            'late-detail-paths',
+            repo: repo,
+            fileSystem: fs,
+            fileService: service,
+            maxNrOfCacheObjects: 20,
+          ),
+          delegate: service,
+        );
+        final uncaught = <Object>[], finished = Completer<void>();
+        runZonedGuarded(() async {
+          try {
+            if (cancel) {
+              final subscription = cache
+                  .getFileStream(
+                    'https://example.invalid/late',
+                    key: 'cancelled',
+                  )
+                  .listen((_) {});
+              await held.response.listened.future.timeout(
+                const Duration(seconds: 2),
+              );
+              await subscription.cancel();
+            } else {
+              final result = await cache
+                  .getFileStream('https://example.invalid/late', key: 'loaded')
+                  .toList();
+              expect(result.whereType<FileInfo>(), hasLength(1));
+            }
+            expect(fs.pendingOldPaths, greaterThan(0));
+            await cache.close().timeout(const Duration(seconds: 2));
+            fs.oldPaths.complete();
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+            final late = await cache.config.fileSystem.createFile(
+              'declined-late.jpg',
+            );
+            await expectLater(late.writeAsBytes([1]), throwsStateError);
+            await expectLater(
+              Stream<List<int>>.value([1]).pipe(late.openWrite()),
+              throwsStateError,
+            );
+            expect(
+              directory.listSync(recursive: true).whereType<io.File>(),
+              isEmpty,
+            );
+            expect(uncaught, isEmpty);
+            finished.complete();
+          } catch (error, stack) {
+            finished.completeError(error, stack);
+          }
+        }, (error, stack) => uncaught.add(error));
+        try {
+          await finished.future;
+        } finally {
+          if (!fs.oldPaths.isCompleted) fs.oldPaths.complete();
+          await cache.close().timeout(const Duration(seconds: 2));
+          await directory.delete(recursive: true);
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMethodCallHandler(channel, null);
+        }
+      },
+    );
+  }
+  test(
+    'reopened detail profile counts existing physical bytes and permits warm reads at full budget',
+    () async {
+      final directory = await io.Directory.systemTemp.createTemp(
+        'detail-persisted-budget-',
+      );
+      const channel = MethodChannel('plugins.flutter.io/path_provider');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async => directory.path);
+      final repo = _Repository(),
+          service = _Service(),
+          disk = IOFileSystem('detail-persisted-budget');
+      final bytes = Uint8List(20971520);
+      for (var index = 0; index < 5; index++) {
+        final name = 'persisted-$index.jpg';
+        await (await disk.createFile(name)).writeAsBytes(bytes);
+        await repo.updateOrInsert(
+          CacheObject(
+            'old-source',
+            key: 'persisted-$index',
+            relativePath: name,
+            validTill: DateTime.now().add(const Duration(minutes: 10)),
+            length: bytes.length,
+          ),
+        );
+      }
+      // Fresh lifecycle ownership starts empty while package metadata/physical files already exist.
+      final cache = LibraryImageCache.profile(
+        Config(
+          'detail-persisted-budget',
+          repo: repo,
+          fileSystem: disk,
+          fileService: service,
+          maxNrOfCacheObjects: 20,
+        ),
+        delegate: service,
+      );
+      try {
+        expect(await cache.getFileFromCache('persisted-0'), isNotNull);
+        await expectLater(
+          cache
+              .getFileStream(
+                'https://example.invalid/current',
+                key: 'new-transfer',
+              )
+              .toList()
+              .timeout(const Duration(seconds: 2)),
+          throwsStateError,
+        );
+        for (var wait = 0; wait < 20 && cache.ownedAttemptCount != 0; wait++) {
+          await Future<void>.delayed(Duration.zero);
+        }
+        expect(cache.ownedAttemptCount, 0);
+        final physical = directory
+            .listSync(recursive: true)
+            .whereType<io.File>()
+            .toList();
+        expect(physical, hasLength(5));
+        expect(
+          physical.fold<int>(0, (total, file) => total + file.lengthSync()),
+          104857600,
+        );
+        expect(repo.objects, hasLength(5));
+        expect(await cache.getFileFromCache('persisted-4'), isNotNull);
+      } finally {
+        await cache.close().timeout(const Duration(seconds: 2));
+        await directory.delete(recursive: true);
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, null);
+      }
+    },
+  );
+  test(
+    'actual detail package old-path removal does not reserve disk and full admission fails through consumer',
+    () async {
+      final directory = await io.Directory.systemTemp.createTemp(
+        'detail-package-capacity-',
+      );
+      const channel = MethodChannel('plugins.flutter.io/path_provider');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async => directory.path);
+      final repo = _Repository(), service = _Service();
+      final cache = LibraryImageCache.profile(
+        Config(
+          'detail-real-capacity',
+          repo: repo,
+          fileSystem: IOFileSystem('detail-real-capacity'),
+          fileService: service,
+          maxNrOfCacheObjects: 20,
+        ),
+        delegate: service,
+      );
+      final uncaught = <Object>[];
+      final finished = Completer<void>();
+      runZonedGuarded(() async {
+        try {
+          for (var index = 0; index < 4; index++) {
+            await cache.putFile(
+              '',
+              Uint8List(20971520),
+              key: 'retained-$index',
+            );
+          }
+          final response = await cache
+              .getFileStream('https://example.invalid/detail', key: 'current')
+              .toList()
+              .timeout(const Duration(seconds: 2));
+          expect(response.whereType<FileInfo>(), hasLength(1));
+          expect(repo.objects.keys, contains('current'));
+          expect(
+            directory.listSync(recursive: true).whereType<io.File>(),
+            hasLength(5),
+          );
+          // Fill the remaining byte allowance with a real retained file, then reject another writer.
+          await cache.removeFile('current');
+          await cache.putFile('', Uint8List(20971520), key: 'last-retained');
+          await expectLater(
+            cache
+                .getFileStream(
+                  'https://example.invalid/rejected',
+                  key: 'rejected',
+                )
+                .toList()
+                .timeout(const Duration(seconds: 2)),
+            throwsStateError,
+          );
+          for (
+            var wait = 0;
+            wait < 20 && cache.ownedAttemptCount != 0;
+            wait++
+          ) {
+            await Future<void>.delayed(Duration.zero);
+          }
+          expect(cache.ownedAttemptCount, 0);
+          expect(
+            directory.listSync(recursive: true).whereType<io.File>(),
+            hasLength(5),
+          );
+          await cache.removeFile('last-retained');
+          final recovered = await cache
+              .getFileStream(
+                'https://example.invalid/retry',
+                key: 'independent-retry',
+              )
+              .toList()
+              .timeout(const Duration(seconds: 2));
+          expect(recovered.whereType<FileInfo>(), hasLength(1));
+          await Future<void>.delayed(Duration.zero);
+          expect(uncaught, isEmpty);
+          finished.complete();
+        } catch (error, stack) {
+          finished.completeError(error, stack);
+        }
+      }, (error, stack) => uncaught.add(error));
+      try {
+        await finished.future;
+      } finally {
+        await cache.close().timeout(const Duration(seconds: 2));
+        await directory.delete(recursive: true);
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, null);
+      }
+    },
+  );
   test(
     'actual package opening failure reaches each consumer once without zone error or HTTP and closes once',
     () async {
@@ -428,14 +706,13 @@ void main() {
           throwsA(isA<io.FileSystemException>()),
         );
       }
-      final before = fs.creates;
       for (var i = 0; i < 3; i++) {
         await expectLater(
           cache.putFile('', _bytes, key: 'rejected-$i', fileExtension: 'jpg'),
           throwsStateError,
         );
+        expect(fs.fs.directory('/').listSync(), hasLength(80));
       }
-      expect(fs.creates, before);
       expect(fs.fs.directory('/').listSync(), hasLength(80));
       await expectLater(cache.close(), throwsA(isA<io.FileSystemException>()));
       expect(repo.closed, isTrue);
@@ -526,12 +803,10 @@ void main() {
           throwsA(isA<io.FileSystemException>()),
         );
       }
-      final before = fs.creates;
       await expectLater(
         cache.putFile('', _bytes, key: 'overflow'),
         throwsStateError,
       );
-      expect(fs.creates, before);
       expect(repo.objects, isEmpty);
       expect(fs.fs.directory('/').listSync(), hasLength(80));
       await expectLater(cache.close(), throwsA(isA<io.FileSystemException>()));

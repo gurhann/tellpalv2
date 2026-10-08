@@ -44,12 +44,38 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
   ImageProvider? _provider;
   String? _transfer;
   StoryDetailImageCache? _cache;
+  late final bool _recycledLoadedConsumer;
+
+  @override
+  void initState() {
+    super.initState();
+    _recycledLoadedConsumer = widget.state.heroStatus == StoryHeroStatus.loaded;
+    if (_recycledLoadedConsumer) {
+      final previousAttempt = widget.state.heroAttempt;
+      scheduleMicrotask(() {
+        if (!mounted) return;
+        context.read<StoryDetailCubit>().restartArtworkConsumer(
+          previousAttempt,
+        );
+      });
+    }
+  }
+
+  void _releaseTransfer(String key, {bool failed = false}) {
+    unawaited(
+      _cache!.discardFailedTransfer(key, failed: failed).catchError((Object _) {
+        // Failed cleanup retains physical ownership for admission/close retry.
+        // The rendered artwork error already reports the failed image to the user.
+      }),
+    );
+  }
+
   @override
   void dispose() {
     final provider = _provider;
     if (provider != null) unawaited(provider.evict());
     final key = _transfer;
-    if (key != null) unawaited(_cache!.discardFailedTransfer(key));
+    if (key != null) _releaseTransfer(key);
     super.dispose();
   }
 
@@ -72,10 +98,17 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
                 size: 32,
               ),
               const SizedBox(height: 12),
-              Text(
-                detail.title,
-                style: AppTypography.section,
-                textAlign: TextAlign.center,
+              Flexible(
+                child: ExcludeSemantics(
+                  // The surrounding hero header already names the complete title.
+                  child: Text(
+                    detail.title,
+                    style: AppTypography.section,
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
               const SizedBox(height: 12),
               Text(strings.artworkError, style: AppTypography.description),
@@ -94,6 +127,11 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
         ),
       );
     }
+    // Readable metadata stays on screen while its fresh hero descriptor renews.
+    // No provider may retry the retained URL during this metadata phase.
+    if (state.recoveringArtwork || _recycledLoadedConsumer) {
+      return const ColoredBox(color: AppColors.placeholder);
+    }
     _cache = libraryGetIt<StoryDetailImageCache>();
     final account = libraryGetIt<LibraryConfiguration>().context.accessIdentity;
     final immutable =
@@ -108,6 +146,17 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
       MediaQuery.sizeOf(context).shortestSide >= 600,
     );
     final attempt = state.heroAttempt;
+    // Own the exact OctoImage decoder key while source bytes/codec are pending.
+    // Waiting until imageBuilder would miss disposal before decode completes.
+    _provider = ResizeImage.resizeIfNeeded(
+      size.$1,
+      size.$2,
+      CachedNetworkImageProvider(
+        hero.url,
+        cacheKey: transfer,
+        cacheManager: _cache,
+      ),
+    );
     return CachedNetworkImage(
       key: ValueKey(transfer),
       imageUrl: hero.url,
@@ -118,11 +167,18 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
       fit: BoxFit.cover,
       placeholder: (_, _) => const ColoredBox(color: AppColors.placeholder),
       imageBuilder: (context, provider) {
-        _provider = provider;
+        // Match OctoImage's admitted decoder key; the unresized key would start
+        // another source load and bypass this hero's decoded pixel target.
+        final bounded = ResizeImage.resizeIfNeeded(size.$1, size.$2, provider);
+        _provider = bounded;
         scheduleMicrotask(() {
           if (!context.mounted) return;
           final cubit = context.read<StoryDetailCubit>();
-          if (cubit.state.heroAttempt != attempt || !cubit.state.visible) {
+          if (cubit.state.heroAttempt != attempt ||
+              !cubit.state.visible ||
+              cubit.state.recoveringArtwork ||
+              cubit.state.status != StoryDetailStatus.loaded ||
+              cubit.state.heroStatus != StoryHeroStatus.loading) {
             return;
           }
           cubit.artworkLoaded(attempt);
@@ -134,12 +190,14 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
                   mounted &&
                   !cubit.isClosed &&
                   cubit.state.heroAttempt == attempt &&
-                  cubit.state.visible,
+                  cubit.state.visible &&
+                  !cubit.state.recoveringArtwork &&
+                  cubit.state.heroStatus == StoryHeroStatus.loaded,
             ),
           );
         });
         return Image(
-          image: provider,
+          image: bounded,
           fit: BoxFit.cover,
           excludeFromSemantics: true,
         );
@@ -147,7 +205,14 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
       errorWidget: (context, _, error) {
         scheduleMicrotask(() {
           if (context.mounted) {
-            context.read<StoryDetailCubit>().artworkFailed(attempt);
+            final cubit = context.read<StoryDetailCubit>();
+            if (cubit.state.heroAttempt == attempt &&
+                !cubit.state.recoveringArtwork &&
+                cubit.state.status == StoryDetailStatus.loaded &&
+                cubit.state.heroStatus != StoryHeroStatus.loaded) {
+              cubit.artworkFailed(attempt);
+              _releaseTransfer(transfer, failed: true);
+            }
           }
         });
         return const ColoredBox(color: AppColors.placeholder);

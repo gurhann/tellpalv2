@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StoryDetailState {
 
- StoryDetailIdentity? get identity; int get attempt; StoryDetailStatus get status; StoryDetail? get detail; Failure? get failure; bool get narration; bool get visible; StoryHeroStatus get heroStatus; int get heroAttempt; bool get recoveringArtwork;
+ StoryDetailIdentity? get identity; int get attempt; int get metadataAttempt; StoryDetailStatus get status; StoryDetail? get detail; Failure? get failure; bool get narration; bool get visible; StoryHeroStatus get heroStatus; int get heroAttempt; bool get recoveringArtwork;
 /// Create a copy of StoryDetailState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $StoryDetailStateCopyWith<StoryDetailState> get copyWith => _$StoryDetailStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoryDetailState&&(identical(other.identity, identity) || other.identity == identity)&&(identical(other.attempt, attempt) || other.attempt == attempt)&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.narration, narration) || other.narration == narration)&&(identical(other.visible, visible) || other.visible == visible)&&(identical(other.heroStatus, heroStatus) || other.heroStatus == heroStatus)&&(identical(other.heroAttempt, heroAttempt) || other.heroAttempt == heroAttempt)&&(identical(other.recoveringArtwork, recoveringArtwork) || other.recoveringArtwork == recoveringArtwork));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoryDetailState&&(identical(other.identity, identity) || other.identity == identity)&&(identical(other.attempt, attempt) || other.attempt == attempt)&&(identical(other.metadataAttempt, metadataAttempt) || other.metadataAttempt == metadataAttempt)&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.narration, narration) || other.narration == narration)&&(identical(other.visible, visible) || other.visible == visible)&&(identical(other.heroStatus, heroStatus) || other.heroStatus == heroStatus)&&(identical(other.heroAttempt, heroAttempt) || other.heroAttempt == heroAttempt)&&(identical(other.recoveringArtwork, recoveringArtwork) || other.recoveringArtwork == recoveringArtwork));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,identity,attempt,status,detail,failure,narration,visible,heroStatus,heroAttempt,recoveringArtwork);
+int get hashCode => Object.hash(runtimeType,identity,attempt,metadataAttempt,status,detail,failure,narration,visible,heroStatus,heroAttempt,recoveringArtwork);
 
 @override
 String toString() {
-  return 'StoryDetailState(identity: $identity, attempt: $attempt, status: $status, detail: $detail, failure: $failure, narration: $narration, visible: $visible, heroStatus: $heroStatus, heroAttempt: $heroAttempt, recoveringArtwork: $recoveringArtwork)';
+  return 'StoryDetailState(identity: $identity, attempt: $attempt, metadataAttempt: $metadataAttempt, status: $status, detail: $detail, failure: $failure, narration: $narration, visible: $visible, heroStatus: $heroStatus, heroAttempt: $heroAttempt, recoveringArtwork: $recoveringArtwork)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $StoryDetailStateCopyWith<$Res>  {
   factory $StoryDetailStateCopyWith(StoryDetailState value, $Res Function(StoryDetailState) _then) = _$StoryDetailStateCopyWithImpl;
 @useResult
 $Res call({
- StoryDetailIdentity? identity, int attempt, StoryDetailStatus status, StoryDetail? detail, Failure? failure, bool narration, bool visible, StoryHeroStatus heroStatus, int heroAttempt, bool recoveringArtwork
+ StoryDetailIdentity? identity, int attempt, int metadataAttempt, StoryDetailStatus status, StoryDetail? detail, Failure? failure, bool narration, bool visible, StoryHeroStatus heroStatus, int heroAttempt, bool recoveringArtwork
 });
 
 
@@ -62,10 +62,11 @@ class _$StoryDetailStateCopyWithImpl<$Res>
 
 /// Create a copy of StoryDetailState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? identity = freezed,Object? attempt = null,Object? status = null,Object? detail = freezed,Object? failure = freezed,Object? narration = null,Object? visible = null,Object? heroStatus = null,Object? heroAttempt = null,Object? recoveringArtwork = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? identity = freezed,Object? attempt = null,Object? metadataAttempt = null,Object? status = null,Object? detail = freezed,Object? failure = freezed,Object? narration = null,Object? visible = null,Object? heroStatus = null,Object? heroAttempt = null,Object? recoveringArtwork = null,}) {
   return _then(_self.copyWith(
 identity: freezed == identity ? _self.identity : identity // ignore: cast_nullable_to_non_nullable
 as StoryDetailIdentity?,attempt: null == attempt ? _self.attempt : attempt // ignore: cast_nullable_to_non_nullable
+as int,metadataAttempt: null == metadataAttempt ? _self.metadataAttempt : metadataAttempt // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoryDetailStatus,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
 as StoryDetail?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoryDetailIdentity? identity,  int attempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoryDetailIdentity? identity,  int attempt,  int metadataAttempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StoryDetailState() when $default != null:
-return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
+return $default(_that.identity,_that.attempt,_that.metadataAttempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.fai
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoryDetailIdentity? identity,  int attempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoryDetailIdentity? identity,  int attempt,  int metadataAttempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)  $default,) {final _that = this;
 switch (_that) {
 case _StoryDetailState():
-return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
+return $default(_that.identity,_that.attempt,_that.metadataAttempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.fai
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoryDetailIdentity? identity,  int attempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoryDetailIdentity? identity,  int attempt,  int metadataAttempt,  StoryDetailStatus status,  StoryDetail? detail,  Failure? failure,  bool narration,  bool visible,  StoryHeroStatus heroStatus,  int heroAttempt,  bool recoveringArtwork)?  $default,) {final _that = this;
 switch (_that) {
 case _StoryDetailState() when $default != null:
-return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
+return $default(_that.identity,_that.attempt,_that.metadataAttempt,_that.status,_that.detail,_that.failure,_that.narration,_that.visible,_that.heroStatus,_that.heroAttempt,_that.recoveringArtwork);case _:
   return null;
 
 }
@@ -215,11 +216,12 @@ return $default(_that.identity,_that.attempt,_that.status,_that.detail,_that.fai
 
 
 class _StoryDetailState implements StoryDetailState {
-  const _StoryDetailState({this.identity, this.attempt = 0, this.status = StoryDetailStatus.loading, this.detail, this.failure, this.narration = true, this.visible = true, this.heroStatus = StoryHeroStatus.loading, this.heroAttempt = 0, this.recoveringArtwork = false});
+  const _StoryDetailState({this.identity, this.attempt = 0, this.metadataAttempt = 0, this.status = StoryDetailStatus.loading, this.detail, this.failure, this.narration = true, this.visible = true, this.heroStatus = StoryHeroStatus.loading, this.heroAttempt = 0, this.recoveringArtwork = false});
 
 
 @override final  StoryDetailIdentity? identity;
 @override@JsonKey() final  int attempt;
+@override@JsonKey() final  int metadataAttempt;
 @override@JsonKey() final  StoryDetailStatus status;
 @override final  StoryDetail? detail;
 @override final  Failure? failure;
@@ -239,16 +241,16 @@ _$StoryDetailStateCopyWith<_StoryDetailState> get copyWith => __$StoryDetailStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoryDetailState&&(identical(other.identity, identity) || other.identity == identity)&&(identical(other.attempt, attempt) || other.attempt == attempt)&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.narration, narration) || other.narration == narration)&&(identical(other.visible, visible) || other.visible == visible)&&(identical(other.heroStatus, heroStatus) || other.heroStatus == heroStatus)&&(identical(other.heroAttempt, heroAttempt) || other.heroAttempt == heroAttempt)&&(identical(other.recoveringArtwork, recoveringArtwork) || other.recoveringArtwork == recoveringArtwork));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoryDetailState&&(identical(other.identity, identity) || other.identity == identity)&&(identical(other.attempt, attempt) || other.attempt == attempt)&&(identical(other.metadataAttempt, metadataAttempt) || other.metadataAttempt == metadataAttempt)&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.narration, narration) || other.narration == narration)&&(identical(other.visible, visible) || other.visible == visible)&&(identical(other.heroStatus, heroStatus) || other.heroStatus == heroStatus)&&(identical(other.heroAttempt, heroAttempt) || other.heroAttempt == heroAttempt)&&(identical(other.recoveringArtwork, recoveringArtwork) || other.recoveringArtwork == recoveringArtwork));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,identity,attempt,status,detail,failure,narration,visible,heroStatus,heroAttempt,recoveringArtwork);
+int get hashCode => Object.hash(runtimeType,identity,attempt,metadataAttempt,status,detail,failure,narration,visible,heroStatus,heroAttempt,recoveringArtwork);
 
 @override
 String toString() {
-  return 'StoryDetailState(identity: $identity, attempt: $attempt, status: $status, detail: $detail, failure: $failure, narration: $narration, visible: $visible, heroStatus: $heroStatus, heroAttempt: $heroAttempt, recoveringArtwork: $recoveringArtwork)';
+  return 'StoryDetailState(identity: $identity, attempt: $attempt, metadataAttempt: $metadataAttempt, status: $status, detail: $detail, failure: $failure, narration: $narration, visible: $visible, heroStatus: $heroStatus, heroAttempt: $heroAttempt, recoveringArtwork: $recoveringArtwork)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$StoryDetailStateCopyWith<$Res> implements $StoryDetailSta
   factory _$StoryDetailStateCopyWith(_StoryDetailState value, $Res Function(_StoryDetailState) _then) = __$StoryDetailStateCopyWithImpl;
 @override @useResult
 $Res call({
- StoryDetailIdentity? identity, int attempt, StoryDetailStatus status, StoryDetail? detail, Failure? failure, bool narration, bool visible, StoryHeroStatus heroStatus, int heroAttempt, bool recoveringArtwork
+ StoryDetailIdentity? identity, int attempt, int metadataAttempt, StoryDetailStatus status, StoryDetail? detail, Failure? failure, bool narration, bool visible, StoryHeroStatus heroStatus, int heroAttempt, bool recoveringArtwork
 });
 
 
@@ -276,10 +278,11 @@ class __$StoryDetailStateCopyWithImpl<$Res>
 
 /// Create a copy of StoryDetailState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? identity = freezed,Object? attempt = null,Object? status = null,Object? detail = freezed,Object? failure = freezed,Object? narration = null,Object? visible = null,Object? heroStatus = null,Object? heroAttempt = null,Object? recoveringArtwork = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? identity = freezed,Object? attempt = null,Object? metadataAttempt = null,Object? status = null,Object? detail = freezed,Object? failure = freezed,Object? narration = null,Object? visible = null,Object? heroStatus = null,Object? heroAttempt = null,Object? recoveringArtwork = null,}) {
   return _then(_StoryDetailState(
 identity: freezed == identity ? _self.identity : identity // ignore: cast_nullable_to_non_nullable
 as StoryDetailIdentity?,attempt: null == attempt ? _self.attempt : attempt // ignore: cast_nullable_to_non_nullable
+as int,metadataAttempt: null == metadataAttempt ? _self.metadataAttempt : metadataAttempt // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoryDetailStatus,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
 as StoryDetail?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable

@@ -1,0 +1,19 @@
+{
+  "surefire-reports": {
+    "tests": 385,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failsafe-reports": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "command": "DOCKER_HOST=<existing Colima socket> TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock bash ./mvnw verify",
+  "logSha256": "646c664c3b05ebf8e751352b8a5ccc10c15ec4eb4f30201dfc7cc36546fe7d88",
+  "newDetailPaginationTest": "recommendationsContinuePastAFullRejectedCandidateBatchAndKeepCmsOrder",
+  "backendJarSha256": "ada97679f5168dbead95a51a9a614e373170f6869cfcf403c0bb46ddc9f42385",
+  "qualification": "First invocation could not execute non-executable wrapper directly; first bash run lacked the existing Colima Docker endpoint. Neither is passing verification; successful configured full run is reported here."
+}

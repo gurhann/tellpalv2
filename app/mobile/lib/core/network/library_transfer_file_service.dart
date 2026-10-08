@@ -25,6 +25,7 @@ class LibraryTransferFileService extends FileService {
   final http.Client Function() _clientFactory;
   final _transfers = <String, _Transfer>{};
   bool _closed = false;
+  void Function(String owner, Map<String, Object?> event)? failureObserver;
 
   void cancel(String owner) => _transfers[owner]?.cancel();
   void close() {
@@ -43,9 +44,23 @@ class LibraryTransferFileService extends FileService {
     final outgoing = Map<String, String>.of(headers ?? {});
     final owner = outgoing.remove(ownershipHeader)!;
     final client = _delegate == null ? _clientFactory() : null;
-    final transfer = _Transfer(client);
+    final transfer = _Transfer(client, (phase, limit, elapsed) {
+      try {
+        failureObserver?.call(
+          owner,
+          Map.unmodifiable({
+            'transportPhase': phase,
+            'transportMilliseconds': elapsed,
+            'transportLimitMilliseconds': limit.inMilliseconds,
+          }),
+        );
+      } catch (_) {
+        // Optional observations cannot replace or delay transport failure.
+      }
+    });
     _transfers[owner] = transfer;
     transfer.timer = Timer(totalWait, () {
+      transfer.observeFailure('total', totalWait);
       transfer.cancel();
       _transfers.remove(owner);
     });
@@ -62,6 +77,7 @@ class LibraryTransferFileService extends FileService {
           ]).timeout(
             headerWait,
             onTimeout: () {
+              transfer.observeFailure('response-headers', headerWait);
               transfer.cancel();
               throw TimeoutException('Artwork response headers expired');
             },
@@ -93,7 +109,16 @@ class LibraryTransferFileService extends FileService {
 }
 
 class _Transfer {
-  _Transfer(this.client);
+  _Transfer(this.client, this._observe);
+  final void Function(String, Duration, int) _observe;
+  final _elapsed = Stopwatch()..start();
+  bool _observed = false;
+  void observeFailure(String phase, Duration limit) {
+    if (_observed) return;
+    _observed = true;
+    _observe(phase, limit, _elapsed.elapsedMilliseconds);
+  }
+
   final http.Client? client;
   final cancelled = Completer<void>();
   Timer? timer;
@@ -157,14 +182,20 @@ class _Response implements FileServiceResponse {
                   controller.add(chunk);
                 }
               },
-              onError: (Object error, StackTrace stack) => unawaited(
-                finish(
-                  _transfer.cancelled.isCompleted
-                      ? TimeoutException('Artwork transfer expired')
-                      : error,
-                  stack,
-                ),
-              ),
+              onError: (Object error, StackTrace stack) {
+                if (error is TimeoutException &&
+                    !_transfer.cancelled.isCompleted) {
+                  _transfer.observeFailure('response-body-idle', _idleWait);
+                }
+                unawaited(
+                  finish(
+                    _transfer.cancelled.isCompleted
+                        ? TimeoutException('Artwork transfer expired')
+                        : error,
+                    stack,
+                  ),
+                );
+              },
               onDone: () => unawaited(finish()),
             );
         unawaited(

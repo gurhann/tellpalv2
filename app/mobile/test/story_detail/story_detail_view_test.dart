@@ -9,14 +9,77 @@ import 'package:tellpal_mobile_poc/core/theme/library_theme.dart';
 import 'package:tellpal_mobile_poc/core/error/failure.dart';
 import 'package:tellpal_mobile_poc/features/library/presentation/cubit/artwork_cubit.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/domain/use_case/get_story_detail.dart';
+import 'package:tellpal_mobile_poc/features/story_detail/data/model/story_detail_model.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/presentation/cubit/story_detail_cubit.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/presentation/view/story_detail_view.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/presentation/story_detail_strings.dart';
+import 'package:tellpal_mobile_poc/features/story_detail/presentation/widgets/story_detail_hero.dart';
 import '../library/library_fixture.dart' show configuration;
 import 'story_detail_fixture.dart';
 
 void main() {
   tearDown(() => libraryGetIt.reset());
+  testWidgets(
+    'very long unavailable-artwork title at 1.3 keeps full semantics and reachable retry inside the hero',
+    (tester) async {
+      const size = Size(411, 914);
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final config = configuration();
+      libraryGetIt.registerSingleton<LibraryConfiguration>(config);
+      final repo = ControlledDetailRepository();
+      final cubit = StoryDetailCubit(GetStoryDetail(repo), config);
+      final load = cubit.load(identity());
+      final title = 'A very long complete localized story title ' * 60;
+      repo.responses[0].complete(
+        right(StoryDetailModel.fromJson({...payload(), 'title': title})),
+      );
+      await load;
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTypography.theme(),
+          home: MediaQuery(
+            data: const MediaQueryData(
+              size: size,
+              textScaler: TextScaler.linear(1.3),
+            ),
+            child: BlocProvider.value(
+              value: cubit,
+              child: const StoryDetailView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(
+        tester
+            .getSemantics(find.byType(StoryDetailHero))
+            .getSemanticsData()
+            .label,
+        contains(title),
+      );
+      final heroRect = tester.getRect(find.byType(StoryDetailHero));
+      final retry = find.widgetWithText(
+        TextButton,
+        const StoryDetailStrings('tr').retryArtwork,
+      );
+      final retryRect = tester.getRect(retry);
+      expect(heroRect.contains(retryRect.topLeft), isTrue);
+      expect(heroRect.contains(retryRect.bottomRight), isTrue);
+      expect(retryRect.height, greaterThanOrEqualTo(48));
+      await tester.tap(retry);
+      expect(repo.calls, hasLength(2));
+      repo.responses.last.complete(left(const Failure(FailureKind.network)));
+      await tester.pump();
+      await tester.pumpWidget(const SizedBox());
+      semantics.dispose();
+      await cubit.close();
+    },
+  );
   for (final size in [const Size(411, 914), const Size(800, 1280)]) {
     for (final language in ['tr', 'en', 'pt']) {
       for (final scale in [1.0, 1.3]) {
@@ -59,6 +122,18 @@ void main() {
               );
               await tester.pump();
               final strings = StoryDetailStrings(language);
+              final heroLabel = tester
+                  .getSemantics(find.byType(StoryDetailHero))
+                  .getSemanticsData()
+                  .label;
+              expect(
+                RegExp(
+                  RegExp.escape(cubit.state.detail!.title),
+                ).allMatches(heroLabel).length,
+                1,
+                reason:
+                    'Artwork failure announces the retained story title once',
+              );
               final lock = find.bySemanticsLabel(strings.locked);
               expect(lock, locked ? findsOneWidget : findsNothing);
               if (locked) {
@@ -83,6 +158,16 @@ void main() {
               expect(tester.getSize(cta).height, greaterThanOrEqualTo(48));
               expect(find.text(strings.similar), findsNothing);
               await tester.ensureVisible(find.byType(Switch));
+              await tester.pumpAndSettle();
+              expect(
+                tester
+                    .getSemantics(find.byType(Switch))
+                    .getSemanticsData()
+                    .label,
+                strings.narration,
+                reason:
+                    'The narration control exposes one localized accessible name',
+              );
               await tester.tap(find.byType(Switch));
               await tester.pump();
               expect(cubit.state.narration, false);

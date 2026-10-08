@@ -1,14 +1,14 @@
 # Story 1.2 controlled Library detail contract
 
-Date: 2026-10-07. Status: proposed implementation contract for BMad plan review; not implemented, integration-verified or production-authorized. Parent: [Story 1.2 specification](spec-1-2-open-the-selected-story-detail-from-library.md).
+Date: 2026-10-07. Status: human-approved contract, implemented backend/Flutter layers and verified controlled HTTP prerequisite; available native/reference/platform accessibility integration verified; complete-diff review patches verified; mobile tracker review for human handoff. No production authorization. Parent: [Story 1.2 specification](spec-1-2-open-the-selected-story-detail-from-library.md).
 
-The human approved same-category, same-language eligible recommendations in CMS order and Library-style loading/error/unavailable states. Remaining technical choices below make that scope executable. The reader and actual paywall remain later stories.
+The human approved same-category, same-language eligible recommendations in CMS order and Library-style loading/error/unavailable states. The technical choices below implement that approved scope. The reader and actual paywall remain later stories.
 
 ## Ownership and admission
 
 Keep existing edges: `user` → `category::api`; `category` → `content::api`; `content` → `asset::api`. `content` supplies scalar metadata/credits; `asset` supplies verified cover-only access; `category` composes the originating category and recommendations; `user` resolves the established controlled Firebase identity/audience before the read-only query. Do not return entities across modules or add a cycle.
 
-Proposed local/test endpoint:
+Controlled local/test endpoint:
 
 ```text
 GET /api/test/library/stories/{contentId}
@@ -62,7 +62,7 @@ Preserve reference hero/pills/summary/credits and access-aware CTA. CTA remains 
 
 ## Implementation map
 
-All backend paths below are relative to `be/src/main/java/com/tellpal/v2/`; new files are planned, not existing capabilities.
+All backend paths below are relative to `be/src/main/java/com/tellpal/v2/`; the listed files are implemented source. See the linked evidence for executed verification and remaining native acceptance gates.
 
 - `content/api/StoryDetailMetadataQueryApi.java`, `StoryDetailMetadata.java`; `content/application/query/StoryDetailMetadataQueryService.java`, `StoryDetailMetadataReadRepository.java`; `content/infrastructure/persistence/JdbcStoryDetailMetadataReadRepository.java` — exact-language scalar metadata and bounded credits projection, excluding full media graphs.
 - `asset/api/StoryDetailHeroQueryApi.java`, `asset/application/StoryDetailHeroQueryService.java` — source-qualified cover-only query/signing and bounded validation. Preserve accepted listing preparation and immutable jobs.
@@ -81,3 +81,8 @@ All backend paths below are relative to `be/src/main/java/com/tellpal/v2/`; new 
 Execute PostgreSQL/Flyway/API/module checks and redacted real-backend detail fixtures before mobile integration. Include both controlled audiences, ordinary/mapped languages, populated/absent credits/hero, withdrawn localization, invalid admission, correct curation beyond home preview, reordered responses, filtered CMS order and valid/empty recommendations. Real source bytes, actual URLs privately exercised and source/build/dataset/time identities must accompany evidence; never commit credentials or signed URLs.
 
 Then run generation/analyze/full Flutter tests, backend verify and the [reference matrix](library-1-2-reference-cases.md) on available Android/iOS phone/tablet environments. Demonstrate actual back/scroll, nested return, no auto-playback, URL expiry/retry, socket/cache release and accessibility. Fixtures or mock calls alone cannot close detail EXT-CATALOG. Preserve separately recorded minimum/older-OS, physical-device and release gaps; no deployment or production access is included.
+
+
+## Controlled detail consumer integration closure — 2026-10-08
+
+Contractv1 detail integration is technically verified by the [development acceptance](library-1-2-development-acceptance.md): real backend/source bytes, current compiled native journeys, reference states, actual platform controls and nine executed matrix rows. This closes the controlled detail consumer integration prerequisite only. Final BMad review, later consumers and documented production/release gaps remain separate. Historical failures and explicitly qualified recoveries are preserved.

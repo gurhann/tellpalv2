@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' as io;
 import 'dart:typed_data';
 import 'package:file/file.dart' as files;
 import 'package:file/memory.dart';
@@ -51,6 +52,47 @@ class EncodedClient extends http.BaseClient {
 }
 
 void main() {
+  test(
+    'profile forwarding file alternate mutation APIs cannot bypass write admission',
+    () async {
+      final files = MemoryFiles();
+      final lifecycle = LibraryCacheFiles(
+        files,
+        capacity: 20,
+        maximumBytes: 104857600,
+        reservedFileBytes: 20971520,
+      );
+      final file = await runZoned(
+        () => lifecycle.createFile('admitted.jpg'),
+        zoneValues: {LibraryCacheFiles.ownerKey: 'owner'},
+      );
+      await file.writeAsString('admitted');
+      await expectLater(file.copy('/unowned.jpg'), throwsUnsupportedError);
+      expect(() => file.copySync('/unowned-sync.jpg'), throwsUnsupportedError);
+      await expectLater(file.rename('/moved.jpg'), throwsUnsupportedError);
+      expect(() => file.renameSync('/moved-sync.jpg'), throwsUnsupportedError);
+      expect(() => file.writeAsBytesSync([1]), throwsUnsupportedError);
+      expect(() => file.writeAsStringSync('unowned'), throwsUnsupportedError);
+      expect(() => file.createSync(), throwsUnsupportedError);
+      expect(() => file.open(mode: io.FileMode.write), throwsUnsupportedError);
+      expect(
+        () => file.openSync(mode: io.FileMode.append),
+        throwsUnsupportedError,
+      );
+      expect(
+        () => file.openWrite(mode: io.FileMode.append),
+        throwsUnsupportedError,
+      );
+      await expectLater(
+        file.writeAsBytes([1], mode: io.FileMode.append),
+        throwsUnsupportedError,
+      );
+      expect(await file.readAsString(), 'admitted');
+      expect(files.system.directory('/').listSync(), hasLength(1));
+      await lifecycle.release('owner', {});
+      await lifecycle.clearAndClose();
+    },
+  );
   test(
     'cancelled checksum/file validation retains all four owned slots until it settles',
     () async {
@@ -178,6 +220,10 @@ void main() {
           (index) => runZoned(
             () => owned
                 .createFile('pending-$index')
+                .then((file) async {
+                  await file.writeAsBytes([0]);
+                  return file;
+                })
                 .then<Object>((file) => file, onError: (Object error) => error),
             zoneValues: {LibraryCacheFiles.ownerKey: 'attempt-$index'},
           ),
@@ -210,7 +256,9 @@ void main() {
       }
       await expectLater(
         runZoned(
-          () => owned.createFile('overflow'),
+          () => owned
+              .createFile('overflow')
+              .then((file) => file.writeAsBytes([0])),
           zoneValues: {LibraryCacheFiles.ownerKey: 'overflow'},
         ),
         throwsStateError,

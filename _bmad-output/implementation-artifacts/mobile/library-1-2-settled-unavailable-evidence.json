@@ -1,0 +1,913 @@
+{
+  "recordedAt": "2026-10-08T10:00:05.082432+00:00",
+  "status": "Current separate settled actual404 reference target passed on both iOS profiles:12cases/12originalPNGs,6actual enlarged raster inspections and booted-device cache audits.",
+  "currentSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+  "originalTwentyNativeTargetsUnchanged": true,
+  "currentSeparateReferenceRuns": [
+    {
+      "label": "story12-reference-ios27-phone-unavailable-a43",
+      "profile": "phone",
+      "sourceAggregateSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+      "proofSha256": "341855c5906bf321d5b996b7f3fa1d567988ad83adfa9048e8913e373b1850ee",
+      "passed": true,
+      "installedBinaryComparison": true,
+      "matchedInstalledParts": 5,
+      "datasetSha256": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "cases": [
+        {
+          "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+          "language": "tr",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+          "language": "tr",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+          "language": "en",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+          "language": "en",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+          "language": "pt",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+          "language": "pt",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        }
+      ],
+      "captures": {
+        "detail-settled-en-1.0-unavailable-real-http.png": "0e571c5e13734580e35170bb2abf85b7ecd3b279ef1cb3ce5a7e681d17b3e519",
+        "detail-settled-en-1.3-unavailable-real-http.png": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+        "detail-settled-pt-1.0-unavailable-real-http.png": "b03da9420083ad5e06b39d734a81c08f22b6444973f0229c938bf3774700b6f8",
+        "detail-settled-pt-1.3-unavailable-real-http.png": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+        "detail-settled-tr-1.0-unavailable-real-http.png": "6e6c4338d905d231e30831edf7b0a02387a8128b4814d6fceb54906f941d717a",
+        "detail-settled-tr-1.3-unavailable-real-http.png": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4"
+      }
+    },
+    {
+      "label": "story12-reference-ios27-tablet-unavailable-a43",
+      "profile": "tablet",
+      "sourceAggregateSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+      "proofSha256": "712b2d61ab99b42077c2f25cb8c778cb339bb59af270feca77a14ef02580509c",
+      "passed": true,
+      "installedBinaryComparison": true,
+      "matchedInstalledParts": 5,
+      "datasetSha256": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "cases": [
+        {
+          "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+          "language": "tr",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+          "language": "tr",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+          "language": "en",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+          "language": "en",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+          "language": "pt",
+          "textScale": 1.0,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        },
+        {
+          "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+          "language": "pt",
+          "textScale": 1.3,
+          "independentHttpStatus": 404,
+          "routeAnimationCompleted": true,
+          "horizontalOrigin": 0.0,
+          "captureFramesFlushed": 8,
+          "backWidth": 48.0,
+          "backHeight": 48.0,
+          "libraryOwnerRetainedAfterBack": true
+        }
+      ],
+      "captures": {
+        "detail-settled-en-1.0-unavailable-real-http.png": "d3325fcd3b00f18bf9adbb45f528dcdcfc4469da54ecc0e2555acd1ddfdf6eba",
+        "detail-settled-en-1.3-unavailable-real-http.png": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+        "detail-settled-pt-1.0-unavailable-real-http.png": "116b314be3701b830dbc3376d0e6c4fa768f3b8e7b7c9b0d547976f0b01d500f",
+        "detail-settled-pt-1.3-unavailable-real-http.png": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+        "detail-settled-tr-1.0-unavailable-real-http.png": "b8a2e47c4b134a0b91863c38848ec2472c5a83dccd71e1a85021886cc19dbe81",
+        "detail-settled-tr-1.3-unavailable-real-http.png": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da"
+      }
+    }
+  ],
+  "actualVisualInspections": [
+    {
+      "profile": "phone",
+      "runLabel": "story12-reference-ios27-phone-unavailable-a43",
+      "language": "tr",
+      "textScale": 1.3,
+      "capture": "detail-settled-tr-1.3-unavailable-real-http.png",
+      "sha256": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4",
+      "inspection": "Actual original settled iPhone enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "341855c5906bf321d5b996b7f3fa1d567988ad83adfa9048e8913e373b1850ee"
+    },
+    {
+      "profile": "phone",
+      "runLabel": "story12-reference-ios27-phone-unavailable-a43",
+      "language": "en",
+      "textScale": 1.3,
+      "capture": "detail-settled-en-1.3-unavailable-real-http.png",
+      "sha256": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+      "inspection": "Actual original settled iPhone enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "341855c5906bf321d5b996b7f3fa1d567988ad83adfa9048e8913e373b1850ee"
+    },
+    {
+      "profile": "phone",
+      "runLabel": "story12-reference-ios27-phone-unavailable-a43",
+      "language": "pt",
+      "textScale": 1.3,
+      "capture": "detail-settled-pt-1.3-unavailable-real-http.png",
+      "sha256": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+      "inspection": "Actual original settled iPhone enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "341855c5906bf321d5b996b7f3fa1d567988ad83adfa9048e8913e373b1850ee"
+    },
+    {
+      "profile": "tablet",
+      "runLabel": "story12-reference-ios27-tablet-unavailable-a43",
+      "language": "tr",
+      "textScale": 1.3,
+      "capture": "detail-settled-tr-1.3-unavailable-real-http.png",
+      "sha256": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da",
+      "inspection": "Actual original settled iPad enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "712b2d61ab99b42077c2f25cb8c778cb339bb59af270feca77a14ef02580509c"
+    },
+    {
+      "profile": "tablet",
+      "runLabel": "story12-reference-ios27-tablet-unavailable-a43",
+      "language": "en",
+      "textScale": 1.3,
+      "capture": "detail-settled-en-1.3-unavailable-real-http.png",
+      "sha256": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+      "inspection": "Actual original settled iPad enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "712b2d61ab99b42077c2f25cb8c778cb339bb59af270feca77a14ef02580509c"
+    },
+    {
+      "profile": "tablet",
+      "runLabel": "story12-reference-ios27-tablet-unavailable-a43",
+      "language": "pt",
+      "textScale": 1.3,
+      "capture": "detail-settled-pt-1.3-unavailable-real-http.png",
+      "sha256": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+      "inspection": "Actual original settled iPad enlarged unavailable raster inspected: readable localized message, visible Back and no underlying Library transition strip. No image edits; tool preview resized only.",
+      "proofSha256": "712b2d61ab99b42077c2f25cb8c778cb339bb59af270feca77a14ef02580509c"
+    }
+  ],
+  "postRunCacheAudits": [
+    {
+      "profile": "phone",
+      "auditSha256": "292a4f4c1ff929761672ffe29a0728bd790afc141dcabbc6cbdc903843c21c45",
+      "cacheReset": false,
+      "profiles": {
+        "library-157117387": {
+          "physicalFileCount": 12,
+          "physicalBytes": 393646,
+          "metadataRowCount": 12,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 80,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 6,
+          "knownMetadataLengthsMatch": true
+        },
+        "detail-hero-157117387": {
+          "physicalFileCount": 8,
+          "physicalBytes": 293122,
+          "metadataRowCount": 8,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 20,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 4,
+          "knownMetadataLengthsMatch": true,
+          "withinDiskByteBound": true
+        }
+      },
+      "qualification": "Settled read-only disk/SQLite snapshot. Unknown optional metadata lengths retained explicitly; no transient peak/memory/latency certification."
+    },
+    {
+      "profile": "tablet",
+      "auditSha256": "c546d6c924a9c11845583bb8c277fc16c962942d1ef2cd92701f0e4457a01356",
+      "cacheReset": false,
+      "profiles": {
+        "library-157117387": {
+          "physicalFileCount": 13,
+          "physicalBytes": 906785,
+          "metadataRowCount": 13,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 80,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 6,
+          "knownMetadataLengthsMatch": true
+        },
+        "detail-hero-157117387": {
+          "physicalFileCount": 8,
+          "physicalBytes": 390698,
+          "metadataRowCount": 8,
+          "duplicatePathRows": 0,
+          "orphanFiles": [],
+          "missingFiles": [],
+          "limit": 20,
+          "withinRetainedFileBound": true,
+          "unknownMetadataLengths": 4,
+          "knownMetadataLengthsMatch": true,
+          "withinDiskByteBound": true
+        }
+      },
+      "qualification": "Settled read-only disk/SQLite snapshot. Unknown optional metadata lengths retained explicitly; no transient peak/memory/latency certification."
+    }
+  ],
+  "privateControllerSummarySha256": "fd0c4b10d1ea6fe6ad529b6f4308c27169e1481cf354b7c41436128d3da71d67",
+  "privateControllerSha256": "faf08139b2d4edb0a3c7f5d445b50311661b3ac246b8c7863ec2095dc5faccef",
+  "historicalPreReviewEvidence": {
+    "recordedAt": "2026-10-07T20:14:11.347853+00:00",
+    "status": "Executed current-source additional real404 reference target on iOS phone/tablet; Story1.2 in progress pending platformAX and BMad review",
+    "currentSourceSeal": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+    "originalTwentyNativeTargetsUnchanged": true,
+    "runs": [
+      {
+        "recordedAt": "2026-10-07T20:09:27.192097+00:00",
+        "label": "story12-reference-ios27-phone-unavailable-a31",
+        "target": "story_detail_unavailable_reference_live_test.dart",
+        "platform": "ios",
+        "device": {
+          "dataPath": "/Users/gurhankucuk/Library/Developer/CoreSimulator/Devices/39AB0892-A272-4AAB-BAD7-42AB7F36F188/data",
+          "dataPathSize": 4885512192,
+          "logPath": "/Users/gurhankucuk/Library/Logs/CoreSimulator/39AB0892-A272-4AAB-BAD7-42AB7F36F188",
+          "udid": "39AB0892-A272-4AAB-BAD7-42AB7F36F188",
+          "lastUsedAt": "2026-10-07T20:07:59Z",
+          "isAvailable": true,
+          "logPathSize": 630784,
+          "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-18-Pro",
+          "state": "Booted",
+          "name": "iPhone 18 Pro",
+          "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
+        },
+        "virtualDevice": true,
+        "buildMode": "debug integration target",
+        "serverAudience": "NON_SUBSCRIBER",
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "backendJarSha256": "1371574d291773ff94c0115f6f483f9fb9eb28f4edf7ad070a024e443477911a",
+        "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+        "sourceUnchanged": true,
+        "installedBinaryComparison": true,
+        "binaries": [
+          {
+            "part": "Runner",
+            "builtSha256": "8b69e21aaf95f649abbd3ec325c3bc3be3075bed54c63b7d34b33dd17b14751b",
+            "installedSha256": "8b69e21aaf95f649abbd3ec325c3bc3be3075bed54c63b7d34b33dd17b14751b",
+            "match": true
+          },
+          {
+            "part": "Runner.debug.dylib",
+            "builtSha256": "5d186204fb1981dcd252a26defed22f6ec3133158d30814e384666f7e3bf402a",
+            "installedSha256": "5d186204fb1981dcd252a26defed22f6ec3133158d30814e384666f7e3bf402a",
+            "match": true
+          },
+          {
+            "part": "Frameworks/App.framework/App",
+            "builtSha256": "1369157d75b3ddfafc490c07321d03b61535f432f357743605a26ce572ba76d1",
+            "installedSha256": "1369157d75b3ddfafc490c07321d03b61535f432f357743605a26ce572ba76d1",
+            "match": true
+          },
+          {
+            "part": "Frameworks/App.framework/flutter_assets/kernel_blob.bin",
+            "builtSha256": "0ea78ec4f0f5faa9699cad10c6b678148db63f9be9cb2c3bacfa72fb3e23f4f2",
+            "installedSha256": "0ea78ec4f0f5faa9699cad10c6b678148db63f9be9cb2c3bacfa72fb3e23f4f2",
+            "match": true
+          },
+          {
+            "part": "Info.plist",
+            "builtSha256": "2d8c69eff008e6242fc62f42e86128ede3a7bb5c72da118cb1460dd55ecf6005",
+            "installedSha256": "2d8c69eff008e6242fc62f42e86128ede3a7bb5c72da118cb1460dd55ecf6005",
+            "match": true
+          }
+        ],
+        "datasetSha256Before": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+        "datasetSha256After": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+        "exitCode": 0,
+        "logSha256": "7a700ac4e9aad768a6739322a15ee25327c571218e69f07b13472fce2a4c4ddf",
+        "captures": {
+          "detail-settled-en-1.0-unavailable-real-http.png": "0e571c5e13734580e35170bb2abf85b7ecd3b279ef1cb3ce5a7e681d17b3e519",
+          "detail-settled-en-1.3-unavailable-real-http.png": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+          "detail-settled-pt-1.0-unavailable-real-http.png": "b03da9420083ad5e06b39d734a81c08f22b6444973f0229c938bf3774700b6f8",
+          "detail-settled-pt-1.3-unavailable-real-http.png": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+          "detail-settled-tr-1.0-unavailable-real-http.png": "6e6c4338d905d231e30831edf7b0a02387a8128b4814d6fceb54906f941d717a",
+          "detail-settled-tr-1.3-unavailable-real-http.png": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4"
+        },
+        "nativeReport": {
+          "passed": true,
+          "story12SettledUnavailableReferences": [
+            {
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "language": "tr",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "language": "tr",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "language": "en",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "language": "en",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "language": "pt",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "language": "pt",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            }
+          ],
+          "streamedScreenshots": [
+            {
+              "sequence": 1,
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "byteSize": 167611,
+              "sha256": "6e6c4338d905d231e30831edf7b0a02387a8128b4814d6fceb54906f941d717a",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 2,
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "byteSize": 171867,
+              "sha256": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 3,
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "byteSize": 164118,
+              "sha256": "0e571c5e13734580e35170bb2abf85b7ecd3b279ef1cb3ce5a7e681d17b3e519",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 4,
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "byteSize": 167735,
+              "sha256": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 5,
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "byteSize": 167759,
+              "sha256": "b03da9420083ad5e06b39d734a81c08f22b6444973f0229c938bf3774700b6f8",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 6,
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "byteSize": 172520,
+              "sha256": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            }
+          ],
+          "hostCaptureReceipts": [
+            {
+              "sequence": 1,
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "byteSize": 167611,
+              "sha256": "6e6c4338d905d231e30831edf7b0a02387a8128b4814d6fceb54906f941d717a",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 2,
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "byteSize": 171867,
+              "sha256": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 3,
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "byteSize": 164118,
+              "sha256": "0e571c5e13734580e35170bb2abf85b7ecd3b279ef1cb3ce5a7e681d17b3e519",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 4,
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "byteSize": 167735,
+              "sha256": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 5,
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "byteSize": 167759,
+              "sha256": "b03da9420083ad5e06b39d734a81c08f22b6444973f0229c938bf3774700b6f8",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 6,
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "byteSize": 172520,
+              "sha256": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            }
+          ]
+        },
+        "proofSha256": "0614a5a8fb7ecefb0d0027c6bf7ae6f8084d67f8a051f084ccc7659565f761db",
+        "captureCount": 6,
+        "cacheAuditSha256": "7aeb52657299359ad804ed1993944aea6d14725a5c6051f4c7babbab3eb894bf",
+        "cacheAuditSummary": {
+          "library-157117387": {
+            "physicalFileCount": 12,
+            "physicalBytes": 393646,
+            "metadataRowCount": 12,
+            "duplicatePathRows": 0,
+            "orphanFiles": [],
+            "missingFiles": [],
+            "limit": 80,
+            "withinRetainedFileBound": true,
+            "unknownMetadataLengths": 6,
+            "knownMetadataLengthsMatch": true
+          },
+          "detail-hero-157117387": {
+            "physicalFileCount": 2,
+            "physicalBytes": 51824,
+            "metadataRowCount": 2,
+            "duplicatePathRows": 0,
+            "orphanFiles": [],
+            "missingFiles": [],
+            "limit": 20,
+            "withinRetainedFileBound": true,
+            "unknownMetadataLengths": 1,
+            "knownMetadataLengthsMatch": true
+          }
+        }
+      },
+      {
+        "recordedAt": "2026-10-07T20:10:55.453268+00:00",
+        "label": "story12-reference-ios27-tablet-unavailable-a31",
+        "target": "story_detail_unavailable_reference_live_test.dart",
+        "platform": "ios",
+        "device": {
+          "dataPath": "/Users/gurhankucuk/Library/Developer/CoreSimulator/Devices/03BA9952-6360-4D68-9F0B-571AF04EA9A9/data",
+          "dataPathSize": 2538291200,
+          "logPath": "/Users/gurhankucuk/Library/Logs/CoreSimulator/03BA9952-6360-4D68-9F0B-571AF04EA9A9",
+          "udid": "03BA9952-6360-4D68-9F0B-571AF04EA9A9",
+          "lastUsedAt": "2026-10-07T20:09:27Z",
+          "isAvailable": true,
+          "logPathSize": 458752,
+          "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+          "state": "Booted",
+          "name": "iPad (A16)",
+          "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
+        },
+        "virtualDevice": true,
+        "buildMode": "debug integration target",
+        "serverAudience": "NON_SUBSCRIBER",
+        "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+        "backendJarSha256": "1371574d291773ff94c0115f6f483f9fb9eb28f4edf7ad070a024e443477911a",
+        "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+        "sourceUnchanged": true,
+        "installedBinaryComparison": true,
+        "binaries": [
+          {
+            "part": "Runner",
+            "builtSha256": "bb397529a10dbfab16700b3247504705c0f5004b0edef9dcbba2d12f74fc7494",
+            "installedSha256": "bb397529a10dbfab16700b3247504705c0f5004b0edef9dcbba2d12f74fc7494",
+            "match": true
+          },
+          {
+            "part": "Runner.debug.dylib",
+            "builtSha256": "5d186204fb1981dcd252a26defed22f6ec3133158d30814e384666f7e3bf402a",
+            "installedSha256": "5d186204fb1981dcd252a26defed22f6ec3133158d30814e384666f7e3bf402a",
+            "match": true
+          },
+          {
+            "part": "Frameworks/App.framework/App",
+            "builtSha256": "1369157d75b3ddfafc490c07321d03b61535f432f357743605a26ce572ba76d1",
+            "installedSha256": "1369157d75b3ddfafc490c07321d03b61535f432f357743605a26ce572ba76d1",
+            "match": true
+          },
+          {
+            "part": "Frameworks/App.framework/flutter_assets/kernel_blob.bin",
+            "builtSha256": "0ea78ec4f0f5faa9699cad10c6b678148db63f9be9cb2c3bacfa72fb3e23f4f2",
+            "installedSha256": "0ea78ec4f0f5faa9699cad10c6b678148db63f9be9cb2c3bacfa72fb3e23f4f2",
+            "match": true
+          },
+          {
+            "part": "Info.plist",
+            "builtSha256": "ea3205425f77d4207dd5924fea4ba1657964d830e1058f84fa8d008526c8566f",
+            "installedSha256": "ea3205425f77d4207dd5924fea4ba1657964d830e1058f84fa8d008526c8566f",
+            "match": true
+          }
+        ],
+        "datasetSha256Before": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+        "datasetSha256After": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+        "exitCode": 0,
+        "logSha256": "3fca881926bf0416be9d3238c719bd6fc1bfc7b528ca2879396af7016e9aa2b5",
+        "captures": {
+          "detail-settled-en-1.0-unavailable-real-http.png": "d3325fcd3b00f18bf9adbb45f528dcdcfc4469da54ecc0e2555acd1ddfdf6eba",
+          "detail-settled-en-1.3-unavailable-real-http.png": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+          "detail-settled-pt-1.0-unavailable-real-http.png": "116b314be3701b830dbc3376d0e6c4fa768f3b8e7b7c9b0d547976f0b01d500f",
+          "detail-settled-pt-1.3-unavailable-real-http.png": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+          "detail-settled-tr-1.0-unavailable-real-http.png": "b8a2e47c4b134a0b91863c38848ec2472c5a83dccd71e1a85021886cc19dbe81",
+          "detail-settled-tr-1.3-unavailable-real-http.png": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da"
+        },
+        "nativeReport": {
+          "passed": true,
+          "story12SettledUnavailableReferences": [
+            {
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "language": "tr",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "language": "tr",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "language": "en",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "language": "en",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "language": "pt",
+              "textScale": 1.0,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            },
+            {
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "language": "pt",
+              "textScale": 1.3,
+              "independentHttpStatus": 404,
+              "routeAnimationCompleted": true,
+              "horizontalOrigin": 0.0,
+              "captureFramesFlushed": 8,
+              "backWidth": 48.0,
+              "backHeight": 48.0,
+              "libraryOwnerRetainedAfterBack": true
+            }
+          ],
+          "streamedScreenshots": [
+            {
+              "sequence": 1,
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "byteSize": 189490,
+              "sha256": "b8a2e47c4b134a0b91863c38848ec2472c5a83dccd71e1a85021886cc19dbe81",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 2,
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "byteSize": 192952,
+              "sha256": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 3,
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "byteSize": 187886,
+              "sha256": "d3325fcd3b00f18bf9adbb45f528dcdcfc4469da54ecc0e2555acd1ddfdf6eba",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 4,
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "byteSize": 190721,
+              "sha256": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 5,
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "byteSize": 189898,
+              "sha256": "116b314be3701b830dbc3376d0e6c4fa768f3b8e7b7c9b0d547976f0b01d500f",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 6,
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "byteSize": 193210,
+              "sha256": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            }
+          ],
+          "hostCaptureReceipts": [
+            {
+              "sequence": 1,
+              "screenshotName": "detail-settled-tr-1.0-unavailable-real-http",
+              "byteSize": 189490,
+              "sha256": "b8a2e47c4b134a0b91863c38848ec2472c5a83dccd71e1a85021886cc19dbe81",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 2,
+              "screenshotName": "detail-settled-tr-1.3-unavailable-real-http",
+              "byteSize": 192952,
+              "sha256": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 3,
+              "screenshotName": "detail-settled-en-1.0-unavailable-real-http",
+              "byteSize": 187886,
+              "sha256": "d3325fcd3b00f18bf9adbb45f528dcdcfc4469da54ecc0e2555acd1ddfdf6eba",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 4,
+              "screenshotName": "detail-settled-en-1.3-unavailable-real-http",
+              "byteSize": 190721,
+              "sha256": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 5,
+              "screenshotName": "detail-settled-pt-1.0-unavailable-real-http",
+              "byteSize": 189898,
+              "sha256": "116b314be3701b830dbc3376d0e6c4fa768f3b8e7b7c9b0d547976f0b01d500f",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            },
+            {
+              "sequence": 6,
+              "screenshotName": "detail-settled-pt-1.3-unavailable-real-http",
+              "byteSize": 193210,
+              "sha256": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+              "chunkCount": 1,
+              "hostAcknowledged": true
+            }
+          ]
+        },
+        "proofSha256": "000cd7e710b7f92452eeaddedcce15a733d0d20483d3e20df5d1ee9c7118441e",
+        "captureCount": 6,
+        "cacheAuditSha256": "0adb73dc1daabbdbb6af3dd0263834309e6935174273ef42dfd762a9eb91ff21",
+        "cacheAuditSummary": {
+          "library-157117387": {
+            "physicalFileCount": 14,
+            "physicalBytes": 965650,
+            "metadataRowCount": 14,
+            "duplicatePathRows": 0,
+            "orphanFiles": [],
+            "missingFiles": [],
+            "limit": 80,
+            "withinRetainedFileBound": true,
+            "unknownMetadataLengths": 7,
+            "knownMetadataLengthsMatch": true
+          },
+          "detail-hero-157117387": {
+            "physicalFileCount": 2,
+            "physicalBytes": 51824,
+            "metadataRowCount": 2,
+            "duplicatePathRows": 0,
+            "orphanFiles": [],
+            "missingFiles": [],
+            "limit": 20,
+            "withinRetainedFileBound": true,
+            "unknownMetadataLengths": 1,
+            "knownMetadataLengthsMatch": true
+          }
+        }
+      }
+    ],
+    "actualVisualInspections": [
+      {
+        "label": "story12-reference-ios27-phone-unavailable-a31",
+        "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+        "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+        "inspectedCaptureHashes": {
+          "detail-settled-en-1.3-unavailable-real-http.png": "553b271bce5dc1bc7852e3c6788a5b87b27ce591929b546f5ba3233a0c0c74ac",
+          "detail-settled-pt-1.3-unavailable-real-http.png": "5440746918e80cb86819ead5a3ab60d717a66f947efb3e9e0e1127a2266109ee",
+          "detail-settled-tr-1.3-unavailable-real-http.png": "cce1b602fd238f76de7ab336c2f10cec176c24131bff3272da3a697e11194de4"
+        },
+        "observation": "Actual enlarged TR/EN/PT SDK PNGs inspected: fully settled full-frame current Library canvas, safe-area back, localized readable unavailable message; no underlying left-edge Library strip, stale content or retry. Native six-case assertions additionally verify independent real upstream404, route completion/origin, original8frame flush,48dp back and same Library owner after actual back.",
+        "qualification": "Visual inspection covers the three named1.3 captures only; six1.0/1.3 native cases passed. Original unmodified1206x2622 phone/1640x2360 tablet SDK PNGs retained; viewer display-only resize. New contract-derived unavailable state, not legacy pixel parity or platformAX/physical proof."
+      },
+      {
+        "label": "story12-reference-ios27-tablet-unavailable-a31",
+        "sourceAggregateSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+        "sourceInstalledFiveBinaryPartsDatasetMatched": true,
+        "inspectedCaptureHashes": {
+          "detail-settled-en-1.3-unavailable-real-http.png": "a78bb2c0ebd0e349b6892088bc0f7b7ef6ab6dbe1eca3231b5c29e3e1eb93fca",
+          "detail-settled-pt-1.3-unavailable-real-http.png": "907f7b7f525c50facc565a72af77f702291bfbba7a5ba83dec147eef7a75fdd1",
+          "detail-settled-tr-1.3-unavailable-real-http.png": "5646aa0e1ddb67360504d23805dab6c70474237797f3f3aa4fc2dc4ff01998da"
+        },
+        "observation": "Actual enlarged TR/EN/PT SDK PNGs inspected: fully settled full-frame current Library canvas, safe-area back, localized readable unavailable message; no underlying left-edge Library strip, stale content or retry. Native six-case assertions additionally verify independent real upstream404, route completion/origin, original8frame flush,48dp back and same Library owner after actual back.",
+        "qualification": "Visual inspection covers the three named1.3 captures only; six1.0/1.3 native cases passed. Original unmodified1206x2622 phone/1640x2360 tablet SDK PNGs retained; viewer display-only resize. New contract-derived unavailable state, not legacy pixel parity or platformAX/physical proof."
+      }
+    ],
+    "postRunAuditInvocationQualification": "Both SDK targets exited0/passed with6captures each. Private controller later exited1 because initial cache helper used a profile label instead of required device UUID; its assertion failed before device access. Separate sequential correct-UUID read-only cache audits each exited0 and verified bounds/metadata. Original SDK target results preserved; controller failure is not relabeled success."
+  }
+}

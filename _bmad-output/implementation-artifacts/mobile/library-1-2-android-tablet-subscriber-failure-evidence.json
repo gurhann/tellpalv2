@@ -1,0 +1,868 @@
+{
+  "recordedAt": "2026-10-07T19:30:53.444116+00:00",
+  "label": "story12-final-android36-tablet-sub-a28",
+  "passed": false,
+  "sourceAggregateSha256": "ca17ba101fe7080cbce603ea1b551437c298b375d8b524ededebef925dac5d23",
+  "sourceInstalledBinaryDatasetMatched": true,
+  "proofSha256": "936a7d5bbcc6c959a7b3a5250cdb7136ebad5657fc51d289a42dac261e520a05",
+  "logSha256": "0d32a7d3b7b320dd93fd1575491def57fe3e4fbf5005ec8685b2442182a7e0bb",
+  "completedJourneys": 6,
+  "acknowledgedCaptureCount": 24,
+  "captures": {
+    "detail-en-1.0-free-2-loaded.png": "be6342cfae4d4f4c7807b13f95023cd3c5604f73cf9947bd1eb7244d9703eb90",
+    "detail-en-1.0-free-2-metadata.png": "09b68db5f7718a2cd43e98330d3503894f30119accee2bcdacf3cb8e31f74965",
+    "detail-en-1.0-free-2-recommendation.png": "e93aa39764525369aa1b53b945ceab88e9b508e483c25e373d89f53f0898fe4d",
+    "detail-en-1.3-free-2-loaded.png": "d484941c119eb79446f75e2a28653d8554d2d6844563a05bb307c74f1e83615d",
+    "detail-en-1.3-free-2-metadata.png": "41023f6d7fa925bd3b06457bf05f2a066c3674e6a39af888e844e28e0c4d2a00",
+    "detail-en-1.3-free-2-recommendation.png": "e67a677aead5c2d3136c0022acd5fa2f42f23b8ad5423c466d717be00e13c987",
+    "detail-en-2-cover-retry-1-error.png": "37d93102eb7d4684082e83ff192f48c8e0bb0338b76c0e947632b02ae0e951b4",
+    "detail-en-2-cover-retry-1-recovered.png": "065c176cce81db01dede8d34436d0f33addc7a16f7110774f9e29938afc94c37",
+    "detail-pt-1.0-free-2-loaded.png": "ab392072d5c96c2a4cd6873e30fedd15ffbb963d54ba676c7c6c14fa761be616",
+    "detail-pt-2-cover-retry-2-error.png": "7240f19d7bdca2139b69f85f158255d87379e423a4da1d4a46d59be8d541d6d7",
+    "detail-tr-1.0-free-2-loaded.png": "650aae0eaf801fe3a69b89e8a6b286b4fab442ff37217f4d62af52bfa5577c74",
+    "detail-tr-1.0-free-2-metadata.png": "03fa4d602f03354a26995b94383eeed5b04368e71822de57d5904129e5933469",
+    "detail-tr-1.0-free-2-recommendation.png": "8e6b29e7fdee32690d28a3930c844ef4f2930997433399bf284b04b0ce05ee1f",
+    "detail-tr-1.0-mapped-9-loaded.png": "6eed1775a27ee0608ea811b74e686cf1e4aa9a7555b114475705bbf2a2125a63",
+    "detail-tr-1.0-mapped-9-metadata.png": "f3bfc0b8b71e031a22de40b172de9856fb76ebd865910b72ea8bd3ecefc1a5f2",
+    "detail-tr-1.0-mapped-9-recommendation.png": "0f6dd41f22f4a62f8bbad412ab9b7bc944dbba4627148076baa01c1e5e2d6ecb",
+    "detail-tr-1.3-free-2-loaded.png": "fa40562d3e8d4901749818ea19b302a6765c9b08f670e1c173ae47142e6d6e74",
+    "detail-tr-1.3-free-2-metadata.png": "7469bf0ca095b9fc44dad33583918789be2503df371e3e0e854f2ed0e3bfa3d2",
+    "detail-tr-1.3-free-2-recommendation.png": "12df0072a71b78295a3181baf98df80c5f300c9e4a8a5ab01a2029d2375722cf",
+    "detail-tr-1.3-mapped-9-loaded.png": "b95a4451d124cb628c8d49b969bf03484d0dfce28cbee047070566c0369c2c11",
+    "detail-tr-1.3-mapped-9-metadata.png": "76a0551c72d4c694c23fc786535af56a16c52c06e1ced49f0f9ba50da11596ef",
+    "detail-tr-1.3-mapped-9-recommendation.png": "3f82978046b6a095e197a69674d1beab4414abb3fa2a0dba44c0c12c1be91f14",
+    "detail-tr-2-cover-retry-0-error.png": "8ddfc8f54d184e1d79175d1280c7a061e78fe3db53d031460a7db0a8af23471b",
+    "detail-tr-2-cover-retry-0-recovered.png": "4249c72f93b404f4e051b8cf1dbdf053face50adecf6efe14a38071b2434479a"
+  },
+  "coverWaitFailure": {
+    "phase": "current-artwork-error",
+    "elapsedMilliseconds": 223190,
+    "detailContentId": 2,
+    "uiLanguage": "pt",
+    "contentLanguage": "pt",
+    "detailAttempt": 2,
+    "metadataAttempt": 2,
+    "globalCardCount": 4,
+    "scopeCount": 1,
+    "scopedCardCount": 4,
+    "mountedCardCount": 5,
+    "waitingContentId": 4,
+    "waitingContentLanguage": "pt",
+    "waitingPhoneAssetId": 42,
+    "waitingTabletAssetId": 43,
+    "waitingTargetCount": 1,
+    "cards": [
+      {
+        "cacheIdentitySha256": "beccc3f8d075ada2b04c7e2eca5d3b64b1a89faaa4a941491b1cd3b394d87cbb",
+        "contentId": 3,
+        "contentLanguage": "pt",
+        "phoneAssetId": 36,
+        "tabletAssetId": 37,
+        "contextLanguage": "pt",
+        "catalogAttempt": 2,
+        "artworkAttempt": 1,
+        "artworkStatus": "loaded",
+        "networkImageCount": 1,
+        "rawImageCount": 1,
+        "decodedImageCount": 1,
+        "decodedImages": [
+          {
+            "width": 428,
+            "height": 695
+          }
+        ],
+        "bounds": [
+          0.0,
+          921.5999999999999,
+          232.8,
+          310.4000000000001
+        ],
+        "intersectsViewports": true
+      },
+      {
+        "cacheIdentitySha256": "8ef8556a055757ca8a7bb44597f6ce09637053608a006d1d9db37b3a79a1c5d2",
+        "contentId": 4,
+        "contentLanguage": "pt",
+        "phoneAssetId": 42,
+        "tabletAssetId": 43,
+        "contextLanguage": "pt",
+        "catalogAttempt": 2,
+        "artworkAttempt": 1,
+        "artworkStatus": "error",
+        "networkImageCount": 0,
+        "rawImageCount": 0,
+        "decodedImageCount": 0,
+        "decodedImages": [],
+        "bounds": [
+          248.8,
+          921.5999999999999,
+          232.8,
+          310.4000000000001
+        ],
+        "intersectsViewports": true
+      },
+      {
+        "cacheIdentitySha256": "6a70ed18cb38852d9f31965831c00e06cce10af7d409f3baac19efe74c63a2c6",
+        "contentId": 5,
+        "contentLanguage": "pt",
+        "phoneAssetId": 48,
+        "tabletAssetId": 49,
+        "contextLanguage": "pt",
+        "catalogAttempt": 2,
+        "artworkAttempt": 1,
+        "artworkStatus": "loaded",
+        "networkImageCount": 1,
+        "rawImageCount": 1,
+        "decodedImageCount": 1,
+        "decodedImages": [
+          {
+            "width": 428,
+            "height": 695
+          }
+        ],
+        "bounds": [
+          497.6,
+          921.5999999999999,
+          232.80000000000007,
+          310.4000000000001
+        ],
+        "intersectsViewports": true
+      },
+      {
+        "cacheIdentitySha256": "380ea461f8d6c9dbee23c03e73341f30e33bd793994922dd9627b14eebfc2612",
+        "contentId": 6,
+        "contentLanguage": "pt",
+        "phoneAssetId": 54,
+        "tabletAssetId": 55,
+        "contextLanguage": "pt",
+        "catalogAttempt": 2,
+        "artworkAttempt": 1,
+        "artworkStatus": "loaded",
+        "networkImageCount": 1,
+        "rawImageCount": 1,
+        "decodedImageCount": 1,
+        "decodedImages": [
+          {
+            "width": 428,
+            "height": 695
+          }
+        ],
+        "bounds": [
+          746.4000000000001,
+          921.5999999999999,
+          232.79999999999995,
+          310.4000000000001
+        ],
+        "intersectsViewports": true
+      },
+      {
+        "cacheIdentitySha256": "139433ddbc02eea3e55e3c2d5c0b38c0a6d385a174dfc7326c333d512da241c6",
+        "contentId": 7,
+        "contentLanguage": "pt",
+        "phoneAssetId": 60,
+        "tabletAssetId": 61,
+        "contextLanguage": "pt",
+        "catalogAttempt": 2,
+        "artworkAttempt": 1,
+        "artworkStatus": "error",
+        "networkImageCount": 0,
+        "rawImageCount": 0,
+        "decodedImageCount": 0,
+        "decodedImages": [],
+        "bounds": [
+          995.2,
+          921.5999999999999,
+          232.79999999999995,
+          310.4000000000001
+        ],
+        "intersectsViewports": false
+      }
+    ],
+    "diagnostics": [
+      {
+        "kind": "error",
+        "type": "TimeoutException"
+      },
+      {
+        "kind": "catalog",
+        "language": "tr",
+        "milliseconds": 112,
+        "outcome": "loaded"
+      },
+      {
+        "kind": "catalog",
+        "language": "en",
+        "milliseconds": 146,
+        "outcome": "loaded"
+      },
+      {
+        "kind": "error",
+        "type": "TimeoutException"
+      },
+      {
+        "kind": "error",
+        "type": "TimeoutException"
+      },
+      {
+        "kind": "catalog",
+        "language": "en",
+        "milliseconds": 129,
+        "outcome": "loaded"
+      },
+      {
+        "kind": "catalog",
+        "language": "pt",
+        "milliseconds": 96,
+        "outcome": "loaded"
+      },
+      {
+        "kind": "error",
+        "type": "TimeoutException"
+      }
+    ]
+  },
+  "explicitCoverRecoveryRecords": [
+    {
+      "selectedContentId": 2,
+      "categoryId": 2,
+      "uiLanguage": "tr",
+      "contentLanguage": "tr",
+      "failedRecommendationContentId": 3,
+      "failedAssetId": 39,
+      "metadataAttemptBefore": 1,
+      "phase": "fresh-same-context-verified-decoded",
+      "classification": "qualified explicit user-control recovery",
+      "realRetryControlTap": true,
+      "metadataAttemptAfter": 2,
+      "freshIndependentHttpComparison": true,
+      "decodedHero": {
+        "width": 512,
+        "height": 909,
+        "bytes": 1861632
+      },
+      "decodedRecommendationCovers": [
+        {
+          "contentId": 3,
+          "contentLanguage": "tr",
+          "assetId": 39,
+          "state": "decoded",
+          "width": 493,
+          "height": 800,
+          "bytes": 1577600
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "tr",
+          "assetId": 45,
+          "state": "decoded",
+          "width": 493,
+          "height": 800,
+          "bytes": 1577600
+        }
+      ]
+    },
+    {
+      "selectedContentId": 2,
+      "categoryId": 1,
+      "uiLanguage": "en",
+      "contentLanguage": "en",
+      "failedRecommendationContentId": 3,
+      "failedAssetId": 35,
+      "metadataAttemptBefore": 1,
+      "phase": "fresh-same-context-verified-decoded",
+      "classification": "qualified explicit user-control recovery",
+      "realRetryControlTap": true,
+      "metadataAttemptAfter": 2,
+      "freshIndependentHttpComparison": true,
+      "decodedHero": {
+        "width": 512,
+        "height": 909,
+        "bytes": 1861632
+      },
+      "decodedRecommendationCovers": [
+        {
+          "contentId": 3,
+          "contentLanguage": "en",
+          "assetId": 35,
+          "state": "decoded",
+          "width": 493,
+          "height": 800,
+          "bytes": 1577600
+        },
+        {
+          "contentId": 4,
+          "contentLanguage": "en",
+          "assetId": 41,
+          "state": "decoded",
+          "width": 493,
+          "height": 800,
+          "bytes": 1577600
+        },
+        {
+          "contentId": 5,
+          "contentLanguage": "en",
+          "assetId": 47,
+          "state": "decoded",
+          "width": 451,
+          "height": 800,
+          "bytes": 1443200
+        },
+        {
+          "contentId": 6,
+          "contentLanguage": "en",
+          "assetId": 53,
+          "state": "decoded",
+          "width": 493,
+          "height": 800,
+          "bytes": 1577600
+        }
+      ]
+    },
+    {
+      "selectedContentId": 2,
+      "categoryId": 1,
+      "uiLanguage": "pt",
+      "contentLanguage": "pt",
+      "failedRecommendationContentId": 3,
+      "failedAssetId": 37,
+      "metadataAttemptBefore": 1,
+      "phase": "observed-current-artwork-error",
+      "classification": "qualified explicit user-control recovery"
+    }
+  ],
+  "cacheFailures": [
+    {
+      "transferSha256": "6daa80a617501345d1c0a87a6bbbd2590612e80c05abdecf71462a8116f79d18",
+      "identitySha256": "0a8192d93437ee70d0a66537d96a444d2bb8264fabbeeb147d3e763953d1f881",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4845,
+      "producerSha256": "6daa80a617501345d1c0a87a6bbbd2590612e80c05abdecf71462a8116f79d18",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "572679e95443315d8b80611ea49b2b84cdf0ba41364463ff30db19468424b860",
+      "identitySha256": "0a8192d93437ee70d0a66537d96a444d2bb8264fabbeeb147d3e763953d1f881",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4849,
+      "producerSha256": "6daa80a617501345d1c0a87a6bbbd2590612e80c05abdecf71462a8116f79d18",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "b6bc7e8dff5481513b4af7f291496b02a7f0affadcd424b146a062074829d0ae",
+      "identitySha256": "e5a8da4baf9c8b40460da79076d584c84b534fe4620896cae78ae244db9cba86",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4892,
+      "producerSha256": "b6bc7e8dff5481513b4af7f291496b02a7f0affadcd424b146a062074829d0ae",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "e13d31494607e5a767b4bd56b996486083c8067786e68d24ce1e7a3698da4ff0",
+      "identitySha256": "e5a8da4baf9c8b40460da79076d584c84b534fe4620896cae78ae244db9cba86",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4892,
+      "producerSha256": "b6bc7e8dff5481513b4af7f291496b02a7f0affadcd424b146a062074829d0ae",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "430f4749a91f084c77e54b02760aedb5865dbad925ca435ae7a548b346e3fce3",
+      "identitySha256": "42c17662b47e208877a9e651fd8bab4c579a44cbb5716ce3c4f44fca2074a2dd",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 5075,
+      "producerSha256": "430f4749a91f084c77e54b02760aedb5865dbad925ca435ae7a548b346e3fce3",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "5025a97c961b16e3b83c2a612e1771185d5db498a5a3344b755e25280201bb58",
+      "identitySha256": "ef280fdb3760afbe9af169b49cbaf8940ace4754f29eafdf289208566457e7ea",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 5075,
+      "producerSha256": "5025a97c961b16e3b83c2a612e1771185d5db498a5a3344b755e25280201bb58",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "beda86cdff83aa747b7b9373437aaff1e2838f2837149f2084d3b6b9677094d4",
+      "identitySha256": "e5a8da4baf9c8b40460da79076d584c84b534fe4620896cae78ae244db9cba86",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4308,
+      "producerSha256": "beda86cdff83aa747b7b9373437aaff1e2838f2837149f2084d3b6b9677094d4",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "c5ec53c9162a5df1d0b66058635d40f0d21b23b6225b43a61b2d484fc026d58b",
+      "identitySha256": "e5a8da4baf9c8b40460da79076d584c84b534fe4620896cae78ae244db9cba86",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 10452,
+      "transportPhase": "total",
+      "transportMilliseconds": 8024,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "c5ec53c9162a5df1d0b66058635d40f0d21b23b6225b43a61b2d484fc026d58b"
+    },
+    {
+      "transferSha256": "afd42370ebe38c52be942356a99163c00dbd0fd74b255a014e638011f4888478",
+      "identitySha256": "e5a8da4baf9c8b40460da79076d584c84b534fe4620896cae78ae244db9cba86",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 10452,
+      "transportPhase": "total",
+      "transportMilliseconds": 8024,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "c5ec53c9162a5df1d0b66058635d40f0d21b23b6225b43a61b2d484fc026d58b"
+    },
+    {
+      "transferSha256": "bae1c6716c1be9a48503874e51b0b4d749e3141eaecae23e722a065d40a6f8f9",
+      "identitySha256": "42c17662b47e208877a9e651fd8bab4c579a44cbb5716ce3c4f44fca2074a2dd",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 11533,
+      "transportPhase": "total",
+      "transportMilliseconds": 8013,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "bae1c6716c1be9a48503874e51b0b4d749e3141eaecae23e722a065d40a6f8f9"
+    },
+    {
+      "transferSha256": "4cac60ffea93cde762edb0cf6ee813f51bde47c510e47c6094e3bb3ca97a0be1",
+      "identitySha256": "97968cc621722fecc724ae4d5d1a4c62978e13e5c0f2846410676e25d697aa36",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 12782,
+      "transportPhase": "total",
+      "transportMilliseconds": 8007,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "4cac60ffea93cde762edb0cf6ee813f51bde47c510e47c6094e3bb3ca97a0be1"
+    },
+    {
+      "transferSha256": "ebd7b7fbe6c6e5c9e576694d5137632931b61296ee8ac286268f9bf91aeb6389",
+      "identitySha256": "05f056336f8f57e841005f7375f8b5fd71282109f3ab75fa7576632af1e653b8",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14072,
+      "transportPhase": "total",
+      "transportMilliseconds": 8011,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ebd7b7fbe6c6e5c9e576694d5137632931b61296ee8ac286268f9bf91aeb6389"
+    },
+    {
+      "transferSha256": "5c836581bda3af622ae7a502a5f9b6c627d16f1c30afaa26c4e921cfceb451d0",
+      "identitySha256": "05f056336f8f57e841005f7375f8b5fd71282109f3ab75fa7576632af1e653b8",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14072,
+      "transportPhase": "total",
+      "transportMilliseconds": 8011,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ebd7b7fbe6c6e5c9e576694d5137632931b61296ee8ac286268f9bf91aeb6389"
+    },
+    {
+      "transferSha256": "b792a0e2c64df89abc0a3a27e0e099352a6c36a6c9e0a478b28a2c532ebf594d",
+      "identitySha256": "ef280fdb3760afbe9af169b49cbaf8940ace4754f29eafdf289208566457e7ea",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14920,
+      "transportPhase": "total",
+      "transportMilliseconds": 8006,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "b792a0e2c64df89abc0a3a27e0e099352a6c36a6c9e0a478b28a2c532ebf594d"
+    },
+    {
+      "transferSha256": "a1c49a37431f7075c80d1dde0065014cb2aa00c84668dbed3958950250532b77",
+      "identitySha256": "983f3918ac5c64454d4656f33931835b17396bed74acf8594288c270a259f954",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15453,
+      "transportPhase": "total",
+      "transportMilliseconds": 8016,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "a1c49a37431f7075c80d1dde0065014cb2aa00c84668dbed3958950250532b77"
+    },
+    {
+      "transferSha256": "c571ce47fa7e84ea9bb66d1dce7ad08d0fd9f923f90b5c8176da463946166a5e",
+      "identitySha256": "983f3918ac5c64454d4656f33931835b17396bed74acf8594288c270a259f954",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15138,
+      "transportPhase": "total",
+      "transportMilliseconds": 8007,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "c571ce47fa7e84ea9bb66d1dce7ad08d0fd9f923f90b5c8176da463946166a5e"
+    },
+    {
+      "transferSha256": "ceacae77b38c29a1ad538f5639dfb135848ccea920efec4b5c6cd84a7b6f9ad9",
+      "identitySha256": "05f056336f8f57e841005f7375f8b5fd71282109f3ab75fa7576632af1e653b8",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15564,
+      "transportPhase": "total",
+      "transportMilliseconds": 8146,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ceacae77b38c29a1ad538f5639dfb135848ccea920efec4b5c6cd84a7b6f9ad9"
+    },
+    {
+      "transferSha256": "ccf7720d100190b6ad4e26b590fff3069f3a01f3f05dd050a7acff6d0a46102c",
+      "identitySha256": "05f056336f8f57e841005f7375f8b5fd71282109f3ab75fa7576632af1e653b8",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15565,
+      "transportPhase": "total",
+      "transportMilliseconds": 8146,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ceacae77b38c29a1ad538f5639dfb135848ccea920efec4b5c6cd84a7b6f9ad9"
+    },
+    {
+      "transferSha256": "43d5db34a91f30e3da1962968c152a568e373953c4051d50485cfbbc6206f21a",
+      "identitySha256": "97968cc621722fecc724ae4d5d1a4c62978e13e5c0f2846410676e25d697aa36",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15917,
+      "transportPhase": "total",
+      "transportMilliseconds": 8208,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "43d5db34a91f30e3da1962968c152a568e373953c4051d50485cfbbc6206f21a"
+    },
+    {
+      "transferSha256": "67981adaa2b1a1f083aafe6ddbe3e1602a8361db37f4f0e4fedef1c5468a7907",
+      "identitySha256": "0a8192d93437ee70d0a66537d96a444d2bb8264fabbeeb147d3e763953d1f881",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 12242,
+      "transportPhase": "total",
+      "transportMilliseconds": 8003,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "67981adaa2b1a1f083aafe6ddbe3e1602a8361db37f4f0e4fedef1c5468a7907"
+    },
+    {
+      "transferSha256": "0f8bed0083298c5d518d39f007e241991b7e49871b2f8fd0ab59e8404cd66ced",
+      "identitySha256": "997c1c23fa5f8474a61c73cce12fbcb4d4d4093f838eebac99077557147210c7",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4270,
+      "producerSha256": "0f8bed0083298c5d518d39f007e241991b7e49871b2f8fd0ab59e8404cd66ced",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "f692a2bd1f33c9903e2bc0cc2378baf5f9abef6630cf458ddd490f31170d5fb9",
+      "identitySha256": "71a0b6a2badb735baf9335317907ed224169aeb537b6b2128dcc290ec266e610",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 9654,
+      "transportPhase": "total",
+      "transportMilliseconds": 8016,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "f692a2bd1f33c9903e2bc0cc2378baf5f9abef6630cf458ddd490f31170d5fb9"
+    },
+    {
+      "transferSha256": "ec4d1fcb3fcc28e404ff460d7dc19e24f9ca769391fcadbc6320d61d423d4685",
+      "identitySha256": "71a0b6a2badb735baf9335317907ed224169aeb537b6b2128dcc290ec266e610",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 9655,
+      "transportPhase": "total",
+      "transportMilliseconds": 8016,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "f692a2bd1f33c9903e2bc0cc2378baf5f9abef6630cf458ddd490f31170d5fb9"
+    },
+    {
+      "transferSha256": "8763a99472f6049e7bba7e05a14ee20514e4cf4efded503b8bf01b407bc7f7f7",
+      "identitySha256": "89c029a0f0e581834dc471c3e489e885cf7c6c4987f9b8f1d677d3728e030b11",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 12093,
+      "transportPhase": "total",
+      "transportMilliseconds": 8015,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "8763a99472f6049e7bba7e05a14ee20514e4cf4efded503b8bf01b407bc7f7f7"
+    },
+    {
+      "transferSha256": "46ac2432027ac09bc9993cd979646cdc7343ec7445cdae1077f54c423b52f0ac",
+      "identitySha256": "693185797f1bbe906f35635b9c8ac7528048909fbf173912f29f895e0494fb3d",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 13930,
+      "transportPhase": "total",
+      "transportMilliseconds": 8047,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "46ac2432027ac09bc9993cd979646cdc7343ec7445cdae1077f54c423b52f0ac"
+    },
+    {
+      "transferSha256": "8232f72c295c9377a368c51e1f3b29e86fe9191c0f22ffeb9885b840fe437105",
+      "identitySha256": "693185797f1bbe906f35635b9c8ac7528048909fbf173912f29f895e0494fb3d",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 13930,
+      "transportPhase": "total",
+      "transportMilliseconds": 8047,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "46ac2432027ac09bc9993cd979646cdc7343ec7445cdae1077f54c423b52f0ac"
+    },
+    {
+      "transferSha256": "88433f1e0749d883f05a42abe302f3ec060842017ce439d08f0e6e1266149f8e",
+      "identitySha256": "fbb98ee64e0262b87f71fef53cef196f87361c7b2088aa92c0f9d88fa76acdf2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14481,
+      "transportPhase": "total",
+      "transportMilliseconds": 8003,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "88433f1e0749d883f05a42abe302f3ec060842017ce439d08f0e6e1266149f8e"
+    },
+    {
+      "transferSha256": "0f9e50bf60a00d6000c0f5349353b0c77a6eaa4f5a50f505b9e1f8360cf7a2db",
+      "identitySha256": "fbb98ee64e0262b87f71fef53cef196f87361c7b2088aa92c0f9d88fa76acdf2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14481,
+      "transportPhase": "total",
+      "transportMilliseconds": 8003,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "88433f1e0749d883f05a42abe302f3ec060842017ce439d08f0e6e1266149f8e"
+    },
+    {
+      "transferSha256": "e4a438c847fc8f1c1e5f1d3545c64bf17fd67528e5e56344ab70b92f8edbfd52",
+      "identitySha256": "3d61fc1012d742cac3184ad1f44fa0157a646f1e9d120eab582c777c58ceb194",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15021,
+      "transportPhase": "total",
+      "transportMilliseconds": 8057,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "e4a438c847fc8f1c1e5f1d3545c64bf17fd67528e5e56344ab70b92f8edbfd52"
+    },
+    {
+      "transferSha256": "ab025f142ed29bb910437e4421b63f8c3944185459025eade043240ab02d7196",
+      "identitySha256": "38c378388185d770b856f10e2e2ef57d9fe794036e83db6df4237fa7df92cb67",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15332,
+      "transportPhase": "total",
+      "transportMilliseconds": 8021,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ab025f142ed29bb910437e4421b63f8c3944185459025eade043240ab02d7196"
+    },
+    {
+      "transferSha256": "b8e832d985d6e4f4766651e309b49a699ee42f060fe63a87f9d5fec8a3d42731",
+      "identitySha256": "38c378388185d770b856f10e2e2ef57d9fe794036e83db6df4237fa7df92cb67",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15332,
+      "transportPhase": "total",
+      "transportMilliseconds": 8021,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "ab025f142ed29bb910437e4421b63f8c3944185459025eade043240ab02d7196"
+    },
+    {
+      "transferSha256": "12fb347423692e130faf5870ffb5f330ad2de89a35aa0b0b336419b71b9df27b",
+      "identitySha256": "7c6be1ae6f23c32eee24d158ae2c892c8aabdd832fe5971f35e4e0e796f1237e",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 12237,
+      "transportPhase": "total",
+      "transportMilliseconds": 8011,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "12fb347423692e130faf5870ffb5f330ad2de89a35aa0b0b336419b71b9df27b"
+    },
+    {
+      "transferSha256": "b7b981dfc356e7321817b2915cc186b2cf49234985620a571d4a65e16014187d",
+      "identitySha256": "fbb98ee64e0262b87f71fef53cef196f87361c7b2088aa92c0f9d88fa76acdf2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 12550,
+      "transportPhase": "total",
+      "transportMilliseconds": 8007,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "b7b981dfc356e7321817b2915cc186b2cf49234985620a571d4a65e16014187d"
+    },
+    {
+      "transferSha256": "b9413475ec7f0e717039791bf1c0fa9be9343af68f1e9e8ad805de7837eaf7ed",
+      "identitySha256": "89c029a0f0e581834dc471c3e489e885cf7c6c4987f9b8f1d677d3728e030b11",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 13004,
+      "transportPhase": "total",
+      "transportMilliseconds": 8011,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "b9413475ec7f0e717039791bf1c0fa9be9343af68f1e9e8ad805de7837eaf7ed"
+    },
+    {
+      "transferSha256": "aab8dac27eac0babe456edd9f099c4aab59306f8ce3f4db486aab8a545d6c0f9",
+      "identitySha256": "3d61fc1012d742cac3184ad1f44fa0157a646f1e9d120eab582c777c58ceb194",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 13411,
+      "transportPhase": "total",
+      "transportMilliseconds": 8006,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "aab8dac27eac0babe456edd9f099c4aab59306f8ce3f4db486aab8a545d6c0f9"
+    },
+    {
+      "transferSha256": "82b7d84f05e5aaa7cdcec8eb245d9cf395abe657acf2367958bcec4b0709d471",
+      "identitySha256": "380ea461f8d6c9dbee23c03e73341f30e33bd793994922dd9627b14eebfc2612",
+      "phase": "admission",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 4787,
+      "producerSha256": "82b7d84f05e5aaa7cdcec8eb245d9cf395abe657acf2367958bcec4b0709d471",
+      "timeoutMilliseconds": 2000
+    },
+    {
+      "transferSha256": "41c7c2859a6e6b2926765191464001084880b8359ae961b5dd80dcb197123403",
+      "identitySha256": "55c7338d2c6d7af8d59f4c004e591f5603c6b08547b9005aecbc8059d20268fa",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 11923,
+      "transportPhase": "total",
+      "transportMilliseconds": 8128,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "41c7c2859a6e6b2926765191464001084880b8359ae961b5dd80dcb197123403"
+    },
+    {
+      "transferSha256": "bd1aae4ebe8b2f246a7247df89cf1b9a02caf2096d6963ee734510b799cd4242",
+      "identitySha256": "55c7338d2c6d7af8d59f4c004e591f5603c6b08547b9005aecbc8059d20268fa",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 11923,
+      "transportPhase": "total",
+      "transportMilliseconds": 8128,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "41c7c2859a6e6b2926765191464001084880b8359ae961b5dd80dcb197123403"
+    },
+    {
+      "transferSha256": "3436c13bf1383ff02a21d03892369adeb2863aebe5b5a37a65f375eb2b49ee04",
+      "identitySha256": "beccc3f8d075ada2b04c7e2eca5d3b64b1a89faaa4a941491b1cd3b394d87cbb",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14028,
+      "transportPhase": "total",
+      "transportMilliseconds": 8028,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "3436c13bf1383ff02a21d03892369adeb2863aebe5b5a37a65f375eb2b49ee04"
+    },
+    {
+      "transferSha256": "24d6339b126beadb6de928a7205e73c6f7a88aeb21eb35d6161dcdead9b2449b",
+      "identitySha256": "beccc3f8d075ada2b04c7e2eca5d3b64b1a89faaa4a941491b1cd3b394d87cbb",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14029,
+      "transportPhase": "total",
+      "transportMilliseconds": 8028,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "3436c13bf1383ff02a21d03892369adeb2863aebe5b5a37a65f375eb2b49ee04"
+    },
+    {
+      "transferSha256": "e5c00a39d3307da050af2e4a21de49cfcfbbc78a140931a2d6cac2ea2c860715",
+      "identitySha256": "8ef8556a055757ca8a7bb44597f6ce09637053608a006d1d9db37b3a79a1c5d2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14711,
+      "transportPhase": "total",
+      "transportMilliseconds": 8015,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "e5c00a39d3307da050af2e4a21de49cfcfbbc78a140931a2d6cac2ea2c860715"
+    },
+    {
+      "transferSha256": "7688106436141624f78ebc2386f263e9a85540f71968db481fedf7e775833790",
+      "identitySha256": "8ef8556a055757ca8a7bb44597f6ce09637053608a006d1d9db37b3a79a1c5d2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14711,
+      "transportPhase": "total",
+      "transportMilliseconds": 8015,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "e5c00a39d3307da050af2e4a21de49cfcfbbc78a140931a2d6cac2ea2c860715"
+    },
+    {
+      "transferSha256": "a9a96ccd754076063553abc8c91a8550bb1e5e6eb701b8f765131db8dbd3d048",
+      "identitySha256": "380ea461f8d6c9dbee23c03e73341f30e33bd793994922dd9627b14eebfc2612",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15394,
+      "transportPhase": "total",
+      "transportMilliseconds": 8013,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "a9a96ccd754076063553abc8c91a8550bb1e5e6eb701b8f765131db8dbd3d048"
+    },
+    {
+      "transferSha256": "439b5828b2b3ff1edfb649cd0b378a0f3998986378ab82a59c32d4718b5d2e68",
+      "identitySha256": "05af96ebe7efc40bc646807e8a528d440d837e7cb2cd2ac11572ba45faccbb4a",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 15908,
+      "transportPhase": "total",
+      "transportMilliseconds": 8009,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "439b5828b2b3ff1edfb649cd0b378a0f3998986378ab82a59c32d4718b5d2e68"
+    },
+    {
+      "transferSha256": "6fde292b281025b368af24e679793ef3078e7402b37b6ee37b09106c0fd27299",
+      "identitySha256": "7f67a671430d3a1e72936e118ac4c309877610a60f6c81cc6e5f7dcbf3ab5027",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 16442,
+      "transportPhase": "total",
+      "transportMilliseconds": 8036,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "6fde292b281025b368af24e679793ef3078e7402b37b6ee37b09106c0fd27299"
+    },
+    {
+      "transferSha256": "68bc89c467efe2bc02202141045beb2d23f6f9aaece7ad9a1d78c6fb994a6d8e",
+      "identitySha256": "6a70ed18cb38852d9f31965831c00e06cce10af7d409f3baac19efe74c63a2c6",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14097,
+      "transportPhase": "total",
+      "transportMilliseconds": 8004,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "68bc89c467efe2bc02202141045beb2d23f6f9aaece7ad9a1d78c6fb994a6d8e"
+    },
+    {
+      "transferSha256": "886c07dff60233a8888bdedc7dcc61a3ca04d8ec031c140548d238e59fd724a0",
+      "identitySha256": "8ef8556a055757ca8a7bb44597f6ce09637053608a006d1d9db37b3a79a1c5d2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14428,
+      "transportPhase": "total",
+      "transportMilliseconds": 8008,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "886c07dff60233a8888bdedc7dcc61a3ca04d8ec031c140548d238e59fd724a0"
+    },
+    {
+      "transferSha256": "7c85d1821abc9ec0fcc8217cde791608ba3ab11f0032d7a264cb0d6ad7cd90a4",
+      "identitySha256": "139433ddbc02eea3e55e3c2d5c0b38c0a6d385a174dfc7326c333d512da241c6",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 14916,
+      "transportPhase": "total",
+      "transportMilliseconds": 8003,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "7c85d1821abc9ec0fcc8217cde791608ba3ab11f0032d7a264cb0d6ad7cd90a4"
+    },
+    {
+      "transferSha256": "b9c82a3fad59a2e78455ace73cac64a459a62bc6deca4b0fcd0b2f47ae258e6d",
+      "identitySha256": "8ef8556a055757ca8a7bb44597f6ce09637053608a006d1d9db37b3a79a1c5d2",
+      "phase": "package-source",
+      "failureClass": "TimeoutException",
+      "operationMilliseconds": 9869,
+      "transportPhase": "total",
+      "transportMilliseconds": 8005,
+      "transportLimitMilliseconds": 8000,
+      "producerSha256": "b9c82a3fad59a2e78455ace73cac64a459a62bc6deca4b0fcd0b2f47ae258e6d"
+    }
+  ],
+  "postFailureCacheAuditSha256": "ca34c5e5120b3b5e2685d26c1900fbe60c450770bfd073ebf99e6226c6d7d24d",
+  "qualification": "Failed current Android tablet subscriber baseline: PT1.0 selected2/category1 after six completeTR/EN journeys, observed asset37 error triggered one real fresh same-context metadataAttempt1-to2 retry. Subsequently required visible content4/PT/tabletasset43 has error/zero decoded images and actual correlated package-source total8005ms timeout at8000ms bound. The second failure is not bypassed or accepted; remaining cases did not execute. Source/installedAPK/dataset matched. Actual retained80home/12detail files/rows within80/20/100MiB, zero duplicates/orphans/missing paths, known lengths match; no reset. Exact transport/network/provider root cause remains unproven; no image/SDK/source/limit/wait/assertion change.",
+  "separateUnchangedOriginalTargetReplay": {
+    "label": "story12-final-android36-tablet-sub-a30",
+    "passed": true,
+    "sourceAggregateSha256": "c626454bddd9cc4c7f0b080d14a69b3de18764591518fa415ab6465b55e8da33",
+    "proofSha256": "80371e710c7129a00b10d0a2c317a419b32c5f02099c293e91c50d93fd38275b",
+    "captures": 33,
+    "completedJourneys": 10,
+    "explicitCoverRecoveries": 1,
+    "qualification": "Retained disk, original target/assertions/waits/limits. Exactly one observed error with actual localized retry/fresh committed same-context metadata/independent HTTP/rendered Hero and every originally required visible/partial recommendation cover plus separate error/recovered captures. Second failure would still reject. This pass is not uninterrupted healthy baseline and does not explain original A28 timeout or establish a production fix."
+  }
+}

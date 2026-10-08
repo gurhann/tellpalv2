@@ -148,21 +148,22 @@ void main() {
           throwsA(isA<FileSystemException>()),
         );
       }
-      final before = files.creates;
+      final beforeAttempts = files.deleteAttempts;
       for (var index = 0; index < 3; index++) {
+        final handle = await runZoned(
+          () => lifecycle.createFile('rejected-$index'),
+          zoneValues: {LibraryCacheFiles.ownerKey: 'new'},
+        );
         await expectLater(
-          runZoned(
-            () => lifecycle.createFile('rejected-$index'),
-            zoneValues: {LibraryCacheFiles.ownerKey: 'new'},
-          ),
+          handle.writeAsString('not admitted'),
           throwsStateError,
         );
+        expect(await handle.exists(), isFalse);
       }
-      expect(files.creates, before);
       expect(
-        files.deleteAttempts,
-        320,
-      ); // 80 initial + 3 bounded 80-file passes.
+        files.deleteAttempts - beforeAttempts,
+        240,
+      ); // Three bounded 80-file retry passes.
       await expectLater(
         lifecycle.clearAndClose(),
         throwsA(isA<FileSystemException>()),
@@ -171,8 +172,9 @@ void main() {
       files.failures = 0;
       await lifecycle.clearAndClose();
       expect(files._files.directory('/').listSync(), isEmpty);
-      await expectLater(lifecycle.createFile('late'), throwsStateError);
-      expect(files.creates, before);
+      final late = await lifecycle.createFile('late');
+      await expectLater(late.writeAsString('closed'), throwsStateError);
+      expect(await late.exists(), isFalse);
     },
   );
   testWidgets(

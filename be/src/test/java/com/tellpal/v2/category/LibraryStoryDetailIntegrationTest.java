@@ -38,6 +38,23 @@ class LibraryStoryDetailIntegrationTest extends PostgresIntegrationTestBase {
         jdbc.update("update content_localizations set status='DRAFT' where content_id=?",selected);
         assertThat(query(category,selected,"tr","tr",LibraryHomeQueryApi.Audience.NON_SUBSCRIBER)).isEmpty();
     }
+    @Test void recommendationsContinuePastAFullRejectedCandidateBatchAndKeepCmsOrder() {
+        long category=category("tr",null,"ALL"),selected=story("selected","tr",true);
+        link(category,selected,"tr",0);
+        for(int i=1;i<100;i++) link(category,story("unready-"+i,"tr",false),"tr",i);
+        var eligible=new java.util.ArrayList<Long>();
+        for(int i=0;i<6;i++) eligible.add(story("eligible-"+i,"tr",true));
+        // Reverse insertion order so CMS order, rather than content ID, decides the result.
+        for(int i=0;i<eligible.size();i++) link(category,eligible.get(i),"tr",105-i);
+        var result=query(category,selected,"tr","tr",LibraryHomeQueryApi.Audience.NON_SUBSCRIBER).orElseThrow();
+        assertThat(result.contentId()).isEqualTo(selected);
+        assertThat(result.recommendations()).extracting(ContentPreview::contentId)
+            .containsExactly(eligible.get(5),eligible.get(4),eligible.get(3),eligible.get(2),eligible.get(1));
+        assertThat(result.recommendations()).allSatisfy(item->{
+            assertThat(item.contentLanguage()).isEqualTo("tr");
+            assertThat(item.isLocked()).isTrue();
+        });
+    }
     @Test void mappedLanguageEmptyRecommendationsAndAudienceAreServerOwned() {
         long category=category("tr","en","ALL"),id=story("mapped","en",true);link(category,id,"en",0);
         var non=query(category,id,"tr","en",LibraryHomeQueryApi.Audience.NON_SUBSCRIBER).orElseThrow();

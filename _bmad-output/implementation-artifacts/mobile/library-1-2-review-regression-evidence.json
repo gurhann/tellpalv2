@@ -1,0 +1,352 @@
+{
+  "recordedAt": "2026-10-08T07:59:07.982033+00:00",
+  "review": "library-1-2-review.md",
+  "baselineCommit": "8380313c4ed32a471e68b83ad780827a92dffcc0",
+  "nativeSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+  "constructedCompleteDiffSha256": "bb600fc01bde9965de16fc53904ee2172e53b5a72131785ecd193e48f63b72b6",
+  "logs": {
+    "tellpal-story12-review-red.log": "4f9766c70ef7497eeb57c717b900c5fea98b27962c3a281bc152f16003456368",
+    "tellpal-story12-review-decoder-red.log": "44b55b0ee3bfe849d3daa24e6470ef22fb4719de277b4a8a017b13e1d7211a5f",
+    "tellpal-story12-review-recovery-final.log": "7d956cb49a6c0abb409ca1d172a968fc0dc3b2901322b8f4cf0c7e42c3dcd4d9",
+    "tellpal-story12-review-final-codegen.log": "e9d37b9091c6d283afbe8e0537ddbd22f4e2ba904f931b28b1bda601e1cd59ec",
+    "tellpal-story12-review-final-analyze.log": "16f0e0a18023b028fd944b93860ab568ecf592034a630d3eb5c2e38541bd174c",
+    "tellpal-story12-review-final-flutter-tests.log": "b78b65079c918d8d1bfb8507b9ba6033b1fd0bf9b7c5938766c6c9406ad94e19",
+    "tellpal-story12-review-final-serial-flutter-tests.log": "61fde14f6b677d0f3b17704f16ff283ea5e08014b43369f2df2e58f41477b8e4",
+    "tellpal-story12-review-final-codec-serial-flutter-tests.log": "a04cf25313bb8ec00f2d9cce6b8101807cd1aba2747c83d74cea952a12210527",
+    "tellpal-story12-review-final-codec-analyze.log": "ef3dbfce335ca33aa1c9dc9874530360b013bc82da3d5688ce2c5cebcabfc51f"
+  },
+  "redObservations": [
+    "64-bit hero dimension product overflow admitted malformed HTTP metadata",
+    "long fallback title overflowed RenderFlex by8621pixels",
+    "recycled loaded hero failed to start current failure/timeout attempt",
+    "pending exact ResizeImage key remained in image cache after disposal before real codec completion"
+  ],
+  "greenVerification": {
+    "fullSerialFlutterTests": 223,
+    "skips": 0,
+    "analyzer": "No issues found",
+    "codeGeneration": "passed",
+    "meaningfulFlutterRegressionsAdded": 10,
+    "realPostgresDetailPaginationRegressionAdded": 1,
+    "actualEngineCodecCompletionBeforeLateCacheAssertions": true
+  },
+  "failedParallelFullSuite": {
+    "passed": 222,
+    "failed": 1,
+    "assertion": "Existing overlapping home/detail PNG expected2decoded RawImages but observed0",
+    "cause": "unproven",
+    "qualification": "Failure retained. Passing serial full suite used unchanged source, waits, assertions and limits; serial command matches previous acceptance."
+  },
+  "initialRedHarnessQualification": "The first combined red run was deliberately stopped after the decoder test waited inside runAsync for a fake-zone event. The separately bounded red decoder run fixes only test scheduling and reproduces pending cache ownership failure. The passing test preserves that same original assertion and real engine codec gate.",
+  "nativeReferencePlatformAcceptance": {
+    "status": "passed within approved development scope",
+    "sourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+    "originalTargets": 20,
+    "originalPngs": 550,
+    "platformEvidence": "library-1-2-platform-ax-evidence.json",
+    "referenceEvidence": "library-1-2-reference-inspection-evidence.json",
+    "qualification": "Current source/binary-matched development evidence closes the approved scope. Historical proofs and failed/unaccepted attempts retain their original scope. Android tablet baselines include two NON_SUBSCRIBER and three SUBSCRIBER qualified cover recoveries; their exact underlying causes remain unproven. CUA physical viewport scrolling remains tool-limited; original native targets independently prove SDK drag/card/Back/scroll retention. Controlled local faults are not provider outages. Physical devices, minimum/older OS and production quantitative memory/latency remain release gaps under the approved emulator-first scope."
+  },
+  "currentInspectedNativeRasters": [
+    {
+      "runLabel": "story12-final-android36-phone-nonsub-a42",
+      "capture": "detail-tr-1.0-free-2-loaded.png",
+      "sha256": "6159312dd197b4d2223f55bfe66e68ec90d9d78e3af325393d5406e50eda721c",
+      "inspection": "Decoded original Hero, visible Back/age/duration/deferredCTA/narration and readable metadata.",
+      "qualification": "Complete original baseline target passed with49captures and zero cover recoveries."
+    },
+    {
+      "runLabel": "story12-final-android36-phone-nonsub-fault-a42",
+      "capture": "detail-injected-en-metadata_timeout.png",
+      "sha256": "947108806186b88dfc8d65e17103bb144ce4f464b559741c7f20203e162b2f7b",
+      "inspection": "Settled localized metadata error and visible retry/Back.",
+      "qualification": "Complete original fault target passed24cases/51captures; explicit controlled injection."
+    },
+    {
+      "runLabel": "story12-final-android36-phone-nonsub-fault-a42",
+      "capture": "detail-injected-en-hero_corrupt.png",
+      "sha256": "60511613f149555adffdaf2aaee75afa78b3afec79c5968d22cb348d14151a4c",
+      "inspection": "Retained readable Hero title, separate Retry cover, age/duration and metadata at enlarged scale.",
+      "qualification": "Complete original fault target passed24cases/51captures; explicit corrupt-source fixture."
+    },
+    {
+      "runLabel": "story12-final-android36-tablet-nonsub-a42",
+      "capture": "detail-tr-1.0-free-2-metadata.png",
+      "sha256": "245054f58f81a626d8483573c7293cecc9dbfb450e98031c8859a09ac33172c3",
+      "inspection": "Actual scrolled tablet raster shows readable full credits/summary, localized recommendations and two rendered original covers.",
+      "qualification": "Complete original baseline target now passed with53captures and two distinctly qualified real-control cover recoveries; this raster is only a visual observation and does not independently prove platform AX."
+    },
+    {
+      "runLabel": "story12-final-ios27-phone-nonsub-a42",
+      "capture": "detail-tr-1.3-locked-3-loaded.png",
+      "sha256": "37bd7dcb48018bf0a75572a445a6717372b4b0dced7dd198cec05cbd7ab5e021",
+      "inspection": "Actual iPhone enlarged locked raster: decoded blurred cover, visible Back/lock/age/duration, localized Premium CTA, narration and wrapped summary.",
+      "qualification": "Complete original current iPhone baseline target passed16journeys/49captures with zero explicit cover recoveries and all five installed binary parts matched. This raster remains a scoped visual observation; actual platform AX roles are separately pending."
+    },
+    {
+      "capture": "detail-pt-1.3-locked-3-loaded.png",
+      "sha256": "a85523485b556aa19c1f33c65e71525d37165fa4460f8f098ed27190b98e7af7",
+      "sourceAggregateSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+      "proofSha256": "14c6b27910cbcaea1a26a2b5d361fc014e12b73a3d6ca6288150527865fa27c5",
+      "runLabel": "story12-final-ios27-tablet-nonsub-a42",
+      "inspection": "Original iPad PT scale1.3 locked detail raster inspected: decoded blurred Hero with visible Back/lock/age/duration, centered Premium action and narration switch, readable wrapped summary and credits. Tool preview resize does not alter original SDK PNG; original target49 captures passed without explicit cover recovery. Actual platform AX remains separate.",
+      "qualification": "Current original49-capture baseline passes without explicit cover recovery; inspected original remains unchanged. Actual platform AX is independently pending."
+    },
+    {
+      "runLabel": "story12-final-ios27-tablet-nonsub-fault-a42",
+      "capture": "detail-injected-en-hero_corrupt.png",
+      "sha256": "36a83b5f17789a009693bbd1c61a69de62260b932d9ce6ea5ac3f839b10a5c61",
+      "inspection": "Original settled iPad enlarged EN corrupt-Hero raster inspected: title, cover unavailable text and Retry cover fit inside Hero; Back/age/duration, narration, summary and credits remain visible. No underlying Library route strip.",
+      "qualification": "Controlled local actual-corrupt source fault, not real provider outage. Original24-case51-capture target passes; actual platform AX is separate.",
+      "proofSha256": "f8fe3cd22aebe9fe9fcb9e49476787d2b8c0c4fbbd8c83ec33786be26fa51583"
+    },
+    {
+      "runLabel": "story12-final-android36-phone-sub-a42",
+      "capture": "detail-pt-1.3-mapped-9-loaded.png",
+      "sha256": "19455e1a663b85d23e8c2ebdc7eac8d7cb7247bdb0e95220344e992b991629b2",
+      "inspection": "Original Android subscriber phone PT1.3 mapped-reading raster inspected: actual decoded unblurred Hero, localized Back/start/narration/age, similar section and decoded partially visible recommendation. Missing optional duration/summary/credits are omitted.",
+      "qualification": "Original subscriber31-capture target passes with zero explicit cover recoveries. Deferred start remains disabled by separately checked state/semantics; raster alone does not prove enabled state or platform roles.",
+      "proofSha256": "52f142069c4053f1cfe68d24e473a53914a34da621c1dfa48628cb1769bf2f88"
+    },
+    {
+      "runLabel": "story12-final-android36-tablet-sub-a42",
+      "capture": "detail-pt-2-cover-retry-2-recovered.png",
+      "sha256": "f324693f73061eaa08ff2424fe04c5d762f1b9c7fbd6c711a2fe27f42e157ae0",
+      "inspection": "Original Android subscriber tablet PT recovery raster inspected: decoded unblurred Hero, localized start/narration, readable wrapped summary and ordered credits, similar section and three whole plus one partial decoded cover.",
+      "qualification": "Actual real-control qualified recovery from an observed current error, not uninterrupted healthy source loading. Original target37captures passed with three distinct per-check recoveries and unchanged assertions; platform roles separately pending."
+    },
+    {
+      "runLabel": "story12-final-ios27-phone-sub-a42",
+      "capture": "detail-pt-1.3-mapped-9-loaded.png",
+      "sha256": "da2b0daef9cdf10c0f7634336df1a00b066f0465aca67b7b86d87bbc2e2b2af5",
+      "inspection": "Original iPhone subscriber PT1.3 mapped-reading raster inspected: decoded unblurred Hero, visible Back/age/start/narration, localized similar section and a decoded partially visible recommendation. Optional duration/summary/credits correctly absent.",
+      "qualification": "Original subscriber31-capture target passed without explicit cover recovery. Tool preview resized; original PNG unchanged. Visual observation does not independently prove enabled state or native AX.",
+      "proofSha256": "dfb6394468a398423916b055dc698c36f73b7d60a2fa9dd41de914abcfccdbee"
+    },
+    {
+      "runLabel": "story12-final-ios27-tablet-sub-a42",
+      "capture": "detail-en-1.3-free-2-metadata.png",
+      "sha256": "b3350d3df06c94d0a568ec8d9e7342907b39c0834cbc6affa4e2041c975f81fc",
+      "inspection": "Original scrolled iPad subscriber EN1.3 raster inspected: decoded Hero lower area/age/duration, centered localized start/narration, readable wrapped summary and ordered credits, similar section with three whole and one partial decoded recommendation covers.",
+      "qualification": "Original subscriber31-capture target passed without explicit cover recovery. Tool preview resized; original PNG unchanged. Visual observation does not independently prove enabled state or native AX.",
+      "proofSha256": "c0290381bf941d88f79cd578e5d95f51850b71b87fdaaf9c1255c54d5a6c8733"
+    }
+  ],
+  "currentTabletBaselineQualification": {
+    "label": "story12-final-android36-tablet-nonsub-a42",
+    "proofSha256": "2ccc3dc4b542347aa01b40875cf59906dc741c9d37c90691b64ca872b1306532",
+    "passed": true,
+    "captures": 53,
+    "qualifiedExplicitCoverRecoveries": 2,
+    "uninterruptedHealthyBaseline": false,
+    "causeOfObservedAdmissionPackageTimeouts": "unproven",
+    "scope": "Original current target and assertions; actual one-retry-per-observed-current-case recovery, fresh identity/metadata/HTTP/decode checks retained."
+  },
+  "currentIphoneBaseline": {
+    "label": "story12-final-ios27-phone-nonsub-a42",
+    "proofSha256": "0b901ef33f63cfffdbaeb400019df8e1bda29ec289c23b1790918be6078bbf7b",
+    "passed": true,
+    "captures": 49,
+    "explicitCoverRecoveries": 0,
+    "matchedInstalledParts": 5
+  },
+  "currentIpadBaseline": {
+    "label": "story12-final-ios27-tablet-nonsub-a42",
+    "passed": true,
+    "captures": 49,
+    "explicitCoverRecoveries": 0,
+    "proofSha256": "14c6b27910cbcaea1a26a2b5d361fc014e12b73a3d6ca6288150527865fa27c5",
+    "sourceAggregateSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04"
+  },
+  "currentAndroidTabletSubscriberQualification": {
+    "label": "story12-final-android36-tablet-sub-a42",
+    "passed": true,
+    "captures": 37,
+    "explicitCoverRecoveries": 3,
+    "recoveryRecords": [
+      {
+        "selectedContentId": 2,
+        "categoryId": 2,
+        "uiLanguage": "tr",
+        "contentLanguage": "tr",
+        "failedRecommendationContentId": 3,
+        "failedAssetId": 39,
+        "metadataAttemptBefore": 1,
+        "phase": "fresh-same-context-verified-decoded",
+        "classification": "qualified explicit user-control recovery",
+        "realRetryControlTap": true,
+        "metadataAttemptAfter": 2,
+        "freshIndependentHttpComparison": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 909,
+          "bytes": 1861632
+        },
+        "decodedRecommendationCovers": [
+          {
+            "contentId": 3,
+            "contentLanguage": "tr",
+            "assetId": 39,
+            "state": "decoded",
+            "width": 493,
+            "height": 800,
+            "bytes": 1577600
+          },
+          {
+            "contentId": 4,
+            "contentLanguage": "tr",
+            "assetId": 45,
+            "state": "decoded",
+            "width": 493,
+            "height": 800,
+            "bytes": 1577600
+          }
+        ]
+      },
+      {
+        "selectedContentId": 2,
+        "categoryId": 1,
+        "uiLanguage": "en",
+        "contentLanguage": "en",
+        "failedRecommendationContentId": 3,
+        "failedAssetId": 35,
+        "metadataAttemptBefore": 1,
+        "phase": "fresh-same-context-verified-decoded",
+        "classification": "qualified explicit user-control recovery",
+        "realRetryControlTap": true,
+        "metadataAttemptAfter": 2,
+        "freshIndependentHttpComparison": true,
+        "decodedHero": {
+          "width": 512,
+          "height": 909,
+          "bytes": 1861632
+        },
+        "decodedRecommendationCovers": [
+          {
+            "contentId": 3,
+            "contentLanguage": "en",
+            "assetId": 35,
+            "state": "decoded",
+            "width": 493,
+            "height": 800,
+            "bytes": 1577600
+          },
+          {
+            "contentId": 4,
+            "contentLanguage": "en",
+            "assetId": 41,
+            "state": "decoded",
+            "width": 493,
+            "height": 800,
+            "bytes": 1577600
+          },
+          {
+            "contentId": 5,
+            "contentLanguage": "en",
+            "assetId": 47,
+            "state": "decoded",
+            "width": 451,
+            "height": 800,
+            "bytes": 1443200
+          },
+          {
+            "contentId": 6,
+            "contentLanguage": "en",
+            "assetId": 53,
+            "state": "decoded",
+            "width": 493,
+            "height": 800,
+            "bytes": 1577600
+          }
+        ]
+      },
+      {
+        "selectedContentId": 2,
+        "categoryId": 1,
+        "uiLanguage": "pt",
+        "contentLanguage": "pt",
+        "failedRecommendationContentId": 3,
+        "failedAssetId": 37,
+        "metadataAttemptBefore": 1,
+        "phase": "fresh-same-context-verified-decoded",
+        "classification": "qualified explicit user-control recovery",
+        "realRetryControlTap": true,
+        "metadataAttemptAfter": 2,
+        "freshIndependentHttpComparison": true,
+        "decodedHero": {
+          "width": 428,
+          "height": 695,
+          "bytes": 1189840
+        },
+        "decodedRecommendationCovers": [
+          {
+            "contentId": 3,
+            "contentLanguage": "pt",
+            "assetId": 37,
+            "state": "decoded",
+            "width": 428,
+            "height": 695,
+            "bytes": 1189840
+          },
+          {
+            "contentId": 4,
+            "contentLanguage": "pt",
+            "assetId": 43,
+            "state": "decoded",
+            "width": 321,
+            "height": 570,
+            "bytes": 731880
+          },
+          {
+            "contentId": 5,
+            "contentLanguage": "pt",
+            "assetId": 49,
+            "state": "decoded",
+            "width": 428,
+            "height": 695,
+            "bytes": 1189840
+          },
+          {
+            "contentId": 6,
+            "contentLanguage": "pt",
+            "assetId": 55,
+            "state": "decoded",
+            "width": 428,
+            "height": 695,
+            "bytes": 1189840
+          }
+        ]
+      }
+    ],
+    "proofSha256": "11fbaa11951c372922e69db1f9b4baeec55173a21e679bc493a04291f84c5936",
+    "qualification": "Three distinct per-cover-check actual current-artwork errors recovered through one real localized control each, fresh same-context committed metadata, independent HTTP and every originally required decoded Hero/visible or partial cover. Not uninterrupted healthy baseline; root cause remains unproven. Original production/test bounds and assertions unchanged."
+  },
+  "secondDefaultParallelFullSuite": {
+    "recordedAt": "2026-10-08T08:59:07.472092+00:00",
+    "command": "flutter test --reporter expanded (default concurrency)",
+    "exitCode": 1,
+    "passed": false,
+    "lastCounts": [
+      "222",
+      "",
+      "1"
+    ],
+    "nativeSourceUnchanged": true,
+    "nativeSourceSeal": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+    "logSha256": "9de2a9ba9f9315f6c62efd851cbdf513e584da1711a2d42567f58a4a7ca3e2e9",
+    "qualification": "Fresh full-suite check for the earlier initial222+1parallel failure. Earlier failure remains preserved; this result alone does not establish its root cause.",
+    "failure": "recommendation en/en warm-cache assertion at line401 returnednull after actual decoded RawImage was present"
+  },
+  "currentTestOnlyPromotionDiagnosis": {
+    "status": "verified",
+    "realPendingPublicationOrderingDemonstrated": true,
+    "nativeSourceUnchanged": true,
+    "parallelFullPassed": 223,
+    "serialFullPassed": 223,
+    "focusedLogSha256": "159a05fb4f0b9a0f774b53d000e93448f87847cf354885ef8b57493cb3d3790c",
+    "parallelLogSha256": "6bb9c7c1f29dc71451ffb8691e743775e123533b0c436f0a939d24ba69cb9668",
+    "serialLogSha256": "31061f59894fd30e811be8a59be3f02bafa245dc97369b5e8d3ae554bc0f026b",
+    "analyzerLogSha256": "9afbd2631dc72fd0999192e6c273d1b8be12854972a9caa02d55b9405936b509",
+    "qualification": "Observer delegates actual IO/HTTP/codec/promotion to real cache. First EN warm test deliberately gates publication: decoded pixels present while immutable absent, then release and actual Future completion before unchanged warm/source assertions. Finite host-test polling uses existing10s test-cache budget, not former incidental300ms pumping. All production/native bounds/assertions/captures unchanged. Exact earlier parallel failure cause remains unproven."
+  }
+}

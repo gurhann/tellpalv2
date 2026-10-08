@@ -11,6 +11,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tellpal_mobile_poc/app/injection.dart';
 import 'package:tellpal_mobile_poc/core/diagnostics/library_diagnostics.dart';
+import 'package:tellpal_mobile_poc/core/error/failure.dart';
 import 'package:tellpal_mobile_poc/core/network/library_image_cache.dart';
 import 'package:tellpal_mobile_poc/features/library/domain/entity/library_catalog.dart';
 import 'package:tellpal_mobile_poc/features/library/domain/use_case/get_library.dart';
@@ -65,7 +66,7 @@ class ControlledImageCache extends LibraryImageCache {
   }) async {}
 }
 
-LibraryPreview preview() => LibraryPreview(
+LibraryPreview preview({bool expired = false}) => LibraryPreview(
   contentId: 1,
   externalKey: 'story',
   type: 'STORY',
@@ -74,14 +75,19 @@ LibraryPreview preview() => LibraryPreview(
   title: 'Story title',
   isFree: false,
   isLocked: true,
-  covers: LibraryCovers(phone: cover(1), tablet: cover(2)),
+  covers: LibraryCovers(
+    phone: cover(1, expired: expired),
+    tablet: cover(2, expired: expired),
+  ),
 );
-LibraryCover cover(int id) => LibraryCover(
+LibraryCover cover(int id, {bool expired = false}) => LibraryCover(
   assetId: id,
   kind: 'LISTING_COVER',
   mimeType: 'image/jpeg',
   url: 'http://test.invalid/artwork/$id',
-  expiresAt: DateTime.now().add(const Duration(hours: 1)),
+  expiresAt: expired
+      ? DateTime.now().subtract(const Duration(seconds: 1))
+      : DateTime.now().add(const Duration(hours: 1)),
 );
 
 void main() {
@@ -104,14 +110,16 @@ void main() {
   });
   Future<(LibraryCubit, ControlledImageCache)> mount(
     WidgetTester tester,
-    Size size,
-  ) async {
+    Size size, {
+    bool expired = false,
+    ControlledRepository? source,
+  }) async {
     final config = configuration(wait: const Duration(seconds: 2));
     final cache = ControlledImageCache(temporary.path);
     libraryGetIt.registerSingleton<LibraryImageCache>(cache);
     libraryGetIt.registerSingleton<LibraryDiagnostics>(LibraryDiagnostics());
     libraryGetIt.registerFactory<ArtworkCubit>(() => ArtworkCubit(config));
-    final repository = ControlledRepository();
+    final repository = source ?? ControlledRepository();
     final catalog = LibraryCubit(
       GetLibrary(repository),
       config,
@@ -130,7 +138,7 @@ void main() {
               width: 180,
               height: 240,
               child: LibraryCard(
-                item: preview(),
+                item: preview(expired: expired),
                 state: catalog.state,
                 strings: const LibraryStrings('tr'),
               ),
@@ -172,6 +180,79 @@ void main() {
     await tester.pumpAndSettle(const Duration(milliseconds: 10));
   }
 
+  testWidgets(
+    'home adapter automatically renews expired provider once and preserves manual retry after failed metadata renewal',
+    (tester) async {
+      final source = ControlledRepository();
+      final (catalog, cache) = await mount(
+        tester,
+        const Size(411, 914),
+        expired: true,
+        source: source,
+      );
+      final original = catalog.state.catalog;
+      await tester.runAsync(() async {
+        cache.transfers.single.addError(
+          const HttpExceptionWithStatus(403, 'controlled expired source'),
+        );
+      });
+      await tester.pump();
+      await tester.pumpAndSettle();
+      expect(source.calls, hasLength(2));
+      expect(source.calls.last, catalog.state.context);
+      expect(catalog.state.catalog, same(original));
+      source.responses[1].complete(left(const Failure(FailureKind.network)));
+      await tester.pump();
+      await tester.pump();
+      expect(source.calls, hasLength(2));
+      expect(catalog.state.catalog, same(original));
+      final retry = find.byTooltip(const LibraryStrings('tr').retryArtwork);
+      expect(retry, findsOneWidget);
+      await tester.tap(retry);
+      await tester.pump();
+      await tester.pump();
+      expect(source.calls, hasLength(3));
+      expect(source.calls.last, catalog.state.context);
+      expect(cache.transfers, hasLength(1));
+      source.responses[2].complete(right(fixtureCatalog('tr')));
+      await tester.pump();
+      await tester.pump();
+      expect(catalog.state.catalog!.rows.first.name, original!.rows.first.name);
+      expect(catalog.state.attempt, 3);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await catalog.close();
+    },
+  );
+
+  for (final size in [const Size(411, 914), const Size(800, 1280)]) {
+    testWidgets(
+      'decoded Library card $size reuses one bounded provider without a duplicate source transfer',
+      (tester) async {
+        final (catalog, cache) = await mount(tester, size);
+        expect(cache.transfers, hasLength(1));
+        await success(tester, cache, 0);
+        expect(artwork(tester).state.status, ArtworkStatus.loaded);
+        expect(cache.transfers, hasLength(1));
+        final image = tester
+            .widget<RawImage>(
+              find
+                  .byWidgetPredicate(
+                    (widget) => widget is RawImage && widget.image != null,
+                  )
+                  .first,
+            )
+            .image!;
+        expect(
+          image.width,
+          lessThanOrEqualTo(size.shortestSide >= 600 ? 600 : 360),
+        );
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        await catalog.close();
+      },
+    );
+  }
   testWidgets(
     'same-asset retry starts a separate provider transfer before old success completes',
     (tester) async {

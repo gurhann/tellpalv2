@@ -9,7 +9,8 @@ class AppColors {
       placeholder = Color(0xFFE6ECF4),
       white = Colors.white,
       bannerStart = Color(0xFF1F5EFF),
-      bannerEnd = Color(0xFF6420F6);
+      bannerEnd = Color(0xFF6420F6),
+      storyNarrationAccent = Color(0xFFE2123F);
 }
 
 class AppTypography {

@@ -34,7 +34,6 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
           ? state.copyWith(
               attempt: attempt,
               recoveringArtwork: true,
-              heroStatus: StoryHeroStatus.loading,
               heroAttempt: ++_heroAttempt,
             )
           : StoryDetailState(
@@ -87,6 +86,7 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
           state.copyWith(
             status: StoryDetailStatus.loaded,
             detail: detail,
+            metadataAttempt: attempt,
             failure: null,
             heroAttempt: ++_heroAttempt,
             heroStatus: !state.visible
@@ -104,7 +104,10 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
 
   void _startArtworkWait() {
     _artworkTimer?.cancel();
-    if (state.heroStatus != StoryHeroStatus.loading) return;
+    if (state.recoveringArtwork ||
+        state.heroStatus != StoryHeroStatus.loading) {
+      return;
+    }
     final attempt = state.heroAttempt;
     _artworkTimer = Timer(
       _configuration.artworkWait,
@@ -112,9 +115,31 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
     );
   }
 
+  /// A recycled Hero owns a new decoder and cannot reuse a completed attempt.
+  void restartArtworkConsumer(int previousAttempt) {
+    if (isClosed ||
+        !state.visible ||
+        state.recoveringArtwork ||
+        state.status != StoryDetailStatus.loaded ||
+        state.detail?.hero == null ||
+        state.heroAttempt != previousAttempt ||
+        state.heroStatus != StoryHeroStatus.loaded) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        heroAttempt: ++_heroAttempt,
+        heroStatus: StoryHeroStatus.loading,
+      ),
+    );
+    _startArtworkWait();
+  }
+
   void artworkLoaded(int attempt) {
     if (isClosed ||
         !state.visible ||
+        state.recoveringArtwork ||
+        state.status != StoryDetailStatus.loaded ||
         attempt != state.heroAttempt ||
         state.heroStatus != StoryHeroStatus.loading) {
       return;
@@ -126,6 +151,8 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
   void artworkFailed(int attempt) {
     if (isClosed ||
         !state.visible ||
+        state.recoveringArtwork ||
+        state.status != StoryDetailStatus.loaded ||
         attempt != state.heroAttempt ||
         state.heroStatus != StoryHeroStatus.loading) {
       return;

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../../domain/entity/story_detail.dart';
-import '../../../library/domain/entity/library_catalog.dart';
-import '../../../library/data/model/library_catalog_model.dart';
+import '../../../../core/preview/domain/entity/library_preview.dart';
+import '../../../../core/preview/data/model/library_preview_model.dart';
 part 'story_detail_model.g.dart';
 
 int _integer(Object? value) {

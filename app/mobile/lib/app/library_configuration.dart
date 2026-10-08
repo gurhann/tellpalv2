@@ -1,4 +1,4 @@
-import '../features/library/domain/entity/library_catalog.dart';
+import '../core/preview/domain/entity/library_preview.dart';
 
 /// Ephemeral development configuration; secrets are never serialized or persisted.
 class LibraryConfiguration {

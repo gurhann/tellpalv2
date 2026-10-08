@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../../domain/entity/library_catalog.dart';
+import '../../../../core/preview/data/model/library_preview_model.dart';
+export '../../../../core/preview/data/model/library_preview_model.dart';
 part 'library_catalog_model.g.dart';
 
 int _integer(Object? value) {
@@ -13,8 +15,6 @@ int _integer(Object? value) {
   }
   throw const FormatException('Library integer field is invalid');
 }
-
-int? _optionalInteger(Object? value) => value == null ? null : _integer(value);
 
 @JsonSerializable(createToJson: false)
 class LibraryCatalogModel extends LibraryCatalog {
@@ -66,68 +66,4 @@ class LibraryRowModel extends LibraryRow {
   static List<LibraryPreview> _items(List<dynamic> value) => value
       .map((j) => LibraryPreviewModel.fromJson(j as Map<String, dynamic>))
       .toList();
-}
-
-@JsonSerializable(createToJson: false)
-class LibraryPreviewModel extends LibraryPreview {
-  const LibraryPreviewModel({
-    required super.contentId,
-    required super.externalKey,
-    required super.type,
-    required super.experienceType,
-    required super.contentLanguage,
-    required super.title,
-    super.ageRange,
-    super.durationMinutes,
-    required super.isFree,
-    required super.isLocked,
-    required super.covers,
-  });
-  @override
-  @JsonKey(fromJson: _integer)
-  int get contentId => super.contentId;
-  @override
-  @JsonKey(fromJson: _optionalInteger)
-  int? get ageRange => super.ageRange;
-  @override
-  @JsonKey(fromJson: _optionalInteger)
-  int? get durationMinutes => super.durationMinutes;
-  @override
-  @JsonKey(fromJson: _covers)
-  LibraryCovers get covers => super.covers;
-  factory LibraryPreviewModel.fromJson(Map<String, dynamic> json) =>
-      _$LibraryPreviewModelFromJson(json);
-  static LibraryCovers _covers(Map<String, dynamic> value) =>
-      LibraryCoversModel.fromJson(value);
-}
-
-@JsonSerializable(createToJson: false)
-class LibraryCoversModel extends LibraryCovers {
-  const LibraryCoversModel({super.phone, super.tablet});
-  @override
-  @JsonKey(fromJson: _cover)
-  LibraryCover? get phone => super.phone;
-  @override
-  @JsonKey(fromJson: _cover)
-  LibraryCover? get tablet => super.tablet;
-  factory LibraryCoversModel.fromJson(Map<String, dynamic> json) =>
-      _$LibraryCoversModelFromJson(json);
-  static LibraryCover? _cover(Map<String, dynamic>? value) =>
-      value == null ? null : LibraryCoverModel.fromJson(value);
-}
-
-@JsonSerializable(createToJson: false)
-class LibraryCoverModel extends LibraryCover {
-  const LibraryCoverModel({
-    required super.assetId,
-    required super.kind,
-    required super.mimeType,
-    required super.url,
-    required super.expiresAt,
-  });
-  @override
-  @JsonKey(fromJson: _integer)
-  int get assetId => super.assetId;
-  factory LibraryCoverModel.fromJson(Map<String, dynamic> json) =>
-      _$LibraryCoverModelFromJson(json);
 }

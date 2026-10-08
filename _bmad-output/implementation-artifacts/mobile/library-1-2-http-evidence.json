@@ -1,7 +1,7 @@
 {
   "executed": true,
-  "recordedAt": "2026-10-07T06:50:55.737772+00:00",
-  "scope": "six_real_authenticated_http_cases_only",
+  "recordedAt": "2026-10-07T08:05:31.072290+00:00",
+  "scope": "current corrected isolated fixture, real authenticated HTTP matrix; historical results qualified separately; native/reference acceptance separate",
   "backendAddress": "http://127.0.0.1:8082",
   "isolatedPostgresqlPort": 5442,
   "accountVerification": {
@@ -18,7 +18,2423 @@
   "accountSelectionFile": "tools/mobile-test-account.json",
   "backendJarSha256": "1371574d291773ff94c0115f6f483f9fb9eb28f4edf7ad070a024e443477911a",
   "harnessSha256": "65ef373eec7565669347d97ac14e909c2fd1ad508ae58a58fcb529053332367b",
-  "cases": [
+  "prerequisiteGateComplete": true,
+  "nativeAcceptanceComplete": true,
+  "pending": [
+    "Physical devices, minimum/older OS and production quantitative memory/latency remain release gaps under the approved emulator-first scope."
+  ],
+  "matrixRecordedAt": "2026-10-07T08:05:31.072290+00:00",
+  "matrices": [
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T08:01:14.885246+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "non-subscriber",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetSha256After": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "tr-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 828,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-locked-access",
+          "status": 200,
+          "elapsedMs": 523,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Lavantamdaki Salyangoz",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 3,
+            "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+            "mimeType": "image/jpeg",
+            "byteSize": 42692,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "tr-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 504,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 522,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 515,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-locked-access",
+          "status": 200,
+          "elapsedMs": 520,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Snail in My Lavender",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 10,
+            "checksumSha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6",
+            "mimeType": "image/jpeg",
+            "byteSize": 28681,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "en-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 572,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Polly the Little Fish — Where is the Sea?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 8,
+            "checksumSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+            "mimeType": "image/jpeg",
+            "byteSize": 67055,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 541,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "pt-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 560,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Minhoca 4 — Passeando Com A Denise",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 16,
+            "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+            "mimeType": "image/jpeg",
+            "byteSize": 25912,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-locked-access",
+          "status": 200,
+          "elapsedMs": 535,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Minhoca 2 — Primeiro Dia Na Fazenda",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 17,
+            "checksumSha256": "0f6ea3c641a95c1ba43bee931b49e2691d5ed8a17aaaf99301eb753fe3f650b1",
+            "mimeType": "image/jpeg",
+            "byteSize": 18786,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 460,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Melody — A Pardal Mensageira",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 15,
+            "checksumSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+            "mimeType": "image/jpeg",
+            "byteSize": 16053,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 537,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "pt",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "ordered-smaller-category",
+          "status": 200,
+          "elapsedMs": 555,
+          "schemaVersion": 1,
+          "categoryId": 2,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "promo-category-server-audience",
+          "status": 200,
+          "elapsedMs": 469,
+          "schemaVersion": 1,
+          "categoryId": 4,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-language",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "elapsedMs": 2,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-content-language",
+          "status": 400,
+          "elapsedMs": 2,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-category",
+          "status": 400,
+          "elapsedMs": 2,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "nonmember",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "exact-language-mismatch",
+          "status": 404,
+          "elapsedMs": 2,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "pending-processing",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unavailable-content",
+          "status": 404,
+          "elapsedMs": 2,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "withdrawn-localization",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-content",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-category",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "opted-out-category",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-category-localization",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-explicit-mapping",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-mapped-language-publication",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "empty-filtered-recommendations",
+          "status": 200,
+          "elapsedMs": 477,
+          "schemaVersion": 1,
+          "categoryId": 4,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "absent-cover-metadata-retained",
+          "status": 200,
+          "elapsedMs": 20,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "corrupt-source-provenance-metadata-retained",
+          "status": 200,
+          "elapsedMs": 501,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "oversized-source-metadata-retained",
+          "status": 200,
+          "elapsedMs": 23,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        }
+      ],
+      "actualSources": [
+        {
+          "language": "tr",
+          "assetId": 1,
+          "byteSize": 50794,
+          "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "en",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "pt",
+          "assetId": 16,
+          "byteSize": 25912,
+          "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+          "mimeType": "image/jpeg",
+          "width": 428,
+          "height": 695
+        }
+      ],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false,
+      "matrixScriptSha256": "bd67ad904c17e6576bf2e2d98a9e3d171b9c4ffdf4f6714139dab0123bb82f24"
+    },
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T08:02:05.096545+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "subscriber",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetSha256After": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "tr-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 1809,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-locked-access",
+          "status": 200,
+          "elapsedMs": 565,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Lavantamdaki Salyangoz",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 3,
+            "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+            "mimeType": "image/jpeg",
+            "byteSize": 42692,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "tr-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 532,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 516,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 560,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-locked-access",
+          "status": 200,
+          "elapsedMs": 470,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Snail in My Lavender",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 10,
+            "checksumSha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6",
+            "mimeType": "image/jpeg",
+            "byteSize": 28681,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "en-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 628,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Polly the Little Fish — Where is the Sea?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 8,
+            "checksumSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+            "mimeType": "image/jpeg",
+            "byteSize": 67055,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 570,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "pt-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 479,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Minhoca 4 — Passeando Com A Denise",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 16,
+            "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+            "mimeType": "image/jpeg",
+            "byteSize": 25912,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-locked-access",
+          "status": 200,
+          "elapsedMs": 488,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Minhoca 2 — Primeiro Dia Na Fazenda",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 17,
+            "checksumSha256": "0f6ea3c641a95c1ba43bee931b49e2691d5ed8a17aaaf99301eb753fe3f650b1",
+            "mimeType": "image/jpeg",
+            "byteSize": 18786,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 538,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Melody — A Pardal Mensageira",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 15,
+            "checksumSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+            "mimeType": "image/jpeg",
+            "byteSize": 16053,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 549,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "pt",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "ordered-smaller-category",
+          "status": 200,
+          "elapsedMs": 555,
+          "schemaVersion": 1,
+          "categoryId": 2,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "promo-category-server-audience",
+          "status": 404,
+          "elapsedMs": 16,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "elapsedMs": 5,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-language",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-content-language",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "nonmember",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "exact-language-mismatch",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "pending-processing",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unavailable-content",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "elapsedMs": 2,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "withdrawn-localization",
+          "status": 404,
+          "elapsedMs": 6,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-content",
+          "status": 404,
+          "elapsedMs": 6,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "opted-out-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-category-localization",
+          "status": 404,
+          "elapsedMs": 6,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-explicit-mapping",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-mapped-language-publication",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "empty-filtered-recommendations",
+          "status": 200,
+          "elapsedMs": 564,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "absent-cover-metadata-retained",
+          "status": 200,
+          "elapsedMs": 24,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "corrupt-source-provenance-metadata-retained",
+          "status": 200,
+          "elapsedMs": 469,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "oversized-source-metadata-retained",
+          "status": 200,
+          "elapsedMs": 33,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        }
+      ],
+      "actualSources": [
+        {
+          "language": "tr",
+          "assetId": 1,
+          "byteSize": 50794,
+          "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "en",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "pt",
+          "assetId": 16,
+          "byteSize": 25912,
+          "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+          "mimeType": "image/jpeg",
+          "width": 428,
+          "height": 695
+        }
+      ],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false,
+      "matrixScriptSha256": "bd67ad904c17e6576bf2e2d98a9e3d171b9c4ffdf4f6714139dab0123bb82f24"
+    },
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T08:02:44.859143+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "unlisted",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetSha256After": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "verified-designated-UID-outside-allowlist",
+          "status": 403,
+          "elapsedMs": 466,
+          "errorCode": "library_test_access_denied"
+        },
+        {
+          "name": "verified-designated-UID-home-outside-allowlist",
+          "status": 403,
+          "elapsedMs": 8,
+          "errorCode": "library_test_access_denied"
+        }
+      ],
+      "actualSources": [],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false,
+      "matrixScriptSha256": "bd67ad904c17e6576bf2e2d98a9e3d171b9c4ffdf4f6714139dab0123bb82f24"
+    }
+  ],
+  "passedMatrixCases": 76,
+  "matrixScriptSha256": "458c02b738fe1b5a1589d06133541132195b7be0a3502b7231853bb7cf29f919",
+  "backendSourceSha256Evidence": "library-1-2-backend-build-evidence.json",
+  "resourceEnvelopeEvidence": "library-1-2-flutter-build-evidence.json",
+  "reusableMatrixScript": "tools/library-1-2/http_matrix.py",
+  "reusableMatrixScriptSha256": "bd67ad904c17e6576bf2e2d98a9e3d171b9c4ffdf4f6714139dab0123bb82f24",
+  "reusableMatrixVerification": {
+    "allThreeModesExecuted": true,
+    "scriptSha256": "bd67ad904c17e6576bf2e2d98a9e3d171b9c4ffdf4f6714139dab0123bb82f24",
+    "passedCases": 76,
+    "actualSourcesVerified": 6,
+    "restorationVerified": true
+  },
+  "historicalInitialCases": [
     {
       "case": "tr-free",
       "executed": true,
@@ -638,13 +3054,2484 @@
       ]
     }
   ],
-  "prerequisiteGateComplete": false,
-  "nativeAcceptanceComplete": false,
-  "pending": [
-    "verified non-allowlisted admission using the same designated account",
-    "subscriber audience",
-    "withdrawn localization/category mapping",
-    "full prerequisite matrix",
-    "native/reference/platform/resource acceptance"
-  ]
+  "historicalInitialCasesQualification": "Original fixture and pre-integration source; TR artwork binding correction postdates these initial six probes. Current acceptance matrix below supersedes them.",
+  "historicalMatricesBeforeBindingCorrection": [
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T07:23:47.299375+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "non-subscriber",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetSha256After": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "tr-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 905,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-locked-access",
+          "status": 200,
+          "elapsedMs": 483,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Lavantamdaki Salyangoz",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 3,
+            "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+            "mimeType": "image/jpeg",
+            "byteSize": 42692,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "tr-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 507,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 518,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 530,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-locked-access",
+          "status": 200,
+          "elapsedMs": 529,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Snail in My Lavender",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 10,
+            "checksumSha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6",
+            "mimeType": "image/jpeg",
+            "byteSize": 28681,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "en-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 568,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Polly the Little Fish — Where is the Sea?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 8,
+            "checksumSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+            "mimeType": "image/jpeg",
+            "byteSize": 67055,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 526,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "pt-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 482,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Minhoca 4 — Passeando Com A Denise",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 16,
+            "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+            "mimeType": "image/jpeg",
+            "byteSize": 25912,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-locked-access",
+          "status": 200,
+          "elapsedMs": 461,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Minhoca 2 — Primeiro Dia Na Fazenda",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 17,
+            "checksumSha256": "0f6ea3c641a95c1ba43bee931b49e2691d5ed8a17aaaf99301eb753fe3f650b1",
+            "mimeType": "image/jpeg",
+            "byteSize": 18786,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 508,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Melody — A Pardal Mensageira",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 15,
+            "checksumSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+            "mimeType": "image/jpeg",
+            "byteSize": 16053,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 509,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "pt",
+          "contentLanguage": "en",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": true,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "ordered-smaller-category",
+          "status": 200,
+          "elapsedMs": 523,
+          "schemaVersion": 1,
+          "categoryId": 2,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "promo-category-server-audience",
+          "status": 200,
+          "elapsedMs": 501,
+          "schemaVersion": 1,
+          "categoryId": 4,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "elapsedMs": 5,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-language",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-content-language",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-category",
+          "status": 400,
+          "elapsedMs": 2,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "nonmember",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "exact-language-mismatch",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "pending-processing",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unavailable-content",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "withdrawn-localization",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-content",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "opted-out-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-category-localization",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-explicit-mapping",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-mapped-language-publication",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "empty-filtered-recommendations",
+          "status": 200,
+          "elapsedMs": 489,
+          "schemaVersion": 1,
+          "categoryId": 4,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "absent-cover-metadata-retained",
+          "status": 200,
+          "elapsedMs": 21,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "corrupt-source-provenance-metadata-retained",
+          "status": 200,
+          "elapsedMs": 539,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "oversized-source-metadata-retained",
+          "status": 200,
+          "elapsedMs": 24,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "NON_SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": true
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": true
+            }
+          ],
+          "hero": null
+        }
+      ],
+      "actualSources": [
+        {
+          "language": "tr",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "en",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "pt",
+          "assetId": 16,
+          "byteSize": 25912,
+          "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+          "mimeType": "image/jpeg",
+          "width": 428,
+          "height": 695
+        }
+      ],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false
+    },
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T07:24:39.048083+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "subscriber",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetSha256After": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "tr-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 1222,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-locked-access",
+          "status": 200,
+          "elapsedMs": 533,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Lavantamdaki Salyangoz",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 3,
+            "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+            "mimeType": "image/jpeg",
+            "byteSize": 42692,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "tr-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 510,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Küçük Balık Poli — Deniz Nerede?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 1,
+            "checksumSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+            "mimeType": "image/jpeg",
+            "byteSize": 50794,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "tr-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 523,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 536,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-locked-access",
+          "status": 200,
+          "elapsedMs": 545,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Snail in My Lavender",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 10,
+            "checksumSha256": "8c89ac2b6625f87c9a38cbdde88caccf4842298bd8aecf6f192841638b32f9d6",
+            "mimeType": "image/jpeg",
+            "byteSize": 28681,
+            "width": 512,
+            "height": 831
+          }
+        },
+        {
+          "name": "en-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 533,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Polly the Little Fish — Where is the Sea?",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "The little hero begins a long adventure through curiosity, friendship and imagination. Reading together reveals new places and ways to overcome challenges with friends.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "en",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 8,
+            "checksumSha256": "66bdf429e5b4b87cd05a3af91607e5e063ebfd26f852d675f3f09b4a06cfcb3a",
+            "mimeType": "image/jpeg",
+            "byteSize": 67055,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "en-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 494,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "en",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "pt-free-identity-credits-order",
+          "status": 200,
+          "elapsedMs": 480,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Minhoca 4 — Passeando Com A Denise",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 16,
+            "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+            "mimeType": "image/jpeg",
+            "byteSize": 25912,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-locked-access",
+          "status": 200,
+          "elapsedMs": 472,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 3,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Minhoca 2 — Primeiro Dia Na Fazenda",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 17,
+            "checksumSha256": "0f6ea3c641a95c1ba43bee931b49e2691d5ed8a17aaaf99301eb753fe3f650b1",
+            "mimeType": "image/jpeg",
+            "byteSize": 18786,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-beyond-home-preview-full-membership",
+          "status": 200,
+          "elapsedMs": 474,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 8,
+          "requestedLanguage": "pt",
+          "contentLanguage": "pt",
+          "audience": "SUBSCRIBER",
+          "title": "Melody — A Pardal Mensageira",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "O pequeno herói começa uma longa aventura de curiosidade, amizade e imaginação. A leitura em conjunto revela novos lugares e maneiras de superar desafios com os amigos.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yilmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 2,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 3,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "pt",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "pt",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 15,
+            "checksumSha256": "3114962b43b15b40b853963be1b5e2afd430f9b357d61cba2de60fe56a82a673",
+            "mimeType": "image/jpeg",
+            "byteSize": 16053,
+            "width": 428,
+            "height": 695
+          }
+        },
+        {
+          "name": "pt-mapped-EN-optional-metadata",
+          "status": 200,
+          "elapsedMs": 505,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "pt",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 10,
+              "contentLanguage": "en",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "ordered-smaller-category",
+          "status": 200,
+          "elapsedMs": 499,
+          "schemaVersion": 1,
+          "categoryId": 2,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "promo-category-server-audience",
+          "status": 404,
+          "elapsedMs": 17,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unsupported-experience",
+          "status": 400,
+          "elapsedMs": 6,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-language",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-language",
+          "status": 400,
+          "elapsedMs": 4,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-content-language",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "invalid-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "missing-category",
+          "status": 400,
+          "elapsedMs": 3,
+          "errorCode": "invalid_request"
+        },
+        {
+          "name": "nonmember",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "exact-language-mismatch",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "pending-processing",
+          "status": 404,
+          "elapsedMs": 4,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "unavailable-content",
+          "status": 404,
+          "elapsedMs": 3,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "missing-bearer",
+          "status": 401,
+          "elapsedMs": 1,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "invalid-bearer",
+          "status": 401,
+          "elapsedMs": 2,
+          "errorCode": "firebase_auth_error"
+        },
+        {
+          "name": "withdrawn-localization",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-content",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "inactive-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "opted-out-category",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-category-localization",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-explicit-mapping",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "withdrawn-mapped-language-publication",
+          "status": 404,
+          "elapsedMs": 5,
+          "errorCode": "content_not_found"
+        },
+        {
+          "name": "empty-filtered-recommendations",
+          "status": 200,
+          "elapsedMs": 487,
+          "schemaVersion": 1,
+          "categoryId": 3,
+          "contentId": 9,
+          "requestedLanguage": "tr",
+          "contentLanguage": "en",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": null,
+          "summary": null,
+          "credits": [],
+          "isFree": false,
+          "isLocked": false,
+          "recommendations": [],
+          "hero": {
+            "assetId": 2,
+            "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+            "mimeType": "image/jpeg",
+            "byteSize": 73182,
+            "width": 512,
+            "height": 909
+          }
+        },
+        {
+          "name": "absent-cover-metadata-retained",
+          "status": 200,
+          "elapsedMs": 23,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "corrupt-source-provenance-metadata-retained",
+          "status": 200,
+          "elapsedMs": 544,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        },
+        {
+          "name": "oversized-source-metadata-retained",
+          "status": 200,
+          "elapsedMs": 27,
+          "schemaVersion": 1,
+          "categoryId": 1,
+          "contentId": 2,
+          "requestedLanguage": "tr",
+          "contentLanguage": "tr",
+          "audience": "SUBSCRIBER",
+          "title": "Kuki and Barky",
+          "ageRange": 5,
+          "durationMinutes": 8,
+          "summary": "Küçük kahraman, merak ve dostlukla hayal gücünün kapılarını açan uzun bir maceraya çıkar. Birlikte okurken yeni yerler keşfeder ve arkadaşlarıyla zorlukları aşmayı öğrenir.",
+          "credits": [
+            {
+              "contributorId": 1,
+              "role": "AUTHOR",
+              "displayName": "Deniz Yılmaz"
+            },
+            {
+              "contributorId": 2,
+              "role": "NARRATOR",
+              "displayName": "Library Fixture Narrator"
+            },
+            {
+              "contributorId": 3,
+              "role": "ILLUSTRATOR",
+              "displayName": "Library Fixture Illustrator"
+            }
+          ],
+          "isFree": true,
+          "isLocked": false,
+          "recommendations": [
+            {
+              "contentId": 3,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 4,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 5,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 6,
+              "contentLanguage": "tr",
+              "isLocked": false
+            },
+            {
+              "contentId": 7,
+              "contentLanguage": "tr",
+              "isLocked": false
+            }
+          ],
+          "hero": null
+        }
+      ],
+      "actualSources": [
+        {
+          "language": "tr",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "en",
+          "assetId": 2,
+          "byteSize": 73182,
+          "checksumSha256": "83ca57b2b0771071eaa72597a6070e4d4004f5359af4fe6ab6ea1444c0ec611d",
+          "mimeType": "image/jpeg",
+          "width": 512,
+          "height": 909
+        },
+        {
+          "language": "pt",
+          "assetId": 16,
+          "byteSize": 25912,
+          "checksumSha256": "2427487121fadfecee6949bd9dd1a653bc4bd5e101558b552e41c561da49247d",
+          "mimeType": "image/jpeg",
+          "width": 428,
+          "height": 695
+        }
+      ],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false
+    },
+    {
+      "executed": true,
+      "recordedAt": "2026-10-07T07:25:26.974328+00:00",
+      "firebaseUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+      "serverFixtureMode": "unlisted",
+      "stubTokensEnabled": false,
+      "backendPort": 8082,
+      "postgresPort": 5442,
+      "datasetSha256Before": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetSha256After": "d5088c288c44a78393115402770113a087a6e97c51a9400694afaab38e8fffde",
+      "datasetRestored": true,
+      "cases": [
+        {
+          "name": "verified-designated-UID-outside-allowlist",
+          "status": 403,
+          "elapsedMs": 20,
+          "errorCode": "library_test_access_denied"
+        },
+        {
+          "name": "verified-designated-UID-home-outside-allowlist",
+          "status": 403,
+          "elapsedMs": 5,
+          "errorCode": "library_test_access_denied"
+        }
+      ],
+      "actualSources": [],
+      "remoteStorageWrites": false,
+      "nativeAcceptance": false
+    }
+  ],
+  "currentDatasetSha256": "7088e7d54b7960c97eab6b0b32883b1ac3cf341d0f39f2e9761699d31405330f",
+  "fixtureBindingCorrection": {
+    "recordedAt": "2026-10-07T08:00:42.906487+00:00",
+    "scope": "isolated QA fixture binding correction; existing read-only verified storage objects only",
+    "postgresPort": 5442,
+    "remoteStorageWrites": false,
+    "productionModified": false,
+    "changes": [
+      {
+        "contentId": 2,
+        "contentLanguage": "tr",
+        "previousTitle": "Kuki and Barky",
+        "previousAssetId": 2,
+        "correctedTitle": "Küçük Balık Poli — Deniz Nerede?",
+        "sourceAssetId": 1,
+        "sourceSha256": "e60624a0ae77289204f9a04b0b29b9e7993e1691405e4ae8ef274428262208af",
+        "donorContentId": 8,
+        "revision": "f787555452c940d750430b4f5ec831154903d97042b7dd5012d72af39a19f974",
+        "phoneAssetId": 68,
+        "tabletAssetId": 69,
+        "actualSourceLanguageVisuallyVerified": "tr"
+      },
+      {
+        "contentId": 6,
+        "contentLanguage": "tr",
+        "previousTitle": "Melody — The Messenger Sparrow",
+        "previousAssetId": 6,
+        "correctedTitle": "Koca Dağın Zirvesi",
+        "sourceAssetId": 5,
+        "sourceSha256": "1ba5e6d027f4950c96e94a9d5592efd0895a56fb4886e18532b179419e623290",
+        "donorContentId": 5,
+        "revision": "2b3e670d87df7fc5045c90584a004861bac573d2bfbce6992d8f24ef0dd92976",
+        "phoneAssetId": 50,
+        "tabletAssetId": 51,
+        "actualSourceLanguageVisuallyVerified": "tr"
+      }
+    ]
+  },
+  "naturalProviderExpiry": {
+    "executed": true,
+    "recordedAt": "2026-10-07T09:13:15.293477Z",
+    "scope": "real provider expiry and same-context backend URL renewal; native recovery is separate",
+    "contentId": 3,
+    "contentLanguage": "tr",
+    "assetId": 3,
+    "checksumSha256": "552cbec46198b314aaef14bf6e23b20d1c5a0287896e8500289f2338305e2565",
+    "byteSize": 42692,
+    "signedReadTtlSeconds": 12,
+    "waitedMs": 17491,
+    "beforeExpiryStatus": 200,
+    "expiredProviderStatus": 400,
+    "expiredProviderErrorCode": "ExpiredToken",
+    "expiryReasonConfirmed": true,
+    "renewedMetadataStatus": 200,
+    "renewedProviderStatus": 200,
+    "sameIdentityAndSource": true,
+    "nativeRecoveryVerified": false,
+    "productionConfigurationChanged": false,
+    "remoteStorageWrites": false,
+    "helperSha256": "8795d575a2e9e57774e91476efec0b9dae4daf3dc1344ff70737e65cdc3861ec",
+    "privateNativeDescriptorPrepared": true,
+    "descriptorPublished": false
+  },
+  "nativeAcceptanceQualification": "Current native/platform/reference development acceptance complete; historical76HTTP matrix retains its recorded jar identity. Recorded598-source compatibility audit changed only the detail integration test; current20native targets execute the current verified runtime jar. Current source/binary-matched development evidence closes the approved scope. Historical proofs and failed/unaccepted attempts retain their original scope. Android tablet baselines include two NON_SUBSCRIBER and three SUBSCRIBER qualified cover recoveries; their exact underlying causes remain unproven. CUA physical viewport scrolling remains tool-limited; original native targets independently prove SDK drag/card/Back/scroll retention. Controlled local faults are not provider outages. Physical devices, minimum/older OS and production quantitative memory/latency remain release gaps under the approved emulator-first scope.",
+  "reviewPatchVerification": {
+    "status": "Current review-patch development verification complete; ready for human review.",
+    "previousSourceSha256": "ce5446d70fbd2cf4d841bcc93e69bf0f55749bd0496f40d505610d2a77e30b73",
+    "qualification": "Current source/binary-matched development evidence closes the approved scope. Historical proofs and failed/unaccepted attempts retain their original scope. Android tablet baselines include two NON_SUBSCRIBER and three SUBSCRIBER qualified cover recoveries; their exact underlying causes remain unproven. CUA physical viewport scrolling remains tool-limited; original native targets independently prove SDK drag/card/Back/scroll retention. Controlled local faults are not provider outages. Physical devices, minimum/older OS and production quantitative memory/latency remain release gaps under the approved emulator-first scope.",
+    "review": "library-1-2-review.md",
+    "currentSourceSha256": "cb6f2759ac2e1f32493d7a67ed65772ebb6822eb869c0a19a6b5dcd77daced04",
+    "fullFlutterTestsPassed": 223,
+    "backendSurefirePassed": 385,
+    "backendFailsafePassed": 1,
+    "nativeOriginalTargetsPassed": 20,
+    "currentOriginalPngs": 550,
+    "currentNativeReplayPending": false,
+    "currentReferenceReplayPending": false,
+    "currentPlatformAcceptanceComplete": true,
+    "historicalHttpProductionSourceCompatibility": {
+      "recordedSourceFiles": 598,
+      "onlyChangedRecordedPath": "be/src/test/java/com/tellpal/v2/category/LibraryStoryDetailIntegrationTest.java",
+      "productionConfigBuildSourcesUnchanged": true,
+      "qualification": "Historical76HTTP matrix retains original jar identity. All598recorded backend source hashes rechecked; only the new detail pagination test differs. Current385+1Maven and all20native targets independently execute the current rebuilt jar."
+    }
+  }
 }

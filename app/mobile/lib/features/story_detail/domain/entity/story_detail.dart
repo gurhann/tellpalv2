@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../library/domain/entity/library_catalog.dart';
+import '../../../../core/preview/domain/entity/library_preview.dart';
 
 class StoryDetailIdentity extends Equatable {
   const StoryDetailIdentity({

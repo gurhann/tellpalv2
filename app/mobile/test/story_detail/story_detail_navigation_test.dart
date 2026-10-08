@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:auto_route/auto_route.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +10,7 @@ import 'package:tellpal_mobile_poc/core/error/failure.dart';
 import 'package:tellpal_mobile_poc/features/library/domain/entity/library_catalog.dart';
 import 'package:tellpal_mobile_poc/features/library/domain/repository/library_repository.dart';
 import 'package:tellpal_mobile_poc/features/library/presentation/widgets/library_card.dart';
-import 'package:tellpal_mobile_poc/features/library/presentation/cubit/library_cubit.dart';
-import 'package:tellpal_mobile_poc/features/library/presentation/view/library_view.dart';
+import 'package:tellpal_mobile_poc/core/preview/presentation/widgets/preview_card.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/domain/entity/story_detail.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/domain/repository/story_detail_repository.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/presentation/cubit/story_detail_cubit.dart';
@@ -47,26 +45,38 @@ class ImmediateDetails implements StoryDetailRepository {
   }
 }
 
-class EnabledLibraryRouter extends LibraryRouter {
-  @override List<AutoRoute> get routes => [
-    AutoRoute(page:PageInfo(LibraryRoute.name,builder:(_)=>BlocProvider(create:(_)=>libraryGetIt<LibraryCubit>()..load(),child:const LibraryView(detailEnabled:true))),initial:true),
-    AutoRoute(page:StoryDetailRoute.page),
-  ];
-}
 void main() {
   tearDown(() => libraryGetIt.reset());
-  testWidgets('enabled Library card carries IDs, reading and both language scalars with one repeated route',(tester)async{
-    configureLibraryDependencies(home.configuration());final library=ImmediateLibrary(),details=ImmediateDetails();
-    libraryGetIt.unregister<LibraryRepository>();libraryGetIt.registerSingleton<LibraryRepository>(library);
-    libraryGetIt.unregister<StoryDetailRepository>();libraryGetIt.registerSingleton<StoryDetailRepository>(details);
-    libraryGetIt.unregister<LibraryRouter>();libraryGetIt.registerSingleton<LibraryRouter>(EnabledLibraryRouter());
-    await tester.pumpWidget(const LibraryApp());await tester.pumpAndSettle();
-    final card=tester.widget<LibraryCard>(find.byType(LibraryCard).first);
-    final expected=card.item;unawaited(card.onTap!());unawaited(card.onTap!());await tester.pumpAndSettle();
-    expect(details.calls,hasLength(1));expect(details.calls.single.contentId,expected.contentId);expect(details.calls.single.contentLanguage,expected.contentLanguage);expect(details.calls.single.uiLanguage,'tr');expect(details.calls.single.experience,'READING');expect(libraryGetIt<LibraryRouter>().stack,hasLength(2));
-    await libraryGetIt<LibraryRouter>().maybePop();await tester.pumpAndSettle();unawaited(card.onTap!());await tester.pumpAndSettle();expect(details.calls,hasLength(2));
-    await tester.pumpWidget(const SizedBox());
-  });
+  testWidgets(
+    'enabled Library card carries IDs, reading and both language scalars with one repeated route',
+    (tester) async {
+      configureLibraryDependencies(home.configuration());
+      final library = ImmediateLibrary(), details = ImmediateDetails();
+      libraryGetIt.unregister<LibraryRepository>();
+      libraryGetIt.registerSingleton<LibraryRepository>(library);
+      libraryGetIt.unregister<StoryDetailRepository>();
+      libraryGetIt.registerSingleton<StoryDetailRepository>(details);
+      await tester.pumpWidget(const LibraryApp());
+      await tester.pumpAndSettle();
+      final card = tester.widget<LibraryCard>(find.byType(LibraryCard).first);
+      final expected = card.item;
+      unawaited(card.onTap!());
+      unawaited(card.onTap!());
+      await tester.pumpAndSettle();
+      expect(details.calls, hasLength(1));
+      expect(details.calls.single.contentId, expected.contentId);
+      expect(details.calls.single.contentLanguage, expected.contentLanguage);
+      expect(details.calls.single.uiLanguage, 'tr');
+      expect(details.calls.single.experience, 'READING');
+      expect(libraryGetIt<LibraryRouter>().stack, hasLength(2));
+      await libraryGetIt<LibraryRouter>().maybePop();
+      await tester.pumpAndSettle();
+      unawaited(card.onTap!());
+      await tester.pumpAndSettle();
+      expect(details.calls, hasLength(2));
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
   testWidgets(
     'nested repeated recommendation selection restores source detail preference/scroll and Library stack/scroll',
     (tester) async {
@@ -126,7 +136,7 @@ void main() {
           )
           .position
           .pixels;
-      final card = tester.widget<LibraryCard>(find.byType(LibraryCard).last);
+      final card = tester.widget<PreviewCard>(find.byType(PreviewCard).last);
       unawaited(card.onTap!());
       unawaited(card.onTap!());
       await tester.pumpAndSettle();

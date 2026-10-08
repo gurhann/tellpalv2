@@ -17,6 +17,55 @@ LibraryConfiguration configuration({required Uri baseUrl}) =>
       context: const LibraryContext('tr', 'account'),
     );
 void main() {
+  for (final dimensions in [
+    (8000, 5000),
+    (40000000, 1),
+    (40000001, 1),
+    (4611686018427387904, 3),
+    (0, 1),
+    (1, 0),
+  ]) {
+    test(
+      'real HTTP hero dimensions $dimensions enforce the pixel ceiling without integer overflow',
+      () async {
+        final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+        server.listen((request) async {
+          request.response.write(
+            jsonEncode({
+              ...payload(),
+              'hero': {
+                'assetId': 1,
+                'checksumSha256': 'a' * 64,
+                'byteSize': 100,
+                'mimeType': 'image/png',
+                'url': 'https://example.invalid/hero.png',
+                'expiresAt': '2026-10-09T00:00:00Z',
+                'width': dimensions.$1,
+                'height': dimensions.$2,
+              },
+            }),
+          );
+          await request.response.close();
+        });
+        final transport = AuthenticatedTransport(
+          configuration(baseUrl: Uri.parse('http://127.0.0.1:${server.port}')),
+        );
+        addTearDown(() async {
+          transport.close();
+          await server.close(force: true);
+        });
+        final result = await StoryDetailRepositoryImpl(
+          StoryDetailDatasource(transport),
+        ).fetch(identity());
+        expect(
+          result.fold((f) => f.kind, (_) => null),
+          dimensions == (8000, 5000) || dimensions == (40000000, 1)
+              ? null
+              : FailureKind.invalidResponse,
+        );
+      },
+    );
+  }
   for (final code in [200, 400, 401, 403, 404, 500]) {
     test(
       'real HTTP detail status $code and explicit mapped identity stay typed',

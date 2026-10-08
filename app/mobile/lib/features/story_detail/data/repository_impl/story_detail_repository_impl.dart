@@ -64,7 +64,7 @@ class StoryDetailRepositoryImpl implements StoryDetailRepository {
               hero.byteSize > 20971520 ||
               hero.width <= 0 ||
               hero.height <= 0 ||
-              hero.width * hero.height > 40000000 ||
+              hero.width > 40000000 ~/ hero.height ||
               !_url(hero.url))) {
         throw const FormatException('Hero contract mismatch');
       }

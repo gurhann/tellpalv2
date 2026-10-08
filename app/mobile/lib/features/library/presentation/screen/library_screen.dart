@@ -18,6 +18,9 @@ class LibraryScreen extends StatelessWidget {
       cubit.load();
       return cubit;
     },
-    child: const PopScope(canPop: false, child: LibraryView()),
+    child: const PopScope(
+      canPop: false,
+      child: LibraryView(detailEnabled: true),
+    ),
   );
 }

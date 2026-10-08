@@ -51,6 +51,8 @@ dependencies:
   crypto: 3.0.7
 
 dev_dependencies:
+  sqflite_common_ffi: 2.3.7
+  sqlite3: 2.9.4
   flutter_test:
     sdk: flutter
 

@@ -17,11 +17,74 @@ import 'package:tellpal_mobile_poc/features/library/presentation/cubit/library_s
 import 'package:tellpal_mobile_poc/features/library/presentation/library_strings.dart';
 import 'package:tellpal_mobile_poc/features/library/presentation/view/library_view.dart';
 import 'package:tellpal_mobile_poc/main_library_dev.dart' as app;
+import 'native_capture_protocol.dart';
 
 /// Host driver injects credentials in memory after connecting; never build defines or assets.
 class LibraryTestBinding extends IntegrationTestWidgetsFlutterBinding {
+  final _captures = NativeCaptureProtocol(
+    maxCaptureBytes: Platform.isIOS
+        ? NativeCaptureProtocol.iosMaxBytes
+        : NativeCaptureProtocol.maxBytes,
+  );
+  Map<String, dynamic>? providerExpiryDescriptor;
+
+  @override
+  Future<List<int>> takeScreenshot(
+    String screenshotName, [
+    Map<String, Object?>? args,
+  ]) async {
+    // Use the SDK's real native capture, but do not accumulate its bytes in reportData.
+    final data = await callbackManager.takeScreenshot(screenshotName, args);
+    final bytes = data['bytes'] as List<int>;
+    final receipt = await _captures.publish(screenshotName, bytes);
+    reportData ??= {};
+    (reportData!['streamedScreenshots'] ??= <Map<String, Object?>>[]).add(
+      receipt,
+    );
+    return bytes;
+  }
+
   @override
   Future<Map<String, dynamic>> callback(Map<String, String> params) async {
+    final message = params['message'];
+    if (params['command'] == 'request_data' &&
+        message?.startsWith('capture-') == true) {
+      Map<String, Object?> result;
+      try {
+        if (message == 'capture-next') {
+          result = await Future.any([
+            _captures.next.then((value) => {'kind': 'capture', ...value}),
+            allTestsPassed.future.then((_) => {'kind': 'finished'}),
+          ]);
+        } else {
+          final parts = message!.split(':');
+          final sequence = int.parse(parts[1]);
+          switch (parts[0]) {
+            case 'capture-chunk':
+              result = {
+                'kind': 'chunk',
+                'sequence': sequence,
+                'index': int.parse(parts[2]),
+                'base64': _captures.chunk(sequence, int.parse(parts[2])),
+              };
+            case 'capture-ack':
+              _captures.acknowledge(sequence, parts[2]);
+              result = {'kind': 'acknowledged', 'sequence': sequence};
+            case 'capture-reject':
+              _captures.reject(sequence);
+              result = {'kind': 'rejected', 'sequence': sequence};
+            default:
+              throw StateError('Native capture command rejected');
+          }
+        }
+      } catch (_) {
+        result = {'kind': 'protocol-rejected'};
+      }
+      return {
+        'isError': false,
+        'response': {'message': jsonEncode(result)},
+      };
+    }
     if (params['command'] == 'request_data' &&
         params['message']?.startsWith('configure:') == true) {
       try {
@@ -35,9 +98,18 @@ class LibraryTestBinding extends IntegrationTestWidgetsFlutterBinding {
             context: const LibraryContext('tr', 'existing-authorized-fixture'),
           ),
         );
+        providerExpiryDescriptor = value['providerExpiryDescriptor'] == null
+            ? null
+            : Map<String, dynamic>.from(
+                value['providerExpiryDescriptor'] as Map,
+              );
         return {
           'isError': false,
-          'response': {'message': 'configured'},
+          'response': {
+            'message': Platform.isIOS
+                ? 'configured:capture-stream-v1-ios16'
+                : 'configured:capture-stream-v1',
+          },
         };
       } catch (_) {
         return {
@@ -325,7 +397,6 @@ void main() {
               strings.search,
               if (current.audience != 'SUBSCRIBER') strings.premium,
               '${strings.all}: ${first.name}',
-              '${card.title}, ${card.contentLanguage}${card.isLocked ? ', ${strings.locked}' : ''}',
             ]) {
               final control = find.bySemanticsLabel(name).first;
               final semantics = tester.getSemantics(control);
@@ -347,6 +418,17 @@ void main() {
               expect(tester.view.viewInsets.bottom, 0);
               expect(find.byType(LibraryView), findsOneWidget);
             }
+            final cardControl = find
+                .bySemanticsLabel(
+                  '${card.title}, ${card.contentLanguage}${card.isLocked ? ', ${strings.locked}' : ''}',
+                )
+                .first;
+            final cardSemantics = tester.getSemantics(cardControl);
+            expect(cardSemantics.flagsCollection.isEnabled, Tristate.isTrue);
+            expect(
+              cardSemantics.getSemanticsData().hasAction(SemanticsAction.tap),
+              isTrue,
+            );
             await settleRenderedCovers();
             final baseline = await freshMetadata(language);
             expect(

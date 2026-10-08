@@ -17,7 +17,9 @@ class LibraryCacheStore extends CacheStore {
       _files = configuration.fileSystem as LibraryCacheFiles,
       _capacity = configuration.maxNrOfCacheObjects,
       _maxAge = configuration.stalePeriod,
-      super(_packageConfiguration(configuration));
+      super(_packageConfiguration(configuration)) {
+    _files.beforeWrite = _makeWriteRoom;
+  }
 
   static Config _packageConfiguration(Config configuration) => Config(
     configuration.cacheKey,
@@ -36,6 +38,34 @@ class LibraryCacheStore extends CacheStore {
   final _failures = <String, (Object, StackTrace)>{};
   Timer? _cleanup;
   bool _stopping = false;
+
+  bool _hasFileOwner(String name) =>
+      _files.writingNames.contains(name) ||
+      (_files.protectedPaths?.call() ?? const <String>{}).any(
+        (path) => path.endsWith('/$name'),
+      );
+
+  Future<void> _makeWriteRoom(String name) async {
+    await _repository.open();
+    final objects = await _repository.getAllObjects();
+    for (final object in objects) {
+      await _files.createFile(object.relativePath);
+    }
+    if (_files.ownsName(name)) return;
+    objects.sort(
+      (a, b) => (a.touched ?? a.validTill).compareTo(b.touched ?? b.validTill),
+    );
+    for (final object in objects) {
+      if (_files.physicalOwnerCount < _files.capacity) break;
+      if (_hasFileOwner(object.relativePath)) {
+        continue;
+      }
+      await removeCachedFile(object);
+    }
+    if (_files.physicalOwnerCount >= _files.capacity) {
+      throw StateError('Artwork retained file capacity reached');
+    }
+  }
 
   Future<T> _ownLookup<T>(Future<T> Function() operation) async {
     final owner = Zone.current[LibraryCacheFiles.ownerKey] as String?;
@@ -126,6 +156,12 @@ class LibraryCacheStore extends CacheStore {
     }
   }
 
+  /// Drop one failed reference while another cache key still owns its file.
+  Future<void> removeCachedReference(CacheObject cacheObject) async {
+    if (cacheObject.id != null) await _repository.deleteAll([cacheObject.id!]);
+    emptyMemoryCache();
+  }
+
   @override
   Future<void> removeCachedFile(CacheObject cacheObject) async {
     // Physical ownership remains in LibraryCacheFiles if deletion fails.
@@ -157,6 +193,18 @@ class LibraryCacheStore extends CacheStore {
       };
       for (final object in objects.values) {
         try {
+          // Timer selection may outlive publication or a pending decoder. Use
+          // the same physical ownership guard as write admission, and never
+          // delete a newer row through the timer's earlier SQLite snapshot.
+          final current = await _repository.get(object.key);
+          if (current == null ||
+              current.id != object.id ||
+              current.relativePath != object.relativePath ||
+              current.touched != object.touched ||
+              current.validTill != object.validTill ||
+              _hasFileOwner(current.relativePath)) {
+            continue;
+          }
           await removeCachedFile(object);
         } catch (_) {
           // Metadata and explicit physical owner remain; retry on the next

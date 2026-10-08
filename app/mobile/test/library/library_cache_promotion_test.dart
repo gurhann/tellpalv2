@@ -219,7 +219,9 @@ void main() {
         final fileSystem = _Files();
         final cache = _Cache(repository, service, fileSystem);
         files.File? firstOld;
-        for (var index = 0; index < 80; index++) {
+        // Each replacement retains its old file and decoded new file: 40 pairs
+        // occupy the actual 80-file profile, rather than 80 pairs / 160 files.
+        for (var index = 0; index < 40; index++) {
           final identity = 'cleanup-$index';
           final transfer = LibraryImageCache.transferKey(identity, 'new');
           await cache.putFile(
@@ -239,6 +241,7 @@ void main() {
           );
         }
         fileSystem.failingPath = firstOld!.path;
+        expect(fileSystem._files.directory('/').listSync().length, 80);
         fileSystem.failures = persistent ? -1 : 1;
         for (var retry = 0; retry < (persistent ? 3 : 1); retry++) {
           await expectLater(
@@ -249,7 +252,7 @@ void main() {
             throwsA(isA<FileSystemException>()),
           );
         }
-        expect(service.requests, 80);
+        expect(service.requests, 40);
         expect(
           fileSystem.deleteAttempts,
           persistent ? inInclusiveRange(3, 6) : 1,
