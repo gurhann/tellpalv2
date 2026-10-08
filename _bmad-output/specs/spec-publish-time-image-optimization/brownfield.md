@@ -18,6 +18,20 @@ Inspected: 2026-10-08. This is source inspection plus rechecking existing local 
 | Existing consumers | Legacy public pages map original localized illustration IDs; public asset bundles can read legacy delivery records. Test page manifests use a verified Firebase allowlist. | Define a versioned consumer transition; do not reinterpret all existing public endpoints or tester access as new production delivery. |
 | Mobile | Detail decode targets and cache bounds already limit local resource use. | Those limits do not reduce the original HTTP payload; backend renditions and client limits must work together. |
 
+## Separately attributed research inventory
+
+The 2026-10-08 [local context](../../planning-artifacts/research/technical-mobile-image-optimization-2026-10-08/local-context.md) and linked backend/mobile inventories add source observations; this SPEC update did not rerun a converter/device benchmark or production audit.
+
+| Observation | Qualification consequence |
+| --- | --- |
+| Accepted previews/Hero use `BoxFit.cover`; decode selection does not derive actual slot geometry/DPR. | Qualify fitted physical demand and inherited crop/text-safe region; this is not measured blur. |
+| Older reader PoC has a separate unbounded `Image.network`/precache path. | Do not attribute it to accepted Story1.2 or certify a future production reader from it. |
+| Controlled Library entry refuses release. | P0c needs a separately qualified profile/release-equivalent entry retaining admission; removing this guard is not implied. |
+| Converters fully decode before resize; current polling batch executes sequentially. | Source raster memory needs measurement; batch size does not prove ten simultaneous decodes. |
+| Package-configuration metadata records Flutter SDK 3.41.1. | This does not identify the compiled engine/renderer. Freeze exact build/toolchain/provider identities at implementation. |
+
+No source inspection here establishes an observed OOM, leak, framing failure or performance saving. The adopted research distinguishes primary technical evidence from local implementation observations.
+
 ## Evidence entry points
 
 Paths are repository-relative. These locations describe current behavior, not permission to change a boundary.

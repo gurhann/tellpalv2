@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "action": "generate",
+  "status_file": "_bmad-output/implementation-artifacts/image-optimization/sprint-status.yaml",
+  "dry_run": false,
+  "fresh": false,
+  "epics": 1,
+  "stories": 6,
+  "counts": {
+    "backlog": 6,
+    "ready-for-dev": 1,
+    "optional": 1
+  },
+  "generated": "10-08-2026 16:45",
+  "last_updated": "10-08-2026 16:45",
+  "warnings": [
+    "unparsed Epic/Story-like heading at _bmad-output/planning-artifacts/image-optimization/epics.md:25: # TellPal Image Optimization \u2014 P0 Epic Breakdown",
+    "unparsed Epic/Story-like heading at _bmad-output/planning-artifacts/image-optimization/epics.md:80: ## Epic List",
+    "unparsed Epic/Story-like heading at _bmad-output/planning-artifacts/image-optimization/epics.md:277: ## Story Execution Matrix"
+  ],
+  "new_entries": [
+    "epic-1",
+    "1-1-measure-current-image-slots-and-source-coverage",
+    "1-2-freeze-a-representative-image-corpus-and-trial-protocol",
+    "1-3-prove-real-encoder-outputs-on-a-bounded-pilot",
+    "1-4-compare-frozen-candidates-and-worker-resource-costs",
+    "1-5-prepare-native-image-measurement-and-admission",
+    "1-6-measure-native-image-quality-and-resource-costs",
+    "epic-1-retrospective"
+  ],
+  "preserved": 0,
+  "changed": 0,
+  "upgraded_from_disk": [
+    "1-1-measure-current-image-slots-and-source-coverage"
+  ],
+  "dropped_orphans": [],
+  "legacy_mapped": [],
+  "illegal": [],
+  "in_sync": false,
+  "explicit_set": []
+}
