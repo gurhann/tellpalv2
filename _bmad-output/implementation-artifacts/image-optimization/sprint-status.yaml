@@ -39,7 +39,7 @@ development_status:
   1-1-measure-current-image-slots-and-source-coverage: review
   1-2-freeze-a-representative-image-corpus-and-trial-protocol: review
   # r3 preparation and review fixes PASS: 88 tests, actual manifest verification; future reader/alpha/EXIF gates open.
-  1-3-prove-real-encoder-outputs-on-a-bounded-pilot: backlog
+  1-3-prove-real-encoder-outputs-on-a-bounded-pilot: review
   1-4-compare-frozen-candidates-and-worker-resource-costs: backlog
   1-5-prepare-native-image-measurement-and-admission: backlog
   1-6-measure-native-image-quality-and-resource-costs: backlog

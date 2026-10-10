@@ -1,0 +1,3198 @@
+{
+  "schema_version": 1,
+  "artifact": "p0b-encoder-pilot",
+  "status": "PASS",
+  "batch_id": "encoder-pilot-r3-v2",
+  "scope_sha256": "89fa6fc8465d6cdd1d6446742046c59995c81aab584108337ceda2439ef1f7b1",
+  "private_result_sha256": "4edd2375ac2c3b94f70231e456d95dbe182adea768fd2b7f2c1ca374f04431fb",
+  "provider_discovery_sha256": "c0139ede48cf1345a021874eb985efd325655d2ea8ca668f50eb5b49bff26e67",
+  "qualified_codecs": [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ],
+  "counts": {
+    "pairs": 14,
+    "scheduled_arms": 28,
+    "actual_attempts": 28,
+    "successful_attempts": 28,
+    "failed_attempts": 0,
+    "retries": 0,
+    "verified_arms": 28,
+    "failed_arms": 0,
+    "not_run_arms": 0,
+    "metric_valid": 28,
+    "visual_passed": 0,
+    "reader_qualified": 0,
+    "native_qualified": 0,
+    "quality_qualified_savings": null
+  },
+  "fixture_rejections_verified": 4,
+  "fixtures": [
+    {
+      "id": "fixture-truncated-jpeg",
+      "expected_rejection": "decode_truncated",
+      "actual_rejection": "decode_truncated",
+      "synthetic": true,
+      "passed": true
+    },
+    {
+      "id": "fixture-mime-mismatch",
+      "expected_rejection": "declared_actual_mime_mismatch",
+      "actual_rejection": "declared_actual_mime_mismatch",
+      "synthetic": true,
+      "passed": true
+    },
+    {
+      "id": "fixture-excessive-bytes",
+      "expected_rejection": "source_byte_limit",
+      "actual_rejection": "source_byte_limit",
+      "synthetic": true,
+      "passed": true
+    },
+    {
+      "id": "fixture-excessive-pixels",
+      "expected_rejection": "source_pixel_limit",
+      "actual_rejection": "source_pixel_limit",
+      "synthetic": true,
+      "passed": true
+    }
+  ],
+  "arms": [
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-candidate-retry-1",
+      "settings_sha256": "f71c848b8b027aae27a38e990f212c9a939e47a44a2f0a66a50d5fbcf95bbb34",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "b817b93741b75a412c52506f3b0536b1257b365f35158da1ca89fa4de00889b9",
+            "bytes": 294450,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "e97a4dafff1b0f682a3e04b961c8afda9400b5e3bb92c77f85d60e8c4b82738f",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "d9bcfb9fd323c94cc742873cac5904a72fe849bd974bead5fc5b311d420db8aa"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "b817b93741b75a412c52506f3b0536b1257b365f35158da1ca89fa4de00889b9",
+        "bytes": 294450,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "e97a4dafff1b0f682a3e04b961c8afda9400b5e3bb92c77f85d60e8c4b82738f",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-png-opaque-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-png-opaque-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-png-opaque-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-png-opaque-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-png-opaque-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-png-opaque-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-png-opaque-r3-candidate-retry-1",
+      "settings_sha256": "c21152b8599e0ab7a65ef680d37a85612ac55087dd7a59680e96144fac26634c",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-png-opaque-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "b622047334c7bb51a75a0916450df3a45aa93c3710ace677a3416bb9735cef72",
+            "bytes": 2969536,
+            "actual_mime": "image/png",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": true
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7c4a45c01da18fc22582c29a75337c729e72cadcc8ad268a91335e95339bc941"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "b622047334c7bb51a75a0916450df3a45aa93c3710ace677a3416bb9735cef72",
+        "bytes": 2969536,
+        "actual_mime": "image/png",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-jpeg-q80-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-jpeg-q80-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-jpeg-q80-r3-candidate-retry-1",
+      "settings_sha256": "e5f7622334d38dab253cb54ccf96c8e9d69804f31d7fde33308a0ebdd4e9fd2d",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-jpeg-q80-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "f146f2c23158ff5061a8db43d98420596f00dd661864d88f6aa1394ea8ca7348",
+            "bytes": 553639,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "a12a44e004c0b097b14cdf601fef5ae9cf69cf4231db85d85dd31c4491d609ad",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "e15adcc75a31d6e5653801d271768d61d7ad1021b050884dfff4e56c577a056c"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "f146f2c23158ff5061a8db43d98420596f00dd661864d88f6aa1394ea8ca7348",
+        "bytes": 553639,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "a12a44e004c0b097b14cdf601fef5ae9cf69cf4231db85d85dd31c4491d609ad",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-jpeg-q80-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-jpeg-q80-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-jpeg-q80-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-jpeg-q80-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-jpeg-q80-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-jpeg-q80-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-jpeg-q80-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-jpeg-q80-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-jpeg-q80-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-jpeg-q80-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-jpeg-q80-r3-candidate-retry-1",
+      "settings_sha256": "e5f7622334d38dab253cb54ccf96c8e9d69804f31d7fde33308a0ebdd4e9fd2d",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-jpeg-q80-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "4329d2bebf25a25a30dc2fc8ef14d04314b62921724f3263b655420ffb13f22b",
+            "bytes": 427585,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "ee49df8887a56ca1853066f9d119fe405c06ca2cd2f177d46df4a25e4726a862",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "c0beceb2745abb7e3621443d00b0b42feb1a3c3bbf9e38f990245ada0b6c5034"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "4329d2bebf25a25a30dc2fc8ef14d04314b62921724f3263b655420ffb13f22b",
+        "bytes": 427585,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "ee49df8887a56ca1853066f9d119fe405c06ca2cd2f177d46df4a25e4726a862",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-jpeg-q90-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-jpeg-q90-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-jpeg-q90-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-jpeg-q90-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-jpeg-q90-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-jpeg-q90-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-jpeg-q90-r3-candidate-retry-1",
+      "settings_sha256": "a5718f1a24be8dce05768a5dbca3d10ba42e276fa7cdc3ed4de0a2a633a1a326",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-jpeg-q90-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "489c5ccd251162f708976b09c40bcb77a1fea40ceba3cbded107ba5f85cf1b13",
+            "bytes": 907837,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "44ea0f50acabf69f64cfe0dce7e92b9ad3a5a7c9d654dd489b78bfc959e3c3e3",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "3709a46e008714291e133892e9aaadf0010a0c35aa9e76abca079e2763634593"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "489c5ccd251162f708976b09c40bcb77a1fea40ceba3cbded107ba5f85cf1b13",
+        "bytes": 907837,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "44ea0f50acabf69f64cfe0dce7e92b9ad3a5a7c9d654dd489b78bfc959e3c3e3",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-candidate-retry-1",
+      "settings_sha256": "30f99f14c9908e81e85d73fd241b9d15d8377858423b0bf94a2a34f2218a7c49",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "db466fa64bd04add4f2b8ba737f4b492bb2d68aa4c78ab5c62b85c62c927d7a7",
+            "bytes": 373532,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "c5b10cce52c1d796fb4de97b858bd028f34172bdeb8cc035cb83d0fb4539ee1e",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "ee784e8deac87530fbe47f03a5f136baaff0dff6e586d6850ddabb299b853254"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "db466fa64bd04add4f2b8ba737f4b492bb2d68aa4c78ab5c62b85c62c927d7a7",
+        "bytes": 373532,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "c5b10cce52c1d796fb4de97b858bd028f34172bdeb8cc035cb83d0fb4539ee1e",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-png-opaque-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-png-opaque-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-png-opaque-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-png-opaque-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-png-opaque-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-png-opaque-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-png-opaque-r3-candidate-retry-1",
+      "settings_sha256": "c21152b8599e0ab7a65ef680d37a85612ac55087dd7a59680e96144fac26634c",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-png-opaque-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "ab3264c56e919bc55d93cab2068953a239aa2733ca4597ebc8add3b0771e5b1f",
+            "bytes": 4374954,
+            "actual_mime": "image/png",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": true
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "90fa5ea4da75a976d66e4cebeb2e8cf2c644f911ec5c4709a79e1a866c7df515"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "ab3264c56e919bc55d93cab2068953a239aa2733ca4597ebc8add3b0771e5b1f",
+        "bytes": 4374954,
+        "actual_mime": "image/png",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-candidate-retry-1",
+      "settings_sha256": "a021e91a5be9733ca9bea8d3199017e5a3c3ee0d241950ef9292128b118d5436",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "918b497feeb7ef694866b793a243f9a24893dd66d4421116c136b13558d8ff3c",
+            "bytes": 176204,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "be1f5943f766407e654c2c284e151ff5dc8ebdec9fab20cc4ae6bd75dfa48eee",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "2fc08012bcdf714e3233c58abcb7131cb0a8207bd14b73e62c3e206fb2d5435a"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "918b497feeb7ef694866b793a243f9a24893dd66d4421116c136b13558d8ff3c",
+        "bytes": 176204,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "be1f5943f766407e654c2c284e151ff5dc8ebdec9fab20cc4ae6bd75dfa48eee",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-jpeg-q90-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-jpeg-q90-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-jpeg-q90-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-jpeg-q90-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-jpeg-q90-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-jpeg-q90-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-jpeg-q90-r3-candidate-retry-1",
+      "settings_sha256": "a5718f1a24be8dce05768a5dbca3d10ba42e276fa7cdc3ed4de0a2a633a1a326",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-jpeg-q90-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "1dd958ffdc41d509e2de114900b51595b55aec6bb0e6baa9fd4f9bd931991037",
+            "bytes": 692371,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "91becf42b25244c0f293aeda881be0522d00d6a4abad1e4df42ca92875cbacb0",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "5dc99e50d6806c31c796360209d22685906afe3871ca91da5f1d0d48cf92e845"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "1dd958ffdc41d509e2de114900b51595b55aec6bb0e6baa9fd4f9bd931991037",
+        "bytes": 692371,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "91becf42b25244c0f293aeda881be0522d00d6a4abad1e4df42ca92875cbacb0",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-candidate-retry-1",
+      "settings_sha256": "f71c848b8b027aae27a38e990f212c9a939e47a44a2f0a66a50d5fbcf95bbb34",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "6dcc5901c910504d8591016088f53db098016a2ca1425af69643b7b19288c710",
+            "bytes": 244442,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "9d3241894c3a6712e22f9bac7c06eef12264a85e9e4da9702c8da60bb2a9120e",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "604e22ec3cd66b9090200bed583e5cadb46ec203d19df98381ca42701c0d1990"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "6dcc5901c910504d8591016088f53db098016a2ca1425af69643b7b19288c710",
+        "bytes": 244442,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "9d3241894c3a6712e22f9bac7c06eef12264a85e9e4da9702c8da60bb2a9120e",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-candidate-retry-1",
+      "settings_sha256": "a021e91a5be9733ca9bea8d3199017e5a3c3ee0d241950ef9292128b118d5436",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "c0628a57918c18160f42739cdbc62c132e1a020e498591a1a28704ec2577b329",
+            "bytes": 217122,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "d2bb3ac84b83e8f23de057f38f485efb29c056e905a11ac30e53569f7cf4269b",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "1624eedd228084139b51cc92e24759de80236fe75ac1c28cdb9b1bf15b2f2b23"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "c0628a57918c18160f42739cdbc62c132e1a020e498591a1a28704ec2577b329",
+        "bytes": 217122,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "d2bb3ac84b83e8f23de057f38f485efb29c056e905a11ac30e53569f7cf4269b",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossless-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossless-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossless-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossless-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossless-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossless-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossless-r3-candidate-retry-1",
+      "settings_sha256": "384b287eb1b4ea8bf95e28f2fcd3c263fda17e3cc16a0154263b75012c82a218",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossless-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "7d88d98daeb5f8bb0dc5d21ec435a0c4f9658c32ac8bc9c81c5970fb66cddf11",
+            "bytes": 2801580,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": true
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "9c2ab30f9f8e53345e39c14be24db213e35c4e47c101540155cc5d4bac32c3b6"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "7d88d98daeb5f8bb0dc5d21ec435a0c4f9658c32ac8bc9c81c5970fb66cddf11",
+        "bytes": 2801580,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossless-r3",
+      "arm": "control",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossless-r3-control-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossless-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossless-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+            "bytes": 508346,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f41f70720a72d3585724989814f330832d679692fd010eb0cfbf1700e494a6a4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content19-page1-tr-reading-webp-lossless-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content19-page1-tr-reading-webp-lossless-r3-candidate-attempt-1",
+      "retry_id": "binding-content19-page1-tr-reading-webp-lossless-r3-candidate-retry-1",
+      "settings_sha256": "384b287eb1b4ea8bf95e28f2fcd3c263fda17e3cc16a0154263b75012c82a218",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content19-page1-tr-reading-webp-lossless-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "613c6772fe796144c0c63d7cb958a94a2f8ea6f26f66f34e00260f2a4e384674",
+            "bytes": 1934590,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1284,
+            "height": 2279,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": true
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "cfc6d4566e9058c18c431a75fbdeb41e43148ff055a627c33c0008319f0e8bb9"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "613c6772fe796144c0c63d7cb958a94a2f8ea6f26f66f34e00260f2a4e384674",
+        "bytes": 1934590,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3",
+      "arm": "candidate",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-candidate-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-candidate-retry-1",
+      "settings_sha256": "30f99f14c9908e81e85d73fd241b9d15d8377858423b0bf94a2a34f2218a7c49",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-candidate-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "15b89473127570db42c5086b53b199472901b6cf9689f21574fcffb0954e19ab",
+            "bytes": 439634,
+            "actual_mime": "image/webp",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "68e78e0b5b433995dec4d7479d1018831c5023b638093884923c083279fc1c76",
+            "jpeg_quality_tables_verified": null,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "f7fa3e3172d1a93fcdc5e3432eefff1b4f6baf3b080be215ec85dbe03bd4e22a"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "15b89473127570db42c5086b53b199472901b6cf9689f21574fcffb0954e19ab",
+        "bytes": 439634,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "68e78e0b5b433995dec4d7479d1018831c5023b638093884923c083279fc1c76",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      }
+    },
+    {
+      "pair_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3",
+      "arm": "control",
+      "initial_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-control-attempt-1",
+      "retry_id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-control-retry-1",
+      "settings_sha256": "26ad5da2013946f079a84d3c4cb11050e6075a91242963c6442fe503f87d8aa1",
+      "status": "success",
+      "execution_status": "success",
+      "attempts": [
+        {
+          "id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3-control-attempt-1",
+          "kind": "initial",
+          "status": "success",
+          "failure": null,
+          "observation": {
+            "status": "available",
+            "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+            "bytes": 669608,
+            "actual_mime": "image/jpeg",
+            "round_trip_decode": true,
+            "verified": true,
+            "width": 1712,
+            "height": 2778,
+            "mode": "RGB",
+            "frames": 1,
+            "opaque": true,
+            "icc_present": false,
+            "exif_present": false,
+            "xmp_present": false,
+            "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+            "jpeg_quality_tables_verified": true,
+            "lossless_exact": null
+          },
+          "logs": {
+            "encode.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "encode.stdout": "cc272982687daa127c5a8010b804b69603fcbc32a40f3ea63649eeb36ad474fa",
+            "readback.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback.stdout": "7ecc2011ed77c39fa0a134b0a07fee9a8466d8a8906e317bae9d027510811ed4"
+          },
+          "receipts_verified": true,
+          "verification_status": "verified",
+          "verification_failure": null
+        }
+      ],
+      "output": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "id": "binding-content71-page1-tr-reading-jpeg-q80-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "JPEG",
+        "quality": 80,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "f146f2c23158ff5061a8db43d98420596f00dd661864d88f6aa1394ea8ca7348",
+        "bytes": 553639,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "a12a44e004c0b097b14cdf601fef5ae9cf69cf4231db85d85dd31c4491d609ad",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 553639,
+        "candidate_minus_control_bytes": -115969
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-jpeg-q90-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "JPEG",
+        "quality": 90,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "489c5ccd251162f708976b09c40bcb77a1fea40ceba3cbded107ba5f85cf1b13",
+        "bytes": 907837,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "44ea0f50acabf69f64cfe0dce7e92b9ad3a5a7c9d654dd489b78bfc959e3c3e3",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 907837,
+        "candidate_minus_control_bytes": 238229
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-webp-lossy-q80-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 80,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "c0628a57918c18160f42739cdbc62c132e1a020e498591a1a28704ec2577b329",
+        "bytes": 217122,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "d2bb3ac84b83e8f23de057f38f485efb29c056e905a11ac30e53569f7cf4269b",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 217122,
+        "candidate_minus_control_bytes": -452486
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-webp-lossy-q85-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 85,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "b817b93741b75a412c52506f3b0536b1257b365f35158da1ca89fa4de00889b9",
+        "bytes": 294450,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "e97a4dafff1b0f682a3e04b961c8afda9400b5e3bb92c77f85d60e8c4b82738f",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 294450,
+        "candidate_minus_control_bytes": -375158
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-webp-lossy-q90-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 90,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "15b89473127570db42c5086b53b199472901b6cf9689f21574fcffb0954e19ab",
+        "bytes": 439634,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "68e78e0b5b433995dec4d7479d1018831c5023b638093884923c083279fc1c76",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 439634,
+        "candidate_minus_control_bytes": -229974
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-webp-lossless-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "mode": "RGB",
+        "lossless": true,
+        "method": 6,
+        "exact": true,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "7d88d98daeb5f8bb0dc5d21ec435a0c4f9658c32ac8bc9c81c5970fb66cddf11",
+        "bytes": 2801580,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 2801580,
+        "candidate_minus_control_bytes": 2131972
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content71-page1-tr-reading-png-opaque-r3",
+      "binding_id": "binding-content71-page1-tr-reading",
+      "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+      "reference_id": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075-rgba8-srgb-v1",
+      "reference_pixel_sha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+      "geometry": {
+        "width": 1712,
+        "height": 2778
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "PNG",
+        "mode": "RGB",
+        "compress_level": 6,
+        "optimize": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "bytes": 1122418,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "fdc283a0810e5b099509f507221732c4dfbd652b9050d061aa5ef8384e58dd1d",
+        "bytes": 669608,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "aee3418ef35eb169086d8a404e731348983ef19530791ae6b6d018e85bce9f6d",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "ab3264c56e919bc55d93cab2068953a239aa2733ca4597ebc8add3b0771e5b1f",
+        "bytes": 4374954,
+        "actual_mime": "image/png",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1712,
+        "height": 2778,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 669608,
+        "candidate_bytes": 4374954,
+        "candidate_minus_control_bytes": 3705346
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-jpeg-q80-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "JPEG",
+        "quality": 80,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "4329d2bebf25a25a30dc2fc8ef14d04314b62921724f3263b655420ffb13f22b",
+        "bytes": 427585,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "ee49df8887a56ca1853066f9d119fe405c06ca2cd2f177d46df4a25e4726a862",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 427585,
+        "candidate_minus_control_bytes": -80761
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-jpeg-q90-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "JPEG",
+        "quality": 90,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "1dd958ffdc41d509e2de114900b51595b55aec6bb0e6baa9fd4f9bd931991037",
+        "bytes": 692371,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "91becf42b25244c0f293aeda881be0522d00d6a4abad1e4df42ca92875cbacb0",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 692371,
+        "candidate_minus_control_bytes": 184025
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-webp-lossy-q80-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 80,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "918b497feeb7ef694866b793a243f9a24893dd66d4421116c136b13558d8ff3c",
+        "bytes": 176204,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "be1f5943f766407e654c2c284e151ff5dc8ebdec9fab20cc4ae6bd75dfa48eee",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 176204,
+        "candidate_minus_control_bytes": -332142
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-webp-lossy-q85-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 85,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "6dcc5901c910504d8591016088f53db098016a2ca1425af69643b7b19288c710",
+        "bytes": 244442,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "9d3241894c3a6712e22f9bac7c06eef12264a85e9e4da9702c8da60bb2a9120e",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 244442,
+        "candidate_minus_control_bytes": -263904
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-webp-lossy-q90-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "quality": 90,
+        "mode": "RGB",
+        "method": 6,
+        "lossless": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "db466fa64bd04add4f2b8ba737f4b492bb2d68aa4c78ab5c62b85c62c927d7a7",
+        "bytes": 373532,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "c5b10cce52c1d796fb4de97b858bd028f34172bdeb8cc035cb83d0fb4539ee1e",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": null
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 373532,
+        "candidate_minus_control_bytes": -134814
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-webp-lossless-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "WEBP",
+        "mode": "RGB",
+        "lossless": true,
+        "method": 6,
+        "exact": true,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "613c6772fe796144c0c63d7cb958a94a2f8ea6f26f66f34e00260f2a4e384674",
+        "bytes": 1934590,
+        "actual_mime": "image/webp",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 1934590,
+        "candidate_minus_control_bytes": 1426244
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    },
+    {
+      "id": "binding-content19-page1-tr-reading-png-opaque-r3",
+      "binding_id": "binding-content19-page1-tr-reading",
+      "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+      "reference_id": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169-rgba8-srgb-v1",
+      "reference_pixel_sha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+      "geometry": {
+        "width": 1284,
+        "height": 2279
+      },
+      "role": "reading_page",
+      "source_owner_role": "reading_page",
+      "cms_binding_source_owner_role": "story_page",
+      "experimental_purpose": "source_resolution_codec_feasibility",
+      "control_settings": {
+        "format": "JPEG",
+        "quality": 85,
+        "mode": "RGB",
+        "subsampling": 0,
+        "optimize": false,
+        "progressive": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "candidate_settings": {
+        "format": "PNG",
+        "mode": "RGB",
+        "compress_level": 6,
+        "optimize": false,
+        "profile_handling": {
+          "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+          "normalized_color_space": "sRGB",
+          "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+        }
+      },
+      "original_byte_denominator": {
+        "label": "original_source_bytes",
+        "source_sha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "bytes": 847415,
+        "verified": true
+      },
+      "control": {
+        "status": "available",
+        "sha256": "aa331fffbb835470c82a95a5f1d63973a1a78b090f31a80d7b04d688a787e2e4",
+        "bytes": 508346,
+        "actual_mime": "image/jpeg",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "b7a735d62300999343d0ebd840b84fe82465b0584e892c9c9b3c2036ccc4eaef",
+        "jpeg_quality_tables_verified": true,
+        "lossless_exact": null
+      },
+      "candidate": {
+        "status": "available",
+        "sha256": "b622047334c7bb51a75a0916450df3a45aa93c3710ace677a3416bb9735cef72",
+        "bytes": 2969536,
+        "actual_mime": "image/png",
+        "round_trip_decode": true,
+        "verified": true,
+        "width": 1284,
+        "height": 2279,
+        "mode": "RGB",
+        "frames": 1,
+        "opaque": true,
+        "icc_present": false,
+        "exif_present": false,
+        "xmp_present": false,
+        "decoded_rgb_sha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+        "jpeg_quality_tables_verified": null,
+        "lossless_exact": true
+      },
+      "raw_byte_delta": {
+        "denominator": "normalized-same-geometry-jpeg-q85",
+        "control_bytes": 508346,
+        "candidate_bytes": 2969536,
+        "candidate_minus_control_bytes": 2461190
+      },
+      "visual_verdict": "pending",
+      "reader_verdict": "pending",
+      "native_verdict": "pending",
+      "quality_qualified_savings": null
+    }
+  ],
+  "limitations": {
+    "scope": "local_installed_python_pillow_source_resolution_codec_feasibility",
+    "shared_pillow_decoder": true,
+    "independent_reread_is_not_decoder_diversity": true,
+    "visual_verdict": "pending",
+    "reader_verdict": "pending",
+    "native_verdict": "pending",
+    "quality_qualified_savings": null,
+    "java_railway_mobile_qualification": false,
+    "resource_qualification": false,
+    "worker_measurement": "deferred_story_1_4",
+    "open_gates": [
+      "FQ-READER",
+      "FQ-REAL-ALPHA",
+      "FQ-EXIF-ROTATION",
+      "FQ-EXIF-MIRRORING",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-6"
+    ]
+  },
+  "diagnostics": []
+}
