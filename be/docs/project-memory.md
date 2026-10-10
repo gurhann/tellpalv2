@@ -60,19 +60,15 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - For all planning, implementation, verification, and review work, use the appropriate BMad skill;
   small isolated fixes are the only exception.
 
-- Use `gpt-5.6-luna` as the default model for BMad planning, implementation, testing, and review
-  workflows in this repository.
-- Before starting a BMad implementation, state the selected model and reassess the choice when the
-  work's risk or scope changes materially.
-- Alert the user and obtain explicit confirmation before switching to `gpt-5.6-terra` for a
-  production-impacting migration, proven concurrency/transactional defect, cross-module
-  architectural change, broad refactor, or a persistent test/debugging failure that Luna cannot
-  resolve safely.
-- Alert the user and obtain explicit confirmation before switching to `gpt-5.6-sol` for a
-  security-sensitive or irreversible production decision, a high-stakes recovery/data-integrity
-  incident, or a complex architecture decision that remains unresolved after Terra-level work.
-- Model escalation does not weaken the BMad workflow: the same approval, verification, review, and
-  local-commit gates remain in force.
+- `ADR-0020`: BMad planning, implementation, testing, verification, and review use the model
+  selected for the current session. Subagents inherit it; omit explicit model overrides unless
+  the user requests a different model for that work.
+- Before starting a BMad implementation, state the selected model when its identity is available;
+  otherwise state that it is inherited from the session without guessing a model name.
+- Scope, risk, or debugging difficulty does not trigger an automatic model change. Apply a new
+  user selection or explicit model request without asking for another confirmation.
+- Model selection does not weaken the BMad workflow: the same approval, verification, review, and
+  local-commit gates remain in force. Keep repository defaults outside installer-managed skills.
 
 ## Module Interaction and Testing Defaults
 

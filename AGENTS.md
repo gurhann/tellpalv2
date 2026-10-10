@@ -42,6 +42,10 @@ When changing durable policies, update project memory and the relevant ADR using
 `apply-project-standards`. For REST controller changes, read and follow
 `standards/rest-api-documentation-standard.md`.
 
+BMad workflows and their subagents use the model selected for the current session. Omit model
+overrides when delegating unless the user explicitly requests a different model. Apply new user
+selections without an additional confirmation; see `be/docs/adr/ADR-0020-bmad-session-model-selection.md`.
+
 Use Turkish for conversations, questions, progress updates, and final summaries; English for
 new long technical documents, ADRs, project memory, code comments, and API documentation.
 Explicit language requests take precedence. Preserve existing Turkish documents during routine

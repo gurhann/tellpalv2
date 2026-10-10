@@ -136,7 +136,8 @@ I want exact representative specimens and comparison conditions,
 So that profile experiments cannot cherry-pick favorable small covers or compare different geometries.
 
 **Phase:** P0a.2. **Requirements:** IO-FR2/3/7; IO-NFR1/3/5/6; IO-UX1/2.
-**Entry conditions:** Story 1.1 baseline; rights-cleared retained high-resolution masters and real text-bearing pages are available; any missing class remains an explicit gate.
+**Entry conditions:** Story 1.1 baseline; rights-cleared retained high-resolution masters and real text-bearing pages are available; missing current-pilot classes remain explicit gates. Gürhan approved the r3 offline source-resolution codec-feasibility preparation on 2026-10-10 with "Uygun"; reader/DPR/native and real alpha/EXIF qualification remain separate open future gates.
+**Context:** [Approved source-resolution r3 context](../../implementation-artifacts/image-optimization/epic-1-context-r3.md); the retained full-scope baseline stays unchanged for Story 1.1 verification.
 **Completion boundary:** Frozen corpus/protocol with selected and deferred roles; no production profile or native quality acceptance.
 **Planned outputs:** `p0a-corpus.json`, `p0a-trial-protocol.md`; actual source files remain in isolated private storage.
 
@@ -144,7 +145,8 @@ So that profile experiments cannot cherry-pick favorable small covers or compare
 
 **Given** the slot/source baseline and proposed evaluation matrix,
 **When** a corpus is selected,
-**Then** exact IDs/hashes/actual MIME/bytes/dimensions and role/language/provenance cover large illustrations, real title/text/diacritic pages, fine lines/gradients/dark art, alpha, EXIF rotation/mirroring and ICC cases,
+**Then** exact IDs/hashes/actual MIME/bytes/dimensions and role/language/provenance cover large illustrations, real title/text/diacritic pages, fine lines/gradients/dark art and ICC cases using verified static opaque sources with no EXIF orientation tag,
+**And** real alpha, EXIF rotation and mirroring remain visible as missing future qualification gates; synthetic checks do not close them and current results cannot qualify those classes,
 **And** the six historical controls plus separate P3 diagnostic remain identifiable; unsupported animation/non-STORY roles are explicitly deferred rather than certified by a still frame.
 
 **Given** malformed and resource-limit input risks,
@@ -154,13 +156,13 @@ So that profile experiments cannot cherry-pick favorable small covers or compare
 
 **Given** all required source files are available and their preservation checks pass,
 **When** trial conditions are frozen,
-**Then** normalized reference geometry, encoder candidates, baselines, randomization, proposed five-cold/five-warm pilot distinctions, stage timing, sampling/settlement and raw evidence format are recorded before measurement,
-**And** source bytes versus same-role q85 comparisons and storage versus journey transfer accounting remain distinct.
+**Then** the two exact independently checked source-resolution references are admitted only for offline codec feasibility, fourteen same-geometry codec pairs and settings are preregistered, and the detached freeze binds actual corpus/protocol/reference identities,
+**And** original-byte versus same-geometry JPEG q85 denominators remain distinct, provider qualification and actual outputs remain Story 1.3, and the future native five-observation contract is preserved with zero native environments/observations in this handoff.
 
 **Given** normalization/framing or specimen suitability needs a human choice,
 **When** that choice is unresolved,
 **Then** the affected trial cannot start and the exact pending choice is recorded,
-**And** OQ-2/3/4 is not silently closed by corpus selection; missing representative sources keep this story incomplete.
+**And** OQ-2/3/4 is not silently closed by corpus selection; missing current-pilot representative sources, exact experimental source geometry, purpose-scoped admission, ledger or detached freeze keep this story incomplete. Reader slot/DPR/fit/unclamped demand/source adequacy/native viewing quality stay unavailable behind an open reader gate; full-source pixels cannot qualify them. These reader and alpha/EXIF gates do not block this approved offline handoff and remain mandatory before expanding its scope or claims.
 
 ### Story 1.3: Prove Real Encoder Outputs on a Bounded Pilot
 
@@ -180,10 +182,11 @@ So that a file extension or registry plan cannot stand in for an encoder qualifi
 **Then** provider/binary/runtime/settings identities and output SHA/MIME/dimensions/bytes are recorded and independently reread/decoded,
 **And** lack of a functioning encoder is an explicit failed qualification; a writer list, build or planned `.webp` path cannot pass.
 
-**Given** color/alpha/orientation/text-sensitive pilot cases,
+**Given** color/text-sensitive cases within the approved initial opaque, EXIF-orientation-tag-free pilot,
 **When** candidates are compared,
 **Then** equal numeric q is never treated as equal visual quality, q100 is not presumed lossless and hidden transparent RGB policy is explicit,
-**And** lossy/resize output is not called mathematically lossless; metadata removal alone is not evidence of unmanaged color.
+**And** lossy/resize output is not called mathematically lossless; metadata removal alone is not evidence of unmanaged color,
+**And** real alpha-edge, EXIF rotation and mirroring quality remain unqualified until a separately approved scope revision admits corresponding real sources; current pilot results cannot close those gates.
 
 **Given** isolated output paths and retained originals,
 **When** retries or the harness fail,
