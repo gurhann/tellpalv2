@@ -2,7 +2,7 @@
 
 ## Status and current evidence
 
-This is the required shape of a reviewable OQ-6 proposal. Its target names and seams below are proposed, not selected or implemented. Story 1.5 must turn them into exact platform-specific proposed patches and name unresolved choices before requesting entry acceptance. Preparing or accepting the story spec grants no entry implementation or native execution approval.
+This is the required shape of a reviewable OQ-6 proposal; the retained preparation output makes the proposed patches concrete. The user selected local physical iPhone 12 and remote physical Android through Android Device Streaming and requested continued setup. Target names, credential mechanisms and instrumentation below remain proposed until their exact acceptance/implementation/verification receipts exist. Platform selection alone cannot close OQ-6. See [native-pilot-scope.md](native-pilot-scope.md).
 
 | Existing seam | Observed boundary |
 | --- | --- |
@@ -59,3 +59,5 @@ Offline candidate files are not served by the existing Library contract automati
 The final proposal records exact additions/patches, build/install commands, controlled backend/fixture configuration, generated-file impact and private artifact locations. Rollback stops the experiment, disposes its composition/owned transfers, revokes the ephemeral session, removes only its application/cache artifacts and restores only scoped experiment configuration. Original/live/session-required objects and accepted application data remain protected.
 
 Record OQ-6 human acceptance, entry implementation and verification as three separate receipts. If any is absent, report NATIVE-ENTRY open. Story 1.6 additionally needs its admitted candidates, physical subset and frozen protocol; this proposal supplies no native result or production policy.
+
+For Android Device Streaming, qualify the reserved device's ADB connection, instrumentation/signing compatibility, token-free host broker reachability and available profiler/counter permissions before session exchange. ADB-over-SSL support does not establish `adb reverse` or local backend reachability. For local iPhone 12, verify connection, developer mode, runnable signing/build and actual Instruments support. Record limitations per mode and attachment state; unavailable support stays explicit.

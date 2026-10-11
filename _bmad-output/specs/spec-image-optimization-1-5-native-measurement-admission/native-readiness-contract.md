@@ -2,7 +2,7 @@
 
 ## Scope and dispatch
 
-This companion specifies the future Story 1.5 preparation deliverables. It does not assert that they have been implemented or that devices have been inventoried during spec authoring.
+The original Story 1.5 preparation deliverables were completed at snapshot `3ee8c2d8ef1e5313e5b827d09eaf6915f2d278fd`. Their observations and source hashes remain historical. The selected-platform follow-on is governed by [native-pilot-scope.md](native-pilot-scope.md); neither that selection nor historical completeness establishes current runnable devices or native execution readiness.
 
 | Field | Required value |
 | --- | --- |
@@ -12,6 +12,7 @@ This companion specifies the future Story 1.5 preparation deliverables. It does 
 | Output directory | `_bmad-output/implementation-artifacts/image-optimization/` |
 | Tracker | `_bmad-output/implementation-artifacts/image-optimization/sprint-status.yaml` |
 | Completion | Readiness/protocol and a reviewable OQ-6 proposal; native entry implementation and native results remain separate |
+| Selected follow-on | Local physical iPhone 12 and Android Device Streaming physical Android; setup/preflight only until relevant entry and batch gates close |
 
 Pass these explicit paths to `bmad-build`. Numeric `1.5` keys overlap with mobile/CMS plans. Leave `story_key` unset unless isolated resolver behavior is demonstrated; do not alter global BMad config or synchronize another tracker. Spec creation alone changes no sprint status.
 
@@ -24,6 +25,8 @@ Pass these explicit paths to `bmad-build`. Numeric `1.5` keys overlap with mobil
 5. Produce `p0c-native-readiness.md` linking the matrix, proposal, protocol, checked source evidence and all remaining gates. Declare preparation completeness separately from native execution readiness.
 
 Keep raw device identifiers, private tool traces, media, tokens and URLs in private storage outside Git. Public artifacts use an opaque device alias and sanitized evidence receipt/hash. A source or tool change invalidates the affected readiness claim until rechecked; a historical observation keeps its original provenance.
+
+Do not update the old matrix's hashes to accommodate this spec revision. Its original verifier intentionally rejects changed current inputs. Replay the unchanged verifier/tests in a private archive of the preparation snapshot, and create new scope/readiness outputs for current pilot checks. The original source baseline `7e3ee8f58a210196ae6988dfa38481d5bd9a7957` remains distinct from the preparation snapshot.
 
 ## Device/tool evidence schema
 

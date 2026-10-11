@@ -1,0 +1,33 @@
+# Dedicated selected-pilot prerequisite; do not synchronize the shared sprint tracker.
+scope: image-optimization-selected-pilot-r1
+updated: 2026-10-11
+implementation_status: review
+setup_preparation_complete: true
+native_execution_ready: false
+story_contract: spec-1-5-selected-pilot-setup.md
+setup_index: p0c-selected-pilot-setup-r1.md
+historical_preparation_commit: 3ee8c2d8ef1e5313e5b827d09eaf6915f2d278fd
+original_source_baseline: 7e3ee8f58a210196ae6988dfa38481d5bd9a7957
+preserved_shared_status:
+  1-5-prepare-native-image-measurement-and-admission: review
+  1-6-measure-native-image-quality-and-resource-costs: backlog
+verification:
+  synthetic_setup_tests: 45
+  synthetic_setup_skips: 0
+  formal_review_layers: 3
+  formal_review_patch_fixes: 4
+  successful_collection_mutation_check: passed
+  historical_source_bindings: 43
+  historical_original_tests: 42
+  historical_private_receipts_rehashed: 13
+  original_preserved_files: 8
+  current_source_recheck: setup-a91a437bc58c4989
+  current_source_report_sha256: b75a5007aeedd99ac028ea150a6facdea9a99c661fca3d3ff2d92d91f0b64042
+  current_source_snapshot_sha256: 45e43d757f5c71fd90f3f42636aaf7ee2245f5f295c74175824a13b150421383
+  current_source_recheck_result: setup-provenance-valid-native-gates-open
+gates:
+  NATIVE-ENTRY: open
+  NATIVE-DEVICE: open
+  NATIVE-CANDIDATE: open
+  NATIVE-PROTOCOL: open
+  NATIVE-DECISIONS: open

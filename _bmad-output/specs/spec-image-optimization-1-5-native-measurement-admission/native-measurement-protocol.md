@@ -4,6 +4,8 @@
 
 Story 1.5 specifies a proposed protocol. Story 1.6 executes only an accepted, immutable protocol/corpus/candidate/build/tool scope after its entry gates close. Freeze exact roles/devices/journeys/cache modes, control/candidate identities, ordering, repeats, counter tools, boundaries, settlement, finite deadlines/resource limits and stop/retry rules before the first batch. Changes create a new scope/version; preserve original failures and not-run rows.
 
+The selected physical pilot is local iPhone 12 plus a reserved Android phone through Android Device Streaming, per [native-pilot-scope.md](native-pilot-scope.md). Freeze each actual device/build separately. Keep local and cloud network, attachment and observer conditions explicit; do not pool unlike counters or use streamed video latency as a target-frame boundary. Selection does not freeze candidates, cache/journey cells, counters or repeat settings.
+
 Retain the parent proposal of 1 Hz process sampling plus event/allocation traces, 30 seconds without active work for settlement and at least five observations per selected control/candidate/cache-mode cell. Apply that repeat proposal separately to network-cold, disk-warm/decoded-cold and decoded-warm when selected. These are review defaults, not accepted budgets or reliability thresholds. Record actual achievable cadence, missed samples, warm variants and deviations; do not silently aggregate unlike cache states.
 
 ## Journey and cache identity
