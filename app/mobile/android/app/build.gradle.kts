@@ -1,3 +1,4 @@
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.attribute.PosixFilePermissions
@@ -20,9 +21,9 @@ val repositoryRoot = rootDir.resolve("../../..").canonicalFile.toPath()
 fun privateExternalFile(property: String): java.io.File {
     val selected = providers.gradleProperty(property).orNull
         ?: throw GradleException("EXPERIMENT_PRIVATE_SIGNING_REQUIRED")
-    val path = java.io.File(selected).toPath().toAbsolutePath().normalize()
+    val path = File(selected).toPath().toAbsolutePath().normalize()
     val output = providers.gradleProperty("imageExperimentOutputRoot").orNull?.let {
-        java.io.File(it).toPath().toAbsolutePath().normalize()
+        File(it).toPath().toAbsolutePath().normalize()
     }
     if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) || path.startsWith(repositoryRoot) ||
         (output != null && path.startsWith(output)) ||
@@ -51,9 +52,9 @@ if (experimentEnabled) {
     require(experimentSigning.stringPropertyNames().all { experimentSigning.getProperty(it).isNotEmpty() }) {
         "EXPERIMENT_SIGNING_SCHEMA_REFUSED"
     }
-    val store = java.io.File(experimentSigning.getProperty("storeFile")).toPath().toAbsolutePath().normalize()
+    val store = File(experimentSigning.getProperty("storeFile")).toPath().toAbsolutePath().normalize()
     require(Files.isRegularFile(store, LinkOption.NOFOLLOW_LINKS) && !store.startsWith(repositoryRoot) &&
-        !store.startsWith(java.io.File(providers.gradleProperty("imageExperimentOutputRoot").get()).toPath().toAbsolutePath().normalize()) &&
+        !store.startsWith(File(providers.gradleProperty("imageExperimentOutputRoot").get()).toPath().toAbsolutePath().normalize()) &&
         store.toRealPath() == store && Files.getPosixFilePermissions(store) ==
         PosixFilePermissions.fromString("rw-------")) { "EXPERIMENT_SIGNING_STORE_REFUSED" }
 } else {
@@ -105,7 +106,7 @@ android {
         }
         testBuildType = experimentMode!!
         signingConfigs.create("imageExperimentPrivate") {
-            storeFile = java.io.File(experimentSigning.getProperty("storeFile"))
+            storeFile = File(experimentSigning.getProperty("storeFile"))
             storePassword = experimentSigning.getProperty("storePassword")
             keyAlias = experimentSigning.getProperty("keyAlias")
             keyPassword = experimentSigning.getProperty("keyPassword")

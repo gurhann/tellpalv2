@@ -446,7 +446,7 @@ def build_entry(config, manifest, output, deadline):
         for name, artifact in (("app-signing", app), ("test-signing", test)):
             prefix = output / name
             checked_run(["codesign", "--verify", "--strict", str(artifact)], output, name + "-verify", deadline=deadline)
-            checked_run(["codesign", "--display", "--extract-certificates", str(prefix), str(artifact)], output, name, deadline=deadline)
+            checked_run(["codesign", "--display", "--extract-certificates=" + str(prefix), str(artifact)], output, name, deadline=deadline)
             certificates.append(sha256(private_file(str(prefix) + "0", exact_mode=False)).hexdigest())
         require(certificates[0] == certificates[1], "signing_mismatch")
         debuggable = None
