@@ -1,0 +1,84 @@
+import 'dart:async';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import '../core/theme/library_theme.dart';
+import 'image_experiment_composition.dart';
+import 'image_experiment_router.dart';
+
+class ImageExperimentApp extends StatefulWidget {
+  const ImageExperimentApp({super.key, required this.composition});
+  final ImageExperimentComposition composition;
+  @override
+  State<ImageExperimentApp> createState() => _ImageExperimentAppState();
+}
+
+class _ImageExperimentAppState extends State<ImageExperimentApp>
+    with WidgetsBindingObserver {
+  StreamSubscription<void>? _revocations;
+  bool _refused = false;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    final credentials = widget.composition.configuration.credentials;
+    _revocations = credentials.revocations.listen((_) => _refuse());
+    // Broadcast revocation can precede mounting; subscription alone cannot replay it.
+    if (!credentials.isActive) _refuse();
+  }
+
+  void _refuse() {
+    if (!mounted || _refused) return;
+    setState(() => _refused = true);
+    // Route removal settles listeners/render handles before cache/container teardown.
+    unawaited(
+      WidgetsBinding.instance.endOfFrame
+          .then((_) => widget.composition.close())
+          .catchError((_) {}),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached) {
+      unawaited(widget.composition.close().catchError((_) {}));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => _refused
+      ? MaterialApp(
+          theme: AppTypography.theme(),
+          home: const Scaffold(
+            body: Center(
+              child: Text(
+                'Experiment entry refused',
+                style: AppTypography.description,
+              ),
+            ),
+          ),
+        )
+      : ImageExperimentResolver(
+          composition: widget.composition,
+          child: MaterialApp.router(
+            title: 'TellPal Image Experiment',
+            debugShowCheckedModeBanner: false,
+            theme: AppTypography.theme(),
+            routerConfig: widget.composition
+                .container<ImageExperimentRouter>()
+                .config(
+                  deepLinkBuilder: (_) => DeepLink.single(
+                    RasterCaseRoute(
+                      caseId: widget.composition.configuration.selectedCaseId,
+                    ),
+                  ),
+                ),
+          ),
+        );
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_revocations?.cancel());
+    unawaited(widget.composition.close().catchError((_) {}));
+    super.dispose();
+  }
+}

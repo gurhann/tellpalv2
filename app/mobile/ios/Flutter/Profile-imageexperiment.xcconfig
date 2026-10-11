@@ -1,0 +1,9 @@
+#include? "Pods/Target Support Files/Pods-ImageExperiment/Pods-ImageExperiment.profile-imageexperiment.xcconfig"
+FLUTTER_TARGET=lib/main_image_experiment.dart
+FLUTTER_BUILD_MODE=profile
+FLUTTER_APPLICATION_PATH=$(SRCROOT)/..
+FLUTTER_BUILD_NAME=1.0.0
+FLUTTER_BUILD_NUMBER=1
+IMAGE_EXPERIMENT_MODE=profile
+CODE_SIGN_STYLE=Manual
+PRODUCT_BUNDLE_IDENTIFIER=com.tellpal.tellpalMobilePoc.imageexperiment.profile

@@ -4,7 +4,15 @@ import 'library_configuration.dart';
 import 'injection.config.dart';
 
 final libraryGetIt = GetIt.asNewInstance();
-@InjectableInit(ignoreUnregisteredTypes: [LibraryConfiguration])
+@InjectableInit(
+  generateForDir: [
+    'lib/features/library',
+    'lib/features/story_detail',
+    'lib/core',
+    'lib/app',
+  ],
+  ignoreUnregisteredTypes: [LibraryConfiguration],
+)
 GetIt _initialize(GetIt container) => container.init();
 void configureLibraryDependencies(LibraryConfiguration configuration) {
   libraryGetIt.registerSingleton<LibraryConfiguration>(configuration);

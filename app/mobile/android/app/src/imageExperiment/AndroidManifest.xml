@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application android:label="TellPal Image Experiment"
+        android:name="${applicationName}" android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false" android:usesCleartextTraffic="false">
+        <activity android:name="com.tellpal.imageexperiment.ImageExperimentActivity"
+            android:exported="false" android:launchMode="singleTop" android:taskAffinity=""
+            android:theme="@style/LaunchTheme" android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode">
+            <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
+        </activity>
+        <meta-data android:name="flutterEmbedding" android:value="2" />
+    </application>
+</manifest>

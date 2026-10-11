@@ -1,8 +1,67 @@
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.attribute.PosixFilePermissions
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val experimentEnabled = providers.gradleProperty("imageExperiment").orNull == "true"
+require(!providers.gradleProperty("imageExperiment").isPresent || experimentEnabled) { "EXPERIMENT_OPT_IN_REFUSED" }
+val experimentEntry = "lib/main_image_experiment.dart"
+val requestedEntry = providers.gradleProperty("target").orNull
+val experimentMode = providers.gradleProperty("experimentMode").orNull
+val repositoryRoot = rootDir.resolve("../../..").canonicalFile.toPath()
+
+fun privateExternalFile(property: String): java.io.File {
+    val selected = providers.gradleProperty(property).orNull
+        ?: throw GradleException("EXPERIMENT_PRIVATE_SIGNING_REQUIRED")
+    val path = java.io.File(selected).toPath().toAbsolutePath().normalize()
+    val output = providers.gradleProperty("imageExperimentOutputRoot").orNull?.let {
+        java.io.File(it).toPath().toAbsolutePath().normalize()
+    }
+    if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) || path.startsWith(repositoryRoot) ||
+        (output != null && path.startsWith(output)) ||
+        path.toRealPath() != path || Files.getPosixFilePermissions(path) !=
+        PosixFilePermissions.fromString("rw-------")) {
+        throw GradleException("EXPERIMENT_PRIVATE_SIGNING_INVALID")
+    }
+    return path.toFile()
+}
+
+val experimentSigning = Properties()
+if (experimentEnabled) {
+    require(experimentMode in setOf("profile", "release")) { "EXPERIMENT_MODE_REFUSED" }
+    require(requestedEntry == experimentEntry) { "EXPERIMENT_ENTRY_REFUSED" }
+    val modeTask = experimentMode!!.replaceFirstChar { it.uppercase() }
+    val allowedTasks = setOf("assemble$modeTask", "assemble${modeTask}AndroidTest")
+    require(gradle.startParameter.taskNames.isNotEmpty() &&
+        gradle.startParameter.taskNames.all { it.substringAfterLast(':') in allowedTasks }) {
+        "EXPERIMENT_TASK_REFUSED"
+    }
+    privateExternalFile("imageExperimentSigningConfig").inputStream().use { experimentSigning.load(it) }
+    require(experimentSigning.stringPropertyNames() ==
+        setOf("storeFile", "storePassword", "keyAlias", "keyPassword")) {
+        "EXPERIMENT_SIGNING_SCHEMA_REFUSED"
+    }
+    require(experimentSigning.stringPropertyNames().all { experimentSigning.getProperty(it).isNotEmpty() }) {
+        "EXPERIMENT_SIGNING_SCHEMA_REFUSED"
+    }
+    val store = java.io.File(experimentSigning.getProperty("storeFile")).toPath().toAbsolutePath().normalize()
+    require(Files.isRegularFile(store, LinkOption.NOFOLLOW_LINKS) && !store.startsWith(repositoryRoot) &&
+        !store.startsWith(java.io.File(providers.gradleProperty("imageExperimentOutputRoot").get()).toPath().toAbsolutePath().normalize()) &&
+        store.toRealPath() == store && Files.getPosixFilePermissions(store) ==
+        PosixFilePermissions.fromString("rw-------")) { "EXPERIMENT_SIGNING_STORE_REFUSED" }
+} else {
+    require(requestedEntry?.endsWith("main_image_experiment.dart") != true) {
+        "EXPERIMENT_REQUIRES_ISOLATED_TARGET"
+    }
+    require(experimentMode == null && !providers.gradleProperty("imageExperimentSigningConfig").isPresent &&
+        !providers.gradleProperty("imageExperimentOutputRoot").isPresent) { "EXPERIMENT_OPT_IN_REQUIRED" }
 }
 
 android {
@@ -28,13 +87,44 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        if (experimentEnabled) {
+            applicationId = "com.tellpal.tellpal_mobile_poc.imageexperiment.$experimentMode"
+            testApplicationId = "$applicationId.test"
+            testInstrumentationRunner = "com.tellpal.imageexperiment.ImageExperimentInstrumentation"
+        }
+    }
+
+    if (experimentEnabled) {
+        sourceSets.getByName("main") {
+            manifest.srcFile("src/imageExperiment/AndroidManifest.xml")
+            java.setSrcDirs(listOf("src/imageExperiment/kotlin"))
+        }
+        sourceSets.getByName("androidTest") {
+            manifest.srcFile("src/imageExperimentAndroidTest/AndroidManifest.xml")
+            java.setSrcDirs(listOf("src/imageExperimentAndroidTest/kotlin"))
+        }
+        testBuildType = experimentMode!!
+        signingConfigs.create("imageExperimentPrivate") {
+            storeFile = java.io.File(experimentSigning.getProperty("storeFile"))
+            storePassword = experimentSigning.getProperty("storePassword")
+            keyAlias = experimentSigning.getProperty("keyAlias")
+            keyPassword = experimentSigning.getProperty("keyPassword")
+        }
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName(if (experimentEnabled) "imageExperimentPrivate" else "debug")
+            if (experimentEnabled) proguardFiles("src/imageExperiment/proguard-rules.pro")
+        }
+    }
+    if (experimentEnabled) {
+        buildTypes.configureEach {
+            if (name == "profile" || name == "release") {
+                signingConfig = signingConfigs.getByName("imageExperimentPrivate")
+            }
         }
     }
 }

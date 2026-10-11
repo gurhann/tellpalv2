@@ -6,7 +6,10 @@ import '../features/story_detail/presentation/screen/story_detail_screen.dart';
 part 'router.gr.dart';
 
 @lazySingleton
-@AutoRouterConfig(replaceInRouteName: 'Screen,Route')
+@AutoRouterConfig(
+  replaceInRouteName: 'Screen,Route',
+  generateForDir: ['lib/features/library', 'lib/features/story_detail'],
+)
 class LibraryRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
