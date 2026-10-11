@@ -72,9 +72,19 @@ All 33 synthetic tests passed in the existing locked environment, including real
 
 Actual use still requires the operator-selected credential/configuration paths. Normal Firebase login metadata updates are possible; the documented external account-deletion race prevents an atomic existing-account guarantee. The helper rejects a new-account indication without attempting a remote account rollback. These limits are separate from fixture admission and physical qualification.
 
+### Private inputs are not yet available
+
+The operator confirmed that neither input file is currently available. The login runbook now explains retrieval from an existing matched Firebase app configuration, approval before a concrete long-lived service-account key creation, and the possible keyless impersonation alternative. The r1 helper and broker do not yet support that alternative. No home-directory credential discovery, new key, ADC creation or IAM change occurred.
+
+The existing Google Cloud SDK `548.0.0` could not load because its `googlecloudsdk.core.docker` package was missing. The same official macOS ARM distribution was downloaded and verified in a separate private directory; metadata MD5 matched, and version/help passed with the existing Python 3.11 interpreter and an empty private CLI configuration. The installed SDK and global settings were preserved. The existing Firebase CLI executable also refused with `Bad CPU type`; it was not changed.
+
+Read-only metadata for the explicitly selected Google account showed one locally configured active account. Subsequent existing-key, service-account, enabled-API and project-policy requests all refused with OAuth `invalid_grant` during credential refresh. Thus the active-account label does not qualify a usable session, and no target service-account identity, role, impersonation permission, API state or actual Web API configuration was obtained. Original refusal traces remain private and were not retried after that condition was established. No API was enabled by these probes.
+
+The Mac is currently locked, preventing inspection of the authenticated console. The operator was asked to unlock it. Refreshing the selected Google Cloud login and reading the existing configuration remain prerequisites; credential creation has not been authorized by the request to prepare the login flow.
+
 ## Remaining operator steps
 
-1. Obtain the operator-selected private Admin credential and same-project Web API configuration paths, then run the prepared local test login flow. No home-directory credential discovery or real login has been performed.
+1. Unlock the Mac, refresh the selected Google Cloud session, and inspect the accepted project's existing API configuration and service-account prerequisites. Obtain explicit private inputs or prepare and validate an explicitly selected keyless credential adapter before running the local test login flow. Any new persistent key or IAM change needs its own concrete approval.
 2. Prepare actual isolated local/test backend startup binding, admitted fixture manifest and private TLS/broker inputs. Qualify token-free network routes and fresh exact installed-artifact prerequisites.
 3. Obtain a fresh scoped Android session after those inputs are ready, install the bound artifacts, and run physical positive/negative native fixture verification. Retain original evidence and separate profile/release observations.
 
