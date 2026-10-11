@@ -1,0 +1,1829 @@
+{
+  "schema_version": 1,
+  "scope": "image-optimization-p0c-1",
+  "observed_at": "2026-10-11T09:47:05.689925+03:00",
+  "baseline_commit": "7e3ee8f58a210196ae6988dfa38481d5bd9a7957",
+  "preparation_complete": true,
+  "native_execution_ready": false,
+  "collection_scope": "read_only_installed_tools_and_registered_device_discovery_no_boot_build_install_auth_or_workload",
+  "evidence_sources": [
+    {
+      "id": "E-ADB-VERSION",
+      "kind": "command_receipt",
+      "receipt_file": "adb-version.json",
+      "receipt_sha256": "e1aeefaab2ca3c56909c1d4a080861af25188445f21ab1f4b4bbdf4deb551b89",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-ADB-DEVICES",
+      "kind": "command_receipt",
+      "receipt_file": "adb-final.json",
+      "receipt_sha256": "3ceb9cbb707111e4766ba0da5258c76d6d029e6803d67f6051d0ab6551fc2566",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-XCODE",
+      "kind": "command_receipt",
+      "receipt_file": "xcode-version.json",
+      "receipt_sha256": "2501113cfb75ee27af702c86fd3af6024eb1b67bae4664f30038714e1a6a9826",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-XCRUN",
+      "kind": "command_receipt",
+      "receipt_file": "xcrun-version.json",
+      "receipt_sha256": "d9e7fac7d0ca0ad549031ed05c85814a0f09aea0836849afe858361fda083373",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-XCTRACE",
+      "kind": "command_receipt",
+      "receipt_file": "trace-version.json",
+      "receipt_sha256": "5d7043db4001c417c3b428d56d6c9dc80941ea3847a8cb8c3a2d6cc6c2d1526f",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-IOS-DEVICES",
+      "kind": "native_json",
+      "receipt_file": "devicectl-escalated.json",
+      "receipt_sha256": "25a03f6e5549b8cad7c9234732bc2517a8c57c0587838a6668a6e0b3d8f52699",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-SIMULATORS",
+      "kind": "native_json",
+      "receipt_file": "simctl-escalated.json",
+      "receipt_sha256": "a114e4523a54d148f99c9d7676ac1bbbccaf5ca8d8b355f2ef40b6573ee96df9",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-FLUTTER-CACHE",
+      "kind": "cached_sdk_identity",
+      "receipt_file": "flutter-cached-version.json",
+      "receipt_sha256": "78538cec8f685b2d3712870ab05184cc7998f6a2b9f0189408a6cbc882842cb7",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-DART-DIRECT",
+      "kind": "command_receipt",
+      "receipt_file": "dart-direct-version.json",
+      "receipt_sha256": "1ef66c3f37d58b592982b80553f2800dec7e2f92b96ac8845c6be3e66f6b845b",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-INITIAL-ADB-DEVICES",
+      "kind": "failed_sandbox_receipt",
+      "receipt_file": "adb-devices.json",
+      "receipt_sha256": "06e8882c05fa5716b66c5119321e2f5c95e72acecb9a4e24756adbea9cd092b2",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-INITIAL-IOS-DEVICES",
+      "kind": "failed_sandbox_receipt",
+      "receipt_file": "ios-devices.json",
+      "receipt_sha256": "078acbb4705d67bbadc3c2eddd72ee0aa18ebaad40119da9da7e95c24fb661a5",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-INITIAL-SIMULATOR-DEVICES",
+      "kind": "failed_sandbox_receipt",
+      "receipt_file": "simulator-devices.json",
+      "receipt_sha256": "99e2fbf2a7a7ea30edacbcfcfb1a2c56f8e2274bf1314d27888a2529f5818ce5",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    },
+    {
+      "id": "E-INITIAL-DART-VERSION",
+      "kind": "failed_sandbox_receipt",
+      "receipt_file": "dart-version.json",
+      "receipt_sha256": "a3b45ceae63d83d140503314d9a665507d976d4af940012e9e9732095c163b0e",
+      "storage": "private_external",
+      "verified_in_this_collection": true
+    }
+  ],
+  "source_snapshot": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "c818ca54e6a2e3c18179d27b8d2cb338d86a59605035be6b3b4d2c7882857faf"
+    },
+    {
+      "path": "be/docs/project-memory.md",
+      "sha256": "736ec5ebc29a056a77c7fad29f69af0c10de5eb80e7c4cc1e2a87cf7c4cf1c0b"
+    },
+    {
+      "path": "architecture.md",
+      "sha256": "dbfe5165b527d9ed9aa4fd1e455dda08047a7a4d2a0add39ccd1190acaf0ccf8"
+    },
+    {
+      "path": "be/docs/adr/ADR-0017-story-page-media-manifests.md",
+      "sha256": "2d4ed349975208922909acffa43e30d528808a176e595bb7f3551bfdd896a886"
+    },
+    {
+      "path": "be/docs/adr/ADR-0018-flutter-skill-architecture-policy.md",
+      "sha256": "a92d249dd142f37d9c112528cd5af08373a766bf093c1a3f8125784218f17fb2"
+    },
+    {
+      "path": "be/docs/adr/ADR-0019-library-home-catalog.md",
+      "sha256": "9ed24426ce13149ce120d973a27a66a4dd91d8fe6b3b695b52990cd4b8fc6b79"
+    },
+    {
+      "path": "app/mobile/lib/main_library_dev.dart",
+      "sha256": "3c979c5fdeec7db16ca349d799eb519ef5cab61f143e6cc34846bfab6a7cdf30"
+    },
+    {
+      "path": "app/mobile/lib/app/library_dev_harness.dart",
+      "sha256": "fee53c5e76e91ccbf6b342b67b3b8628c5eccb321af41506567df3642864c2ef"
+    },
+    {
+      "path": "app/mobile/lib/app/library_configuration.dart",
+      "sha256": "2baea13f0efb69ebe248c7372b1ee90262132b2e0c01af2d9dd78ab3d788a442"
+    },
+    {
+      "path": "app/mobile/lib/app/injection.dart",
+      "sha256": "dd0d67d58cfd7c45a22e3eb2ce656b66fd6adaf0373ccebfffe9669ca757e7b3"
+    },
+    {
+      "path": "app/mobile/lib/app/library_app.dart",
+      "sha256": "8515312fdf140c1279aef93742b4a956724ffa84145412742933834949bcc862"
+    },
+    {
+      "path": "app/mobile/lib/app/router.dart",
+      "sha256": "9c1c13132b183415217fa16a7a5bc02e115fcc33547ab08d23facbe6c822bb6c"
+    },
+    {
+      "path": "app/mobile/lib/core/diagnostics/library_diagnostics.dart",
+      "sha256": "be9bbc830c05c967e76bfbfddba0dc0b17ec1d66e5779f810c287b5a36ceeaf4"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_image_cache.dart",
+      "sha256": "a9955bf12d7b1bca43439830b4cf897511c9fe92a6c043f862440031d96001a9"
+    },
+    {
+      "path": "app/mobile/lib/core/network/story_detail_image_cache.dart",
+      "sha256": "07c569249d88c5f0855af66088837f11d918015703ae07f3b78c25d9e1893990"
+    },
+    {
+      "path": "app/mobile/lib/core/network/library_transfer_file_service.dart",
+      "sha256": "07153a1a96e02e8b66b0ce502bdfe3ee7a44af3b613d931c7f3cbff2df43aced"
+    },
+    {
+      "path": "app/mobile/lib/core/preview/presentation/widgets/preview_card.dart",
+      "sha256": "42a32c49371fd8b7cb5fe335b1ff04cc6f7de1198bed2b5617b8c5dbc699c819"
+    },
+    {
+      "path": "app/mobile/android/app/build.gradle.kts",
+      "sha256": "8fec76b6de7b81b7f700283eb8cb07e4a718071a4a9090c341c0ef7ded222df1"
+    },
+    {
+      "path": "app/mobile/android/app/src/main/AndroidManifest.xml",
+      "sha256": "3a6fa7da8c3df1f31b6b669c5aced0a09e59d390af7656150f151d02bac160ac"
+    },
+    {
+      "path": "app/mobile/ios/Podfile",
+      "sha256": "a7e4adc1545026dd5b33fb093bac3f378dc7936d388c09e143cf0f9b1357fb86"
+    },
+    {
+      "path": "app/mobile/ios/Runner.xcodeproj/project.pbxproj",
+      "sha256": "8a8fc229e35a7c7861ff6b72bab0636e437cb0676786b1214d1824c0a19d9bfe"
+    },
+    {
+      "path": "app/mobile/pubspec.lock",
+      "sha256": "9d95c6e29e64f84e6db57db60008b8c4eb5aa00c95f8f718955f1c0519c2f212"
+    },
+    {
+      "path": "app/mobile/ios/Podfile.lock",
+      "sha256": "91138659592386c85bc7f9ec370a11fe3b7ef69c24ca44210324f716db96bf17"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/web/mobile/LibraryHomeTestController.java",
+      "sha256": "e3256ae48bb3ce3f85bce796606e18e2153c0efdc52987195eb9cd7b8068365c"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/application/LibraryHomeTestQueryService.java",
+      "sha256": "8c65ee305e73ed4bcec1e725b6f603d7d0fb4aec40cc89c9254c4552c79bf0ff"
+    },
+    {
+      "path": "tools/mobile-test-account.json",
+      "sha256": "b40d95bb639b7a8ce37fd7b9f5e25e25ff67a3c38279beb201fc2898f2687636"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/mobile/library-1-1-platform-builds.json",
+      "sha256": "356a38290303565b58e81811450e28b4a69c5efeeede6cc779596a069ff91e69"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/mobile/library-1-2-flutter-build-evidence.json",
+      "sha256": "268715e88f3cad4ddc25ea023eb587a96fdf2511d7b7f757e9368a826786651f"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0a-slot-source-inventory.md",
+      "sha256": "adfcff010713b7516981e882be83273ccff10c9ba1e6d98e17a0a136fa5e42bd"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0a-slot-source-inventory.json",
+      "sha256": "ac701cd5f0437b21a3eff5f0385e931bb38e3548d15c2a153db14a8ab490e02e"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0a-corpus.json",
+      "sha256": "362a27880240eabb72624c5ac71563229a4f397c1bd16a33f619b858b5681536"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0a-trial-protocol.md",
+      "sha256": "12360f22a606a498799f838007a013f66a179ed05b865ea7696a76840250b0ba"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0b-worker-findings.md",
+      "sha256": "02c772c2957b0340b69c6eb7ac8525c94bc006cfca804da3674ea72c4af2884b"
+    },
+    {
+      "path": "_bmad-output/implementation-artifacts/image-optimization/p0b-comparison.json",
+      "sha256": "1914b17fc73e510d0efee60252661b8982a7193ba0df22a378afc9343deb2796"
+    },
+    {
+      "path": "_bmad-output/specs/spec-image-optimization-1-5-native-measurement-admission/SPEC.md",
+      "sha256": "1ff42c326aed10825c08cdb258992be88485d131c38c3d1c9e79675de03b0511"
+    },
+    {
+      "path": "_bmad-output/specs/spec-image-optimization-1-5-native-measurement-admission/native-readiness-contract.md",
+      "sha256": "b33883fc96eb79cda67a9a471aece7bbfb4f1da5fd91afd79be9f1c8253fb478"
+    },
+    {
+      "path": "_bmad-output/specs/spec-image-optimization-1-5-native-measurement-admission/native-entry-proposal.md",
+      "sha256": "3a88bc578ead16eae013b0d3bddfc195e09e50bd5db689ca23074aced4cb7831"
+    },
+    {
+      "path": "_bmad-output/specs/spec-image-optimization-1-5-native-measurement-admission/native-measurement-protocol.md",
+      "sha256": "ee4916c3e1d23423ac2389b9aa8ec168683c417039ad3205ad111e5e71cfffd0"
+    },
+    {
+      "path": "app/mobile/lib/core/network/authenticated_transport.dart",
+      "sha256": "5d2edabc6936735bd2a81ff1c633302b1acb283f89824d80546c56d58e37b917"
+    },
+    {
+      "path": "app/mobile/lib/features/story_detail/presentation/widgets/story_detail_hero.dart",
+      "sha256": "acff4f88aac6ef11d81b6210f1b6632189a6e90376a8f52649d59196dc3a74e3"
+    },
+    {
+      "path": "be/src/main/java/com/tellpal/v2/user/infrastructure/firebase/FirebaseAdminTokenVerifier.java",
+      "sha256": "6dbd84c38f9b4a41b5be20eea915a8a76c604d4a06f708a93c390b4a6e6752b0"
+    },
+    {
+      "path": "be/src/main/resources/application.yml",
+      "sha256": "b241c460c0e8378b90c7bd3f3e632f5d24dde8764feed88d2845dbf2c1fa0ffb"
+    },
+    {
+      "path": "app/mobile/.metadata",
+      "sha256": "7370223e4f7e1c9bcfbc41bcefe57bd9832433afb46ad8e4c9663b9a260f123b"
+    }
+  ],
+  "probes": [
+    {
+      "id": "adb-version",
+      "observed_at": "2026-10-11T09:41:18.539566+03:00",
+      "exit_code": 0,
+      "duration_seconds": 0.435,
+      "receipt_sha256": "e1aeefaab2ca3c56909c1d4a080861af25188445f21ab1f4b4bbdf4deb551b89",
+      "scope": "sandbox_initial",
+      "availability": "observed",
+      "reason": null
+    },
+    {
+      "id": "adb-devices",
+      "observed_at": "2026-10-11T09:41:18.539935+03:00",
+      "exit_code": 1,
+      "duration_seconds": 1.081,
+      "receipt_sha256": "06e8882c05fa5716b66c5119321e2f5c95e72acecb9a4e24756adbea9cd092b2",
+      "scope": "sandbox_initial",
+      "availability": "unavailable",
+      "reason": "Sandbox/tool-service access failed; see private receipt; successful direct/authorized requery recorded separately."
+    },
+    {
+      "id": "xcode-version",
+      "observed_at": "2026-10-11T09:41:18.540899+03:00",
+      "exit_code": 0,
+      "duration_seconds": 0.195,
+      "receipt_sha256": "2501113cfb75ee27af702c86fd3af6024eb1b67bae4664f30038714e1a6a9826",
+      "scope": "sandbox_initial",
+      "availability": "observed",
+      "reason": null
+    },
+    {
+      "id": "xcrun-version",
+      "observed_at": "2026-10-11T09:41:18.539845+03:00",
+      "exit_code": 0,
+      "duration_seconds": 0.008,
+      "receipt_sha256": "d9e7fac7d0ca0ad549031ed05c85814a0f09aea0836849afe858361fda083373",
+      "scope": "sandbox_initial",
+      "availability": "observed",
+      "reason": null
+    },
+    {
+      "id": "ios-devices",
+      "observed_at": "2026-10-11T09:41:18.548235+03:00",
+      "exit_code": 1,
+      "duration_seconds": 15.347,
+      "receipt_sha256": "078acbb4705d67bbadc3c2eddd72ee0aa18ebaad40119da9da7e95c24fb661a5",
+      "scope": "sandbox_initial",
+      "availability": "unavailable",
+      "reason": "Sandbox/tool-service access failed; see private receipt; successful direct/authorized requery recorded separately."
+    },
+    {
+      "id": "simulator-devices",
+      "observed_at": "2026-10-11T09:41:18.736414+03:00",
+      "exit_code": 1,
+      "duration_seconds": 0.101,
+      "receipt_sha256": "99e2fbf2a7a7ea30edacbcfcfb1a2c56f8e2274bf1314d27888a2529f5818ce5",
+      "scope": "sandbox_initial",
+      "availability": "unavailable",
+      "reason": "Sandbox/tool-service access failed; see private receipt; successful direct/authorized requery recorded separately."
+    },
+    {
+      "id": "trace-version",
+      "observed_at": "2026-10-11T09:41:18.837813+03:00",
+      "exit_code": 0,
+      "duration_seconds": 2.175,
+      "receipt_sha256": "5d7043db4001c417c3b428d56d6c9dc80941ea3847a8cb8c3a2d6cc6c2d1526f",
+      "scope": "sandbox_initial",
+      "availability": "observed",
+      "reason": null
+    },
+    {
+      "id": "dart-version",
+      "observed_at": "2026-10-11T09:41:18.975023+03:00",
+      "exit_code": 1,
+      "duration_seconds": 0.102,
+      "receipt_sha256": "a3b45ceae63d83d140503314d9a665507d976d4af940012e9e9732095c163b0e",
+      "scope": "sandbox_initial",
+      "availability": "unavailable",
+      "reason": "Sandbox/tool-service access failed; see private receipt; successful direct/authorized requery recorded separately."
+    }
+  ],
+  "tools": [
+    {
+      "id": "adb",
+      "identity": {
+        "value": "Android Debug Bridge 1.0.41 / platform-tools 35.0.0-11411520",
+        "availability": "observed",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": null
+      },
+      "executed": "version; devices -l",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    },
+    {
+      "id": "xcode",
+      "identity": {
+        "value": "Xcode 27.0 / build 27A266a",
+        "availability": "observed",
+        "evidence_ref": "E-XCODE",
+        "reason": null
+      },
+      "executed": "xcodebuild -version",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCODE",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCODE",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    },
+    {
+      "id": "xcrun",
+      "identity": {
+        "value": "72",
+        "availability": "observed",
+        "evidence_ref": "E-XCRUN",
+        "reason": null
+      },
+      "executed": "--version; devicectl list devices; simctl list devices --json",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCRUN",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCRUN",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    },
+    {
+      "id": "xctrace",
+      "identity": {
+        "value": "27.0 / 27A266a",
+        "availability": "observed",
+        "evidence_ref": "E-XCTRACE",
+        "reason": null
+      },
+      "executed": "version only",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCTRACE",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCTRACE",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    },
+    {
+      "id": "flutter-cached-sdk",
+      "identity": {
+        "value": "3.41.1 stable",
+        "availability": "observed",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": null
+      },
+      "framework_revision": "582a0e7c5581dc0ca5f7bfd8662bb8db6f59d536",
+      "engine_revision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+      "dart_sdk_version": "3.11.0",
+      "devtools_version": "2.54.1",
+      "identity_scope": "installed_cached_build_inputs_not_experiment_runtime",
+      "executed": "cached version file read; Flutter wrapper not executed",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    },
+    {
+      "id": "dart-direct",
+      "identity": {
+        "value": "3.11.0 stable macos_arm64",
+        "availability": "observed",
+        "evidence_ref": "E-DART-DIRECT",
+        "reason": null
+      },
+      "executed": "direct cached Dart binary --version",
+      "runtime_qualification": false,
+      "executable_or_package_identity": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-DART-DIRECT",
+        "reason": "Version/cache identity observed; exact executable/package identity is not qualified for a native experiment build."
+      },
+      "permissions_and_attachment": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-DART-DIRECT",
+        "reason": "No experiment process, physical attachment, capture permissions or attachment perturbation was tested."
+      }
+    }
+  ],
+  "devices": [
+    {
+      "alias": "ios-physical-1",
+      "kind": "physical",
+      "platform": "ios",
+      "form_factor": "phone",
+      "model": {
+        "value": "iPhone 12",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "product_type": {
+        "value": "iPhone13,2",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "os": {
+        "value": "26.7",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "os_build": {
+        "value": "23H24",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "metadata_provenance": "registered_device_metadata_not_live_hardware_query",
+      "connection": {
+        "value": "disconnected",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "pairing": {
+        "value": "paired",
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "ddi_services_available": {
+        "value": false,
+        "availability": "observed",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": null
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": "RAM not reported; no live physical query was performed"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-IOS-DEVICES",
+        "reason": "Registered physical device is disconnected and DDI services unavailable; no experiment target exists"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/result/devices/1",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "unassigned_pending_physical_subset_selection",
+      "next_action": "Reobserve connected physical OS/RAM and accepted experiment build compatibility before role selection.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-1",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "phone",
+      "model": {
+        "value": "iPhone 18 Pro",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/0",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-2",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "phone",
+      "model": {
+        "value": "iPhone 18 Pro Max",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/1",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-3",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "phone",
+      "model": {
+        "value": "iPhone 17e",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/2",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-4",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "phone",
+      "model": {
+        "value": "iPhone Air",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/3",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-5",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad Pro 13 inch M5 12GB",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/4",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-6",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad Pro 11 inch M5 12GB",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/5",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-7",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad mini A17 Pro",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/6",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-8",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad Air 13 inch M4",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/7",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-9",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad Air 11 inch M4",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/8",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    },
+    {
+      "alias": "ios-simulator-10",
+      "kind": "simulator",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "model": {
+        "value": "iPad A16",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "product_type": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "simctl device listing does not supply productType"
+      },
+      "os": {
+        "value": "27.0",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "os_build": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "OS build not supplied by device listing"
+      },
+      "metadata_provenance": "registered_simulator_profile_not_booted_runtime",
+      "connection": {
+        "value": "Shutdown",
+        "availability": "observed",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": null
+      },
+      "pairing": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ddi_services_available": {
+        "value": null,
+        "availability": "not_applicable",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator profile"
+      },
+      "ram_bytes": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Simulator settings cannot establish physical RAM"
+      },
+      "runnable": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-SIMULATORS",
+        "reason": "Profile is available but shut down; no boot/build/run attempted"
+      },
+      "qualified_for_native_batch": false,
+      "evidence_pointer": "/devices/com.apple.CoreSimulator.SimRuntime.iOS-27-0/9",
+      "model_source_field": "deviceTypeIdentifier",
+      "observed_at": "2026-10-11T09:47:05.689925+03:00",
+      "floor_control_role": "supplementary_virtual_tooling_only",
+      "next_action": "Keep virtual evidence supplementary; a separate authorized boot/build/run is required for functional use.",
+      "observed_at_kind": "discovery_projection_timestamp_not_live_runtime"
+    }
+  ],
+  "virtual_runtime_summary": [
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+      "registered_count": 10,
+      "available_count": 10,
+      "booted_count": 0,
+      "evidence_ref": "E-SIMULATORS"
+    },
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-0",
+      "registered_count": 11,
+      "available_count": 0,
+      "booted_count": 0,
+      "evidence_ref": "E-SIMULATORS"
+    },
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "registered_count": 12,
+      "available_count": 0,
+      "booted_count": 0,
+      "evidence_ref": "E-SIMULATORS"
+    },
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "registered_count": 11,
+      "available_count": 0,
+      "booted_count": 0,
+      "evidence_ref": "E-SIMULATORS"
+    },
+    {
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-1",
+      "registered_count": 11,
+      "available_count": 0,
+      "booted_count": 0,
+      "evidence_ref": "E-SIMULATORS"
+    }
+  ],
+  "coverage": [
+    {
+      "id": "constrained-android-phone",
+      "required_kind": "physical",
+      "platform": "android",
+      "form_factor": "phone",
+      "supported_floor": "API 24",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "Successful ADB discovery returned no devices; constrained-device RAM criterion also remains OQ-2.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-ADB-DEVICES"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "constrained-android-tablet",
+      "required_kind": "physical",
+      "platform": "android",
+      "form_factor": "tablet",
+      "supported_floor": "API 24",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No Android device connected; no physical tablet RAM/OS observed.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-ADB-DEVICES"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "oldest-available-iphone",
+      "required_kind": "physical",
+      "platform": "ios",
+      "form_factor": "phone",
+      "supported_floor": "iOS 15",
+      "device_aliases": [
+        "ios-physical-1"
+      ],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "One registered iPhone 12 record reports iOS 26.7 but is disconnected; not an available or oldest-floor device.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-IOS-DEVICES",
+        "E-SIMULATORS"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "oldest-available-ipad",
+      "required_kind": "physical",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "supported_floor": "iPadOS 15",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No physical iPad reported; simulator iPads do not supply physical coverage.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-IOS-DEVICES",
+        "E-SIMULATORS"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "modern-android-control",
+      "required_kind": "physical",
+      "platform": "android",
+      "form_factor": "any",
+      "supported_floor": "API 24",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No physical Android control connected; modern-control criteria are not selected.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-ADB-DEVICES"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "modern-apple-control",
+      "required_kind": "physical",
+      "platform": "ios",
+      "form_factor": "any",
+      "supported_floor": "iOS/iPadOS 15",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No connected physical Apple control; modern-control criteria are not selected.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-IOS-DEVICES",
+        "E-SIMULATORS"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "android-api24-floor",
+      "required_kind": "physical",
+      "platform": "android",
+      "form_factor": "any",
+      "supported_floor": "API 24",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No physical API24 execution or currently connected floor device.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-ADB-DEVICES"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "iphone-ios15-floor",
+      "required_kind": "physical",
+      "platform": "ios",
+      "form_factor": "phone",
+      "supported_floor": "iOS 15",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No physical iOS15 device observed; minimum build setting is not runtime evidence.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-IOS-DEVICES",
+        "E-SIMULATORS"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    },
+    {
+      "id": "ipad-ipados15-floor",
+      "required_kind": "physical",
+      "platform": "ios",
+      "form_factor": "tablet",
+      "supported_floor": "iPadOS 15",
+      "device_aliases": [],
+      "availability": "unavailable",
+      "native_qualified": false,
+      "reason": "No physical iPadOS15 device observed; minimum build setting is not runtime evidence.",
+      "next_action": "Provide a connected physical device and reobserve OS/RAM/toolchain/target compatibility before batch admission.",
+      "evidence_refs": [
+        "E-IOS-DEVICES",
+        "E-SIMULATORS"
+      ],
+      "checked_at": "2026-10-11T09:47:05.689925+03:00",
+      "evidence_age_basis": "Current collection timestamp; reobserve actual physical/tool compatibility before execution. Historical virtual builds are not current coverage.",
+      "intended_roles": [
+        "current_library_listing",
+        "current_story_recommendation",
+        "current_story_detail_hero"
+      ],
+      "intended_journeys": [
+        "list-scroll-reversal-v1",
+        "detail-back-overlap-v1"
+      ],
+      "intended_scope_status": "proposed_unverified"
+    }
+  ],
+  "counters": [
+    {
+      "id": "dart_heap",
+      "platform": "flutter",
+      "unit": "bytes",
+      "tool": "flutter-cached-sdk",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": "No native experiment process/VM measurement session"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "dart_external",
+      "platform": "flutter",
+      "unit": "bytes",
+      "tool": "flutter-cached-sdk",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": "No native experiment process/VM measurement session"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "raster_cache",
+      "platform": "flutter",
+      "unit": "bytes",
+      "tool": "flutter-cached-sdk",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-FLUTTER-CACHE",
+        "reason": "Built renderer/counter API not qualified"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "decoded_lru",
+      "platform": "flutter",
+      "unit": "bytes_and_count",
+      "tool": "source",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "source_snapshot",
+        "reason": "Existing dev harness snapshots only; no native experiment observation"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "live_pending_owners",
+      "platform": "flutter",
+      "unit": "count",
+      "tool": "source",
+      "observation": {
+        "value": null,
+        "availability": "unavailable",
+        "evidence_ref": "source_snapshot",
+        "reason": "No complete public owner recorder currently implemented"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "first_target_raster",
+      "platform": "flutter",
+      "unit": "microseconds",
+      "tool": "source",
+      "observation": {
+        "value": null,
+        "availability": "unavailable",
+        "evidence_ref": "source_snapshot",
+        "reason": "No target-specific frame association implemented/verified"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "android_rss",
+      "platform": "android",
+      "unit": "bytes",
+      "tool": "adb",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "No connected physical Android or measured process"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "android_pss",
+      "platform": "android",
+      "unit": "bytes",
+      "tool": "adb",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "No connected physical Android or measured process"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "android_private_dirty",
+      "platform": "android",
+      "unit": "bytes",
+      "tool": "adb",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "No connected physical Android or measured process"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "android_native",
+      "platform": "android",
+      "unit": "bytes",
+      "tool": "adb",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "No connected physical Android or qualified row parser"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "android_graphics",
+      "platform": "android",
+      "unit": "bytes",
+      "tool": "adb",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-ADB-VERSION",
+        "reason": "Graphics counter support depends on device/tool; no capture"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "ios_footprint",
+      "platform": "ios",
+      "unit": "bytes",
+      "tool": "xctrace",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCTRACE",
+        "reason": "Tool version available; no connected physical device or capture"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    },
+    {
+      "id": "ios_allocations_graphics",
+      "platform": "ios",
+      "unit": "bytes",
+      "tool": "xctrace",
+      "observation": {
+        "value": null,
+        "availability": "unverified",
+        "evidence_ref": "E-XCTRACE",
+        "reason": "Per-device permissions/counters/attachment limits unverified"
+      },
+      "sampling_support": "unverified",
+      "overhead": "unmeasured",
+      "scope_description": "Unverified on exact native experiment process/build/device; source/cache/tool availability is not a measured process counter."
+    }
+  ],
+  "experiment_build": {
+    "status": "not_implemented",
+    "target": null,
+    "artifact_sha256": null,
+    "engine_runtime": null,
+    "renderer": null,
+    "reason": "Installed cached SDK identities and historical builds do not identify a new native experiment artifact."
+  },
+  "gates": [
+    {
+      "id": "NATIVE-ENTRY",
+      "status": "open",
+      "acceptance_ref": null,
+      "implementation_ref": null,
+      "verification_ref": null,
+      "reason": "OQ-6 proposal only; no accepted implemented verified target/bootstrap/delivery",
+      "next_action": "Review the linked exact entry proposal, then separately authorize/implement/verify its scope."
+    },
+    {
+      "id": "NATIVE-DEVICE",
+      "status": "open",
+      "acceptance_ref": null,
+      "implementation_ref": null,
+      "verification_ref": null,
+      "reason": "No connected qualified physical subset; floors/low-RAM/control gaps explicit",
+      "next_action": "Connect/provide the selected physical subset; record actual OS/RAM/build compatibility."
+    },
+    {
+      "id": "NATIVE-CANDIDATE",
+      "status": "open",
+      "acceptance_ref": null,
+      "implementation_ref": null,
+      "verification_ref": null,
+      "reason": "Offline outputs do not establish native role/geometry/delivery/quality admission",
+      "next_action": "Freeze a purpose-scoped native candidate ledger and independently verify admitted bytes."
+    },
+    {
+      "id": "NATIVE-PROTOCOL",
+      "status": "open",
+      "acceptance_ref": null,
+      "implementation_ref": null,
+      "verification_ref": null,
+      "reason": "Draft protocol only; no native batch freeze or instrument capture",
+      "next_action": "Accept/freeze selected physical cells and validate instrumentation/caches/clocks/limits."
+    },
+    {
+      "id": "NATIVE-DECISIONS",
+      "status": "open",
+      "acceptance_ref": null,
+      "implementation_ref": null,
+      "verification_ref": null,
+      "reason": "Relevant quality/resource criteria and OQ-2/3/4/5 dependencies unresolved",
+      "next_action": "Resolve only decisions required by the selected batch and retain production-policy separation."
+    }
+  ],
+  "summary": {
+    "adb_connected_devices": 0,
+    "registered_physical_ios_devices": 1,
+    "connected_physical_ios_devices": 0,
+    "registered_available_simulators": 10,
+    "booted_simulators": 0,
+    "qualified_physical_devices": 0
+  },
+  "historical_evidence": [
+    {
+      "source": "_bmad-output/implementation-artifacts/mobile/library-1-1-platform-builds.json",
+      "availability": "historical_only",
+      "claims": "2026-10-06 API30 emulator / iOS27 Simulator functional builds; API24/iOS15 build floors; no physical-device qualification."
+    }
+  ],
+  "limitations": [
+    "Device discovery reports registered/cached metadata, not live physical OS/RAM verification.",
+    "No device connection, boot, build, install, signing, auth, candidate serving, cache reset or native resource workload was performed.",
+    "Simulator profiles are supplementary tooling availability only.",
+    "Current installed SDK cache is not an experiment binary/renderer qualification.",
+    "Failed initial sandbox probes were preserved; successful authorized queries are distinct evidence.",
+    "Private raw receipts and device IDs remain outside repository outputs."
+  ]
+}
