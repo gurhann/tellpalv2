@@ -43,3 +43,4 @@ ops/content-migration/out/
 be/src/main/resources/application-local.yml
 be/src/main/resources/application-local.yml
 be/src/main/resources/application-local.yml
+build/generated-spring-modulith/javadoc.json
