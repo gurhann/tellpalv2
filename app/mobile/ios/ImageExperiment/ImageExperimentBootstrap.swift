@@ -4,6 +4,94 @@ import Security
 
 enum ImageExperimentRefusal: Error { case refused }
 
+enum ImageExperimentFixtureStage: String, CaseIterable {
+  case nativeMetadata = "NATIVE_METADATA"
+  case nativeKey = "NATIVE_KEY"
+  case nativeTransport = "NATIVE_TRANSPORT"
+  case nativeGate = "NATIVE_GATE"
+  case nativeProbe = "NATIVE_PROBE"
+  case nativeBackendProbe = "NATIVE_BACKEND_PROBE"
+  case nativePairing = "NATIVE_PAIRING"
+  case nativeChallenge = "NATIVE_CHALLENGE"
+  case nativeProof = "NATIVE_PROOF"
+  case nativeClaim = "NATIVE_CLAIM"
+  case nativeEnvelope = "NATIVE_ENVELOPE"
+  case nativeEnvelopeFields = "NATIVE_ENVELOPE_FIELDS"
+  case nativeEnvelopeTimeFields = "NATIVE_ENVELOPE_TIME_FIELDS"
+  case nativeEnvelopeIssuedFuture = "NATIVE_ENVELOPE_ISSUED_FUTURE"
+  case nativeEnvelopeExpired = "NATIVE_ENVELOPE_EXPIRED"
+  case nativeEnvelopeTimeBounds = "NATIVE_ENVELOPE_TIME_BOUNDS"
+  case nativeEnvelopeToken = "NATIVE_ENVELOPE_TOKEN"
+  case nativeEnvelopeManifest = "NATIVE_ENVELOPE_MANIFEST"
+  case nativeEnvelopeBinding = "NATIVE_ENVELOPE_BINDING"
+  case nativeHandoff = "NATIVE_HANDOFF"
+  case dartNativeHandoff = "DART_NATIVE_HANDOFF"
+  case dartNativeResponse = "DART_NATIVE_RESPONSE"
+  case dartConfiguration = "DART_CONFIGURATION"
+  case dartMode = "DART_MODE"
+  case dartComposition = "DART_COMPOSITION"
+  case compositionRegistration = "DART_COMPOSITION_REGISTRATION"
+  case compositionCache = "DART_COMPOSITION_CACHE"
+  case compositionStatus = "DART_COMPOSITION_STATUS"
+  case statusAdmission = "DART_STATUS_ADMISSION"
+  case statusClient = "DART_STATUS_CLIENT"
+  case statusValidation = "DART_STATUS_VALIDATION"
+  case clientPreconditions = "DART_CLIENT_PRECONDITIONS"
+  case clientConstruction = "DART_CLIENT_CONSTRUCTION"
+  case trustContext = "DART_TRUST_CONTEXT"
+  case certificateImport = "DART_CERTIFICATE_IMPORT"
+  case certificateImportDerFailPemPass = "DART_CERT_IMPORT_DER_FAIL_PEM_PASS"
+  case certificateImportDerPassPemFail = "DART_CERT_IMPORT_DER_PASS_PEM_FAIL"
+  case certificateImportBothFail = "DART_CERT_IMPORT_BOTH_FAIL"
+  case certificateImportBothPass = "DART_CERT_IMPORT_BOTH_PASS"
+  case certificateImportUnavailable = "DART_CERT_IMPORT_UNAVAILABLE"
+  case requestPreconditions = "DART_REQUEST_PRECONDITIONS"
+  case tlsConnect = "DART_TLS_CONNECT"
+  case tlsHandshake = "DART_TLS_HANDSHAKE"
+  case tlsPinValidity = "DART_TLS_PIN_VALIDITY"
+  case outgoingRequest = "DART_OUTGOING_REQUEST"
+  case responseValidation = "DART_RESPONSE_VALIDATION"
+  case responseBody = "DART_RESPONSE_BODY"
+  case configurationEnvelope = "DART_CONFIG_ENVELOPE"
+  case configurationFields = "DART_CONFIG_FIELDS"
+  case configurationIdentity = "DART_CONFIG_IDENTITY"
+  case configurationIds = "DART_CONFIG_IDS"
+  case configurationLauncher = "DART_CONFIG_LAUNCHER"
+  case configurationTime = "DART_CONFIG_TIME"
+  case configurationEnvironment = "DART_CONFIG_ENVIRONMENT"
+  case configurationOrigin = "DART_CONFIG_ORIGIN"
+  case configurationApp = "DART_CONFIG_APP"
+  case configurationHashes = "DART_CONFIG_HASHES"
+  case configurationCertificate = "DART_CONFIG_CERTIFICATE"
+  case configurationToken = "DART_CONFIG_TOKEN"
+  case configurationClaims = "DART_CONFIG_CLAIMS"
+  case configurationManifestHash = "DART_CONFIG_MANIFEST_HASH"
+  case configurationManifest = "DART_CONFIG_MANIFEST"
+  case configurationBindings = "DART_CONFIG_BINDINGS"
+  case configurationCapacity = "DART_CONFIG_CAPACITY"
+  case configurationFixture = "DART_CONFIG_FIXTURE"
+  case configurationGeometry = "DART_CONFIG_GEOMETRY"
+  case configurationSelection = "DART_CONFIG_SELECTION"
+  case diagnosticUnavailable = "DIAGNOSTIC_UNAVAILABLE"
+
+  var line: String { "IMAGE_EXPERIMENT_FIXTURE_STAGE " + rawValue }
+  var isDart: Bool { rawValue.hasPrefix("DART_") }
+}
+
+// Retain only the first fixed failure code; diagnostics cannot complete admission or teardown.
+final class ImageExperimentFixtureDiagnostic {
+  private(set) var stage: ImageExperimentFixtureStage?
+  func record(_ value: ImageExperimentFixtureStage) {
+    if stage == nil { stage = value }
+  }
+  func recordDart(_ value: Any?) -> Bool {
+    guard let code = value as? String, code.utf8.count <= 48,
+      let stage = ImageExperimentFixtureStage(rawValue: code), stage.isDart else { return false }
+    record(stage)
+    return true
+  }
+}
+
 /// Untrusted epoch integers must never trap while checking finite session bounds.
 enum ImageExperimentTimeBounds {
   static func positiveDelta(_ later: Int64, since earlier: Int64, maximum: Int64) -> Int64? {
@@ -149,29 +237,45 @@ final class ImageExperimentLauncherOutcome: @unchecked Sendable {
   var onReachabilityQualified: (() -> Void)?
   private let started = ProcessInfo.processInfo.systemUptime
   private let transport: ImageExperimentPinnedTransport
+  private let observeRefusal: (ImageExperimentFixtureStage) -> Void
+  private var refusalStage = ImageExperimentFixtureStage.nativeGate
 
-  init(encodedMetadata: String?, applicationId: String?) throws {
-    guard let encodedMetadata, encodedMetadata.utf8.count <= 24_000,
-      let bytes = Data(base64Encoded: encodedMetadata), bytes.count <= 16_384,
-      let object = try JSONSerialization.jsonObject(with: bytes) as? [String: Any]
-    else { throw ImageExperimentRefusal.refused }
-    try Self.validateMetadata(object, applicationId: applicationId)
-    metadata = object
-    let generated = P256.Signing.PrivateKey()
-    key = generated
-    publicKeySpkiBase64 = generated.publicKey.derRepresentation.base64EncodedString()
-    transport = try ImageExperimentPinnedTransport(metadata: object)
+  init(encodedMetadata: String?, applicationId: String?,
+    observeRefusal: @escaping (ImageExperimentFixtureStage) -> Void = { _ in }) throws {
+    self.observeRefusal = observeRefusal
+    var stage = ImageExperimentFixtureStage.nativeMetadata
+    do {
+      guard let encodedMetadata, encodedMetadata.utf8.count <= 24_000,
+        let bytes = Data(base64Encoded: encodedMetadata), bytes.count <= 16_384,
+        let object = try JSONSerialization.jsonObject(with: bytes) as? [String: Any]
+      else { throw ImageExperimentRefusal.refused }
+      try Self.validateMetadata(object, applicationId: applicationId)
+      metadata = object
+      stage = .nativeKey
+      let generated = P256.Signing.PrivateKey()
+      key = generated
+      publicKeySpkiBase64 = generated.publicKey.derRepresentation.base64EncodedString()
+      stage = .nativeTransport
+      transport = try ImageExperimentPinnedTransport(metadata: object)
+    } catch {
+      observeRefusal(stage)
+      throw error
+    }
   }
 
   func takeSession() async throws -> [String: Any] {
-    guard gate.take() else { throw ImageExperimentRefusal.refused }
+    guard gate.take() else { observeRefusal(.nativeGate); throw ImageExperimentRefusal.refused }
     defer { key = nil }
     do {
+      refusalStage = .nativeProbe
       _ = try await request("GET", "/experiment/v1/probe")
+      refusalStage = .nativeBackendProbe
       _ = try await request("GET", "/experiment/v1/backend-probe")
       isReachabilityQualified = true
       onReachabilityQualified?()
+      refusalStage = .nativePairing
       try await awaitPairing()
+      refusalStage = .nativeChallenge
       let challengeBytes = try await request("POST", "/experiment/v1/bootstrap/challenge", body: publicProof())
       guard let challenge = try JSONSerialization.jsonObject(with: challengeBytes) as? [String: Any]
       else { throw ImageExperimentRefusal.refused }
@@ -184,6 +288,7 @@ final class ImageExperimentLauncherOutcome: @unchecked Sendable {
         ImageExperimentTimeBounds.positiveDelta(expires, since: challengeNow, maximum: 30_000) != nil,
         let retained = key
       else { throw ImageExperimentRefusal.refused }
+      refusalStage = .nativeProof
       var proof = publicProof()
       proof["challenge"] = value
       let payload = try Self.signedPayload(scope: string("scope"), batch: string("batchId"),
@@ -192,12 +297,16 @@ final class ImageExperimentLauncherOutcome: @unchecked Sendable {
       let signature = try retained.signature(for: payload).derRepresentation
       guard signature.count <= 128 else { throw ImageExperimentRefusal.refused }
       proof["signatureBase64"] = signature.base64EncodedString()
+      refusalStage = .nativeClaim
       let bytes = try await request("POST", "/experiment/v1/bootstrap/claim", body: proof)
+      refusalStage = .nativeEnvelope
       try validateEnvelope(bytes)
+      refusalStage = .nativeHandoff
       try checkAlive()
       guard let envelope = String(data: bytes, encoding: .utf8) else { throw ImageExperimentRefusal.refused }
       return ["envelope": envelope, "metadata": metadata]
     } catch {
+      observeRefusal(refusalStage)
       revoke()
       throw ImageExperimentRefusal.refused
     }
@@ -266,17 +375,29 @@ final class ImageExperimentLauncherOutcome: @unchecked Sendable {
 
   private func validateEnvelope(_ bytes: Data) throws {
     let now = Self.now
+    refusalStage = .nativeEnvelopeFields
     guard bytes.count <= 65_536,
       let envelope = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
       Self.integer(envelope["schemaVersion"]) == 1,
-      let generation = Self.integer(envelope["generation"]), generation >= 0,
-      let issued = Self.integer(envelope["issuedAt"]), let expires = Self.integer(envelope["expiresAt"]),
-      ImageExperimentTimeBounds.allowsSession(issued: issued, expires: expires, now: now),
-      let token = envelope["idToken"] as? String, (1...8192).contains(token.utf8.count),
-      let publicManifest = envelope["publicManifestBase64"] as? String,
+      let generation = Self.integer(envelope["generation"]), generation >= 0
+    else { throw ImageExperimentRefusal.refused }
+    refusalStage = .nativeEnvelopeTimeFields
+    guard let issued = Self.integer(envelope["issuedAt"]), let expires = Self.integer(envelope["expiresAt"])
+    else { throw ImageExperimentRefusal.refused }
+    refusalStage = .nativeEnvelopeTimeBounds
+    if issued > now { refusalStage = .nativeEnvelopeIssuedFuture }
+    else if expires <= now { refusalStage = .nativeEnvelopeExpired }
+    guard ImageExperimentTimeBounds.allowsSession(issued: issued, expires: expires, now: now)
+    else { throw ImageExperimentRefusal.refused }
+    refusalStage = .nativeEnvelopeToken
+    guard let token = envelope["idToken"] as? String, (1...8192).contains(token.utf8.count)
+    else { throw ImageExperimentRefusal.refused }
+    refusalStage = .nativeEnvelopeManifest
+    guard let publicManifest = envelope["publicManifestBase64"] as? String,
       let manifestBytes = Data(base64Encoded: publicManifest),
       Self.sha256(manifestBytes) == string("publicManifestSha256")
     else { throw ImageExperimentRefusal.refused }
+    refusalStage = .nativeEnvelopeBinding
     for field in ["scope", "batchId", "sessionId", "expectedUid", "backendEnvironment", "brokerOrigin",
       "brokerCertificateSha256", "manifestSha256", "publicManifestSha256"] {
       guard envelope[field] as? String == string(field) else { throw ImageExperimentRefusal.refused }

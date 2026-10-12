@@ -8,13 +8,31 @@ class ImageExperimentBootstrap {
   final MethodChannel _channel;
   bool _taken = false;
   bool _revoked = false;
+  bool _diagnosticReported = false;
+  void reportRefusal(ImageExperimentFixtureStage stage) {
+    if (_diagnosticReported) return;
+    _diagnosticReported = true;
+    // Diagnostic failure never delays or changes the original revoke/fallback path.
+    unawaited(
+      _channel
+          .invokeMethod<void>('reportDiagnostic', stage.code)
+          .timeout(const Duration(milliseconds: 200))
+          .catchError((Object _) {}),
+    );
+  }
+
   Future<ImageExperimentConfiguration> takeSession() async {
-    if (_taken || _revoked) throw const FormatException('bootstrap_refused');
+    if (_taken || _revoked) {
+      reportRefusal(ImageExperimentFixtureStage.dartNativeHandoff);
+      throw const FormatException('bootstrap_refused');
+    }
     _taken = true;
+    var stage = ImageExperimentFixtureStage.dartNativeHandoff;
     try {
       final response = await _channel
           .invokeMapMethod<String, dynamic>('takeSession')
           .timeout(const Duration(seconds: 30));
+      stage = ImageExperimentFixtureStage.dartNativeResponse;
       if (_revoked ||
           response == null ||
           response.keys.toSet().difference({
@@ -25,8 +43,14 @@ class ImageExperimentBootstrap {
       }
       final raw = response.remove('envelope') as String;
       final metadata = Map<String, dynamic>.from(response['metadata'] as Map);
-      return ImageExperimentConfiguration.parse(raw, metadata);
+      stage = ImageExperimentFixtureStage.dartConfiguration;
+      return ImageExperimentConfiguration.parse(
+        raw,
+        metadata,
+        observeRefusal: reportRefusal,
+      );
     } catch (_) {
+      reportRefusal(stage);
       await revoke();
       throw const FormatException('bootstrap_refused');
     }

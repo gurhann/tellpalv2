@@ -2,11 +2,21 @@ import Flutter
 import UIKit
 
 @main
+enum ImageExperimentMain {
+  static func main() {
+    // Dispatch before FlutterAppDelegate is instantiated, including malformed audit requests.
+    let delegate: AnyClass = ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_INSTALLATION_AUDIT"] != nil
+      ? ImageExperimentAuditAppDelegate.self : AppDelegate.self
+    UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, NSStringFromClass(delegate))
+  }
+}
+
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private(set) var bootstrap: ImageExperimentBootstrap?
   private var channel: FlutterMethodChannel?
   weak var pairingElement: UIView?
-  weak var ownedWindow: UIWindow?
+  weak var ownedWindow: UIWindow? { didSet { exposeFixtureDiagnostic() } }
+  private let fixtureDiagnostic = ImageExperimentFixtureDiagnostic()
   private let ledgerQueue = DispatchQueue(label: "com.tellpal.imageexperiment.ledger")
   private var ledgerWork: DispatchWorkItem?
   private let ledgerGate = ImageExperimentAdmissionGate()
@@ -15,7 +25,8 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     bootstrap = try? ImageExperimentBootstrap(
       encodedMetadata: ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_METADATA"],
-      applicationId: Bundle.main.bundleIdentifier)
+      applicationId: Bundle.main.bundleIdentifier,
+      observeRefusal: { [weak self] in self?.publishFixtureDiagnostic($0) })
     bootstrap?.onReachabilityQualified = { [weak self] in self?.exposePairingKey() }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
@@ -32,6 +43,26 @@ import UIKit
     pairingElement = element
   }
 
+  private func publishFixtureDiagnostic(_ stage: ImageExperimentFixtureStage) {
+    guard ProcessInfo.processInfo.environment[ImageExperimentAuditRequest.environmentKey] == nil,
+      ImageExperimentAuditRequest.appIds.contains(Bundle.main.bundleIdentifier ?? "") else { return }
+    fixtureDiagnostic.record(stage)
+    exposeFixtureDiagnostic()
+  }
+
+  private func exposeFixtureDiagnostic() {
+    guard let stage = fixtureDiagnostic.stage, let window = ownedWindow,
+      window.viewWithTag(73_020) == nil else { return }
+    let element = UIView(frame: CGRect(x: 8, y: 48, width: 32, height: 32))
+    element.tag = 73_020
+    element.isAccessibilityElement = true
+    element.accessibilityIdentifier = "imageExperimentFixtureDiagnostic"
+    element.accessibilityLabel = "Experiment diagnostic"
+    element.accessibilityValue = stage.rawValue
+    element.isUserInteractionEnabled = false
+    window.addSubview(element)
+  }
+
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     let owned = FlutterMethodChannel(name: "tellpal/image_experiment",
@@ -40,8 +71,16 @@ import UIKit
     owned.setMethodCallHandler { [weak self] call, result in
       guard let self else { result(FlutterError(code: "NATIVE_BOOTSTRAP_REFUSED", message: nil, details: nil)); return }
       switch call.method {
+      case "reportDiagnostic":
+        guard ProcessInfo.processInfo.environment[ImageExperimentAuditRequest.environmentKey] == nil,
+          ImageExperimentAuditRequest.appIds.contains(Bundle.main.bundleIdentifier ?? ""),
+          self.fixtureDiagnostic.recordDart(call.arguments)
+        else { result(false); return }
+        self.exposeFixtureDiagnostic()
+        result(true)
       case "takeSession":
         guard let bootstrap = self.bootstrap else {
+          self.publishFixtureDiagnostic(.nativeGate)
           result(FlutterError(code: "NATIVE_BOOTSTRAP_REFUSED", message: nil, details: nil)); return
         }
         Task { @MainActor in

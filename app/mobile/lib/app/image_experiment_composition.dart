@@ -52,25 +52,51 @@ class ImageExperimentComposition {
 
   static Future<ImageExperimentComposition> create(
     ImageExperimentConfiguration configuration,
-    ImageExperimentBootstrap bootstrap,
-  ) async {
-    final container = GetIt.asNewInstance();
-    container.registerSingleton<ImageExperimentConfiguration>(configuration);
-    _initializeImageExperiment(container);
-    final result = ImageExperimentComposition._(
-      container,
-      bootstrap,
-      configuration,
-    );
-    try {
-      container<ImageExperimentImageCache>();
-      await container<ImageExperimentTransport>().admitStatus();
-      return result;
-    } catch (_) {
-      await result.close();
-      throw const FormatException('composition_refused');
-    }
-  }
+    ImageExperimentBootstrap bootstrap, {
+    ImageExperimentRefusalObserver? observeRefusal,
+  }) => runZoned(
+    () async {
+      final observer = ImageExperimentRefusalObservation.current(
+        observeRefusal,
+      );
+      final container = ImageExperimentRefusalObservation.construct(
+        ImageExperimentFixtureStage.compositionRegistration,
+        () {
+          final container = GetIt.asNewInstance();
+          container.registerSingleton<ImageExperimentConfiguration>(
+            configuration,
+          );
+          _initializeImageExperiment(container);
+          return container;
+        },
+        observer: observer,
+      );
+      final result = ImageExperimentComposition._(
+        container,
+        bootstrap,
+        configuration,
+      );
+      var stage = ImageExperimentFixtureStage.compositionCache;
+      try {
+        ImageExperimentRefusalObservation.construct(
+          stage,
+          () => container<ImageExperimentImageCache>(),
+          observer: observer,
+        );
+        stage = ImageExperimentFixtureStage.compositionStatus;
+        await container<ImageExperimentTransport>().admitStatus();
+        return result;
+      } catch (_) {
+        ImageExperimentRefusalObservation.report(stage, observer);
+        await result.close();
+        throw const FormatException('composition_refused');
+      }
+    },
+    zoneValues: {
+      ImageExperimentRefusalObservation.zoneKey:
+          ImageExperimentRefusalObservation.current(observeRefusal),
+    },
+  );
 
   Future<void> close() => _closing ??= _close();
   Future<void> _close() async {

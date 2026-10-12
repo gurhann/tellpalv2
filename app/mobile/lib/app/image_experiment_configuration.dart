@@ -5,6 +5,96 @@ import 'package:crypto/crypto.dart';
 import '../features/image_experiment/data/model/raster_case_model.dart';
 import 'image_experiment_json.dart';
 
+enum ImageExperimentFixtureStage {
+  dartNativeHandoff('DART_NATIVE_HANDOFF'),
+  dartNativeResponse('DART_NATIVE_RESPONSE'),
+  dartConfiguration('DART_CONFIGURATION'),
+  dartMode('DART_MODE'),
+  dartComposition('DART_COMPOSITION'),
+  compositionRegistration('DART_COMPOSITION_REGISTRATION'),
+  compositionCache('DART_COMPOSITION_CACHE'),
+  compositionStatus('DART_COMPOSITION_STATUS'),
+  statusAdmission('DART_STATUS_ADMISSION'),
+  statusClient('DART_STATUS_CLIENT'),
+  statusValidation('DART_STATUS_VALIDATION'),
+  clientPreconditions('DART_CLIENT_PRECONDITIONS'),
+  clientConstruction('DART_CLIENT_CONSTRUCTION'),
+  trustContext('DART_TRUST_CONTEXT'),
+  certificateImport('DART_CERTIFICATE_IMPORT'),
+  certificateImportDerFailPemPass('DART_CERT_IMPORT_DER_FAIL_PEM_PASS'),
+  certificateImportDerPassPemFail('DART_CERT_IMPORT_DER_PASS_PEM_FAIL'),
+  certificateImportBothFail('DART_CERT_IMPORT_BOTH_FAIL'),
+  certificateImportBothPass('DART_CERT_IMPORT_BOTH_PASS'),
+  certificateImportUnavailable('DART_CERT_IMPORT_UNAVAILABLE'),
+  requestPreconditions('DART_REQUEST_PRECONDITIONS'),
+  tlsConnect('DART_TLS_CONNECT'),
+  tlsHandshake('DART_TLS_HANDSHAKE'),
+  tlsPinValidity('DART_TLS_PIN_VALIDITY'),
+  outgoingRequest('DART_OUTGOING_REQUEST'),
+  responseValidation('DART_RESPONSE_VALIDATION'),
+  responseBody('DART_RESPONSE_BODY'),
+  configurationEnvelope('DART_CONFIG_ENVELOPE'),
+  configurationFields('DART_CONFIG_FIELDS'),
+  configurationIdentity('DART_CONFIG_IDENTITY'),
+  configurationIds('DART_CONFIG_IDS'),
+  configurationLauncher('DART_CONFIG_LAUNCHER'),
+  configurationTime('DART_CONFIG_TIME'),
+  configurationEnvironment('DART_CONFIG_ENVIRONMENT'),
+  configurationOrigin('DART_CONFIG_ORIGIN'),
+  configurationApp('DART_CONFIG_APP'),
+  configurationHashes('DART_CONFIG_HASHES'),
+  configurationCertificate('DART_CONFIG_CERTIFICATE'),
+  configurationToken('DART_CONFIG_TOKEN'),
+  configurationClaims('DART_CONFIG_CLAIMS'),
+  configurationManifestHash('DART_CONFIG_MANIFEST_HASH'),
+  configurationManifest('DART_CONFIG_MANIFEST'),
+  configurationBindings('DART_CONFIG_BINDINGS'),
+  configurationCapacity('DART_CONFIG_CAPACITY'),
+  configurationFixture('DART_CONFIG_FIXTURE'),
+  configurationGeometry('DART_CONFIG_GEOMETRY'),
+  configurationSelection('DART_CONFIG_SELECTION');
+
+  const ImageExperimentFixtureStage(this.code);
+  final String code;
+}
+
+typedef ImageExperimentRefusalObserver =
+    void Function(ImageExperimentFixtureStage);
+
+/// Passive per-entry observation; observer errors cannot change the original operation.
+class ImageExperimentRefusalObservation {
+  static const zoneKey = #imageExperimentRefusalStage;
+  static ImageExperimentRefusalObserver? current([
+    ImageExperimentRefusalObserver? observer,
+  ]) {
+    if (observer != null) return observer;
+    final value = Zone.current[zoneKey];
+    return value is ImageExperimentRefusalObserver ? value : null;
+  }
+
+  static void report(
+    ImageExperimentFixtureStage stage,
+    ImageExperimentRefusalObserver? observer,
+  ) {
+    try {
+      observer?.call(stage);
+    } catch (_) {}
+  }
+
+  static T construct<T>(
+    ImageExperimentFixtureStage stage,
+    T Function() operation, {
+    ImageExperimentRefusalObserver? observer,
+  }) {
+    try {
+      return operation();
+    } catch (_) {
+      report(stage, current(observer));
+      rethrow;
+    }
+  }
+}
+
 const imageExperimentScope = 'image-optimization-native-fixture-r1';
 const imageExperimentQaUid = 'jLRypTmoBrhhX21HsDJojurcKTC3';
 final _id = RegExp(r'^[A-Za-z0-9_-]{1,64}$');
@@ -82,10 +172,20 @@ class ImageExperimentConfiguration {
     String raw,
     Map<String, dynamic> metadata, {
     DateTime Function()? now,
+    void Function(ImageExperimentFixtureStage)? observeRefusal,
   }) {
+    var stage = ImageExperimentFixtureStage.configurationEnvelope;
     try {
-      return _parse(raw, metadata, now ?? DateTime.now);
+      return _parse(
+        raw,
+        metadata,
+        now ?? DateTime.now,
+        (value) => stage = value,
+      );
     } catch (_) {
+      try {
+        observeRefusal?.call(stage);
+      } catch (_) {}
       throw const FormatException('bootstrap_refused');
     }
   }
@@ -94,11 +194,13 @@ class ImageExperimentConfiguration {
     String raw,
     Map<String, dynamic> metadata,
     DateTime Function() now,
+    void Function(ImageExperimentFixtureStage) observeStage,
   ) {
     if (utf8.encode(raw).length > 65536) {
       throw const FormatException('envelope_capacity');
     }
     final envelope = decodeImageExperimentJson(raw) as Map<String, dynamic>;
+    observeStage(ImageExperimentFixtureStage.configurationFields);
     const keys = {
       'schemaVersion',
       'scope',
@@ -122,6 +224,7 @@ class ImageExperimentConfiguration {
         keys.difference(envelope.keys.toSet()).isNotEmpty) {
       throw const FormatException('envelope_fields');
     }
+    observeStage(ImageExperimentFixtureStage.configurationIdentity);
     if (envelope['schemaVersion'] is! int ||
         envelope['schemaVersion'] != 1 ||
         envelope['scope'] != imageExperimentScope ||
@@ -130,11 +233,13 @@ class ImageExperimentConfiguration {
         metadata['expectedUid'] != imageExperimentQaUid) {
       throw const FormatException('identity');
     }
+    observeStage(ImageExperimentFixtureStage.configurationIds);
     for (final key in ['batchId', 'sessionId', 'accessAlias']) {
       if (envelope[key] is! String || !_id.hasMatch(envelope[key])) {
         throw const FormatException('id');
       }
     }
+    observeStage(ImageExperimentFixtureStage.configurationLauncher);
     for (final key in [
       'scope',
       'batchId',
@@ -150,6 +255,7 @@ class ImageExperimentConfiguration {
         throw const FormatException('launcher_mismatch');
       }
     }
+    observeStage(ImageExperimentFixtureStage.configurationTime);
     if (envelope['generation'] is! int ||
         envelope['generation'] < 0 ||
         envelope['issuedAt'] is! int ||
@@ -169,9 +275,11 @@ class ImageExperimentConfiguration {
         expires - issued > 180000) {
       throw const FormatException('time');
     }
+    observeStage(ImageExperimentFixtureStage.configurationEnvironment);
     if (!['local', 'test'].contains(envelope['backendEnvironment'])) {
       throw const FormatException('environment');
     }
+    observeStage(ImageExperimentFixtureStage.configurationOrigin);
     final origin = Uri.parse(envelope['brokerOrigin'] as String);
     if (origin.scheme != 'https' ||
         origin.host.isEmpty ||
@@ -183,6 +291,7 @@ class ImageExperimentConfiguration {
         origin.port > 65535) {
       throw const FormatException('origin');
     }
+    observeStage(ImageExperimentFixtureStage.configurationApp);
     final appId = metadata['expectedAppId'];
     if (appId is! String ||
         !RegExp(
@@ -190,6 +299,7 @@ class ImageExperimentConfiguration {
         ).hasMatch(appId)) {
       throw const FormatException('app_identity');
     }
+    observeStage(ImageExperimentFixtureStage.configurationHashes);
     for (final key in [
       'brokerCertificateSha256',
       'manifestSha256',
@@ -199,6 +309,7 @@ class ImageExperimentConfiguration {
         throw const FormatException('hash');
       }
     }
+    observeStage(ImageExperimentFixtureStage.configurationCertificate);
     final cert = base64Decode(envelope['brokerCertificateDerBase64'] as String);
     if (cert.isEmpty ||
         cert.length > 16384 ||
@@ -206,12 +317,14 @@ class ImageExperimentConfiguration {
             envelope['brokerCertificateSha256']) {
       throw const FormatException('certificate');
     }
+    observeStage(ImageExperimentFixtureStage.configurationToken);
     final token = envelope.remove('idToken');
     if (token is! String || utf8.encode(token).length > 8192 || token.isEmpty) {
       throw const FormatException('token');
     }
     final jwtParts = token.split('.');
     if (jwtParts.length != 3) throw const FormatException('token');
+    observeStage(ImageExperimentFixtureStage.configurationClaims);
     final claims =
         decodeImageExperimentJson(
               utf8.decode(base64Url.decode(base64Url.normalize(jwtParts[1]))),
@@ -228,6 +341,7 @@ class ImageExperimentConfiguration {
         expires > claims['exp'] * 1000) {
       throw const FormatException('token_selection');
     }
+    observeStage(ImageExperimentFixtureStage.configurationManifestHash);
     final manifestBytes = base64Decode(
       envelope['publicManifestBase64'] as String,
     );
@@ -236,6 +350,7 @@ class ImageExperimentConfiguration {
             envelope['publicManifestSha256']) {
       throw const FormatException('manifest_hash');
     }
+    observeStage(ImageExperimentFixtureStage.configurationManifest);
     final manifest =
         decodeImageExperimentJson(
               utf8.decode(manifestBytes, allowMalformed: false),
@@ -258,11 +373,13 @@ class ImageExperimentConfiguration {
         manifest['batchId'] != envelope['batchId']) {
       throw const FormatException('manifest');
     }
+    observeStage(ImageExperimentFixtureStage.configurationBindings);
     for (final key in ['corpusSha256', 'referenceSha256', 'sourceSha256']) {
       if (manifest[key] is! String || !_hash.hasMatch(manifest[key])) {
         throw const FormatException('binding');
       }
     }
+    observeStage(ImageExperimentFixtureStage.configurationCapacity);
     final entries = manifest['entries'] as List<dynamic>;
     if (entries.isEmpty || entries.length > 20) {
       throw const FormatException('manifest_capacity');
@@ -291,6 +408,7 @@ class ImageExperimentConfiguration {
       'purposeAcceptanceReceipt',
     };
     for (final rawEntry in entries) {
+      observeStage(ImageExperimentFixtureStage.configurationFixture);
       final entry = rawEntry as Map<String, dynamic>;
       if (entry.keys.toSet().difference(caseKeys).isNotEmpty ||
           caseKeys.difference(entry.keys.toSet()).isNotEmpty) {
@@ -328,6 +446,7 @@ class ImageExperimentConfiguration {
           entry['width'] * entry['height'] > 16777216) {
         throw const FormatException('fixture_bounds');
       }
+      observeStage(ImageExperimentFixtureStage.configurationGeometry);
       for (final key in [
         'logicalSlotWidth',
         'logicalSlotHeight',
@@ -356,10 +475,12 @@ class ImageExperimentConfiguration {
       cases[value.caseId] = value;
       totalBytes += value.byteSize;
     }
+    observeStage(ImageExperimentFixtureStage.configurationSelection);
     if (metadata['caseId'] is! String ||
         !cases.containsKey(metadata['caseId'])) {
       throw const FormatException('case_selection');
     }
+    observeStage(ImageExperimentFixtureStage.configurationCapacity);
     if (totalBytes > 104857600) {
       throw const FormatException('manifest_capacity');
     }

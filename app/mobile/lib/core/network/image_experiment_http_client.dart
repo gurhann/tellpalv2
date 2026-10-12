@@ -1,15 +1,108 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import '../../app/image_experiment_configuration.dart';
 import '../../app/image_experiment_json.dart';
 import '../diagnostics/image_experiment_recorder.dart';
 
+/// Discarded, connection-free contexts compare formats only after an original import fails.
+class ImageExperimentCertificateImportDiagnostic {
+  static const maximumBytes = 16384;
+  static const maximumMicroseconds = 200000;
+
+  static void observe(
+    void Function() originalImport,
+    Uint8List der, {
+    ImageExperimentRefusalObserver? observer,
+  }) {
+    try {
+      originalImport();
+    } catch (_) {
+      final observation = ImageExperimentRefusalObservation.current(observer);
+      if (observation != null) {
+        ImageExperimentRefusalObservation.report(compare(der), observation);
+      }
+      rethrow;
+    }
+  }
+
+  static ImageExperimentFixtureStage compare(
+    Uint8List der, {
+    void Function(List<int>)? importCertificateForTesting,
+    int Function()? elapsedMicrosecondsForTesting,
+  }) {
+    final elapsed = Stopwatch()..start();
+    bool withinBound() =>
+        (elapsedMicrosecondsForTesting?.call() ?? elapsed.elapsedMicroseconds) <
+        maximumMicroseconds;
+    try {
+      if (der.isEmpty || der.length > maximumBytes || !withinBound()) {
+        return ImageExperimentFixtureStage.certificateImportUnavailable;
+      }
+      final immutable = Uint8List.fromList(der).asUnmodifiableView();
+      final encoded = base64Encode(immutable);
+      final lines = [
+        for (var offset = 0; offset < encoded.length; offset += 64)
+          encoded.substring(
+            offset,
+            offset + 64 < encoded.length ? offset + 64 : encoded.length,
+          ),
+      ];
+      final pem = utf8.encode(
+        '-----BEGIN CERTIFICATE-----\n${lines.join('\n')}\n-----END CERTIFICATE-----\n',
+      );
+      bool imports(List<int> bytes) {
+        final probe = importCertificateForTesting == null
+            ? SecurityContext(withTrustedRoots: false)
+            : null;
+        try {
+          if (importCertificateForTesting != null) {
+            importCertificateForTesting(bytes);
+          } else {
+            probe!.setTrustedCertificatesBytes(bytes);
+          }
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      if (!withinBound()) {
+        return ImageExperimentFixtureStage.certificateImportUnavailable;
+      }
+      final derPasses = imports(immutable);
+      if (!withinBound()) {
+        return ImageExperimentFixtureStage.certificateImportUnavailable;
+      }
+      final pemPasses = imports(pem);
+      if (!withinBound()) {
+        return ImageExperimentFixtureStage.certificateImportUnavailable;
+      }
+      return derPasses
+          ? (pemPasses
+                ? ImageExperimentFixtureStage.certificateImportBothPass
+                : ImageExperimentFixtureStage.certificateImportDerPassPemFail)
+          : (pemPasses
+                ? ImageExperimentFixtureStage.certificateImportDerFailPemPass
+                : ImageExperimentFixtureStage.certificateImportBothFail);
+    } catch (_) {
+      return ImageExperimentFixtureStage.certificateImportUnavailable;
+    }
+  }
+}
+
 /// Owns status observation, the expiry clock and every per-transfer client.
 class ImageExperimentTransport {
-  ImageExperimentTransport(this.configuration, this.recorder) {
+  ImageExperimentTransport(
+    this.configuration,
+    this.recorder, {
+    ImageExperimentRefusalObserver? observeRefusal,
+  }) : _observeRefusal = ImageExperimentRefusalObservation.current(
+         observeRefusal,
+       ) {
     _revocations = configuration.credentials.revocations.listen(
       (_) => _invalidate('session_inactive'),
     );
@@ -18,6 +111,7 @@ class ImageExperimentTransport {
       () => _invalidate('session_inactive'),
     );
   }
+  final ImageExperimentRefusalObserver? _observeRefusal;
   final ImageExperimentConfiguration configuration;
   final ImageExperimentRecorder recorder;
   static const observationZoneKey = #imageExperimentObservation;
@@ -28,37 +122,57 @@ class ImageExperimentTransport {
   Future<void>? _closing;
   bool _authenticatedRevokeObserved = false;
   bool get authenticatedRevokeObserved => _authenticatedRevokeObserved;
-  http.Client newClient() {
-    configuration.credentials.requireActive();
-    if (_closingStarted) throw StateError('session_inactive');
-    return _newOwnedClient();
-  }
+  http.Client newClient() => ImageExperimentRefusalObservation.construct(
+    ImageExperimentFixtureStage.clientPreconditions,
+    () {
+      configuration.credentials.requireActive();
+      if (_closingStarted) throw StateError('session_inactive');
+      return _newOwnedClient();
+    },
+    observer: _observeRefusal,
+  );
 
   http.Client _newOwnedClient() {
-    configuration.credentials.requireActive();
-    if (_closed) throw StateError('session_inactive');
-    late ImageExperimentHttpClient client;
-    client = ImageExperimentHttpClient(
-      configuration,
-      recorder,
-      onClose: () => _clients.remove(client),
-      observation: Map<String, Object?>.from(
-        Zone.current[observationZoneKey] as Map? ?? const {},
-      ),
-    );
-    _clients.add(client);
-    return client;
+    var stage = ImageExperimentFixtureStage.clientPreconditions;
+    try {
+      configuration.credentials.requireActive();
+      if (_closed) throw StateError('session_inactive');
+      late ImageExperimentHttpClient client;
+      stage = ImageExperimentFixtureStage.clientConstruction;
+      client = ImageExperimentHttpClient(
+        configuration,
+        recorder,
+        onClose: () => _clients.remove(client),
+        observeRefusal: _observeRefusal,
+        observation: Map<String, Object?>.from(
+          Zone.current[observationZoneKey] as Map? ?? const {},
+        ),
+      );
+      _clients.add(client);
+      return client;
+    } catch (_) {
+      ImageExperimentRefusalObservation.report(stage, _observeRefusal);
+      rethrow;
+    }
   }
 
   Future<void> admitStatus() async {
-    if (_closed || _closingStarted) throw StateError('session_inactive');
-    await _checkStatus();
-    if (_closed || _closingStarted) throw StateError('session_inactive');
-    _poll ??= Timer.periodic(const Duration(seconds: 2), (_) {
-      if (!_polling && !_closed && !_closingStarted) {
-        unawaited(_checkStatus().catchError((_) {}));
-      }
-    });
+    try {
+      if (_closed || _closingStarted) throw StateError('session_inactive');
+      await _checkStatus();
+      if (_closed || _closingStarted) throw StateError('session_inactive');
+      _poll ??= Timer.periodic(const Duration(seconds: 2), (_) {
+        if (!_polling && !_closed && !_closingStarted) {
+          unawaited(_checkStatus().catchError((_) {}));
+        }
+      });
+    } catch (_) {
+      ImageExperimentRefusalObservation.report(
+        ImageExperimentFixtureStage.statusAdmission,
+        _observeRefusal,
+      );
+      rethrow;
+    }
   }
 
   Future<void> _checkStatus() async {
@@ -66,8 +180,10 @@ class ImageExperimentTransport {
     _polling = true;
     final elapsed = Stopwatch()..start();
     http.Client? client;
+    var stage = ImageExperimentFixtureStage.statusClient;
     try {
       client = newClient();
+      stage = ImageExperimentFixtureStage.statusAdmission;
       final response = await client
           .get(
             configuration.brokerOrigin.replace(
@@ -76,6 +192,7 @@ class ImageExperimentTransport {
           )
           .timeout(const Duration(seconds: 10));
       if (_closingStarted) return;
+      stage = ImageExperimentFixtureStage.statusValidation;
       if (response.bodyBytes.length > 1024 || response.statusCode != 200) {
         throw StateError('status_unavailable');
       }
@@ -96,6 +213,7 @@ class ImageExperimentTransport {
     } catch (_) {
       // This observer is intentionally retired before the authenticated revoke.
       if (_closingStarted) return;
+      ImageExperimentRefusalObservation.report(stage, _observeRefusal);
       _invalidate('status_unavailable');
       throw StateError('session_inactive');
     } finally {
@@ -177,63 +295,107 @@ class ImageExperimentHttpClient extends http.BaseClient {
     void Function()? onClose,
     String? pinOverrideForTesting,
     this.observation = const {},
-  }) : _onClose = onClose,
+    ImageExperimentRefusalObserver? observeRefusal,
+  }) : _observeRefusal = ImageExperimentRefusalObservation.current(
+         observeRefusal,
+       ),
+       _onClose = onClose,
        _pin = pinOverrideForTesting ?? configuration.certificateSha256 {
-    final encoded = base64Encode(configuration.certificateDer);
-    final lines = [
-      for (var offset = 0; offset < encoded.length; offset += 64)
-        encoded.substring(
-          offset,
-          offset + 64 < encoded.length ? offset + 64 : encoded.length,
-        ),
-    ];
-    final pem =
-        '-----BEGIN CERTIFICATE-----\n${lines.join('\n')}\n-----END CERTIFICATE-----\n';
-    final context = SecurityContext(withTrustedRoots: false)
-      ..setTrustedCertificatesBytes(
-        Platform.isIOS ? configuration.certificateDer : utf8.encode(pem),
+    var stage = ImageExperimentFixtureStage.trustContext;
+    try {
+      final encoded = base64Encode(configuration.certificateDer);
+      final lines = [
+        for (var offset = 0; offset < encoded.length; offset += 64)
+          encoded.substring(
+            offset,
+            offset + 64 < encoded.length ? offset + 64 : encoded.length,
+          ),
+      ];
+      final pem =
+          '-----BEGIN CERTIFICATE-----\n${lines.join('\n')}\n-----END CERTIFICATE-----\n';
+      final context = SecurityContext(withTrustedRoots: false);
+      stage = ImageExperimentFixtureStage.certificateImport;
+      ImageExperimentCertificateImportDiagnostic.observe(
+        () => context.setTrustedCertificatesBytes(utf8.encode(pem)),
+        configuration.certificateDer,
+        observer: _observeRefusal,
       );
-    _native = HttpClient(context: context)
-      ..connectionTimeout = const Duration(seconds: 10)
-      ..findProxy = ((_) => 'DIRECT');
-    _native.connectionFactory = (uri, proxyHost, proxyPort) async {
-      _validateUri(uri);
-      if (_closed || proxyHost != null) throw StateError('transport_refused');
-      final task = await SecureSocket.startConnect(
-        uri.host,
-        uri.port,
-        context: context,
-      );
-      _tasks.add(task);
-      final socket = task.socket
-          .then((socket) {
-            _tasks.remove(task);
-            final certificate = socket.peerCertificate;
-            final now = DateTime.now();
-            if (_closed ||
-                certificate == null ||
-                sha256.convert(certificate.der).toString() != _pin ||
-                now.isBefore(certificate.startValidity) ||
-                now.isAfter(certificate.endValidity)) {
-              socket.destroy();
+      stage = ImageExperimentFixtureStage.clientConstruction;
+      _native = HttpClient(context: context)
+        ..connectionTimeout = const Duration(seconds: 10)
+        ..findProxy = ((_) => 'DIRECT');
+      _native.connectionFactory = (uri, proxyHost, proxyPort) async {
+        ImageExperimentRefusalObservation.construct(
+          ImageExperimentFixtureStage.requestPreconditions,
+          () {
+            _validateUri(uri);
+            if (_closed || proxyHost != null) {
+              throw StateError('transport_refused');
+            }
+          },
+          observer: _observeRefusal,
+        );
+        late ConnectionTask<SecureSocket> task;
+        try {
+          task = await SecureSocket.startConnect(
+            uri.host,
+            uri.port,
+            context: context,
+          );
+        } catch (_) {
+          ImageExperimentRefusalObservation.report(
+            ImageExperimentFixtureStage.tlsConnect,
+            _observeRefusal,
+          );
+          rethrow;
+        }
+        _tasks.add(task);
+        final socket = task.socket
+            .then((socket) {
+              _tasks.remove(task);
+              final certificate = socket.peerCertificate;
+              final now = DateTime.now();
+              if (_closed ||
+                  certificate == null ||
+                  sha256.convert(certificate.der).toString() != _pin ||
+                  now.isBefore(certificate.startValidity) ||
+                  now.isAfter(certificate.endValidity)) {
+                ImageExperimentRefusalObservation.report(
+                  ImageExperimentFixtureStage.tlsPinValidity,
+                  _observeRefusal,
+                );
+                socket.destroy();
+                throw StateError('pin_refused');
+              }
+              try {
+                configuration.credentials.requireActive();
+              } catch (_) {
+                ImageExperimentRefusalObservation.report(
+                  ImageExperimentFixtureStage.requestPreconditions,
+                  _observeRefusal,
+                );
+                socket.destroy();
+                rethrow;
+              }
+              _sockets.add(socket);
+              return socket;
+            })
+            .catchError((Object error) {
+              ImageExperimentRefusalObservation.report(
+                ImageExperimentFixtureStage.tlsHandshake,
+                _observeRefusal,
+              );
+              _tasks.remove(task);
               throw StateError('pin_refused');
-            }
-            try {
-              configuration.credentials.requireActive();
-            } catch (_) {
-              socket.destroy();
-              rethrow;
-            }
-            _sockets.add(socket);
-            return socket;
-          })
-          .catchError((Object error) {
-            _tasks.remove(task);
-            throw StateError('pin_refused');
-          });
-      return ConnectionTask.fromSocket(socket, task.cancel);
-    };
+            });
+        return ConnectionTask.fromSocket(socket, task.cancel);
+      };
+    } catch (_) {
+      ImageExperimentRefusalObservation.report(stage, _observeRefusal);
+      rethrow;
+    }
   }
+  final ImageExperimentRefusalObserver? _observeRefusal;
   final ImageExperimentConfiguration configuration;
   final ImageExperimentRecorder recorder;
   final String _pin;
@@ -266,25 +428,33 @@ class ImageExperimentHttpClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    _validateUri(request.url);
-    if (_closed ||
-        !(request.method == 'GET' &&
-                request.url.path != '/experiment/v1/session/revoke' ||
-            request.method == 'POST' &&
-                request.url.path == '/experiment/v1/session/revoke') ||
-        request.headers.isNotEmpty ||
-        request.contentLength != null && request.contentLength != 0) {
-      throw StateError('transport_refused');
-    }
-    configuration.credentials.requireActive();
+    ImageExperimentRefusalObservation.construct(
+      ImageExperimentFixtureStage.requestPreconditions,
+      () {
+        _validateUri(request.url);
+        if (_closed ||
+            !(request.method == 'GET' &&
+                    request.url.path != '/experiment/v1/session/revoke' ||
+                request.method == 'POST' &&
+                    request.url.path == '/experiment/v1/session/revoke') ||
+            request.headers.isNotEmpty ||
+            request.contentLength != null && request.contentLength != 0) {
+          throw StateError('transport_refused');
+        }
+        configuration.credentials.requireActive();
+      },
+      observer: _observeRefusal,
+    );
     late Timer timer;
     timer = Timer(const Duration(seconds: 10), close);
     _timers.add(timer);
+    var stage = ImageExperimentFixtureStage.outgoingRequest;
     try {
       // openUrl awaits the pinned connectionFactory before returning this request.
       final outgoing = await _native
           .openUrl(request.method, request.url)
           .timeout(const Duration(seconds: 10));
+      stage = ImageExperimentFixtureStage.requestPreconditions;
       if (_closed) throw StateError('session_inactive');
       outgoing.followRedirects = false;
       outgoing.headers.set(
@@ -308,7 +478,9 @@ class ImageExperimentHttpClient extends http.BaseClient {
         outgoing.contentLength = 2;
         outgoing.write('{}');
       }
+      stage = ImageExperimentFixtureStage.outgoingRequest;
       final response = await outgoing.close();
+      stage = ImageExperimentFixtureStage.responseValidation;
       final isStatus =
           request.url.path == '/experiment/v1/session/status' ||
           request.url.path == '/experiment/v1/session/revoke';
@@ -327,20 +499,28 @@ class ImageExperimentHttpClient extends http.BaseClient {
       }
       var bytes = 0;
       final stream = response.map((chunk) {
-        configuration.credentials.requireActive();
-        if (_closed) throw StateError('session_inactive');
-        bytes += chunk.length;
-        if (bytes > maximum) {
-          close();
-          throw StateError('transport_refused');
+        try {
+          configuration.credentials.requireActive();
+          if (_closed) throw StateError('session_inactive');
+          bytes += chunk.length;
+          if (bytes > maximum) {
+            close();
+            throw StateError('transport_refused');
+          }
+          recorder.record({
+            ...observation,
+            'event': isStatus ? 'status_body' : 'body',
+            'bodyBytes': chunk.length,
+            'generation': configuration.generation,
+          });
+          return chunk;
+        } catch (_) {
+          ImageExperimentRefusalObservation.report(
+            ImageExperimentFixtureStage.responseBody,
+            _observeRefusal,
+          );
+          rethrow;
         }
-        recorder.record({
-          ...observation,
-          'event': isStatus ? 'status_body' : 'body',
-          'bodyBytes': chunk.length,
-          'generation': configuration.generation,
-        });
-        return chunk;
       });
       return http.StreamedResponse(
         _finish(stream, timer),
@@ -360,6 +540,7 @@ class ImageExperimentHttpClient extends http.BaseClient {
         request: request,
       );
     } catch (_) {
+      ImageExperimentRefusalObservation.report(stage, _observeRefusal);
       timer.cancel();
       _timers.remove(timer);
       close();
@@ -370,6 +551,12 @@ class ImageExperimentHttpClient extends http.BaseClient {
   Stream<List<int>> _finish(Stream<List<int>> source, Timer timer) async* {
     try {
       yield* source;
+    } catch (_) {
+      ImageExperimentRefusalObservation.report(
+        ImageExperimentFixtureStage.responseBody,
+        _observeRefusal,
+      );
+      rethrow;
     } finally {
       timer.cancel();
       _timers.remove(timer);

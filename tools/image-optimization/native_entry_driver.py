@@ -17,10 +17,12 @@ import sys
 import threading
 import time
 
-from native_entry_config import (EntryError, HASH, ROOT, SCOPE, canonical_uid, exact_keys,
-    frozen_json, load_config, load_manifest, no_symlink, origin, private_file, private_output,
+from native_entry_config import (EntryError, HASH, ROOT, SCOPE, MAX_BACKEND_RECEIPT_BYTES,
+    MAX_BACKEND_SOURCE_FILES, canonical_uid, exact_keys,
+    frozen_json, load_config, load_manifest, no_symlink, open_nofollow, origin, private_file, private_output,
     require, strict_json, write_private)
 from native_entry_crypto import certificate_identity, public_key
+from native_entry_destination import destination_run, FIXTURE_TEST
 from native_fixture_server import Broker, FirebaseVerifier, create_server
 
 TOTAL_SECONDS = 180
@@ -101,6 +103,9 @@ def run_bounded(argv, output, alias, *, seconds=180, max_bytes=MAX_TRACE_BYTES,
                     require(len(pending) <= 65536, "launcher_line_rejected")
                     while b"\n" in pending:
                         line, pending = pending.split(b"\n", 1)
+                        # Remove only the CR belonging to this consumed CRLF delimiter.
+                        if line.endswith(b"\r"):
+                            line = line[:-1]
                         on_line(line)
             if status == "output_limit":
                 break
@@ -272,27 +277,126 @@ def source_snapshot():
         raise EntryError("source_unavailable") from None
 
 
-def artifact_hash(path):
+def artifact_observation(path, *, deadline=None):
+    """Hash every regular byte with UTF-8 path ordering and bounded no-follow reads."""
     path = no_symlink(path)
+    deadline = min(deadline if deadline is not None else float("inf"), time.monotonic() + 30)
+    root = None
+    def signature(info):
+        return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+    def check_deadline():
+        require(time.monotonic() < deadline, "artifact_deadline_exceeded")
+    def hash_file(descriptor, expected, budget=256 * 1024 * 1024):
+        check_deadline()
+        before = os.fstat(descriptor)
+        require(stat.S_ISREG(before.st_mode) and signature(before) == expected, "artifact_changed")
+        require(before.st_size <= min(256 * 1024 * 1024, budget), "artifact_size_rejected")
+        digest, count = sha256(), 0
+        while True:
+            check_deadline()
+            data = os.read(descriptor, 1024 * 1024)
+            if not data:
+                break
+            count += len(data)
+            require(count <= min(256 * 1024 * 1024, budget), "artifact_size_rejected")
+            digest.update(data)
+        require(count == before.st_size and signature(os.fstat(descriptor)) == expected, "artifact_changed")
+        return digest.digest(), count
     try:
-        if path.is_file():
-            require(path.stat().st_size <= 256 * 1024 * 1024, "artifact_size_rejected")
-            return sha256(path.read_bytes()).hexdigest()
-        require(path.is_dir(), "artifact_unavailable")
+        initial = os.lstat(path)
+        require(stat.S_ISREG(initial.st_mode) or stat.S_ISDIR(initial.st_mode), "artifact_type_rejected")
+        root = open_nofollow(path, os.O_RDONLY | os.O_NONBLOCK |
+            (os.O_DIRECTORY if stat.S_ISDIR(initial.st_mode) else 0))
+        require(signature(os.fstat(root)) == signature(initial), "artifact_changed")
+        if stat.S_ISREG(initial.st_mode):
+            digest, size = hash_file(root, signature(initial))
+            require(signature(os.lstat(path)) == signature(initial), "artifact_changed")
+            return {"sha256": digest.hex(), "fileCount": 1, "byteCount": size}
+        selected, scanned = [], 0
+        directories = {(): signature(initial)}
+        def visit(descriptor, parts, depth):
+            nonlocal scanned
+            check_deadline()
+            require(depth <= 128, "artifact_scan_bound_rejected")
+            # Descriptor scandir propagates traversal/read errors; Path.rglob can hide them.
+            with os.scandir(descriptor) as entries:
+                for entry in entries:
+                    check_deadline()
+                    scanned += 1
+                    require(scanned <= 65536, "artifact_scan_bound_rejected")
+                    components = parts + (entry.name,)
+                    relative = "/".join(components).encode("utf-8", "strict")
+                    require(len(relative) <= 4096, "artifact_scan_bound_rejected")
+                    info = os.stat(entry.name, dir_fd=descriptor, follow_symlinks=False)
+                    expected = signature(info)
+                    require(not stat.S_ISLNK(info.st_mode), "artifact_symlink_rejected")
+                    if stat.S_ISREG(info.st_mode):
+                        selected.append((relative, components, expected))
+                    elif stat.S_ISDIR(info.st_mode):
+                        child = os.open(entry.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=descriptor)
+                        try:
+                            require(signature(os.fstat(child)) == expected, "artifact_changed")
+                            directories[components] = expected
+                            visit(child, components, depth + 1)
+                        finally:
+                            os.close(child)
+                    else:
+                        raise EntryError("artifact_type_rejected")
+        def open_relative(parts, *, directory=False):
+            descriptor = os.dup(root)
+            try:
+                require(signature(os.fstat(descriptor)) == directories[()], "artifact_changed")
+                for index, component in enumerate(parts):
+                    check_deadline()
+                    prefix = parts[:index + 1]
+                    is_directory = directory or index < len(parts) - 1
+                    child = os.open(component, os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW |
+                        (os.O_DIRECTORY if is_directory else 0), dir_fd=descriptor)
+                    os.close(descriptor)
+                    descriptor = child
+                    if is_directory:
+                        require(signature(os.fstat(descriptor)) == directories[prefix], "artifact_changed")
+                return descriptor
+            except BaseException:
+                os.close(descriptor)
+                raise
+        visit(root, (), 0)
         digest, total = sha256(), 0
-        for item in sorted(path.rglob("*")):
-            require(not item.is_symlink(), "artifact_symlink_rejected")
-            if item.is_file():
-                size = item.stat().st_size
-                total += size
-                require(total <= 512 * 1024 * 1024 and size <= 256 * 1024 * 1024, "artifact_size_rejected")
-                relative = str(item.relative_to(path)).encode()
-                digest.update(len(relative).to_bytes(4, "big") + relative + sha256(item.read_bytes()).digest())
-            else:
-                require(item.is_dir(), "artifact_type_rejected")
-        return digest.hexdigest()
-    except OSError:
+        for relative, parts, expected in sorted(selected, key=lambda row: row[0]):
+            descriptor = open_relative(parts)
+            try:
+                file_digest, size = hash_file(descriptor, expected, 512 * 1024 * 1024 - total)
+            finally:
+                os.close(descriptor)
+            total += size
+            digest.update(len(relative).to_bytes(4, "big") + relative + file_digest)
+        # Earlier bytes may change while later files are hashed without altering a directory.
+        for _, parts, expected in selected:
+            descriptor = open_relative(parts)
+            try:
+                check_deadline()
+                require(stat.S_ISREG(os.fstat(descriptor).st_mode) and signature(os.fstat(descriptor)) == expected,
+                    "artifact_changed")
+            finally:
+                os.close(descriptor)
+        for parts in directories:
+            descriptor = open_relative(parts, directory=True)
+            os.close(descriptor)
+        current_root = open_nofollow(path, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            require(signature(os.fstat(current_root)) == directories[()], "artifact_changed")
+        finally:
+            os.close(current_root)
+        return {"sha256": digest.hexdigest(), "fileCount": len(selected), "byteCount": total}
+    except (OSError, UnicodeError):
         raise EntryError("artifact_unavailable") from None
+    finally:
+        if root is not None:
+            os.close(root)
+
+
+def artifact_hash(path):
+    return artifact_observation(path)["sha256"]
 
 
 def private_mobile_snapshot(output, expected_sources=None):
@@ -357,7 +461,8 @@ def prepare_android_tool_settings(mobile):
 
 def validate_backend_startup(config, inspector=None):
     """Bind live PID/start/command/listener to rehashed source, artifact and config."""
-    receipt = strict_json(private_file(config.values["backendStartupReceiptPath"]))
+    receipt = strict_json(private_file(config.values["backendStartupReceiptPath"],
+        MAX_BACKEND_RECEIPT_BYTES), MAX_BACKEND_RECEIPT_BYTES)
     exact_keys(receipt, ("schemaVersion", "backendEnvironment", "backendOrigin", "pid", "processStartTime",
         "commandSha256", "sourceSha256", "sourceFiles", "artifactPath", "artifactSha256", "configPath", "configSha256"))
     require(type(receipt["schemaVersion"]) is int and receipt["schemaVersion"] == 1 and
@@ -368,7 +473,7 @@ def validate_backend_startup(config, inspector=None):
     for name in ("commandSha256", "sourceSha256", "artifactSha256", "configSha256"):
         require(type(receipt[name]) is str and HASH.fullmatch(receipt[name]), "backend_receipt_rejected")
     files = receipt["sourceFiles"]
-    require(type(files) is dict and 1 <= len(files) <= 512, "backend_receipt_rejected")
+    require(type(files) is dict and 1 <= len(files) <= MAX_BACKEND_SOURCE_FILES, "backend_receipt_rejected")
     for name, digest in files.items():
         require(type(name) is str and name.startswith("be/") and ".." not in Path(name).parts and
             not Path(name).is_absolute() and type(digest) is str and HASH.fullmatch(digest), "backend_receipt_rejected")
@@ -394,6 +499,15 @@ def validate_backend_startup(config, inspector=None):
     require(ports and all(item in (b"127.0.0.1:" + str(parsed.port).encode(),
         b"[::1]:" + str(parsed.port).encode(), b"::1:" + str(parsed.port).encode()) for item in ports), "backend_listener_unverified")
     return sha256(frozen_json(receipt)).hexdigest()
+
+
+def validate_ios_native_test_linkage(mobile, runner, output, deadline):
+    """Reject application runtimes in the native XCTest runner before accepting a build."""
+    helper = Path(mobile) / "ios/ImageExperimentUITests/verify_native_linkage.py"
+    result = checked_run([sys.executable, "-B", str(helper), "--runner", str(runner)],
+        output, "native-test-linkage", deadline=deadline)
+    require(result == b"NATIVE_TEST_LINKAGE_PASS\n", "native_test_linkage_rejected")
+    return "apple_native_only"
 
 
 def build_entry(config, manifest, output, deadline):
@@ -440,8 +554,13 @@ def build_entry(config, manifest, output, deadline):
         products = derived / "Build/Products" / (values["mode"].capitalize() + "-imageexperiment-iphoneos")
         app, test = products / "ImageExperiment.app", products / "ImageExperimentUITests-Runner.app"
         require(app.is_dir() and test.is_dir(), "artifact_unavailable")
+        run_files = sorted((derived / "Build/Products").glob("*.xctestrun"))
+        require(len(run_files) == 1, "xctestrun_binding_rejected")
+        xctestrun = no_symlink(run_files[0])
+        xctestrun_hash = sha256(private_file(xctestrun, 256 * 1024)).hexdigest()
         app_id = checked_run(["plutil", "-extract", "CFBundleIdentifier", "raw", "-o", "-", str(app / "Info.plist")], output, "app-id", deadline=deadline).decode().strip()
         test_id = checked_run(["plutil", "-extract", "CFBundleIdentifier", "raw", "-o", "-", str(test / "Info.plist")], output, "test-id", deadline=deadline).decode().strip()
+        native_test_linkage = validate_ios_native_test_linkage(mobile, test, output, deadline)
         certificates = []
         for name, artifact in (("app-signing", app), ("test-signing", test)):
             prefix = output / name
@@ -466,6 +585,9 @@ def build_entry(config, manifest, output, deadline):
         "lockSha256": sha256((Path(__file__).parent / "uv.lock").read_bytes()).hexdigest(),
         "dartTarget": "lib/main_image_experiment.dart", "nativeTarget": "imageExperiment" if values["platform"] == "android" else "ImageExperiment",
         "workspacePath": str(mobile / "ios/Runner.xcworkspace") if values["platform"] == "ios" else None,
+        "xctestrunPath": str(xctestrun) if values["platform"] == "ios" else None,
+        "xctestrunSha256": xctestrun_hash if values["platform"] == "ios" else None,
+        "nativeTestLinkage": native_test_linkage if values["platform"] == "ios" else None,
         "engineRevision": version["engineRevision"], "renderer": None, "rendererReason": "runtime_not_observed",
         "debuggable": debuggable, "debuggableReason": None if debuggable is not None else "runtime_not_observed",
         "physicalVerification": "not_run", "nativeEntryGate": "open"}
@@ -663,17 +785,10 @@ def verify_entry(config, manifest, output, deadline, *, case_id, build_path, pre
             selected = checked_run(["xcrun", "devicectl", "device", "info", "details", "--device", values["deviceSelector"]],
                 output, "device-state", deadline=deadline)
             require(selected and b"disconnected" not in selected.lower(), "device_unavailable")
-            workspace = no_symlink(build["workspacePath"])
-            require(workspace.is_dir() and workspace.is_relative_to(Path(build["artifactPath"]).parents[4]), "workspace_binding_rejected")
-            command = ["xcodebuild", "-workspace", str(workspace), "-scheme", "imageexperiment",
-                "-configuration", values["mode"].capitalize() + "-imageexperiment", "-derivedDataPath",
-                str(Path(build["artifactPath"]).parents[3]), "-xcconfig", values["signingConfigFile"],
-                "FLUTTER_APPLICATION_PATH=" + str(workspace.parent.parent),
-                "-destination", "id=" + values["deviceSelector"], "test-without-building", "-only-testing:ImageExperimentUITests"]
+            run_file = destination_run(build, output, metadata, audit=False)
+            command = ["xcodebuild", "-xctestrun", str(run_file), "-destination", "id=" + values["deviceSelector"],
+                "test-without-building", "-only-testing:ImageExperimentUITests/" + FIXTURE_TEST]
             launch_env = tool_environment()
-            launch_env["IMAGE_EXPERIMENT_METADATA"] = metadata
-            # XCTest forwarding uses this documented prefix; the value contains only public metadata.
-            launch_env["TEST_RUNNER_IMAGE_EXPERIMENT_METADATA"] = metadata
         checked_run(command, output, "launcher", deadline=deadline, on_line=pairing, env=launch_env)
         outcome = validate_entry_outcome(broker, pairing)
         receipt = {"schemaVersion": 1, "scope": SCOPE, "deviceAlias": values["deviceAlias"], "platform": values["platform"],

@@ -30,6 +30,7 @@ void main() {
     var takes = 0, revokes = 0;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
+          if (call.method == 'reportDiagnostic') return true;
           if (call.method == 'revoke') {
             revokes++;
             expect(call.arguments, {'result': 'refused'});

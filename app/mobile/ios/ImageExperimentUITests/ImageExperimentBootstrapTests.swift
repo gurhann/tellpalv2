@@ -2,12 +2,32 @@ import CryptoKit
 import Foundation
 import XCTest
 
+enum ImageExperimentAuditStage: String, CaseIterable {
+  case request = "REQUEST"
+  case runnerId = "RUNNER_ID"
+  case pluginId = "PLUGIN_ID"
+  case pluginPathLexical = "PLUGIN_PATH_LEXICAL"
+  case pluginPathCanonical = "PLUGIN_PATH_CANONICAL"
+  case runnerHash = "RUNNER_HASH"
+  case appLaunch = "APP_LAUNCH"
+  case appReport = "APP_REPORT"
+  case reportMerge = "REPORT_MERGE"
+  case finalDeadline = "FINAL_DEADLINE"
+
+  func refusalLines(reported: Bool, hashStage: ImageExperimentAuditHashStage? = nil) -> [String] {
+    let code = self == .runnerHash ? hashStage?.rawValue ?? rawValue : rawValue
+    return reported ? [] : ["IMAGE_EXPERIMENT_INSTALLATION_AUDIT_STAGE " + code,
+      "IMAGE_EXPERIMENT_INSTALLATION_AUDIT_REFUSED"]
+  }
+}
+
 @MainActor final class ImageExperimentBootstrapTests: XCTestCase {
   func testPairedPublicKeyLaunch() throws {
     var launcherResult = "refused"
     defer { print("IMAGE_EXPERIMENT_RESULT " + launcherResult) }
     continueAfterFailure = false
-    guard let encoded = ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_METADATA"],
+    guard ProcessInfo.processInfo.environment[ImageExperimentAuditRequest.environmentKey] == nil,
+      let encoded = ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_METADATA"],
       encoded.utf8.count <= 24_000, let bytes = Data(base64Encoded: encoded), bytes.count <= 16_384,
       let metadata = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
       let appId = metadata["expectedAppId"] as? String,
@@ -17,7 +37,15 @@ import XCTest
     let app = XCUIApplication(bundleIdentifier: appId)
     app.launchEnvironment = ["IMAGE_EXPERIMENT_METADATA": encoded]
     app.launch()
-    defer { app.terminate() }
+    defer {
+      if launcherResult == "refused" {
+        let diagnostic = app.otherElements["imageExperimentFixtureDiagnostic"]
+        let value = diagnostic.exists ? diagnostic.value as? String : nil
+        let stage = value.flatMap { $0.utf8.count <= 48 ? ImageExperimentFixtureStage(rawValue: $0) : nil }
+        print((stage ?? .diagnosticUnavailable).line)
+      }
+      app.terminate()
+    }
     let element = app.otherElements["imageExperimentPairingKey"]
     guard element.waitForExistence(timeout: 30), let publicKey = element.value as? String,
       let der = Data(base64Encoded: publicKey), der.count <= 256,
@@ -34,6 +62,112 @@ import XCTest
     guard closed.exists, closed.value as? String == "settled"
     else { throw NSError(domain: "NATIVE_TEARDOWN_REFUSED", code: 1) }
     launcherResult = "settled"
+  }
+
+  func testInstallationAudit() throws {
+    var reported = false
+    var stage = ImageExperimentAuditStage.request
+    var hashStage: ImageExperimentAuditHashStage?
+    var rootProbe: (() -> ImageExperimentAuditRootViewResult)?
+    defer { for line in stage.refusalLines(reported: reported, hashStage: hashStage) { print(line) } }
+    continueAfterFailure = false
+    do {
+      let environment = ProcessInfo.processInfo.environment
+      let request = try ImageExperimentAuditRequest(encoded: environment[ImageExperimentAuditRequest.environmentKey],
+        brokerMetadataPresent: environment["IMAGE_EXPERIMENT_METADATA"] != nil)
+      let runner = Bundle.main
+      let plugin = Bundle(for: ImageExperimentBootstrapTests.self)
+      let expectedPlugin = runner.bundleURL.appendingPathComponent("PlugIns/ImageExperimentUITests.xctest")
+      let canonicalPlugin = runner.bundleURL.resolvingSymlinksInPath().appendingPathComponent("PlugIns/ImageExperimentUITests.xctest")
+      stage = .runnerId
+      guard runner.bundleIdentifier == request.runnerId else { throw ImageExperimentAuditRefusal.refused }
+      stage = .pluginId
+      guard plugin.bundleIdentifier == request.appId + ".uitests" else { throw ImageExperimentAuditRefusal.refused }
+      stage = .pluginPathLexical
+      guard plugin.bundleURL.standardizedFileURL == expectedPlugin.standardizedFileURL
+      else { throw ImageExperimentAuditRefusal.refused }
+      stage = .pluginPathCanonical
+      guard plugin.bundleURL.resolvingSymlinksInPath() == canonicalPlugin.standardizedFileURL
+      else { throw ImageExperimentAuditRefusal.refused }
+      // Hash the installed runner, including its contained plugin, rather than the test bundle alone.
+      stage = .runnerHash
+      rootProbe = { ImageExperimentAuditRootViews.probe(runner.bundleURL, checkDeadline: request.checkDeadline) }
+      let digest = try ImageExperimentInstallationAudit.hashBundle(runner.bundleURL, checkDeadline: request.checkDeadline,
+        observeStage: { hashStage = $0 }, observeEntryViews: { print($0.line) })
+      stage = .appLaunch
+      let app = XCUIApplication(bundleIdentifier: request.appId)
+      app.launchEnvironment = [ImageExperimentAuditRequest.environmentKey: environment[ImageExperimentAuditRequest.environmentKey]!]
+      app.launch()
+      defer { app.terminate() }
+      stage = .appReport
+      let element = app.otherElements["imageExperimentInstallationAudit"]
+      guard element.waitForExistence(timeout: request.remainingSeconds), let encodedReport = element.value as? String
+      else { throw ImageExperimentAuditRefusal.refused }
+      stage = .reportMerge
+      let result = try ImageExperimentInstallationAudit.report(request: request, encodedAppReport: encodedReport,
+        runnerId: runner.bundleIdentifier, digest: digest)
+      stage = .finalDeadline
+      try request.checkDeadline()
+      print("IMAGE_EXPERIMENT_INSTALLATION_AUDIT " + result)
+      reported = true
+    } catch {
+      if stage == .runnerHash, let hashStage, ImageExperimentAuditRootViews.isRootIdentityStage(hashStage),
+        let rootProbe { print(rootProbe().line) }
+      throw NSError(domain: "INSTALLATION_AUDIT_REFUSED", code: 1)
+    }
+  }
+
+  func testSyntheticInstallationAuditRequestRefusesUnsafeInput() throws {
+    let appId = ImageExperimentAuditRequest.appIds[0]
+    let nonce = String(repeating: "a", count: 64)
+    func encoded(_ extra: [String: Any] = [:]) throws -> String {
+      try ImageExperimentAuditJSON.encode(["schemaVersion": 1, "scope": ImageExperimentAuditRequest.scope,
+        "expectedAppId": appId, "nonce": nonce, "deadline": Int64(Date().timeIntervalSince1970 * 1000) + 30_000]
+        .merging(extra, uniquingKeysWith: { _, new in new }))
+    }
+    _ = try ImageExperimentAuditRequest(encoded: encoded(), brokerMetadataPresent: false, applicationId: appId)
+    let invalid = [try encoded(["schemaVersion": true]), try encoded(["scope": "image-optimization-native-fixture-r1"]),
+      try encoded(["expectedAppId": "com.tellpal.tellpalMobilePoc"]), try encoded(["nonce": String(repeating: "A", count: 64)]),
+      try encoded(["deadline": Int64.max]), try encoded(["deadline": Int64.min]), try encoded(["appSha256": nonce])]
+    for raw in invalid {
+      guard (try? ImageExperimentAuditRequest(encoded: raw, brokerMetadataPresent: false)) == nil
+      else { throw ImageExperimentAuditRefusal.refused }
+    }
+    guard (try? ImageExperimentAuditRequest(encoded: encoded(), brokerMetadataPresent: true)) == nil,
+      (try? ImageExperimentAuditRequest(encoded: encoded(), brokerMetadataPresent: false, applicationId: "ordinary")) == nil
+    else { throw ImageExperimentAuditRefusal.refused }
+    for raw in [#"{"schemaVersion":1,"schemaVersion":1}"#, #"{"deadline":true}"#, #"{"nonce":{}}"#,
+      #"{"deadline":01}"#, #"{"deadline":1} trailing"#, #"{"deadline":1,}"#] {
+      guard (try? ImageExperimentAuditJSON.parse(Data(raw.utf8))) == nil else { throw ImageExperimentAuditRefusal.refused }
+    }
+  }
+
+  func testSyntheticInstallationAuditHashesHiddenAndSignatureBytes() throws {
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: root.appendingPathComponent("_CodeSignature"), withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: root) }
+    let files = [".hidden": Data("hidden".utf8), "_CodeSignature/CodeResources": Data("signature".utf8),
+      "embedded.mobileprovision": Data("profile".utf8), "z.dSYM": Data("symbols".utf8)]
+    for (path, bytes) in files { try bytes.write(to: root.appendingPathComponent(path)) }
+    let before = try ImageExperimentInstallationAudit.hashBundle(root, checkDeadline: {})
+    var expected = SHA256()
+    for path in files.keys.sorted(by: { Array($0.utf8).lexicographicallyPrecedes(Array($1.utf8)) }) {
+      let bytes = Data(path.utf8)
+      var length = UInt32(bytes.count).bigEndian
+      withUnsafeBytes(of: &length) { expected.update(data: Data($0)) }
+      expected.update(data: bytes)
+      expected.update(data: Data(SHA256.hash(data: files[path]!)))
+    }
+    guard before.fileCount == 4, before.byteCount == 29,
+      before.sha256 == expected.finalize().map({ String(format: "%02x", $0) }).joined()
+    else { throw ImageExperimentAuditRefusal.refused }
+    try Data("changed".utf8).write(to: root.appendingPathComponent("_CodeSignature/CodeResources"))
+    let after = try ImageExperimentInstallationAudit.hashBundle(root, checkDeadline: {})
+    guard before.sha256 != after.sha256 else { throw ImageExperimentAuditRefusal.refused }
+    try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("link"), withDestinationURL: root.appendingPathComponent(".hidden"))
+    guard (try? ImageExperimentInstallationAudit.hashBundle(root, checkDeadline: {})) == nil,
+      (try? ImageExperimentInstallationAudit.hashBundle(root, checkDeadline: { throw ImageExperimentAuditRefusal.refused })) == nil
+    else { throw ImageExperimentAuditRefusal.refused }
   }
 
   func testSyntheticProofRejectsMutation() throws {

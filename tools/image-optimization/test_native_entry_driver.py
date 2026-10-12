@@ -11,7 +11,7 @@ import time
 import unittest
 from unittest.mock import patch
 
-from native_entry_config import EntryError, SCOPE, frozen_json
+from native_entry_config import Configuration, EntryError, SCOPE, frozen_json
 import native_entry_driver as driver
 from test_native_entry_config import PrivateInputs
 from test_native_entry_server import BrokerInputs
@@ -43,6 +43,44 @@ class CommandTests(PrivateInputs):
         self.assertLessEqual(result["traceBytes"], 1024)
         self.assertLessEqual(sum((output / ("flood" + suffix)).stat().st_size for suffix in (".stdout", ".stderr")), 1024)
 
+    def test_stdout_lf_and_crlf_observers_preserve_exact_private_trace_bytes_and_hashes(self):
+        output = self.output()
+        raw = b"alpha\nbeta\r\n\ngamma \t\r\n"
+        stderr = b"unchanged stderr\r\n"
+        observed = []
+        command = [sys.executable, "-c",
+            "import os,sys;os.write(1,bytes.fromhex(sys.argv[1]));os.write(2,bytes.fromhex(sys.argv[2]))",
+            raw.hex(), stderr.hex()]
+        result = driver.run_bounded(command, output, "line-endings", seconds=3, on_line=observed.append)
+        self.assertEqual(observed, [b"alpha", b"beta", b"", b"gamma \t"])
+        self.assertEqual((result["status"], result["exitCode"]), ("ok", 0))
+        self.assertEqual((output / "line-endings.stdout").read_bytes(), raw)
+        self.assertEqual((output / "line-endings.stderr").read_bytes(), stderr)
+        self.assertEqual(result["traceBytes"], len(raw) + len(stderr))
+        self.assertEqual(result["traceSha256"], [sha256(raw).hexdigest(), sha256(stderr).hexdigest()])
+        self.assertEqual(result["argumentSha256"], sha256(frozen_json(command)).hexdigest())
+
+    def test_real_pipe_crlf_split_between_reads_preserves_embedded_repeated_and_bare_cr(self):
+        output = self.output()
+        raw = b"A\r\nB\r\r\nC\rD\nE\t \r\nF\r"
+        observed, chunks = [], []
+        real_read = os.read
+        def byte_read(descriptor, capacity):
+            chunk = real_read(descriptor, min(capacity, 1))
+            if chunk:
+                chunks.append(chunk)
+            return chunk
+        command = [sys.executable, "-c", "import os,sys;os.write(1,bytes.fromhex(sys.argv[1]))", raw.hex()]
+        with patch.object(driver.os, "read", side_effect=byte_read):
+            result = driver.run_bounded(command, output, "split-crlf", seconds=3, on_line=observed.append)
+        self.assertEqual(chunks, [raw[index:index + 1] for index in range(len(raw))])
+        self.assertEqual(observed, [b"A", b"B\r", b"C\rD", b"E\t "])
+        self.assertEqual(result["status"], "ok")
+        self.assertEqual((output / "split-crlf.stdout").read_bytes(), raw)
+        self.assertEqual((output / "split-crlf.stderr").read_bytes(), b"")
+        self.assertEqual(result["traceBytes"], len(raw))
+        self.assertEqual(result["traceSha256"], [sha256(raw).hexdigest(), sha256(b"").hexdigest()])
+
     def test_failed_missing_tool_and_reused_trace_refuse(self):
         output = self.output()
         result = driver.run_bounded(["/nonexistent/synthetic-tool"], output, "missing", seconds=1)
@@ -65,6 +103,73 @@ class CommandTests(PrivateInputs):
             driver.capture_observation([sys.executable, "-c", "import os;os.write(1,b'x'*65536)"], max_bytes=128)
         with self.assertRaisesRegex(EntryError, "backend_observation_unavailable"):
             driver.capture_observation([sys.executable, "-c", "import time;time.sleep(30)"], seconds=0.15)
+
+    def test_ios_native_test_linkage_gate_uses_copied_helper_and_requires_exact_success(self):
+        mobile, runner, output = self.base / "copied-mobile", self.base / "native-runner.app", self.output()
+        deadline = time.monotonic() + 5
+        with patch.object(driver, "checked_run", return_value=b"NATIVE_TEST_LINKAGE_PASS\n") as command:
+            self.assertEqual(driver.validate_ios_native_test_linkage(mobile, runner, output, deadline), "apple_native_only")
+        command.assert_called_once_with([sys.executable, "-B",
+            str(mobile / "ios/ImageExperimentUITests/verify_native_linkage.py"), "--runner", str(runner)],
+            output, "native-test-linkage", deadline=deadline)
+        for result in (b"", b"NATIVE_TEST_LINKAGE_REFUSED\n", b"NATIVE_TEST_LINKAGE_PASS\nextra\n"):
+            with self.subTest(result=result), patch.object(driver, "checked_run", return_value=result), \
+                    self.assertRaisesRegex(EntryError, "native_test_linkage_rejected"):
+                driver.validate_ios_native_test_linkage(mobile, runner, output, deadline)
+        with patch.object(driver, "checked_run", side_effect=EntryError("native_command_failed")), \
+                self.assertRaisesRegex(EntryError, "native_command_failed"):
+            driver.validate_ios_native_test_linkage(mobile, runner, output, deadline)
+
+    def test_ios_build_rejects_linkage_before_signing_or_receipt_and_records_valid_gate(self):
+        app_id = "com.tellpal.tellpalMobilePoc.imageexperiment.profile"
+        config = Configuration(self.values | {"platform": "ios", "mode": "profile", "expectedAppId": app_id}, "0" * 64)
+        for index, status in enumerate((b"NATIVE_TEST_LINKAGE_REFUSED\n", b"NATIVE_TEST_LINKAGE_PASS\n")):
+            with self.subTest(status=status):
+                output = self.base / ("build-" + str(index))
+                output.mkdir(mode=0o700)
+                mobile = output / "source/repository/app/mobile"
+                (mobile / "ios").mkdir(parents=True)
+                (mobile / "pubspec.lock").write_bytes(b"pinned synthetic lock")
+                products = output / "derived-data/Build/Products/Profile-imageexperiment-iphoneos"
+                app, runner = products / "ImageExperiment.app", products / "ImageExperimentUITests-Runner.app"
+                app.mkdir(parents=True)
+                runner.mkdir()
+                runfile = products.parent / "synthetic.xctestrun"
+                runfile.write_bytes(b"synthetic original runfile")
+                runfile.chmod(0o600)
+                calls = []
+                def native_command(argv, target, alias, **kwargs):
+                    calls.append((argv, alias))
+                    if alias == "app-id":
+                        return app_id.encode()
+                    if alias == "test-id":
+                        return (app_id + ".uitests.xctrunner").encode()
+                    if alias == "native-test-linkage":
+                        return status
+                    if alias in ("app-signing", "test-signing"):
+                        certificate = output / (alias + "0")
+                        certificate.write_bytes(b"same selected synthetic certificate")
+                        certificate.chmod(0o600)
+                    if alias == "flutter-version":
+                        return frozen_json({"engineRevision": "synthetic-engine"})
+                    return b""
+                with ExitStack() as stack:
+                    stack.enter_context(patch.object(driver, "source_snapshot", return_value=({}, "0" * 64)))
+                    stack.enter_context(patch.object(driver, "certificate_identity"))
+                    stack.enter_context(patch.object(driver, "private_mobile_snapshot", return_value=mobile))
+                    stack.enter_context(patch.object(driver, "validate_copied_sources", return_value="1" * 64))
+                    stack.enter_context(patch.object(driver, "artifact_hash", return_value="2" * 64))
+                    stack.enter_context(patch.object(driver, "checked_run", side_effect=native_command))
+                    if status.endswith(b"REFUSED\n"):
+                        with self.assertRaisesRegex(EntryError, "native_test_linkage_rejected"):
+                            driver.build_entry(config, None, output, time.monotonic() + 5)
+                        self.assertFalse((output / "build-receipt.json").exists())
+                        self.assertFalse(any(argv[0] == "codesign" for argv, alias in calls))
+                    else:
+                        receipt = driver.build_entry(config, None, output, time.monotonic() + 5)
+                        self.assertEqual(receipt["nativeTestLinkage"], "apple_native_only")
+                        self.assertTrue((output / "build-receipt.json").exists())
+                self.assertEqual([alias for argv, alias in calls].count("native-test-linkage"), 1)
 
     def test_private_snapshot_preserves_actual_native_repository_exclusion_topology(self):
         origin = self.base / "original/app/mobile"
@@ -110,6 +215,42 @@ class BackendReceiptTests(PrivateInputs):
 
     def test_full_live_process_profile_source_artifact_config_listener_binding(self):
         self.assertRegex(self.validate(), r"^[0-9a-f]{64}$")
+
+    def test_complete_522_and_1024_source_maps_fit_and_every_changed_input_refuses(self):
+        repository = self.base / "backend-source"
+        directory = repository / "be" / ("runtime_" + "x" * 90)
+        directory.mkdir(parents=True)
+        sources = {}
+        for index in range(1024):
+            path = directory / (str(index).zfill(4) + ".java")
+            path.write_bytes(b"synthetic runtime input " + str(index).encode())
+            sources[str(path.relative_to(repository))] = sha256(path.read_bytes()).hexdigest()
+        for count in (522, 1024):
+            self.receipt["sourceFiles"] = dict(list(sources.items())[:count])
+            self.receipt["sourceSha256"] = sha256(frozen_json(self.receipt["sourceFiles"])).hexdigest()
+            self.assertGreater(len(frozen_json(self.receipt)), 65536)
+            with patch.object(driver, "ROOT", repository):
+                self.assertRegex(self.validate(), r"^[0-9a-f]{64}$")
+                selected = repository / next(reversed(self.receipt["sourceFiles"]))
+                original = selected.read_bytes()
+                selected.write_bytes(original + b"tampered")
+                with self.assertRaisesRegex(EntryError, "backend_source_changed"):
+                    self.validate()
+                selected.write_bytes(original)
+        self.receipt["sourceFiles"]["be/extra.java"] = "0" * 64
+        with self.assertRaisesRegex(EntryError, "backend_receipt_rejected"):
+            self.validate()
+
+    def test_startup_receipt_256_kib_boundary_is_shared_by_config_and_validator(self):
+        path = Path(self.values["backendStartupReceiptPath"])
+        data = frozen_json(self.receipt)
+        path.write_bytes(data + b" " * (256 * 1024 - len(data)))
+        self.assertRegex(driver.validate_backend_startup(self.configuration(), inspector=self.inspect), r"^[0-9a-f]{64}$")
+        path.write_bytes(path.read_bytes() + b" ")
+        with self.assertRaisesRegex(EntryError, "file_size_rejected"):
+            self.configuration()
+        with self.assertRaisesRegex(EntryError, "file_size_rejected"):
+            driver.validate_backend_startup(Configuration(self.values, "0" * 64), inspector=self.inspect)
 
     def test_label_or_401_and_tampered_pid_start_hash_profile_or_listener_cannot_admit(self):
         for key, value in (("schemaVersion", True), ("backendEnvironment", "production"), ("pid", True),
@@ -323,6 +464,26 @@ class PhysicalPrerequisiteTests(SourceBindingInputs):
 
 
 class LauncherTests(BrokerInputs):
+    def test_real_crlf_stdout_pairs_one_key_and_exact_native_result_without_changing_raw_trace(self):
+        self.broker.probe(self.broker.session_id, self.broker.nonce)
+        self.broker.probe(self.broker.session_id, self.broker.nonce, backend=True)
+        parser = driver.LauncherPairing(self.broker, "ios")
+        self.addCleanup(parser.close)
+        raw = (b"IMAGE_EXPERIMENT_PAIRING " + base64.b64encode(frozen_json(self.pairing)) + b"\r\n"
+            b"IMAGE_EXPERIMENT_RESULT settled\r\n")
+        output = self.base / "paired-crlf"
+        output.mkdir(mode=0o700)
+        result = driver.run_bounded([sys.executable, "-c",
+            "import os,sys;os.write(1,bytes.fromhex(sys.argv[1]))", raw.hex()],
+            output, "paired-crlf", seconds=3, on_line=parser)
+        self.assertEqual(result["status"], "ok")
+        self.assertTrue(parser.ready.wait(timeout=1))
+        parser.poll()
+        self.assertEqual(self.broker.paired, self.der_key)
+        self.assertEqual((parser.count, parser.native_result_count, parser.native_result), (1, 1, "settled"))
+        self.assertEqual((output / "paired-crlf.stdout").read_bytes(), raw)
+        self.assertEqual(result["traceSha256"][0], sha256(raw).hexdigest())
+
     def test_native_results_require_exact_positive_or_refused_platform_receipt(self):
         android = driver.LauncherPairing(self.broker, "android")
         android(b"INSTRUMENTATION_RESULT: reason=NATIVE_LAUNCHER_SETTLED")

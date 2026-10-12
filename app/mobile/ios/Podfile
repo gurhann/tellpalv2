@@ -42,7 +42,8 @@ target 'ImageExperiment' do
   use_frameworks!
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'ImageExperimentUITests' do
-    inherit! :search_paths
+    # The installation audit starts before the app's Flutter/plugin runtime.
+    inherit! :none
   end
 end
 

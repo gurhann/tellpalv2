@@ -18,6 +18,8 @@ HASH = re.compile(r"[0-9a-f]{64}")
 MAX_FILE = 20 * 1024 * 1024
 MAX_TOTAL = 100 * 1024 * 1024
 MAX_PIXELS = 16_777_216
+MAX_BACKEND_RECEIPT_BYTES = 256 * 1024
+MAX_BACKEND_SOURCE_FILES = 1024
 CONFIG_KEYS = frozenset(("schemaVersion", "scope", "batchId", "platform", "mode",
     "deviceAlias", "deviceSelector", "expectedAppId", "firebaseProjectId",
     "backendEnvironment", "backendOrigin", "backendStartupReceiptPath", "brokerOrigin",
@@ -237,7 +239,8 @@ def load_config(path):
         raise EntryError("certificate_rejected") from None
     inputs = [path]
     for name in INPUT_KEYS:
-        limit = MAX_TOTAL if name == "manifestPath" else 8192 if name == "idTokenFile" else 65536
+        limit = (MAX_TOTAL if name == "manifestPath" else 8192 if name == "idTokenFile" else
+            MAX_BACKEND_RECEIPT_BYTES if name == "backendStartupReceiptPath" else 65536)
         private_file(value[name], limit)
         inputs.append(value[name])
     private_output(value["privateOutputRoot"], inputs)

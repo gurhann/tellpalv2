@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A70FD13E4BFDFA1B9856BB5 /* ImageExperimentLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11645D1F1D8C72C7B718456E /* ImageExperimentLedger.swift */; };
-		12A7902460314C292A853FC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
+		12A7902460314C292A853FC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2DA0F1AB37EC0196887FD16 /* Main.storyboard */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		26A46AF03CEF9E4236D3248D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC8C35AE6016121BC72B3CA /* SceneDelegate.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -30,6 +30,10 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9C8378FC264B8FFF6085B5E6 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		B2DA0F1AB37EC0196887FD11 /* ImageExperimentInstallationAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA0F1AB37EC0196887FD10 /* ImageExperimentInstallationAudit.swift */; };
+		B2DA0F1AB37EC0196887FD12 /* ImageExperimentInstallationAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA0F1AB37EC0196887FD10 /* ImageExperimentInstallationAudit.swift */; };
+		B2DA0F1AB37EC0196887FD14 /* ImageExperimentAuditAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA0F1AB37EC0196887FD13 /* ImageExperimentAuditAppDelegate.swift */; };
+		B2DA0F1AB37EC0196887FD19 /* FlutterMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2DA0F1AB37EC0196887FD18 /* FlutterMain.storyboard */; };
 		C5E31C1F3A9C26EF3122D2E7 /* Pods_ImageExperimentUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74BECB1DBFDE09E509A9266D /* Pods_ImageExperimentUITests.framework */; };
 		ED945FC52E0047CE335B51DA /* ImageExperimentLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11645D1F1D8C72C7B718456E /* ImageExperimentLedger.swift */; };
 		F552E125999AC90EAD18A014 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -103,6 +107,10 @@
 		A93EB00D819A0BF58DEBFAED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		AC9CB92B79971E8C635433F7 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		ADD264087EA32D89FACF93DA /* Release-imageexperiment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Release-imageexperiment.xcconfig"; path = "Flutter/Release-imageexperiment.xcconfig"; sourceTree = "<group>"; };
+		B2DA0F1AB37EC0196887FD10 /* ImageExperimentInstallationAudit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageExperimentInstallationAudit.swift; sourceTree = "<group>"; };
+		B2DA0F1AB37EC0196887FD13 /* ImageExperimentAuditAppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageExperimentAuditAppDelegate.swift; sourceTree = "<group>"; };
+		B2DA0F1AB37EC0196887FD15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B2DA0F1AB37EC0196887FD17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/FlutterMain.storyboard; sourceTree = "<group>"; };
 		B826096AD60E24CDF4F90429 /* Pods-ImageExperimentUITests.debug-imageexperiment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageExperimentUITests.debug-imageexperiment.xcconfig"; path = "Target Support Files/Pods-ImageExperimentUITests/Pods-ImageExperimentUITests.debug-imageexperiment.xcconfig"; sourceTree = "<group>"; };
 		B932F3216EA8355FF8B91C16 /* Pods-ImageExperimentUITests.profile-imageexperiment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageExperimentUITests.profile-imageexperiment.xcconfig"; path = "Target Support Files/Pods-ImageExperimentUITests/Pods-ImageExperimentUITests.profile-imageexperiment.xcconfig"; sourceTree = "<group>"; };
 		BD93EF85681FBBD6DDED12AC /* Pods-ImageExperiment.debug-imageexperiment.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageExperiment.debug-imageexperiment.xcconfig"; path = "Target Support Files/Pods-ImageExperiment/Pods-ImageExperiment.debug-imageexperiment.xcconfig"; sourceTree = "<group>"; };
@@ -163,6 +171,10 @@
 			isa = PBXGroup;
 			children = (
 				388E0C616D85DE165FEB290D /* AppDelegate.swift */,
+				B2DA0F1AB37EC0196887FD10 /* ImageExperimentInstallationAudit.swift */,
+				B2DA0F1AB37EC0196887FD13 /* ImageExperimentAuditAppDelegate.swift */,
+				B2DA0F1AB37EC0196887FD16 /* Main.storyboard */,
+				B2DA0F1AB37EC0196887FD18 /* FlutterMain.storyboard */,
 				DAC8C35AE6016121BC72B3CA /* SceneDelegate.swift */,
 				D32D9EEB3E9BE16F0B357AA1 /* ImageExperimentBootstrap.swift */,
 				4F22F3CA6D148B4802F30C1C /* Info.plist */,
@@ -418,6 +430,7 @@
 				3E5C940B85EBBBD547BE71FC /* AppFrameworkInfo.plist in Resources */,
 				3D6597B7626E571C52E38507 /* Assets.xcassets in Resources */,
 				12A7902460314C292A853FC3 /* Main.storyboard in Resources */,
+				B2DA0F1AB37EC0196887FD19 /* FlutterMain.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,6 +731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85428E71ED51CADCC77CE93F /* ImageExperimentBootstrapTests.swift in Sources */,
+				B2DA0F1AB37EC0196887FD12 /* ImageExperimentInstallationAudit.swift in Sources */,
 				81308ACAC8C4614FA4BE9CCC /* ImageExperimentBootstrap.swift in Sources */,
 				ED945FC52E0047CE335B51DA /* ImageExperimentLedger.swift in Sources */,
 			);
@@ -738,6 +752,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				33BDE170897432BD2DEFB116 /* AppDelegate.swift in Sources */,
+				B2DA0F1AB37EC0196887FD11 /* ImageExperimentInstallationAudit.swift in Sources */,
+				B2DA0F1AB37EC0196887FD14 /* ImageExperimentAuditAppDelegate.swift in Sources */,
 				26A46AF03CEF9E4236D3248D /* SceneDelegate.swift in Sources */,
 				79C4C72C551CE58AC632439D /* ImageExperimentBootstrap.swift in Sources */,
 				9C8378FC264B8FFF6085B5E6 /* GeneratedPluginRegistrant.m in Sources */,
@@ -776,6 +792,22 @@
 				97C147001CF9000F007C117D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B2DA0F1AB37EC0196887FD16 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2DA0F1AB37EC0196887FD15 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B2DA0F1AB37EC0196887FD18 /* FlutterMain.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B2DA0F1AB37EC0196887FD17 /* Base */,
+			);
+			name = FlutterMain.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
