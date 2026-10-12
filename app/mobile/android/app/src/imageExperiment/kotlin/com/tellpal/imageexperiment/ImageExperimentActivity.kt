@@ -9,12 +9,23 @@ import io.flutter.plugin.common.MethodChannel
 class ImageExperimentActivity : FlutterActivity() {
     private val ledgerExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
     private val ledgerOnce = java.util.concurrent.atomic.AtomicBoolean(false)
+    var refusalDiagnostics = ImageExperimentRefusalDiagnostics()
+        private set
     var bootstrap: ImageExperimentBootstrap? = null
         private set
 
+    // Instrumentation binds only its newly created owned Activity before onCreate.
+    fun attachLauncherDiagnostics(diagnostics: ImageExperimentRefusalDiagnostics) {
+        refusalDiagnostics = diagnostics
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         bootstrap = try {
-            ImageExperimentBootstrap(intent.getStringExtra("imageExperimentMetadata"), packageName)
+            ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.activityBootstrap,
+                { refusalDiagnostics.record(it) }) {
+                ImageExperimentBootstrap(intent.getStringExtra("imageExperimentMetadata"), packageName,
+                    observeRefusal = { refusalDiagnostics.record(it) })
+            }
         } catch (_: Exception) {
             null
         }
@@ -27,6 +38,10 @@ class ImageExperimentActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "tellpal/image_experiment")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
+                    "reportDiagnostic" -> {
+                        val accepted = refusalDiagnostics.reportDart(call.arguments)
+                        runCatching { result.success(accepted) }
+                    }
                     "takeSession" -> {
                         val owned = bootstrap
                         if (owned == null) result.error("NATIVE_BOOTSTRAP_REFUSED", null, null)

@@ -9,29 +9,31 @@ import android.util.Base64
 
 /** Synthetic proof checks run before the launcher can report a pairing key. */
 object ImageExperimentHandshakeTests {
-    fun run() {
-        sharedVector()
-        onceOnlyGate()
-        explicitLauncherOutcome()
-        boundedJsonStructure()
-        val key = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair()
-        val payload = ImageExperimentBootstrap.signedPayload("scope", "batch", "session",
-            "0".repeat(64), "1".repeat(64), key.public.encoded)
-        require(payload.toString(Charsets.US_ASCII).split('\n').size == 8)
-        val signature = Signature.getInstance("SHA256withECDSA").apply {
-            initSign(key.private); update(payload)
-        }.sign()
-        require(Signature.getInstance("SHA256withECDSA").apply {
-            initVerify(key.public); update(payload)
-        }.verify(signature))
-        val replaced = payload.copyOf().apply { this[0] = 'x'.code.toByte() }
-        require(!Signature.getInstance("SHA256withECDSA").apply {
-            initVerify(key.public); update(replaced)
-        }.verify(signature))
-        require(runCatching {
-            ImageExperimentBootstrap.signedPayload("scope\nother", "batch", "session",
+    fun run(observeRefusal: ((ImageExperimentRefusalStage) -> Unit)? = null) {
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestVector, observeRefusal) { sharedVector() }
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestGate, observeRefusal) { onceOnlyGate() }
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestOutcome, observeRefusal) { explicitLauncherOutcome() }
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestJson, observeRefusal) { boundedJsonStructure() }
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestProof, observeRefusal) {
+            val key = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair()
+            val payload = ImageExperimentBootstrap.signedPayload("scope", "batch", "session",
                 "0".repeat(64), "1".repeat(64), key.public.encoded)
-        }.isFailure)
+            require(payload.toString(Charsets.US_ASCII).split('\n').size == 8)
+            val signature = Signature.getInstance("SHA256withECDSA").apply {
+                initSign(key.private); update(payload)
+            }.sign()
+            require(Signature.getInstance("SHA256withECDSA").apply {
+                initVerify(key.public); update(payload)
+            }.verify(signature))
+            val replaced = payload.copyOf().apply { this[0] = 'x'.code.toByte() }
+            require(!Signature.getInstance("SHA256withECDSA").apply {
+                initVerify(key.public); update(replaced)
+            }.verify(signature))
+            require(runCatching {
+                ImageExperimentBootstrap.signedPayload("scope\nother", "batch", "session",
+                    "0".repeat(64), "1".repeat(64), key.public.encoded)
+            }.isFailure)
+        }
     }
 
     private fun onceOnlyGate() {
@@ -91,17 +93,19 @@ object ImageExperimentHandshakeTests {
         require(runCatching { ImageExperimentJson.checkStructure(escaped, 4) }.isFailure)
     }
 
-    fun runLedgerValidation() {
-        val deep = "{\"value\":" + "[".repeat(4096) + "0" + "]".repeat(4096) + "}"
-        require(runCatching { ImageExperimentJson.parseObject(deep) }.exceptionOrNull()?.message == "NATIVE_JSON_REFUSED")
-        val escaped = """{"value":"quoted \" braces { } [ ] and slash \\"}"""
-        require(ImageExperimentJson.parseObject(escaped).getString("value").contains("{ } [ ]"))
-        val valid = """{"schemaVersion":1,"records":[{"event":"status_request","observerOverheadMicroseconds":2,"dpr":2.0,"fit":"contain","firstRasterizedTargetFrame":null}],"droppedCount":0}"""
-        require(ImageExperimentLedger.validate(valid).isNotEmpty())
-        require(runCatching { ImageExperimentLedger.validate(valid.replace("status_request", "detached_secret")) }.isFailure)
-        require(runCatching { ImageExperimentLedger.validate("""{"schemaVersion":1,"records":[{"idToken":"detached_secret"}],"droppedCount":0}""") }.isFailure)
-        val duplicate = """{"schemaVersion":1,"records":[{"event":"detached_secret","event":"status"}],"droppedCount":0}"""
-        require(!ImageExperimentLedger.validate(duplicate).toString(Charsets.UTF_8).contains("detached_secret"))
+    fun runLedgerValidation(observeRefusal: ((ImageExperimentRefusalStage) -> Unit)? = null) {
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestLedger, observeRefusal) {
+            val deep = "{\"value\":" + "[".repeat(4096) + "0" + "]".repeat(4096) + "}"
+            require(runCatching { ImageExperimentJson.parseObject(deep) }.exceptionOrNull()?.message == "NATIVE_JSON_REFUSED")
+            val escaped = """{"value":"quoted \" braces { } [ ] and slash \\"}"""
+            require(ImageExperimentJson.parseObject(escaped).getString("value").contains("{ } [ ]"))
+            val valid = """{"schemaVersion":1,"records":[{"event":"status_request","observerOverheadMicroseconds":2,"dpr":2.0,"fit":"contain","firstRasterizedTargetFrame":null}],"droppedCount":0}"""
+            require(ImageExperimentLedger.validate(valid).isNotEmpty())
+            require(runCatching { ImageExperimentLedger.validate(valid.replace("status_request", "detached_secret")) }.isFailure)
+            require(runCatching { ImageExperimentLedger.validate("""{"schemaVersion":1,"records":[{"idToken":"detached_secret"}],"droppedCount":0}""") }.isFailure)
+            val duplicate = """{"schemaVersion":1,"records":[{"event":"detached_secret","event":"status"}],"droppedCount":0}"""
+            require(!ImageExperimentLedger.validate(duplicate).toString(Charsets.UTF_8).contains("detached_secret"))
+        }
     }
 
     private fun sharedVector() {

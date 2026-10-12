@@ -22,9 +22,58 @@ spec.loader.exec_module(guard)
 linkage_spec = importlib.util.spec_from_file_location("native_linkage", Path(__file__).with_name("verify_native_linkage.py"))
 linkage = importlib.util.module_from_spec(linkage_spec)
 linkage_spec.loader.exec_module(linkage)
+harness_spec = importlib.util.spec_from_file_location("android_diagnostic_harness", Path(__file__).with_name("android_diagnostic_harness.py"))
+android_harness = importlib.util.module_from_spec(harness_spec)
+harness_spec.loader.exec_module(android_harness)
 
 
 class BuildGuardTests(unittest.TestCase):
+    def test_android_refusal_diagnostics_execute_actual_kotlin_matrix_and_private_mutant(self):
+        evidence = android_harness.run(mutant=True)
+        self.assertEqual(evidence["caseCount"], 35)
+        self.assertEqual(evidence["matrixExit"], 0)
+        self.assertNotEqual(evidence["mutantExit"], 0)
+        self.assertEqual(evidence["mutantFailure"], "first-specific-stage-propagation")
+
+    def test_android_harness_snapshot_hashes_and_copies_one_exact_read(self):
+        source, destination = self.root / "source.kt", self.root / "copied.kt"
+        with patch.object(Path, "read_bytes", side_effect=[b"first snapshot", b"changed read"]) as read:
+            digest = android_harness.copy_source(source, destination)
+        self.assertEqual(read.call_count, 1)
+        self.assertEqual(destination.read_bytes(), b"first snapshot")
+        self.assertEqual(digest, hashlib.sha256(destination.read_bytes()).hexdigest())
+        self.assertEqual(destination.stat().st_mode & 0o777, 0o600)
+
+    def test_android_harness_timeout_retains_original_bounded_outputs_and_fixed_status(self):
+        command = [sys.executable, "-c", "import os,time;os.write(1,b'original stdout\\n');os.write(2,b'original stderr\\r\\n');time.sleep(10)"]
+        with self.assertRaises(subprocess.TimeoutExpired) as caught:
+            android_harness.execute(command, self.output, "timeout", timeout=0.5)
+        stdout, stderr = (self.output / "timeout.stdout").read_bytes(), (self.output / "timeout.stderr").read_bytes()
+        self.assertEqual(stdout, b"original stdout\n")
+        self.assertEqual(stderr, b"original stderr\r\n")
+        self.assertEqual((caught.exception.stdout, caught.exception.stderr), (stdout, stderr))
+        status = json.loads((self.output / "timeout.status.json").read_text())
+        self.assertEqual(status["status"], "timeout")
+        self.assertEqual(status["exitCode"], int((self.output / "timeout.exit").read_text()))
+        self.assertFalse(status["truncated"])
+        self.assertEqual(status["traceBytes"], len(stdout) + len(stderr))
+        self.assertEqual(status["traceSha256"], [hashlib.sha256(value).hexdigest() for value in (stdout, stderr)])
+        self.assertTrue(all(path.stat().st_mode & 0o777 == 0o600 for path in self.output.iterdir()))
+
+    def test_android_harness_output_limit_retains_only_bounded_prefix_and_fixed_status(self):
+        command = [sys.executable, "-c", "import os;os.write(1,b'x'*262145)"]
+        with self.assertRaisesRegex(RuntimeError, "Host harness output exceeded its private bound"):
+            android_harness.execute(command, self.output, "oversized")
+        stdout, stderr = (self.output / "oversized.stdout").read_bytes(), (self.output / "oversized.stderr").read_bytes()
+        self.assertEqual(stdout, b"x" * android_harness.MAX_OUTPUT_BYTES)
+        self.assertEqual(stderr, b"")
+        status = json.loads((self.output / "oversized.status.json").read_text())
+        self.assertEqual(status["status"], "output_limit")
+        self.assertTrue(status["truncated"])
+        self.assertEqual(status["traceBytes"], android_harness.MAX_OUTPUT_BYTES)
+        self.assertEqual(status["traceSha256"], [hashlib.sha256(value).hexdigest() for value in (stdout, stderr)])
+        self.assertEqual(status["exitCode"], int((self.output / "oversized.exit").read_text()))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(dir="/private/tmp")
         self.root = Path(self.temp.name)

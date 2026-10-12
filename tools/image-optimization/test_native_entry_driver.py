@@ -493,6 +493,24 @@ class LauncherTests(BrokerInputs):
         ios(b"IMAGE_EXPERIMENT_RESULT refused")
         self.assertEqual((ios.native_result, ios.native_result_count), ("refused", 1))
 
+    def test_android_diagnostic_result_field_cannot_pair_or_settle_a_refused_launcher(self):
+        for stage in (b"NATIVE_METADATA", b"DART_COMPOSITION", b"unknown", b"raw_marker"):
+            with self.subTest(stage=stage):
+                parser = driver.LauncherPairing(self.broker, "android")
+                self.addCleanup(parser.close)
+                parser(b"INSTRUMENTATION_RESULT: diagnosticStage=" + stage)
+                self.assertEqual((parser.count, parser.native_result_count), (0, 0))
+                self.assertIsNone(parser.pending)
+                self.assertFalse(parser.ready.is_set())
+                self.assertEqual(parser.rows, {})
+                parser(b"INSTRUMENTATION_RESULT: reason=NATIVE_LAUNCHER_REFUSED")
+                parser(b"INSTRUMENTATION_CODE: 0")
+                self.assertEqual((parser.count, parser.native_result_count, parser.native_result), (0, 1, "refused"))
+                self.assertIsNone(self.broker.paired)
+                self.assertEqual(self.calls, [])
+                with self.assertRaisesRegex(EntryError, "launcher_pairing_unsettled"):
+                    driver.validate_entry_outcome(self.broker, parser)
+
     def test_mismatched_missing_duplicate_or_unknown_native_results_refuse(self):
         for reason, code in ((None, b"-1"), (b"NATIVE_LAUNCHER_REFUSED", b"-1"),
             (b"NATIVE_LAUNCHER_SETTLED", b"0")):

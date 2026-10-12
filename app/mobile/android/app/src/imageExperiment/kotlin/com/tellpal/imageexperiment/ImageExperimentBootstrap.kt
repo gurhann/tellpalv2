@@ -82,14 +82,21 @@ class ImageExperimentLauncherOutcome {
 }
 
 /** Finite in-memory bootstrap; every request validates the exact TLS leaf before HTTP. */
-class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
+class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String,
+    private val observeRefusal: ((ImageExperimentRefusalStage) -> Unit)? = null) {
     val launcherOutcome = ImageExperimentLauncherOutcome()
-    private val metadata = parseMetadata(rawMetadata, applicationId)
-    private val publicMetadata = metadata.keys().asSequence().associateWith { metadata.get(it) }
-    @Volatile private var key: KeyPair? = KeyPairGenerator.getInstance("EC").apply {
-        initialize(ECGenParameterSpec("secp256r1"))
-    }.generateKeyPair()
-    val publicKeySpkiBase64: String = Base64.encodeToString(key!!.public.encoded, Base64.NO_WRAP)
+    private val metadata = observe(ImageExperimentRefusalStage.metadata) { parseMetadata(rawMetadata, applicationId) }
+    private val publicMetadata = observe(ImageExperimentRefusalStage.metadata) {
+        metadata.keys().asSequence().associateWith { metadata.get(it) }
+    }
+    @Volatile private var key: KeyPair? = observe(ImageExperimentRefusalStage.keyGeneration) {
+        KeyPairGenerator.getInstance("EC").apply {
+            initialize(ECGenParameterSpec("secp256r1"))
+        }.generateKeyPair()
+    }
+    val publicKeySpkiBase64: String = observe(ImageExperimentRefusalStage.keyGeneration) {
+        Base64.encodeToString(key!!.public.encoded, Base64.NO_WRAP)
+    }
     private val gate = ImageExperimentAdmissionGate()
     private val reachabilityQualified = java.util.concurrent.atomic.AtomicBoolean(false)
     val isReachabilityQualified: Boolean get() = reachabilityQualified.get()
@@ -98,23 +105,40 @@ class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
     private val connection = AtomicReference<HttpsURLConnection?>(null)
     private val executor = Executors.newSingleThreadExecutor()
     private val startedAt = SystemClock.elapsedRealtime()
-    private val certificate = CertificateFactory.getInstance("X.509").generateCertificate(
-        ByteArrayInputStream(Base64.decode(metadata.getString("brokerCertificateDerBase64"), Base64.NO_WRAP))
-    ) as X509Certificate
-    private val socketFactory = pinnedContext(certificate, metadata.getString("brokerCertificateSha256")).socketFactory
+    private val certificate = observe(ImageExperimentRefusalStage.certificate) {
+        CertificateFactory.getInstance("X.509").generateCertificate(
+            ByteArrayInputStream(Base64.decode(metadata.getString("brokerCertificateDerBase64"), Base64.NO_WRAP))
+        ) as X509Certificate
+    }
+    private val socketFactory = observe(ImageExperimentRefusalStage.trustContext) {
+        pinnedContext(certificate, metadata.getString("brokerCertificateSha256")).socketFactory
+    }
+
+    private fun <T> observe(stage: ImageExperimentRefusalStage, operation: () -> T): T =
+        ImageExperimentRefusalObservation.run(stage, observeRefusal, operation)
 
     fun takeSession(callback: (Map<String, Any>?) -> Unit) {
-        if (!gate.take()) { callback(null); return }
+        if (!gate.take()) {
+            ImageExperimentRefusalObservation.report(ImageExperimentRefusalStage.handoff, observeRefusal)
+            callback(null); return
+        }
         completion.set(callback)
-        if (gate.isRevoked()) { completion.getAndSet(null)?.invoke(null); return }
+        if (gate.isRevoked()) {
+            ImageExperimentRefusalObservation.report(ImageExperimentRefusalStage.handoff, observeRefusal)
+            completion.getAndSet(null)?.invoke(null); return
+        }
         try {
             executor.execute {
                 var result: Map<String, Any>? = null
+                var stage = ImageExperimentRefusalStage.probe
                 try {
                     request("GET", "/experiment/v1/probe")
+                    stage = ImageExperimentRefusalStage.backendProbe
                     request("GET", "/experiment/v1/backend-probe")
                     reachabilityQualified.set(true)
+                    stage = ImageExperimentRefusalStage.pairing
                     awaitPairing()
+                    stage = ImageExperimentRefusalStage.challenge
                     val challenge = ImageExperimentJson.parseObject(request("POST", "/experiment/v1/bootstrap/challenge", publicProof()))
                     for (field in listOf("scope", "batchId", "sessionId", "launchNonce")) {
                         require(challenge.getString(field) == metadata.getString(field))
@@ -123,6 +147,7 @@ class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
                     val challengeExpiry = challenge.get("expiresAt")
                     require((challengeExpiry is Long || challengeExpiry is Int) && HEX.matches(value) &&
                         challenge.getLong("expiresAt") - System.currentTimeMillis() in 1..30_000)
+                    stage = ImageExperimentRefusalStage.proof
                     val proof = publicProof().put("challenge", value)
                     val retained = key ?: error("REFUSED")
                     val signer = Signature.getInstance("SHA256withECDSA").apply {
@@ -134,11 +159,14 @@ class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
                     val signature = signer.sign()
                     require(signature.size <= 128)
                     proof.put("signatureBase64", Base64.encodeToString(signature, Base64.NO_WRAP))
+                    stage = ImageExperimentRefusalStage.claim
                     val envelope = request("POST", "/experiment/v1/bootstrap/claim", proof)
                     validateEnvelope(envelope)
+                    stage = ImageExperimentRefusalStage.handoff
                     checkAlive()
                     result = mapOf("envelope" to envelope, "metadata" to publicMetadata)
                 } catch (_: Exception) {
+                    ImageExperimentRefusalObservation.report(stage, observeRefusal)
                     revoke()
                 } finally {
                     key = null
@@ -147,6 +175,7 @@ class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
                 completion.getAndSet(null)?.invoke(if (gate.isRevoked()) null else result)
             }
         } catch (_: java.util.concurrent.RejectedExecutionException) {
+            ImageExperimentRefusalObservation.report(ImageExperimentRefusalStage.dispatch, observeRefusal)
             completion.getAndSet(null)?.invoke(null)
         }
     }
@@ -233,19 +262,26 @@ class ImageExperimentBootstrap(rawMetadata: String?, applicationId: String) {
     }
 
     private fun validateEnvelope(raw: String) {
-        val envelope = ImageExperimentJson.parseObject(raw)
-        require(envelope.getInt("schemaVersion") == 1 && envelope.getLong("generation") >= 0)
-        for (field in listOf("scope", "batchId", "sessionId", "expectedUid", "backendEnvironment", "brokerOrigin",
-            "brokerCertificateSha256", "manifestSha256", "publicManifestSha256")) {
-            require(envelope.getString(field) == metadata.getString(field))
+        val envelope = observe(ImageExperimentRefusalStage.envelopeFields) {
+            val envelope = ImageExperimentJson.parseObject(raw)
+            require(envelope.getInt("schemaVersion") == 1 && envelope.getLong("generation") >= 0)
+            for (field in listOf("scope", "batchId", "sessionId", "expectedUid", "backendEnvironment", "brokerOrigin",
+                "brokerCertificateSha256", "manifestSha256", "publicManifestSha256")) {
+                require(envelope.getString(field) == metadata.getString(field))
+            }
+            envelope
         }
-        val now = System.currentTimeMillis()
-        val issued = envelope.getLong("issuedAt")
-        val expires = envelope.getLong("expiresAt")
-        require(issued <= now && expires > now && expires - issued in 1..180_000 &&
-            envelope.getString("idToken").toByteArray(Charsets.UTF_8).size in 1..8192)
-        val manifest = Base64.decode(envelope.getString("publicManifestBase64"), Base64.NO_WRAP)
-        require(sha256(manifest) == metadata.getString("publicManifestSha256"))
+        observe(ImageExperimentRefusalStage.envelopeTimeToken) {
+            val now = System.currentTimeMillis()
+            val issued = envelope.getLong("issuedAt")
+            val expires = envelope.getLong("expiresAt")
+            require(issued <= now && expires > now && expires - issued in 1..180_000 &&
+                envelope.getString("idToken").toByteArray(Charsets.UTF_8).size in 1..8192)
+        }
+        observe(ImageExperimentRefusalStage.envelopeManifest) {
+            val manifest = Base64.decode(envelope.getString("publicManifestBase64"), Base64.NO_WRAP)
+            require(sha256(manifest) == metadata.getString("publicManifestSha256"))
+        }
     }
 
     companion object {
