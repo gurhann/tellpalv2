@@ -158,6 +158,8 @@ def run(output=None, mutant=False):
     dart_producer = MOBILE / "lib/app/image_experiment_configuration.dart"
     copied_dart = source_root / dart_producer.name
     frozen[str(dart_producer.relative_to(MOBILE.parents[1]))] = copy_source(dart_producer, copied_dart)
+    dart_entry = MOBILE / "lib/main_image_experiment.dart"
+    frozen[str(dart_entry.relative_to(MOBILE.parents[1]))] = copy_source(dart_entry, source_root / dart_entry.name)
     for path in (Path(__file__).resolve(), HERE / "test_build_guard.py"):
         frozen[str(path.relative_to(MOBILE.parents[1]))] = hashlib.sha256(path.read_bytes()).hexdigest()
     private_file(output / "source-freeze.json", json.dumps(frozen, indent=2, sort_keys=True) + "\n")
@@ -242,6 +244,63 @@ path.chmod(0o600)
                              "originalSha256": hashlib.sha256(text.encode()).hexdigest(),
                              "mutatedSha256": hashlib.sha256(changed.encode()).hexdigest(),
                              "removedBehavior": "Bootstrap observeRefusal propagation"}
+        # Restore the observer before independently restoring the old startup cycle.
+        private_file(activity, text)
+        launcher = source_root / "ImageExperimentInstrumentation.kt"
+        original = launcher.read_bytes()
+        seam = b"targetContext.startActivity(intent)"
+        if original.count(seam) != 1:
+            raise AssertionError("Private synchronous-start mutant could not isolate the launch seam")
+        changed = original.replace(seam, b"startActivitySync(intent)")
+        private_file(launcher, changed)
+        startup_classes = output / "startup-mutant-classes"
+        compiled_startup = execute([java, "-cp", os.pathsep.join(str(path) for path in compiler),
+            "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-no-stdlib", "-no-reflect", "-jvm-target", "17",
+            "-classpath", os.pathsep.join([str(classes), compile_classpath]), "-d", startup_classes, launcher],
+            output, "startup-mutant-compile")
+        if compiled_startup.returncode:
+            raise AssertionError("Private synchronous-start mutant must compile before its runtime failure counts")
+        failed_startup = execute([java, "-cp", os.pathsep.join([str(startup_classes), str(classes), classpath]),
+            "com.tellpal.imageexperiment.host.HarnessAssertionsKt", output / "startup-mutant-app", certificate,
+            copied_dart, expired_certificate, "startup"], output, "startup-mutant", timeout=15)
+        if (failed_startup.returncode == 0 or b"HARNESS_ASSERTION startup-cycle-one-pairing-report" not in failed_startup.stderr
+                or b"STARTUP_REPORT_COUNT 0\n" not in failed_startup.stdout):
+            raise AssertionError("Restoring synchronous startup was not detected as a zero-report runtime failure")
+        summary["startupMutant"] = {"file": "ImageExperimentInstrumentation.kt", "replacementCount": 1,
+            "compileExit": compiled_startup.returncode, "runtimeExit": failed_startup.returncode,
+            "failure": "startup-cycle-one-pairing-report", "reportCount": 0,
+            "originalSha256": hashlib.sha256(original).hexdigest(), "mutatedSha256": hashlib.sha256(changed).hexdigest(),
+            "restoredBehavior": "startActivitySync waits for actual Flutter session callback startup gate"}
+        private_file(launcher, original)
+        for name, seam, replacement, mode, assertion, marker in (
+                ("cleanupMutant", b"owned.runOnUiThread {", b"runOnMainSync {", "cleanup",
+                 "blocked-main-refusal-before-release", b"BLOCKED_MAIN_TERMINAL_COUNT 0\n"),
+                ("finishAckMutant", b"finishCompleted.await(250, java.util.concurrent.TimeUnit.MILLISECONDS)", b"Unit",
+                 "finish-ack", "responsive-main-finish-before-terminal", b"FINISH_ACK_ORDER terminal,activity-finish\n")):
+            if original.count(seam) != 1:
+                raise AssertionError(f"Private {name} could not isolate its cleanup seam")
+            changed = original.replace(seam, replacement)
+            private_file(launcher, changed)
+            label = "cleanup-mutant" if mode == "cleanup" else "finish-ack-mutant"
+            mutated_classes = output / f"{label}-classes"
+            compiled_cleanup = execute([java, "-cp", os.pathsep.join(str(path) for path in compiler),
+                "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-no-stdlib", "-no-reflect", "-jvm-target", "17",
+                "-classpath", os.pathsep.join([str(classes), compile_classpath]), "-d", mutated_classes, launcher],
+                output, f"{label}-compile")
+            if compiled_cleanup.returncode:
+                raise AssertionError(f"Private {name} must compile before its runtime failure counts")
+            failed_cleanup = execute([java, "-cp", os.pathsep.join([str(mutated_classes), str(classes), classpath]),
+                "com.tellpal.imageexperiment.host.HarnessAssertionsKt", output / f"{label}-app", certificate,
+                copied_dart, expired_certificate, mode], output, label, timeout=15)
+            if (failed_cleanup.returncode == 0 or f"HARNESS_ASSERTION {assertion}".encode() not in failed_cleanup.stderr
+                    or marker not in failed_cleanup.stdout):
+                raise AssertionError(f"Private {name} was not detected by its named runtime assertion")
+            summary[name] = {"file": "ImageExperimentInstrumentation.kt", "replacementCount": 1,
+                "compileExit": compiled_cleanup.returncode, "runtimeExit": failed_cleanup.returncode,
+                "failure": assertion, "originalSha256": hashlib.sha256(original).hexdigest(),
+                "mutatedSha256": hashlib.sha256(changed).hexdigest(), "runtimeLabel": label,
+                "removedBehavior": "bounded queued finish" if mode == "cleanup" else "responsive-main finish acknowledgment"}
+            private_file(launcher, original)
     private_file(output / "summary.json", json.dumps(summary, indent=2) + "\n")
     return summary
 

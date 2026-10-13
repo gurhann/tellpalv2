@@ -99,14 +99,12 @@ object ActivityHarness {
         HarnessAssertions.case("new-activity-owned-binding-before-constructor") {
             HostRuntime.reset(File(root, "activity-binding"))
             val launcher = ImageExperimentInstrumentation()
-            val intent = Intent().setClassName(HostRuntime.APP_ID, "com.tellpal.imageexperiment.ImageExperimentActivity")
-                .putExtra("imageExperimentMetadata", "{}")
-            val activity = launcher.newActivity(javaClass.classLoader, intent.className, intent) as ImageExperimentActivity
-            HostRuntime.activity = activity
             val field = ImageExperimentInstrumentation::class.java.getDeclaredField("refusalDiagnostics").apply { isAccessible = true }
-            HarnessAssertions.truth(activity.refusalDiagnostics === field.get(launcher), "keeper-shared-before-onCreate")
-            activity.intent = intent
-            HostRuntime.onMain { activity.onCreate(null) }
+            HostRuntime.beforeCreate = { _, activity, _ ->
+                HarnessAssertions.truth((activity as ImageExperimentActivity).refusalDiagnostics === field.get(launcher), "keeper-shared-before-onCreate")
+            }
+            launcher.onCreate(android.os.Bundle().apply { putString("imageExperimentMetadata", HostedFixture.encode("{}".toByteArray())) })
+            launcher.onStart()
             HarnessAssertions.equal((field.get(launcher) as ImageExperimentRefusalDiagnostics).firstStage,
                 ImageExperimentRefusalStage.metadata, "bound-constructor-refusal")
         }

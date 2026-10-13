@@ -1,6 +1,7 @@
 package com.tellpal.imageexperiment.host
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.tellpal.imageexperiment.*
 import java.io.File
@@ -8,7 +9,7 @@ import javax.net.ssl.HttpsURLConnection
 import org.json.JSONObject
 
 object LauncherHarness {
-    private fun launch(root: File, metadata: String? = HostedFixture.metadata().toString(), configure: () -> Unit = {}) {
+    private fun launch(root: File, metadata: String? = HostedFixture.metadata().toString(), configure: () -> Unit = {}): ImageExperimentInstrumentation {
         HostRuntime.reset(root)
         configure()
         val arguments = Bundle()
@@ -16,17 +17,21 @@ object LauncherHarness {
         val launcher = ImageExperimentInstrumentation()
         launcher.onCreate(arguments)
         launcher.onStart()
+        HostRuntime.onMain {}
+        return launcher
     }
 
     private fun refused(stage: ImageExperimentRefusalStage?, expectedStatusCount: Int? = 0) {
         HarnessAssertions.equal(HostRuntime.resultCode, Activity.RESULT_CANCELED, "unchanged-refused-result")
+        HarnessAssertions.equal(HostRuntime.terminalCount, 1, "one-terminal-refusal")
         val result = HostRuntime.result!!
         HarnessAssertions.equal(result.getString("reason"), "NATIVE_LAUNCHER_REFUSED", "unchanged-generic-reason")
         HarnessAssertions.equal(result.getString("diagnosticStage"), stage?.code, "first-specific-stage-propagation")
         HarnessAssertions.equal(result.keySet(), if (stage == null) setOf("reason") else setOf("reason", "diagnosticStage"), "bounded-result-keys")
         expectedStatusCount?.let { HarnessAssertions.equal(HostRuntime.statuses.size, it, "pairing-count") }
         HostRuntime.activity?.let { activity ->
-            HarnessAssertions.truth(activity.isFinishing && activity.finishCount == 1, "owned-activity-finished-once")
+            HarnessAssertions.truth(if (activity.isDestroyed) activity.finishCount == 0
+                else activity.isFinishing && activity.finishCount == 1, "owned-activity-finished-once")
             activity.bootstrap?.let { bootstrap ->
                 HarnessAssertions.truth(bootstrap.isRevoked && !bootstrap.launcherOutcome.isSettled(), "refusal-revoked-unsettled")
                 val key = ImageExperimentBootstrap::class.java.getDeclaredField("key").apply { isAccessible = true }
@@ -134,7 +139,11 @@ object LauncherHarness {
             HarnessAssertions.equal(pairing.second.keySet(), setOf("event", "sessionId", "launchNonce", "publicKeySpkiBase64"), "original-pairing-fields")
             HarnessAssertions.equal(pairing.second.getString("event"), "pairing-key", "original-pairing-event")
             HarnessAssertions.truth(HostRuntime.activity!!.bootstrap!!.isRevoked && HostRuntime.activity!!.bootstrap!!.launcherOutcome.isSettled(), "original-explicit-settlement")
-            HarnessAssertions.equal(HostRuntime.requests.map { it.requestMethod }, listOf("GET", "GET", "GET", "POST", "POST"), "original-request-order")
+            HarnessAssertions.equal(HostRuntime.requests.map { it.url.path }.distinct(), listOf("/experiment/v1/probe",
+                "/experiment/v1/backend-probe", "/experiment/v1/bootstrap/paired", "/experiment/v1/bootstrap/challenge",
+                "/experiment/v1/bootstrap/claim"), "original-request-order")
+            HarnessAssertions.truth(HostRuntime.requests.all { it.requestMethod ==
+                if (it.url.path.endsWith("challenge") || it.url.path.endsWith("claim")) "POST" else "GET" }, "original-request-methods")
             for (request in HostRuntime.requests) {
                 HarnessAssertions.truth(!request.instanceFollowRedirects && !request.useCaches && request.connectTimeout in 1..10_000 &&
                     request.readTimeout in 1..10_000 && request.disconnectCount > 0, "original-request-guards")
@@ -154,6 +163,200 @@ object LauncherHarness {
             val verified = java.security.Signature.getInstance("SHA256withECDSA").apply { initVerify(publicKey); update(payload) }
                 .verify(decoder.decode(proof.getString("signatureBase64")))
             HarnessAssertions.truth(verified, "actual-bootstrap-proof-verifies-real-jca")
+        }
+        lifecycle(root)
+    }
+
+    fun startup(root: File) {
+        HarnessAssertions.case("launcher-startup-dependency-reports-before-first-draw") {
+            val metadata = HostedFixture.metadata().put("deadline", System.currentTimeMillis() + 5_000)
+            launch(File(root, "startup-dependency"), metadata.toString())
+            println("STARTUP_REPORT_COUNT ${HostRuntime.statuses.size}")
+            HarnessAssertions.equal(HostRuntime.statuses.size, 1, "startup-cycle-one-pairing-report")
+            HarnessAssertions.equal(HostRuntime.resultCode, Activity.RESULT_OK, "startup-cycle-explicit-success")
+            HarnessAssertions.equal(HostRuntime.terminalCount, 1, "startup-cycle-one-terminal")
+            HarnessAssertions.equal(HostRuntime.events.toList(), listOf("status", "pairing", "handoff", "startup-ready", "settlement"),
+                "status-pairing-handoff-startup-settlement-order")
+            val status = HostRuntime.statuses.single()
+            HarnessAssertions.equal(status.first, 1, "startup-original-status-code")
+            HarnessAssertions.equal(status.second.keySet(), setOf("event", "sessionId", "launchNonce", "publicKeySpkiBase64"),
+                "startup-original-status-fields")
+            HarnessAssertions.equal(status.second.getString("sessionId"), metadata.getString("sessionId"), "startup-exact-session")
+            HarnessAssertions.equal(status.second.getString("launchNonce"), metadata.getString("launchNonce"), "startup-exact-nonce")
+            HarnessAssertions.equal(status.second.getString("publicKeySpkiBase64"), HostRuntime.activity!!.bootstrap!!.publicKeySpkiBase64,
+                "startup-exact-public-key")
+        }
+    }
+
+    private fun lifecycle(root: File) {
+        startup(root)
+        responsiveMain(root)
+        blockedMain(root)
+        for ((name, flag) in listOf("constructor-failure" to { HostRuntime.failActivityConstructor = true },
+            "on-create-failure" to { HostRuntime.failActivityCreate = true },
+            "early-destroy" to { HostRuntime.destroyDuringCreate = true })) {
+            HarnessAssertions.case("launcher-lifecycle-$name") {
+                val metadata = HostedFixture.metadata().put("deadline", System.currentTimeMillis() + 500)
+                launch(File(root, name), metadata.toString(), flag)
+                refused(if (name == "early-destroy") ImageExperimentRefusalStage.activityBootstrap else ImageExperimentRefusalStage.activityStart)
+            }
+        }
+        HarnessAssertions.case("launcher-no-callback-absolute-deadline") {
+            val metadata = HostedFixture.metadata().put("deadline", System.currentTimeMillis() + 500)
+            val start = System.nanoTime()
+            launch(File(root, "no-callback"), metadata.toString()) { HostRuntime.deferCreation = true }
+            refused(ImageExperimentRefusalStage.activityStart)
+            HarnessAssertions.truth((System.nanoTime() - start) / 1_000_000 in 1..2_000, "creation-absolute-deadline-bounded")
+            HarnessAssertions.equal(HostRuntime.activity, null, "no-callback-no-adoption")
+        }
+        HarnessAssertions.case("launcher-lifecycle-missing-bootstrap-metadata") {
+            launch(File(root, "missing-bootstrap")) {
+                HostRuntime.beforeCreate = { _, _, intent -> intent.removeExtra("imageExperimentMetadata") }
+            }
+            refused(ImageExperimentRefusalStage.metadata)
+            HarnessAssertions.equal(HostRuntime.activity!!.bootstrap, null, "missing-bootstrap-no-admission")
+        }
+        HarnessAssertions.case("launcher-invalid-deadline-keeps-bootstrap-diagnostic") {
+            val metadata = HostedFixture.metadata().put("deadline", 0)
+            launch(File(root, "invalid-deadline"), metadata.toString())
+            refused(ImageExperimentRefusalStage.metadata)
+        }
+        HarnessAssertions.case("launcher-creation-and-reachability-share-launch-bound") {
+            launch(File(root, "shared-launch-bound")) {
+                HostRuntime.beforeCreate = { _, _, _ -> HostRuntime.elapsedOffset += 29_000 }
+                HostRuntime.backendProbeClockAdvance = 2_000
+            }
+            refused(ImageExperimentRefusalStage.reachability)
+            HarnessAssertions.equal(HostRuntime.elapsedOffset, 31_000L, "creation-plus-probe-exceeds-shared-bound")
+        }
+        for (afterInstantiation in listOf(false, true)) {
+            HarnessAssertions.case("launcher-late-owned-callback-after-closure-$afterInstantiation") {
+                val launcher = launch(File(root, "late-$afterInstantiation")) {
+                    HostRuntime.deferCreation = !afterInstantiation
+                    HostRuntime.deferAfterInstantiation = afterInstantiation
+                    HostRuntime.advanceClockOnLaunch = 30_000
+                }
+                HarnessAssertions.equal(HostRuntime.resultCode, Activity.RESULT_CANCELED, "late-owner-initial-refusal")
+                HostRuntime.releaseCreation()
+                refused(ImageExperimentRefusalStage.activityStart)
+                val owner = HostRuntime.activity!!
+                HarnessAssertions.truth(owner.bootstrap!!.isRevoked, "late-owner-bootstrap-revoked")
+                HarnessAssertions.equal(HostRuntime.requests.size, 0, "late-owner-no-network")
+                HostRuntime.onMain { launcher.callActivityOnCreate(owner, null) }
+                launcher.onStart()
+                HarnessAssertions.equal(owner.finishCount, 1, "late-duplicate-no-extra-finish")
+                HarnessAssertions.equal(HostRuntime.terminalCount, 1, "late-duplicate-no-extra-terminal")
+            }
+        }
+        HarnessAssertions.case("launcher-foreign-and-second-instances-stay-unowned") {
+            val foreign = mutableListOf<Activity>()
+            val launcher = launch(File(root, "foreign")) {
+                HostRuntime.beforeInstantiate = { instrumentation, intent ->
+                    val raw = intent.getStringExtra("imageExperimentMetadata")!!
+                    for ((className, value) in listOf("android.app.Activity" to raw,
+                        ImageExperimentActivity::class.java.name to "{}")) {
+                        val otherIntent = Intent().setClassName(HostRuntime.APP_ID, className).putExtra("imageExperimentMetadata", value)
+                        val other = HostRuntime.instantiate(instrumentation, otherIntent)
+                        foreign += other
+                        instrumentation.callActivityOnCreate(other, null)
+                        HarnessAssertions.truth(!other.isFinishing && !other.isDestroyed && other.finishCount == 0, "foreign-lifecycle-untouched")
+                        if (other is ImageExperimentActivity) {
+                            val field = ImageExperimentInstrumentation::class.java.getDeclaredField("refusalDiagnostics").apply { isAccessible = true }
+                            HarnessAssertions.truth(other.refusalDiagnostics !== field.get(instrumentation), "foreign-keeper-unbound")
+                        }
+                    }
+                }
+                HostRuntime.beforeCreate = { instrumentation, owner, intent ->
+                    val otherIntent = Intent().setClassName(HostRuntime.APP_ID, ImageExperimentActivity::class.java.name)
+                        .putExtra("imageExperimentMetadata", intent.getStringExtra("imageExperimentMetadata")!!)
+                    val other = HostRuntime.instantiate(instrumentation, otherIntent) as ImageExperimentActivity
+                    foreign += other
+                    instrumentation.callActivityOnCreate(other, null)
+                    HarnessAssertions.truth(other.refusalDiagnostics !== (owner as ImageExperimentActivity).refusalDiagnostics,
+                        "second-instance-never-replaces-owner")
+                }
+                HostRuntime.afterCreate = { instrumentation, owner, _ ->
+                    val bootstrap = (owner as ImageExperimentActivity).bootstrap
+                    instrumentation.callActivityOnCreate(owner, null)
+                    HarnessAssertions.truth(owner.bootstrap === bootstrap, "repeated-callback-inert")
+                }
+            }
+            HarnessAssertions.equal(HostRuntime.resultCode, Activity.RESULT_OK, "foreign-channel-cannot-replace-owner")
+            HarnessAssertions.equal(HostRuntime.statuses.size, 1, "foreign-no-extra-status")
+            launcher.onStart()
+            HarnessAssertions.equal(HostRuntime.terminalCount, 1, "duplicate-start-one-terminal")
+            for (other in foreign) {
+                HarnessAssertions.truth(!other.isFinishing && !other.isDestroyed && other.finishCount == 0, "foreign-cleanup-untouched")
+                if (other is ImageExperimentActivity) other.bootstrap?.let {
+                    HarnessAssertions.truth(!it.isRevoked, "foreign-bootstrap-not-revoked")
+                }
+            }
+        }
+    }
+
+    fun responsiveMain(root: File) {
+        HarnessAssertions.case("launcher-responsive-main-finish-ack-before-terminal") {
+            launch(File(root, "responsive-finish-ack")) {
+                HostRuntime.networkFailure = "/experiment/v1/probe"
+                HostRuntime.offMainUiDelay = 80
+            }
+            refused(ImageExperimentRefusalStage.probe)
+            println("FINISH_ACK_ORDER ${HostRuntime.cleanupEvents.joinToString(",")}")
+            HarnessAssertions.equal(HostRuntime.cleanupEvents.toList(), listOf("activity-finish", "terminal"),
+                "responsive-main-finish-before-terminal")
+            HarnessAssertions.truth(HostRuntime.finishOwners.single() === HostRuntime.activity, "finish-ack-owned-only")
+        }
+    }
+
+    fun blockedMain(root: File) {
+        HarnessAssertions.case("launcher-blocked-main-deadline-refuses-before-release") {
+            HostRuntime.reset(File(root, "blocked-main"))
+            val entered = java.util.concurrent.CountDownLatch(1)
+            val release = java.util.concurrent.CountDownLatch(1)
+            HostRuntime.createEntered = entered
+            HostRuntime.createRelease = release
+            val foreign = java.util.concurrent.atomic.AtomicReference<Activity?>()
+            HostRuntime.beforeCreate = { launcher, _, _ ->
+                val intent = Intent().setClassName(HostRuntime.APP_ID, "android.app.Activity")
+                val other = HostRuntime.instantiate(launcher, intent)
+                launcher.callActivityOnCreate(other, null)
+                foreign.set(other)
+            }
+            val metadata = HostedFixture.metadata().put("deadline", System.currentTimeMillis() + 500)
+            val launcher = ImageExperimentInstrumentation()
+            launcher.onCreate(Bundle().apply {
+                putString("imageExperimentMetadata", HostedFixture.encode(metadata.toString().toByteArray()))
+            })
+            val failure = java.util.concurrent.atomic.AtomicReference<Throwable?>()
+            val worker = Thread({
+                try { launcher.onStart() } catch (caught: Throwable) { failure.set(caught) }
+            }, "controlled-launcher-blocked-main")
+            worker.start()
+            try {
+                HarnessAssertions.truth(entered.await(2, java.util.concurrent.TimeUnit.SECONDS), "blocked-main-entered-owned-create")
+                val terminalBeforeRelease = HostRuntime.terminalReady.await(1500, java.util.concurrent.TimeUnit.MILLISECONDS)
+                println("BLOCKED_MAIN_TERMINAL_COUNT ${HostRuntime.terminalCount}")
+                HarnessAssertions.truth(terminalBeforeRelease && HostRuntime.terminalCount == 1 &&
+                    HostRuntime.resultCode == Activity.RESULT_CANCELED, "blocked-main-refusal-before-release")
+                HarnessAssertions.equal(HostRuntime.statuses.size, 0, "blocked-main-zero-pairing-reports")
+                HarnessAssertions.equal(HostRuntime.activity!!.finishCount, 0, "blocked-main-finish-still-queued")
+                HarnessAssertions.equal(release.count, 1L, "blocked-main-refusal-precedes-release")
+            } finally {
+                release.countDown()
+                worker.join(3_000)
+            }
+            HarnessAssertions.truth(!worker.isAlive && failure.get() == null, "blocked-main-launcher-completed")
+            HostRuntime.onMain {}
+            refused(ImageExperimentRefusalStage.activityStart)
+            val owner = HostRuntime.activity!!
+            HarnessAssertions.truth(owner.bootstrap!!.isRevoked, "blocked-main-late-bootstrap-revoked")
+            HarnessAssertions.equal(owner.finishCount, 1, "blocked-main-owned-finish-once")
+            HarnessAssertions.truth(HostRuntime.finishOwners.single() === owner, "blocked-main-finish-owned-only")
+            HarnessAssertions.truth(!foreign.get()!!.isFinishing && !foreign.get()!!.isDestroyed &&
+                foreign.get()!!.finishCount == 0, "blocked-main-foreign-untouched")
+            HarnessAssertions.equal(HostRuntime.requests.size, 0, "blocked-main-no-late-admission")
+            launcher.onStart()
+            HarnessAssertions.equal(HostRuntime.terminalCount, 1, "blocked-main-one-terminal-after-release")
         }
     }
 }

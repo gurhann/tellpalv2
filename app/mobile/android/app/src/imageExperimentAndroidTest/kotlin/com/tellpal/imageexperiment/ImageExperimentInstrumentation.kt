@@ -12,11 +12,68 @@ import android.util.Base64
 class ImageExperimentInstrumentation : Instrumentation() {
     private var arguments = Bundle()
     private val refusalDiagnostics = ImageExperimentRefusalDiagnostics()
+    private val creationLock = Object()
+    private val started = java.util.concurrent.atomic.AtomicBoolean(false)
+    private var launchMetadata: String? = null
+    private var ownedActivity: ImageExperimentActivity? = null
+    private var createdBootstrap: ImageExperimentBootstrap? = null
+    private var creationComplete = false
+    private var creationClaimed = false
+    private var creationFailed = false
+    private var admissionClosed = true
 
     override fun newActivity(cl: ClassLoader, className: String, intent: Intent): Activity =
         super.newActivity(cl, className, intent).also {
-            if (it is ImageExperimentActivity) it.attachLauncherDiagnostics(refusalDiagnostics)
+            synchronized(creationLock) {
+                if (it.javaClass == ImageExperimentActivity::class.java &&
+                    className == ImageExperimentActivity::class.java.name && launchMetadata != null &&
+                    intent.getStringExtra("imageExperimentMetadata") == launchMetadata && ownedActivity == null) {
+                    ownedActivity = it as ImageExperimentActivity
+                    it.attachLauncherDiagnostics(refusalDiagnostics)
+                }
+            }
         }
+
+    override fun callActivityOnCreate(activity: Activity, savedInstanceState: Bundle?) {
+        synchronized(creationLock) {
+            if (activity === ownedActivity) {
+                if (creationClaimed) return
+                creationClaimed = true
+            }
+        }
+        var failed = true
+        try {
+            super.callActivityOnCreate(activity, savedInstanceState)
+            failed = false
+        } finally {
+            val cleanup = synchronized(creationLock) {
+                if (activity !== ownedActivity || creationComplete) false
+                else {
+                    createdBootstrap = ownedActivity?.bootstrap
+                    creationFailed = failed
+                    creationComplete = true
+                    creationLock.notifyAll()
+                    admissionClosed
+                }
+            }
+            if (cleanup) runCatching { cleanupOwnedActivity() }
+        }
+    }
+
+    private fun cleanupOwnedActivity() {
+        val owned = synchronized(creationLock) { ownedActivity } ?: return
+        owned.bootstrap?.revoke()
+        val finishCompleted = java.util.concurrent.CountDownLatch(1)
+        owned.runOnUiThread {
+            try {
+                if (!owned.isFinishing && !owned.isDestroyed) owned.finish()
+            } finally {
+                finishCompleted.countDown()
+            }
+        }
+        // Give a responsive main thread time to finish before instrumentation terminates.
+        finishCompleted.await(250, java.util.concurrent.TimeUnit.MILLISECONDS)
+    }
 
     override fun onCreate(arguments: Bundle?) {
         this.arguments = arguments ?: Bundle()
@@ -24,7 +81,7 @@ class ImageExperimentInstrumentation : Instrumentation() {
     }
 
     override fun onStart() {
-        var activity: ImageExperimentActivity? = null
+        if (!started.compareAndSet(false, true)) return
         val result = Bundle()
         val observeRefusal: (ImageExperimentRefusalStage) -> Unit = { refusalDiagnostics.record(it) }
         var stage = ImageExperimentRefusalStage.signingIdentity
@@ -43,37 +100,59 @@ class ImageExperimentInstrumentation : Instrumentation() {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra("imageExperimentMetadata", metadata)
             stage = ImageExperimentRefusalStage.activityStart
-            activity = startActivitySync(intent) as ImageExperimentActivity
+            val launchStart = SystemClock.elapsedRealtime()
+            // Reading the deadline never replaces the bootstrap's original metadata validator.
+            val metadataDeadline = runCatching {
+                val parsed = ImageExperimentJson.parseObject(metadata, 16_384)
+                val deadline = parsed.get("deadline")
+                require(deadline is Long || deadline is Int)
+                parsed.getLong("deadline").also { require(it - System.currentTimeMillis() in 1..30_000) }
+            }.getOrNull()
+            fun remaining(): Long = minOf(30_000 - (SystemClock.elapsedRealtime() - launchStart),
+                metadataDeadline?.let { it - System.currentTimeMillis() } ?: 30_000)
+            synchronized(creationLock) {
+                launchMetadata = metadata
+                admissionClosed = false
+            }
+            targetContext.startActivity(intent)
+            val activity = synchronized(creationLock) {
+                while (!creationComplete && remaining() > 0) creationLock.wait(minOf(20, remaining()).coerceAtLeast(1))
+                require(creationComplete && !creationFailed && !admissionClosed && remaining() > 0)
+                ownedActivity ?: error("REFUSED")
+            }
             stage = ImageExperimentRefusalStage.activityBootstrap
-            val bootstrap = activity.bootstrap ?: error("REFUSED")
+            val bootstrap = synchronized(creationLock) { createdBootstrap } ?: error("REFUSED")
+            require(!activity.isFinishing && !activity.isDestroyed)
             stage = ImageExperimentRefusalStage.reachability
-            val pairingStart = SystemClock.elapsedRealtime()
             while (!bootstrap.isReachabilityQualified && !bootstrap.isRevoked &&
-                SystemClock.elapsedRealtime() - pairingStart < 30_000) Thread.sleep(20)
-            require(bootstrap.isReachabilityQualified && !bootstrap.isRevoked)
+                !activity.isFinishing && !activity.isDestroyed && remaining() > 0) Thread.sleep(20)
+            require(bootstrap.isReachabilityQualified && !bootstrap.isRevoked &&
+                !activity.isFinishing && !activity.isDestroyed && remaining() > 0)
             stage = ImageExperimentRefusalStage.pairingReport
             val parsed = ImageExperimentJson.parseObject(metadata, 16_384)
-            sendStatus(1, Bundle().apply {
-                putString("event", "pairing-key")
-                putString("sessionId", parsed.getString("sessionId"))
-                putString("launchNonce", parsed.getString("launchNonce"))
-                putString("publicKeySpkiBase64", bootstrap.publicKeySpkiBase64)
-            })
+            synchronized(creationLock) {
+                require(!admissionClosed && remaining() > 0)
+                sendStatus(1, Bundle().apply {
+                    putString("event", "pairing-key")
+                    putString("sessionId", parsed.getString("sessionId"))
+                    putString("launchNonce", parsed.getString("launchNonce"))
+                    putString("publicKeySpkiBase64", bootstrap.publicKeySpkiBase64)
+                })
+            }
             stage = ImageExperimentRefusalStage.settlement
             val start = SystemClock.elapsedRealtime()
             while (!bootstrap.isRevoked && !activity.isFinishing && !activity.isDestroyed &&
                 SystemClock.elapsedRealtime() - start < 180_000) {
                 Thread.sleep(100)
             }
+            synchronized(creationLock) { admissionClosed = true }
             require(bootstrap.isRevoked && bootstrap.launcherOutcome.isSettled())
             result.putString("reason", "NATIVE_LAUNCHER_SETTLED")
             finish(Activity.RESULT_OK, result)
         } catch (_: Exception) {
             ImageExperimentRefusalObservation.report(stage, observeRefusal)
-            activity?.bootstrap?.revoke()
-            activity?.let { owned ->
-                runCatching { runOnMainSync { if (!owned.isFinishing && !owned.isDestroyed) owned.finish() } }
-            }
+            synchronized(creationLock) { admissionClosed = true; creationLock.notifyAll() }
+            runCatching { cleanupOwnedActivity() }
             result.putString("reason", "NATIVE_LAUNCHER_REFUSED")
             runCatching { refusalDiagnostics.firstStage?.let { result.putString("diagnosticStage", it.code) } }
             finish(Activity.RESULT_CANCELED, result)

@@ -38,9 +38,13 @@ object HostedFixture {
         return when {
             path == "/experiment/v1/probe" || path == "/experiment/v1/backend-probe" -> "{}"
             path.startsWith("/experiment/v1/bootstrap/paired") -> JSONObject().apply {
-                put("paired", true)
-                val der = java.util.Base64.getDecoder().decode(HostRuntime.activity!!.bootstrap!!.publicKeySpkiBase64)
-                put("publicKeySha256", ImageExperimentBootstrap.sha256(der))
+                val key = HostRuntime.pairedPublicKey
+                put("paired", key != null)
+                if (key != null) {
+                    val der = java.util.Base64.getDecoder().decode(key)
+                    put("publicKeySha256", ImageExperimentBootstrap.sha256(der))
+                    HostRuntime.events += "pairing"
+                }
             }.toString()
             path == "/experiment/v1/bootstrap/challenge" -> JSONObject().apply {
                 for (field in listOf("scope", "batchId", "sessionId", "launchNonce")) put(field, metadata.get(field))
@@ -69,6 +73,10 @@ class HostedConnection(url: URL) : HttpsURLConnection(url) {
     override fun getResponseCode(): Int {
         responseReads++
         if (HostRuntime.networkFailure == url.path) throw HostRuntime.failure
+        if (url.path == "/experiment/v1/backend-probe" && HostRuntime.backendProbeClockAdvance != 0L) {
+            Thread.sleep(80)
+            HostRuntime.elapsedOffset += HostRuntime.backendProbeClockAdvance
+        }
         return 200
     }
     override fun getInputStream(): ByteArrayInputStream {

@@ -71,3 +71,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-story-page-media-delivery.md`
   summary: Story page rendition profile changes need an explicit reprocessing operation for unchanged page sources.
   evidence: Profile version participates in the output revision, but completed jobs cannot be rescheduled unless the source snapshot changes; this slice covers the initial profile, not profile rollout and regeneration operations.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-android-launcher-pairing-lifecycle.md`
+  summary: Investigate scoped reporting of uncaught Android experiment Activity constructor/lifecycle exceptions without swallowing unrelated framework failures.
+  evidence: API 33 ActivityThread routes uncaught construction/onCreate exceptions through Instrumentation.onException; the inherited default returns false and can terminate the process before fixed launcher refusal output. This path also exists in baseline ad9a7c48fc9d588677efc7fcbc6b9836855653e1. Synthetic lifecycle injection does not establish a physical framework exception receipt; handling it requires a separate ownership design.

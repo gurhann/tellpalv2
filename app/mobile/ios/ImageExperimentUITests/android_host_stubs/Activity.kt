@@ -9,10 +9,10 @@ open class Activity : Context() {
     var intent = Intent()
     @Volatile var isFinishing = false
     @Volatile var isDestroyed = false
-    var finishCount = 0
+    @Volatile var finishCount = 0
     open fun onCreate(savedInstanceState: Bundle?) {}
     open fun onDestroy() { isDestroyed = true }
-    open fun finish() { finishCount++; isFinishing = true }
-    fun runOnUiThread(action: () -> Unit) = HostRuntime.onMain(action)
+    open fun finish() { finishCount++; isFinishing = true; HostRuntime.recordActivityFinish(this) }
+    fun runOnUiThread(action: () -> Unit) = HostRuntime.runOnUiThread(action)
     companion object { const val RESULT_OK = -1; const val RESULT_CANCELED = 0 }
 }

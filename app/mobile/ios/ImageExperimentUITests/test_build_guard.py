@@ -30,10 +30,38 @@ harness_spec.loader.exec_module(android_harness)
 class BuildGuardTests(unittest.TestCase):
     def test_android_refusal_diagnostics_execute_actual_kotlin_matrix_and_private_mutant(self):
         evidence = android_harness.run(mutant=True)
-        self.assertEqual(evidence["caseCount"], 35)
+        self.assertEqual(evidence["caseCount"], 48)
         self.assertEqual(evidence["matrixExit"], 0)
         self.assertNotEqual(evidence["mutantExit"], 0)
         self.assertEqual(evidence["mutantFailure"], "first-specific-stage-propagation")
+        lifecycle = {"launcher-startup-dependency-reports-before-first-draw", "launcher-lifecycle-constructor-failure",
+            "launcher-lifecycle-on-create-failure", "launcher-lifecycle-early-destroy", "launcher-no-callback-absolute-deadline",
+            "launcher-lifecycle-missing-bootstrap-metadata", "launcher-invalid-deadline-keeps-bootstrap-diagnostic",
+            "launcher-late-owned-callback-after-closure-false", "launcher-late-owned-callback-after-closure-true",
+            "launcher-foreign-and-second-instances-stay-unowned", "launcher-creation-and-reachability-share-launch-bound",
+            "launcher-responsive-main-finish-ack-before-terminal", "launcher-blocked-main-deadline-refuses-before-release"}
+        self.assertTrue(lifecycle <= set(evidence["cases"]))
+        startup = evidence["startupMutant"]
+        self.assertEqual(startup["compileExit"], 0)
+        self.assertNotEqual(startup["runtimeExit"], 0)
+        self.assertEqual(startup["failure"], "startup-cycle-one-pairing-report")
+        self.assertEqual(startup["reportCount"], 0)
+        root = Path(evidence["evidenceRoot"])
+        self.assertEqual(json.loads((root / "startup-mutant.status.json").read_text())["status"], "failed")
+        self.assertIn(b"STARTUP_REPORT_COUNT 0\n", (root / "startup-mutant.stdout").read_bytes())
+        frozen = json.loads((root / "source-freeze.json").read_text())
+        launcher = "app/mobile/android/app/src/imageExperimentAndroidTest/kotlin/com/tellpal/imageexperiment/ImageExperimentInstrumentation.kt"
+        self.assertEqual(startup["originalSha256"], frozen[launcher])
+        for key, assertion in (("cleanupMutant", "blocked-main-refusal-before-release"),
+                ("finishAckMutant", "responsive-main-finish-before-terminal")):
+            mutation = evidence[key]
+            self.assertEqual(mutation["compileExit"], 0)
+            self.assertNotEqual(mutation["runtimeExit"], 0)
+            self.assertEqual(mutation["failure"], assertion)
+            self.assertEqual(mutation["originalSha256"], frozen[launcher])
+            self.assertEqual(json.loads((root / (mutation["runtimeLabel"] + ".status.json")).read_text())["status"], "failed")
+        for path in ("app/mobile/lib/main_image_experiment.dart", "app/mobile/lib/app/image_experiment_configuration.dart"):
+            self.assertEqual(frozen[path], hashlib.sha256((root / "sources" / Path(path).name).read_bytes()).hexdigest())
 
     def test_android_harness_snapshot_hashes_and_copies_one_exact_read(self):
         source, destination = self.root / "source.kt", self.root / "copied.kt"

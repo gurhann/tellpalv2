@@ -22,6 +22,9 @@ fun main(arguments: Array<String>) {
     HostedFixture.install(java.io.File(arguments[1]))
     try {
         if (arguments.getOrNull(4) == "propagation") LauncherHarness.propagation(root)
+        else if (arguments.getOrNull(4) == "startup") LauncherHarness.startup(root)
+        else if (arguments.getOrNull(4) == "cleanup") LauncherHarness.blockedMain(root)
+        else if (arguments.getOrNull(4) == "finish-ack") LauncherHarness.responsiveMain(root)
         else {
             NativeContracts.run(root)
             ActivityHarness.run(root, java.io.File(arguments[2]))

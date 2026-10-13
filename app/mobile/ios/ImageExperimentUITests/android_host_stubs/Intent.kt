@@ -2,9 +2,11 @@ package android.content
 
 class Intent {
     var className: String = ""
+    var packageName: String = ""
+    var flags: Int = 0
     private val extras = mutableMapOf<String, String>()
-    fun setClassName(packageName: String, className: String) = apply { this.className = className }
-    fun addFlags(flags: Int) = this
+    fun setClassName(packageName: String, className: String) = apply { this.packageName = packageName; this.className = className }
+    fun addFlags(flags: Int) = apply { this.flags = this.flags or flags }
     fun putExtra(key: String, value: String) = apply { extras[key] = value }
     fun getStringExtra(key: String): String? = extras[key]
     fun removeExtra(key: String) { extras.remove(key) }
