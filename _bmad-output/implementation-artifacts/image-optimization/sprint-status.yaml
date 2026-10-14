@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review with fresh context and the selected session model
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 10-08-2026 16:45
-last_updated: 2026-10-11
+last_updated: 2026-10-14
 project: TellPal V2 - Image Optimization P0
 project_key: NOKEY
 tracking_system: file-system
@@ -41,6 +41,7 @@ development_status:
   # r3 preparation and review fixes PASS: 88 tests, actual manifest verification; future reader/alpha/EXIF gates open.
   1-3-prove-real-encoder-outputs-on-a-bounded-pilot: review
   1-4-compare-frozen-candidates-and-worker-resource-costs: review
-  1-5-prepare-native-image-measurement-and-admission: review
+  # Preparation accepted and verified; completion-r1 records remaining native execution gates.
+  1-5-prepare-native-image-measurement-and-admission: done
   1-6-measure-native-image-quality-and-resource-costs: backlog
   epic-1-retrospective: optional

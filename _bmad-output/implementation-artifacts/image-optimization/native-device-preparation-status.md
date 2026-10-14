@@ -1,6 +1,120 @@
 # iPhone signing and Android Streaming preparation
 
-Date: 2026-10-11; latest observations: 2026-10-14. Initial implementation commit: `a9cb9b6`. This record separates operator preparation, exact signed artifacts, authenticated entry observations and remaining physical/performance acceptance gates. Individual successful entries do not complete Story 1.5.
+Date: 2026-10-11; latest observations: 2026-10-14. Initial implementation commit: `a9cb9b6`. This record separates operator preparation, exact signed artifacts, authenticated entry observations and remaining physical/performance acceptance gates. Story 1.5 completion applies to preparation; individual successful entries do not qualify a native measurement batch.
+
+## Preparation completion and resumed release entry — 2026-10-14
+
+The [Story 1.5 completion record](story-1-5-completion-r1.md) applies the approved
+preparation boundary and advances only its dedicated tracker entry to `done`.
+The separately versioned [r3 selected-pilot checkpoint](p0c-selected-pilot-checkpoint-r3.json)
+preserves r2 and records four actual positive physical entry cases. Story 1.6
+remains `backlog`; `native_execution_ready=false` and all five native gates remain
+open or partial.
+
+iPhone release r323/r327 installed audits retained `tool_timeout` failures at
+the original 30-second limit. After the user reported granting the phone prompt,
+r328 passed whole-bundle installed equality, r329 passed fresh prerequisites and
+r330 passed the original authenticated QA entry on current release r312. Both
+token-free probes, pairing, canonical admission, complete 357-byte PNG delivery,
+explicit app revoke and native settlement passed. Neither timeout became an
+accepted observation, and no guard or deadline changed.
+
+The immediate post-entry release app ledger r331 has 14 records, zero dropped
+records and one 128×160 decode. This is the control's ledger, with physical
+presentation unmeasured; it supplies no native candidate-quality or benchmark
+claim. Android profile/release r278/r276 and iPhone profile r300 remain the other
+three current positive cases on the same 292-input source freeze.
+
+The exact resource-limited r321 backend was closed after startup/full-command/
+process-group proof. Backend and broker listeners are closed; the owned database
+and unrelated processes remain preserved. Final free space was 11.48 GiB internal
+and 4.93 GiB external before retiring this run's regenerable historical replay
+copies. No new Cloud session, signing identity, IAM/key change or deployment was
+performed. The unchanged conservative Android budget still blocks another full
+window; remaining physical negative cases are explicit gaps.
+
+The fresh historical replay's regenerable archive/source copies were subsequently
+retired after its successful report and original-file hashes were verified. Its
+report and command evidence remain; regeneration uses the original Git commit.
+This recovered approximately 1.08 GiB externally. The final storage observation
+was 12.18 GiB internal and 6.01 GiB external free, without deleting device evidence.
+
+Fresh preparation checks passed: the immutable historical replay verified 43
+source bindings and all 42 original tests. This replay supplied no private raw
+receipts; their earlier 13-receipt replay remains historical. The current offline
+setup refresh validates 18 source bindings and returns the expected blocked
+native-readiness status without any device/account/network calls.
+
+## Earlier physical and host storage checkpoint — 2026-10-14
+
+The separately versioned [selected-pilot checkpoint](p0c-selected-pilot-checkpoint-r2.json)
+records current evidence without changing the historical preparation matrix.
+All current products bind the same 292-input source freeze recorded below.
+
+| Current physical case | Qualified observation |
+| --- | --- |
+| Pixel 7 / API 33 release r259/r276 | Original authenticated entry passed: paired probes, canonical QA admission, complete 357-byte control PNG, app revoke and native settlement. Exact installed app/test APK bytes were verified. Owned session FINISHED after 71.805 seconds. |
+| Pixel 7 / API 33 profile r260/r278 | Original authenticated entry passed on the actual rebuilt profile APK. Ledger has 14 records, zero dropped records and one 128×160 decode. Owned session FINISHED after 78.768 seconds. |
+| iPhone 12 profile r281/r302/r300 | Current signed build, installed whole-bundle equality and original authenticated entry passed. r305 ledger has 14 records, zero dropped records and 128×160 decode. |
+| iPhone 12 release r312/r314/r315 | Current signed build, installation and whole-bundle equality passed. Authenticated entry remains not run: the fresh prerequisite query reported a locked phone. Historical release r127 remains separate. |
+
+Android r282 exercised expired metadata and wrong scope on the physical profile
+artifact. Both qualified the exact NATIVE_METADATA refusal with zero observed
+claims and fixture attempts. The inconsistent metadata pin also refused at
+NATIVE_METADATA, while its operator expected NATIVE_TRUST_CONTEXT; that trial
+remains unqualified against the planned stage and does not establish a peer-pin
+test. Later UID/MIME cases did not run. The owned session FINISHED after 71.296
+seconds. Full physical pin/key/session/UID/fixture/teardown coverage remains open.
+
+The original r274 attempt stopped before installation because a private clock
+helper demanded unjustified five-millisecond midpoint precision. Its original
+failure is retained. The corrected helper retains all five offset brackets,
+requires each complete bracket inside ±500 ms and containing independently
+observed UTC, and uses midpoint only as a diagnostic. The original native time
+rules and two-second preparation bound remain unchanged; r276 used the default
+device clock without modification and introduced no intentional future pad.
+
+The authenticated Billing report observed before these latest device trials
+showed TellPal total **67.83 TRY** and Firebase Test Lab filtered reported cost
+**0.00 TRY** for 1–14 October 2026. This is reported cost at that observation,
+with billing delay possible, not a final invoice or verification of later charges.
+After r282, fresh original inventory found zero active/pending sessions for the
+current principal. The operator retains **945 USD cents gross conservative
+exposure without free credits** and **1035 cents** for another complete window.
+The latter exceeds the unchanged 1000-cent authorization: no further full Android
+window is permitted. These conservative values are not realized invoice amounts;
+the scoped Cloud alert does not automatically stop charges.
+
+Host storage recovery moved approximately **5.21 GiB** of Gradle/Pub caches to
+the external volume after complete content/mode/symlink equality checks, retaining
+usable original aliases. Five regenerable intermediate copies were then retired;
+their manifests, original receipts, APKs and selected source copies remain.
+Host-only Gradle settings now cap heap at 2048 MiB and workers at two, with 1024 MiB
+metaspace and 256 MiB code cache. A real offline Gradle probe confirmed the running
+limits; offline Pub resolved the original lock unchanged and the Flutter engine
+remained unchanged. No repository build input changed.
+
+The fresh iOS release build used an exclusive heavy-work lock, external temporary
+files, two Xcode jobs, and preflight minima of 10 GiB internal and 2 GiB external
+free space. It passed with internal free space remaining about 12 GiB. A subsequent
+memory-pressure read reported 53 percent free headroom; this is host evidence,
+not application memory or performance qualification. The recovered local backend
+uses a fresh actual startup binding and a 768 MiB heap cap, preserving its original
+JAR, configuration, source map and owned database. A changed LAN address was
+handled using the existing test TLS key with a fresh certificate and exact pin;
+the current iPhone profile entry passed on that new session.
+
+The exact owned QA backend was subsequently closed for handoff after PID, process
+start, full-command hash and process-group verification; its loopback listener
+closed. Database, Colima and unrelated processes remain preserved. At that final
+check, internal free space was 12.51 GiB and external free space was 6.01 GiB.
+
+All new receipts and the detailed host operating/rollback record remain private.
+The current release still needs a fresh unlocked-device audit/prerequisite/entry
+sequence before authentication. Native gates, supported-floor gaps, candidate
+admission, comparative protocol freeze, quality/resource decisions and Story 1.6
+measurements remain open. Story 1.5's dedicated tracker remains review; individual
+positive entries do not close the complete native pilot.
 
 ## Latest Kotlin runtime repair checkpoint — 2026-10-14
 

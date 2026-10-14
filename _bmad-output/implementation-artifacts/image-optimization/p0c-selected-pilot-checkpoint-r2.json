@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "record_kind": "selected_native_pilot_checkpoint",
+  "scope": "image-optimization-p0c-selected-pilot-r2",
+  "observed_at": "2026-10-14T10:28:10.542352+00:00",
+  "source_sha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935",
+  "source_file_count": 292,
+  "positive_entries": [
+    {
+      "platform": "android",
+      "mode": "release",
+      "device_alias": "android_pixel7_api33",
+      "source_sha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935",
+      "artifact_sha256": "ddc95009fae5926a111bdfcb030ffa266d46838fe568a501ca0d570afd5cfa3d",
+      "test_artifact_sha256": "c3ec7aea56a344d54c76fe467bef6a28f9fac62ad388d16c0fbb60f5c53820e5",
+      "certificate_sha256": "913d78e46bb9bc3b3a1b0c545fb855cb6f57b3b91eaa7c1e87223fb3a188c967",
+      "engine_revision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+      "positive_receipt_alias": "android_release_positive_r276",
+      "verified_fixture_body_bytes": 357,
+      "physical_presentation": null,
+      "physical_presentation_reason": "not_measured",
+      "full_negative_matrix": "open"
+    },
+    {
+      "platform": "android",
+      "mode": "profile",
+      "device_alias": "android_pixel7_api33",
+      "source_sha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935",
+      "artifact_sha256": "13e898044e31d6ef1df76b2b1aa8a1268ef3d7eb201c793546e0569e38dc89df",
+      "test_artifact_sha256": "f1dcf1c3f821d1e28c986b7864fb413f12c86a5ce55273fa043640f455c59a47",
+      "certificate_sha256": "913d78e46bb9bc3b3a1b0c545fb855cb6f57b3b91eaa7c1e87223fb3a188c967",
+      "engine_revision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+      "positive_receipt_alias": "android_profile_positive_r278",
+      "verified_fixture_body_bytes": 357,
+      "physical_presentation": null,
+      "physical_presentation_reason": "not_measured",
+      "full_negative_matrix": "open"
+    },
+    {
+      "platform": "ios",
+      "mode": "profile",
+      "device_alias": "ios_iphone12_local",
+      "source_sha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935",
+      "artifact_sha256": "f048c5298498599a14a40f358588ccd1712218f344315820811bdf2b9aba77ee",
+      "test_artifact_sha256": "e58f9997442f93f65089a9cd5648de91bd4aa6e14fb0b29b227be535af64ed16",
+      "certificate_sha256": "1758140a307351c4a00d7210298a005d52c25f69bd35676f83f137a306ad640a",
+      "engine_revision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+      "positive_receipt_alias": "ios_profile_positive_r300",
+      "verified_fixture_body_bytes": 357,
+      "physical_presentation": null,
+      "physical_presentation_reason": "not_measured",
+      "full_negative_matrix": "open"
+    }
+  ],
+  "bounded_negative_entries": [
+    {
+      "platform": "android",
+      "mode": "profile",
+      "case": "expired_metadata",
+      "native_stage": "NATIVE_METADATA",
+      "observed_claims": 0,
+      "observed_fixture_attempts": 0,
+      "scope": "early_bootstrap_only",
+      "receipt_alias": "android_profile_negative_expired_metadata"
+    },
+    {
+      "platform": "android",
+      "mode": "profile",
+      "case": "wrong_scope",
+      "native_stage": "NATIVE_METADATA",
+      "observed_claims": 0,
+      "observed_fixture_attempts": 0,
+      "scope": "early_bootstrap_only",
+      "receipt_alias": "android_profile_negative_wrong_scope"
+    }
+  ],
+  "ios_release_current": {
+    "build": "passed",
+    "installed_audit": "passed",
+    "authenticated_entry": "not_run",
+    "reason": "phone_locked",
+    "source_sha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935"
+  },
+  "budget": {
+    "limit_usd_cents": 1000,
+    "gross_conservative_usd_cents_without_free_credits": 945,
+    "next_full_window_projected_usd_cents": 1035,
+    "new_full_android_window_permitted": false,
+    "current_principal_active_sessions": 0,
+    "all_project_principals_inventory": false,
+    "realized_invoice_verified": false
+  },
+  "coverage_gaps": [
+    "android_api24",
+    "ios_ipados15",
+    "physical_tablets_ipads",
+    "constrained_ram_classes",
+    "renderer_counter_attachment",
+    "full_positive_negative_matrix"
+  ],
+  "gates": [
+    {
+      "id": "NATIVE-ENTRY",
+      "status": "open",
+      "reason": "Full physical pin/key/session/UID/fixture/teardown matrix remains incomplete."
+    },
+    {
+      "id": "NATIVE-DEVICE",
+      "status": "partial",
+      "reason": "Selected phone functional entries do not qualify agreed floors, counters or fleet."
+    },
+    {
+      "id": "NATIVE-CANDIDATE",
+      "status": "open",
+      "reason": "The 357-byte control is entry/draw/teardown-only; offline codec arms have no native role/geometry/quality admission."
+    },
+    {
+      "id": "NATIVE-PROTOCOL",
+      "status": "open",
+      "reason": "Future comparative cache/journey/order/repeat/counter batch remains unfrozen."
+    },
+    {
+      "id": "NATIVE-DECISIONS",
+      "status": "open",
+      "reason": "Quality/resource criteria and parent decisions remain unresolved."
+    }
+  ],
+  "story16_measurements_started": false,
+  "evidence": [
+    {
+      "alias": "android_release_build",
+      "sha256": "20b832b166f523635ae62de19f13c35b8ab7246bae8fa1ae22401e3c362b9043",
+      "byte_count": 41323
+    },
+    {
+      "alias": "android_release_positive_r276",
+      "sha256": "b7edea454235b7cae509dafd3f19ffd77997aeae49ee0c25985725b23c6a53ba",
+      "byte_count": 1016
+    },
+    {
+      "alias": "android_profile_build",
+      "sha256": "2d97e3822cc838d64cd1dd8f66fe4db35178052420fb9371a2c8617ac5c5e4f2",
+      "byte_count": 41260
+    },
+    {
+      "alias": "android_profile_positive_r278",
+      "sha256": "ce367c288e9c54ef1cda28c6712356535c63207b35ff6a2992dfeaa7fabfe62f",
+      "byte_count": 1016
+    },
+    {
+      "alias": "ios_profile_build",
+      "sha256": "652ad45e1cc44b095acdbc8d3363927e3be89c0c9f55ee0a503149b362b117d5",
+      "byte_count": 40001
+    },
+    {
+      "alias": "ios_profile_positive_r300",
+      "sha256": "b3999d6c257b8a829a41b9d382ae2cb3792685f84fe650aeb65b9d5b7877a410",
+      "byte_count": 993
+    },
+    {
+      "alias": "android_profile_ledger",
+      "sha256": "e0907d36b8661a44eaf4ea54175bffeb0c4ec6939de7720cfae9e10469f607d3",
+      "byte_count": 524
+    },
+    {
+      "alias": "ios_profile_ledger",
+      "sha256": "2a80b8a7640ca1553cb685d4d9f2726446eafd9a6e75641cd79afd45d756afd9",
+      "byte_count": 669
+    },
+    {
+      "alias": "android_final_budget",
+      "sha256": "bab968f91269def7c1880523c7a5f499b999df91ac68d9e991a18849d3cac5f8",
+      "byte_count": 582
+    },
+    {
+      "alias": "host_cache_migration",
+      "sha256": "37582dbb8e2f973ae3f36374123ba00e553384220178dcedd94e6b66c5df183f",
+      "byte_count": 985
+    },
+    {
+      "alias": "host_resource_policy",
+      "sha256": "a23de0e20c69998a4fb23f2ebdf0ef96ca9842454cf899433e613da16ac15b40",
+      "byte_count": 479
+    },
+    {
+      "alias": "host_resource_runtime_probe",
+      "sha256": "94cfbe977f4351c7ee4599fb00cdd6241b0275aca85caa8e504c517dee8eeb71",
+      "byte_count": 578
+    },
+    {
+      "alias": "ios_release_installed_audit",
+      "sha256": "6c8343c94b882fb3b9c9ae03a11870797fa5e5d7992464ed3234bd5f6b5c37fb",
+      "byte_count": 1375
+    },
+    {
+      "alias": "android_profile_negative_expired_metadata",
+      "sha256": "b86c02e17dd3a315b6457921b341ecb186bdabd38d4dd2d3229cd135a3a2daf9",
+      "byte_count": 658
+    },
+    {
+      "alias": "android_profile_negative_wrong_scope",
+      "sha256": "53c18274db39594c0626e47ea066ce6fa6c309c2735b41ed39878d6d7a25735c",
+      "byte_count": 653
+    }
+  ]
+}
