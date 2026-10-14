@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "scope": "image-optimization-story15-critical-ios-handoff-r1",
+  "status": "bounded_preparation_followon_verified",
+  "platform": "ios",
+  "deviceModel": "iPhone 12",
+  "mode": "release",
+  "preparationComplete": true,
+  "nativeExecutionReady": false,
+  "fullNativeEntryGate": "open",
+  "story16": "backlog",
+  "sourceSha256": "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935",
+  "sourceFileCount": 292,
+  "observerVerifierSha256": "cd2c72bca2e79047f3ec5d667db197dff4b1ffbda999024a46b74269df9970d6",
+  "testSuiteSha256": "8fbbcf044ded2f0860ac455ec4dd2fe4b458d799b6af24e5b56ba785b26db089",
+  "syntheticTestCount": 25,
+  "cases": [
+    {
+      "fault": "alternate-trust",
+      "status": "observed",
+      "nativeResult": "refused",
+      "nativeStage": "NATIVE_PROBE",
+      "admissionSuccessful": false,
+      "boundaryCounts": {
+        "brokerProbe": 0,
+        "backendProbe": 0,
+        "pairing": 0,
+        "claim": 0,
+        "fixtureDispatch": 0,
+        "fixtureFlushed": 0,
+        "originalDeliveryGuardRefused": 0
+      },
+      "ownedCleanup": true,
+      "sourceUnchanged": true,
+      "evidenceSha256": {
+        "observation": "405fdd7a771197aa9ddcdd1b3588cab303393be28d040e4db194ebe5d03931e4",
+        "launcher_stdout": "88bc9bda77d1204f47bdb307eb35232b07018d9e69cb76c34b86e96898bc66e3",
+        "launcher_stderr": "43d66c045dedcd0f8ef89f013b7c19985f2f773013195201304b929434c5135f"
+      },
+      "invocationSourceBinding": "first_run_binding_not_recorded; stable_verifier_replay_passed"
+    },
+    {
+      "fault": "expired-envelope",
+      "status": "observed",
+      "nativeResult": "refused",
+      "nativeStage": "NATIVE_ENVELOPE_EXPIRED",
+      "admissionSuccessful": true,
+      "boundaryCounts": {
+        "brokerProbe": 1,
+        "backendProbe": 1,
+        "pairing": 1,
+        "claim": 1,
+        "fixtureDispatch": 0,
+        "fixtureFlushed": 0,
+        "originalDeliveryGuardRefused": 0
+      },
+      "ownedCleanup": true,
+      "sourceUnchanged": true,
+      "evidenceSha256": {
+        "observation": "e79f6f3084be75a07330d35e5eb06f52970d8003d6bbee82469e595a88359b83",
+        "launcher_stdout": "e4aee61878d34bcddcaf8b65e5cfb6ee37da1440e9debfb3645f724356138e98",
+        "launcher_stderr": "b94bf591d74c0f0235f66fc013e8696026c299ff26c68363aec48dfc139712f3"
+      },
+      "invocationSourceBinding": "recorded",
+      "observerExecutionSha256": "362e9a969278c45c788c19e92f11ed793b6671aa010de3e498e92c31942f3dee"
+    },
+    {
+      "fault": "wrong-uid-envelope",
+      "status": "observed",
+      "nativeResult": "refused",
+      "nativeStage": "NATIVE_ENVELOPE_BINDING",
+      "admissionSuccessful": true,
+      "boundaryCounts": {
+        "brokerProbe": 1,
+        "backendProbe": 1,
+        "pairing": 1,
+        "claim": 1,
+        "fixtureDispatch": 0,
+        "fixtureFlushed": 0,
+        "originalDeliveryGuardRefused": 0
+      },
+      "ownedCleanup": true,
+      "sourceUnchanged": true,
+      "evidenceSha256": {
+        "observation": "0305064e219c74e4d36fdcaa72265743f0bbf2a5e9d5daee9486f8c43ca6a243",
+        "launcher_stdout": "7579615d3843fab6e53358827810a2a4a8f329e0fa1ec79b5bfb3d46029c7275",
+        "launcher_stderr": "fb12c15aa27bf192955b1b30fcbcd8723ba83c8d910bf3f7736fb6755a45ace0"
+      },
+      "invocationSourceBinding": "recorded",
+      "observerExecutionSha256": "362e9a969278c45c788c19e92f11ed793b6671aa010de3e498e92c31942f3dee"
+    },
+    {
+      "fault": "corrupt-bytes",
+      "status": "observed",
+      "nativeResult": "refused",
+      "nativeStage": "DIAGNOSTIC_UNAVAILABLE",
+      "admissionSuccessful": true,
+      "boundaryCounts": {
+        "brokerProbe": 1,
+        "backendProbe": 1,
+        "pairing": 1,
+        "claim": 1,
+        "fixtureDispatch": 1,
+        "fixtureFlushed": 1,
+        "originalDeliveryGuardRefused": 1
+      },
+      "ownedCleanup": true,
+      "sourceUnchanged": true,
+      "ledger": {
+        "ledgerSha256": "6b600c720167b72c2fe8d3f7e748ffff7c25dffdabb284dcc4c84217536fe1e4",
+        "recordCount": 11,
+        "droppedCount": 0,
+        "freshSessionProviderBinding": "observed",
+        "events": [
+          "body",
+          "failure",
+          "ownership",
+          "request",
+          "revoke",
+          "status",
+          "status_body",
+          "status_request"
+        ],
+        "ownedAppReleaseObserved": true
+      },
+      "evidenceSha256": {
+        "observation": "8904a317a20cf73852539a9e887d60795e9ee1aa85804272e606029e2fa24cc2",
+        "launcher_stdout": "b7c1bcd9076a9d626906a8d79406d068d4643bdf22ee1cb9d447e95983762513",
+        "launcher_stderr": "18b50bebad6d12eaec2c2072ee428282b6837ede9906a864b47ed347e2bf366a",
+        "device_ledger": "6b600c720167b72c2fe8d3f7e748ffff7c25dffdabb284dcc4c84217536fe1e4",
+        "qualification": "4b4fce4aaaae974dde0e8084e0a502029893389b710b9d8b65bfaff9c8e84b91",
+        "post_review_qualification": "4b4fce4aaaae974dde0e8084e0a502029893389b710b9d8b65bfaff9c8e84b91"
+      },
+      "invocationSourceBinding": "recorded",
+      "observerExecutionSha256": "362e9a969278c45c788c19e92f11ed793b6671aa010de3e498e92c31942f3dee"
+    },
+    {
+      "fault": "normal-teardown",
+      "status": "observed",
+      "nativeResult": "settled",
+      "nativeStage": null,
+      "admissionSuccessful": true,
+      "boundaryCounts": {
+        "brokerProbe": 1,
+        "backendProbe": 1,
+        "pairing": 1,
+        "claim": 1,
+        "fixtureDispatch": 1,
+        "fixtureFlushed": 1,
+        "originalDeliveryGuardRefused": 0
+      },
+      "ownedCleanup": true,
+      "sourceUnchanged": true,
+      "ledger": {
+        "ledgerSha256": "2312585eac10641da081384dd7889c4515f582bc0cb13b1ecc4e6eec0e297d20",
+        "recordCount": 14,
+        "droppedCount": 0,
+        "freshSessionProviderBinding": "observed",
+        "events": [
+          "body",
+          "decoded",
+          "draw",
+          "encoded_verified",
+          "ownership",
+          "request",
+          "revoke",
+          "status",
+          "status_body",
+          "status_request"
+        ],
+        "ownedAppReleaseObserved": true
+      },
+      "evidenceSha256": {
+        "observation": "785921e50fb64232ab1ea8ae6e7f6e22871479b9936da7beb5dfc6b9397e3c46",
+        "launcher_stdout": "23b2f83bc060a0d7cf6882c5245516360c47ca0542e80e61fe14068ca24ea558",
+        "launcher_stderr": "31ca458083928be0c943af63d504459dd0abbcf808ebadc1b53034b2754664af",
+        "device_ledger": "2312585eac10641da081384dd7889c4515f582bc0cb13b1ecc4e6eec0e297d20",
+        "qualification": "2493b67fafe3a0652548d4ccd2cc212032a336177e6a41a9efbcae268a1a347b",
+        "post_review_qualification": "2493b67fafe3a0652548d4ccd2cc212032a336177e6a41a9efbcae268a1a347b"
+      },
+      "invocationSourceBinding": "recorded",
+      "observerExecutionSha256": "362e9a969278c45c788c19e92f11ed793b6671aa010de3e498e92c31942f3dee"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "alias": "alternate-trust_observation",
+      "sha256": "405fdd7a771197aa9ddcdd1b3588cab303393be28d040e4db194ebe5d03931e4"
+    },
+    {
+      "alias": "alternate-trust_launcher_stdout",
+      "sha256": "88bc9bda77d1204f47bdb307eb35232b07018d9e69cb76c34b86e96898bc66e3"
+    },
+    {
+      "alias": "alternate-trust_launcher_stderr",
+      "sha256": "43d66c045dedcd0f8ef89f013b7c19985f2f773013195201304b929434c5135f"
+    },
+    {
+      "alias": "expired-envelope_observation",
+      "sha256": "e79f6f3084be75a07330d35e5eb06f52970d8003d6bbee82469e595a88359b83"
+    },
+    {
+      "alias": "expired-envelope_launcher_stdout",
+      "sha256": "e4aee61878d34bcddcaf8b65e5cfb6ee37da1440e9debfb3645f724356138e98"
+    },
+    {
+      "alias": "expired-envelope_launcher_stderr",
+      "sha256": "b94bf591d74c0f0235f66fc013e8696026c299ff26c68363aec48dfc139712f3"
+    },
+    {
+      "alias": "wrong-uid-envelope_observation",
+      "sha256": "0305064e219c74e4d36fdcaa72265743f0bbf2a5e9d5daee9486f8c43ca6a243"
+    },
+    {
+      "alias": "wrong-uid-envelope_launcher_stdout",
+      "sha256": "7579615d3843fab6e53358827810a2a4a8f329e0fa1ec79b5bfb3d46029c7275"
+    },
+    {
+      "alias": "wrong-uid-envelope_launcher_stderr",
+      "sha256": "fb12c15aa27bf192955b1b30fcbcd8723ba83c8d910bf3f7736fb6755a45ace0"
+    },
+    {
+      "alias": "corrupt-bytes_observation",
+      "sha256": "8904a317a20cf73852539a9e887d60795e9ee1aa85804272e606029e2fa24cc2"
+    },
+    {
+      "alias": "corrupt-bytes_launcher_stdout",
+      "sha256": "b7c1bcd9076a9d626906a8d79406d068d4643bdf22ee1cb9d447e95983762513"
+    },
+    {
+      "alias": "corrupt-bytes_launcher_stderr",
+      "sha256": "18b50bebad6d12eaec2c2072ee428282b6837ede9906a864b47ed347e2bf366a"
+    },
+    {
+      "alias": "corrupt-bytes_device_ledger",
+      "sha256": "6b600c720167b72c2fe8d3f7e748ffff7c25dffdabb284dcc4c84217536fe1e4"
+    },
+    {
+      "alias": "corrupt-bytes_qualification",
+      "sha256": "4b4fce4aaaae974dde0e8084e0a502029893389b710b9d8b65bfaff9c8e84b91"
+    },
+    {
+      "alias": "normal-teardown_observation",
+      "sha256": "785921e50fb64232ab1ea8ae6e7f6e22871479b9936da7beb5dfc6b9397e3c46"
+    },
+    {
+      "alias": "normal-teardown_launcher_stdout",
+      "sha256": "23b2f83bc060a0d7cf6882c5245516360c47ca0542e80e61fe14068ca24ea558"
+    },
+    {
+      "alias": "normal-teardown_launcher_stderr",
+      "sha256": "31ca458083928be0c943af63d504459dd0abbcf808ebadc1b53034b2754664af"
+    },
+    {
+      "alias": "normal-teardown_device_ledger",
+      "sha256": "2312585eac10641da081384dd7889c4515f582bc0cb13b1ecc4e6eec0e297d20"
+    },
+    {
+      "alias": "normal-teardown_qualification",
+      "sha256": "2493b67fafe3a0652548d4ccd2cc212032a336177e6a41a9efbcae268a1a347b"
+    },
+    {
+      "alias": "owned_cleanup",
+      "sha256": "4defaaea41e13a31c8a5678ca83c2c1642e2206eea3815f9fa1d2e55a251eb1a"
+    },
+    {
+      "alias": "installation_audit_retry",
+      "sha256": "d2c1f7503065230c65fd1c30e3ecad1f65e028d101d0ea7a1a4e5f5d20c3ff3c"
+    },
+    {
+      "alias": "installation_audit_second",
+      "sha256": "2557e9b0ed81812c6deed8ccc1e1f55e84c51df1906b4474642e2c22727c98c8"
+    },
+    {
+      "alias": "corrupt-bytes_post_review_qualification",
+      "sha256": "4b4fce4aaaae974dde0e8084e0a502029893389b710b9d8b65bfaff9c8e84b91"
+    },
+    {
+      "alias": "normal-teardown_post_review_qualification",
+      "sha256": "2493b67fafe3a0652548d4ccd2cc212032a336177e6a41a9efbcae268a1a347b"
+    },
+    {
+      "alias": "critical-root-operator_py",
+      "sha256": "f3091281dceececa2ae2383fab1e5777a1d11c50c415ba3f2ae62b8de3759554"
+    },
+    {
+      "alias": "artwork-admission-operator_py",
+      "sha256": "4e3fb1cac0d7ecd902fbb2b8eb148e7cd9ac97ef5a44829216cb5a21ddccc81b"
+    },
+    {
+      "alias": "provider-vector-original-test_dart",
+      "sha256": "7e2e5328773fa96bbc1754bebbeb4b28552d2e5d6c6b596963d50e026dc39906"
+    },
+    {
+      "alias": "post_review_replay",
+      "sha256": "cdc0bf50071e7ef1ec26f2524ab7c9fc34f0790a1427186dc545bcb93de76dc4"
+    }
+  ],
+  "retainedFailures": [
+    {
+      "alias": "initial_installation_audit",
+      "status": "timeout",
+      "physicalCaseExecuted": false
+    },
+    {
+      "alias": "stale_wrong_uid_preflight",
+      "reason": "installation_receipt_stale",
+      "physicalCaseExecuted": false
+    }
+  ],
+  "artworkAdmissionSha256": "b0b268a31c68d1eaf17c9f603f90bd01f5d8aec66c6dd3ae3f3e19d3fa1bf8c4",
+  "cleanup": {
+    "backendClosed": true,
+    "brokerClosed": true,
+    "newCloudSessions": 0,
+    "qaCredentialCleanup": "retained_for_unfinished_physical_qualification"
+  },
+  "deferred": [
+    "full_profile_release_negative_matrix",
+    "fleet_floor_tablet_ram_coverage",
+    "native_artwork_layout_decode",
+    "human_artwork_quality",
+    "latency_memory_first_presentation",
+    "story16_measurement_batch"
+  ],
+  "providerContractVerification": {
+    "actualDartTestCount": 1,
+    "matchingVectors": 2,
+    "syntheticVectorSha256": "4b47ef2a679987c09537d57857ae61c9c4381cbc2b5dc012e30a429911a5b529",
+    "producer": "actual ImageExperimentImageCache.provider and RasterCase.geometry",
+    "nativeExecution": false,
+    "sourceSha256": {
+      "app/mobile/lib/core/network/image_experiment_image_cache.dart": "4b5e3878eb2ccb41b05d1290cccfb58e49acdc693fa4813549edb2071b097785",
+      "app/mobile/lib/features/image_experiment/domain/entity/raster_case.dart": "c5df461a9fedead13a77356d34abf570d1204cdab9b1ac0fef0fa404a9ee2a33"
+    }
+  },
+  "formalReview": {
+    "layers": 3,
+    "actionableFindings": 4,
+    "fixed": 4,
+    "remaining": 0,
+    "postReviewOriginalEvidenceReplay": "passed"
+  }
+}

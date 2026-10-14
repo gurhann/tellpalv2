@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "scope": "synthetic-dart-cache-identity-r1",
+  "producer": "actual ImageExperimentImageCache.provider and RasterCase.geometry",
+  "vectors": [
+    {
+      "name": "contain",
+      "manifest": {
+        "schemaVersion": 1,
+        "scope": "image-optimization-native-fixture-r1",
+        "batchId": "synthetic",
+        "corpusSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "referenceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "sourceSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "entries": [
+          {
+            "caseId": "vector_first",
+            "role": "isolated_raster_fixture",
+            "arm": "control",
+            "sourceSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "referenceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+            "outputSha256": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e",
+            "mime": "image/png",
+            "byteSize": 69,
+            "width": 13,
+            "height": 7,
+            "encoderRevision": "synthetic-r1",
+            "profileRevision": "synthetic-r1",
+            "logicalSlotWidth": 2.5,
+            "logicalSlotHeight": 3.25,
+            "dpr": 2.5,
+            "fit": "contain",
+            "alignmentX": -0.0,
+            "alignmentY": 0.5,
+            "purposeAcceptanceReceipt": "synthetic-only"
+          },
+          {
+            "caseId": "vector_second",
+            "role": "isolated_raster_fixture",
+            "arm": "candidate",
+            "sourceSha256": "5555555555555555555555555555555555555555555555555555555555555555",
+            "referenceSha256": "6666666666666666666666666666666666666666666666666666666666666666",
+            "outputSha256": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e",
+            "mime": "image/png",
+            "byteSize": 69,
+            "width": 8,
+            "height": 12,
+            "encoderRevision": "synthetic-r1",
+            "profileRevision": "synthetic-candidate",
+            "logicalSlotWidth": 2.0,
+            "logicalSlotHeight": 3.0,
+            "dpr": 2.0,
+            "fit": "contain",
+            "alignmentX": 0.0,
+            "alignmentY": 0.0,
+            "purposeAcceptanceReceipt": "synthetic-only"
+          }
+        ]
+      },
+      "envelopeIdentity": {
+        "batchId": "synthetic",
+        "sessionId": "synthetic-session",
+        "generation": 0,
+        "accessAlias": "synthetic-access"
+      },
+      "caseId": "vector_first",
+      "expected": {
+        "expectedProviderSha256": "09d71f1fd155100fced8d04ccc1872ae66851db8dcd2425ff3dc6d1566ee51b5",
+        "expectedAttemptSha256": "2df428b084a5460e34465f569deb69e0c75ceef6858d78a2a581f7ad739681fb",
+        "expectedDecodeWidth": 7,
+        "expectedDecodeHeight": 4
+      }
+    },
+    {
+      "name": "cover",
+      "manifest": {
+        "schemaVersion": 1,
+        "scope": "image-optimization-native-fixture-r1",
+        "batchId": "synthetic",
+        "corpusSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "referenceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "sourceSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "entries": [
+          {
+            "caseId": "vector_first",
+            "role": "isolated_raster_fixture",
+            "arm": "control",
+            "sourceSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "referenceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+            "outputSha256": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e",
+            "mime": "image/png",
+            "byteSize": 69,
+            "width": 13,
+            "height": 7,
+            "encoderRevision": "synthetic-r1",
+            "profileRevision": "synthetic-r1",
+            "logicalSlotWidth": 2.5,
+            "logicalSlotHeight": 3.25,
+            "dpr": 2.5,
+            "fit": "cover",
+            "alignmentX": -0.0,
+            "alignmentY": 0.5,
+            "purposeAcceptanceReceipt": "synthetic-only"
+          },
+          {
+            "caseId": "vector_second",
+            "role": "isolated_raster_fixture",
+            "arm": "candidate",
+            "sourceSha256": "5555555555555555555555555555555555555555555555555555555555555555",
+            "referenceSha256": "6666666666666666666666666666666666666666666666666666666666666666",
+            "outputSha256": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e",
+            "mime": "image/png",
+            "byteSize": 69,
+            "width": 8,
+            "height": 12,
+            "encoderRevision": "synthetic-r1",
+            "profileRevision": "synthetic-candidate",
+            "logicalSlotWidth": 2.0,
+            "logicalSlotHeight": 3.0,
+            "dpr": 2.0,
+            "fit": "cover",
+            "alignmentX": 0.0,
+            "alignmentY": 0.0,
+            "purposeAcceptanceReceipt": "synthetic-only"
+          }
+        ]
+      },
+      "envelopeIdentity": {
+        "batchId": "synthetic",
+        "sessionId": "synthetic-session",
+        "generation": 0,
+        "accessAlias": "synthetic-access"
+      },
+      "caseId": "vector_first",
+      "expected": {
+        "expectedProviderSha256": "db435169014ce1862dd245b4a4ad649049a4cc6a520584876bbd739135117af5",
+        "expectedAttemptSha256": "c0e7993f5254d6043084f8588296668963cb7a20462a1b960c56d3bac13a920d",
+        "expectedDecodeWidth": 13,
+        "expectedDecodeHeight": 7
+      }
+    }
+  ]
+}

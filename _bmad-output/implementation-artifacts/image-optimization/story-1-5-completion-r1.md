@@ -90,3 +90,11 @@ The [dedicated tracker](sprint-status.yaml) records Story 1.5 `done` and Story 1
 `backlog`. All native gates stay open or partial. This completes preparation and
 hands off the explicit entry/batch prerequisites; it does not declare the full
 native pilot complete.
+
+## Bounded continuation — 2026-10-14
+
+The [critical iPhone follow-on](story-1-5-critical-ios-handoff-r1.md) now records
+four physical release refusals, normal control draw/teardown and independent
+file admission of two real JPEG/WebP pairs. This supplements the historical
+preparation closure above; full native execution, human quality and Story 1.6
+measurement remain unqualified.
