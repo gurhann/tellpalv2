@@ -16,6 +16,8 @@ PLUGIN_REGISTRY = "io.flutter.embedding.engine.plugins.PluginRegistry"
 JNI_PLUGINS = ("com.github.dart_lang.jni.JniPlugin", "com.github.dart_lang.jni_flutter.JniFlutterPlugin")
 SOURCE = Path("android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java")
 COPIED = Path("generated/imageExperimentRegistrant/io/flutter/plugins/GeneratedPluginRegistrant.java")
+# Full experiment stdlib retention produces a mapping slightly above 16 MiB.
+MAX_MAPPING_BYTES = 20 * 1024 * 1024
 NAME = r"[A-Za-z_$][A-Za-z0-9_.$]*"
 SDK_GENERATOR = b"""import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/base/template.dart';
@@ -163,7 +165,7 @@ def inspect_android_plugins(mobile, app, output, mode, deadline, checked_run, ar
     classes, add, mapping_hash = {}, "add", None
     if mode == "release":
         mapping = private_file(output / "gradle/app/outputs/mapping/release/mapping.txt",
-            16 * 1024 * 1024, exact_mode=False)
+            MAX_MAPPING_BYTES, exact_mode=False)
         classes, add = mapping_names(mapping)
         mapping_hash = sha256(mapping).hexdigest()
     require(mode in ("profile", "release"), "android_plugin_mode_rejected")
@@ -183,7 +185,7 @@ def inspect_android_plugins(mobile, app, output, mode, deadline, checked_run, ar
         "android_plugin_binding_changed")
     if mode == "release":
         require(sha256(private_file(output / "gradle/app/outputs/mapping/release/mapping.txt",
-            16 * 1024 * 1024, exact_mode=False)).hexdigest() == mapping_hash, "android_plugin_binding_changed")
+            MAX_MAPPING_BYTES, exact_mode=False)).hexdigest() == mapping_hash, "android_plugin_binding_changed")
     return {"artifactSha256": before, "generatedSourceSha256": source_hash,
         "compiledSourceSha256": copied_hash, "mappingSha256": mapping_hash,
         "generationReceiptSha256": sha256(private_file(output / "android-plugin-generation.json")).hexdigest(),

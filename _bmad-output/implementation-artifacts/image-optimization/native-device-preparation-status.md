@@ -1,8 +1,130 @@
 # iPhone signing and Android Streaming preparation
 
-Date: 2026-10-11. Implementation commit: `a9cb9b6`. This receipt covers operator setup, subsequent signed Apple builds and installation, Android artifact preparation and local QA login tooling after the native entry implementation. It is not an authenticated physical fixture qualification or a performance receipt.
+Date: 2026-10-11; latest observations: 2026-10-14. Initial implementation commit: `a9cb9b6`. This record separates operator preparation, exact signed artifacts, authenticated entry observations and remaining physical/performance acceptance gates. Individual successful entries do not complete Story 1.5.
 
-## Latest checkpoint — 2026-10-14
+## Latest Kotlin runtime repair checkpoint — 2026-10-14
+
+The [release Kotlin runtime repair spec](../spec-android-release-instrumentation-kotlin-runtime.md)
+now has fresh signed profile/release products and successful local release entry.
+This checkpoint supersedes Android artifact and local release readiness below;
+all original failures and physical/performance gates remain preserved.
+
+The experiment release rule retains `kotlin.**` beside the existing bootstrap API
+rule. The existing experiment opt-in/ProGuard selection, R8/minification, SDK,
+dependency versions and locks, app/test identities, common development signer,
+launcher/self-tests, Dart/Apple, TLS/authentication/time guards and cleanup are
+unchanged. Both builds bind the same **292-input** source freeze
+`d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935`.
+Compared with immutable r233, only the retention file and the bounded plugin
+mapping reader changed; **290 selected inputs**, including **82 Dart inputs** and
+**79 Apple inputs**, remain identical. The new checker, portable tests and README
+are verification additions outside that existing build-input selection.
+
+| Fresh signed build | App SHA-256 | Test SHA-256 |
+| --- | --- | --- |
+| Release r259 | `ddc95009fae5926a111bdfcb030ffa266d46838fe568a501ca0d570afd5cfa3d` | `c3ec7aea56a344d54c76fe467bef6a28f9fac62ad388d16c0fbb60f5c53820e5` |
+| Profile r260 | `13e898044e31d6ef1df76b2b1aa8a1268ef3d7eb201c793546e0569e38dc89df` | `f1dcf1c3f821d1e28c986b7864fb413f12c86a5ce55273fa043640f455c59a47` |
+
+Gradle elapsed times were 99.552 seconds for release and 66.940 seconds for
+profile. Both source copies, plugin provenance, exact IDs, signer, engine and
+locks passed unchanged `build-entry` admission. Profile app size is unchanged,
+but its rebuilt app hash differs from r234; byte equivalence is not claimed.
+
+| Mode and comparison | Previous APK bytes | New APK bytes | Delta |
+| --- | ---: | ---: | ---: |
+| Release r233 → r259 | 47,789,507 | 48,332,847 | +543,340 (+1.14%) |
+| Profile r234 → r260 | 66,357,880 | 66,357,880 | 0 |
+
+Explicit runtime inspection r265 passed on exact app/test bytes for both modes.
+Each has **15 actual static Kotlin call signatures**, resolved through genuine
+facade/superclass definitions with public static executable bodies. Fresh
+registrant/JNI definitions and registration code also passed with generated/copy
+and release mapping provenance. Mapping/reference text supplies no definition
+proof. Six independent raw SDK inspections establish that both immutable r233
+APKs lack `StringsKt`, `RangesKt` and `ResultKt`, regardless of plugin admission.
+The real private facade-only retention mutant r263 compiled successfully and
+refused because `kotlin.ResultKt` remained absent; no accepted build receipt or
+device session was created for the mutant. The separate real SDK/plugin harness
+r267 passed both generation modes, its dev-plugin mode mutant, four actual
+Gradle stale-source refusals and r166/r167 missing-registrant negatives.
+
+The original local release entry r266 passed on owned AOSP API 33 ARM64 in
+**13.776 seconds**: self-tests, both pinned token-free probes, one pairing report,
+canonical QA admission, the complete **357-byte control PNG**, authenticated app
+revoke and native settlement. Legitimate UTC calibration measured +5.874 ms
+reference offset and +6.361 ms device midpoint offset, retaining the original
+guards and zero intentional future pad. Exact installed app/test bytes and
+fresh host identities/signatures were bound. UID **10128** before/after crash
+buffers were both empty. Original positive receipt SHA-256:
+`1132a973ba8b248dbfa3cf5a8d269663fc1e88f7d38092eaed28f82e8bf6c884`.
+
+The passive-observer repeat r268 also passed in **13.280 seconds**, with one
+actual authenticated `/experiment/v1/session/status` HTTP 200 observation, full
+PNG, revoke and settlement, and empty exact-UID crash buffers. The observer
+retained only a fixed route's numeric HTTP code and derived bearer-presence
+boolean; no raw header, token or body was logged. It delegated the unchanged
+response method and retained the original `__main__`-guarded Firebase worker
+entry. Receipt SHA-256:
+`3267bbbfb216128286c00d15a9cbc177e3f59609dc4a93afccaad8db193bc6d5`.
+No release ledger/decode extraction or physical-presentation result is claimed.
+Both runs closed owned broker/server/reverse resources, backend, emulator and
+isolated ADB processes/listeners. Global ADB, database/Colima and the existing
+QA credential remain preserved; no Cloud session or paid trial was created.
+
+Preserved repair refusals: r255 compiled but mapping admission exceeded the old
+16 MiB ceiling (observed **17,484,863 bytes**); both readers now share a fixed
+**20 MiB** cap, with larger files refusing and unchanged trace/deadline bounds.
+r261 stopped because public external SDK reads changed atime; the new checker
+uses the existing no-follow artifact observer's inode/mode/size/mtime/ctime
+stability and exact hash, with a fixed 1 MiB executable cap. Atime-only reads
+pass; content/size/mtime/ctime/path mutations refuse. r262 stopped before emulator
+startup at a private trace-alias collision. Its original incomplete cleanup is
+retained, and a separate receipt proves qualified exact-backend ownership and
+complete listener closure. The private wrapper uses unique aliases afterward.
+The initial final-proof r269 retained two synthetic permission-fixture failures:
+the private command runner inherited umask `077`, while those existing public
+fixture cases assume `022`. The final unit-test children use that standard
+fixture umask; private traces/receipts remain `0600`/`0700`, with no application
+or security-validator change.
+
+The review patch hardens malformed JSON roots/plugin provenance and canonical
+source-copy ancestry into fixed refusals. Diagnostic-storage failure preserves
+the original public refusal/exit 4; success-receipt write failure also refuses.
+New actual-file regressions reject equal source/copy comment mutations against
+recorded build hashes and independent mutations of each original build receipt
+with unchanged APKs. Both condition-removal mutants failed their targeted
+assertions without compilation/runtime errors; original private evidence is
+bound by `kotlin-runtime-review-mutants-r271` receipt SHA-256
+`8a698932910d3f67544faf0ba1e1b8004d355616cdf3d1b78000292bf8fa50ba`.
+The patched checker passed fresh actual SDK inspection r272 on the same r259/
+r260/r233 bytes, retaining all 15 calls per fresh mode and genuine historical
+missing-definition negatives. Its receipt SHA-256 is
+`730eaf2b9fe86f2fa2ce2d0fb99c5eac8fd8fbc355fc3a7691bcba96172cb3c7`.
+Only checker/tests/documentation changed during review; the 292-input runtime
+freeze, source copies, SDK/build evidence and original r266/r268 positives remain
+unchanged. No additional build, local entry, Cloud session or credential/IAM
+operation was needed.
+
+Reviewed final verification passed **194 portable native host tests**, **22 runtime
+checker tests** and all **33 existing Apple/native build guards**, with zero
+skips and clean whitespace checks. Actual original/new APKs and source copies
+were rehashed after review. Reviewed final aggregate receipt SHA-256:
+`b36f7abd390770968e9240afbeae3197fef1ede4d38d8eb565e3b4b211015e34`.
+The pre-review r270 aggregate remains a preserved historical record:
+`836e6b817c76eb7abea3ad2cb9789a7b881287c2ac02833e4d85da30fd19db36`.
+
+Private originals are under external `android-kotlin-runtime-*` r255/r259/r260/
+r261/r263/r265 and `android-kotlin-plugin-integration-r267`, plus persistent
+`local-kotlin-release-r262/r266/r268`. Fresh tests and final preservation bindings
+are retained separately in `kotlin-runtime-reviewed-final-proof-r273`; r269/r270
+remain preserved. Physical Android
+release, the physical negative matrix, low-RAM/presentation/resource/performance
+qualification, OQ-6 and Story 1.6 remain open. A later physical trial still needs
+fresh budget/prerequisite/watchdog controls; local success creates no physical
+prerequisite or release-ledger evidence. The existing unfinished-test QA key
+must be revoked after physical testing, preserving the account and Viewer role.
+
+## Previous checkpoint — 2026-10-14
 
 This section supersedes the chronological checkpoints below. The preceding signed-artifact source freeze is **271 inputs**, `7de1a031b186009c1cc04720d3da4484a43d2fc778b7071871dc79b0a328d7c7`. Its verification passed **87 Dart tests, 101 locked host tests, 29 native guards**, analysis, both arm64 iOS 15 typechecks and whitespace checks. The accepted review patch changed only a test; production bytes matched the preceding PEM compatibility repair. A private zone-propagation mutant failed the new real-production-composition regression as expected. The Android diagnostic source freeze and host-only verification below supersede that source binding for future builds; these signed products and physical receipts remain historical observations of their exact earlier bytes.
 
@@ -17,16 +139,31 @@ This section supersedes the chronological checkpoints below. The preceding signe
 | Android current artifacts | Post-review profile r234 and release r233 app/test builds passed on the 292-input `c50615b6a410ec58212c62666a3551d9ce89d867a21c3138340d783137a5332e` source freeze, existing signer/locks/engine and byte-bound plugin provenance. Earlier r208/r209 products remain historical. |
 | Local Android profile r223 | Original QA/TLS/time gates and full installed-byte bindings passed on owned API 33 ARM64. One pairing report, authenticated admission/status, one complete 357-byte control PNG, app revoke and native settlement were observed in 13.418 seconds. The owned-app ledger has 14 records, zero drops and 128×160 actual decode. Both UID crash buffers are empty; owned broker/server/reverse and emulator/ADB cleanup passed. This is local diagnostic success; physical Android qualification remains open. |
 | Latest local Android r243/r244 | Current r234 passed complete original QA/TLS/time entry twice, with and without a passive observer. Both runs delivered the full control PNG, authenticated status/revoke and native settlement; both independently extracted ledgers have 14 records, zero drops and 128×160 decode. UID crash buffers are empty and owned runtime cleanup passed. Earlier r231/r237 combined time/token refusals remain historical. |
+| Physical Android profile r247 | Current r234 passed original authenticated entry on Pixel 7/API 33 with exact installed app/test byte binding. Both probes, canonical admission/status, the complete 357-byte PNG, authenticated app revoke and native settlement passed. A separately bound profile ledger has 14 records, zero drops and 128×160 decode; before/after exact-UID crash buffers are empty. Reachability was proxied. Physical presentation and the negative matrix remain unqualified. |
+| Physical Android release r247/r248 | r247 refused `broker_unavailable` before launch. r248 used a separately preflighted loopback port and reached a physical device, but refused `device_clock_still_unqualified` before APK installation. Default network-time refresh reported success; subsequent whole-second offset brackets remained outside the original two-second preparation bound. Neither trial supplies a release fixture result. |
+| Local Android release r253 | Current r233 exact installed app/test bytes passed admission on owned API 33 ARM64 after bounded UTC calibration. The instrumentation crashed before probes/pairing: `NoClassDefFoundError: kotlin.text.StringsKt` at the shared-vector self-test's `String.repeat` call. Exact-UID before-buffer is empty; after-buffer contains 2,015 bytes. No admission, PNG, revoke or settlement occurred. The runtime dependency repair requires its own reviewable spec; no runtime/source fix is applied here. |
 | Android latest fixture r175 | Physical Pixel 7/API 33, exact installed APK bytes, signing/identity binding, clock alignment and both token-free probes passed. The launcher emitted one pairing-key report, then returned `Process crashed.`; the host refused `native_result_rejected`. No positive authenticated entry receipt or crash stack was captured. Session was confirmed FINISHED after 92.987 seconds. |
 | Android diagnostic r178 | The next scoped-log attempt stopped at `device_connection_unavailable`, before installation or fixture execution. It produced no crash log. Session was confirmed FINISHED after 64.868 seconds. |
 | Local Android diagnostic r187 | The same r166 APKs passed host/source/signing and complete installed-byte bindings on the existing API 36 ARM64 emulator. Both probes, one pairing report, broker claim and real QA admission were observed. Native validation refused at `NATIVE_ENVELOPE_TIME_TOKEN`, before Dart handoff or fixture delivery. The selected UID's before/after crash buffers were empty. Owned reverse, broker and server cleanup passed. This is a local diagnostic observation, not physical qualification or a reproduced r175 crash. |
 | Local Android API 33 r198 | The same r166 APKs passed exact installed-byte/source/signing bindings; probes, pairing, claim and QA admission were observed. Measured transport compensation aligned the owned emulator to independently observed UTC without changing host time or validators. The process then crashed: the selected UID's original buffer identifies a null-pointer `SIGSEGV` in the matched JNI binary. No fixture, app revoke or native settlement succeeded. Owned reverse/broker/server cleanup passed. |
 | Android packaging diagnosis | Independent scans find no `GeneratedPluginRegistrant` definition in either profile r166 or release r167, while JNI/JNIFlutter plugin definitions exist. Experiment Java source replacement excludes the registrant. Matched native symbols identify the resulting uninitialized JavaVM dereference. The narrow [repair spec](../spec-android-experiment-plugin-registration.md) is implemented, both build modes pass packaging admission, and current r234 local entry passed in r243/r244 after measured UTC calibration; the narrow implementation spec is done. Physical r175 lacks a stack, so identical root cause there remains unconfirmed. |
-| Android budget and next action | User authorized 10 USD; the scoped alert, monitor and before-create guard remain configured. Fresh read-only r199 at 18:48 UTC finds 13 current-principal sessions, all terminal; latest reported GAUGE is 15 minutes. The 22-minute closed-window floor plus 22-minute pending/rounding reserve gives a gross conservative 6.60 USD before free-credit deductions; a hypothetical five-minute window plus rounding gives 7.50 USD. Neither is a bill or per-test charge; the earlier 7.05 USD was also a gross cumulative projection. Current scoped Billing UI reports Test Lab filtered total 0.00 TRY for October 1–13; delayed charges/final invoice remain unverified. The alert is unchanged and does not cut off spending. No Cloud allocation occurred after r178; diagnosis uses local API 33. Physical Android profile/release entry and negative coverage remain open. |
+| Android budget and next action | User authorized 10 USD; the scoped alert, monitor and before-create guard remain configured. Post-r248 read-only r252 finds 16 current-principal sessions, all terminal. The reconciled closed-window floor plus pending/rounding reserve gives a gross conservative 7.80 USD before free-credit deductions; a hypothetical additional five-minute window plus rounding gives 8.70 USD. Neither is an invoice or per-test charge. The last historical filtered Billing UI observation was 0.00 TRY for October 1–13; actual current/final charges remain unverified. The alert does not cut off spending. Resolve the demonstrated release crash locally before allocating another paid device. |
 
 Google's [DeviceSession state contract](https://firebase.google.com/docs/test-lab/reference/testing/rest/v1/projects.deviceSessions) defines `PENDING` as queued and `ACTIVE` as allocated and accepting connections. The earlier r109 20-read window ended before the forty-second maximum check. Later retries allow sixty seconds for the queue while retaining independent root cancellation at 280 seconds and a 300-second cleanup window. Provider expiration and this whole create-to-return limit are distinct; no provider hard cap is asserted.
 
-The replacement QA key and private backend/database artifacts remain retained for unfinished physical verification. Earlier readiness checks remain historical: the 2026-10-14 04:47 UTC read-only check found the owned emulator/ADB processes absent and the previous QA backend listener closed. Fresh runtime and token readiness are required before another local test. Revoke only that replacement key after tests finish; preserve the dedicated account, Viewer role, canonical user and unrelated resources. All raw evidence stays in persistent private storage outside Git. The complete physical negative matrix, Android fixture qualification, OQ-6, candidate/presentation/resource evidence and Story 1.6 remain open.
+The replacement QA key and private backend/database artifacts remain retained for unfinished physical verification. r254 confirms closure of the exact owned QA backend and r251/r253 emulator/isolated ADB processes; owned listeners are closed, global ADB and database/Colima are preserved. Fresh runtime and token readiness are required before another test. Revoke only that replacement key after tests finish; preserve the dedicated account, Viewer role, canonical user and unrelated resources. All raw evidence stays in persistent private storage outside Git. Physical Android release, the complete physical negative matrix, OQ-6, candidate/presentation/resource evidence and Story 1.6 remain open.
+
+### Physical profile success and release blockers — 2026-10-14
+
+The r246 trial stopped at the UID-log capability check because `logcat --help` supplied valid help on stderr rather than stdout. Its exact owned session finished in 76.086 seconds. A private r247 operator accepts bounded combined stdout/stderr only with the anchored genuine usage/UID-option text; filtering remains exact to the selected experiment UID. No application, TLS, authentication or native guard changed.
+
+r247's physical profile verification receipt SHA-256 is `b0abf5fe065abacdb5998bde324a0ad588c1a6549c0918003e3392c94ec784fb`. Its companion ledger supplies actual decode evidence independently of the original driver's nullable decode field. Both app/test installations were verified by device-computed full SHA-256, exact size, stable file metadata/package selection and fresh host signature/identity checks. This binds signatures by exact APK equivalence; independent device certificate extraction is not asserted. MemTotal was approximately 7.6 GiB, so this device does not qualify the low-RAM floor. Streaming/proxied reachability supplies no physical-presentation or benchmark receipt.
+
+r247 release then refused broker creation on the shared port; the exact underlying socket error was not observed. A distinct owned port passed the original server's certificate-chain/load/bind preflight before r248; reuse/TLS/native rules were preserved. r247 and r248 were independently confirmed `FINISHED` in 92.818 and 50.747 seconds. r248's default clock refresh reduced an initial approximately seven-second lag, but the post-refresh brackets ranged from −2,665 to −1,066 milliseconds and failed the unchanged preparation bound. A subsequent independent host UTC check measured offsets of approximately +1.1 ms (Apple) and +2.6 ms (Google); this check does not retroactively establish the device's exact millisecond offset.
+
+Free local release investigation retained r249's configuration-key refusal and r250's unique-receipt write refusal. r251's cold command application correction exceeded the existing 25 ms limit and did not launch the app. After the same owned emulator warmed, r253 passed unchanged bounded calibration at approximately +2.724 ms against a +1.555 ms reference, then reached the release instrumentation crash in 5.829 seconds. Before-buffer was empty; after-buffer SHA-256 is `111c1151b966dd8a8dddd722bcaa07a963aea572c60a111c6c418e57758cb3f8`. The shared-vector call references the missing Kotlin facade before Activity startup, independently of authentication or device time. Broker/server/reverse cleanup passed. A QEMU exec transition was rebound using the exact executable/arguments, unchanged process start and owned group before shutdown; r254 confirms complete owned process/listener closure.
+
+Private originals are under `android-physical-session-r246` through `r248`, `local-release-r249` through `r253`, `android-readonly-budget-r252` and `native-runtime-cleanup-r254`. No additional Cloud allocation occurred during local release investigation. Current runtime artifacts remain bound to the unchanged 292-input source selection `c50615b6a410ec58212c62666a3551d9ce89d867a21c3138340d783137a5332e`; the successful physical profile does not qualify release or missing negative/presentation/resource cases.
 
 ### Approved lifecycle repair and local crash diagnosis — 2026-10-13
 

@@ -86,6 +86,27 @@ class AndroidPluginTests(unittest.TestCase):
             with self.subTest(raw=raw), self.assertRaisesRegex(EntryError, "android_plugin_mapping_rejected"):
                 plugins.mapping_names(raw)
 
+    def test_large_retained_stdlib_mapping_passes_and_above_cap_refuses(self):
+        directory = self.output / "gradle/app/outputs/mapping/release"
+        directory.mkdir(parents=True)
+        path = directory / "mapping.txt"
+        header = (plugins.ENGINE + " -> a.b:\n" + plugins.PLUGIN + " -> c.d:\n" + plugins.REGISTRY +
+            " -> e.f:\n    void add(" + plugins.PLUGIN + ") -> x\n").encode()
+        path.write_bytes(header + b"# retained stdlib mapping padding\n" * 530000)
+        path.chmod(0o600)
+        self.assertGreater(path.stat().st_size, 16 * 1024 * 1024)
+        def command(argv, output, alias, **kwargs):
+            raw = self.command(argv, output, alias, **kwargs)
+            return registrant("a.b", "e.f", "c.d", "x") if argv[-2] == plugins.REGISTRANT else raw
+        result = plugins.inspect_android_plugins(self.mobile, self.app, self.output, "release",
+            time.monotonic() + 5, command, driver.artifact_hash)
+        self.assertEqual(result["mappingSha256"], sha256(path.read_bytes()).hexdigest())
+        with path.open("wb") as handle:
+            handle.truncate(plugins.MAX_MAPPING_BYTES + 1)
+        with self.assertRaisesRegex(EntryError, "^file_size_rejected$"):
+            plugins.inspect_android_plugins(self.mobile, self.app, self.output, "release",
+                time.monotonic() + 5, command, driver.artifact_hash)
+
     def test_reference_only_decoys_wrong_class_empty_and_truncated_outputs_refuse(self):
         for raw in (b"", b"C r 0 1 0 io.flutter.plugins.GeneratedPluginRegistrant\n",
                 smali("decoy.Class", "const-string v0, \"io.flutter.plugins.GeneratedPluginRegistrant\"\n"),

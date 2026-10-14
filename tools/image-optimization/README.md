@@ -479,3 +479,76 @@ trace bounds. Exit `0` and `integration-receipt.json` attest all these checks;
 exit `4` is refusal. It creates no accepted APK build receipt, device/Cloud session
 or physical qualification. Fresh source-bound signed builds and the separate
 local runtime check remain required after production helper changes.
+
+### Android instrumentation Kotlin runtime
+
+Experiment release retains the shared Kotlin stdlib because target-app R8 cannot
+see calls in the separately packaged instrumentation APK. The existing
+experiment-only ProGuard selection and bootstrap rule remain in place. Ordinary
+builds do not select this rule; shrinking and pinned dependencies remain enabled.
+Record the signed APK size delta against r233 whenever rebuilding this repair.
+
+Run portable runtime definition, reference, inheritance, partial-retention and
+byte-mismatch refusal cases without an SDK or private inputs:
+
+```sh
+tools/image-optimization/.venv/bin/python -B -m unittest discover \
+  -s tools/image-optimization -p 'test_android_instrumentation_runtime*.py'
+```
+
+Real byte-bound APK inspection is a separate mandatory check. Supply the selected
+existing Java/SDK tool and original receipts explicitly in a private `0600` config
+under an owned `0700` directory; no path discovery or skipped proof is supported:
+
+```json
+{
+  "scope": "android-instrumentation-runtime-integration-r1",
+  "schemaVersion": 1,
+  "apkanalyzer": "/absolute/path/to/existing-sdk/cmdline-tools/current/bin/apkanalyzer",
+  "javaHome": "/absolute/path/to/existing-java-home",
+  "profileBuildReceipt": "/absolute/private/path/to/fresh-profile/build-receipt.json",
+  "releaseBuildReceipt": "/absolute/private/path/to/fresh-release/build-receipt.json",
+  "oldReleaseBuildReceipt": "/absolute/private/path/to/immutable-r233/build-receipt.json",
+  "privateOutputRoot": "/absolute/private/path/to/new-exclusive-runtime-output"
+}
+```
+
+```sh
+tools/image-optimization/.venv/bin/python -B \
+  tools/image-optimization/android_instrumentation_runtime_integration.py \
+  --config "$ANDROID_RUNTIME_INTEGRATION_CONFIG"
+```
+
+The checker pins both full historical r233 APK hashes, requires genuine missing
+`StringsKt`, `RangesKt` and `ResultKt` definitions in both old APKs independently
+of plugin admission, and preserves the originals. For each fresh mode it hashes
+both full APKs, enumerates defined instrumentation classes, reads actual static
+Kotlin call sites, and resolves exact method signatures through raw superclass
+definitions. Public static executable bodies are required; mapping entries,
+references and strings cannot establish a definition. It independently rereads
+the registrant/JNI definitions and registration code with generated-source,
+compiled-copy and release mapping bindings from the signed build receipt.
+Retaining the full stdlib grew the observed release mapping to 17,484,863 bytes;
+both plugin admission and runtime inspection share a fixed 20 MiB mapping cap.
+Larger files refuse. Tool trace and deadline bounds remain unchanged.
+
+Original build-receipt and tool bytes are rechecked, signer/source identity must
+match across fresh modes. The selected SDK executable has a 1 MiB cap and uses
+the existing no-follow artifact observer's inode/mode/size/mtime/ctime stability
+checks; a read-only atime update is allowed. Every command uses the private bounded
+trace runner within a 180-second total deadline. Exit `0` plus the private
+`integration-receipt.json` establishes inspection; exit `4` and the fixed failure
+receipt preserve refusal. This check reads no QA token or credential and creates
+no device/Cloud session. It does not prove complete transitive runtime closure:
+the original authenticated API 33 release entry, UID-scoped crash observation and
+owned cleanup remain required. Local success cannot close physical, negative
+matrix, presentation or performance gates.
+
+Malformed receipt roots, plugin provenance and noncanonical/short source-copy
+paths produce fixed refusals. Equal source/copy bytes must still match the
+recorded build hashes, and all three original build receipts are rehashed after
+inspection. If diagnostic storage is full, occupied or unavailable, the public
+fixed refusal and exit `4` remain available even when its failure receipt cannot
+be saved. Failure to save a success receipt always refuses. Portable regressions
+cover these paths; source-provenance and receipt-binding condition-removal
+mutants must fail their targeted assertions before accepting review evidence.
