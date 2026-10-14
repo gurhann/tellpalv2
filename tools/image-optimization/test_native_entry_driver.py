@@ -171,6 +171,59 @@ class CommandTests(PrivateInputs):
                         self.assertTrue((output / "build-receipt.json").exists())
                 self.assertEqual([alias for argv, alias in calls].count("native-test-linkage"), 1)
 
+    def test_android_build_plugin_admission_failure_precedes_receipt_and_success_is_bound(self):
+        for index, reject in enumerate((True, False)):
+            with self.subTest(reject=reject):
+                output = self.base / ("android-build-" + str(index))
+                output.mkdir(mode=0o700)
+                mobile = output / "mobile"
+                mobile.mkdir(mode=0o700)
+                (mobile / "pubspec.lock").write_bytes(b"synthetic pinned lock")
+                app = output / "gradle/app/outputs/apk/release/app-release.apk"
+                test = app.parent / "androidTest/app-release-androidTest.apk"
+                test.parent.mkdir(parents=True)
+                app.write_bytes(b"synthetic app APK")
+                test.write_bytes(b"synthetic test APK")
+                evidence = {"artifactSha256": "2" * 64, "generatedSourceSha256": "4" * 64,
+                    "status": "defined_registration_verified"}
+                calls = []
+                def native_command(argv, target, alias, **kwargs):
+                    calls.append((argv, alias))
+                    if alias == "app-id":
+                        return self.values["expectedAppId"].encode()
+                    if alias == "test-id":
+                        return (self.values["expectedAppId"] + ".test").encode()
+                    if alias in ("app-signing", "test-signing"):
+                        return ("Signer #1 certificate SHA-256 digest: " + "3" * 64).encode()
+                    if alias == "debuggable":
+                        return b"false"
+                    if alias == "flutter-version":
+                        return frozen_json({"engineRevision": "synthetic-engine"})
+                    return b""
+                with ExitStack() as stack:
+                    stack.enter_context(patch.object(driver, "source_snapshot", return_value=({}, "0" * 64)))
+                    stack.enter_context(patch.object(driver, "certificate_identity"))
+                    stack.enter_context(patch.object(driver, "private_mobile_snapshot", return_value=mobile))
+                    stack.enter_context(patch.object(driver, "prepare_android_tool_settings"))
+                    stack.enter_context(patch.object(driver, "generated_source", return_value="4" * 64))
+                    generation = stack.enter_context(patch.object(driver, "generate_android_registrant", return_value={}))
+                    stack.enter_context(patch.object(driver, "validate_copied_sources", return_value="1" * 64))
+                    stack.enter_context(patch.object(driver, "artifact_hash", return_value="2" * 64))
+                    stack.enter_context(patch.object(driver, "checked_run", side_effect=native_command))
+                    admission = stack.enter_context(patch.object(driver, "inspect_android_plugins",
+                        side_effect=EntryError("android_plugin_definition_rejected") if reject else None,
+                        return_value=evidence))
+                    if reject:
+                        with self.assertRaisesRegex(EntryError, "android_plugin_definition_rejected"):
+                            driver.build_entry(Configuration(self.values, "0" * 64), None, output, time.monotonic() + 5)
+                        self.assertFalse((output / "build-receipt.json").exists())
+                    else:
+                        receipt = driver.build_entry(Configuration(self.values, "0" * 64), None, output, time.monotonic() + 5)
+                        self.assertEqual(receipt["androidPluginRegistration"], evidence)
+                        self.assertEqual(receipt["artifactSha256"], evidence["artifactSha256"])
+                    admission.assert_called_once()
+                generation.assert_called_once()
+
     def test_private_snapshot_preserves_actual_native_repository_exclusion_topology(self):
         origin = self.base / "original/app/mobile"
         (origin / "android").mkdir(parents=True, mode=0o700)

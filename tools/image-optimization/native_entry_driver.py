@@ -22,6 +22,8 @@ from native_entry_config import (EntryError, HASH, ROOT, SCOPE, MAX_BACKEND_RECE
     frozen_json, load_config, load_manifest, no_symlink, open_nofollow, origin, private_file, private_output,
     require, strict_json, write_private)
 from native_entry_crypto import certificate_identity, public_key
+from native_entry_android_plugins import (inspect_android_plugins, generate_android_registrant,
+    generated_source, SOURCE as ANDROID_REGISTRANT_SOURCE)
 from native_entry_destination import destination_run, FIXTURE_TEST
 from native_fixture_server import Broker, FirebaseVerifier, create_server
 
@@ -521,6 +523,9 @@ def build_entry(config, manifest, output, deadline):
     checked_run(["flutter", "pub", "get", "--offline"], output, "flutter-packages", deadline=deadline, cwd=mobile)
     require(sha256((mobile / "pubspec.lock").read_bytes()).hexdigest() == original_pub_lock, "mobile_lock_changed")
     if values["platform"] == "android":
+        android_generation = generate_android_registrant(mobile, output, values["mode"], deadline, checked_run)
+        require(sha256((mobile / "pubspec.lock").read_bytes()).hexdigest() == original_pub_lock, "mobile_lock_changed")
+        generated_registrant_hash = generated_source(mobile / ANDROID_REGISTRANT_SOURCE)
         mode = values["mode"].capitalize()
         checked_run([str(mobile / "android/gradlew"), "--no-daemon", "-PimageExperiment=true",
             "-PexperimentMode=" + values["mode"], "-Ptarget=lib/main_image_experiment.dart",
@@ -544,6 +549,10 @@ def build_entry(config, manifest, output, deadline):
         debuggable_text = checked_run(["apkanalyzer", "manifest", "debuggable", str(app)], output, "debuggable", deadline=deadline).decode().strip()
         require(debuggable_text in ("true", "false"), "debuggable_unverified")
         debuggable = debuggable_text == "true"
+        android_plugins = inspect_android_plugins(mobile, app, output, values["mode"], deadline,
+            checked_run, artifact_hash)
+        require(android_plugins["generatedSourceSha256"] == generated_registrant_hash, "android_plugin_binding_changed")
+        android_plugins.update(android_generation)
     else:
         derived = output / "derived-data"
         checked_run(["pod", "install", "--deployment"], output, "pods", deadline=deadline, cwd=mobile / "ios")
@@ -591,6 +600,9 @@ def build_entry(config, manifest, output, deadline):
         "engineRevision": version["engineRevision"], "renderer": None, "rendererReason": "runtime_not_observed",
         "debuggable": debuggable, "debuggableReason": None if debuggable is not None else "runtime_not_observed",
         "physicalVerification": "not_run", "nativeEntryGate": "open"}
+    if values["platform"] == "android":
+        require(receipt["artifactSha256"] == android_plugins["artifactSha256"], "android_plugin_binding_changed")
+        receipt["androidPluginRegistration"] = android_plugins
     write_private(output / "build-receipt.json", receipt)
     return receipt
 

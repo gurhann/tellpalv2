@@ -418,3 +418,64 @@ pass. No Flutter/native build is needed for this host-only setup increment.
 Official guidance was checked on 2026-10-11. Recheck rolling client compatibility,
 IAM, quota/pricing and profiler guidance before the later manual step; this
 runbook records prerequisites rather than an executed native or cloud session.
+
+## Android plugin registration verification
+
+The default `test_native*.py` suite uses synthetic private fixtures and requires
+no personal SDK, Java installation, signing files or archived APKs. Run it with
+the locked host environment:
+
+```sh
+tools/image-optimization/.venv/bin/python -B -m unittest discover \
+  -s tools/image-optimization -p 'test_native*.py'
+```
+
+Real SDK generation, Gradle refusal and historical APK negatives are separate,
+mandatory integration evidence for the plugin repair. Invoke them explicitly:
+
+```sh
+tools/image-optimization/.venv/bin/python -B \
+  tools/image-optimization/android_plugin_registration_integration.py \
+  --config "$ANDROID_PLUGIN_INTEGRATION_CONFIG"
+```
+
+Create the configuration outside Git with mode `0600`, in an owned `0700`
+directory. Every path is explicit and absolute; this example contains placeholders,
+not discovered defaults:
+
+```json
+{
+  "scope": "android-plugin-registration-integration-r1",
+  "schemaVersion": 1,
+  "flutterExecutable": "/absolute/path/to/flutter/bin/flutter",
+  "androidSdkRoot": "/absolute/path/to/android-sdk",
+  "javaHome": "/absolute/path/to/existing-java-home",
+  "apkanalyzer": "/absolute/path/to/android-sdk/cmdline-tools/current/bin/apkanalyzer",
+  "signingConfigFile": "/absolute/private/path/to/existing-experiment-signing.properties",
+  "oldProfileBuildReceipt": "/absolute/private/path/to/original-profile/build-receipt.json",
+  "oldReleaseBuildReceipt": "/absolute/private/path/to/original-release/build-receipt.json",
+  "privateOutputRoot": "/absolute/private/path/to/new-exclusive-integration-output"
+}
+```
+
+Use the existing selected SDK, signer and r166/r167 archive receipts; never
+replace missing inputs with synthetic receipts. Missing, malformed, changed or
+incompatible inputs produce a nonzero refusal, never a skip or successful proof.
+The output root must be new and have an owned private parent. Inputs, originals
+and SDK files remain unchanged; all new traces and receipts stay private.
+
+The harness resolves packages once with `flutter pub get --offline` in a fresh
+private source snapshot and checks unchanged lock bytes. It executes the actual
+selected SDK generator for both modes: profile must include the project's
+`integration_test` plugin, release must exclude that dev plugin, and both must
+retain JNI/JNIFlutter registration. A private invocation-only mutant setting
+`releaseMode: false` must fail the release content check. No SDK source or
+SDK-generated Java is manually edited for this mode check.
+
+The same harness runs the four real Gradle generation refusals, including owned
+stale-copy removal, and verifies byte-bound old APK missing-definition negatives.
+Its total deadline is 180 seconds and each tool retains the existing private
+trace bounds. Exit `0` and `integration-receipt.json` attest all these checks;
+exit `4` is refusal. It creates no accepted APK build receipt, device/Cloud session
+or physical qualification. Fresh source-bound signed builds and the separate
+local runtime check remain required after production helper changes.
