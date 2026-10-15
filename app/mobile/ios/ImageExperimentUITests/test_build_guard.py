@@ -30,7 +30,7 @@ harness_spec.loader.exec_module(android_harness)
 class BuildGuardTests(unittest.TestCase):
     def test_android_refusal_diagnostics_execute_actual_kotlin_matrix_and_private_mutant(self):
         evidence = android_harness.run(mutant=True)
-        self.assertEqual(evidence["caseCount"], 48)
+        self.assertEqual(evidence["caseCount"], 65)
         self.assertEqual(evidence["matrixExit"], 0)
         self.assertNotEqual(evidence["mutantExit"], 0)
         self.assertEqual(evidence["mutantFailure"], "first-specific-stage-propagation")
@@ -41,6 +41,23 @@ class BuildGuardTests(unittest.TestCase):
             "launcher-foreign-and-second-instances-stay-unowned", "launcher-creation-and-reachability-share-launch-bound",
             "launcher-responsive-main-finish-ack-before-terminal", "launcher-blocked-main-deadline-refuses-before-release"}
         self.assertTrue(lifecycle <= set(evidence["cases"]))
+        self.assertTrue({"quality-actual-instrumentation-wait-timeout", "quality-actual-instrumentation-encoding",
+            "quality-actual-instrumentation-status-send", "quality-actual-instrumentation-settlement",
+            "quality-actual-instrumentation-ledger", "quality-actual-interrupted-wait-is-not-timeout",
+            "quality-first-substage-and-original-dart-cause-survive-cleanup",
+            "quality-each-finite-substage-and-disabled-observer-preserve-failure",
+            "quality-success-keeps-original-wire-and-null-marker"} <= set(evidence["cases"]))
+        self.assertTrue({"reader-quality-responsive200ms-keeps-legacy150ms-separate",
+            "reader-quality-blocked-timeout500-excludes-late-read-and-publication",
+            "reader-quality-blocked-absolute120-excludes-late-read-and-publication",
+            "reader-quality-blocked-interrupted-excludes-late-read-and-publication",
+            "reader-quality-blocked-retired-excludes-late-read-and-publication"} <= set(evidence["cases"]))
+        self.assertTrue({f"reader-quality-launcher-reader_quality_{arm}_r1-responsive200ms-settles"
+            for arm in ("full", "100", "075")} <= set(evidence["cases"]))
+        quality_dispatch = evidence["readerQualityDispatchMutant"]
+        self.assertEqual(quality_dispatch["compileExit"], 0)
+        self.assertNotEqual(quality_dispatch["runtimeExit"], 0)
+        self.assertEqual(quality_dispatch["failure"], "reader-quality-launcher-success")
         startup = evidence["startupMutant"]
         self.assertEqual(startup["compileExit"], 0)
         self.assertNotEqual(startup["runtimeExit"], 0)
@@ -194,7 +211,11 @@ class BuildGuardTests(unittest.TestCase):
         launcher = (sources / "imageExperimentAndroidTest/kotlin/com/tellpal/imageexperiment/ImageExperimentInstrumentation.kt").read_text()
         activity = (sources / "imageExperiment/kotlin/com/tellpal/imageexperiment/ImageExperimentActivity.kt").read_text()
         self.assertRegex(launcher, r"while \(!bootstrap\.isRevoked && !activity\.isFinishing && !activity\.isDestroyed &&\s*SystemClock\.elapsedRealtime\(\) - start < 180_000\)")
-        self.assertRegex(launcher, r"require\(bootstrap\.isRevoked && bootstrap\.launcherOutcome\.isSettled\(\)\)\s*exportLedger\(\)\s*result\.putString\(\"reason\", \"NATIVE_LAUNCHER_SETTLED\"\)\s*finish\(Activity.RESULT_OK, result\)")
+        self.assertRegex(launcher, r"val revoked = bootstrap\.isRevoked\s*if \(!revoked\) qualityDiagnostics\.record\(ImageExperimentQualityStage\.bootstrapRevocation\)\s*require\(revoked && bootstrap\.launcherOutcome\.isSettled\(\)\)\s*\}\s*qualityDiagnostics\.run\(ImageExperimentQualityStage\.ledgerExport\) \{ exportLedger\(\) \}\s*result\.putString\(\"reason\", \"NATIVE_LAUNCHER_SETTLED\"\)\s*finish\(Activity.RESULT_OK, result\)")
+        self.assertRegex(launcher, r"val finished = completed\.await\(150, java\.util\.concurrent\.TimeUnit\.MILLISECONDS\)\s*if \(!finished\) qualityDiagnostics\.record\(ImageExperimentQualityStage\.uiWaitTimeout\)\s*require\(finished\)")
+        self.assertIn('minOf(500, maxOf(1, deadline - SystemClock.elapsedRealtime()))', launcher)
+        self.assertIn('require(!reader || SystemClock.elapsedRealtime() < nativeDeadline)', launcher)
+        self.assertIn('require(!readerPrimary || readerBackgroundCompleted)', launcher)
         self.assertIn('result.putString("reason", "NATIVE_LAUNCHER_REFUSED")', launcher)
         self.assertIn("finish(Activity.RESULT_CANCELED, result)", launcher)
         self.assertIn('arguments?.keys == setOf("result")', activity)

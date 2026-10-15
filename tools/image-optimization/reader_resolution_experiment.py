@@ -617,7 +617,48 @@ def reload_reader_manifest(config, previous, binding):
     return refreshed
 
 
-def qualify(data, binding, outcome, manifest, *, platform, source_root=None):
+def quality_variant_provenance(manifest, observed, source_root, quality_inputs_path):
+    """Reproduce each quality PNG directly from independently admitted TR originals."""
+    from reader_android_quality_capture import QUALITY_BATCHES
+    require(source_root is not None and quality_inputs_path is not None,
+        'reader_quality_sources_required')
+    pages, admission = admit_quality_sources(source_root, quality_inputs_path)
+    public = strict_json(manifest.public_bytes)
+    batch = public.get('batchId')
+    require(batch in QUALITY_BATCHES and len(manifest.entries) == 2 and
+        public.get('corpusSha256') == digest(frozen_json(admission)) and
+        public.get('sourceSha256') == digest(frozen_json([page.source_sha256 for page in pages])) and
+        public.get('referenceSha256') == digest(frozen_json([page.reference_sha256 for page in pages])),
+        'reader_quality_source_binding_rejected')
+    provenance = []
+    for case, page, entry in zip(READER_CASES[:2], pages, manifest.entries):
+        dimensions = ({'width': page.width, 'height': page.height} if batch == 'reader_quality_full_r1' else
+            contain_dimensions(page.width, page.height, observed['observedSlotWidth'],
+                observed['observedSlotHeight'], observed['observedDpr'], .75 if batch == 'reader_quality_075_r1' else 1.0))
+        full = batch == 'reader_quality_full_r1'
+        require(entry['caseId'] == case and entry['sourceSha256'] == page.source_sha256 and
+            entry['referenceSha256'] == page.reference_sha256 and
+            (entry['width'], entry['height']) == (dimensions['width'], dimensions['height']) and
+            (entry['logicalSlotWidth'], entry['logicalSlotHeight'], entry['dpr']) ==
+                tuple(observed[key] for key in GEOMETRY_FIELDS[:3]) and
+            entry['profileRevision'] == 'reader_frozen_r1' and entry['purposeAcceptanceReceipt'] == batch and
+            entry['arm'] == ('control' if full else 'candidate') and entry['encoderRevision'] ==
+                ('reader_v7_png_pillow12_r1' if full else 'reader_lanczos_pillow12_r1'),
+            'reader_quality_resize_binding_rejected')
+        encoded = encode_page(page, dimensions)
+        require(manifest.objects.get(case) == encoded and entry['byteSize'] == len(encoded) and
+            entry['outputSha256'] == digest(encoded), 'reader_quality_bytes_rejected')
+        provenance.append({'contentId': page.content_id, 'language': 'tr', 'pageNumber': 1,
+            'sourceSha256': page.source_sha256, 'referenceSha256': page.reference_sha256,
+            'outputSha256': digest(encoded), 'encodedDimensions': [entry['width'], entry['height']],
+            'pixelsVerified': True, 'retainedInputsSha256': admission['retainedInputsSha256'],
+            'originalManifestSha256': admission['originalManifestSha256'],
+            'v7PreparationSha256': admission['v7PreparationSha256']})
+    return provenance
+
+
+def qualify(data, binding, outcome, manifest, *, platform, source_root=None,
+        quality_inputs_path=None, quality_capture_root=None):
     require(platform in ('ios', 'android') and binding.get('batchId') in READER_BATCHES and
         validate_reader_entries(binding['batchId'], manifest.entries) and
         binding.get('publicManifestSha256') == manifest.public_sha256 and
@@ -741,6 +782,12 @@ def qualify(data, binding, outcome, manifest, *, platform, source_root=None):
     frame_observations = [type(row.get('frameCount')) is int and row['frameCount'] > 0 for row in frames]
     frame_reason = ('observed' if frames and all(frame_observations) else
         'partially_observed' if any(frame_observations) else 'unavailable')
+    quality_captures = None
+    if quality and platform == 'android':
+        from reader_android_quality_capture import qualify_collection
+        require(quality_capture_root is not None, 'reader_capture_collection_incomplete')
+        provenance = quality_variant_provenance(manifest, observed, source_root, quality_inputs_path)
+        quality_captures = qualify_collection(quality_capture_root, binding, manifest, observed, provenance)
     return {'schemaVersion': 1, 'scope': SCOPE, 'status': 'observed', 'platform': platform,
         'qualification': 'awaiting_human_quality' if quality else 'qualified' if metric_eligible else 'unavailable',
         'sourceSufficiencyReason': 'insufficient_pixels' if shortages else 'sufficient',
@@ -758,6 +805,9 @@ def qualify(data, binding, outcome, manifest, *, platform, source_root=None):
         'lifecycle': lifecycle[-1] if lifecycle else None,
         'lifecycleReason': 'observed' if lifecycle_observed else 'unavailable',
         'deviceUnitSha256': binding.get('deviceUnitSha256'), 'crossReservationCausalComparison': False,
+        'allocationSha256': binding.get('allocationSha256'),
+        'artifactSha256': outcome.get('artifactSha256'), 'testArtifactSha256': outcome.get('testArtifactSha256'),
+        'qualityCaptures': quality_captures,
         'physicalPresentation': None, 'qualityAccepted': None, 'audioGeometry': 'untested',
         'repeatability': None, 'p95': None, 'jpegWebpPerformance': 'unqualified'}
 
@@ -807,7 +857,7 @@ def _run(config, manifest, output, *, sequential_window=None, **arguments):
 
 def _run_observed(config, manifest, output, *, build_path, prerequisite_path, audit_path,
         frozen_geometry=None, root_elapsed_seconds=None, reservation_remaining_seconds=None,
-        sequential_lease=None, source_root=None):
+        sequential_lease=None, source_root=None, quality_inputs_path=None):
     """Observe an already installed reader launch; never create a paid allocation."""
     import native_entry_driver as host
     from native_fixture_server import Broker
@@ -818,6 +868,9 @@ def _run_observed(config, manifest, output, *, build_path, prerequisite_path, au
         validate_reader_entries(config.values['batchId'], manifest.entries), 'reader_selection_rejected')
     if config.values['batchId'] != 'reader_resolution_a_r1':
         geometry(frozen_geometry)
+    android_quality = config.values['platform'] == 'android' and config.values['batchId'].startswith('reader_quality_')
+    if android_quality:
+        quality_variant_provenance(manifest, geometry(frozen_geometry), source_root, quality_inputs_path)
     sequential_arguments = {'sequential_lease': sequential_lease} if sequential_lease is not None else {}
     build, proof = host.validate_physical_prerequisites(config, build_path, prerequisite_path,
         **sequential_arguments)
@@ -832,7 +885,8 @@ def _run_observed(config, manifest, output, *, build_path, prerequisite_path, au
         selected075_provenance(manifest, geometry(frozen_geometry), source_root)
     source_digest = host.source_snapshot()[1]
     tools = {name: digest((Path(__file__).parent / name).read_bytes()) for name in
-        ('reader_resolution_experiment.py', 'reader_android_window.py', 'reader_terminal_observation.py', 'native_entry_config.py',
+        ('reader_resolution_experiment.py', 'reader_android_window.py', 'reader_android_quality_capture.py',
+            'native_artwork_comparison.py', 'reader_terminal_observation.py', 'native_entry_config.py',
             'native_fixture_server.py', 'native_entry_driver.py')}
     output = Path(output)
     write_private(output / 'reader-tool-freeze.json', {'scope': SCOPE, 'sourceSha256': source_digest,
@@ -885,9 +939,25 @@ def _run_observed(config, manifest, output, *, build_path, prerequisite_path, au
             super().__init__(*args, **kwargs)
             self.chunks = LedgerChunks()
             state['pairing'] = self
+            if android_quality:
+                from reader_android_quality_capture import ReaderAndroidQualityCollector
+                state['quality'] = ReaderAndroidQualityCollector(config, output,
+                    binding=lambda: state.get('binding'), geometry=frozen_geometry, deadline=deadline)
         def __call__(self, line):
             self.chunks.feed(line)
+            if android_quality:
+                state['quality'].feed(line)
             super().__call__(line)
+        def poll(self):
+            super().poll()
+            if android_quality:
+                state['quality'].poll()
+        def close(self):
+            try:
+                if android_quality:
+                    state['quality'].close()
+            finally:
+                super().close()
     try:
         host.Broker, host.LauncherPairing = ObservedBroker, Pairing
         outcome = host.verify_entry(config, manifest, output, deadline, case_id=READER_CASES[0],
@@ -901,19 +971,27 @@ def _run_observed(config, manifest, output, *, build_path, prerequisite_path, au
                 pass
         raise
     finally:
+        if 'quality' in state:
+            state['quality'].close()
         host.Broker, host.LauncherPairing = original_broker, original_pairing
         LOCK.release()
     require('binding' in state and host.source_snapshot()[1] == source_digest and all(
         digest((Path(__file__).parent / name).read_bytes()) == expected for name, expected in tools.items()),
         'reader_source_changed')
     if config.values['platform'] == 'android':
+        if android_quality:
+            require('quality' in state, 'reader_capture_collection_incomplete')
+            state['quality'].finish()
         data = state['pairing'].chunks.finish()
         write_private(output / 'device-ledger.json', data)
         refreshed = (reload_reader_manifest(config, manifest, state['binding'])
-            if config.values['batchId'] == SELECTED075_BATCH else manifest)
+            if config.values['batchId'] == SELECTED075_BATCH or android_quality else manifest)
         try:
             result = qualify(data, state['binding'], outcome, refreshed,
-                platform='android', source_root=source_root)
+                platform='android', source_root=source_root, quality_inputs_path=quality_inputs_path,
+                quality_capture_root=state['quality'].root if android_quality else None)
+            if android_quality:
+                write_private(output / 'reader-quality-collection.json', result['qualityCaptures'])
         finally:
             if refreshed is not manifest:
                 refreshed.objects.clear()

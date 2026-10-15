@@ -492,5 +492,184 @@ class TwelveMinuteProfileTests(WindowInputs):
             owned.validate_cleanup(allocation_sha256='2' * 64, terminal_observed=True)
 
 
+class QualityProfileTests(WindowInputs):
+    def quality_window(self, **changes):
+        return window.SequentialAndroidWindow(**{**self.arguments,
+            'profile': window.QUALITY_PROFILE,
+            'reservation_expires_at_milliseconds': self.root_epoch + 718000, **changes})
+
+    def test_quality_A_full_100_075_order_is_isolated_and_each_native_entry_is_bounded(self):
+        owned = self.quality_window()
+        self.assertEqual(owned.order, window.QUALITY_ORDER)
+        self.assertEqual(window.SequentialAndroidWindow(**self.arguments).order, window.ORDER)
+        proof = {**self.proof, 'reservationExpiresAt': self.root_epoch + 718000}
+        for index, batch in enumerate(window.QUALITY_ORDER):
+            self.elapsed = 60 + 120 * index
+            lease = owned.enter(batch, geometry_sha256=None if index == 0 else 'a' * 64)
+            lease.validate(self.values(batch), self.build, proof)
+            self.assertLessEqual(lease.deadline - lease.entered_monotonic, 180)
+            self.assertGreaterEqual(lease.deadline - lease.entered_monotonic, 150)
+            with self.assertRaisesRegex(EntryError, 'order'):
+                owned.enter(batch, geometry_sha256='a' * 64)
+            owned.finish(lease, succeeded=True, geometry_sha256='a' * 64)
+        with self.assertRaisesRegex(EntryError, 'order'):
+            owned.enter(window.QUALITY_ORDER[-1], geometry_sha256='a' * 64)
+
+    def test_quality_refuses_primary_wrong_order_geometry_failed_run_and_wrong_allocation(self):
+        owned = self.quality_window()
+        for batch in (*window.ORDER[1:], *window.QUALITY_ORDER[1:]):
+            with self.subTest(batch=batch), self.assertRaisesRegex(EntryError, 'order'):
+                owned.enter(batch)
+        lease = owned.enter(window.QUALITY_ORDER[0])
+        owned.finish(lease, succeeded=True, geometry_sha256='a' * 64)
+        with self.assertRaisesRegex(EntryError, 'geometry'):
+            owned.enter(window.QUALITY_ORDER[1], geometry_sha256='b' * 64)
+        lease = owned.enter(window.QUALITY_ORDER[1], geometry_sha256='a' * 64)
+        with self.assertRaisesRegex(EntryError, 'identity'):
+            lease.validate(self.values(window.QUALITY_ORDER[1]), self.build,
+                {**self.proof, 'reservationExpiresAt': self.root_epoch + 718000,
+                    'reservationReceiptSha256': 'b' * 64})
+        owned.finish(lease, succeeded=False)
+        with self.assertRaisesRegex(EntryError, 'order'):
+            owned.enter(window.QUALITY_ORDER[2], geometry_sha256='a' * 64)
+
+    def test_quality718_expiry_690_cancellation_718_cleanup_and_dispatch150_boundary(self):
+        owned = self.quality_window()
+        limits = owned.limits_receipt
+        self.assertEqual(limits['maximumProviderExpiryRootMilliseconds'], 718000)
+        self.assertEqual(limits['cancelAtRootSeconds'], 690)
+        self.assertEqual(limits['hardCleanupRootSeconds'], 718)
+        self.assertIsNone(limits['retainedModeledUpperUsd'])
+        self.assertFalse(limits['historicalTenUsdScopeApplies'])
+        self.elapsed = 540
+        lease = owned.enter(window.QUALITY_ORDER[0])
+        self.assertEqual(lease.deadline - lease.entered_monotonic, 150)
+        self.elapsed = 540.001
+        with self.assertRaisesRegex(EntryError, 'entry_refused'):
+            lease.require_full_entry_budget()
+        owned.finish(lease, succeeded=False)
+        self.elapsed = 718
+        owned.validate_cleanup(allocation_sha256='2' * 64, terminal_observed=True)
+        self.elapsed = 718.001
+        with self.assertRaisesRegex(EntryError, 'cleanup'):
+            owned.validate_cleanup(allocation_sha256='2' * 64, terminal_observed=True)
+        for changes in ({'reservation_expires_at_milliseconds': self.root_epoch + 718001},
+                {'prior_whole_root_milliseconds': 1}, {'current_allocation_name_sha256': 'b' * 64}):
+            with self.subTest(changes=changes), self.assertRaises(EntryError):
+                self.quality_window(**changes)
+        self.elapsed = 60
+        for profile in (window.DEFAULT_PROFILE, window.SEVEN_MINUTES_PROFILE,
+                window.NINE_MINUTES_PROFILE, window.TWELVE_MINUTES_PROFILE):
+            # Existing windows retain their primary-only order without a quality slot.
+            if profile == window.SEVEN_MINUTES_PROFILE:
+                continue
+            old = window.SequentialAndroidWindow(**{**self.arguments, 'profile': profile})
+            with self.assertRaisesRegex(EntryError, 'order'):
+                old.enter(window.QUALITY_ORDER[1])
+
+
+class SeededQualityProfileTests(WindowInputs):
+    def quality_window(self, **changes):
+        return window.SequentialAndroidWindow(**{**self.arguments,
+            'profile': window.SEEDED_QUALITY_PROFILE,
+            'reservation_expires_at_milliseconds': self.root_epoch + 718000,
+            'expected_geometry_sha256': 'a' * 64, **changes})
+
+    def test_seed_is_required_and_immutable_before_any_entry_and_rejected_by_every_old_profile(self):
+        for value in (None, True, {}, '', 'A' * 64, 'a' * 63):
+            with self.subTest(value=value), self.assertRaisesRegex(EntryError, 'geometry_seed_rejected'):
+                self.quality_window(expected_geometry_sha256=value)
+        owned = self.quality_window()
+        self.assertEqual(owned._geometry_sha256, 'a' * 64)
+        self.assertEqual(owned.expected_geometry_sha256, 'a' * 64)
+        self.assertEqual(owned.limits_receipt['expectedGeometrySha256'], 'a' * 64)
+        self.assertEqual(owned.limits_receipt['geometrySeedScope'], 'expected_layout_only')
+        with self.assertRaises(FrozenInstanceError): owned.expected_geometry_sha256 = 'b' * 64
+        for profile in (window.DEFAULT_PROFILE, window.SEVEN_MINUTES_PROFILE,
+                window.NINE_MINUTES_PROFILE, window.TWELVE_MINUTES_PROFILE, window.QUALITY_PROFILE):
+            with self.subTest(profile=profile), self.assertRaisesRegex(EntryError, 'geometry_seed_rejected'):
+                window.SequentialAndroidWindow(**{**self.arguments, 'profile': profile,
+                    'reservation_expires_at_milliseconds': self.root_epoch + window._PROFILE_LIMITS[profile][0],
+                    'expected_geometry_sha256': 'a' * 64})
+
+    def test_seeded_full100075_order_without_A_and_first_entry_requires_matching_frozen_hash(self):
+        owned = self.quality_window()
+        self.assertEqual(owned.order, window.SEEDED_QUALITY_ORDER)
+        self.assertEqual(owned.order, window.QUALITY_ORDER[1:])
+        for batch in (*window.ORDER, *window.SEEDED_QUALITY_ORDER[1:]):
+            with self.subTest(batch=batch), self.assertRaisesRegex(EntryError, 'order'):
+                owned.enter(batch, geometry_sha256='a' * 64)
+        for value in (None, 'b' * 64):
+            with self.subTest(value=value), self.assertRaisesRegex(EntryError, 'geometry'):
+                owned.enter(window.SEEDED_QUALITY_ORDER[0], geometry_sha256=value)
+        proof = {**self.proof, 'reservationExpiresAt': self.root_epoch + 718000}
+        for index, batch in enumerate(window.SEEDED_QUALITY_ORDER):
+            self.elapsed = 60 + index * 40
+            lease = owned.enter(batch, geometry_sha256='a' * 64)
+            lease.validate(self.values(batch), self.build, proof)
+            self.assertGreaterEqual(lease.deadline - lease.entered_monotonic, 150)
+            self.assertLessEqual(lease.deadline - lease.entered_monotonic, 180)
+            with self.assertRaisesRegex(EntryError, 'order'):
+                owned.enter(batch, geometry_sha256='a' * 64)
+            owned.finish(lease, succeeded=True, geometry_sha256='a' * 64)
+            self.assertEqual(owned._geometry_sha256, 'a' * 64)
+        with self.assertRaisesRegex(EntryError, 'order'):
+            owned.enter(window.SEEDED_QUALITY_ORDER[0], geometry_sha256='a' * 64)
+
+    def test_first_and_later_success_cannot_replace_or_omit_the_expected_geometry(self):
+        for index in range(3):
+            for observed in (None, 'b' * 64):
+                owned = self.quality_window()
+                for batch in window.SEEDED_QUALITY_ORDER[:index]:
+                    lease = owned.enter(batch, geometry_sha256='a' * 64)
+                    owned.finish(lease, succeeded=True, geometry_sha256='a' * 64)
+                lease = owned.enter(window.SEEDED_QUALITY_ORDER[index], geometry_sha256='a' * 64)
+                with self.subTest(index=index, observed=observed), self.assertRaisesRegex(EntryError, 'geometry'):
+                    owned.finish(lease, succeeded=True, geometry_sha256=observed)
+                self.assertEqual(owned._geometry_sha256, 'a' * 64)
+                self.assertTrue(owned._failed)
+                self.assertIsNone(owned._active)
+
+    def test_seeded_window_keeps_exact_expiry_cancel_cleanup_and_final_dispatch_budget(self):
+        owned = self.quality_window()
+        self.assertEqual(owned.limits_receipt['maximumProviderExpiryRootMilliseconds'], 718000)
+        self.assertEqual(owned.cancel_monotonic, self.root_monotonic + 690)
+        self.assertEqual(owned.cleanup_monotonic, self.root_monotonic + 718)
+        self.assertIsNone(owned.limits_receipt['retainedModeledUpperUsd'])
+        self.assertFalse(owned.limits_receipt['historicalTenUsdScopeApplies'])
+        self.elapsed = 540
+        lease = owned.enter(window.SEEDED_QUALITY_ORDER[0], geometry_sha256='a' * 64)
+        lease.require_full_entry_budget()
+        self.elapsed = 540.001
+        with self.assertRaisesRegex(EntryError, 'entry_refused'): lease.require_full_entry_budget()
+        owned.finish(lease, succeeded=False)
+        self.elapsed = 718
+        owned.validate_cleanup(allocation_sha256='2' * 64, terminal_observed=True)
+        self.elapsed = 718.001
+        with self.assertRaisesRegex(EntryError, 'cleanup'):
+            owned.validate_cleanup(allocation_sha256='2' * 64, terminal_observed=True)
+        for changes in ({'reservation_expires_at_milliseconds': self.root_epoch + 718001},
+                {'prior_whole_root_milliseconds': 1}, {'current_allocation_name_sha256': 'b' * 64}):
+            with self.subTest(changes=changes), self.assertRaises(EntryError): self.quality_window(**changes)
+
+    def test_reader_run_checks_all13_actual_geometry_fields_before_publication_and_blocks_changed_success(self):
+        from types import SimpleNamespace
+        observed = dict(zip(reader.GEOMETRY_FIELDS, (2, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'portrait')))
+        expected_hash = sha256(frozen_json(reader.geometry(observed))).hexdigest()
+        selected = SimpleNamespace(values=self.values(window.SEEDED_QUALITY_ORDER[0]))
+        for key in reader.GEOMETRY_FIELDS:
+            owned = self.quality_window(expected_geometry_sha256=expected_hash)
+            changed = {**observed, key: 'landscape' if key == 'orientation' else observed[key] + .25}
+            with tempfile.TemporaryDirectory() as folder, \
+                    patch.object(reader, '_run_observed', return_value={'geometry': changed}):
+                output = Path(folder).resolve()
+                with self.subTest(key=key), self.assertRaisesRegex(EntryError, 'geometry'):
+                    reader._run(selected, None, output, sequential_window=owned, frozen_geometry=observed)
+                self.assertFalse((output / 'reader-result.json').exists())
+                self.assertEqual(owned._geometry_sha256, expected_hash)
+                with self.assertRaisesRegex(EntryError, 'order'):
+                    owned.enter(window.SEEDED_QUALITY_ORDER[1], geometry_sha256=expected_hash)
+
+
 if __name__ == '__main__':
     unittest.main()

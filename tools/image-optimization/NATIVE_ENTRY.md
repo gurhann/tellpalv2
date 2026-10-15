@@ -247,3 +247,58 @@ failed Android native run may retain a complete digest-verified
 `failure-ledger-observation.json`. These files remain unqualified failure evidence.
 They cannot create a verification receipt, claim native settlement or replace the
 original outcome guards.
+
+## Reader Android quality closure
+
+The separate `reader_android_window.QUALITY_PROFILE` (`twelve_minutes_quality_r1`)
+permits exactly `QUALITY_ORDER`: discovery A, `reader_quality_full_r1`,
+`reader_quality_100_r1`, then `reader_quality_075_r1`. It keeps provider expiry at
+most root+718 seconds, independent cancellation at 690 seconds, hard cleanup at 718
+seconds, at least 150 seconds at every dispatch, and at most 180 seconds per native
+invocation. Every earlier profile keeps its existing primary order and limits.
+Discovery supplies geometry/device evidence; it supplies no replacement performance
+comparison. Allocation, signed installation, clocks and authoritative cleanup remain
+operator-owned.
+
+For Android quality, call `reader_resolution_experiment.run` with the same typed
+`sequential_window`, discovered `frozen_geometry`, original `source_root`, and
+`quality_inputs_path` naming the retained TR71/TR19 source admission JSON. Before
+native dispatch and after broker cleanup, the host independently admits the retained
+original references and reproduces each direct PNG from v7 pixels with the pinned
+Pillow 12 encoder. Source/reference/preparation, dimensions, encoded pixels and bytes
+must all match. Quality runs remain exactly two pages with no memory sampling.
+
+The reader-only `ReaderAndroidQualityCollector` keeps screenshot work in one bounded
+worker while Pairing continuously consumes native stdout. Each case requires fresh
+native observations before and after the exact-selector ADB PNG, unchanged geometry,
+case/session/provider/attempt/decode/context, and increasing native UTC. Stable marker
+comparison excludes only `nativeObservedAtEpochMilliseconds`; sidecar read times are
+those exact native values. Null or changed observations during a capture refuse it.
+The legacy 280×460 `native_quality_r1` validator and collector remain unchanged.
+
+Each run retains `reader-quality-captures/reader_page_{1,2}/quality.png` and
+`quality-capture.json`, plus `reader-quality-worker.json` with termination evidence.
+An original PNG survives a failed after-read; bounded incomplete subprocess bytes are
+kept as `screencap-incomplete.bin`. Collection qualification re-reads both PNGs and
+sidecars; missing/extra captures, invalid PNGs, stale bindings or a live worker prevent
+`reader-result.json`. Successful collection is retained separately in
+`reader-quality-collection.json` and the result's `qualityCaptures` field.
+
+After all three arms, `reader_android_quality_capture.qualify_quality_matrix(results)`
+requires six complete captures in arm order, fresh sessions, identical allocation,
+physical unit, app/test build, geometry, original TR sources and preparation identities.
+It returns `awaiting_human_quality`; neither complete collection nor PNG pixel equality
+supplies human acceptance, quality-qualified savings or a codec sharpness verdict.
+
+`SEEDED_QUALITY_PROFILE` (`twelve_minutes_seeded_quality_r1`) is a separate finite
+quality-only alternative. Its `SEEDED_QUALITY_ORDER` is full, 100, 075. Construct the
+window with `expected_geometry_sha256` before its first entry; supply that same hash
+at entry and on every successful finish. Missing or changed actual geometry refuses
+and the first success cannot replace the seed. The seed represents only expected
+layout; it transfers no historical device, allocation, build or session identity.
+The operator retains its qualified source geometry/result hashes independently.
+Every current quality ledger still requires exact equality across all 13 reader
+geometry fields. Matrix qualification also requires `deviceFactsReason=observed`
+and `lowMemoryPhysicalQualification=observed` for every current arm. This profile
+keeps the same 718/690/718-second limits and 150/180-second entry/native guards; all
+earlier profiles retain their original orders and behavior.

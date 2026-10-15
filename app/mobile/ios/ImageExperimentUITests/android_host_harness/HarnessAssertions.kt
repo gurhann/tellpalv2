@@ -26,6 +26,7 @@ fun main(arguments: Array<String>) {
         else if (arguments.getOrNull(4) == "cleanup") LauncherHarness.blockedMain(root)
         else if (arguments.getOrNull(4) == "finish-ack") LauncherHarness.responsiveMain(root)
         else if (arguments.getOrNull(4) == "reader-lifecycle") ActivityHarness.readerLifecycle(root)
+        else if (arguments.getOrNull(4) == "reader-quality") LauncherHarness.readerQualityLauncher(root)
         else {
             NativeContracts.run(root)
             ActivityHarness.run(root, java.io.File(arguments[2]))

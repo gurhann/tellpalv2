@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit
 object HostRuntime {
     const val APP_ID = "com.tellpal.tellpal_mobile_poc.imageexperiment.profile"
     var readerFixture = false
+    var readerBatchId = "reader_resolution_a_r1"
     val applicationId: String get() = if (readerFixture) APP_ID.removeSuffix(".profile") + ".release" else APP_ID
     val failure = IllegalStateException("PRIVATE_RAW_SENTINEL_DO_NOT_EXPORT")
     val main = Executors.newSingleThreadExecutor { Thread(it, "controlled-android-main") }
@@ -34,6 +35,14 @@ object HostRuntime {
     var createEntered: CountDownLatch? = null
     var createRelease: CountDownLatch? = null
     var offMainUiDelay = 0L
+    var qualityCapture = false
+    var failQualityEncoding = false
+    var failQualityStatus = false
+    var suppressSessionCompletion = false
+    var sessionCompletionDelayMillis = 120L
+    var deviceFactsStatusCount = 0
+    var corruptLedgerAfterRevoke = false
+    val qualityStatuses = java.util.concurrent.CopyOnWriteArrayList<Pair<Int, Bundle>>()
     val cleanupEvents = java.util.concurrent.CopyOnWriteArrayList<String>()
     val finishOwners = java.util.concurrent.CopyOnWriteArrayList<Activity>()
     val statuses = java.util.concurrent.CopyOnWriteArrayList<Pair<Int, Bundle>>()
@@ -74,7 +83,11 @@ object HostRuntime {
         }
         privateRoot = root.apply { mkdirs() }
         activity = null; resultCode = null; result = null; terminalCount = 0; readerFixture = false
+        readerBatchId = "reader_resolution_a_r1"; sessionCompletionDelayMillis = 120; deviceFactsStatusCount = 0
         terminalReady = CountDownLatch(1); createEntered = null; createRelease = null; offMainUiDelay = 0
+        qualityCapture = false; failQualityEncoding = false; failQualityStatus = false; suppressSessionCompletion = false
+        corruptLedgerAfterRevoke = false
+        qualityStatuses.clear()
         cleanupEvents.clear(); finishOwners.clear()
         statuses.clear(); requests.clear(); events.clear(); pairedPublicKey = null
         startupReady = CountDownLatch(1); launchIntent = null; launchMetadata = null; pendingCreation = null
@@ -126,6 +139,8 @@ object HostRuntime {
         onMain {
             handlers[owner]!!(MethodCall(method, arguments), captured)
             if (method == "revoke") events += "settlement"
+            if (method == "revoke" && corruptLedgerAfterRevoke)
+                File(privateRoot, "image_experiment/ledger.json").writeText("{}")
         }
         return captured
     }
@@ -175,6 +190,23 @@ object HostRuntime {
     fun reportStatus(code: Int, result: Bundle) {
         val owner = activity ?: error("No owned activity")
         val bootstrap = owner.bootstrap ?: error("No owned bootstrap")
+        if (code == 3) {
+            if (failQualityStatus) throw failure
+            require(result.keySet() == setOf("event", "bindingBase64") && result.getString("event") == "quality-binding")
+            val bytes = java.util.Base64.getDecoder().decode(result.getString("bindingBase64"))
+            require(bytes.size <= 4096 && bytes.toString(Charsets.UTF_8) == "null")
+            qualityStatuses += code to result
+            return
+        }
+        if (code == 4) {
+            require(readerFixture && result.keySet() == setOf("event", "reportBase64", "reportSha256") &&
+                result.getString("event") == "device-facts")
+            val bytes = java.util.Base64.getDecoder().decode(result.getString("reportBase64"))
+            require(bytes.size in 1..4096 && result.getString("reportSha256") == ImageExperimentBootstrap.sha256(bytes))
+            org.json.JSONObject(bytes.toString(Charsets.UTF_8))
+            deviceFactsStatusCount++
+            return
+        }
         if (code == 2) {
             require(result.keySet() == setOf("event", "index", "count", "ledgerSha256", "payloadBase64") &&
                 result.getString("event") == "ledger-chunk" && bootstrap.isRevoked)
@@ -204,8 +236,12 @@ object HostRuntime {
             override fun success(result: Any?) {
                 require(result is Map<*, *> && result.keys == setOf("envelope", "metadata"))
                 events += "handoff"; events += "startup-ready"; startupReady.countDown()
+                if (suppressSessionCompletion) return
+                if (readerFixture && readerBatchId.startsWith("reader_quality_")) {
+                    require(invoke("readDeviceFacts", null, owner).await() is Map<*, *>)
+                }
                 Thread({
-                    Thread.sleep(120)
+                    Thread.sleep(sessionCompletionDelayMillis)
                     if (dartReport != null) invoke("reportDiagnostic", dartReport, owner)
                     val stored = invoke("storeLedger", ledger, owner)
                     require(stored.await() is Boolean)

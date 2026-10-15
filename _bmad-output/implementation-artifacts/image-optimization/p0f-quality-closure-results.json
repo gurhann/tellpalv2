@@ -1,0 +1,901 @@
+{
+  "schemaVersion": 1,
+  "scope": "story16-bounded-reader-quality-closure",
+  "date": "2026-10-15",
+  "status": "complete_for_bounded_tested_scope_with_evidence_retention_limitation",
+  "story16Complete": true,
+  "fullP0Complete": false,
+  "productionResolutionChanged": false,
+  "billingUsagePriceExchangeQueries": 0,
+  "previousUsd10CapExplicitlyRemoved": true,
+  "immutableEvidence": {
+    "p0c-native-results.json": "5bcd53f6db64adebd71522fb5fde35871b84fdb2689ea2be1f109190fc023ec0",
+    "p0d-reader-resolution-results.json": "f2749e0131d99d11dd6ae2fd71ae612ccfd4f8c9257dc839b764298ec6f69fc7",
+    "p0e-selected075-performance-results.json": "0c1f952b71ad62ea6a27968109c15f8287fd3e0ccc2a8e2f55767ae133db8ae1"
+  },
+  "iphone": {
+    "selectionStatus": "accepted_for_prior_tested_scope",
+    "selectedFormat": "PNG",
+    "smallestAcceptedTestedFactor": 0.75,
+    "contentIds": [
+      71,
+      19
+    ],
+    "geometry": {
+      "observedSlotWidth": 390,
+      "observedSlotHeight": 557,
+      "observedDpr": 3,
+      "textScaleFactor": 0.9411764705882353,
+      "paddingLeft": 0,
+      "paddingTop": 47,
+      "paddingRight": 0,
+      "paddingBottom": 34,
+      "viewInsetLeft": 0,
+      "viewInsetTop": 0,
+      "viewInsetRight": 0,
+      "viewInsetBottom": 0,
+      "orientation": "portrait"
+    },
+    "historicalHumanReceipt": {
+      "scope": "reader-resolution-explicit-human-quality-verdict",
+      "recordedAtEpochMilliseconds": 1792073317906,
+      "humanStatementVerbatim": "hepsi ok gibi",
+      "interpretation": "all_six_captures_accepted_as_appearing_ok",
+      "reviewDelivery": "offline_single_page_with_all_six_original_native_captures",
+      "contentIds": [
+        71,
+        19
+      ],
+      "acceptedFactors": [
+        "full",
+        1.0,
+        0.75
+      ],
+      "smallestAcceptedTestedFactor": 0.75,
+      "encodedSizesAtSelectedFactor": [
+        [
+          773,
+          1254
+        ],
+        [
+          707,
+          1254
+        ]
+      ],
+      "selectedFactorPrimaryPerformanceObserved": false,
+      "measured100FactorRemainsSeparate": true,
+      "jpegWebpQualityResolved": false,
+      "physicalOldAndroidQualified": false,
+      "cloudAllocation": false,
+      "receiptSha256": "dddc08e4b5db124ce649bc8654f22a9b8d577189a55feac85fec2b4e913621e0"
+    },
+    "priorHumanReceiptRetainsOriginalHistoricalFlags": true,
+    "currentPrimaryPerformanceReference": "p0e-selected075-performance-results.json",
+    "lossyQ85Decision": "rejected_for_selection_due_to_unresolved_sharpness_concern",
+    "q85BlurFixed": false,
+    "formalHumanCodecRejectionInvented": false,
+    "qualityQualifiedCodecSavings": null,
+    "codecDiagnosticReceiptSha256": "7b7f9dc4f5965ee6beca0b1e460cfe92d3757a3e5ebb813f9d8d115245d6c485",
+    "codecDiagnostics": [
+      {
+        "contentId": 71,
+        "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+        "referenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+        "jpegSettings": {
+          "format": "JPEG",
+          "quality": 85,
+          "mode": "RGB",
+          "subsampling": 0,
+          "optimize": false,
+          "progressive": false,
+          "profile_handling": {
+            "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+            "normalized_color_space": "sRGB",
+            "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+          }
+        },
+        "webpSettings": {
+          "format": "WEBP",
+          "quality": 85,
+          "mode": "RGB",
+          "method": 6,
+          "lossless": false,
+          "profile_handling": {
+            "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+            "normalized_color_space": "sRGB",
+            "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+          }
+        },
+        "encodedOriginalsReencoded": false,
+        "metricsAreHumanSharpnessVerdicts": false,
+        "nativeResamplingContributionIsolated": false,
+        "arms": [
+          {
+            "arm": "png",
+            "rgbMeanAbsoluteError0To255": 0.0,
+            "captureSha256": "220479990baaf2d6820ea38ce2bf458ccc00e6614a78c99e81f2fe46dd1a028d",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 840,
+              "actualDecodeHeight": 1364
+            }
+          },
+          {
+            "arm": "jpeg",
+            "rgbMeanAbsoluteError0To255": 1.2345576138955614,
+            "captureSha256": "ca43bce2a763143aa5d1d08d0c3cebc6d3adfd8290da15f6a2b33f3760c28c8e",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 840,
+              "actualDecodeHeight": 1364
+            }
+          },
+          {
+            "arm": "webp",
+            "rgbMeanAbsoluteError0To255": 1.6041441684665225,
+            "captureSha256": "fb6bfe81fc5585e90b84f4cf8c6e7fd22416d5775256d0003a5c9a5ed0396c0b",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 840,
+              "actualDecodeHeight": 1364
+            }
+          }
+        ]
+      },
+      {
+        "contentId": 19,
+        "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+        "referenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+        "jpegSettings": {
+          "format": "JPEG",
+          "quality": 85,
+          "mode": "RGB",
+          "subsampling": 0,
+          "optimize": false,
+          "progressive": false,
+          "profile_handling": {
+            "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+            "normalized_color_space": "sRGB",
+            "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+          }
+        },
+        "webpSettings": {
+          "format": "WEBP",
+          "quality": 85,
+          "mode": "RGB",
+          "method": 6,
+          "lossless": false,
+          "profile_handling": {
+            "policy": "omit_embedded_profile_and_exif; normalized_srgb_pixels_explicitly_assumed",
+            "normalized_color_space": "sRGB",
+            "destination_profile_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e"
+          }
+        },
+        "encodedOriginalsReencoded": false,
+        "metricsAreHumanSharpnessVerdicts": false,
+        "nativeResamplingContributionIsolated": false,
+        "arms": [
+          {
+            "arm": "png",
+            "rgbMeanAbsoluteError0To255": 0.0,
+            "captureSha256": "02a60ab37fd9eac5db6b372c7f10787cd8ee9ac513ffcafa6195f4ac2220c8a5",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 778,
+              "actualDecodeHeight": 1380
+            }
+          },
+          {
+            "arm": "jpeg",
+            "rgbMeanAbsoluteError0To255": 1.6043229823796394,
+            "captureSha256": "39f3e961005d484c4294916928cb105b3d7eb124b7afb056a8667816c7f0bb84",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 778,
+              "actualDecodeHeight": 1380
+            }
+          },
+          {
+            "arm": "webp",
+            "rgbMeanAbsoluteError0To255": 2.004687022281639,
+            "captureSha256": "e83643c17901ad927316ec53426f9179448d39d90b0e73e239e63968b4285f98",
+            "nativeGeometry": {
+              "observedSlotWidth": 280,
+              "observedSlotHeight": 460,
+              "observedDpr": 3,
+              "actualDecodeWidth": 778,
+              "actualDecodeHeight": 1380
+            }
+          }
+        ]
+      }
+    ],
+    "jpeg444AlreadyUsed": true,
+    "nativeResamplingContributionIsolated": false
+  },
+  "android": {
+    "status": "accepted_for_tested_scope",
+    "reader": "StoryPlayerPage",
+    "device": "physical Moto E20",
+    "build": {
+      "sourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+      "artifactSha256": "8135796cba0c6d21b92e4517868ae96455c0d24933fc874fc7d032a2a72b46ee",
+      "testArtifactSha256": "0dfe2525d6322d029f568494df1a1d1dcc989d97ed542b2c6abfd44a2eba76a0",
+      "certificateSha256": "913d78e46bb9bc3b3a1b0c545fb855cb6f57b3b91eaa7c1e87223fb3a188c967",
+      "mode": "release"
+    },
+    "buildReceiptSha256": "ea5d9841d767a3ceb1291e7d89186c7afa32ce075f5d0a749844e182a1b7eeb3",
+    "captures": {
+      "status": "human_selection_recorded",
+      "captureCount": 6,
+      "captures": [
+        {
+          "caseId": "reader_page_1",
+          "contentId": 71,
+          "pageNumber": 1,
+          "captureSha256": "702b98a71d7bf2bdec0f9e7671d8c13b2dd03bc811a8644cac5b8030740dbf0f",
+          "sidecarSha256": "55b5f8f23c54685e392fd6dc85a49077878f13ec2d06e6514ea7843a08b11cab",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "9381dcfc903463122183232dbbcd5a5f93834d81605c768e33156e3a3a594141",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 1712,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "4e834c84fd362961343762f450d65180760fa73dfef1c28ed2a766b939f0ce51",
+            "sessionSha256": "669c89bfc972f503a677cf9a630b161ad36ca769651e745cb173e0961812bdc1",
+            "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+            "actualDecodeHeight": 2778,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093582039
+          },
+          "beforeReadEpochMilliseconds": 1792093572237,
+          "afterReadEpochMilliseconds": 1792093573803,
+          "provenance": {
+            "contentId": 71,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+            "referenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+            "outputSha256": "1e334e0e82deb948e6805aa10bb59efcd32d0ec3d5594abedb460fd1a83ead88",
+            "encodedDimensions": [
+              1712,
+              2778
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        },
+        {
+          "caseId": "reader_page_2",
+          "contentId": 19,
+          "pageNumber": 1,
+          "captureSha256": "ddee03734be9dd298509842f1728c11f66c8ecf7db7b142c8c9a479c80f747ff",
+          "sidecarSha256": "35c5df7c350357d35c859ce292bed826ed84cbb431c885233bd0d23ff4a57602",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "c4c3976eb83e8370223ac539955ad47135cb79e34eaeb617863c6dfabe65f7b9",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 1284,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "adcf4f6ddcca7f8c218e4670b4f4d51527ce7ea5bc5bea0cfc21cb9e30ef07a5",
+            "sessionSha256": "669c89bfc972f503a677cf9a630b161ad36ca769651e745cb173e0961812bdc1",
+            "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+            "actualDecodeHeight": 2279,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093587155
+          },
+          "beforeReadEpochMilliseconds": 1792093577228,
+          "afterReadEpochMilliseconds": 1792093578376,
+          "provenance": {
+            "contentId": 19,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+            "referenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+            "outputSha256": "bd984be3f0a99d74f12c72aadf89439e500bdf3f1c769eaef8a2d1f44ab9457b",
+            "encodedDimensions": [
+              1284,
+              2279
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        },
+        {
+          "caseId": "reader_page_1",
+          "contentId": 71,
+          "pageNumber": 1,
+          "captureSha256": "4d391373675b1e736f2998a4a1622c841a5746c5aed4afffe5a0830230c51eb4",
+          "sidecarSha256": "eb06b13bdcdc19d4b360b35dcff3fb5adc7e4478473d10623c7e2ad6945cfbb3",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "ef3b196f4e68cb3c2abe0729079e758463e68ab16c6f2314d6f48ccde735aca0",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 681,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "02152979e47e3f7fac3a97204da214e9adcac1e031d549fdd255e2888c1ed57a",
+            "sessionSha256": "4a4fd2f4eaeb3dd553715321669c4924405b6e7ea2c97895f3a8544391aff7af",
+            "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+            "actualDecodeHeight": 1105,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093610535
+          },
+          "beforeReadEpochMilliseconds": 1792093600693,
+          "afterReadEpochMilliseconds": 1792093602156,
+          "provenance": {
+            "contentId": 71,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+            "referenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+            "outputSha256": "e50d18ba66e1484abf376e2daf4cff8088ef82a6e4e7b71c4f3801e79ac38431",
+            "encodedDimensions": [
+              681,
+              1105
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        },
+        {
+          "caseId": "reader_page_2",
+          "contentId": 19,
+          "pageNumber": 1,
+          "captureSha256": "d8c5a14b5ab22fefe6709810302ad621b9fefcd955b24c8c491842d2f5b38acd",
+          "sidecarSha256": "8408c7e2691388c134c0c4ef258e8cb66be10e3bb7871d47770301bc767cf7ee",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "97583f96c39b399cd164f2c38f22071c07f6fc72e5f328a93dd90db3adb43fa7",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 623,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "3453f3647ec1bf6eb198dbe7904f58b23103f3f1b6714356f9d538387d58d475",
+            "sessionSha256": "4a4fd2f4eaeb3dd553715321669c4924405b6e7ea2c97895f3a8544391aff7af",
+            "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+            "actualDecodeHeight": 1105,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093616717
+          },
+          "beforeReadEpochMilliseconds": 1792093606803,
+          "afterReadEpochMilliseconds": 1792093608260,
+          "provenance": {
+            "contentId": 19,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+            "referenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+            "outputSha256": "d0d33aa2dc2c350e816a0cee76c2876a8a2d05db62fe4d46cdd5dc08ccc65e5e",
+            "encodedDimensions": [
+              623,
+              1105
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        },
+        {
+          "caseId": "reader_page_1",
+          "contentId": 71,
+          "pageNumber": 1,
+          "captureSha256": "4966ebc745512334c14787dcc2161e56ef4a1c46eccd3e147d7306ec758a9741",
+          "sidecarSha256": "cb037e8098ca4559cc150b6e743fcec14fc6cedc387a829a53baf092eda3e386",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "afee0808e64312cfbbf388cec5d399fa46d4f469ca8d157716664ce4c335479a",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 511,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "fb1ecd06d6e2fc95fa14720a1cfb721232ec2ce68630996468e8ac5bf3c0b99a",
+            "sessionSha256": "6d81c292448a18a63ba585037212f6a5287df343ff065bda4a904d10b67c3527",
+            "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+            "actualDecodeHeight": 829,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093638196
+          },
+          "beforeReadEpochMilliseconds": 1792093628319,
+          "afterReadEpochMilliseconds": 1792093629579,
+          "provenance": {
+            "contentId": 71,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+            "referenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+            "outputSha256": "655e7a0609c84eeb8106204e1e1595e22d8c89e2201d4f1e2a05a931a568a03f",
+            "encodedDimensions": [
+              511,
+              829
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        },
+        {
+          "caseId": "reader_page_2",
+          "contentId": 19,
+          "pageNumber": 1,
+          "captureSha256": "d9fb0ffb1a123943d9242aade9855ea8884ecd441334009d735b189f3dba2603",
+          "sidecarSha256": "3a704f4525005bd6eadb459fb91fdb2950ed2a8073b21239d3732719da85dd1b",
+          "captureDimensions": [
+            720,
+            1600
+          ],
+          "providerBinding": {
+            "generation": 0,
+            "attemptSha256": "78c702ad1100146aa8a5cd6811c1992136726a8d30c438d366a117b4cab6444b",
+            "observedSlotWidth": 411.42857142857144,
+            "observedDpr": 1.75,
+            "actualDecodeWidth": 467,
+            "observedSlotHeight": 631.4285714285714,
+            "providerSha256": "db2686472f5d04c654a074605b28ab17f8457f8321cd25c7d3b290b86e1b1c5c",
+            "sessionSha256": "6d81c292448a18a63ba585037212f6a5287df343ff065bda4a904d10b67c3527",
+            "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+            "actualDecodeHeight": 829,
+            "phase": "hold",
+            "orientation": "portrait",
+            "nativeContext": "foreground_activity",
+            "holdDeadlineEpochMilliseconds": 1792093644514
+          },
+          "beforeReadEpochMilliseconds": 1792093634600,
+          "afterReadEpochMilliseconds": 1792093635851,
+          "provenance": {
+            "contentId": 19,
+            "language": "tr",
+            "pageNumber": 1,
+            "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+            "referenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+            "outputSha256": "f40950b440bd6aa934b0c9f7fa0a192ec7e9659aa7719745813307d365f91b70",
+            "encodedDimensions": [
+              467,
+              829
+            ],
+            "pixelsVerified": true,
+            "retainedInputsSha256": "ae9fd4ffd27bc68a576335e1488d9bcf7de0b09b649976f6c73b07e48f599da9",
+            "originalManifestSha256": "27569facc718ca65afd221c84b597186df64f9380127466b43ee6be48944136e",
+            "v7PreparationSha256": "8c4dd77fb14f0d1448cf98ef623098b3da5b01743afc83c60b384085481b1f8d"
+          },
+          "qualityAccepted": null
+        }
+      ],
+      "qualityAccepted": null,
+      "qualityQualifiedSavings": null,
+      "selectedFactorQualityAccepted": true
+    },
+    "matrixSha256": "709763695decc109eb769dbe6ce768782ec5a302d8e09950afc2a5376b417aa0",
+    "humanVerdict": {
+      "schemaVersion": 1,
+      "scope": "story16-android-reader-resolution-human-selection",
+      "recordedDate": "2026-10-15",
+      "status": "accepted_for_tested_scope",
+      "humanStatementsVerbatim": [
+        "hayır android 0.75 de görsel yazılar buğulaşıyor",
+        "1x net"
+      ],
+      "followupQuestionVerbatim": "Aynı Android karşılaştırmasında 1× PNG, tam PNG’ye göre görsel içindeki yazıların netliğini koruyor mu?",
+      "interpretation": "Human rejects 0.75x for embedded-text blur and accepts 1.0x in the displayed Android comparison against full PNG.",
+      "selectedFormat": "PNG",
+      "smallestAcceptedTestedFactor": 1.0,
+      "rejectedFactors": [
+        0.75
+      ],
+      "contentIdsInDisplayedComparison": [
+        71,
+        19
+      ],
+      "individualContentStatementsInvented": false,
+      "geometry": {
+        "observedSlotWidth": 411.42857142857144,
+        "observedSlotHeight": 631.4285714285714,
+        "observedDpr": 1.75,
+        "orientation": "portrait"
+      },
+      "device": "physical Moto E20",
+      "reader": "StoryPlayerPage",
+      "galleryHtmlSha256": "f04ee2c4621992db0bf3aa7e4c7021569d94d905e556a26e3f8de86ad869cda6",
+      "matrixSha256": "709763695decc109eb769dbe6ce768782ec5a302d8e09950afc2a5376b417aa0",
+      "buildSourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+      "galleryAndroidCaptures": [
+        {
+          "contentId": 71,
+          "variantLabel": "Tam PNG",
+          "captureSha256": "702b98a71d7bf2bdec0f9e7671d8c13b2dd03bc811a8644cac5b8030740dbf0f"
+        },
+        {
+          "contentId": 19,
+          "variantLabel": "Tam PNG",
+          "captureSha256": "ddee03734be9dd298509842f1728c11f66c8ecf7db7b142c8c9a479c80f747ff"
+        },
+        {
+          "contentId": 71,
+          "variantLabel": "1× PNG",
+          "captureSha256": "4d391373675b1e736f2998a4a1622c841a5746c5aed4afffe5a0830230c51eb4"
+        },
+        {
+          "contentId": 19,
+          "variantLabel": "1× PNG",
+          "captureSha256": "d8c5a14b5ab22fefe6709810302ad621b9fefcd955b24c8c491842d2f5b38acd"
+        },
+        {
+          "contentId": 71,
+          "variantLabel": "0,75× PNG",
+          "captureSha256": "4966ebc745512334c14787dcc2161e56ef4a1c46eccd3e147d7306ec758a9741"
+        },
+        {
+          "contentId": 19,
+          "variantLabel": "0,75× PNG",
+          "captureSha256": "d9fb0ffb1a123943d9242aade9855ea8884ecd441334009d735b189f3dba2603"
+        }
+      ],
+      "partialVerdictFile": "p0f-android-quality-human-verdict.json",
+      "partialVerdictSha256": "80a2bab8c86f8b64da6319a6201a689b8c972e893a53f28b49250641c893feb8",
+      "qualityQualified075Savings": null,
+      "productionResolutionChanged": false,
+      "scopeLimit": "Displayed portrait TR71/TR19 page1 comparison only; no whole-corpus or fleet acceptance."
+    },
+    "humanVerdictSha256": "d06f5695b3ca7ce2b752a12811b33016f2b53df2a7fbf75291e820fc917d4b5c",
+    "smallestAcceptedTestedFactor": 1.0,
+    "newPerformanceBenchmark": false,
+    "expectedGeometryIsOnlyHistoricalLayoutSeed": true,
+    "currentLowMemoryNativeFactsRequired": true,
+    "readerObserverCorrection": {
+      "provenFailingRoot": 5,
+      "failingWaitMillis": 150,
+      "readerWaitMaximumMillis": 500,
+      "legacyNonReaderWaitMillis": 150,
+      "lateCallbacksCannotReadOrPublish": true,
+      "nativeAbsoluteDeadlineSeconds": 180,
+      "proofSha256": "77c12a60a8b6877478a3d2d6eb8c71af69d85526a2191cbb99fd0beb902eb708"
+    },
+    "attempts": [
+      {
+        "ordinal": 1,
+        "plannedSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+        "terminalState": "FINISHED",
+        "failure": "reader_quality_source_binding_rejected",
+        "results": [
+          {
+            "batchId": "reader_resolution_a_r1",
+            "status": "observed",
+            "qualification": "qualified",
+            "intentionalUndersamplingPerformanceEligibility": "not_applicable",
+            "readerResultSha256": "bcbd3f6390cd972c93bd5cf921b95a7c571123bc9a9e3aec030ac57f92fc8c9e"
+          },
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "attempted_unqualified",
+            "reason": "reader_quality_source_binding_rejected"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "unrun",
+            "reason": "reader_quality_source_binding_rejected"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "unrun",
+            "reason": "reader_quality_source_binding_rejected"
+          }
+        ],
+        "terminalSummarySha256": "e75a7f3e5fd77d9435f4eb0a0c991763420bb1b347917411ed66c78baa09ac5f",
+        "cleanupReceiptSha256": "cba655e4904d3709da9d1174faf5c45575b576abd10ae8f838d84522cbe2bb9d",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      },
+      {
+        "ordinal": 2,
+        "plannedSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+        "terminalState": "FINISHED",
+        "failure": "native_entry_refused",
+        "results": [
+          {
+            "batchId": "reader_resolution_a_r1",
+            "status": "observed",
+            "qualification": "qualified",
+            "intentionalUndersamplingPerformanceEligibility": "not_applicable",
+            "readerResultSha256": "18385f01e3d3c93ef9f7ad021d5afc624c2b04ed0531ee758dcbb3994833bd59"
+          },
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "attempted_unqualified",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          }
+        ],
+        "terminalSummarySha256": "c9e13503b2ca7151afc342ed2c31c2abb2363f6ad854a85fbbd7a1642c941dcb",
+        "cleanupReceiptSha256": "2d3a0437295b0654976bd323ab98ec177cf1617d2fff1ed660e3891c1f457e23",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      },
+      {
+        "ordinal": 3,
+        "plannedSourceSha256": "7b4aec2c31421e5b3ffa820331e0213e9aec75de8cea60b8c90fe0b4f38bd233",
+        "terminalState": "FINISHED",
+        "failure": "TimeoutError",
+        "results": [
+          {
+            "batchId": "reader_resolution_a_r1",
+            "status": "unrun",
+            "reason": "TimeoutError"
+          },
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "unrun",
+            "reason": "TimeoutError"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "unrun",
+            "reason": "TimeoutError"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "unrun",
+            "reason": "TimeoutError"
+          }
+        ],
+        "terminalSummarySha256": "d3944542439fac9168f26296b7cdc4fd02fffca1fc0762ea0748b8953814271e",
+        "cleanupReceiptSha256": "52588394cc65b6441385786e6a1869ef0177b83c866562cd86f07d248a67b970",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      },
+      {
+        "ordinal": 4,
+        "plannedSourceSha256": "7b4aec2c31421e5b3ffa820331e0213e9aec75de8cea60b8c90fe0b4f38bd233",
+        "terminalState": "FINISHED",
+        "failure": "native_entry_refused",
+        "results": [
+          {
+            "batchId": "reader_resolution_a_r1",
+            "status": "attempted_unqualified",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          }
+        ],
+        "terminalSummarySha256": "459ca028ad0368fe2df05871960ebecced5eebb8cde6e66e89a9e1c65742d6cb",
+        "cleanupReceiptSha256": "8a1b00a8dc6324007f432e0cd6911187d6c801b11068025880a3737d95a20bd8",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      },
+      {
+        "ordinal": 5,
+        "plannedSourceSha256": "7b4aec2c31421e5b3ffa820331e0213e9aec75de8cea60b8c90fe0b4f38bd233",
+        "terminalState": "FINISHED",
+        "failure": "native_entry_refused",
+        "results": [
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "attempted_unqualified",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "unrun",
+            "reason": "native_entry_refused"
+          }
+        ],
+        "terminalSummarySha256": "ac70b4f9af7b4568dde5bfbd8782940283dfdeae5d9fc82280406fa9d41df95f",
+        "cleanupReceiptSha256": "d37261d4d7b03db1fed715e3ceb0a3688ce9ecb67e8cec83a79ce52e95a446f5",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      },
+      {
+        "ordinal": 6,
+        "plannedSourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+        "terminalState": "FINISHED",
+        "failure": null,
+        "results": [
+          {
+            "batchId": "reader_quality_full_r1",
+            "status": "observed",
+            "qualification": "awaiting_human_quality",
+            "intentionalUndersamplingPerformanceEligibility": "not_applicable",
+            "readerResultSha256": "a5812ca02c199777812a0fda3f1eaa1141aebef1e08209e23d46201c7ff0eb66"
+          },
+          {
+            "batchId": "reader_quality_100_r1",
+            "status": "observed",
+            "qualification": "awaiting_human_quality",
+            "intentionalUndersamplingPerformanceEligibility": "not_applicable",
+            "readerResultSha256": "34861270fb9f006237a0b3a157741c4672e8c6d9770e4a3a0de5611e6dab8c8b"
+          },
+          {
+            "batchId": "reader_quality_075_r1",
+            "status": "observed",
+            "qualification": "awaiting_human_quality",
+            "intentionalUndersamplingPerformanceEligibility": "not_applicable",
+            "readerResultSha256": "0a3e7ed5f2bcf26b69cd2b03fb8a27a97992cff3bb62c46d4f45144c0e0abd8d"
+          }
+        ],
+        "terminalSummarySha256": "6d39e9a7110022046bf0aed9b5231c98eda24f2ba90506bd912abf5386f52f85",
+        "cleanupReceiptSha256": "2c8efd94d7636bf56b5fd0b99d5fc385e704bb8edcf5446309bb2ef33d43c39e",
+        "automaticRetry": false,
+        "discoveryUsedAsNewPerformanceBenchmark": false
+      }
+    ],
+    "rejectedFactors": [
+      0.75
+    ],
+    "selectedFormat": "PNG"
+  },
+  "performance": {
+    "taskComplete": true,
+    "resultFile": "p0e-selected075-performance-results.json",
+    "resultSha256": "0c1f952b71ad62ea6a27968109c15f8287fd3e0ccc2a8e2f55767ae133db8ae1",
+    "performanceSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+    "qualityBuildIsSeparateIdentity": true,
+    "singleObservationPerCondition": true,
+    "android100SampledOnstagePssLowerThan075": true,
+    "universalOptimumEstablished": false
+  },
+  "verification": {
+    "portableTestCount": 378,
+    "portableReceiptSha256": "466eed8374604b56980bcec5ba42fd025d46751a136c6bb3f44d0aff8a4410ca",
+    "realKotlinDiagnosticCaseCount": 62,
+    "nativeObserverVerificationReceiptSha256": "6ea05a121eb0e151583ffd5f043d99f7a032b3c60555ae1f1842ca16a3039cc4",
+    "localInteropControls": 9,
+    "localInteropReceiptSha256": "d40068877be99aa43c8d7c2c83098197caa7af3588947c65718c7a1b57bdd15d",
+    "privateOperatorControlsPassed": 43,
+    "privateOperatorReceiptSha256": "9770bc74272945b12f2cbe4b054019355aaf4a3f6e4fc2e7c8c0c19ab0cfaa0c",
+    "finalLocalReview": {
+      "scope": "story16-final-local-review-verification",
+      "status": "passed",
+      "date": "2026-10-16",
+      "portableTests": 381,
+      "nativeKotlinCases": 65,
+      "nativeGuardTests": 4,
+      "inMemoryRegressionMutantsDetected": 4,
+      "readerQualityDispatchMutant": {
+        "file": "ImageExperimentInstrumentation.kt",
+        "replacementCount": 1,
+        "compileExit": 0,
+        "runtimeExit": 1,
+        "failure": "reader-quality-launcher-success",
+        "runtimeLabel": "reader-quality-mutant",
+        "originalSha256": "80957ddd5cc2d32eeea453ec14fdd51c7b302754000ae93f19d516131edf1ff9",
+        "mutatedSha256": "8610c0ca3ec97084cc931f8fafd003a8c613e6148afe30991a32b651d63dd260",
+        "removedBehavior": "reader-quality batch selects its bounded500ms observer"
+      },
+      "nativeSuiteIncludesEarlierPropagationStartupCleanupFinishAckMutants": true,
+      "logs": {
+        "portable-tests-r2.log": "6338d8577f9b94250f7280e1dd05424393a9a0587ed98c58a0ee18c86ea0d341",
+        "native-tests-r3.log": "9b8336d2e4e031705742d0cf15af665691d5c20fd729383e5192976d4484b978",
+        "native-guard-tests.log": "7bf5d6669d51caf18337c361b5354dc11fc201f684d2ae62293cf0b2937f4d20",
+        "review-mutants-receipt.json": "19c05579575b0d68c3e0ef57aa2a7bcb7e0c74fe94bcebbebe5d44cc02a1ee0e"
+      },
+      "nativeSummarySha256": "2bc392b5887bdf53a6280ba8baf0c4894d46b0056b2713b9d220c17b513c7ef8",
+      "finalRepositorySourceSha256": "8f51bd5afb28af528a5bca374dc3161eabb2ced8eb8fb59dcd74d102ef174b57",
+      "selectedSourceFileCount": 310,
+      "physicalQualitySourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+      "physicalQualityBuildReplaced": false,
+      "newCloudOrDeviceCalls": 0,
+      "failedIntermediateLocalTestsRetained": true,
+      "sourceDifferenceExplanation": "Final harness/test changes; physical quality captures retain their recorded original build. New host collector cleanup/source guards are verified locally and do not relabel historical native evidence."
+    },
+    "finalReviewFile": "p0f-final-review.md"
+  },
+  "coverageGaps": [
+    "whole corpus visual acceptance",
+    "untested smaller factors",
+    "other device units and fleet",
+    "landscape and rotation",
+    "repeatability and P95",
+    "continuous true memory peak",
+    "sustained thermal behavior",
+    "codec-only native resampling cause",
+    "production resolution policy"
+  ],
+  "lastUpdated": "2026-10-16",
+  "evidenceRetention": {
+    "status": "partial_original_raw_evidence_unavailable",
+    "auditFile": "p0f-evidence-retention.json",
+    "auditSha256": "64293f9dbb4d473d0d171761a0f87ba6110d6c898f7f47d75f67d601cd89dfc3",
+    "originalScreenshotsReverified": 18,
+    "fullOriginalQualityRootArchived": false,
+    "independentPhysicalAuditLimited": true
+  },
+  "archive": {
+    "schemaVersion": 1,
+    "scope": "story16-surviving-evidence-supplement-archive",
+    "status": "verified",
+    "archiveName": "quality-closure-surviving-evidence-r1.tar.gz",
+    "archiveSha256": "05f2cb057104f62263fbf8edf0def5d5f6a6c1dee4de3ebb260297e32f9c6ddc",
+    "archiveBytes": 35574056,
+    "archiveIndexSha256": "28084491569a5c9c4037a6a5a5bea4ab44fb0e62c50293ccf6ef7f5b041a051f",
+    "logicalFiles": 903,
+    "allArchivedFileHashesVerified": true,
+    "fullOriginalQualityRootArchive": false,
+    "originalRawRootAvailable": false,
+    "snapshotStage": "before_archive_receipt_and_final_commit_insertion",
+    "parentPerformanceArchiveSha256": "60d535e77971990d12dd82135448e6e4dc7f81dbc0d00446bc324958ab80237d",
+    "archivePath": "/Volumes/MAC_EK/dev/tellpal-reader-extension-evidence-20261015/quality-closure-surviving-evidence-r1.tar.gz",
+    "externalReadbackVerified": true
+  },
+  "completionScope": "Bounded displayed-reader quality decision and retained speed/memory handoff; original raw quality evidence remains unavailable for full independent re-audit."
+}

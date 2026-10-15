@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review with fresh context and the selected session model
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 10-08-2026 16:45
-last_updated: 2026-10-15
+last_updated: 2026-10-16
 project: TellPal V2 - Image Optimization P0
 project_key: NOKEY
 tracking_system: file-system
@@ -45,5 +45,6 @@ development_status:
   1-5-prepare-native-image-measurement-and-admission: done
   # Native evidence collected:24 primary/12 captures/10 controls; all13 cloud windows closed. Review fixes verified; Android quality accepted, iPhone sharpness concern retains its open quality gate.
   # Selected075 follow-up: iPhone A/C/075 and physical low-RAM Moto E20 A/075/C observed with valid native closure.075 saves payload vs full; Android1x used less sampled onstage PSS than075, no universal optimum. Prior failures retained; all11new cloud roots and17local endpoints closed.354host/340Flutter/33native/8integration checks passed; Android resolution-quality and original iPhone q85 blur gates remain open. No billing queries; prior10USD cap explicitly lifted.
-  1-6-measure-native-image-quality-and-resource-costs: review
+  # Current reader-quality closure: six physical Moto E20 full/1x/075 captures complete; human selects Android1x and rejects075 for embedded-text blur. Earlier Android codec acceptance is a separate comparison. iPhone prior075 PNG acceptance retained; q85 codecs excluded. All six new roots recorded closed;381host/65Kotlin/4guard checks pass. Surviving-evidence archive verified; missing original raw quality root limits independent audit.
+  1-6-measure-native-image-quality-and-resource-costs: done
   epic-1-retrospective: optional

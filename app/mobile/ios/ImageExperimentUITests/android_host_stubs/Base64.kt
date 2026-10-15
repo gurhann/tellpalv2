@@ -8,5 +8,8 @@ object Base64 {
         if (HostRuntime.failSharedVector && value.startsWith("MFkwEwYHKoZIzj0")) throw HostRuntime.failure
         return java.util.Base64.getDecoder().decode(value)
     }
-    fun encodeToString(value: ByteArray, flags: Int): String = java.util.Base64.getEncoder().encodeToString(value)
+    fun encodeToString(value: ByteArray, flags: Int): String {
+        if (HostRuntime.failQualityEncoding && value.toString(Charsets.UTF_8) == "null") throw HostRuntime.failure
+        return java.util.Base64.getEncoder().encodeToString(value)
+    }
 }

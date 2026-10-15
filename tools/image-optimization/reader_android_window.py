@@ -1,4 +1,4 @@
-"""Finite leases for one operator-owned selected-075 Android allocation.
+"""Finite leases for one operator-owned reader Android allocation.
 
 This module never allocates, extends, cancels or discovers a provider resource.
 The private operator retains original ownership and independent watchdog evidence.
@@ -17,10 +17,17 @@ DEFAULT_PROFILE = 'eight_minutes_r1'
 SEVEN_MINUTES_PROFILE = 'seven_minutes_after_terminal_r2'
 NINE_MINUTES_PROFILE = 'nine_minutes_matrix_r3'
 TWELVE_MINUTES_PROFILE = 'twelve_minutes_matrix_r11'
+QUALITY_PROFILE = 'twelve_minutes_quality_r1'
+QUALITY_ORDER = ('reader_resolution_a_r1', 'reader_quality_full_r1',
+    'reader_quality_100_r1', 'reader_quality_075_r1')
+SEEDED_QUALITY_PROFILE = 'twelve_minutes_seeded_quality_r1'
+SEEDED_QUALITY_ORDER = QUALITY_ORDER[1:]
 _PROFILE_LIMITS = {DEFAULT_PROFILE: (470000, 450, 478, 8),
     SEVEN_MINUTES_PROFILE: (418000, 390, 418, 7),
     NINE_MINUTES_PROFILE: (538000, 510, 538, 9),
-    TWELVE_MINUTES_PROFILE: (718000, 690, 718, 12)}
+    TWELVE_MINUTES_PROFILE: (718000, 690, 718, 12),
+    QUALITY_PROFILE: (718000, 690, 718, 12),
+    SEEDED_QUALITY_PROFILE: (718000, 690, 718, 12)}
 _CONSUMED_TERMINAL_LEDGERS = set()
 _TERMINAL_CONSUMPTION_LOCK = threading.Lock()
 RETAINED_MODELED_UPPER_USD = '9.95523914272981'
@@ -45,6 +52,7 @@ class SequentialAndroidWindow:
     prior_terminal_ledger_sha256: str | None = None
     prior_whole_root_milliseconds: int | None = None
     current_allocation_name_sha256: str | None = None
+    expected_geometry_sha256: str | None = None
     _next: int = field(default=0, init=False)
     _active: object = field(default=None, init=False)
     _failed: bool = field(default=False, init=False)
@@ -66,6 +74,12 @@ class SequentialAndroidWindow:
                 'certificate_sha256', 'watchdog_receipt_sha256'):
             require(type(getattr(self, name)) is str and HASH.fullmatch(getattr(self, name)),
                 'reader_sequential_identity_rejected')
+        if self.profile == SEEDED_QUALITY_PROFILE:
+            require(type(self.expected_geometry_sha256) is str and HASH.fullmatch(self.expected_geometry_sha256),
+                'reader_sequential_geometry_seed_rejected')
+            object.__setattr__(self, '_geometry_sha256', self.expected_geometry_sha256)
+        else:
+            require(self.expected_geometry_sha256 is None, 'reader_sequential_geometry_seed_rejected')
         if self.profile != SEVEN_MINUTES_PROFILE:
             require(all(value is None for value in (self.prior_terminal_ledger_path,
                 self.prior_terminal_ledger_sha256, self.prior_whole_root_milliseconds,
@@ -101,9 +115,10 @@ class SequentialAndroidWindow:
     @property
     def limits_receipt(self):
         prior_minutes = 1 if self.profile == SEVEN_MINUTES_PROFILE else 0
-        current_only = self.profile in (NINE_MINUTES_PROFILE, TWELVE_MINUTES_PROFILE)
+        current_only = self.profile in (NINE_MINUTES_PROFILE, TWELVE_MINUTES_PROFILE,
+            QUALITY_PROFILE, SEEDED_QUALITY_PROFILE)
         expiry_ms, cancel, cleanup, new_minutes = _PROFILE_LIMITS[self.profile]
-        return {'profile': self.profile, 'maximumProviderExpiryRootMilliseconds': expiry_ms,
+        receipt = {'profile': self.profile, 'maximumProviderExpiryRootMilliseconds': expiry_ms,
             'cancelAtRootSeconds': cancel, 'hardCleanupRootSeconds': cleanup,
             'priorTerminalLedgerSha256': self.prior_terminal_ledger_sha256,
             'priorWholeRootMilliseconds': self.prior_whole_root_milliseconds,
@@ -114,6 +129,16 @@ class SequentialAndroidWindow:
             'retainedModeledUpperUsd': None if current_only else RETAINED_MODELED_UPPER_USD,
             'historicalTenUsdScopeApplies': not current_only,
             'historicalDebitsAndReserveChanged': False, 'currentInvoice': False}
+        if self.profile == SEEDED_QUALITY_PROFILE:
+            receipt['expectedGeometrySha256'] = self.expected_geometry_sha256
+            receipt['geometrySeedScope'] = 'expected_layout_only'
+        return receipt
+
+    @property
+    def order(self):
+        if self.profile == SEEDED_QUALITY_PROFILE:
+            return SEEDED_QUALITY_ORDER
+        return QUALITY_ORDER if self.profile == QUALITY_PROFILE else ORDER
 
     @property
     def cancel_monotonic(self):
@@ -138,9 +163,9 @@ class SequentialAndroidWindow:
     def _enter(self, batch, *, geometry_sha256):
         now = self._clock()
         require(not self._closed and not self._failed and self._active is None and
-            self._next < len(ORDER) and batch == ORDER[self._next],
+            self._next < len(self.order) and batch == self.order[self._next],
             'reader_sequential_order_rejected')
-        require(geometry_sha256 is None if self._next == 0 else
+        require(geometry_sha256 is None if self._next == 0 and self.profile != SEEDED_QUALITY_PROFILE else
             geometry_sha256 is not None and geometry_sha256 == self._geometry_sha256,
             'reader_sequential_geometry_rejected')
         provider_expiry = self.root_monotonic + (
@@ -163,7 +188,10 @@ class SequentialAndroidWindow:
         object.__setattr__(self, '_active', None)
         object.__setattr__(self, '_failed', True)
         timely = self._clock() <= lease.deadline
-        if succeeded and lease.batch == ORDER[0]:
+        if succeeded and self.profile == SEEDED_QUALITY_PROFILE:
+            require(type(geometry_sha256) is str and geometry_sha256 ==
+                self.expected_geometry_sha256 == self._geometry_sha256, 'reader_sequential_geometry_rejected')
+        elif succeeded and lease.batch == ORDER[0]:
             require(type(geometry_sha256) is str and HASH.fullmatch(geometry_sha256),
                 'reader_sequential_geometry_rejected')
             object.__setattr__(self, '_geometry_sha256', geometry_sha256)
@@ -214,7 +242,7 @@ class SequentialAndroidLease:
         window = self.window
         now = window._clock()
         require(type(window) is SequentialAndroidWindow and window._active is self and
-            not window._closed and not window._failed and self.batch in ORDER and
+            not window._closed and not window._failed and self.batch in window.order and
             values.get('batchId') == self.batch and values.get('platform') == 'android' and
             values.get('mode') == 'release' and self.entered_monotonic <= now < self.deadline and
             0 < self.deadline - self.entered_monotonic <= 180 and

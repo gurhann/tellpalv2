@@ -8,10 +8,40 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Base64
 
+/** Supplemental fixed categories; the original first refusal stage stays authoritative. */
+internal enum class ImageExperimentQualityStage(val code: String) {
+    uiDispatch("NATIVE_QUALITY_UI_DISPATCH"),
+    uiWait("NATIVE_QUALITY_UI_WAIT"),
+    uiWaitTimeout("NATIVE_QUALITY_UI_WAIT_TIMEOUT"),
+    statusEncoding("NATIVE_QUALITY_STATUS_ENCODING"),
+    statusSend("NATIVE_QUALITY_STATUS_SEND"),
+    loopBody("NATIVE_QUALITY_LOOP_BODY"),
+    loopExit("NATIVE_QUALITY_LOOP_EXIT"),
+    nativeDeadline("NATIVE_QUALITY_NATIVE_DEADLINE"),
+    primaryBackground("NATIVE_QUALITY_PRIMARY_BACKGROUND"),
+    bootstrapRevocation("NATIVE_QUALITY_BOOTSTRAP_REVOCATION"),
+    authenticatedSettlement("NATIVE_QUALITY_AUTHENTICATED_SETTLEMENT"),
+    ledgerExport("NATIVE_QUALITY_LEDGER_EXPORT")
+}
+
+internal class ImageExperimentQualityDiagnostics {
+    var enabled = false
+    private val first = java.util.concurrent.atomic.AtomicReference<ImageExperimentQualityStage?>(null)
+    val firstStage: ImageExperimentQualityStage? get() = first.get()
+    fun record(stage: ImageExperimentQualityStage) { if (enabled) first.compareAndSet(null, stage) }
+    fun <T> run(stage: ImageExperimentQualityStage, operation: () -> T): T = try {
+        operation()
+    } catch (failure: Exception) {
+        record(stage)
+        throw failure
+    }
+}
+
 /** Same-signed launcher reports only the ephemeral public key, never the envelope. */
 class ImageExperimentInstrumentation : Instrumentation() {
     private var arguments = Bundle()
     private val refusalDiagnostics = ImageExperimentRefusalDiagnostics()
+    private val qualityDiagnostics = ImageExperimentQualityDiagnostics()
     private val creationLock = Object()
     private val started = java.util.concurrent.atomic.AtomicBoolean(false)
     private var launchMetadata: String? = null
@@ -96,20 +126,47 @@ class ImageExperimentInstrumentation : Instrumentation() {
     private fun reportQualityBinding(activity: ImageExperimentActivity) {
         val completed = java.util.concurrent.CountDownLatch(1)
         var snapshot: Map<String, Any?>? = null
-        activity.runOnUiThread {
-            try { snapshot = activity.readQualityBinding() }
-            finally { completed.countDown() }
+        qualityDiagnostics.run(ImageExperimentQualityStage.uiDispatch) {
+            activity.runOnUiThread {
+                try { snapshot = activity.readQualityBinding() }
+                finally { completed.countDown() }
+            }
         }
-        require(completed.await(150, java.util.concurrent.TimeUnit.MILLISECONDS))
-        val encoded = org.json.JSONObject.wrap(snapshot).toString().toByteArray(Charsets.UTF_8)
-        require(encoded.size <= 4096)
-        sendStatus(3, Bundle().apply {
-            putString("event", "quality-binding")
-            putString("bindingBase64", Base64.encodeToString(encoded, Base64.NO_WRAP))
-        })
+        qualityDiagnostics.run(ImageExperimentQualityStage.uiWait) {
+            val finished = completed.await(150, java.util.concurrent.TimeUnit.MILLISECONDS)
+            if (!finished) qualityDiagnostics.record(ImageExperimentQualityStage.uiWaitTimeout)
+            require(finished)
+        }
+        publishQualitySnapshot(snapshot)
     }
 
-    private fun <T> readerMain(activity: ImageExperimentActivity, deadline: Long, operation: () -> T): T {
+    private fun reportReaderQualityBinding(activity: ImageExperimentActivity, deadline: Long) {
+        var retired = false
+        val snapshot = qualityDiagnostics.run(ImageExperimentQualityStage.uiWait) {
+            readerMain(activity, deadline,
+                onTimeout = { qualityDiagnostics.record(ImageExperimentQualityStage.uiWaitTimeout) },
+                onRetired = { retired = true; null }) { activity.readQualityBinding() }
+        }
+        if (retired) return
+        publishQualitySnapshot(snapshot)
+    }
+
+    private fun publishQualitySnapshot(snapshot: Map<String, Any?>?) {
+        val encoded = qualityDiagnostics.run(ImageExperimentQualityStage.statusEncoding) {
+            val bytes = org.json.JSONObject.wrap(snapshot).toString().toByteArray(Charsets.UTF_8)
+            require(bytes.size <= 4096)
+            Base64.encodeToString(bytes, Base64.NO_WRAP)
+        }
+        qualityDiagnostics.run(ImageExperimentQualityStage.statusSend) {
+            sendStatus(3, Bundle().apply {
+                putString("event", "quality-binding")
+                putString("bindingBase64", encoded)
+            })
+        }
+    }
+
+    private fun <T> readerMain(activity: ImageExperimentActivity, deadline: Long,
+        onTimeout: (() -> Unit)? = null, onRetired: (() -> T)? = null, operation: () -> T): T {
         require(SystemClock.elapsedRealtime() < deadline)
         val completed = java.util.concurrent.CountDownLatch(1)
         val active = java.util.concurrent.atomic.AtomicBoolean(true)
@@ -117,14 +174,24 @@ class ImageExperimentInstrumentation : Instrumentation() {
         var failure: Throwable? = null
         activity.runOnUiThread {
             try {
-                require(active.get() && SystemClock.elapsedRealtime() < deadline && !activity.isFinishing && !activity.isDestroyed &&
-                    activity.bootstrap?.isRevoked == false)
-                value = operation()
+                require(active.get() && SystemClock.elapsedRealtime() < deadline)
+                val retired = activity.isFinishing || activity.isDestroyed || activity.bootstrap?.isRevoked != false
+                if (retired && onRetired != null) value = onRetired()
+                else {
+                    require(!retired)
+                    value = operation()
+                }
             } catch (error: Throwable) { failure = error }
             finally { completed.countDown() }
         }
-        val finished = completed.await(minOf(500, maxOf(1, deadline - SystemClock.elapsedRealtime())), java.util.concurrent.TimeUnit.MILLISECONDS)
+        val finished = try {
+            completed.await(minOf(500, maxOf(1, deadline - SystemClock.elapsedRealtime())), java.util.concurrent.TimeUnit.MILLISECONDS)
+        } finally {
+            // The optional snapshot owner retires queued work on interruption as well.
+            if (onRetired != null) active.set(false)
+        }
         active.set(false)
+        if (!finished) runCatching { onTimeout?.invoke() }
         require(finished)
         failure?.let { throw IllegalStateException("READER_REFUSED") }
         @Suppress("UNCHECKED_CAST")
@@ -213,6 +280,7 @@ class ImageExperimentInstrumentation : Instrumentation() {
             val parsed = ImageExperimentJson.parseObject(metadata, 16_384)
             val reader = parsed.getString("batchId") in ImageExperimentReaderPolicy.batches
             val readerPrimary = parsed.getString("batchId") in ImageExperimentReaderPolicy.primaryBatches
+            val readerQuality = parsed.getString("batchId") in ImageExperimentReaderPolicy.qualityBatches
             synchronized(creationLock) {
                 require(!admissionClosed && remaining() > 0)
                 sendStatus(1, Bundle().apply {
@@ -227,9 +295,14 @@ class ImageExperimentInstrumentation : Instrumentation() {
             val nativeDeadline = start + 180_000
             var readerBackgroundCompleted = false
             var deviceFactsReported = false
+            qualityDiagnostics.enabled = arguments.getString("imageExperimentQualityCapture") == "1"
             while (!bootstrap.isRevoked && !activity.isFinishing && !activity.isDestroyed &&
                 SystemClock.elapsedRealtime() - start < 180_000) {
-                if (arguments.getString("imageExperimentQualityCapture") == "1") reportQualityBinding(activity)
+                qualityDiagnostics.run(ImageExperimentQualityStage.loopBody) {
+                if (arguments.getString("imageExperimentQualityCapture") == "1") {
+                    if (readerQuality) reportReaderQualityBinding(activity, nativeDeadline)
+                    else reportQualityBinding(activity)
+                }
                 if (reader && !deviceFactsReported) {
                     val facts = readerMain(activity, nativeDeadline) { activity.readDeviceFactsForLauncher() }
                     if (facts != null) {
@@ -247,12 +320,23 @@ class ImageExperimentInstrumentation : Instrumentation() {
                     readerBackgroundCompleted = true
                 }
                 Thread.sleep(100)
+                }
             }
-            synchronized(creationLock) { admissionClosed = true }
-            require(!reader || SystemClock.elapsedRealtime() < nativeDeadline)
-            require(!readerPrimary || readerBackgroundCompleted)
-            require(bootstrap.isRevoked && bootstrap.launcherOutcome.isSettled())
-            exportLedger()
+            qualityDiagnostics.run(ImageExperimentQualityStage.loopExit) {
+                synchronized(creationLock) { admissionClosed = true }
+            }
+            qualityDiagnostics.run(ImageExperimentQualityStage.nativeDeadline) {
+                require(!reader || SystemClock.elapsedRealtime() < nativeDeadline)
+            }
+            qualityDiagnostics.run(ImageExperimentQualityStage.primaryBackground) {
+                require(!readerPrimary || readerBackgroundCompleted)
+            }
+            qualityDiagnostics.run(ImageExperimentQualityStage.authenticatedSettlement) {
+                val revoked = bootstrap.isRevoked
+                if (!revoked) qualityDiagnostics.record(ImageExperimentQualityStage.bootstrapRevocation)
+                require(revoked && bootstrap.launcherOutcome.isSettled())
+            }
+            qualityDiagnostics.run(ImageExperimentQualityStage.ledgerExport) { exportLedger() }
             result.putString("reason", "NATIVE_LAUNCHER_SETTLED")
             finish(Activity.RESULT_OK, result)
         } catch (_: Exception) {
@@ -262,6 +346,7 @@ class ImageExperimentInstrumentation : Instrumentation() {
             runCatching { exportLedger() }
             result.putString("reason", "NATIVE_LAUNCHER_REFUSED")
             runCatching { refusalDiagnostics.firstStage?.let { result.putString("diagnosticStage", it.code) } }
+            runCatching { qualityDiagnostics.firstStage?.let { result.putString("diagnosticSubstage", it.code) } }
             finish(Activity.RESULT_CANCELED, result)
         }
     }

@@ -15,8 +15,9 @@ import javax.net.ssl.HttpsURLConnection
 object HostedFixture {
     lateinit var certificate: ByteArray
     private fun manifest(): ByteArray = if (!HostRuntime.readerFixture) "{\"synthetic_fixture\":1}".toByteArray()
-        else JSONObject(mapOf("entries" to (1..6).map { index -> mapOf("caseId" to "reader_page_$index",
-            "mime" to "image/png", "purposeAcceptanceReceipt" to "reader_resolution_a_r1") })).toString().toByteArray()
+        else JSONObject(mapOf("entries" to (1..if (HostRuntime.readerBatchId.startsWith("reader_quality_")) 2 else 6)
+            .map { index -> mapOf("caseId" to "reader_page_$index",
+                "mime" to "image/png", "purposeAcceptanceReceipt" to HostRuntime.readerBatchId) })).toString().toByteArray()
     fun install(certificateFile: File) {
         certificate = certificateFile.readBytes()
         URL.setURLStreamHandlerFactory { protocol -> if (protocol == "https") object : URLStreamHandler() {
@@ -27,7 +28,7 @@ object HostedFixture {
     fun metadata(): JSONObject = JSONObject().apply {
         val manifest = manifest()
         put("schemaVersion", 1); put("scope", "image-optimization-native-fixture-r1")
-        put("batchId", if (HostRuntime.readerFixture) "reader_resolution_a_r1" else "synthetic_batch")
+        put("batchId", if (HostRuntime.readerFixture) HostRuntime.readerBatchId else "synthetic_batch")
         put("sessionId", "synthetic_session"); put("caseId", if (HostRuntime.readerFixture) "reader_page_1" else "synthetic_case")
         put("launchNonce", "1".repeat(64)); put("deadline", System.currentTimeMillis() + 29_000)
         put("expectedUid", "jLRypTmoBrhhX21HsDJojurcKTC3"); put("expectedAppId", HostRuntime.applicationId)

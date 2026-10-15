@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "scope": "story16-quality-closure-current-evidence-retention",
+  "auditDate": "2026-10-16",
+  "status": "partial_original_raw_evidence_unavailable",
+  "originalRawRootAvailable": false,
+  "missingPaths": [
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/local-cleanup-receipt.json",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/android/session-06",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/builds/observer-r2/build-receipt.json",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/verification/portable-observer-r2",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/verification/private-operator-r4",
+    "/private/tmp/tellpal-quality-closure-35ff4afb586f/operator/quality_closure_archive.py"
+  ],
+  "deletionCauseKnown": false,
+  "originalRawEvidenceReconstructed": false,
+  "retainedGalleryCaptures": [
+    {
+      "file": "images/android-reader-71-full.png",
+      "sha256": "702b98a71d7bf2bdec0f9e7671d8c13b2dd03bc811a8644cac5b8030740dbf0f",
+      "bytes": 1046755
+    },
+    {
+      "file": "images/android-reader-19-full.png",
+      "sha256": "ddee03734be9dd298509842f1728c11f66c8ecf7db7b142c8c9a479c80f747ff",
+      "bytes": 949277
+    },
+    {
+      "file": "images/android-reader-71-100.png",
+      "sha256": "4d391373675b1e736f2998a4a1622c841a5746c5aed4afffe5a0830230c51eb4",
+      "bytes": 1059769
+    },
+    {
+      "file": "images/android-reader-19-100.png",
+      "sha256": "d8c5a14b5ab22fefe6709810302ad621b9fefcd955b24c8c491842d2f5b38acd",
+      "bytes": 1056822
+    },
+    {
+      "file": "images/android-reader-71-075.png",
+      "sha256": "4966ebc745512334c14787dcc2161e56ef4a1c46eccd3e147d7306ec758a9741",
+      "bytes": 955488
+    },
+    {
+      "file": "images/android-reader-19-075.png",
+      "sha256": "d9fb0ffb1a123943d9242aade9855ea8884ecd441334009d735b189f3dba2603",
+      "bytes": 849899
+    },
+    {
+      "file": "images/ios-codec-71-png.png",
+      "sha256": "220479990baaf2d6820ea38ce2bf458ccc00e6614a78c99e81f2fe46dd1a028d",
+      "bytes": 1903420
+    },
+    {
+      "file": "images/ios-codec-71-jpeg.png",
+      "sha256": "ca43bce2a763143aa5d1d08d0c3cebc6d3adfd8290da15f6a2b33f3760c28c8e",
+      "bytes": 1778245
+    },
+    {
+      "file": "images/ios-codec-71-webp.png",
+      "sha256": "fb6bfe81fc5585e90b84f4cf8c6e7fd22416d5775256d0003a5c9a5ed0396c0b",
+      "bytes": 1749504
+    },
+    {
+      "file": "images/ios-codec-19-png.png",
+      "sha256": "02a60ab37fd9eac5db6b372c7f10787cd8ee9ac513ffcafa6195f4ac2220c8a5",
+      "bytes": 1795096
+    },
+    {
+      "file": "images/ios-codec-19-jpeg.png",
+      "sha256": "39f3e961005d484c4294916928cb105b3d7eb124b7afb056a8667816c7f0bb84",
+      "bytes": 1692399
+    },
+    {
+      "file": "images/ios-codec-19-webp.png",
+      "sha256": "e83643c17901ad927316ec53426f9179448d39d90b0e73e239e63968b4285f98",
+      "bytes": 1680521
+    },
+    {
+      "file": "images/ios-reader-71-full.png",
+      "sha256": "cd626dae417ccdd8b90a798166bf655b96a6987b178bb3e69d0a2bf02db49348",
+      "bytes": 2790360
+    },
+    {
+      "file": "images/ios-reader-19-full.png",
+      "sha256": "4ba321bad08df3b219bb7b49bf28d8ed2229f9be5e1bd2e8242d627547d0668a",
+      "bytes": 2711178
+    },
+    {
+      "file": "images/ios-reader-71-100.png",
+      "sha256": "229a8378c651ee1584d371b1afebf563fc39b6228288d16d6bf1994fa552150e",
+      "bytes": 2600406
+    },
+    {
+      "file": "images/ios-reader-19-100.png",
+      "sha256": "69498f38dcdbe0b664fee20f2597aa63ab2c1b9c5ac364e542646ad499f7e772",
+      "bytes": 2775786
+    },
+    {
+      "file": "images/ios-reader-71-075.png",
+      "sha256": "bf63c2d8b916c80349d723eb07ae09fde020e409df2d02a77b82a4e042bc885b",
+      "bytes": 2612899
+    },
+    {
+      "file": "images/ios-reader-19-075.png",
+      "sha256": "f0d48a6d705e2d5b46bb873e51988057b6f04f887bc96505ab63b83a2129c1fd",
+      "bytes": 2508087
+    }
+  ],
+  "originalImageHashesReverified": 18,
+  "currentGalleryHtmlSha256": "f04ee2c4621992db0bf3aa7e4c7021569d94d905e556a26e3f8de86ad869cda6",
+  "retainedStructuredQualityResults": "p0f-quality-closure-results.json",
+  "historicalPhysicalBuildSourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+  "originalNativeLedgersSidecarsBuildCleanupAndPrivateTestReceiptsReverifiedNow": false,
+  "newArchiveScope": "Surviving screenshots, gallery, structured results, human verdicts, final code/review and freshly rerun local test evidence only.",
+  "isFullOriginalQualityRootArchive": false,
+  "decisionScope": "Human-reviewed displayed quality selection remains available; missing original raw material limits independent audit of physical qualification and historical private controls."
+}

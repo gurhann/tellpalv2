@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "scope": "story16-android-reader-resolution-human-selection",
+  "recordedDate": "2026-10-15",
+  "status": "accepted_for_tested_scope",
+  "humanStatementsVerbatim": [
+    "hayır android 0.75 de görsel yazılar buğulaşıyor",
+    "1x net"
+  ],
+  "followupQuestionVerbatim": "Aynı Android karşılaştırmasında 1× PNG, tam PNG’ye göre görsel içindeki yazıların netliğini koruyor mu?",
+  "interpretation": "Human rejects 0.75x for embedded-text blur and accepts 1.0x in the displayed Android comparison against full PNG.",
+  "selectedFormat": "PNG",
+  "smallestAcceptedTestedFactor": 1.0,
+  "rejectedFactors": [
+    0.75
+  ],
+  "contentIdsInDisplayedComparison": [
+    71,
+    19
+  ],
+  "individualContentStatementsInvented": false,
+  "geometry": {
+    "observedSlotWidth": 411.42857142857144,
+    "observedSlotHeight": 631.4285714285714,
+    "observedDpr": 1.75,
+    "orientation": "portrait"
+  },
+  "device": "physical Moto E20",
+  "reader": "StoryPlayerPage",
+  "galleryHtmlSha256": "f04ee2c4621992db0bf3aa7e4c7021569d94d905e556a26e3f8de86ad869cda6",
+  "matrixSha256": "709763695decc109eb769dbe6ce768782ec5a302d8e09950afc2a5376b417aa0",
+  "buildSourceSha256": "a1e827ddf2285b6d4babade85dd62b9142ea2f973a21a0ce28c1e0cefe1fd0d3",
+  "galleryAndroidCaptures": [
+    {
+      "contentId": 71,
+      "variantLabel": "Tam PNG",
+      "captureSha256": "702b98a71d7bf2bdec0f9e7671d8c13b2dd03bc811a8644cac5b8030740dbf0f"
+    },
+    {
+      "contentId": 19,
+      "variantLabel": "Tam PNG",
+      "captureSha256": "ddee03734be9dd298509842f1728c11f66c8ecf7db7b142c8c9a479c80f747ff"
+    },
+    {
+      "contentId": 71,
+      "variantLabel": "1× PNG",
+      "captureSha256": "4d391373675b1e736f2998a4a1622c841a5746c5aed4afffe5a0830230c51eb4"
+    },
+    {
+      "contentId": 19,
+      "variantLabel": "1× PNG",
+      "captureSha256": "d8c5a14b5ab22fefe6709810302ad621b9fefcd955b24c8c491842d2f5b38acd"
+    },
+    {
+      "contentId": 71,
+      "variantLabel": "0,75× PNG",
+      "captureSha256": "4966ebc745512334c14787dcc2161e56ef4a1c46eccd3e147d7306ec758a9741"
+    },
+    {
+      "contentId": 19,
+      "variantLabel": "0,75× PNG",
+      "captureSha256": "d9fb0ffb1a123943d9242aade9855ea8884ecd441334009d735b189f3dba2603"
+    }
+  ],
+  "partialVerdictFile": "p0f-android-quality-human-verdict.json",
+  "partialVerdictSha256": "80a2bab8c86f8b64da6319a6201a689b8c972e893a53f28b49250641c893feb8",
+  "qualityQualified075Savings": null,
+  "productionResolutionChanged": false,
+  "scopeLimit": "Displayed portrait TR71/TR19 page1 comparison only; no whole-corpus or fleet acceptance."
+}

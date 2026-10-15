@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "scope": "story16-surviving-evidence-supplement-archive",
+  "status": "verified",
+  "archiveName": "quality-closure-surviving-evidence-r1.tar.gz",
+  "archiveSha256": "05f2cb057104f62263fbf8edf0def5d5f6a6c1dee4de3ebb260297e32f9c6ddc",
+  "archiveBytes": 35574056,
+  "archiveIndexSha256": "28084491569a5c9c4037a6a5a5bea4ab44fb0e62c50293ccf6ef7f5b041a051f",
+  "logicalFiles": 903,
+  "allArchivedFileHashesVerified": true,
+  "fullOriginalQualityRootArchive": false,
+  "originalRawRootAvailable": false,
+  "snapshotStage": "before_archive_receipt_and_final_commit_insertion",
+  "parentPerformanceArchiveSha256": "60d535e77971990d12dd82135448e6e4dc7f81dbc0d00446bc324958ab80237d",
+  "archivePath": "/Volumes/MAC_EK/dev/tellpal-reader-extension-evidence-20261015/quality-closure-surviving-evidence-r1.tar.gz",
+  "externalReadbackVerified": true
+}

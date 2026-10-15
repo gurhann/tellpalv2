@@ -342,6 +342,29 @@ path.chmod(0o600)
                 "mutatedSha256": hashlib.sha256(changed).hexdigest(), "runtimeLabel": label,
                 "removedBehavior": "bounded queued finish" if mode == "cleanup" else "responsive-main finish acknowledgment"}
             private_file(launcher, original)
+        seam = b'val readerQuality = parsed.getString("batchId") in ImageExperimentReaderPolicy.qualityBatches'
+        if original.count(seam) != 1:
+            raise AssertionError("Reader-quality dispatch mutant could not isolate its batch selection")
+        changed = original.replace(seam, b'val readerQuality = false')
+        private_file(launcher, changed)
+        mutated_classes = output / "reader-quality-mutant-classes"
+        compiled_quality = execute([java, "-cp", os.pathsep.join(str(path) for path in compiler),
+            "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-no-stdlib", "-no-reflect", "-jvm-target", "17",
+            "-classpath", os.pathsep.join([str(classes), compile_classpath]), "-d", mutated_classes, launcher],
+            output, "reader-quality-mutant-compile")
+        if compiled_quality.returncode:
+            raise AssertionError("Reader-quality dispatch mutant must compile before its runtime failure counts")
+        failed_quality = execute([java, "-cp", os.pathsep.join([str(mutated_classes), str(classes), classpath]),
+            "com.tellpal.imageexperiment.host.HarnessAssertionsKt", output / "reader-quality-mutant-app", certificate,
+            copied_dart, expired_certificate, "reader-quality"], output, "reader-quality-mutant", timeout=15)
+        if failed_quality.returncode == 0 or b"HARNESS_ASSERTION reader-quality-launcher-success" not in failed_quality.stderr:
+            raise AssertionError("Reader-quality dispatch regression was not detected by the real launcher test")
+        summary["readerQualityDispatchMutant"] = {"file": "ImageExperimentInstrumentation.kt", "replacementCount": 1,
+            "compileExit": compiled_quality.returncode, "runtimeExit": failed_quality.returncode,
+            "failure": "reader-quality-launcher-success", "runtimeLabel": "reader-quality-mutant",
+            "originalSha256": hashlib.sha256(original).hexdigest(), "mutatedSha256": hashlib.sha256(changed).hexdigest(),
+            "removedBehavior": "reader-quality batch selects its bounded500ms observer"}
+        private_file(launcher, original)
     private_file(output / "summary.json", json.dumps(summary, indent=2) + "\n")
     return summary
 

@@ -504,7 +504,8 @@ class PhysicalPrerequisiteTests(SourceBindingInputs):
         from types import SimpleNamespace
         from unittest.mock import Mock
         import reader_android_window as window
-        root_epoch, root_monotonic = self.now - 60000, time.monotonic() - 60
+        # Keep the frozen 180-second boundary exactly representable in this test.
+        root_epoch, root_monotonic = self.now - 60000, float(int(time.monotonic()) - 60)
         elapsed = [60]
         self.values['batchId'] = window.ORDER[0]
         self.proof.update(batchId=window.ORDER[0], deviceModel='Moto E20', reservationExpiresAt=root_epoch + 470000)
