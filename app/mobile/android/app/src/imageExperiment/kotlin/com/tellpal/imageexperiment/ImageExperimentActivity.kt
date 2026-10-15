@@ -13,10 +13,18 @@ class ImageExperimentActivity : FlutterActivity() {
     private var admittedExpiry = 0L
     private var comparisonAdmitted = false
     private var qualityAdmitted = false
+    private var readerAdmitted = false
+    private var readerPrimaryAdmitted = false
+    private var readerBackgroundRequested = false
+    private var readerBackgroundConsumed = false
+    private val readerLifecycle = ImageExperimentReaderLifecycle()
+    private var deviceFactsReport: ByteArray? = null
     private var expectedQualitySession = ""
     private var expectedQualityCase = ""
     private var expectedQualityGeneration = -1L
     private val qualityLifetime = ImageExperimentQualityLifetime()
+    private val readerQualityLifetime = ImageExperimentReaderQualityLifetime()
+    private var expectedQualityCases = emptySet<String>()
     private var qualityBinding: Map<String, Any?>? = null
     private val qualityHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private val expireQuality = Runnable { clearQualityBinding() }
@@ -92,6 +100,25 @@ class ImageExperimentActivity : FlutterActivity() {
                             }
                         }
                     }
+                    "readDeviceFacts" -> {
+                        if (call.arguments != null || !measurementActive() || !readerAdmitted)
+                            result.error("READER_REFUSED", null, null)
+                        else {
+                            val facts = ImageExperimentDeviceFacts.read(this)
+                            if (storeDeviceFacts(facts)) result.success(facts)
+                            else result.error("READER_REFUSED", null, null)
+                        }
+                    }
+                    "readReaderLifecycle" -> {
+                        if (call.arguments != null || !measurementActive() || !readerAdmitted)
+                            result.error("READER_REFUSED", null, null)
+                        else result.success(readerLifecycle.snapshot())
+                    }
+                    "requestReaderBackground" -> {
+                        if (call.arguments != null || !measurementActive() || !readerPrimaryAdmitted || readerBackgroundRequested)
+                            result.success(false)
+                        else { readerBackgroundRequested = true; result.success(true) }
+                    }
                     "clearQualityBinding" -> {
                         if (call.arguments != null) result.success(false)
                         else { clearQualityBinding(); result.success(true) }
@@ -104,19 +131,19 @@ class ImageExperimentActivity : FlutterActivity() {
                         else {
                             val root = findViewById<android.view.ViewGroup>(android.R.id.content)
                             if (root.findViewWithTag<android.view.View>("imageExperimentQualityBinding") != null ||
-                                !qualityLifetime.begin(admittedExpiry)) result.success(false)
+                                !beginQualityLifetime()) result.success(false)
                             else {
                                 val element = android.view.View(this)
                                 element.tag = "imageExperimentQualityBinding"
                                 element.importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_YES
                                 @Suppress("UNCHECKED_CAST")
                                 val published = (row as Map<String, Any?>) + mapOf("phase" to "hold", "orientation" to "portrait",
-                                    "nativeContext" to "foreground_activity", "holdDeadlineEpochMilliseconds" to qualityLifetime.deadline)
+                                    "nativeContext" to "foreground_activity", "holdDeadlineEpochMilliseconds" to qualityDeadline())
                                 qualityBinding = published
                                 element.contentDescription = "IMAGE_EXPERIMENT_QUALITY_BINDING " +
                                     android.util.Base64.encodeToString(org.json.JSONObject(published).toString().toByteArray(Charsets.UTF_8), android.util.Base64.NO_WRAP)
                                 root.addView(element, android.view.ViewGroup.LayoutParams(1, 1))
-                                qualityHandler.postDelayed(expireQuality, maxOf(1, qualityLifetime.deadline - System.currentTimeMillis()))
+                                qualityHandler.postDelayed(expireQuality, maxOf(1, qualityDeadline() - System.currentTimeMillis()))
                                 result.success(true)
                             }
                         }
@@ -137,8 +164,36 @@ class ImageExperimentActivity : FlutterActivity() {
             }
     }
 
+    private fun beginQualityLifetime() = if (readerAdmitted) readerQualityLifetime.begin(admittedExpiry) else qualityLifetime.begin(admittedExpiry)
+    private fun qualityDeadline() = if (readerAdmitted) readerQualityLifetime.deadline else qualityLifetime.deadline
+    private fun activeQualityLifetime() = if (readerAdmitted) readerQualityLifetime.isActive() else qualityLifetime.isActive()
+    private fun storeDeviceFacts(facts: Map<String, Any?>): Boolean {
+        var temporary: java.io.File? = null
+        val started = android.os.SystemClock.elapsedRealtime()
+        return runCatching {
+            val bytes = ImageExperimentDeviceFacts.validatedBytes(facts)
+            val root = noBackupFilesDir.canonicalFile
+            val directory = java.io.File(root, "image_experiment")
+            require(directory.mkdirs() || directory.isDirectory)
+            require(directory.canonicalFile.parentFile == root && android.system.Os.lstat(directory.path).st_mode and
+                android.system.OsConstants.S_IFMT == android.system.OsConstants.S_IFDIR)
+            android.system.Os.chmod(directory.path, 0x1c0)
+            val destination = java.io.File(directory, "device-facts.json")
+            if (destination.exists()) require(android.system.Os.lstat(destination.path).st_mode and
+                android.system.OsConstants.S_IFMT == android.system.OsConstants.S_IFREG)
+            val selected = java.io.File.createTempFile("device-facts-", ".tmp", directory)
+            temporary = selected
+            android.system.Os.chmod(selected.path, 0x180)
+            selected.writeBytes(bytes)
+            require(measurementActive() && android.os.SystemClock.elapsedRealtime() - started < 1000)
+            require(selected.renameTo(destination))
+            deviceFactsReport = bytes.copyOf()
+            true
+        }.getOrDefault(false).also { temporary?.delete() }
+    }
     private fun clearQualityBinding() {
         qualityLifetime.invalidate()
+        readerQualityLifetime.release()
         qualityHandler.removeCallbacks(expireQuality)
         qualityBinding = null
         val root = findViewById<android.view.ViewGroup>(android.R.id.content)
@@ -146,13 +201,25 @@ class ImageExperimentActivity : FlutterActivity() {
     }
     // Called on the UI thread by the same-signed, exact-Activity instrumentation owner.
     fun readQualityBinding(): Map<String, Any?>? {
-        if (!measurementActive() || !qualityLifetime.isActive() || isFinishing || isDestroyed || !hasWindowFocus() ||
+        if (!measurementActive() || !activeQualityLifetime() || isFinishing || isDestroyed || !hasWindowFocus() ||
             resources.configuration.orientation != android.content.res.Configuration.ORIENTATION_PORTRAIT) return null
         val root = findViewById<android.view.ViewGroup>(android.R.id.content)
         if (root.findViewWithTag<android.view.View>("imageExperimentQualityBinding") == null) return null
         return qualityBinding?.plus("nativeObservedAtEpochMilliseconds" to System.currentTimeMillis())
     }
-    override fun onPause() { clearQualityBinding(); super.onPause() }
+    override fun onPause() { readerQualityLifetime.invalidate(); clearQualityBinding(); super.onPause() }
+    override fun onStop() { readerLifecycle.background(); super.onStop() }
+    override fun onResume() { super.onResume(); readerLifecycle.foreground() }
+
+    // Instrumentation consumes only an app-owned request after validated reader admission.
+    fun consumeReaderBackgroundRequest(): Boolean {
+        if (!measurementActive() || !readerPrimaryAdmitted || !readerBackgroundRequested || readerBackgroundConsumed) return false
+        readerBackgroundConsumed = true
+        return true
+    }
+    fun readReaderLifecycleForLauncher(): Map<String, Any?>? =
+        if (measurementActive() && readerAdmitted) readerLifecycle.snapshot() else null
+    fun readDeviceFactsForLauncher(): ByteArray? = if (readerAdmitted) deviceFactsReport?.copyOf() else null
 
     private fun measurementActive() = bootstrap != null && bootstrap?.isRevoked == false &&
         System.currentTimeMillis() < admittedExpiry
@@ -161,29 +228,35 @@ class ImageExperimentActivity : FlutterActivity() {
             if (!packageName.endsWith(".release")) return
             val envelope = ImageExperimentJson.parseObject(value.getValue("envelope") as String)
             val batch = envelope.getString("batchId")
-            if (batch !in setOf("native_comparison_r1", "native_quality_r1")) return
+            if (batch !in setOf("native_comparison_r1", "native_quality_r1") + ImageExperimentReaderPolicy.batches) return
             val manifest = ImageExperimentJson.parseObject(String(android.util.Base64.decode(
                 envelope.getString("publicManifestBase64"), android.util.Base64.NO_WRAP), Charsets.UTF_8))
             val metadata = value.getValue("metadata") as Map<*, *>
             val selected = metadata["caseId"] as String
             val entries = manifest.getJSONArray("entries")
+            val reader = batch in ImageExperimentReaderPolicy.batches
+            if (reader && !ImageExperimentReaderPolicy.accepts(batch, selected, entries)) return
             val entry = (0 until entries.length()).map { entries.getJSONObject(it) }
                 .single { it.getString("caseId") == selected }
             if (entry.getString("purposeAcceptanceReceipt") != batch) return
             admittedExpiry = envelope.getLong("expiresAt")
-            comparisonAdmitted = batch == "native_comparison_r1"
-            qualityAdmitted = batch == "native_quality_r1"
+            readerAdmitted = reader
+            readerPrimaryAdmitted = batch in ImageExperimentReaderPolicy.primaryBatches
+            if (reader) readerLifecycle.enable()
+            comparisonAdmitted = batch == "native_comparison_r1" || readerPrimaryAdmitted
+            qualityAdmitted = batch == "native_quality_r1" || batch in ImageExperimentReaderPolicy.qualityBatches
             fun digest(text: String) = java.security.MessageDigest.getInstance("SHA-256")
                 .digest(text.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
             expectedQualitySession = digest(envelope.getString("sessionId"))
             expectedQualityCase = digest(selected)
+            expectedQualityCases = if (reader) (1..(if (batch in ImageExperimentReaderPolicy.qualityBatches) 2 else 6)).map { digest("reader_page_$it") }.toSet() else setOf(expectedQualityCase)
             expectedQualityGeneration = envelope.getLong("generation")
-        } catch (_: Exception) { comparisonAdmitted = false; qualityAdmitted = false }
+        } catch (_: Exception) { comparisonAdmitted = false; qualityAdmitted = false; readerAdmitted = false; readerPrimaryAdmitted = false }
     }
     private fun validQualityBinding(row: Map<*, *>): Boolean = runCatching {
         require(row.keys == setOf("caseSha256", "providerSha256", "attemptSha256", "sessionSha256", "generation",
             "observedSlotWidth", "observedSlotHeight", "observedDpr", "actualDecodeWidth", "actualDecodeHeight"))
-        require(row["sessionSha256"] == expectedQualitySession && row["caseSha256"] == expectedQualityCase &&
+        require(row["sessionSha256"] == expectedQualitySession && row["caseSha256"] in expectedQualityCases &&
             (row["generation"] as? Number)?.toLong() == expectedQualityGeneration)
         ImageExperimentLedger.validate(org.json.JSONObject(mapOf("schemaVersion" to 1,
             "records" to listOf(row), "droppedCount" to 0)).toString())

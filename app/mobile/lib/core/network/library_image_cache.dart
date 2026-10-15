@@ -665,6 +665,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
           rethrow;
         } finally {
           await _repository.whenIdle();
+          await _repository.open();
           await _files.release(
             owner,
             (await _repository.getAllObjects())
@@ -898,6 +899,7 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
 
   Future<void> _restoreProfileFiles() async {
     // Account for persisted profile bytes across app restarts before any new write.
+    await _repository.open();
     for (final object in await _repository.getAllObjects()) {
       await _files.createFile(object.relativePath);
     }

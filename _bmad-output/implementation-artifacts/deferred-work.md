@@ -75,3 +75,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-android-launcher-pairing-lifecycle.md`
   summary: Investigate scoped reporting of uncaught Android experiment Activity constructor/lifecycle exceptions without swallowing unrelated framework failures.
   evidence: API 33 ActivityThread routes uncaught construction/onCreate exceptions through Instrumentation.onException; the inherited default returns false and can terminate the process before fixed launcher refusal output. This path also exists in baseline ad9a7c48fc9d588677efc7fcbc6b9836855653e1. Synthetic lifecycle injection does not establish a physical framework exception receipt; handling it requires a separate ownership design.
+
+- source_spec: `_bmad-output/implementation-artifacts/image-optimization/spec-1-6-reader-resolution-extension.md`
+  summary: Preserve bounded process-observation errors when owned process-group cleanup yields EPERM.
+  evidence: The unchanged `capture_observation` function in `native_entry_driver.py` raised `PermissionError` from its `finally` cleanup during the first post-review 312-test host run, masking the expected bounded-output `EntryError`. Its function bytes equal baseline `4721dccf090b29ce7b2d773d789873dbfbb324ae`; the same isolated test and a complete 312-test rerun passed without source changes. The original failed run and audit remain retained; audit SHA-256 `66c967173ef835dd277e26ba15c76d603c17f0090f8be0f2aa32c1694aad6096`. Root cause remains unavailable.

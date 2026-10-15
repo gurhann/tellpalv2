@@ -17,8 +17,30 @@ the production Kotlin file and compiles that exact slice with configurable
 for positive, zero, maximum signed integer, negative PSS and a throwing OS reader.
 It uses cached Kotlin 2.0.21 compiler dependencies and an installed JetBrains Java
 runtime, writes compiler outputs only to a temporary directory, and prints the
-production source SHA. The host `test_native_android_memory.py` suite also executes
+production source SHA. The explicit `integration_native_android_memory.py` suite also executes
 this runner, including compilation and all five cases.
+
+The SDK/Java-free Python suites do not discover native integrations. Run both
+native integration modules explicitly from the repository root:
+
+```sh
+tools/image-optimization/.venv/bin/python -B -m unittest discover \
+  -s tools/image-optimization -p 'integration_native_*.py' -v
+```
+
+`integration_native_reader_probes.py` additionally requires `xcrun`/Swift, Java 17,
+cached Kotlin 2.2.20 compiler/runtime dependencies, the installed Android SDK JSON
+compile API, the cached executable Android-compatible JSON JAR, OpenSSL and the
+locked Python environment. `ANDROID_HOME` selects the SDK when set; otherwise the
+reader harness uses the existing `~/Library/Android/sdk`. It installs or downloads
+nothing. The real Activity's accepted reader handoff and `onStop`/`onResume`
+callbacks feed its MethodChannel and launcher lifecycle snapshots. Independently
+compiled callback-removal mutants must fail named runtime assertions. The
+Android/Flutter boundaries and callback delivery remain synthetic host fixtures,
+not physical Android lifecycle evidence. Missing prerequisites fail, never skip.
+Set `NATIVE_INTEGRATION_EVIDENCE_ROOT` to an existing owned private directory for
+new Activity harness source-freeze and bounded trace children. Existing historical
+native receipts remain unchanged and do not stand in for a current integration.
 
 From `app/mobile`, use the existing mobile package configuration for the external
 Flutter regression:

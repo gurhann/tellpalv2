@@ -15,7 +15,7 @@ import time
 from urllib.parse import parse_qs, urlsplit
 
 from native_entry_config import (EntryError, HASH, ID, ROOT, SCOPE, canonical_uid, exact_keys,
-    frozen_json, origin, private_file, require, strict_json)
+    frozen_json, origin, private_file, require, strict_json, validate_reader_entries, READER_CASES)
 from native_entry_crypto import certificate_identity, public_key, random_nonce, verify_proof
 
 REQUEST_SECONDS = 10
@@ -166,6 +166,9 @@ class Broker:
         self.lock = threading.RLock()
         self.case_id = case_id or manifest.entries[0]["caseId"]
         require(self.case_id in manifest.objects, "unknown_case")
+        self.reader = validate_reader_entries(config.values["batchId"], manifest.entries)
+        require(not self.reader or self.case_id == READER_CASES[0], "reader_selection_rejected")
+        self.allowed_cases = frozenset((entry["caseId"] for entry in manifest.entries) if self.reader else (self.case_id,))
         self.session_id = secrets.token_urlsafe(24)
         self.nonce = random_nonce()
         self.started = monotonic()
@@ -178,6 +181,7 @@ class Broker:
         self.fixture_delivery_count = 0
         self.fixture_delivery_bytes = 0
         self.fixture_delivery_sha256 = None
+        self.fixture_deliveries = {}
         self.token = None
         self.expires_at = None
         self.reason = None
@@ -328,7 +332,7 @@ class Broker:
         status = self.authorize(session_id, authorization)
         require(status["status"] == "admitted", status["reason"])
         with self.lock:
-            require(case_id == self.case_id and case_id in self.manifest.objects, "unknown_case")
+            require(case_id in self.allowed_cases and case_id in self.manifest.objects, "unknown_case")
             require(self.state()["status"] == "admitted", "session_revoked")
             entry = next(item for item in self.manifest.entries if item["caseId"] == case_id)
             return entry, self.manifest.objects[case_id]
@@ -345,7 +349,7 @@ class Broker:
     def completed_fixture(self, case_id, byte_count, digest):
         """Only a fully written selected immutable response is a delivery observation."""
         with self.lock:
-            require(self.admission_successful and case_id == self.case_id, "fixture_delivery_unverified")
+            require(self.admission_successful and case_id in self.allowed_cases, "fixture_delivery_unverified")
             entry = next(item for item in self.manifest.entries if item["caseId"] == case_id)
             require(type(byte_count) is int and byte_count == entry["byteSize"] and digest == entry["outputSha256"],
                 "fixture_delivery_unverified")
@@ -355,6 +359,10 @@ class Broker:
             self.fixture_delivery_count += 1
             self.fixture_delivery_bytes = byte_count
             self.fixture_delivery_sha256 = digest
+            delivery = self.fixture_deliveries.setdefault(case_id, {"count": 0, "bodyBytes": 0,
+                "outputSha256": digest})
+            delivery["count"] += 1
+            delivery["bodyBytes"] += byte_count
 
     def revoke_from_app(self, session_id, authorization):
         """Retain positive teardown evidence only for active authenticated app revocation."""

@@ -8,6 +8,7 @@ import '../core/network/image_experiment_image_cache.dart';
 import 'image_experiment_bootstrap.dart';
 import 'image_experiment_phase_coordinator.dart';
 import '../features/image_experiment/presentation/cubit/raster_case_cubit.dart';
+import '../features/image_experiment/presentation/cubit/reader_resolution_cubit.dart';
 import 'image_experiment_configuration.dart';
 import 'image_experiment_router.dart';
 import 'image_experiment_composition.config.dart';
@@ -47,6 +48,17 @@ class ImageExperimentComposition {
   Future<bool>? _qualityPublication;
   Future<void>? _qualityInvalidation;
   final _targetReleases = <Future<void>>[];
+  ReaderResolutionCubit? _reader;
+  void startReader(ReaderResolutionCubit cubit) {
+    _reader = cubit;
+    cubit.images.onPainted = cubit.pagePainted;
+    cubit.start(
+      finish: (complete) => requestTeardown(verifiedDraw: complete),
+      publishQuality: bootstrap.publishQualityBinding,
+      clearQuality: bootstrap.clearQualityBinding,
+    );
+  }
+
   void ownTargetRelease(Future<void> release) {
     _targetReleases.add(release);
   }
@@ -120,6 +132,9 @@ class ImageExperimentComposition {
   }
 
   Future<void> invalidateQualityBinding() {
+    if (configuration.readerQuality && _reader != null) {
+      return _reader!.retireQualityBinding();
+    }
     if (!phases.enabled || !phases.quality) return Future.value();
     return _qualityInvalidation ??= _invalidateQualityBinding();
   }
@@ -234,6 +249,7 @@ class ImageExperimentComposition {
     }
 
     await attempt(invalidateQualityBinding);
+    if (_reader != null) await attempt(_reader!.close);
     await attempt(phases.close);
     await attempt(transport.close, maximumMilliseconds: 2000);
     configuration.credentials.revoke();

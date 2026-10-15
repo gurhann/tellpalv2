@@ -14,7 +14,9 @@ import javax.net.ssl.HttpsURLConnection
 
 object HostedFixture {
     lateinit var certificate: ByteArray
-    private val manifest = "{\"synthetic_fixture\":1}".toByteArray()
+    private fun manifest(): ByteArray = if (!HostRuntime.readerFixture) "{\"synthetic_fixture\":1}".toByteArray()
+        else JSONObject(mapOf("entries" to (1..6).map { index -> mapOf("caseId" to "reader_page_$index",
+            "mime" to "image/png", "purposeAcceptanceReceipt" to "reader_resolution_a_r1") })).toString().toByteArray()
     fun install(certificateFile: File) {
         certificate = certificateFile.readBytes()
         URL.setURLStreamHandlerFactory { protocol -> if (protocol == "https") object : URLStreamHandler() {
@@ -23,10 +25,12 @@ object HostedFixture {
     }
 
     fun metadata(): JSONObject = JSONObject().apply {
+        val manifest = manifest()
         put("schemaVersion", 1); put("scope", "image-optimization-native-fixture-r1")
-        put("batchId", "synthetic_batch"); put("sessionId", "synthetic_session"); put("caseId", "synthetic_case")
+        put("batchId", if (HostRuntime.readerFixture) "reader_resolution_a_r1" else "synthetic_batch")
+        put("sessionId", "synthetic_session"); put("caseId", if (HostRuntime.readerFixture) "reader_page_1" else "synthetic_case")
         put("launchNonce", "1".repeat(64)); put("deadline", System.currentTimeMillis() + 29_000)
-        put("expectedUid", "jLRypTmoBrhhX21HsDJojurcKTC3"); put("expectedAppId", HostRuntime.APP_ID)
+        put("expectedUid", "jLRypTmoBrhhX21HsDJojurcKTC3"); put("expectedAppId", HostRuntime.applicationId)
         put("firebaseProjectId", "synthetic-project"); put("backendEnvironment", "test")
         put("brokerOrigin", "https://fixture.invalid"); put("brokerCertificateDerBase64", encode(certificate))
         put("brokerCertificateSha256", ImageExperimentBootstrap.sha256(certificate))
@@ -55,7 +59,7 @@ object HostedFixture {
                 for (field in listOf("scope", "batchId", "sessionId", "expectedUid", "backendEnvironment", "brokerOrigin",
                     "brokerCertificateSha256", "manifestSha256", "publicManifestSha256")) put(field, metadata.get(field))
                 put("issuedAt", System.currentTimeMillis() - 1_000); put("expiresAt", System.currentTimeMillis() + 60_000)
-                put("idToken", "SYNTHETIC_DETACHED_TOKEN"); put("publicManifestBase64", encode(manifest))
+                put("idToken", "SYNTHETIC_DETACHED_TOKEN"); put("publicManifestBase64", encode(manifest()))
             }.toString()
             else -> error("Unexpected path")
         }

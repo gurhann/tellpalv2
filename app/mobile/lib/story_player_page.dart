@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 
 import 'story_manifest.dart';
 import 'story_manifest_client.dart';
+import 'story_reader_images.dart';
 
 class StoryPlayerPage extends StatefulWidget {
   const StoryPlayerPage({
@@ -14,12 +15,16 @@ class StoryPlayerPage extends StatefulWidget {
     required this.contentId,
     required this.languageCode,
     this.grantRefreshWindow = const Duration(minutes: 1),
+    this.images,
+    this.controller,
   });
 
-  final StoryManifestClient client;
+  final StoryManifestSource client;
   final int contentId;
   final String languageCode;
   final Duration grantRefreshWindow;
+  final StoryReaderImages? images;
+  final StoryReaderController? controller;
 
   @override
   State<StoryPlayerPage> createState() => _StoryPlayerPageState();
@@ -44,6 +49,7 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
   @override
   void initState() {
     super.initState();
+    widget.controller?.attach(_selectPage);
     _playerStateSubscription = _player.playerStateStream.listen(_onPlayerState);
     unawaited(_loadManifest());
   }
@@ -51,6 +57,7 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
   @override
   void dispose() {
     _selectionGeneration++;
+    widget.controller?.detach();
     _playerStateSubscription?.cancel();
     widget.client.close();
     unawaited(_player.dispose());
@@ -92,6 +99,7 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
     final manifest = _manifest;
     if (manifest == null || index < 0 || index >= manifest.pages.length) return;
     final generation = ++_selectionGeneration;
+    widget.images?.selected(manifest.pages[index], generation);
     setState(() {
       _pageIndex = index;
       _loadedGeneration = null;
@@ -116,8 +124,14 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
       final manifest = _manifest!;
       final page = manifest.pages[_pageIndex];
       var imageFailed = false;
+      final provider =
+          await (widget.images?.prepare(page) ??
+              Future<ImageProvider>.value(
+                NetworkImage(page.illustration.url.toString()),
+              ));
+      if (!mounted || generation != _selectionGeneration) return;
       await precacheImage(
-        NetworkImage(page.illustration.url.toString()),
+        provider,
         context,
         onError: (error, stackTrace) => imageFailed = true,
       ).timeout(const Duration(seconds: 15));
@@ -216,15 +230,22 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
   void _prefetchNextImage() {
     final manifest = _manifest!;
     if (_pageIndex + 1 >= manifest.pages.length) return;
-    final grant = manifest.pages[_pageIndex + 1].illustration;
+    final nextPage = manifest.pages[_pageIndex + 1];
+    final grant = nextPage.illustration;
     if (grant.expiresSoon) return;
-    unawaited(
-      precacheImage(
-        NetworkImage(grant.url.toString()),
-        context,
-        onError: (error, stackTrace) {},
-      ),
-    );
+    unawaited(() async {
+      try {
+        final provider =
+            await (widget.images?.prepare(nextPage) ??
+                Future<ImageProvider>.value(
+                  NetworkImage(grant.url.toString()),
+                ));
+        if (!mounted) return;
+        await precacheImage(provider, context, onError: (error, stackTrace) {});
+      } catch (_) {
+        // A speculative next page cannot replace the selected-page error state.
+      }
+    }());
   }
 
   void _onPlayerState(PlayerState state) {
@@ -337,25 +358,48 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
             child: ColoredBox(
               color: Colors.black,
               child: Center(
-                child: Image.network(
-                  page.illustration.url.toString(),
-                  key: ValueKey(page.illustration.url),
-                  fit: BoxFit.contain,
-                  semanticLabel: 'Hikâye sayfası ${page.pageNumber}',
-                  loadingBuilder: (context, child, progress) => progress == null
-                      ? child
-                      : const CircularProgressIndicator(),
-                  errorBuilder: (context, error, stackTrace) => Center(
-                    child: TextButton(
-                      onPressed: _refreshGrants,
-                      child: const Text('Görsel açılamadı · bağlantıyı yenile'),
-                    ),
-                  ),
-                ),
+                child: widget.images == null
+                    ? Image.network(
+                        page.illustration.url.toString(),
+                        key: ValueKey(page.illustration.url),
+                        fit: BoxFit.contain,
+                        semanticLabel: 'Hikâye sayfası ${page.pageNumber}',
+                        loadingBuilder: (context, child, progress) =>
+                            progress == null
+                            ? child
+                            : const CircularProgressIndicator(),
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: TextButton(
+                            onPressed: _refreshGrants,
+                            child: const Text(
+                              'Görsel açılamadı · bağlantıyı yenile',
+                            ),
+                          ),
+                        ),
+                      )
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          final media = MediaQuery.of(this.context);
+                          widget.images!.observeLayout(
+                            StoryReaderGeometry(
+                              slot: constraints.biggest,
+                              dpr: media.devicePixelRatio,
+                              textScale: media.textScaler.scale(1),
+                              padding: media.padding,
+                              viewInsets: media.viewInsets,
+                            ),
+                          );
+                          return widget.images!.display(context, page);
+                        },
+                      ),
               ),
             ),
           ),
-          if (_loadingMedia) const LinearProgressIndicator(),
+          if (_loadingMedia || widget.images != null)
+            SizedBox(
+              height: 4,
+              child: _loadingMedia ? const LinearProgressIndicator() : null,
+            ),
           if (_mediaError != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

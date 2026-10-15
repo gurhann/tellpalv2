@@ -421,14 +421,43 @@ runbook records prerequisites rather than an executed native or cloud session.
 
 ## Android plugin registration verification
 
-The default `test_native*.py` suite uses synthetic private fixtures and requires
-no personal SDK, Java installation, signing files or archived APKs. Run it with
-the locked host environment:
+The portable Python suites use synthetic private fixtures and require no Apple
+or Android SDK, Java installation, signing files or archived APKs. Run their
+explicit patterns with the locked host environment:
+
+```sh
+for pattern in 'test_native_entry_*.py' 'test_native_artwork_comparison.py' \
+  'test_native_pilot_setup.py' 'test_native_test_login.py'; do
+  tools/image-optimization/.venv/bin/python -B -m unittest discover \
+    -s tools/image-optimization -p "$pattern" || exit
+done
+```
+
+Native source execution is an explicit, separate host integration suite:
 
 ```sh
 tools/image-optimization/.venv/bin/python -B -m unittest discover \
-  -s tools/image-optimization -p 'test_native*.py'
+  -s tools/image-optimization -p 'integration_native_*.py' -v
 ```
+
+It requires installed `xcrun`/Swift, an Android SDK compile API, Java 17, the
+existing cached Kotlin 2.2.20 and memory-runner 2.0.21 dependencies, the executable
+Android-compatible JSON JAR, OpenSSL and the locked Python environment. The memory
+runner additionally uses an installed JetBrains Java runtime. See
+[`native-tests/README.md`](native-tests/README.md) for its exact runner contract.
+Missing tools or dependencies fail these integrations; no case silently skips.
+Set `NATIVE_INTEGRATION_EVIDENCE_ROOT` to an existing owned private directory to
+retain the Activity harness source freeze and bounded compiler/runtime traces in
+a new child directory.
+
+The reader integration executes the accepted reader handoff through the actual
+Activity channel, invokes its `onStop`/`onResume`, and compares MethodChannel
+snapshots with the actual launcher observation API. Two independently compiled
+private mutants remove one callback each and must fail the corresponding runtime
+assertion. Android/Flutter boundaries and lifecycle delivery are controlled host
+fixtures. These are synthetic executable checks, not real Android OS transitions
+or physical-device evidence. Current execution receipts remain separate from
+unchanged historical native evidence.
 
 Real SDK generation, Gradle refusal and historical APK negatives are separate,
 mandatory integration evidence for the plugin repair. Invoke them explicitly:

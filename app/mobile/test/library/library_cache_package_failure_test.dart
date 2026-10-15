@@ -98,6 +98,37 @@ class _Repository extends NonStoringObjectProvider {
   }
 }
 
+class _OpeningRepository extends _Repository {
+  final opening = Completer<bool>();
+  final entered = Completer<void>();
+  final beforeOpenError = StateError('Repository enumerated before opening');
+  int openCalls = 0, enumerations = 0, publications = 0;
+  bool opened = false;
+
+  @override
+  Future<bool> open() async {
+    check();
+    openCalls++;
+    if (!entered.isCompleted) entered.complete();
+    final result = await opening.future;
+    opened = true;
+    return result;
+  }
+
+  @override
+  Future<List<CacheObject>> getAllObjects() {
+    enumerations++;
+    if (!opened) throw beforeOpenError;
+    return super.getAllObjects();
+  }
+
+  @override
+  Future<dynamic> updateOrInsert(CacheObject object) {
+    publications++;
+    return super.updateOrInsert(object);
+  }
+}
+
 class _Files implements FileSystem {
   _Files() {
     fs = MemoryFileSystem(
@@ -487,6 +518,114 @@ void main() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(channel, null);
       }
+    },
+  );
+  test(
+    'profile publication waits for delayed opening before enumeration or writing',
+    () async {
+      final repo = _OpeningRepository(), files = _Files(), service = _Service();
+      final cache = LibraryImageCache.profile(
+        Config(
+          'delayed-opening-publication',
+          repo: repo,
+          fileSystem: files,
+          fileService: service,
+        ),
+        delegate: service,
+      );
+      io.File? published;
+      Object? failure;
+      var settled = false;
+      final publication = cache
+          .putFile('', _bytes, key: 'owned')
+          .then<void>(
+            (file) {
+              published = file;
+              settled = true;
+            },
+            onError: (Object error) {
+              failure = error;
+              settled = true;
+            },
+          );
+      try {
+        await repo.entered.future.timeout(const Duration(seconds: 2));
+        await Future<void>.delayed(Duration.zero);
+        expect(settled, false);
+        expect(repo.openCalls, 1);
+        expect(repo.enumerations, 0);
+        expect(repo.publications, 0);
+        expect(files.creates, 0);
+        repo.opening.complete(true);
+        await publication.timeout(const Duration(seconds: 2));
+        expect(failure, null);
+        expect(published, isNotNull);
+        expect(await published!.readAsBytes(), _bytes);
+        expect(repo.objects.keys, ['owned']);
+        expect(repo.publications, 1);
+        expect(repo.openCalls, 1);
+        expect(service.requests, 0);
+      } finally {
+        if (!repo.opening.isCompleted) repo.opening.complete(true);
+        await publication.timeout(const Duration(seconds: 2));
+        await cache.close().timeout(const Duration(seconds: 2));
+      }
+      expect(repo.closeCalls, 1);
+      expect(repo.afterClose, 0);
+    },
+  );
+  test(
+    'profile publication preserves delayed opening error without enumeration or writing',
+    () async {
+      final error = StateError('Injected delayed repository opening failure');
+      final repo = _OpeningRepository(), files = _Files(), service = _Service();
+      final cache = LibraryImageCache.profile(
+        Config(
+          'rejected-opening-publication',
+          repo: repo,
+          fileSystem: files,
+          fileService: service,
+        ),
+        delegate: service,
+      );
+      Object? failure;
+      var settled = false;
+      final publication = cache
+          .putFile('', _bytes, key: 'owned')
+          .then<void>(
+            (_) => settled = true,
+            onError: (Object value) {
+              failure = value;
+              settled = true;
+            },
+          );
+      try {
+        await repo.entered.future.timeout(const Duration(seconds: 2));
+        await Future<void>.delayed(Duration.zero);
+        expect(settled, false);
+        expect(repo.enumerations, 0);
+        expect(repo.publications, 0);
+        expect(files.creates, 0);
+        repo.opening.completeError(error);
+        await publication.timeout(const Duration(seconds: 2));
+        expect(failure, same(error));
+        expect(repo.openCalls, 1);
+        expect(repo.enumerations, 0);
+        expect(repo.publications, 0);
+        expect(files.creates, 0);
+        expect(repo.objects, isEmpty);
+        expect(service.requests, 0);
+      } finally {
+        if (!repo.opening.isCompleted) repo.opening.completeError(error);
+        await publication.timeout(const Duration(seconds: 2));
+        // Failed opening remains a cleanup failure; every owner still closes.
+        await expectLater(
+          cache.close().timeout(const Duration(seconds: 2)),
+          throwsA(same(repo.beforeOpenError)),
+        );
+      }
+      expect(repo.closeCalls, 1);
+      expect(repo.afterClose, 0);
     },
   );
   test(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../core/theme/library_theme.dart';
+import '../story_reader_theme.dart';
 import 'image_experiment_composition.dart';
 import 'image_experiment_router.dart';
 
@@ -30,8 +31,9 @@ class _ImageExperimentAppState extends State<ImageExperimentApp>
   void _refuse() {
     if (!mounted || _refusing) return;
     _refusing = true;
-    if (!widget.composition.phases.enabled ||
-        !widget.composition.phases.quality) {
+    if ((!widget.composition.phases.enabled ||
+            !widget.composition.phases.quality) &&
+        !widget.composition.configuration.readerQuality) {
       setState(() => _refused = true);
       unawaited(
         WidgetsBinding.instance.endOfFrame
@@ -79,14 +81,19 @@ class _ImageExperimentAppState extends State<ImageExperimentApp>
           child: MaterialApp.router(
             title: 'TellPal Image Experiment',
             debugShowCheckedModeBanner: false,
-            theme: AppTypography.theme(),
+            theme: widget.composition.configuration.isReader
+                ? storyReaderTheme()
+                : AppTypography.theme(),
             routerConfig: widget.composition
                 .container<ImageExperimentRouter>()
                 .config(
                   deepLinkBuilder: (_) => DeepLink.single(
-                    RasterCaseRoute(
-                      caseId: widget.composition.configuration.selectedCaseId,
-                    ),
+                    widget.composition.configuration.isReader
+                        ? const ReaderResolutionRoute()
+                        : RasterCaseRoute(
+                            caseId:
+                                widget.composition.configuration.selectedCaseId,
+                          ),
                   ),
                 ),
           ),

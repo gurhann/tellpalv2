@@ -2,6 +2,121 @@ import CryptoKit
 import Foundation
 import XCTest
 
+/// XCTest may report a genuine backgrounded process as suspended before the next state read.
+enum ImageExperimentReaderBackgroundWait {
+  enum State: String {
+    case foreground = "FOREGROUND"
+    case background = "BACKGROUND"
+    case suspended = "BACKGROUND_SUSPENDED"
+    case notRunning = "NOT_RUNNING"
+    case unknown = "UNKNOWN"
+  }
+  enum Goal { case background, foreground }
+  struct Outcome { let accepted: Bool; let observed: State; let foregroundObserved: State }
+
+  static func state(_ value: XCUIApplication.State) -> State {
+    switch value {
+    case .runningBackground: return .background
+    case .runningBackgroundSuspended: return .suspended
+    case .runningForeground: return .foreground
+    case .notRunning: return .notRunning
+    case .unknown: return .unknown
+    @unknown default: return .unknown
+    }
+  }
+
+  static func wait(absoluteDeadline: TimeInterval,
+    now: () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+    pause: (TimeInterval) -> Void = { processRunLoop($0) },
+    goal: Goal = .background, beforeActivation: Goal? = nil, activate: () -> Void = {},
+    observeForeground: () -> State = { .foreground },
+    observe: () -> State) -> Outcome {
+    let started = now()
+    var lastClock = started
+    var observed = State.unknown
+    var foregroundObserved = State.unknown
+    func refusal() -> Outcome { Outcome(accepted: false, observed: observed, foregroundObserved: foregroundObserved) }
+    guard started.isFinite, absoluteDeadline.isFinite, absoluteDeadline > started else { return refusal() }
+    let limit = min(started + 3, absoluteDeadline)
+    func readClock() -> TimeInterval? {
+      let value = now()
+      guard value.isFinite, value >= lastClock else { return nil }
+      lastClock = value
+      return value
+    }
+    if let required = beforeActivation {
+      observed = observe()
+      guard let before = readClock(), before < limit else { return refusal() }
+      let valid = required == .foreground ? observed == .foreground : observed == .background || observed == .suspended
+      guard valid else { return refusal() }
+    }
+    activate()
+    guard let activatedAt = readClock(), activatedAt < limit else { return refusal() }
+    while let before = readClock(), before < limit {
+      foregroundObserved = observeForeground()
+      guard let foregroundAt = readClock(), foregroundAt < limit, foregroundObserved == .foreground else { return refusal() }
+      observed = observe()
+      guard let after = readClock(), after < limit else { return refusal() }
+      let accepted = goal == .background ? observed == .background || observed == .suspended : observed == .foreground
+      if accepted { return Outcome(accepted: true, observed: observed, foregroundObserved: foregroundObserved) }
+      guard observed != .notRunning, observed != .unknown else { return refusal() }
+      pause(min(0.02, limit - after))
+    }
+    return refusal()
+  }
+
+  static func processRunLoop(_ seconds: TimeInterval) {
+    guard seconds.isFinite, seconds > 0 else { return }
+    _ = RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: seconds))
+  }
+
+  @MainActor static func background(original: XCUIApplication, absoluteDeadline: TimeInterval,
+    now: () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+    pause: (TimeInterval) -> Void = { processRunLoop($0) }) -> Outcome {
+    let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+    return wait(absoluteDeadline: absoluteDeadline, now: now, pause: pause, beforeActivation: .foreground,
+      activate: { settings.activate() }, observeForeground: { state(settings.state) },
+      observe: { state(original.state) })
+  }
+
+  @MainActor static func restore(original: XCUIApplication, absoluteDeadline: TimeInterval,
+    now: () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+    pause: (TimeInterval) -> Void = { processRunLoop($0) }) -> Outcome {
+    wait(absoluteDeadline: absoluteDeadline, now: now, pause: pause, goal: .foreground, beforeActivation: .background,
+      activate: { original.activate() }, observe: { state(original.state) })
+  }
+
+  @MainActor static func pollElements(original: XCUIApplication, readerPrimary: Bool,
+    backgroundCompleted: Bool, capture: Bool, onBackground: () throws -> Void,
+    onQuality: (XCUIElement) throws -> Void) rethrows {
+    if readerPrimary && !backgroundCompleted {
+      let background = original.otherElements["imageExperimentReaderBackground"]
+      if background.exists && background.value as? String == "requested" { try onBackground() }
+    }
+    if capture {
+      let binding = original.otherElements["imageExperimentQualityBinding"]
+      if binding.exists { try onQuality(binding) }
+    }
+  }
+
+  static func pausePolling(readerPrimary: Bool, readerDeadline: TimeInterval?,
+    now: () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
+    pause: (TimeInterval) -> Void = { processRunLoop($0) }) -> Bool {
+    let started = now()
+    guard started.isFinite, readerDeadline?.isFinite != false else { return false }
+    let until = min(started + (readerPrimary ? 0.5 : 0.1), readerDeadline ?? .infinity)
+    var lastClock = started
+    while true {
+      let current = now()
+      guard current.isFinite, current >= lastClock else { return false }
+      if let readerDeadline, current >= readerDeadline { return false }
+      if current >= until { return true }
+      lastClock = current
+      pause(min(0.02, until - current))
+    }
+  }
+}
+
 enum ImageExperimentAuditStage: String, CaseIterable {
   case request = "REQUEST"
   case runnerId = "RUNNER_ID"
@@ -35,6 +150,11 @@ enum ImageExperimentAuditStage: String, CaseIterable {
       let sessionId = metadata["sessionId"] as? String, let nonce = metadata["launchNonce"] as? String
     else { throw NSError(domain: "NATIVE_LAUNCHER_REFUSED", code: 1) }
     let app = XCUIApplication(bundleIdentifier: appId)
+    let batch = metadata["batchId"] as? String ?? ""
+    let reader = ImageExperimentReaderPolicy.batches.contains(batch)
+    let readerPrimary = ImageExperimentReaderPolicy.primaryBatches.contains(batch)
+    let readerQuality = ImageExperimentReaderPolicy.qualityBatches.contains(batch)
+    let nativeStarted = ProcessInfo.processInfo.systemUptime
     app.terminate()
     app.launchEnvironment = ["IMAGE_EXPERIMENT_METADATA": encoded]
     if ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_QUALITY_CAPTURE"] == "1" { XCUIDevice.shared.orientation = .portrait }
@@ -62,27 +182,58 @@ enum ImageExperimentAuditStage: String, CaseIterable {
     let closed = app.otherElements["imageExperimentClosed"]
     let capture = ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_QUALITY_CAPTURE"] == "1"
     var captured = false
-    while app.state == .runningForeground && !closed.exists && Date() < deadline {
-      let binding = app.otherElements["imageExperimentQualityBinding"]
-      if capture && !captured && binding.exists {
-        try storeQualityCapture(app: app, binding: binding, sessionId: sessionId, caseId: metadata["caseId"] as? String)
-        captured = true
-      }
-      Thread.sleep(forTimeInterval: 0.1)
+    var captureCount = 0
+    var lastQualityBinding: String?
+    var readerBackgroundCompleted = false
+    func withinDeadline() -> Bool { reader ? ProcessInfo.processInfo.systemUptime - nativeStarted < 180 : Date() < deadline }
+    while app.state == .runningForeground && !closed.exists && withinDeadline() {
+      try ImageExperimentReaderBackgroundWait.pollElements(original: app, readerPrimary: readerPrimary,
+        backgroundCompleted: readerBackgroundCompleted, capture: capture, onBackground: {
+        let backgroundResult = ImageExperimentReaderBackgroundWait.background(original: app, absoluteDeadline: nativeStarted + 180)
+        guard backgroundResult.accepted, withinDeadline() else {
+          print("IMAGE_EXPERIMENT_READER_SETTINGS_STATE " + backgroundResult.foregroundObserved.rawValue)
+          print("IMAGE_EXPERIMENT_READER_BACKGROUND_STATE " + backgroundResult.observed.rawValue)
+          throw NSError(domain: "READER_BACKGROUND_REFUSED", code: 1)
+        }
+        let heldUntil = min(ProcessInfo.processInfo.systemUptime + 0.5, nativeStarted + 180)
+        while ProcessInfo.processInfo.systemUptime < heldUntil {
+          ImageExperimentReaderBackgroundWait.processRunLoop(min(0.02, heldUntil - ProcessInfo.processInfo.systemUptime))
+        }
+        let returnResult = ImageExperimentReaderBackgroundWait.restore(original: app, absoluteDeadline: nativeStarted + 180)
+        guard returnResult.accepted, withinDeadline() else {
+          print("IMAGE_EXPERIMENT_READER_RETURN_STATE " + returnResult.observed.rawValue)
+          throw NSError(domain: "READER_RETURN_REFUSED", code: 1)
+        }
+        readerBackgroundCompleted = true
+      }, onQuality: { binding in
+        let currentBinding = binding.value as? String
+        if (!readerQuality && !captured) || (readerQuality && captureCount < 2 && currentBinding != lastQualityBinding) {
+          try storeQualityCapture(app: app, binding: binding, sessionId: sessionId, caseId: metadata["caseId"] as? String,
+            reader: readerQuality, index: captureCount + 1)
+          lastQualityBinding = currentBinding
+          captureCount += 1
+          captured = true
+        }
+      })
+      guard ImageExperimentReaderBackgroundWait.pausePolling(readerPrimary: readerPrimary,
+        readerDeadline: reader ? nativeStarted + 180 : nil) else { throw NSError(domain: "READER_NATIVE_REFUSED", code: 1) }
     }
     guard !capture || captured else { throw NSError(domain: "QUALITY_CAPTURE_REFUSED", code: 1) }
+    guard (!reader || withinDeadline()), (!readerPrimary || readerBackgroundCompleted), (!readerQuality || !capture || captureCount == 2)
+    else { throw NSError(domain: "READER_NATIVE_REFUSED", code: 1) }
     guard closed.exists, closed.value as? String == "settled"
     else { throw NSError(domain: "NATIVE_TEARDOWN_REFUSED", code: 1) }
     launcherResult = "settled"
   }
 
-  private func storeQualityCapture(app: XCUIApplication, binding: XCUIElement, sessionId: String, caseId: String?) throws {
+  private func storeQualityCapture(app: XCUIApplication, binding: XCUIElement, sessionId: String, caseId: String?, reader: Bool = false, index: Int = 0) throws {
     let beforeAt = Int64(Date().timeIntervalSince1970 * 1000)
     guard let before = binding.value as? String, before.utf8.count <= 4096,
       let bytes = Data(base64Encoded: before),
       let row = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
       row["sessionSha256"] as? String == ImageExperimentBootstrap.sha256(Data(sessionId.utf8)),
-      let caseId, row["caseSha256"] as? String == ImageExperimentBootstrap.sha256(Data(caseId.utf8)),
+      let caseId, let caseHash = row["caseSha256"] as? String,
+      reader ? (1...2).contains(where: { ImageExperimentBootstrap.sha256(Data("reader_page_\($0)".utf8)) == caseHash }) : caseHash == ImageExperimentBootstrap.sha256(Data(caseId.utf8)),
       row["phase"] as? String == "hold", row["orientation"] as? String == "portrait",
       row["nativeContext"] as? String == "foreground_application",
       let holdDeadline = row["holdDeadlineEpochMilliseconds"] as? NSNumber,
@@ -100,8 +251,9 @@ enum ImageExperimentAuditStage: String, CaseIterable {
     try manager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
     guard directory.resolvingSymlinksInPath().deletingLastPathComponent() == support.resolvingSymlinksInPath()
     else { throw ImageExperimentRefusal.refused }
-    let pngPath = directory.appendingPathComponent("quality.png")
-    let receiptPath = directory.appendingPathComponent("quality-capture.json")
+    let stem = reader ? "quality-reader-\(index)" : "quality"
+    let pngPath = directory.appendingPathComponent(stem + ".png")
+    let receiptPath = directory.appendingPathComponent(reader ? stem + "-capture.json" : "quality-capture.json")
     for path in [pngPath, receiptPath] where manager.fileExists(atPath: path.path) {
       guard try manager.attributesOfItem(atPath: path.path)[.type] as? FileAttributeType == .typeRegular
       else { throw ImageExperimentRefusal.refused }

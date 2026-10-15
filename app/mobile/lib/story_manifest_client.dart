@@ -4,7 +4,16 @@ import 'dart:io';
 
 import 'story_manifest.dart';
 
-class StoryManifestClient {
+abstract interface class StoryManifestSource {
+  Future<StoryManifest> fetch({
+    required int contentId,
+    required String languageCode,
+    String? revision,
+  });
+  void close();
+}
+
+class StoryManifestClient implements StoryManifestSource {
   StoryManifestClient({required this.baseUrl, required this.bearerToken}) {
     _httpClient.connectionTimeout = const Duration(seconds: 8);
   }
@@ -13,6 +22,7 @@ class StoryManifestClient {
   final String bearerToken;
   final HttpClient _httpClient = HttpClient();
 
+  @override
   Future<StoryManifest> fetch({
     required int contentId,
     required String languageCode,
@@ -79,6 +89,7 @@ class StoryManifestClient {
     }
   }
 
+  @override
   void close() => _httpClient.close(force: true);
 }
 

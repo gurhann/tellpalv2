@@ -8,7 +8,11 @@ import '../../../core/network/image_experiment_image_cache.dart';
 @module
 abstract class ImageExperimentModule {
   @lazySingleton
-  ImageExperimentRecorder get recorder => ImageExperimentRecorder();
+  ImageExperimentRecorder recorder(
+    ImageExperimentConfiguration configuration,
+  ) => ImageExperimentRecorder(
+    includeLegacyCounterPlaceholders: !configuration.isReader,
+  );
   @lazySingleton
   ImageExperimentRouter get router => ImageExperimentRouter();
   @lazySingleton

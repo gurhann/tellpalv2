@@ -8,16 +8,79 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 object ActivityHarness {
-    private fun create(root: File, metadata: String): ImageExperimentActivity {
+    private fun create(root: File, metadata: String) = create(root) { metadata }
+
+    private fun create(root: File, metadata: () -> String): ImageExperimentActivity {
         HostRuntime.reset(root)
+        val selectedMetadata = metadata()
         val activity = ImageExperimentActivity()
         HostRuntime.activity = activity
         HostRuntime.onMain {
-            activity.intent = Intent().putExtra("imageExperimentMetadata", metadata)
+            activity.intent = Intent().putExtra("imageExperimentMetadata", selectedMetadata)
             activity.onCreate(null)
             activity.configureFlutterEngine(FlutterEngine())
         }
         return activity
+    }
+
+    fun readerLifecycle(root: File) {
+        HarnessAssertions.case("actual-reader-activity-callbacks-reach-channel-and-launcher") {
+            val activity = create(File(root, "reader-lifecycle")) {
+                HostRuntime.readerFixture = true
+                HostedFixture.metadata().toString()
+            }
+            HostRuntime.onMain { activity.onStop(); activity.onResume() }
+            val refused = HostRuntime.invoke("readReaderLifecycle", null).apply { await() }
+            HarnessAssertions.equal(refused.error, "READER_REFUSED", "reader-activity-pre-admission-channel-refuses")
+            HarnessAssertions.equal(activity.readReaderLifecycleForLauncher(), null, "reader-activity-pre-admission-launcher-refuses")
+            HostRuntime.pairedPublicKey = activity.bootstrap!!.publicKeySpkiBase64
+            val session = HostRuntime.invoke("takeSession", null)
+            HarnessAssertions.truth(session.await() is Map<*, *> && session.error == null, "reader-activity-real-bootstrap-handoff")
+            HarnessAssertions.equal(HostRuntime.requests.map { it.url.path }.toSet(), setOf(
+                "/experiment/v1/probe", "/experiment/v1/backend-probe", "/experiment/v1/bootstrap/paired",
+                "/experiment/v1/bootstrap/challenge", "/experiment/v1/bootstrap/claim"), "reader-activity-bootstrap-paths")
+            fun snapshot(): Map<*, *> {
+                val response = HostRuntime.invoke("readReaderLifecycle", null)
+                val channel = response.await() as? Map<*, *>
+                HarnessAssertions.truth(channel != null && response.error == null, "reader-activity-admitted-channel-snapshot")
+                HostRuntime.onMain {
+                    HarnessAssertions.equal(activity.readReaderLifecycleForLauncher(), channel, "reader-activity-launcher-matches-channel")
+                }
+                return channel!!
+            }
+            val initial = snapshot()
+            HarnessAssertions.equal(initial["backgroundCount"], 0, "reader-activity-unadmitted-callbacks-not-counted")
+            HarnessAssertions.equal(initial["returnCount"], 0, "reader-activity-initial-return-count")
+            HarnessAssertions.equal(initial["backgroundEpochMilliseconds"], null, "reader-activity-initial-background-unavailable")
+            HarnessAssertions.equal(initial["returnedEpochMilliseconds"], null, "reader-activity-initial-return-unavailable")
+            HarnessAssertions.equal(HostRuntime.invoke("requestReaderBackground", null).await(), true, "reader-activity-primary-background-request")
+            HostRuntime.onMain {
+                HarnessAssertions.truth(activity.consumeReaderBackgroundRequest(), "reader-activity-launcher-consumes-request")
+                HarnessAssertions.truth(!activity.consumeReaderBackgroundRequest(), "reader-activity-launcher-request-once")
+                activity.onResume()
+            }
+            HarnessAssertions.equal(snapshot(), initial, "reader-activity-foreground-without-background-is-neutral")
+            val stoppedAt = System.currentTimeMillis()
+            HostRuntime.onMain { activity.onStop(); activity.onStop() }
+            val background = snapshot()
+            HarnessAssertions.truth(background["backgrounded"] == true && background["backgroundCount"] == 1 &&
+                background["returnCount"] == 0, "reader-activity-onStop-channel-background")
+            HarnessAssertions.truth((background["backgroundEpochMilliseconds"] as? Long)?.let {
+                it in stoppedAt..System.currentTimeMillis() } == true, "reader-activity-onStop-observed-timestamp")
+            HarnessAssertions.equal(background["returnedEpochMilliseconds"], null, "reader-activity-return-unavailable-while-backgrounded")
+            val resumedAt = System.currentTimeMillis()
+            HostRuntime.onMain { activity.onResume(); activity.onResume() }
+            val returned = snapshot()
+            HarnessAssertions.truth(returned["backgrounded"] == false && returned["backgroundCount"] == 1 &&
+                returned["returnCount"] == 1, "reader-activity-onResume-channel-return")
+            HarnessAssertions.equal(returned["backgroundEpochMilliseconds"], background["backgroundEpochMilliseconds"], "reader-activity-background-timestamp-retained")
+            HarnessAssertions.truth((returned["returnedEpochMilliseconds"] as? Long)?.let {
+                it in resumedAt..System.currentTimeMillis() } == true, "reader-activity-onResume-observed-timestamp")
+            HostRuntime.onMain { activity.bootstrap!!.revoke(); activity.onStop(); activity.onResume() }
+            HarnessAssertions.equal(HostRuntime.invoke("readReaderLifecycle", null).apply { await() }.error,
+                "READER_REFUSED", "reader-activity-revoked-channel-refuses")
+            HarnessAssertions.equal(activity.readReaderLifecycleForLauncher(), null, "reader-activity-revoked-launcher-refuses")
+        }
     }
 
     fun run(root: File, dartProducer: File) {
@@ -50,6 +113,11 @@ object ActivityHarness {
             HarnessAssertions.equal(HostRuntime.invoke("reportDiagnostic", "DART_CONFIGURATION").await(), true, "channel-later-known")
             HarnessAssertions.equal(activity.refusalDiagnostics.firstStage, ImageExperimentRefusalStage.dartMode, "channel-first-only")
             HarnessAssertions.truth(!bootstrap.isRevoked && !bootstrap.isReachabilityQualified && !bootstrap.launcherOutcome.isSettled(), "diagnostic-no-admission")
+            for (method in listOf("readDeviceFacts", "readReaderLifecycle")) {
+                val response = HostRuntime.invoke(method, null).apply { await() }
+                HarnessAssertions.equal(response.error, "READER_REFUSED", "reader-method-requires-reader-admission")
+            }
+            HarnessAssertions.equal(HostRuntime.invoke("requestReaderBackground", null).await(), false, "reader-background-requires-reader-admission")
             HarnessAssertions.equal(bootstrap.publicKeySpkiBase64, key, "diagnostic-no-key-change")
             HarnessAssertions.equal(HostRuntime.requests.size, 0, "diagnostic-no-requests")
             HarnessAssertions.equal(activity.intent.getStringExtra("imageExperimentMetadata"), null, "metadata-removed")

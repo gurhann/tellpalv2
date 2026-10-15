@@ -128,7 +128,43 @@ def execute(command, output, label, timeout=90):
     return subprocess.CompletedProcess(arguments, process.returncode, stdout, stderr)
 
 
-def run(output=None, mutant=False):
+def reader_lifecycle_mutants(output, source_root, java, compiler, classes, compile_classpath, classpath,
+                             certificate, copied_dart, expired_certificate):
+    """Remove each real Activity callback only in the private compiled snapshot."""
+    activity = source_root / "ImageExperimentActivity.kt"
+    original = activity.read_bytes()
+    mutations = []
+    for callback, seam, assertion in (
+            ("onStop", b"readerLifecycle.background();", "reader-activity-onStop-channel-background"),
+            ("onResume", b"readerLifecycle.foreground()", "reader-activity-onResume-channel-return")):
+        if original.count(seam) != 1:
+            raise AssertionError(f"Private {callback} mutant could not isolate its Activity lifecycle callback")
+        changed = original.replace(seam, b"Unit;" if callback == "onStop" else b"Unit")
+        label = f"reader-{callback}-mutant"
+        private_file(activity, changed)
+        try:
+            mutated_classes = output / f"{label}-classes"
+            compiled = execute([java, "-cp", os.pathsep.join(str(path) for path in compiler),
+                "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-no-stdlib", "-no-reflect", "-jvm-target", "17",
+                "-classpath", os.pathsep.join([str(classes), compile_classpath]), "-d", mutated_classes, activity],
+                output, f"{label}-compile")
+            if compiled.returncode:
+                raise AssertionError(f"Private {callback} mutant must compile before its runtime failure counts")
+            failed = execute([java, "-cp", os.pathsep.join([str(mutated_classes), str(classes), classpath]),
+                "com.tellpal.imageexperiment.host.HarnessAssertionsKt", output / f"{label}-app", certificate,
+                copied_dart, expired_certificate, "reader-lifecycle"], output, label, timeout=15)
+            if failed.returncode == 0 or f"HARNESS_ASSERTION {assertion}".encode() not in failed.stderr:
+                raise AssertionError(f"Removing private {callback} callback was not detected by its runtime assertion")
+            mutations.append({"callback": callback, "compileExit": compiled.returncode,
+                "runtimeExit": failed.returncode, "failure": assertion, "runtimeLabel": label,
+                "originalSha256": hashlib.sha256(original).hexdigest(),
+                "mutatedSha256": hashlib.sha256(changed).hexdigest()})
+        finally:
+            private_file(activity, original)
+    return mutations
+
+
+def run(output=None, mutant=False, reader_lifecycle=False):
     output = Path(output) if output else Path(tempfile.mkdtemp(prefix="tellpal-android-kotlin-", dir="/private/tmp"))
     output.mkdir(parents=True, exist_ok=True, mode=0o700)
     output.chmod(0o700)
@@ -210,6 +246,8 @@ path.chmod(0o600)
     command = [java, "-cp", os.pathsep.join([str(classes), classpath]),
                "com.tellpal.imageexperiment.host.HarnessAssertionsKt", output / "private-app", certificate,
                copied_dart, expired_certificate]
+    if reader_lifecycle:
+        command.append("reader-lifecycle")
     checked = execute(command, output, "matrix")
     if checked.returncode:
         raise AssertionError(f"Kotlin host matrix failed; inspect {output / 'matrix.stderr'}")
@@ -218,6 +256,9 @@ path.chmod(0o600)
         raise AssertionError("Kotlin host matrix did not execute all registered cases")
     summary = {"caseCount": len(cases), "cases": cases, "matrixExit": checked.returncode,
                "evidenceRoot": str(output), "runtime": "controlled Android/Flutter; real JSON/JCA; no android.jar"}
+    if reader_lifecycle:
+        summary["lifecycleMutants"] = reader_lifecycle_mutants(output, source_root, java, compiler, classes,
+            compile_classpath, classpath, certificate, copied_dart, expired_certificate)
     if mutant:
         activity = source_root / "ImageExperimentActivity.kt"
         text = activity.read_text()
@@ -309,5 +350,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path)
     parser.add_argument("--mutant", action="store_true")
+    parser.add_argument("--reader-lifecycle", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(run(args.output, args.mutant), indent=2))
+    print(json.dumps(run(args.output, args.mutant, args.reader_lifecycle), indent=2))

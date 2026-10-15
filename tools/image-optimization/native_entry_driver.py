@@ -18,7 +18,7 @@ import threading
 import time
 
 from native_entry_config import (EntryError, HASH, ROOT, SCOPE, MAX_BACKEND_RECEIPT_BYTES,
-    MAX_BACKEND_SOURCE_FILES, canonical_uid, exact_keys,
+    MAX_BACKEND_SOURCE_FILES, canonical_uid, exact_keys, is_reader_batch,
     frozen_json, load_config, load_manifest, no_symlink, open_nofollow, origin, private_file, private_output,
     require, strict_json, write_private)
 from native_entry_crypto import certificate_identity, public_key
@@ -716,6 +716,23 @@ def validate_entry_outcome(broker, pairing):
     with broker.lock:
         broker.state()
         require(broker.admission_successful, "entry_admission_unverified")
+        if getattr(broker, "reader", False):
+            required = set(broker.allowed_cases)
+            require(required <= set(broker.fixture_deliveries) <= broker.allowed_cases, "fixture_delivery_unverified")
+            for item in broker.manifest.entries:
+                if item["caseId"] not in broker.fixture_deliveries:
+                    continue
+                delivery = broker.fixture_deliveries[item["caseId"]]
+                require(type(delivery["count"]) is int and delivery["count"] >= 1 and
+                    delivery["bodyBytes"] == delivery["count"] * item["byteSize"] and
+                    delivery["outputSha256"] == item["outputSha256"], "fixture_delivery_unverified")
+            require(broker.explicit_app_revoked and broker.reason == "app_revoked" and
+                not broker.active and broker.token is None, "entry_teardown_unverified")
+            return {"admission": "observed", "fixtureDelivery": "observed",
+                "fixtureDeliveryCount": broker.fixture_delivery_count,
+                "fixtureBodyBytes": sum(item["bodyBytes"] for item in broker.fixture_deliveries.values()),
+                "fixtureDeliveries": {key: dict(value) for key, value in broker.fixture_deliveries.items()},
+                "nativeResult": "settled", "teardown": "authenticated_app_revoke_observed"}
         entry = next(item for item in broker.manifest.entries if item["caseId"] == broker.case_id)
         require(broker.fixture_delivery_count > 0 and broker.fixture_delivery_bytes == entry["byteSize"] and
             broker.fixture_delivery_sha256 == entry["outputSha256"], "fixture_delivery_unverified")
@@ -774,7 +791,8 @@ def validate_physical_prerequisites(config, build_path, prerequisite_path):
 def verify_entry(config, manifest, output, deadline, *, case_id, build_path, prerequisite_path, quality_capture=False):
     """Launch only already-installed bound artifacts after private prerequisite admission."""
     require(case_id in manifest.objects, "unknown_case")
-    require(type(quality_capture) is bool and (not quality_capture or config.values["batchId"] == "native_quality_r1"), "capture_selection_rejected")
+    require(type(quality_capture) is bool and (not quality_capture or config.values["batchId"] == "native_quality_r1" or
+        is_reader_batch(config.values["batchId"]) and config.values["batchId"].startswith("reader_quality_")), "capture_selection_rejected")
     build, proof = validate_physical_prerequisites(config, build_path, prerequisite_path)
     backend_hash = validate_backend_startup(config)
     verifier = FirebaseVerifier(config)

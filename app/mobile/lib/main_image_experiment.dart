@@ -27,8 +27,11 @@ Future<void> main() async {
       bootstrap,
       observeRefusal: bootstrap.reportRefusal,
     );
-    PaintingBinding.instance.imageCache.maximumSize = 48;
-    PaintingBinding.instance.imageCache.maximumSizeBytes = 32 * 1024 * 1024;
+    if (!configuration.isReader) {
+      PaintingBinding.instance.imageCache.maximumSize = 48;
+    }
+    PaintingBinding.instance.imageCache.maximumSizeBytes =
+        (configuration.isReader ? 24 : 32) * 1024 * 1024;
     runApp(ImageExperimentApp(composition: composition));
   } catch (_) {
     bootstrap.reportRefusal(stage);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'story_manifest_client.dart';
 import 'story_player_page.dart';
+import 'story_reader_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +19,7 @@ class TellPalMediaPoc extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TellPal Medya PoC',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6254A4)),
-      ),
+      theme: storyReaderTheme(),
       home: const _ConnectionPage(),
     );
   }

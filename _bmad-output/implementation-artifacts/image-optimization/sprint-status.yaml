@@ -44,5 +44,6 @@ development_status:
   # Preparation accepted and verified; completion-r1 records remaining native execution gates.
   1-5-prepare-native-image-measurement-and-admission: done
   # Native evidence collected:24 primary/12 captures/10 controls; all13 cloud windows closed. Review fixes verified; Android quality accepted, iPhone sharpness concern retains its open quality gate.
+  # Reader extension: iPhone A/B/C qualified; human accepted all six captures;0.75× is the smallest tested quality candidate, its performance unmeasured. Android clock guard refused before native entry; C unrun. USD8.75524 conservative bound, owned resources closed.
   1-6-measure-native-image-quality-and-resource-costs: review
   epic-1-retrospective: optional

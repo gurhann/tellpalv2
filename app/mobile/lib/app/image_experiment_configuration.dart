@@ -97,6 +97,14 @@ class ImageExperimentRefusalObservation {
 
 const imageExperimentScope = 'image-optimization-native-fixture-r1';
 const imageExperimentQaUid = 'jLRypTmoBrhhX21HsDJojurcKTC3';
+const readerExperimentBatches = {
+  'reader_resolution_a_r1',
+  'reader_resolution_b_r1',
+  'reader_resolution_c_r1',
+  'reader_quality_full_r1',
+  'reader_quality_100_r1',
+  'reader_quality_075_r1',
+};
 final _id = RegExp(r'^[A-Za-z0-9_-]{1,64}$');
 final _hash = RegExp(r'^[a-f0-9]{64}$');
 
@@ -167,6 +175,13 @@ class ImageExperimentConfiguration {
   final Uint8List certificateDer;
   final ImageExperimentCredentials credentials;
   final Map<String, RasterCaseModel> cases;
+  bool get isReader => readerExperimentBatches.contains(batchId);
+  bool get readerQuality => isReader && batchId.startsWith('reader_quality_');
+  bool get readerFullDecode => const {
+    'reader_resolution_a_r1',
+    'reader_quality_full_r1',
+  }.contains(batchId);
+  int get readerPageCount => readerQuality ? 2 : 6;
 
   static ImageExperimentConfiguration parse(
     String raw,
@@ -476,6 +491,38 @@ class ImageExperimentConfiguration {
       totalBytes += value.byteSize;
     }
     observeStage(ImageExperimentFixtureStage.configurationSelection);
+    if (readerExperimentBatches.contains(envelope['batchId'])) {
+      final discovery = envelope['batchId'] == 'reader_resolution_a_r1';
+      final quality = (envelope['batchId'] as String).startsWith(
+        'reader_quality_',
+      );
+      final values = cases.values.toList();
+      if (appId.split('.').last != 'release' ||
+          values.length != (quality ? 2 : 6) ||
+          metadata['caseId'] != 'reader_page_1') {
+        throw const FormatException('reader_selection');
+      }
+      for (var index = 0; index < values.length; index++) {
+        final value = values[index];
+        if (value.caseId != 'reader_page_${index + 1}' ||
+            value.mime != 'image/png' ||
+            value.fit != 'contain' ||
+            value.alignmentX != 0 ||
+            value.alignmentY != 0 ||
+            value.purposeAcceptanceReceipt != envelope['batchId'] ||
+            value.profileRevision !=
+                (discovery ? 'reader_discover_r1' : 'reader_frozen_r1') ||
+            value.logicalSlotWidth != values.first.logicalSlotWidth ||
+            value.logicalSlotHeight != values.first.logicalSlotHeight ||
+            value.dpr != values.first.dpr ||
+            (discovery &&
+                (value.logicalSlotWidth != 1 ||
+                    value.logicalSlotHeight != 1 ||
+                    value.dpr != 1))) {
+          throw const FormatException('reader_manifest');
+        }
+      }
+    }
     if (metadata['caseId'] is! String ||
         !cases.containsKey(metadata['caseId'])) {
       throw const FormatException('case_selection');
@@ -507,7 +554,7 @@ class ImageExperimentConfiguration {
 
   Uri objectUri(String caseId) {
     credentials.requireActive();
-    if (!cases.containsKey(caseId) || caseId != selectedCaseId) {
+    if (!cases.containsKey(caseId) || (!isReader && caseId != selectedCaseId)) {
       throw const FormatException('fixture_unknown');
     }
     return brokerOrigin.replace(

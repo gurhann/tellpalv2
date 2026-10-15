@@ -194,7 +194,7 @@ class BuildGuardTests(unittest.TestCase):
         launcher = (sources / "imageExperimentAndroidTest/kotlin/com/tellpal/imageexperiment/ImageExperimentInstrumentation.kt").read_text()
         activity = (sources / "imageExperiment/kotlin/com/tellpal/imageexperiment/ImageExperimentActivity.kt").read_text()
         self.assertRegex(launcher, r"while \(!bootstrap\.isRevoked && !activity\.isFinishing && !activity\.isDestroyed &&\s*SystemClock\.elapsedRealtime\(\) - start < 180_000\)")
-        self.assertRegex(launcher, r"require\(bootstrap\.isRevoked && bootstrap\.launcherOutcome\.isSettled\(\)\)\s*result\.putString\(\"reason\", \"NATIVE_LAUNCHER_SETTLED\"\)\s*finish\(Activity.RESULT_OK, result\)")
+        self.assertRegex(launcher, r"require\(bootstrap\.isRevoked && bootstrap\.launcherOutcome\.isSettled\(\)\)\s*exportLedger\(\)\s*result\.putString\(\"reason\", \"NATIVE_LAUNCHER_SETTLED\"\)\s*finish\(Activity.RESULT_OK, result\)")
         self.assertIn('result.putString("reason", "NATIVE_LAUNCHER_REFUSED")', launcher)
         self.assertIn("finish(Activity.RESULT_CANCELED, result)", launcher)
         self.assertIn('arguments?.keys == setOf("result")', activity)
@@ -234,8 +234,9 @@ class BuildGuardTests(unittest.TestCase):
         self.assertLess(scene.index('UIApplication.shared.delegate as? ImageExperimentAuditAppDelegate'), scene.index('let flutter = FlutterSceneDelegate()'))
         self.assertLess(scene.index('return\n    }'), scene.index('UIStoryboard(name: "FlutterMain"'))
         for callback in ('sceneDidDisconnect', 'sceneWillEnterForeground', 'sceneDidBecomeActive',
-            'sceneWillResignActive', 'sceneDidEnterBackground', 'stateRestorationActivity'):
+            'sceneWillResignActive', 'sceneDidEnterBackground'):
             self.assertIn('ordinaryDelegate?.' + callback + '(', scene)
+        self.assertIn('return ordinaryDelegate.stateRestorationActivity(for: scene)', scene)
         info = plistlib.loads((ios / 'ImageExperiment/Info.plist').read_bytes())
         self.assertNotIn('UIMainStoryboardFile', info)
         configurations = info['UIApplicationSceneManifest']['UISceneConfigurations']['UIWindowSceneSessionRoleApplication']
@@ -1241,7 +1242,8 @@ import Foundation
         launcher = (ios / 'ImageExperimentUITests/ImageExperimentBootstrapTests.swift').read_text()
         fixture = launcher.split('func testPairedPublicKeyLaunch()', 1)[1].split('func testInstallationAudit()', 1)[0]
         self.assertIn('if launcherResult == "refused"', fixture)
-        self.assertLess(fixture.index('print((stage ?? .diagnosticUnavailable).line)'), fixture.index('app.terminate()'))
+        refusal_cleanup = fixture.split('defer {\n      if launcherResult == "refused"', 1)[1].split('let element =', 1)[0]
+        self.assertLess(refusal_cleanup.index('print((stage ?? .diagnosticUnavailable).line)'), refusal_cleanup.index('app.terminate()'))
         audit = launcher.split('func testInstallationAudit()', 1)[1].split('func testSynthetic', 1)[0]
         self.assertNotIn('FixtureDiagnostic', audit)
         self.assertNotIn('FixtureStage', audit)

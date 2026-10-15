@@ -153,6 +153,62 @@ void main() {
     );
   }
 
+  for (final reader in [false, true]) {
+    test('generated DI selects recorder format for reader=$reader', () async {
+      final manifest = fixtureManifest();
+      if (reader) {
+        manifest['batchId'] = 'reader_resolution_a_r1';
+        manifest['entries'] = [
+          for (var page = 1; page <= 6; page++)
+            {
+              ...fixtureEntry(),
+              'caseId': 'reader_page_$page',
+              'profileRevision': 'reader_discover_r1',
+              'purposeAcceptanceReceipt': 'reader_resolution_a_r1',
+            },
+        ];
+      }
+      final wire = FixtureWire(manifest: manifest);
+      if (reader) {
+        wire.envelope['batchId'] = 'reader_resolution_a_r1';
+        wire.metadata['batchId'] = 'reader_resolution_a_r1';
+        wire.metadata['caseId'] = 'reader_page_1';
+        wire.metadata['expectedAppId'] =
+            'com.tellpal.tellpal_mobile_poc.imageexperiment.release';
+      }
+      final configuration = wire.configuration();
+      final container = GetIt.asNewInstance();
+      container.registerSingleton<ImageExperimentConfiguration>(configuration);
+      container.initImageExperiment();
+      try {
+        final recorder = container<ImageExperimentRecorder>();
+        recorder.record({'event': 'status', 'reason': 'none'});
+        final row =
+            (jsonDecode(await recorder.export())['records'] as List).single
+                as Map<String, dynamic>;
+        for (final counter in [
+          'dartHeapBytes',
+          'dartExternalBytes',
+          'decodedLruBytes',
+          'decodedLiveCount',
+          'decodedPendingCount',
+          'processBytes',
+          'nativeBytes',
+          'graphicsBytes',
+          'diskBytes',
+          'transferBytes',
+        ]) {
+          expect(row.containsKey(counter), !reader, reason: counter);
+          if (!reader) expect(row[counter], null, reason: counter);
+        }
+        expect(row['counterReason'], 'missing_counter');
+      } finally {
+        await configuration.credentials.close();
+        await container.reset();
+      }
+    });
+  }
+
   for (final revoked in [false, true]) {
     testWidgets(
       'native quality marker retires before target removal revoked=$revoked',

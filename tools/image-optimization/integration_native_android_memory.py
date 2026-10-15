@@ -1,4 +1,4 @@
-"""Required offline execution of the actual frozen production Kotlin memory sampler."""
+"""Explicit Java/Kotlin integration for the actual frozen production memory sampler."""
 import importlib.util
 from pathlib import Path
 import unittest

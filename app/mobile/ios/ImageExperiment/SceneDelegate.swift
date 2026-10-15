@@ -41,9 +41,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FlutterSceneLifeCyclePr
   }
 
   func sceneWillEnterForeground(_ scene: UIScene) { ordinaryDelegate?.sceneWillEnterForeground(scene) }
-  func sceneDidBecomeActive(_ scene: UIScene) { ordinaryDelegate?.sceneDidBecomeActive(scene) }
-  func sceneWillResignActive(_ scene: UIScene) { ordinaryDelegate?.sceneWillResignActive(scene) }
-  func sceneDidEnterBackground(_ scene: UIScene) { ordinaryDelegate?.sceneDidEnterBackground(scene) }
+  func sceneDidBecomeActive(_ scene: UIScene) {
+    (UIApplication.shared.delegate as? AppDelegate)?.readerDidBecomeActive()
+    ordinaryDelegate?.sceneDidBecomeActive(scene)
+  }
+  func sceneWillResignActive(_ scene: UIScene) {
+    (UIApplication.shared.delegate as? AppDelegate)?.readerWillResignActive()
+    ordinaryDelegate?.sceneWillResignActive(scene)
+  }
+  func sceneDidEnterBackground(_ scene: UIScene) {
+    (UIApplication.shared.delegate as? AppDelegate)?.readerDidEnterBackground()
+    ordinaryDelegate?.sceneDidEnterBackground(scene)
+  }
   func scene(_ scene: UIScene, openURLContexts contexts: Set<UIOpenURLContext>) {
     ordinaryDelegate?.scene(scene, openURLContexts: contexts)
   }
@@ -51,7 +60,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FlutterSceneLifeCyclePr
     ordinaryDelegate?.scene(scene, continue: userActivity)
   }
   func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
-    ordinaryDelegate?.stateRestorationActivity(for: scene)
+    guard let ordinaryDelegate else { return nil }
+    if scene.userActivity == nil {
+      scene.userActivity = NSUserActivity(activityType: "com.tellpal.imageexperiment.scene-restoration")
+    }
+    return ordinaryDelegate.stateRestorationActivity(for: scene)
   }
   func scene(_ scene: UIScene, restoreInteractionStateWith stateRestorationActivity: NSUserActivity) {
     ordinaryDelegate?.scene(scene, restoreInteractionStateWith: stateRestorationActivity)

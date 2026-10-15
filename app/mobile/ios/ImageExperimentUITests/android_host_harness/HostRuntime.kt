@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.tellpal.imageexperiment.ImageExperimentActivity
 import com.tellpal.imageexperiment.ImageExperimentBootstrap
+import com.tellpal.imageexperiment.ImageExperimentLedger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit
 /** Controlled lifecycle and per-engine channels; production code owns all validation. */
 object HostRuntime {
     const val APP_ID = "com.tellpal.tellpal_mobile_poc.imageexperiment.profile"
+    var readerFixture = false
+    val applicationId: String get() = if (readerFixture) APP_ID.removeSuffix(".profile") + ".release" else APP_ID
     val failure = IllegalStateException("PRIVATE_RAW_SENTINEL_DO_NOT_EXPORT")
     val main = Executors.newSingleThreadExecutor { Thread(it, "controlled-android-main") }
     lateinit var privateRoot: File
@@ -70,7 +73,7 @@ object HostRuntime {
             instances.clear(); messengerOwners.clear(); handlers.clear()
         }
         privateRoot = root.apply { mkdirs() }
-        activity = null; resultCode = null; result = null; terminalCount = 0
+        activity = null; resultCode = null; result = null; terminalCount = 0; readerFixture = false
         terminalReady = CountDownLatch(1); createEntered = null; createRelease = null; offMainUiDelay = 0
         cleanupEvents.clear(); finishOwners.clear()
         statuses.clear(); requests.clear(); events.clear(); pairedPublicKey = null
@@ -172,6 +175,19 @@ object HostRuntime {
     fun reportStatus(code: Int, result: Bundle) {
         val owner = activity ?: error("No owned activity")
         val bootstrap = owner.bootstrap ?: error("No owned bootstrap")
+        if (code == 2) {
+            require(result.keySet() == setOf("event", "index", "count", "ledgerSha256", "payloadBase64") &&
+                result.getString("event") == "ledger-chunk" && bootstrap.isRevoked)
+            val file = java.io.File(privateRoot, "image_experiment/ledger.json")
+            val bytes = ImageExperimentLedger.validate(file.readText())
+            val index = result.getString("index")!!.toInt()
+            val count = result.getString("count")!!.toInt()
+            require(count == (bytes.size + 3071) / 3072 && index in 0 until count)
+            require(result.getString("ledgerSha256") == ImageExperimentBootstrap.sha256(bytes))
+            val payload = java.util.Base64.getDecoder().decode(result.getString("payloadBase64"))
+            require(payload.contentEquals(bytes.copyOfRange(index * 3072, minOf((index + 1) * 3072, bytes.size))))
+            return
+        }
         val metadata = org.json.JSONObject(launchMetadata!!)
         require(code == 1 && result.keySet() == setOf("event", "sessionId", "launchNonce", "publicKeySpkiBase64"))
         require(result.getString("event") == "pairing-key" && result.getString("sessionId") == metadata.getString("sessionId") &&

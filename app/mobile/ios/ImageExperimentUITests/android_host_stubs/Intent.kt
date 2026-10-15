@@ -10,5 +10,9 @@ class Intent {
     fun putExtra(key: String, value: String) = apply { extras[key] = value }
     fun getStringExtra(key: String): String? = extras[key]
     fun removeExtra(key: String) { extras.remove(key) }
-    companion object { const val FLAG_ACTIVITY_NEW_TASK = 0x10000000 }
+    companion object {
+        const val FLAG_ACTIVITY_NEW_TASK = 0x10000000
+        const val FLAG_ACTIVITY_REORDER_TO_FRONT = 0x00020000
+        const val FLAG_ACTIVITY_SINGLE_TOP = 0x20000000
+    }
 }

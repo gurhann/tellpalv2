@@ -37,7 +37,7 @@ class ImageExperimentImageCache extends LibraryImageCache {
                maxNrOfCacheObjects: 20,
              ),
          clientFactory: transport.newClient,
-         maximumOwnedAttempts: 4,
+         maximumOwnedAttempts: configuration.isReader ? 6 : 4,
          maximumFiles: 20,
          maximumBytes: 104857600,
          maximumTransferBytes: 20971520,
@@ -65,6 +65,8 @@ class ImageExperimentImageCache extends LibraryImageCache {
     for (final field in fixture.props) '$field',
     '${fixture.geometry.decodeWidth}',
     '${fixture.geometry.decodeHeight}',
+    if (configuration.isReader)
+      configuration.readerFullDecode ? 'full' : 'bounded',
   ]);
   ImageExperimentProvider provider(RasterCase fixture, String attempt) {
     configuration.credentials.requireActive();
@@ -77,7 +79,7 @@ class ImageExperimentImageCache extends LibraryImageCache {
         _identities.keys
                 .where((k) => k.contains('::library-transfer::'))
                 .length >=
-            4) {
+            (configuration.isReader ? 6 : 4)) {
       throw const FormatException('attempt_capacity');
     }
     final newlyOwned = !_identities.containsKey(transfer);
@@ -119,8 +121,12 @@ class ImageExperimentImageCache extends LibraryImageCache {
         'alignmentY': fixture.alignmentY,
         'requiredWidth': geometry.requiredWidth,
         'requiredHeight': geometry.requiredHeight,
-        'decodeWidth': geometry.decodeWidth,
-        'decodeHeight': geometry.decodeHeight,
+        'decodeWidth': configuration.isReader && configuration.readerFullDecode
+            ? fixture.width
+            : geometry.decodeWidth,
+        'decodeHeight': configuration.isReader && configuration.readerFullDecode
+            ? fixture.height
+            : geometry.decodeHeight,
         'sourceShortage': geometry.sourceShortage,
       });
     }
@@ -129,12 +135,15 @@ class ImageExperimentImageCache extends LibraryImageCache {
       cacheManager: this,
       cacheKey: transfer,
     );
-    final provider = ResizeImage(
-      base,
-      width: fixture.geometry.decodeWidth,
-      height: fixture.geometry.decodeHeight,
-      allowUpscaling: false,
-    );
+    final ImageProvider provider =
+        configuration.isReader && configuration.readerFullDecode
+        ? base
+        : ResizeImage(
+            base,
+            width: fixture.geometry.decodeWidth,
+            height: fixture.geometry.decodeHeight,
+            allowUpscaling: false,
+          );
     return ImageExperimentProvider(
       provider,
       immutable,

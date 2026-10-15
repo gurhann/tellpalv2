@@ -13,6 +13,9 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 SCOPE = "image-optimization-native-fixture-r1"
+READER_BATCHES = frozenset(("reader_resolution_a_r1", "reader_resolution_b_r1",
+    "reader_resolution_c_r1", "reader_quality_full_r1", "reader_quality_100_r1", "reader_quality_075_r1"))
+READER_CASES = tuple(f"reader_page_{index}" for index in range(1, 7))
 ID = re.compile(r"[A-Za-z0-9_-]{1,64}")
 HASH = re.compile(r"[0-9a-f]{64}")
 MAX_FILE = 20 * 1024 * 1024
@@ -56,6 +59,33 @@ def finite_number(value):
 
 def exact_keys(value, keys):
     require(type(value) is dict and set(value) == set(keys), "schema_rejected")
+
+
+def is_reader_batch(batch):
+    return type(batch) is str and batch in READER_BATCHES
+
+
+def validate_reader_entries(batch, entries):
+    """The existing wire contract grants six objects only for these finite purposes."""
+    if not is_reader_batch(batch):
+        require(not (type(batch) is str and batch.startswith("reader_")), "reader_purpose_rejected")
+        return False
+    cases = READER_CASES[:2] if batch.startswith("reader_quality_") else READER_CASES
+    require(type(entries) in (list, tuple) and all(type(item) is dict for item in entries) and
+        tuple(item.get("caseId") for item in entries) == cases,
+        "reader_order_rejected")
+    discovery = batch == "reader_resolution_a_r1"
+    geometry = None
+    for entry in entries:
+        require(entry.get("mime") == "image/png" and entry.get("fit") == "contain" and
+            entry.get("alignmentX") == 0 and entry.get("alignmentY") == 0 and
+            entry.get("purposeAcceptanceReceipt") == batch and entry.get("profileRevision") ==
+            ("reader_discover_r1" if discovery else "reader_frozen_r1"), "reader_contract_rejected")
+        current = tuple(entry.get(key) for key in ("logicalSlotWidth", "logicalSlotHeight", "dpr"))
+        require(all(finite_number(number) and number > 0 for number in current), "reader_geometry_rejected")
+        require(current == ((1, 1, 1) if discovery else geometry or current), "reader_geometry_rejected")
+        geometry = current
+    return True
 
 
 def strict_json(data, limit=65536):
@@ -219,6 +249,7 @@ def load_config(path):
         value["scope"] == SCOPE, "scope_rejected")
     for name in ("batchId", "deviceAlias"):
         require(type(value[name]) is str and ID.fullmatch(value[name]), "id_rejected")
+    require(not value["batchId"].startswith("reader_") or is_reader_batch(value["batchId"]), "reader_purpose_rejected")
     require(value["platform"] in ("ios", "android") and value["mode"] in ("profile", "release"), "mode_rejected")
     require(value["backendEnvironment"] in ("local", "test"), "environment_rejected")
     require(type(value["deviceSelector"]) is str and 1 <= len(value["deviceSelector"]) <= 256 and
@@ -270,6 +301,7 @@ def load_manifest(config):
     for name in ("corpusSha256", "referenceSha256", "sourceSha256"):
         require(type(value[name]) is str and HASH.fullmatch(value[name]), "manifest_hash_rejected")
     require(type(value["entries"]) is list and 1 <= len(value["entries"]) <= 20, "manifest_capacity_rejected")
+    validate_reader_entries(value["batchId"], value["entries"])
     objects, public_entries, total = {}, [], 0
     for entry in value["entries"]:
         exact_keys(entry, ENTRY_KEYS)

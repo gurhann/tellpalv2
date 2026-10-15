@@ -61,3 +61,19 @@ class RasterCaseRouteArgs {
   @override
   int get hashCode => key.hashCode ^ caseId.hashCode;
 }
+
+/// generated route for
+/// [ReaderResolutionScreen]
+class ReaderResolutionRoute extends PageRouteInfo<void> {
+  const ReaderResolutionRoute({List<PageRouteInfo>? children})
+    : super(ReaderResolutionRoute.name, initialChildren: children);
+
+  static const String name = 'ReaderResolutionRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ReaderResolutionScreen();
+    },
+  );
+}

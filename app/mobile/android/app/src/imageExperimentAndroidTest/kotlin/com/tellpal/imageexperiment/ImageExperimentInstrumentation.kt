@@ -109,6 +109,52 @@ class ImageExperimentInstrumentation : Instrumentation() {
         })
     }
 
+    private fun <T> readerMain(activity: ImageExperimentActivity, deadline: Long, operation: () -> T): T {
+        require(SystemClock.elapsedRealtime() < deadline)
+        val completed = java.util.concurrent.CountDownLatch(1)
+        val active = java.util.concurrent.atomic.AtomicBoolean(true)
+        var value: T? = null
+        var failure: Throwable? = null
+        activity.runOnUiThread {
+            try {
+                require(active.get() && SystemClock.elapsedRealtime() < deadline && !activity.isFinishing && !activity.isDestroyed &&
+                    activity.bootstrap?.isRevoked == false)
+                value = operation()
+            } catch (error: Throwable) { failure = error }
+            finally { completed.countDown() }
+        }
+        val finished = completed.await(minOf(500, maxOf(1, deadline - SystemClock.elapsedRealtime())), java.util.concurrent.TimeUnit.MILLISECONDS)
+        active.set(false)
+        require(finished)
+        failure?.let { throw IllegalStateException("READER_REFUSED") }
+        @Suppress("UNCHECKED_CAST")
+        return value as T
+    }
+
+    private fun exerciseReaderBackground(activity: ImageExperimentActivity, deadline: Long) {
+        val before = readerMain(activity, deadline) { activity.readReaderLifecycleForLauncher() } ?: error("READER_REFUSED")
+        require(readerMain(activity, deadline) { activity.moveTaskToBack(true) })
+        fun awaitLifecycle(predicate: (Map<String, Any?>) -> Boolean) {
+            val limit = minOf(deadline, SystemClock.elapsedRealtime() + 3000)
+            while (SystemClock.elapsedRealtime() < limit) {
+                val row = readerMain(activity, deadline) { activity.readReaderLifecycleForLauncher() } ?: error("READER_REFUSED")
+                if (predicate(row)) return
+                Thread.sleep(20)
+            }
+            error("READER_REFUSED")
+        }
+        awaitLifecycle { it["backgrounded"] == true && (it["backgroundCount"] as Int) > (before["backgroundCount"] as Int) }
+        require(deadline - SystemClock.elapsedRealtime() > 750)
+        Thread.sleep(500)
+        readerMain(activity, deadline) {
+            activity.startActivity(Intent().setClassName(targetContext.packageName,
+                "com.tellpal.imageexperiment.ImageExperimentActivity")
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+        }
+        awaitLifecycle { it["backgrounded"] == false && (it["returnCount"] as Int) > (before["returnCount"] as Int) }
+        require(synchronized(creationLock) { ownedActivity === activity } && !activity.isFinishing && !activity.isDestroyed)
+    }
+
     override fun onCreate(arguments: Bundle?) {
         this.arguments = arguments ?: Bundle()
         start()
@@ -116,6 +162,7 @@ class ImageExperimentInstrumentation : Instrumentation() {
 
     override fun onStart() {
         if (!started.compareAndSet(false, true)) return
+        val invocationStart = SystemClock.elapsedRealtime()
         val result = Bundle()
         val observeRefusal: (ImageExperimentRefusalStage) -> Unit = { refusalDiagnostics.record(it) }
         var stage = ImageExperimentRefusalStage.signingIdentity
@@ -164,6 +211,8 @@ class ImageExperimentInstrumentation : Instrumentation() {
                 !activity.isFinishing && !activity.isDestroyed && remaining() > 0)
             stage = ImageExperimentRefusalStage.pairingReport
             val parsed = ImageExperimentJson.parseObject(metadata, 16_384)
+            val reader = parsed.getString("batchId") in ImageExperimentReaderPolicy.batches
+            val readerPrimary = parsed.getString("batchId") in ImageExperimentReaderPolicy.primaryBatches
             synchronized(creationLock) {
                 require(!admissionClosed && remaining() > 0)
                 sendStatus(1, Bundle().apply {
@@ -174,13 +223,34 @@ class ImageExperimentInstrumentation : Instrumentation() {
                 })
             }
             stage = ImageExperimentRefusalStage.settlement
-            val start = SystemClock.elapsedRealtime()
+            val start = if (reader) invocationStart else SystemClock.elapsedRealtime()
+            val nativeDeadline = start + 180_000
+            var readerBackgroundCompleted = false
+            var deviceFactsReported = false
             while (!bootstrap.isRevoked && !activity.isFinishing && !activity.isDestroyed &&
                 SystemClock.elapsedRealtime() - start < 180_000) {
                 if (arguments.getString("imageExperimentQualityCapture") == "1") reportQualityBinding(activity)
+                if (reader && !deviceFactsReported) {
+                    val facts = readerMain(activity, nativeDeadline) { activity.readDeviceFactsForLauncher() }
+                    if (facts != null) {
+                        require(facts.size in 1..4096)
+                        sendStatus(4, Bundle().apply {
+                            putString("event", "device-facts")
+                            putString("reportBase64", Base64.encodeToString(facts, Base64.NO_WRAP))
+                            putString("reportSha256", ImageExperimentBootstrap.sha256(facts))
+                        })
+                        deviceFactsReported = true
+                    }
+                }
+                if (readerPrimary && !readerBackgroundCompleted && readerMain(activity, nativeDeadline) { activity.consumeReaderBackgroundRequest() }) {
+                    exerciseReaderBackground(activity, nativeDeadline)
+                    readerBackgroundCompleted = true
+                }
                 Thread.sleep(100)
             }
             synchronized(creationLock) { admissionClosed = true }
+            require(!reader || SystemClock.elapsedRealtime() < nativeDeadline)
+            require(!readerPrimary || readerBackgroundCompleted)
             require(bootstrap.isRevoked && bootstrap.launcherOutcome.isSettled())
             exportLedger()
             result.putString("reason", "NATIVE_LAUNCHER_SETTLED")

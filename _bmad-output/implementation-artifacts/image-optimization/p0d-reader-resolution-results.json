@@ -1,0 +1,3684 @@
+{
+  "schemaVersion": 1,
+  "scope": "image-optimization-actual-reader-resolution-extension",
+  "status": "completed_with_explicit_android_unrun",
+  "createdAtUtc": "2026-10-15T13:30:43.593682+00:00",
+  "baselineCommit": "4721dccf090b29ce7b2d773d789873dbfbb324ae",
+  "applicationSourceSha256": "faa3a37ba01862375d03963a28325a971878fea049aacc9118e91c1d4a33da93",
+  "applicationSourceFiles": 310,
+  "protocol": {
+    "reader": "existing StoryPlayerPage with scoped pinned providers and original reader theme",
+    "primaryCorpus": "six ordered distinct retained v7 textless pages from content71",
+    "qualityCorpus": "retained TR content71/page1 and content19/page1",
+    "publication": "QA synthetic identifiers/revision; not a production start",
+    "audio": null,
+    "audioGeometry": "untested",
+    "arms": {
+      "A": "full PNG / full decode",
+      "B": "same full PNG / bounded decode",
+      "C": "resized PNG at1.0x observed demand / bounded decode"
+    },
+    "baselineSeconds": 20,
+    "scriptedJourneySeconds": 52,
+    "naturalPostRouteSeconds": 30,
+    "afterOwnedEvictionSeconds": 10,
+    "sampling": "serial native1Hz and frame aggregates",
+    "readerDecodedLruBytes": 25165824,
+    "legacyExperimentLruBytes": 33554432,
+    "geometry": {
+      "observedSlotWidth": 390,
+      "observedSlotHeight": 557,
+      "observedDpr": 3,
+      "textScaleFactor": 0.9411764705882353,
+      "paddingLeft": 0,
+      "paddingTop": 47,
+      "paddingRight": 0,
+      "paddingBottom": 34,
+      "viewInsetLeft": 0,
+      "viewInsetTop": 0,
+      "viewInsetRight": 0,
+      "viewInsetBottom": 0,
+      "orientation": "portrait"
+    },
+    "qualityCapturedInPrimary": false,
+    "primarySealedBeforeQualitySha256": "ffdd2a2eb5fd2b960bf5b5e2e36d92d771feee2594817ce3817cdff1dfca1c86",
+    "delivery": "private LAN HTTPS broker, fresh process/session/namespace and absent exact cache keys",
+    "osNetworkColdCertified": false,
+    "renderer": "unavailable unless directly observed",
+    "PNGOnly": true
+  },
+  "ios": {
+    "device": "one connected physical iPhone12",
+    "observationsPerArm": 1,
+    "release": {
+      "schemaVersion": 1,
+      "scope": "image-optimization-native-fixture-r1",
+      "platform": "ios",
+      "mode": "release",
+      "expectedAppId": "com.tellpal.tellpalMobilePoc.imageexperiment.release",
+      "testAppId": "com.tellpal.tellpalMobilePoc.imageexperiment.release.uitests.xctrunner",
+      "artifactSha256": "4e1c6b597253590ceced69dd5ae238f7f9499970884b35b40f5f9692ce610609",
+      "testArtifactSha256": "1ea7bc82bfb7f6b299bc2015d1886da98c00c1d7d76b2fe50e3c20ae845c1002",
+      "certificateSha256": "1758140a307351c4a00d7210298a005d52c25f69bd35676f83f137a306ad640a",
+      "sourceSha256": "faa3a37ba01862375d03963a28325a971878fea049aacc9118e91c1d4a33da93",
+      "copiedSourceSha256": "2c7ead977bc95118e36d2fca9a20101a4f17ab9e4371ce28283423ee15a26749",
+      "lockSha256": "8784680856084477849dd5c7b2ff8cb5fe4881de1ea6f9228bd1c8014e40a45e",
+      "dartTarget": "lib/main_image_experiment.dart",
+      "nativeTarget": "ImageExperiment",
+      "xctestrunSha256": "5f094ffa464cb50bb20cda7865a8242c14f99b2835c5edd433347ae2923e820a",
+      "nativeTestLinkage": "apple_native_only",
+      "engineRevision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+      "renderer": null,
+      "rendererReason": "runtime_not_observed",
+      "debuggable": null,
+      "debuggableReason": "runtime_not_observed"
+    },
+    "buildReceiptSha256": "b49fb82e8e00a60ce9e9d6d0e69d8d37dfd3c93eb0748bb449b7277d3b31d8b8",
+    "primaries": [
+      {
+        "deviceSelectorSha256": "af3e9cdf549c1a844399f87e8e84679cf78e5839a817750018a2d955ccc2a9c2",
+        "arm": "A",
+        "qualifiedResult": {
+          "schemaVersion": 1,
+          "scope": "image-optimization-reader-resolution-r1",
+          "status": "observed",
+          "platform": "ios",
+          "qualification": "qualified",
+          "sourceSufficiencyReason": "sufficient",
+          "sourceShortagePages": [],
+          "batchId": "reader_resolution_a_r1",
+          "ledgerSha256": "f9f802844fffdd3341e6de2f6452f9b52660b3b4c0455e2027a7343cd922c6e6",
+          "recordCount": 414,
+          "droppedCount": 0,
+          "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce",
+          "geometry": {
+            "observedSlotWidth": 390,
+            "observedSlotHeight": 557,
+            "observedDpr": 3,
+            "textScaleFactor": 0.9411764705882353,
+            "paddingLeft": 0,
+            "paddingTop": 47,
+            "paddingRight": 0,
+            "paddingBottom": 34,
+            "viewInsetLeft": 0,
+            "viewInsetTop": 0,
+            "viewInsetRight": 0,
+            "viewInsetBottom": 0,
+            "orientation": "portrait"
+          },
+          "pages": [
+            {
+              "pageIndex": 0,
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 23477308,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3891075,
+                "outputSha256": "9617e8ff249dc7a7484e557fe5ed1469deb8d030fce5a9fdac9784ed97315b7b"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 1,
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 25882152,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3910622,
+                "outputSha256": "7ff34fea7f144139f005d7210f00eeba24f7e0f685f83481a12dd2a787cc39e2"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 2,
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 29890424,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3228632,
+                "outputSha256": "516beb80cf0d968b28261880ff57e630a90163ab731d695de0638a64c889a08a"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 3,
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 33881458,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2676776,
+                "outputSha256": "15773b2abab0dbae348b4d52b008a62a3b33824bbcfc3a2d97c6b3de8000ce98"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 4,
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 38249952,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2662268,
+                "outputSha256": "04a48587da8618f67d651bc7bc200e35b06d6e5b0c046dfb31a5c6f0ba97af2a"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 5,
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "decode": {
+                "expectedDecodeWidth": 1712,
+                "expectedDecodeHeight": 2778
+              },
+              "firstTargetPaintMicroseconds": 42013570,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2815469,
+                "outputSha256": "b2e168654adcd51f41a02f5cf1cc3388d340e1b213ba0836e1e2a71a24928dfb"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            }
+          ],
+          "memory": {
+            "counter": "ios_phys_footprint",
+            "windows": {
+              "baseline": {
+                "sampleCount": 20,
+                "validCount": 20,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 21,
+                "maximumGapMicroseconds": 1003308,
+                "medianBytes": 98953408.0,
+                "sampledMaximumBytes": 102893760,
+                "observerMicroseconds": 50115,
+                "nativeReadCount": 20,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1203
+              },
+              "reader": {
+                "sampleCount": 52,
+                "validCount": 52,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 53,
+                "maximumGapMicroseconds": 1352223,
+                "medianBytes": 151529792.0,
+                "sampledMaximumBytes": 198789504,
+                "observerMicroseconds": 45274,
+                "nativeReadCount": 52,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 2490
+              },
+              "natural_retention": {
+                "sampleCount": 30,
+                "validCount": 30,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 31,
+                "maximumGapMicroseconds": 1004695,
+                "medianBytes": 146139392.0,
+                "sampledMaximumBytes": 151144704,
+                "observerMicroseconds": 28363,
+                "nativeReadCount": 30,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1478
+              },
+              "owned_eviction": {
+                "sampleCount": 10,
+                "validCount": 10,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 11,
+                "maximumGapMicroseconds": 1003340,
+                "medianBytes": 113297664.0,
+                "sampledMaximumBytes": 117999872,
+                "observerMicroseconds": 9834,
+                "nativeReadCount": 10,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 515
+              }
+            },
+            "eligibility": "observed_samples",
+            "sampledOnstageDeltaBytes": 99836096.0,
+            "naturalRetentionDeltaBytes": 47185984.0,
+            "ownedEvictionDeltaBytes": 14344256.0,
+            "truePeak": null,
+            "leakConclusion": null,
+            "packageGpuRetention": "unknown"
+          },
+          "frames": [
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 150,
+              "frameBuildTotalMicroseconds": 272,
+              "frameCount": 3,
+              "frameRasterMaxMicroseconds": 7197,
+              "frameRasterTotalMicroseconds": 13008,
+              "generation": 0,
+              "monotonicMicroseconds": 21838404,
+              "phase": "baseline",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 22123,
+              "frameBuildTotalMicroseconds": 170644,
+              "frameCount": 212,
+              "frameRasterMaxMicroseconds": 6786,
+              "frameRasterTotalMicroseconds": 113065,
+              "generation": 0,
+              "monotonicMicroseconds": 73841902,
+              "phase": "reader",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 1105,
+              "frameBuildTotalMicroseconds": 1105,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 681,
+              "frameRasterTotalMicroseconds": 681,
+              "generation": 0,
+              "monotonicMicroseconds": 103864704,
+              "phase": "natural_retention",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 84,
+              "frameBuildTotalMicroseconds": 84,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 1294,
+              "frameRasterTotalMicroseconds": 1294,
+              "generation": 0,
+              "monotonicMicroseconds": 113897753,
+              "phase": "owned_eviction",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            }
+          ],
+          "framesReason": "observed",
+          "cacheOwnership": [
+            {
+              "attemptSha256": "271b456e07f06473b07fd4f05745b032c4344c6cd4ed51eb4aa40408f0980664",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 21895219,
+              "ownership": "owned",
+              "providerSha256": "20f2cf7180003cefc1dd911a999760c499b944202e2c9907662000bb7e65f615",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "42656e76dfea93a242d03e585d2708674818bc95f12de8c8cccf0c5d75f86145",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 23474476,
+              "ownership": "owned",
+              "providerSha256": "0c9f802b58f5f60aef7350eb38f81ac98117ddcae5f7beac501d84718b23b16a",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "08e761a08c37d14cf75c1c2c1e1c810b2785cc0810fcd0d6e4aed00947190546",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 25844646,
+              "ownership": "owned",
+              "providerSha256": "cf3d5fbccb85efda7a76620627b9df3925afdf9b6909186d7fc1d5a146959503",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "d4b975efa420fcec5eecec49b17dbdf53b12fd2a653d7ea5c72b7ff32eb0cccb",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 29845292,
+              "ownership": "owned",
+              "providerSha256": "f48d45d4c867c4be09a0363c136954db8b6377d7f3609024e53338a029d95d14",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "b5a8525e382a0e0eb798b4a97b8b467c33afdcb58af75782fa9c048cf2f02185",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 33845040,
+              "ownership": "owned",
+              "providerSha256": "69daadc0041500240739ff463d89347015258fb02673a2eb151453bbac142821",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "3bf737cb26979cc383d7aa8933ae83c2c9d6d76b7c333a81093223449a30bad5",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 37844743,
+              "ownership": "owned",
+              "providerSha256": "61a0dbc7ab9426c313743e45450c4e8ce93523831bd28ab884a620fb1e41a439",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "271b456e07f06473b07fd4f05745b032c4344c6cd4ed51eb4aa40408f0980664",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862134,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "20f2cf7180003cefc1dd911a999760c499b944202e2c9907662000bb7e65f615",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "42656e76dfea93a242d03e585d2708674818bc95f12de8c8cccf0c5d75f86145",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862172,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "0c9f802b58f5f60aef7350eb38f81ac98117ddcae5f7beac501d84718b23b16a",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "08e761a08c37d14cf75c1c2c1e1c810b2785cc0810fcd0d6e4aed00947190546",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862198,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "cf3d5fbccb85efda7a76620627b9df3925afdf9b6909186d7fc1d5a146959503",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "d4b975efa420fcec5eecec49b17dbdf53b12fd2a653d7ea5c72b7ff32eb0cccb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862222,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "f48d45d4c867c4be09a0363c136954db8b6377d7f3609024e53338a029d95d14",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "b5a8525e382a0e0eb798b4a97b8b467c33afdcb58af75782fa9c048cf2f02185",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862247,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "69daadc0041500240739ff463d89347015258fb02673a2eb151453bbac142821",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "3bf737cb26979cc383d7aa8933ae83c2c9d6d76b7c333a81093223449a30bad5",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73862270,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "61a0dbc7ab9426c313743e45450c4e8ce93523831bd28ab884a620fb1e41a439",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "271b456e07f06473b07fd4f05745b032c4344c6cd4ed51eb4aa40408f0980664",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864534,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "20f2cf7180003cefc1dd911a999760c499b944202e2c9907662000bb7e65f615",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "42656e76dfea93a242d03e585d2708674818bc95f12de8c8cccf0c5d75f86145",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864577,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "0c9f802b58f5f60aef7350eb38f81ac98117ddcae5f7beac501d84718b23b16a",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "08e761a08c37d14cf75c1c2c1e1c810b2785cc0810fcd0d6e4aed00947190546",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864601,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "cf3d5fbccb85efda7a76620627b9df3925afdf9b6909186d7fc1d5a146959503",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "d4b975efa420fcec5eecec49b17dbdf53b12fd2a653d7ea5c72b7ff32eb0cccb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864623,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "f48d45d4c867c4be09a0363c136954db8b6377d7f3609024e53338a029d95d14",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "b5a8525e382a0e0eb798b4a97b8b467c33afdcb58af75782fa9c048cf2f02185",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864644,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "69daadc0041500240739ff463d89347015258fb02673a2eb151453bbac142821",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "3bf737cb26979cc383d7aa8933ae83c2c9d6d76b7c333a81093223449a30bad5",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 19023744,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103864665,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "61a0dbc7ab9426c313743e45450c4e8ce93523831bd28ab884a620fb1e41a439",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "271b456e07f06473b07fd4f05745b032c4344c6cd4ed51eb4aa40408f0980664",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895032,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "20f2cf7180003cefc1dd911a999760c499b944202e2c9907662000bb7e65f615",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "42656e76dfea93a242d03e585d2708674818bc95f12de8c8cccf0c5d75f86145",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895068,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "0c9f802b58f5f60aef7350eb38f81ac98117ddcae5f7beac501d84718b23b16a",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "08e761a08c37d14cf75c1c2c1e1c810b2785cc0810fcd0d6e4aed00947190546",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895101,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "cf3d5fbccb85efda7a76620627b9df3925afdf9b6909186d7fc1d5a146959503",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "d4b975efa420fcec5eecec49b17dbdf53b12fd2a653d7ea5c72b7ff32eb0cccb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895131,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "f48d45d4c867c4be09a0363c136954db8b6377d7f3609024e53338a029d95d14",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "b5a8525e382a0e0eb798b4a97b8b467c33afdcb58af75782fa9c048cf2f02185",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895163,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "69daadc0041500240739ff463d89347015258fb02673a2eb151453bbac142821",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            },
+            {
+              "attemptSha256": "3bf737cb26979cc383d7aa8933ae83c2c9d6d76b7c333a81093223449a30bad5",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103895194,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "61a0dbc7ab9426c313743e45450c4e8ce93523831bd28ab884a620fb1e41a439",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+            }
+          ],
+          "deviceFacts": {
+            "abisSha256": "11efa2ca4340191b00ab96cd350df1fb09035674e332c692b4fc4ce39fdb9324",
+            "apiLevel": null,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "deviceFactsSha256": "051de79bfa65fd0a92891ffc055cac7e46c1acf06669d70280213f8c3183d508",
+            "deviceReason": "unavailable",
+            "event": "device_facts",
+            "generation": 0,
+            "isPhysicalDevice": true,
+            "lowRamDevice": null,
+            "memoryClassMiB": null,
+            "memTotalBytes": 3863904256,
+            "modelSha256": "bbe73b97a8190c45abc303f1aacf7b8ab7db045f1ab0acb11daad493864280ac",
+            "monotonicMicroseconds": 1865251,
+            "platform": "ios",
+            "qemu": "unavailable",
+            "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+          },
+          "deviceFactsReason": "observed",
+          "physicalEvidence": "native_observation",
+          "lowMemoryPhysicalQualification": "unavailable",
+          "lifecycle": {
+            "backgroundCount": 1,
+            "backgrounded": false,
+            "backgroundEpochMilliseconds": 1792070164654,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "event": "lifecycle",
+            "generation": 0,
+            "monotonicMicroseconds": 73841770,
+            "returnCount": 1,
+            "returnedEpochMilliseconds": 1792070165713,
+            "sessionSha256": "2101fffc75b231152943cd0e6ae6645c964b0e2c74682d219fbf2e8b09eda0ce"
+          },
+          "lifecycleReason": "observed",
+          "deviceUnitSha256": null,
+          "crossReservationCausalComparison": false,
+          "physicalPresentation": null,
+          "qualityAccepted": null,
+          "audioGeometry": "untested",
+          "repeatability": null,
+          "p95": null,
+          "jpegWebpPerformance": "unqualified"
+        },
+        "resultSha256": "40bd4599da1592f2b65fbc9f5793049041f330dd5b0b5029515987324937177c",
+        "ledgerBytes": 167560,
+        "verificationReceiptSha256": "c9e4c446f1b0b0adab2d3aaeee225833479f8be72fbb16ddc83e17ad1978cd81",
+        "runBindingSha256": "588a7c36061814df761db8bf3fc3d7d6aa232cfd8b064d05687568e9325cf9b0",
+        "prerequisiteSha256": "edead4311c0fc0626f5253df69cf8644ff241153745fc47d64bc804fd22da593",
+        "installationAuditSha256": "48f5de603e46c50232695604c23b4f44593069126fa5d872978825d837af9248",
+        "manifestSha256": "93c235a193191482a14154199cb6870128794f6dd71f3d8e42a2d2661a268e9b",
+        "phaseStartMicroseconds": {
+          "baseline": 1835344,
+          "reader": 21838521,
+          "natural_retention": 73841978,
+          "owned_eviction": 103864715,
+          "complete": 113897884
+        },
+        "firstPageTargetPaintAfterReaderPhaseMs": 1638.787,
+        "verifiedTransferBytes": 19184842,
+        "thermalSampleCounts": {
+          "nominal": 112,
+          "fair": 0,
+          "serious": 0,
+          "critical": 0,
+          "unavailable": 0,
+          "notRecorded": 0
+        },
+        "nativeActualDecodeDimensions": [
+          [
+            1712,
+            2778
+          ]
+        ],
+        "observedGeometryIdentical": true,
+        "repeatability": null,
+        "encodedDimensionsFromFrozenManifest": [
+          [
+            1712,
+            2778
+          ]
+        ],
+        "payloadBytesInclude": "verified PNG response bodies only",
+        "physicalTargetPresentation": null
+      },
+      {
+        "deviceSelectorSha256": "af3e9cdf549c1a844399f87e8e84679cf78e5839a817750018a2d955ccc2a9c2",
+        "arm": "B",
+        "qualifiedResult": {
+          "schemaVersion": 1,
+          "scope": "image-optimization-reader-resolution-r1",
+          "status": "observed",
+          "platform": "ios",
+          "qualification": "qualified",
+          "sourceSufficiencyReason": "sufficient",
+          "sourceShortagePages": [],
+          "batchId": "reader_resolution_b_r1",
+          "ledgerSha256": "6ca3eaf18ab477c591fb0ec2bb3634a656c45c8c3307f0cb9e3bb8b0a5f62f55",
+          "recordCount": 414,
+          "droppedCount": 0,
+          "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59",
+          "geometry": {
+            "observedSlotWidth": 390,
+            "observedSlotHeight": 557,
+            "observedDpr": 3,
+            "textScaleFactor": 0.9411764705882353,
+            "paddingLeft": 0,
+            "paddingTop": 47,
+            "paddingRight": 0,
+            "paddingBottom": 34,
+            "viewInsetLeft": 0,
+            "viewInsetTop": 0,
+            "viewInsetRight": 0,
+            "viewInsetBottom": 0,
+            "orientation": "portrait"
+          },
+          "pages": [
+            {
+              "pageIndex": 0,
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 22898843,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3891075,
+                "outputSha256": "9617e8ff249dc7a7484e557fe5ed1469deb8d030fce5a9fdac9784ed97315b7b"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 1,
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 25270394,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3910622,
+                "outputSha256": "7ff34fea7f144139f005d7210f00eeba24f7e0f685f83481a12dd2a787cc39e2"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 2,
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 29277968,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 3228632,
+                "outputSha256": "516beb80cf0d968b28261880ff57e630a90163ab731d695de0638a64c889a08a"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 3,
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 33268372,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2676776,
+                "outputSha256": "15773b2abab0dbae348b4d52b008a62a3b33824bbcfc3a2d97c6b3de8000ce98"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 4,
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 37276126,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2662268,
+                "outputSha256": "04a48587da8618f67d651bc7bc200e35b06d6e5b0c046dfb31a5c6f0ba97af2a"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 5,
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1672
+              },
+              "firstTargetPaintMicroseconds": 41383750,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 2815469,
+                "outputSha256": "b2e168654adcd51f41a02f5cf1cc3388d340e1b213ba0836e1e2a71a24928dfb"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1672,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            }
+          ],
+          "memory": {
+            "counter": "ios_phys_footprint",
+            "windows": {
+              "baseline": {
+                "sampleCount": 20,
+                "validCount": 20,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 21,
+                "maximumGapMicroseconds": 1005459,
+                "medianBytes": 97634624.0,
+                "sampledMaximumBytes": 102009088,
+                "observerMicroseconds": 45737,
+                "nativeReadCount": 20,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1268
+              },
+              "reader": {
+                "sampleCount": 52,
+                "validCount": 52,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 53,
+                "maximumGapMicroseconds": 1032817,
+                "medianBytes": 146401632.0,
+                "sampledMaximumBytes": 191498624,
+                "observerMicroseconds": 39839,
+                "nativeReadCount": 52,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 2184
+              },
+              "natural_retention": {
+                "sampleCount": 30,
+                "validCount": 30,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 31,
+                "maximumGapMicroseconds": 1004412,
+                "medianBytes": 140560704.0,
+                "sampledMaximumBytes": 144738624,
+                "observerMicroseconds": 27904,
+                "nativeReadCount": 30,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1529
+              },
+              "owned_eviction": {
+                "sampleCount": 10,
+                "validCount": 10,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 11,
+                "maximumGapMicroseconds": 1002916,
+                "medianBytes": 107751744.0,
+                "sampledMaximumBytes": 112380224,
+                "observerMicroseconds": 9158,
+                "nativeReadCount": 10,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 436
+              }
+            },
+            "eligibility": "observed_samples",
+            "sampledOnstageDeltaBytes": 93864000.0,
+            "naturalRetentionDeltaBytes": 42926080.0,
+            "ownedEvictionDeltaBytes": 10117120.0,
+            "truePeak": null,
+            "leakConclusion": null,
+            "packageGpuRetention": "unknown"
+          },
+          "frames": [
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 160,
+              "frameBuildTotalMicroseconds": 269,
+              "frameCount": 3,
+              "frameRasterMaxMicroseconds": 9615,
+              "frameRasterTotalMicroseconds": 14595,
+              "generation": 0,
+              "monotonicMicroseconds": 21226292,
+              "phase": "baseline",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 18792,
+              "frameBuildTotalMicroseconds": 163344,
+              "frameCount": 217,
+              "frameRasterMaxMicroseconds": 6124,
+              "frameRasterTotalMicroseconds": 93934,
+              "generation": 0,
+              "monotonicMicroseconds": 73228548,
+              "phase": "reader",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 1040,
+              "frameBuildTotalMicroseconds": 1040,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 686,
+              "frameRasterTotalMicroseconds": 686,
+              "generation": 0,
+              "monotonicMicroseconds": 103254534,
+              "phase": "natural_retention",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 71,
+              "frameBuildTotalMicroseconds": 71,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 836,
+              "frameRasterTotalMicroseconds": 836,
+              "generation": 0,
+              "monotonicMicroseconds": 113303325,
+              "phase": "owned_eviction",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            }
+          ],
+          "framesReason": "observed",
+          "cacheOwnership": [
+            {
+              "attemptSha256": "ed3e7feec7ebe290a61ab7ea846c6d1163ad2c1df42143070cefb0de11722017",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 21278342,
+              "ownership": "owned",
+              "providerSha256": "5076d8ae9561248e7009a6b974be3c3db67d5738279f8526ad777c3030e3a7fc",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "d05ae163535463cbf694ed3ddfacb571db3caafef60b1f628244a340b5c9136a",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 22894243,
+              "ownership": "owned",
+              "providerSha256": "6557876e7521dd2b61b8fe0595f0b2e8c6f2f57cc4de641c6a7f0bcbc370120e",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "fa105577952d3f70c1350799e818a1fb306dc145b75ef7be72e7b3d257ed9909",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 25231780,
+              "ownership": "owned",
+              "providerSha256": "f0147906cca2f6ee3555550cb2dadbeb0e6edbde3f2186c7d9b3a37d6461685d",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "85c2b20907cd45e0c41d00415bc5fb0cbf83ee53953ff636742471514c63677c",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 29231375,
+              "ownership": "owned",
+              "providerSha256": "ad555d20ade87491ae5187ada641bee21aeeb75da977501e0c40d1186a2c3f94",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "306ca4fb64a500226cd46257128d09ac714611bfa2810621d5d6689cce0b4106",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 33229956,
+              "ownership": "owned",
+              "providerSha256": "75d2bac918a65cbb88d016936e6bce890371287a637e0d6b665bc984a91acb37",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "083d97d6fbf5111f0a317e5a6a6427ae86efe5694bfbe15d0019d5b68d9268d7",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 37230028,
+              "ownership": "owned",
+              "providerSha256": "8e4f227b050b6542b8b79b12fd38840e1b65953d4d40a17d6337a356ab27a80c",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "ed3e7feec7ebe290a61ab7ea846c6d1163ad2c1df42143070cefb0de11722017",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251433,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "5076d8ae9561248e7009a6b974be3c3db67d5738279f8526ad777c3030e3a7fc",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "d05ae163535463cbf694ed3ddfacb571db3caafef60b1f628244a340b5c9136a",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251591,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "6557876e7521dd2b61b8fe0595f0b2e8c6f2f57cc4de641c6a7f0bcbc370120e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "fa105577952d3f70c1350799e818a1fb306dc145b75ef7be72e7b3d257ed9909",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251697,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "f0147906cca2f6ee3555550cb2dadbeb0e6edbde3f2186c7d9b3a37d6461685d",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "85c2b20907cd45e0c41d00415bc5fb0cbf83ee53953ff636742471514c63677c",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251797,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "ad555d20ade87491ae5187ada641bee21aeeb75da977501e0c40d1186a2c3f94",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "306ca4fb64a500226cd46257128d09ac714611bfa2810621d5d6689cce0b4106",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251897,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "75d2bac918a65cbb88d016936e6bce890371287a637e0d6b665bc984a91acb37",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "083d97d6fbf5111f0a317e5a6a6427ae86efe5694bfbe15d0019d5b68d9268d7",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73251995,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "8e4f227b050b6542b8b79b12fd38840e1b65953d4d40a17d6337a356ab27a80c",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "ed3e7feec7ebe290a61ab7ea846c6d1163ad2c1df42143070cefb0de11722017",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103253537,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "5076d8ae9561248e7009a6b974be3c3db67d5738279f8526ad777c3030e3a7fc",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "d05ae163535463cbf694ed3ddfacb571db3caafef60b1f628244a340b5c9136a",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103253745,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "6557876e7521dd2b61b8fe0595f0b2e8c6f2f57cc4de641c6a7f0bcbc370120e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "fa105577952d3f70c1350799e818a1fb306dc145b75ef7be72e7b3d257ed9909",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103253900,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "f0147906cca2f6ee3555550cb2dadbeb0e6edbde3f2186c7d9b3a37d6461685d",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "85c2b20907cd45e0c41d00415bc5fb0cbf83ee53953ff636742471514c63677c",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103254042,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "ad555d20ade87491ae5187ada641bee21aeeb75da977501e0c40d1186a2c3f94",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "306ca4fb64a500226cd46257128d09ac714611bfa2810621d5d6689cce0b4106",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103254190,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "75d2bac918a65cbb88d016936e6bce890371287a637e0d6b665bc984a91acb37",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "083d97d6fbf5111f0a317e5a6a6427ae86efe5694bfbe15d0019d5b68d9268d7",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20665920,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103254336,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "8e4f227b050b6542b8b79b12fd38840e1b65953d4d40a17d6337a356ab27a80c",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "ed3e7feec7ebe290a61ab7ea846c6d1163ad2c1df42143070cefb0de11722017",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301147,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "5076d8ae9561248e7009a6b974be3c3db67d5738279f8526ad777c3030e3a7fc",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "d05ae163535463cbf694ed3ddfacb571db3caafef60b1f628244a340b5c9136a",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301187,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "6557876e7521dd2b61b8fe0595f0b2e8c6f2f57cc4de641c6a7f0bcbc370120e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "fa105577952d3f70c1350799e818a1fb306dc145b75ef7be72e7b3d257ed9909",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301218,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "f0147906cca2f6ee3555550cb2dadbeb0e6edbde3f2186c7d9b3a37d6461685d",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "85c2b20907cd45e0c41d00415bc5fb0cbf83ee53953ff636742471514c63677c",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301253,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "ad555d20ade87491ae5187ada641bee21aeeb75da977501e0c40d1186a2c3f94",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "306ca4fb64a500226cd46257128d09ac714611bfa2810621d5d6689cce0b4106",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301299,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "75d2bac918a65cbb88d016936e6bce890371287a637e0d6b665bc984a91acb37",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            },
+            {
+              "attemptSha256": "083d97d6fbf5111f0a317e5a6a6427ae86efe5694bfbe15d0019d5b68d9268d7",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103301330,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "8e4f227b050b6542b8b79b12fd38840e1b65953d4d40a17d6337a356ab27a80c",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+            }
+          ],
+          "deviceFacts": {
+            "abisSha256": "11efa2ca4340191b00ab96cd350df1fb09035674e332c692b4fc4ce39fdb9324",
+            "apiLevel": null,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "deviceFactsSha256": "639b7a2c90c38fa90d25e1f88987a07719c5f2bf77079375addfad7921fdf84a",
+            "deviceReason": "unavailable",
+            "event": "device_facts",
+            "generation": 0,
+            "isPhysicalDevice": true,
+            "lowRamDevice": null,
+            "memoryClassMiB": null,
+            "memTotalBytes": 3863904256,
+            "modelSha256": "bbe73b97a8190c45abc303f1aacf7b8ab7db045f1ab0acb11daad493864280ac",
+            "monotonicMicroseconds": 1250581,
+            "platform": "ios",
+            "qemu": "unavailable",
+            "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+          },
+          "deviceFactsReason": "observed",
+          "physicalEvidence": "native_observation",
+          "lowMemoryPhysicalQualification": "unavailable",
+          "lifecycle": {
+            "backgroundCount": 1,
+            "backgrounded": false,
+            "backgroundEpochMilliseconds": 1792070413326,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "event": "lifecycle",
+            "generation": 0,
+            "monotonicMicroseconds": 73228458,
+            "returnCount": 1,
+            "returnedEpochMilliseconds": 1792070414447,
+            "sessionSha256": "7bd13549667e1b0951326c26daa6e9757432b6bc0391f568aadf733a23465b59"
+          },
+          "lifecycleReason": "observed",
+          "deviceUnitSha256": null,
+          "crossReservationCausalComparison": false,
+          "physicalPresentation": null,
+          "qualityAccepted": null,
+          "audioGeometry": "untested",
+          "repeatability": null,
+          "p95": null,
+          "jpegWebpPerformance": "unqualified"
+        },
+        "resultSha256": "5c64d0bbae023784db28f94766f80a1557961597c7b4fc90f812384fbd403d75",
+        "ledgerBytes": 168706,
+        "verificationReceiptSha256": "94db4195a728847b907ed9a3ff7faa4dc21ccfab6fd9cf6bdca9263f8a03edd3",
+        "runBindingSha256": "eff93c852b3d25ed22a87c50b4fc51b3da6ba82e69b03ae42f4b58fcb545bf71",
+        "prerequisiteSha256": "21bd9f8768708d9284aa76cb320cdf70f69d15a822caa377de5927b009bfe0c5",
+        "installationAuditSha256": "b144b56f72daca2f80a75bafcdd955ce8f678d6376299dfa63d3fc661ab335c5",
+        "manifestSha256": "bdbe0c73123963039d01aea5040f581f516a506be581911d44ed7a2af61b28cb",
+        "phaseStartMicroseconds": {
+          "baseline": 1223948,
+          "reader": 21226341,
+          "natural_retention": 73228587,
+          "owned_eviction": 103254617,
+          "complete": 113303439
+        },
+        "firstPageTargetPaintAfterReaderPhaseMs": 1672.502,
+        "verifiedTransferBytes": 19184842,
+        "thermalSampleCounts": {
+          "nominal": 112,
+          "fair": 0,
+          "serious": 0,
+          "critical": 0,
+          "unavailable": 0,
+          "notRecorded": 0
+        },
+        "nativeActualDecodeDimensions": [
+          [
+            1030,
+            1672
+          ]
+        ],
+        "observedGeometryIdentical": true,
+        "repeatability": null,
+        "encodedDimensionsFromFrozenManifest": [
+          [
+            1712,
+            2778
+          ]
+        ],
+        "payloadBytesInclude": "verified PNG response bodies only",
+        "physicalTargetPresentation": null
+      },
+      {
+        "deviceSelectorSha256": "af3e9cdf549c1a844399f87e8e84679cf78e5839a817750018a2d955ccc2a9c2",
+        "arm": "C",
+        "qualifiedResult": {
+          "schemaVersion": 1,
+          "scope": "image-optimization-reader-resolution-r1",
+          "status": "observed",
+          "platform": "ios",
+          "qualification": "qualified",
+          "sourceSufficiencyReason": "sufficient",
+          "sourceShortagePages": [],
+          "batchId": "reader_resolution_c_r1",
+          "ledgerSha256": "84512e7bb2f5e192c7159999b15248f50e76ece37201fa1241a954cc83747000",
+          "recordCount": 416,
+          "droppedCount": 0,
+          "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6",
+          "geometry": {
+            "observedSlotWidth": 390,
+            "observedSlotHeight": 557,
+            "observedDpr": 3,
+            "textScaleFactor": 0.9411764705882353,
+            "paddingLeft": 0,
+            "paddingTop": 47,
+            "paddingRight": 0,
+            "paddingBottom": 34,
+            "viewInsetLeft": 0,
+            "viewInsetTop": 0,
+            "viewInsetRight": 0,
+            "viewInsetBottom": 0,
+            "orientation": "portrait"
+          },
+          "pages": [
+            {
+              "pageIndex": 0,
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 22817886,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1818236,
+                "outputSha256": "7926c2252bf229d0fe5b8da84d21ea9c667315da8d32b6238843725d50982a04"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 1,
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 25272591,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1866709,
+                "outputSha256": "276719883af01881fafdf4dd62c28b83819e49ee0b99f2e6face4e3c072424ea"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 2,
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 29280470,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1653648,
+                "outputSha256": "554736bb48b052ea9a7183e54c8b8babd9da739b60ae0fc73aaf5fca2ffbbc73"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 3,
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 33270898,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1477669,
+                "outputSha256": "dc6cbd632ca81554e5a51d47a4f7331a28a94a50ee6befab3d34dc6176e7f000"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 4,
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 37896494,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1472000,
+                "outputSha256": "ebd9423f281116470520484c919602903e548b0a980b197940cc7ceb3594dd19"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            },
+            {
+              "pageIndex": 5,
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "decode": {
+                "expectedDecodeWidth": 1030,
+                "expectedDecodeHeight": 1671
+              },
+              "firstTargetPaintMicroseconds": 41269378,
+              "transfers": {
+                "count": 1,
+                "bodyBytes": 1325304,
+                "outputSha256": "1382e1851166a15a50775602a0dbd67b7092352b42d321606d25e45370cf1e45"
+              },
+              "sourceDemand": {
+                "width": 1030,
+                "height": 1671,
+                "demandWidth": 1170,
+                "demandHeight": 1671,
+                "sourcePixelsSufficient": true,
+                "factor": 1.0,
+                "fit": "contain",
+                "upscaled": false,
+                "cropped": false
+              }
+            }
+          ],
+          "memory": {
+            "counter": "ios_phys_footprint",
+            "windows": {
+              "baseline": {
+                "sampleCount": 20,
+                "validCount": 20,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 21,
+                "maximumGapMicroseconds": 1002980,
+                "medianBytes": 97913088.0,
+                "sampledMaximumBytes": 102172864,
+                "observerMicroseconds": 48370,
+                "nativeReadCount": 20,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1231
+              },
+              "reader": {
+                "sampleCount": 52,
+                "validCount": 52,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 53,
+                "maximumGapMicroseconds": 1096408,
+                "medianBytes": 139487616.0,
+                "sampledMaximumBytes": 159467904,
+                "observerMicroseconds": 39822,
+                "nativeReadCount": 52,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 2108
+              },
+              "natural_retention": {
+                "sampleCount": 30,
+                "validCount": 30,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 31,
+                "maximumGapMicroseconds": 1005951,
+                "medianBytes": 141019520.0,
+                "sampledMaximumBytes": 145262976,
+                "observerMicroseconds": 27476,
+                "nativeReadCount": 30,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 1503
+              },
+              "owned_eviction": {
+                "sampleCount": 10,
+                "validCount": 10,
+                "nullCount": 0,
+                "expectedCountAt1Hz": 11,
+                "maximumGapMicroseconds": 1003455,
+                "medianBytes": 107841920.0,
+                "sampledMaximumBytes": 112658816,
+                "observerMicroseconds": 9180,
+                "nativeReadCount": 10,
+                "nativeReadNullCount": 0,
+                "nativeReadMicroseconds": 501
+              }
+            },
+            "eligibility": "observed_samples",
+            "sampledOnstageDeltaBytes": 61554816.0,
+            "naturalRetentionDeltaBytes": 43106432.0,
+            "ownedEvictionDeltaBytes": 9928832.0,
+            "truePeak": null,
+            "leakConclusion": null,
+            "packageGpuRetention": "unknown"
+          },
+          "frames": [
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 147,
+              "frameBuildTotalMicroseconds": 255,
+              "frameCount": 3,
+              "frameRasterMaxMicroseconds": 7442,
+              "frameRasterTotalMicroseconds": 12670,
+              "generation": 0,
+              "monotonicMicroseconds": 21226246,
+              "phase": "baseline",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 19049,
+              "frameBuildTotalMicroseconds": 190031,
+              "frameCount": 217,
+              "frameRasterMaxMicroseconds": 6287,
+              "frameRasterTotalMicroseconds": 103424,
+              "generation": 0,
+              "monotonicMicroseconds": 73229591,
+              "phase": "reader",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 1389,
+              "frameBuildTotalMicroseconds": 1389,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 859,
+              "frameRasterTotalMicroseconds": 859,
+              "generation": 0,
+              "monotonicMicroseconds": 103251647,
+              "phase": "natural_retention",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "frame_aggregate",
+              "frameBuildMaxMicroseconds": 75,
+              "frameBuildTotalMicroseconds": 75,
+              "frameCount": 1,
+              "frameRasterMaxMicroseconds": 902,
+              "frameRasterTotalMicroseconds": 902,
+              "generation": 0,
+              "monotonicMicroseconds": 113302035,
+              "phase": "owned_eviction",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            }
+          ],
+          "framesReason": "observed",
+          "cacheOwnership": [
+            {
+              "attemptSha256": "279fe45c5d202650c4e56ff49cc2be3d48c44ee124e19bd0fd4a8f54b690da2b",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 21287414,
+              "ownership": "owned",
+              "providerSha256": "9362bc1849d214ee006cd6a1338773e50a79278cc122730b5283457d35e16f05",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "6acf30eae99f9e29b3a138ad38dc08943f6c6f66e11818cde034fe678a5dd5d1",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 22802227,
+              "ownership": "owned",
+              "providerSha256": "be9fba70541a741be1060a7b0220d3a7892baa2cfc6a4feba4aa875cb4a37200",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "2cbffd557408418461fd9ba0d34cf26de7987ced5a038b02c5028eaf554f153b",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 25232226,
+              "ownership": "owned",
+              "providerSha256": "473643104876b2d9d299b8c0a678f60e219591068c9cb96d94c4c6e2c86fb4aa",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "0150b10c6801c295cfc779164f78030bae8a1904e550332164b98714432482fb",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 29232760,
+              "ownership": "owned",
+              "providerSha256": "bc841defe878ab81b34afcd9665973d8112e32f65b91474e7b783b896ae5483e",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "ef7c3461dc0490979f2d0537f574f4421ef5ad87d8cf0902c93ebfc1b7a72592",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 33232228,
+              "ownership": "owned",
+              "providerSha256": "46c4931d8759904bec8c4e83b7fcc966d5f99c493c155e4827c3c2bc6c728a7b",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "81685da1692bb2c79042e9df981602c932b5b6e60c462d3b2dc6850dc7f0c65f",
+              "cacheState": "namespace_keys_absent",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 37888547,
+              "ownership": "owned",
+              "providerSha256": "922910723dc9f6cbd5fcefb62b1e4487273d338e9b657dde33d2ab6985ecb373",
+              "reason": "none"
+            },
+            {
+              "attemptSha256": "279fe45c5d202650c4e56ff49cc2be3d48c44ee124e19bd0fd4a8f54b690da2b",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73247602,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "9362bc1849d214ee006cd6a1338773e50a79278cc122730b5283457d35e16f05",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "6acf30eae99f9e29b3a138ad38dc08943f6c6f66e11818cde034fe678a5dd5d1",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73247813,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "be9fba70541a741be1060a7b0220d3a7892baa2cfc6a4feba4aa875cb4a37200",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "2cbffd557408418461fd9ba0d34cf26de7987ced5a038b02c5028eaf554f153b",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73247967,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "473643104876b2d9d299b8c0a678f60e219591068c9cb96d94c4c6e2c86fb4aa",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "0150b10c6801c295cfc779164f78030bae8a1904e550332164b98714432482fb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73248112,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "bc841defe878ab81b34afcd9665973d8112e32f65b91474e7b783b896ae5483e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "ef7c3461dc0490979f2d0537f574f4421ef5ad87d8cf0902c93ebfc1b7a72592",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73248258,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "46c4931d8759904bec8c4e83b7fcc966d5f99c493c155e4827c3c2bc6c728a7b",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "81685da1692bb2c79042e9df981602c932b5b6e60c462d3b2dc6850dc7f0c65f",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 73248403,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "922910723dc9f6cbd5fcefb62b1e4487273d338e9b657dde33d2ab6985ecb373",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "279fe45c5d202650c4e56ff49cc2be3d48c44ee124e19bd0fd4a8f54b690da2b",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103250626,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "9362bc1849d214ee006cd6a1338773e50a79278cc122730b5283457d35e16f05",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "6acf30eae99f9e29b3a138ad38dc08943f6c6f66e11818cde034fe678a5dd5d1",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103250827,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "be9fba70541a741be1060a7b0220d3a7892baa2cfc6a4feba4aa875cb4a37200",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "2cbffd557408418461fd9ba0d34cf26de7987ced5a038b02c5028eaf554f153b",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103250995,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "473643104876b2d9d299b8c0a678f60e219591068c9cb96d94c4c6e2c86fb4aa",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "0150b10c6801c295cfc779164f78030bae8a1904e550332164b98714432482fb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103251168,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "bc841defe878ab81b34afcd9665973d8112e32f65b91474e7b783b896ae5483e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "ef7c3461dc0490979f2d0537f574f4421ef5ad87d8cf0902c93ebfc1b7a72592",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103251309,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "46c4931d8759904bec8c4e83b7fcc966d5f99c493c155e4827c3c2bc6c728a7b",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "81685da1692bb2c79042e9df981602c932b5b6e60c462d3b2dc6850dc7f0c65f",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 1,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 20653560,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103251457,
+              "ownership": "owned",
+              "phase": "natural_retention",
+              "providerSha256": "922910723dc9f6cbd5fcefb62b1e4487273d338e9b657dde33d2ab6985ecb373",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "279fe45c5d202650c4e56ff49cc2be3d48c44ee124e19bd0fd4a8f54b690da2b",
+              "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299719,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "9362bc1849d214ee006cd6a1338773e50a79278cc122730b5283457d35e16f05",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "6acf30eae99f9e29b3a138ad38dc08943f6c6f66e11818cde034fe678a5dd5d1",
+              "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299765,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "be9fba70541a741be1060a7b0220d3a7892baa2cfc6a4feba4aa875cb4a37200",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "2cbffd557408418461fd9ba0d34cf26de7987ced5a038b02c5028eaf554f153b",
+              "caseSha256": "a3b1678e67221df3127ed4156691e36ae1586adbfab0e362cfa1c5e76af31dc5",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299807,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "473643104876b2d9d299b8c0a678f60e219591068c9cb96d94c4c6e2c86fb4aa",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "0150b10c6801c295cfc779164f78030bae8a1904e550332164b98714432482fb",
+              "caseSha256": "b962167f7bf041b27102de40efd585fc7f15e41a0cf70ce3c1816cbd8e3ad0c7",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299845,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "bc841defe878ab81b34afcd9665973d8112e32f65b91474e7b783b896ae5483e",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "ef7c3461dc0490979f2d0537f574f4421ef5ad87d8cf0902c93ebfc1b7a72592",
+              "caseSha256": "883485df3bea0c9a0fe4d9ef698ed5d056690641e1915ab69adf07a6f80fa853",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299882,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "46c4931d8759904bec8c4e83b7fcc966d5f99c493c155e4827c3c2bc6c728a7b",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            },
+            {
+              "attemptSha256": "81685da1692bb2c79042e9df981602c932b5b6e60c462d3b2dc6850dc7f0c65f",
+              "caseSha256": "b8f4af6b0d46fa562d999d30195f610fb0c5a73b0990ae8fcec5269a7793e349",
+              "clockDomain": "dart_monotonic",
+              "clockUnit": "microseconds",
+              "counterReason": "missing_counter",
+              "decodedKeepAliveCount": 0,
+              "decodedLiveCount": 0,
+              "decodedLruBytes": 0,
+              "decodedPendingCount": 0,
+              "event": "cache_state",
+              "generation": 0,
+              "monotonicMicroseconds": 103299919,
+              "ownership": "owned",
+              "phase": "owned_eviction",
+              "providerSha256": "922910723dc9f6cbd5fcefb62b1e4487273d338e9b657dde33d2ab6985ecb373",
+              "reason": "internal_settlement_unavailable",
+              "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+            }
+          ],
+          "deviceFacts": {
+            "abisSha256": "11efa2ca4340191b00ab96cd350df1fb09035674e332c692b4fc4ce39fdb9324",
+            "apiLevel": null,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "deviceFactsSha256": "d55d1ad2f0ffb26b127548229801ecb05089d3f780b8707296913aac8b04c040",
+            "deviceReason": "unavailable",
+            "event": "device_facts",
+            "generation": 0,
+            "isPhysicalDevice": true,
+            "lowRamDevice": null,
+            "memoryClassMiB": null,
+            "memTotalBytes": 3863904256,
+            "modelSha256": "bbe73b97a8190c45abc303f1aacf7b8ab7db045f1ab0acb11daad493864280ac",
+            "monotonicMicroseconds": 1249500,
+            "platform": "ios",
+            "qemu": "unavailable",
+            "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+          },
+          "deviceFactsReason": "observed",
+          "physicalEvidence": "native_observation",
+          "lowMemoryPhysicalQualification": "unavailable",
+          "lifecycle": {
+            "backgroundCount": 1,
+            "backgrounded": false,
+            "backgroundEpochMilliseconds": 1792070695601,
+            "clockDomain": "dart_monotonic",
+            "clockUnit": "microseconds",
+            "counterReason": "missing_counter",
+            "event": "lifecycle",
+            "generation": 0,
+            "monotonicMicroseconds": 73229421,
+            "returnCount": 1,
+            "returnedEpochMilliseconds": 1792070696722,
+            "sessionSha256": "cad84f4f8f7d5659ea20594e1f3fe5d8ab3ff4035cb456774c776552555d62a6"
+          },
+          "lifecycleReason": "observed",
+          "deviceUnitSha256": null,
+          "crossReservationCausalComparison": false,
+          "physicalPresentation": null,
+          "qualityAccepted": null,
+          "audioGeometry": "untested",
+          "repeatability": null,
+          "p95": null,
+          "jpegWebpPerformance": "unqualified"
+        },
+        "resultSha256": "8315aa644a7395c52252c99741fb75f718eda93860e3ddf7196bcb894f1bd939",
+        "ledgerBytes": 170001,
+        "verificationReceiptSha256": "1efdcbdab11d918fa9f5c69ff398689b46f4d451a4cfef43e5417998a830ff87",
+        "runBindingSha256": "98005cdde7af50e188b2937876006806073612d6528a541d83caa113b3867f17",
+        "prerequisiteSha256": "9a47ffcbb80ab05543e4a241039a7fe7bf2c838c94f9791a2708e78c3dee5428",
+        "installationAuditSha256": "7e7fbb923f69de20259cd5e1198ec2e0a431ca531851fc4fa06ce69ddc5d6c95",
+        "manifestSha256": "b73ca998112fcbc3f9dea2c35b73161a7589019a903c0b8da14bff176a8f4e7b",
+        "phaseStartMicroseconds": {
+          "baseline": 1223954,
+          "reader": 21226313,
+          "natural_retention": 73229681,
+          "owned_eviction": 103251718,
+          "complete": 113302156
+        },
+        "firstPageTargetPaintAfterReaderPhaseMs": 1591.573,
+        "verifiedTransferBytes": 9613566,
+        "thermalSampleCounts": {
+          "nominal": 112,
+          "fair": 0,
+          "serious": 0,
+          "critical": 0,
+          "unavailable": 0,
+          "notRecorded": 0
+        },
+        "nativeActualDecodeDimensions": [
+          [
+            1030,
+            1671
+          ]
+        ],
+        "observedGeometryIdentical": true,
+        "repeatability": null,
+        "encodedDimensionsFromFrozenManifest": [
+          [
+            1030,
+            1672
+          ]
+        ],
+        "payloadBytesInclude": "verified PNG response bodies only",
+        "physicalTargetPresentation": null
+      }
+    ],
+    "rawPngPayloadReductionCFromA": {
+      "bytes": 9571276,
+      "percent": 49.88978277746567,
+      "qualityQualified": true,
+      "qualityGateScope": "representative_TR71_TR19_capture_acceptance_at_recorded_iPhone_geometry",
+      "selectedCandidate": false
+    },
+    "memoryCounter": "self phys_footprint bytes",
+    "deltaDefinition": "each own-run baseline median subtracted from reader sampled maximum, natural-retention median and owned-eviction median respectively; no pooled samples",
+    "quality": {
+      "status": "accepted_from_explicit_human_capture_review",
+      "variants": [
+        {
+          "batchId": "reader_quality_full_r1",
+          "manifestSha256": "5ccea066c680543e2e6d93137606feea5fe78e5e28d85f0bbe5e31a71d2228b6",
+          "encodedSizes": [
+            [
+              1712,
+              2778
+            ],
+            [
+              1284,
+              2279
+            ]
+          ],
+          "humanAccepted": true
+        },
+        {
+          "batchId": "reader_quality_100_r1",
+          "manifestSha256": "8c198fb3d7f959c55ce3c2b39fe6662e65354ae0e629567289d3dd29a71a10b1",
+          "encodedSizes": [
+            [
+              1030,
+              1672
+            ],
+            [
+              942,
+              1671
+            ]
+          ],
+          "humanAccepted": true
+        },
+        {
+          "batchId": "reader_quality_075_r1",
+          "manifestSha256": "d2d0902ccbaf25204b36a3d86cb22b03db31f88d5b56722f136858cab472a5b2",
+          "encodedSizes": [
+            [
+              773,
+              1254
+            ],
+            [
+              707,
+              1254
+            ]
+          ],
+          "humanAccepted": true
+        }
+      ],
+      "captureCollections": [
+        {
+          "caseTag": "quality-full",
+          "collectionSha256": "e6601717b188c698b62c1e0c1fa5075160741123eda35920c43101e5125132aa",
+          "collection": {
+            "scope": "reader-resolution-capture-collection",
+            "status": "awaiting_human_quality",
+            "batchId": "reader_quality_full_r1",
+            "captures": [
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "cd626dae417ccdd8b90a798166bf655b96a6987b178bb3e69d0a2bf02db49348",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "61c7bb0ed8e9194b49a5b08bc7d813d2fcd5ced4981323134646468f96a0f5ff",
+                  "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+                  "providerSha256": "645a662a038138030f01f88d3c622457a7413e536b0a8118aae0a1dac7610a2b",
+                  "attemptSha256": "48f17de1b413ea0a6e6b6f7b26fd106e73e199f374d7066d4c3567eb18b87f30"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 1712,
+                "encodedHeight": 2778,
+                "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+                "originalReferenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+                "encodedPngSha256": "1e334e0e82deb948e6805aa10bb59efcd32d0ec3d5594abedb460fd1a83ead88",
+                "perSizeExpectedPixelSha256": "8793385396fbb4f7351a9f42c7efb1b37d9a77afc31c9cddd4c94ff039766dae",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": true,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "5df74996573acf222dc3793edb7d053b055d71db5727b913d8892547b155c194",
+                "sidecarSha256": "f5c9c6a9fee3aff2732f47e3e01b61b773ebaa8df7f78ad928d2cd9e772fd414",
+                "caseId": "reader_page_1",
+                "contentId": 71
+              },
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "4ba321bad08df3b219bb7b49bf28d8ed2229f9be5e1bd2e8242d627547d0668a",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "61c7bb0ed8e9194b49a5b08bc7d813d2fcd5ced4981323134646468f96a0f5ff",
+                  "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+                  "providerSha256": "a73d6ab56b6f6fd7fd87c6b21891c39e520c30531349872383fd27fb8d18db95",
+                  "attemptSha256": "201a19077bb2de87554b5debc208b6b337a75c458833a196423004bad34ef29e"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 1284,
+                "encodedHeight": 2279,
+                "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+                "originalReferenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+                "encodedPngSha256": "bd984be3f0a99d74f12c72aadf89439e500bdf3f1c769eaef8a2d1f44ab9457b",
+                "perSizeExpectedPixelSha256": "5a2c7d4124933134f5866045a0083742147aa7d6bdc57fd7c9bcca2d67a5b0af",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": true,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "5df74996573acf222dc3793edb7d053b055d71db5727b913d8892547b155c194",
+                "sidecarSha256": "8af54a5a3f4082dc8f93f49000d69f07a085492ca783eb6e61fc0f668ecc0220",
+                "caseId": "reader_page_2",
+                "contentId": 19
+              }
+            ],
+            "collectorSha256": "42082f95f4e76c64ec7cb5aba44c8a63e75f0d4e5b6af4d9838ee5f7669df878",
+            "sourceImagesPublic": false
+          }
+        },
+        {
+          "caseTag": "quality-100-r2",
+          "collectionSha256": "c4455d42cc534e96b0cacc57119092c2494b9e54f88723d4390ff6cae3f77dba",
+          "collection": {
+            "scope": "reader-resolution-capture-collection",
+            "status": "awaiting_human_quality",
+            "batchId": "reader_quality_100_r1",
+            "captures": [
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "229a8378c651ee1584d371b1afebf563fc39b6228288d16d6bf1994fa552150e",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "93558b5a444729eafcfb9ee2af25f3ffdc8feeb37a2f36a58434d922e9d38ade",
+                  "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+                  "providerSha256": "7ecddc6528bf5e93cf160ab58d3a1d61c81ec60c02c34d0a0ee2c9ddd54d7a86",
+                  "attemptSha256": "fba22e2b1b4a676f83f3c967845e452fadd35b0a9b5bb1c8afc3bcfd0343d959"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 1030,
+                "encodedHeight": 1672,
+                "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+                "originalReferenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+                "encodedPngSha256": "f32bc1de6ec26ff8848228396373810bca2bedee67f58a83d1b9452a488a5839",
+                "perSizeExpectedPixelSha256": "29297bed8d796265de553428111a5087d2e8377ad5d648238ac61bc51648c104",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": false,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "00dc8ec8838b0e3fc4f7f7e063bf5909d0348bd0a3f4c8f63960a83859422d10",
+                "sidecarSha256": "6b662520d012c6b12caf452cde6bef36fbd849c9236973bef7249439f53474bd",
+                "caseId": "reader_page_1",
+                "contentId": 71
+              },
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "69498f38dcdbe0b664fee20f2597aa63ab2c1b9c5ac364e542646ad499f7e772",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "93558b5a444729eafcfb9ee2af25f3ffdc8feeb37a2f36a58434d922e9d38ade",
+                  "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+                  "providerSha256": "20d81261fe5c6727ffda89bcb678b0ed6f0168b8e74865c4d5c34550bf2823be",
+                  "attemptSha256": "f4d72502ea35454aa651f962b8f3a579e1b03158f36b85e289459d78ceed77fc"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 942,
+                "encodedHeight": 1671,
+                "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+                "originalReferenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+                "encodedPngSha256": "b95d114671f481b7a9509243f8493f010c18314f042619cef2cd004278d0dc87",
+                "perSizeExpectedPixelSha256": "ce5a04312d3ef41a33e3cd49781e45813474348b63fa62dc855a713e88923017",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": false,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "00dc8ec8838b0e3fc4f7f7e063bf5909d0348bd0a3f4c8f63960a83859422d10",
+                "sidecarSha256": "f9076788bc3cb06733d7e900451e0d38080b5c76ee09be1d6db50a37eb0f0bd0",
+                "caseId": "reader_page_2",
+                "contentId": 19
+              }
+            ],
+            "collectorSha256": "ad952a86fa14f5b128695672310e5387317291ddfaaccf6a39a923ea415ac8c9",
+            "sourceImagesPublic": false
+          }
+        },
+        {
+          "caseTag": "quality-075",
+          "collectionSha256": "c75505905a79ea6ccca446f7cb800f3354408f09c340033acffba076bba36d5a",
+          "collection": {
+            "scope": "reader-resolution-capture-collection",
+            "status": "awaiting_human_quality",
+            "batchId": "reader_quality_075_r1",
+            "captures": [
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "bf63c2d8b916c80349d723eb07ae09fde020e409df2d02a77b82a4e042bc885b",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "5444e6edfee0e07ebf0cb94b3743af245a14482cc3c723c9de5bb089e0514757",
+                  "caseSha256": "392640f155c2de39809bf4b6a021637f077224343fe92725e6441cdeda695b34",
+                  "providerSha256": "7a1296279739e7474e7176a536805d4125408ac240022db165344b201b0a4937",
+                  "attemptSha256": "62fc81058a6ea6a5bc2ef208f23021e8cc3d3d21b2c4e60e24d512fde98666da"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 773,
+                "encodedHeight": 1254,
+                "sourceSha256": "24d27b3384c5ecf706f1c4458bc3bc869a2e55e85e4ca46e449a4e5dbdcbe075",
+                "originalReferenceSha256": "1fbbd6f4f5cfcb56dd62cd60a779ff8cd772921f7e7a5eaa7514e3d6f1ad26c6",
+                "encodedPngSha256": "b3703fe2c2f5ab1c19569499fc1ac5a1247aec4cabb021b3b77a579e6c84792e",
+                "perSizeExpectedPixelSha256": "c440ec8af01cb857b132e627aafe1666360fbab97401d48385323f7f29a9f695",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": false,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "b4a09239db7840e7d38e7a68f6ca454fccfc00891b2634205127923692988659",
+                "sidecarSha256": "a5c4c6b801ab70484ae9c5de465d96450341558ef816feed07dd74297eb679cd",
+                "caseId": "reader_page_1",
+                "contentId": 71
+              },
+              {
+                "scope": "reader-resolution-capture-r1",
+                "quality": "human_verdict_pending",
+                "captureSha256": "f0d48a6d705e2d5b46bb873e51988057b6f04f887bc96505ab63b83a2129c1fd",
+                "captureWidth": 1170,
+                "captureHeight": 2532,
+                "providerBinding": {
+                  "generation": 0,
+                  "sessionSha256": "5444e6edfee0e07ebf0cb94b3743af245a14482cc3c723c9de5bb089e0514757",
+                  "caseSha256": "da009a09127ccf3712e5ac83ca1445ddeeeefdbe258317048fea9b4e2e0b4ece",
+                  "providerSha256": "e7d58ed2afe6ed400cbc911b357d51f5be9346bdbc7ef017c6242183dd8793ca",
+                  "attemptSha256": "13c0e27714617314de369efcc0e6f312c56c23f9cb527d6a0bd8401db4db4ef3"
+                },
+                "geometry": {
+                  "observedSlotWidth": 390,
+                  "observedSlotHeight": 557,
+                  "observedDpr": 3,
+                  "textScaleFactor": 0.9411764705882353,
+                  "paddingLeft": 0,
+                  "paddingTop": 47,
+                  "paddingRight": 0,
+                  "paddingBottom": 34,
+                  "viewInsetLeft": 0,
+                  "viewInsetTop": 0,
+                  "viewInsetRight": 0,
+                  "viewInsetBottom": 0,
+                  "orientation": "portrait"
+                },
+                "encodedWidth": 707,
+                "encodedHeight": 1254,
+                "sourceSha256": "1b21f7041b76d401a70447a3da7f72ffa1f8149b5508c588b7107d79d2d80169",
+                "originalReferenceSha256": "03802a378dc106e6af5505e94b72608b3f09e20ac6cadf4a606c4b8546f8fef2",
+                "encodedPngSha256": "e5681d70dbce50a3442e819a1c8410141cbad13fd24e241767241981ce5f0f58",
+                "perSizeExpectedPixelSha256": "01fef8e27c6df1a52f1f1a86f8190bbff10ff32336c420397913807913932eb8",
+                "perSizeDecodedPixelEquality": true,
+                "fullOriginalPixelEquality": false,
+                "preparationReceiptSha256": "1b39c74ddfcd282cacec50828774bac550286b11a6e26181d9653af6b89c38af",
+                "operatorSha256": "9b676d2ca575fca769b95c107fc3f197efad684507fa00c9bc6396ca87367b99",
+                "physicalPresentationVerified": false,
+                "humanQualityAccepted": null,
+                "readerResultSha256": "b4a09239db7840e7d38e7a68f6ca454fccfc00891b2634205127923692988659",
+                "sidecarSha256": "eca256b5176d3c1c11c0e797e9f4ec285e48933ac15a42624b93999c2332a764",
+                "caseId": "reader_page_2",
+                "contentId": 19
+              }
+            ],
+            "collectorSha256": "ad952a86fa14f5b128695672310e5387317291ddfaaccf6a39a923ea415ac8c9",
+            "sourceImagesPublic": false
+          }
+        }
+      ],
+      "humanReview": {
+        "scope": "reader-resolution-explicit-human-quality-verdict",
+        "recordedAtEpochMilliseconds": 1792073317906,
+        "humanStatementVerbatim": "hepsi ok gibi",
+        "interpretation": "all_six_captures_accepted_as_appearing_ok",
+        "reviewDelivery": "offline_single_page_with_all_six_original_native_captures",
+        "contentIds": [
+          71,
+          19
+        ],
+        "acceptedFactors": [
+          "full",
+          1.0,
+          0.75
+        ],
+        "smallestAcceptedTestedFactor": 0.75,
+        "encodedSizesAtSelectedFactor": [
+          [
+            773,
+            1254
+          ],
+          [
+            707,
+            1254
+          ]
+        ],
+        "selectedFactorPrimaryPerformanceObserved": false,
+        "measured100FactorRemainsSeparate": true,
+        "jpegWebpQualityResolved": false,
+        "physicalOldAndroidQualified": false,
+        "cloudAllocation": false,
+        "receiptSha256": "dddc08e4b5db124ce649bc8654f22a9b8d577189a55feac85fec2b4e913621e0"
+      },
+      "smallestAcceptedTestedResolution": {
+        "factor": 0.75,
+        "content71EncodedSize": [
+          773,
+          1254
+        ],
+        "content19EncodedSize": [
+          707,
+          1254
+        ],
+        "scope": "two_TR_quality_pages_captured_in_recorded_iPhone12_reader_geometry",
+        "primaryPerformanceObserved": false
+      },
+      "fullResolutionRetainedPendingReview": false,
+      "qualityQualifiedSavings": {
+        "measured100CandidateRawPngPayloadReduction": {
+          "bytes": 9571276,
+          "percent": 49.88978277746567,
+          "qualityQualified": true,
+          "qualityGateScope": "representative_TR71_TR19_capture_acceptance_at_recorded_iPhone_geometry",
+          "selectedCandidate": false
+        },
+        "selected075CandidatePrimaryPerformance": null,
+        "interpretation": "1x primary measurements remain separate from the smallest accepted 0.75x quality candidate."
+      },
+      "075Scope": "quality/stress only; no Android or iPhone primary performance observation at0.75x",
+      "reviewDelivery": {
+        "status": "six_original_captures_copied_to_private_local_review_folder",
+        "singleOfflineHtmlContainsAllSixOriginals": true,
+        "copyHashesEqualOriginals": true,
+        "humanAccepted": true
+      },
+      "productionResolutionChange": false,
+      "captureReceiptsReflectCollectionTime": true,
+      "separateLaterHumanVerdict": true
+    },
+    "primaryPairing": {
+      "receiptSha256": "9e632a92d569e7883ffd1e2240e7dd1950228fb40d3cd780ce9679facc69b668",
+      "scope": "reader-extension-primary-pairing-verification",
+      "sourceOrderReferenceEqualAcrossABC": true,
+      "sameFullPngHashesAcrossAB": true,
+      "pages": 6,
+      "manifestHashes": {
+        "a": "93c235a193191482a14154199cb6870128794f6dd71f3d8e42a2d2661a268e9b",
+        "b": "bdbe0c73123963039d01aea5040f581f516a506be581911d44ed7a2af61b28cb",
+        "c": "b73ca998112fcbc3f9dea2c35b73161a7589019a903c0b8da14bff176a8f4e7b"
+      },
+      "qualityQualifiedSavings": null,
+      "sealedBeforeHumanVerdict": true
+    },
+    "frameAttribution": {
+      "basis": "callback_delivery_phase",
+      "actualFrameOccurrencePhase": "unavailable",
+      "delayedCallbackAcrossPhaseBoundary": "possible",
+      "interpretation": "Aggregates use the phase active when FrameTiming callbacks were delivered; they do not establish exact phase-specific frame counts or maxima."
+    }
+  },
+  "android": {
+    "historicalIdentity": {
+      "sourceSha256": "15b827b410aaa2d3db0badc514a1d7d616c5d64570eb1257b682d9337de068db",
+      "buildReceiptSha256": "b506d49b52bafadabdbe4f26b75d41af0bf6c2c45a45a00b7abd209a5bb2c689",
+      "appApkSha256": "4d006df7d6f8354e00b8b007541f724014b6c70e7fcd72947627a216921a0358",
+      "testApkSha256": "b78e93d08f9007f7d6a575f18b38a8a2be67f48775edb72472d0a3f5cc54f2f3",
+      "provenance": "Actual Android-r3 build and reservation receipts; later iOS source changes/current freeze do not alter this historical identity.",
+      "currentSourceFreezeReinterpreted": false
+    },
+    "androidA": {
+      "plannedBatch": "reader_resolution_a_r1",
+      "plannedArm": "full PNG / full decode",
+      "ordinal": 1,
+      "status": "refused_before_install_and_native_reader_entry",
+      "reason": "physical_utc_bound_unqualified",
+      "releaseInstallAttempted": false,
+      "installedApkAuditAttempted": false,
+      "nativeReaderEntered": false,
+      "readerGeometryAvailable": false,
+      "clockObservation": {
+        "status": "original_two_second_bound_rejected",
+        "sampleCount": 5,
+        "medianDeviceMinusReferenceDiagnosticMillis": -9582.225180149078,
+        "deviceMinusHostEnvelopeLowerMillis": -9680.456787109375,
+        "deviceMinusHostEnvelopeUpperMillis": -9478.01513671875,
+        "exactUtcProof": false,
+        "interpretation": "About 9.58 seconds behind the recorded references; diagnostic under the retained reference/transport assumptions.",
+        "deviceClockChangedByObserver": false,
+        "hostClockChangedByObserver": false,
+        "nativeValidatorsChanged": false,
+        "futureGuardPaddingMillis": 0
+      },
+      "cleanup": {
+        "state": "FINISHED",
+        "terminalObserved": true,
+        "wholeRootMillis": 52957,
+        "ownership": "authoritative successful POST response",
+        "automaticRetry": false,
+        "replacementWindow": false
+      }
+    },
+    "deviceOsObservations": {
+      "model": "moto e20",
+      "product": "aruba",
+      "apiLevel": 30,
+      "providerCatalogForm": "PHYSICAL",
+      "directAccessSupported": true,
+      "memTotalKiB": 1855712,
+      "memTotalBytes": 1900249088,
+      "nominalTwoGiBHostAdmission": true,
+      "abis": [
+        "armeabi-v7a",
+        "armeabi"
+      ],
+      "roKernelQemu": null,
+      "roKernelQemuReason": "property_unset",
+      "qemuAbsenceUsedAsPhysicalProof": false,
+      "roConfigLowRam": "true",
+      "nativeLowRamQualificationRequired": true,
+      "nativeLowRamQualificationObserved": false,
+      "nativeMemoryClassMiB": null,
+      "physicalProofBasis": "Fresh selected PHYSICAL aruba/API30/direct-access catalog, authoritative POST ownership and exact observed model/API/MemTotal; no absent-property or capacity-as-RAM inference."
+    },
+    "androidC": {
+      "plannedBatch": "reader_resolution_c_r1",
+      "plannedArm": "resized PNG / bounded decode",
+      "ordinal": 2,
+      "status": "unrun",
+      "reason": "verified_a_reader_geometry_unavailable_after_clock_guard_refusal",
+      "allocated": false,
+      "debited": false,
+      "nativeReaderEntered": false,
+      "geometry": "unavailable_after_A_clock_guard_refusal",
+      "automaticRetry": false
+    },
+    "unavailableMeasurements": {
+      "installedApkIdentity": {
+        "value": null,
+        "reason": "Install and installed-APK readback were not attempted; application presence on the device is not inferred."
+      },
+      "nativeActivityManagerIsLowRamDevice": {
+        "value": null,
+        "reason": "Native reader/probe not entered; ro.config.low_ram=true is only a separately observed OS property."
+      },
+      "memoryClassMiB": {
+        "value": null,
+        "reason": "Native ActivityManager observation not executed."
+      },
+      "nativePssBytes": {
+        "value": null,
+        "reason": "No native reader memory sampling occurred; unavailable is not zero."
+      },
+      "dartHeapOrExternalBytes": {
+        "value": null,
+        "reason": "No reader run occurred."
+      },
+      "readerSlotInsetsDprTextScaleGeometry": {
+        "value": null,
+        "reason": "No A reader geometry was observed or frozen."
+      },
+      "actualDecodeDimensions": {
+        "value": null,
+        "reason": "No reader decode occurred."
+      },
+      "targetPaintTiming": {
+        "value": null,
+        "reason": "No reader page paint was observed."
+      },
+      "fixtureTransferBytes": {
+        "value": null,
+        "reason": "No reader transfer measurement was collected; no byte-savings inference."
+      },
+      "frameAggregates": {
+        "value": null,
+        "reason": "No reader frame aggregate was collected."
+      },
+      "backgroundReturnLifecycle": {
+        "value": null,
+        "reason": "Native reader lifecycle sequence never started."
+      },
+      "naturalRetentionAndOwnedEviction": {
+        "value": null,
+        "reason": "No reader route exit/retention/owned-eviction sequence was measured."
+      },
+      "cacheOwnershipCounters": {
+        "value": null,
+        "reason": "No reader pending/live/LRU ownership measurements were collected."
+      },
+      "resolutionQualityAcceptance": {
+        "value": null,
+        "reason": "No Android extension quality capture or human acceptance occurred."
+      },
+      "crossReservationUnitComparison": {
+        "value": null,
+        "reason": "C was never allocated; no A/C physical-unit comparison exists."
+      },
+      "physicalOomOrCrashConclusion": {
+        "value": null,
+        "reason": "Reader was never launched; no physical OOM or app crash is claimed."
+      }
+    }
+  },
+  "budget": {
+    "status": "reconciled_no_pending_new_window",
+    "allServicesUpperUsd": 8.75523914272981,
+    "oldProtectedStreamingUpperUsd": 5.85,
+    "retainedExistingExtensionDebitMinutes": 6,
+    "retainedExistingExtensionDebitUsd": 0.9,
+    "actualClosedRootPlusOneSecondCeilMinutes": 1,
+    "existingDebitRefunded": false,
+    "streamingUpperUsd": 6.75,
+    "otherServicesBaselineTry": 73.73,
+    "conversionTryPerUsd": 48.98225000067947,
+    "otherServicesBaselineUpperUsd": 1.50523914272981,
+    "reserveUsd": 0.5,
+    "actualExtensionWindows": 1,
+    "pendingNewWindows": 0,
+    "pendingNewDebitMinutes": 0,
+    "cAllocated": false,
+    "cDebited": false,
+    "unusedCPreview": {
+      "hypotheticalAllServicesUpperUsd": 9.65523914272981,
+      "hypotheticalAdditionalDebitMinutes": 6,
+      "hypotheticalAdditionalDebitUsd": 0.9,
+      "spent": false,
+      "debited": false,
+      "pending": false,
+      "additionalRunPermission": false
+    },
+    "reportedMonthlyUsageMinutes": 43,
+    "historicalMaximumQuotaMinutes": 47,
+    "currentPrincipalInventoryCount": 34,
+    "currentPrincipalInventoryStates": {
+      "FINISHED": 34
+    },
+    "invoice": false,
+    "providerHardCap": false,
+    "accountSpendingLock": false,
+    "allProjectPrincipalsInventory": false,
+    "allPrincipalsUsageKnown": false,
+    "monitoringIngestionGuarantee": false,
+    "otherServicesConsoleBaselineRefreshed": false,
+    "otherServicesSpendingSinceBaselineUnknown": true,
+    "interpretation": "Conservative retained-model upper bound, not billed spend or an account-wide spending lock."
+  },
+  "originalStory16Preserved": {
+    "modified": false,
+    "sourceSha256": "f917af7931307fe6e70aeb1b23466e501bfd08424ace796fdd59ba87eff60516",
+    "originalReservationCount": 13,
+    "oldUpperMinutesRetained": 40,
+    "originalClosedRootMinutes": 29,
+    "originalProtectedStreamingUpperUsd": 5.85,
+    "artifactSha256": {
+      "story-1-6-final-cost-reconciliation.json": "cf532ef1e74895f97bb921a7a210dea0c6735bd4439dac01e9a6d4313ee59226",
+      "p0c-quality-resource-findings.md": "7a3bc8a8a73a04729c6ebf497ef29d238adf7c02b46248e73ac608e60e6ab558",
+      "p0c-native-results.json": "5bcd53f6db64adebd71522fb5fde35871b84fdb2689ea2be1f109190fc023ec0"
+    },
+    "limitations": [
+      "Original JPEG/WebP q85 observations use the earlier isolated pilot geometry and do not qualify actual-reader resolution or the nominal 2GB low-memory phone floor.",
+      "Original Android human acceptance applies only to the earlier observed q85 layout; it is not Android extension PNG-resolution acceptance.",
+      "Original iPhone PNG-sharper/q85 blur concern remains unresolved; qualityQualifiedSavings remains unavailable.",
+      "No codec-only causal speedup, general RAM saving, leak, fleet, repeatability or P95 claim is added.",
+      "The one failed extension window and unused C do not rewrite or reopen the original 13-window evidence or its cost reconciliation."
+    ]
+  },
+  "verification": {
+    "receiptSha256": "488e6db437352494e9b4901f69f915caee53ca1795ae60f5d989eba03a2dd93f",
+    "historicalNative": {
+      "tests": 33,
+      "sourceSha256": "4133f384883df993dc2dba1ec5be1390f29ebd2652d4a533a1594f2013f315c9",
+      "receiptSha256": "e75903b2d54184b726028fce07034700c64fb9c358d8bb7e2011c8f7ae44c32c",
+      "rerun": false,
+      "unchangedNativeFileCount": 116,
+      "allNativeInputsEqual": true
+    },
+    "iosPhysicalGuards": {
+      "r5AllFivePassedReceiptSha256": "a9a10508c5c78e5fc2427a7820e8ef119013061ac5207a5727a58f54778e23e1",
+      "r5SourceSha256": "4133f384883df993dc2dba1ec5be1390f29ebd2652d4a533a1594f2013f315c9",
+      "r7NormalPassedReceiptSha256": "bde33a62e37c07e81fa0cab85d1d1adbc8c9f18089f5e630a3261afebe8d2ea9",
+      "negativeSecurityNativeInputsUnchanged": true
+    },
+    "matrixCoveringTests": {
+      "receiptSha256": "aba3be5f5d224e3adbe8d665a4c9d4aeb45d456333a9e8297f886f8411669310",
+      "privateMethods": 76,
+      "scope": "34 controller +13 deadline +29 wrapper synthetic methods; not physical OOM evidence"
+    },
+    "captureQualifier": {
+      "receiptSha256": "65ad1094c859c696a6f00368e8105f1c68ac00920bb64d8acaa806c7fa81e516",
+      "methods": 9
+    },
+    "measurementSource": {
+      "sourceSha256": "faa3a37ba01862375d03963a28325a971878fea049aacc9118e91c1d4a33da93",
+      "sourceFileCount": 310,
+      "hostTests": 309,
+      "flutterTests": 336,
+      "analyzer": "passed",
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sourceUnchanged": true,
+      "toolsUnchanged": true
+    },
+    "postReviewImplementation": {
+      "schemaVersion": 1,
+      "scope": "post-review-complete-local-verification",
+      "status": "passed",
+      "implementationSourceSha256": "de707ee1fb8f40e6e847dc7c3c905a88b6e5195e230e117b6223ad669af6c366",
+      "sourceFileCount": 310,
+      "measuredR7SourceSha256": "faa3a37ba01862375d03963a28325a971878fea049aacc9118e91c1d4a33da93",
+      "hostTests": 312,
+      "flutterTests": 340,
+      "nativeGuardTests": 33,
+      "explicitNativeIntegrationTests": 8,
+      "captureQualifierTests": 9,
+      "analyzer": "passed",
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sourceUnchanged": true,
+      "toolsUnchanged": true,
+      "physicalBenchmarkRerun": false,
+      "paidAllocation": false,
+      "checks": {
+        "host": {
+          "sha256": "bef360b2f495eb0362a68259f50a1fc07a013f415dfb2c00a8718b69e1f1da60"
+        },
+        "flutter": {
+          "sha256": "c37deb4f8a4bb594fe6b6b3213e4a6ba2028aebdd9b79cbe4681b828a1d0cf75"
+        },
+        "analyze": {
+          "sha256": "15a215911940a3a28242e5979e272cf729a209e789496b7ae58de098a5d1fcbe"
+        },
+        "native-guards": {
+          "sha256": "43fbeca494d4166f715e2b10d82491717a74f4048616aed7dbe16f1e6f464c60"
+        },
+        "native-integration": {
+          "sha256": "e3bbe33969da46f827be3af8d8c08ebb2204546562ff56430a9623b1b1e714e8"
+        },
+        "capture-qualifier": {
+          "sha256": "151cb74c75826aa8021a61f3a93447759f90ccd8498395cec36efee170bff44f"
+        }
+      },
+      "receiptSha256": "26f68bb19636c1ab20a64f6337dc453d1aafc5907fe618d2f79475b8e834a4cb"
+    },
+    "offlineRequalificationOfObservedR7": {
+      "schemaVersion": 1,
+      "scope": "offline-stricter-qualification-of-original-r7-observations",
+      "status": "passed",
+      "measuredR7MobileSourceSha256": "faa3a37ba01862375d03963a28325a971878fea049aacc9118e91c1d4a33da93",
+      "postReviewMobileSourceSha256": "de707ee1fb8f40e6e847dc7c3c905a88b6e5195e230e117b6223ad669af6c366",
+      "currentQualificationToolSha256": "cb04b7c15cec1973a89c0e22a06b74bcfd3e6881b5ec2038aa4ce35865a1914f",
+      "originalQualificationToolRecoveredSha256": "04b4eb20fb53cdcd035dc92159797e7ef4431a41d1d3cfdf56c92c4bf3d5eeb4",
+      "cases": [
+        {
+          "caseTag": "primary-a-r7",
+          "batchId": "reader_resolution_a_r1",
+          "qualification": "qualified",
+          "originalResultSha256": "40bd4599da1592f2b65fbc9f5793049041f330dd5b0b5029515987324937177c",
+          "requalifiedResultSha256": "9ba6c98a2740d41d7d0e4534abf823750ca3099f3e8c5284c754c608a583be98",
+          "originalLedgerSha256": "f9f802844fffdd3341e6de2f6452f9b52660b3b4c0455e2027a7343cd922c6e6",
+          "runBindingSha256": "588a7c36061814df761db8bf3fc3d7d6aa232cfd8b064d05687568e9325cf9b0",
+          "verificationReceiptSha256": "c9e4c446f1b0b0adab2d3aaeee225833479f8be72fbb16ddc83e17ad1978cd81",
+          "privateManifestSha256": "93c235a193191482a14154199cb6870128794f6dd71f3d8e42a2d2661a268e9b",
+          "publicManifestSha256": "37a6dd54b5d21f2f1066b727af27d6b7759802f7c2c5202229e2f53f701368e2",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": true
+        },
+        {
+          "caseTag": "primary-b-r7",
+          "batchId": "reader_resolution_b_r1",
+          "qualification": "qualified",
+          "originalResultSha256": "5c64d0bbae023784db28f94766f80a1557961597c7b4fc90f812384fbd403d75",
+          "requalifiedResultSha256": "fc7d365d423ec597c9b61e735076791c327ad0bb94e02d1563e8c113cbd1507e",
+          "originalLedgerSha256": "6ca3eaf18ab477c591fb0ec2bb3634a656c45c8c3307f0cb9e3bb8b0a5f62f55",
+          "runBindingSha256": "eff93c852b3d25ed22a87c50b4fc51b3da6ba82e69b03ae42f4b58fcb545bf71",
+          "verificationReceiptSha256": "94db4195a728847b907ed9a3ff7faa4dc21ccfab6fd9cf6bdca9263f8a03edd3",
+          "privateManifestSha256": "bdbe0c73123963039d01aea5040f581f516a506be581911d44ed7a2af61b28cb",
+          "publicManifestSha256": "591fc842c252053afe7b66a8c29139ced1df40f44858b9eb04511b646064529e",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": true
+        },
+        {
+          "caseTag": "primary-c-r7",
+          "batchId": "reader_resolution_c_r1",
+          "qualification": "qualified",
+          "originalResultSha256": "8315aa644a7395c52252c99741fb75f718eda93860e3ddf7196bcb894f1bd939",
+          "requalifiedResultSha256": "55f6cb6b1a58581292a550a6e7cb7b23236cdf2bd66b8cd203ec5b14d979c5e1",
+          "originalLedgerSha256": "84512e7bb2f5e192c7159999b15248f50e76ece37201fa1241a954cc83747000",
+          "runBindingSha256": "98005cdde7af50e188b2937876006806073612d6528a541d83caa113b3867f17",
+          "verificationReceiptSha256": "1efdcbdab11d918fa9f5c69ff398689b46f4d451a4cfef43e5417998a830ff87",
+          "privateManifestSha256": "b73ca998112fcbc3f9dea2c35b73161a7589019a903c0b8da14bff176a8f4e7b",
+          "publicManifestSha256": "437a9beb4ffe9e03eab2fd8d9ff6ed1892a28945620e7862f552e9975aa728f3",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": true
+        },
+        {
+          "caseTag": "quality-full",
+          "batchId": "reader_quality_full_r1",
+          "qualification": "awaiting_human_quality",
+          "originalResultSha256": "5df74996573acf222dc3793edb7d053b055d71db5727b913d8892547b155c194",
+          "requalifiedResultSha256": "5df74996573acf222dc3793edb7d053b055d71db5727b913d8892547b155c194",
+          "originalLedgerSha256": "9a8ee068d6b5cd060fcfc85ff4fe0e0050621ce6ce22bf1a5dfdd91a414e7a7e",
+          "runBindingSha256": "41d67d940c66ba5631f63f6182a971a37d98c99be5355590aaf218a279bc6685",
+          "verificationReceiptSha256": "0aaa04b9fe8d52e25ce07c088fe448620c08d1765cb281987185592224bb2acd",
+          "privateManifestSha256": "5ccea066c680543e2e6d93137606feea5fe78e5e28d85f0bbe5e31a71d2228b6",
+          "publicManifestSha256": "47f0afafce668e17b99fe6590953c301faea5af3a54900c51602aab93f6f2da9",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": false
+        },
+        {
+          "caseTag": "quality-100-r2",
+          "batchId": "reader_quality_100_r1",
+          "qualification": "awaiting_human_quality",
+          "originalResultSha256": "00dc8ec8838b0e3fc4f7f7e063bf5909d0348bd0a3f4c8f63960a83859422d10",
+          "requalifiedResultSha256": "00dc8ec8838b0e3fc4f7f7e063bf5909d0348bd0a3f4c8f63960a83859422d10",
+          "originalLedgerSha256": "7f8409d623f0e79486a6a772fab0107a20d13f4db954a5255ca882fbb91e0157",
+          "runBindingSha256": "560eda6b422f4af44829505bada3c053168aba0107a1f98ac270e1ddeb8e0b51",
+          "verificationReceiptSha256": "25749c2a34fe095e16d55219b7c0d41ae175cae8b82f4b97d923c933d5580e3b",
+          "privateManifestSha256": "8c198fb3d7f959c55ce3c2b39fe6662e65354ae0e629567289d3dd29a71a10b1",
+          "publicManifestSha256": "8b0e4de0a6d83b1e75399079b7805d6460462f06d87ad098f92b6ddba5c72368",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": false
+        },
+        {
+          "caseTag": "quality-075",
+          "batchId": "reader_quality_075_r1",
+          "qualification": "awaiting_human_quality",
+          "originalResultSha256": "b4a09239db7840e7d38e7a68f6ca454fccfc00891b2634205127923692988659",
+          "requalifiedResultSha256": "b4a09239db7840e7d38e7a68f6ca454fccfc00891b2634205127923692988659",
+          "originalLedgerSha256": "bb703576c7d249e5bdf3557527d7ebebc5e1975f3bc3e1abd99dd6931e885f31",
+          "runBindingSha256": "d8ed9ebc430ccbd684d467a5825db80b6629f4627d02ec4a39e177d804bfb863",
+          "verificationReceiptSha256": "f439f21c5bec2d79c2aa33d6aeb97dfd14ce7401caac2a43e1b15b2db41524e9",
+          "privateManifestSha256": "d2d0902ccbaf25204b36a3d86cb22b03db31f88d5b56722f136858cab472a5b2",
+          "publicManifestSha256": "8fd64755c024892c1b6475a73a30c0d1d6febde3d054b91bcc9932c97798f116",
+          "allPriorResultFieldsEqual": true,
+          "onlyNewZeroCrossingFields": false
+        }
+      ],
+      "primariesStillQualified": 3,
+      "qualityCasesStillSourceBoundAwaitingSeparateHumanVerdict": 3,
+      "humanVerdictRecordedSeparately": true,
+      "originalResultsOverwritten": false,
+      "newGeometryOrDeviceObservation": false,
+      "nativeCommands": false,
+      "cloudAllocation": false,
+      "allInputFilesPreserved": true,
+      "receiptSha256": "4092e5b3089456cc1e4baadf7fca9073da9e7c9cdd0f16497efb8da1fdcb3f19"
+    },
+    "priorFailedAttemptsPreserved": {
+      "firstFullHost": "one pre-existing cleanup EPERM, unchanged function; isolated test and full312 rerun passed",
+      "captureWrapper": "all9 methods passed; historical main post-test receipt writer referenced removed tmp file; discovery completed9 successfully",
+      "nativeFocusedInfrastructure": "prior ENOSPC attempt not counted as success; temporary logs were removed with the temporary working copy; fresh8-case integration passed after restoration"
+    },
+    "realCacheMutationProof": {
+      "receiptSha256": "01807c21da91f098898c468b03eb6feb9f9f7b919b87276ee72e735e60c6ab83",
+      "mutants": 2,
+      "expectedFailures": 2,
+      "infrastructureFailures": false,
+      "repositoryUnchanged": true
+    },
+    "formalReview": {
+      "status": "complete_patches_verified",
+      "freshContextFreeLayers": 3,
+      "patchFindingsResolved": 10,
+      "preexistingDeferredFindings": 1,
+      "reportLabel": "p0d-reader-resolution-review.json"
+    }
+  },
+  "preservedFailures": {
+    "previousIosReaderAttempts": [
+      {
+        "attemptLabel": "primary-a",
+        "qualification": "failed",
+        "reason": "tool_failed",
+        "failureSha256": "b54aa66179f9f5cf21d3163d48784b91f8b1f039ed73c9a249dd55beb8ac9e32",
+        "runBindingSha256": "58120c05d4f074119fe5fe9d117bfd471ebffd767751f0c71e09f065ac5d0851",
+        "verificationSha256": null,
+        "sourceSha256": null,
+        "readerMeasurementsAccepted": false,
+        "geometryUsedForCandidates": false
+      },
+      {
+        "attemptLabel": "primary-a-r3",
+        "qualification": "failed",
+        "reason": "tool_failed",
+        "failureSha256": "b54aa66179f9f5cf21d3163d48784b91f8b1f039ed73c9a249dd55beb8ac9e32",
+        "runBindingSha256": "3f0df833417201d6d1e4acdaa86bf56981d9f54287e4b2641ae3f6590cb14031",
+        "verificationSha256": null,
+        "sourceSha256": null,
+        "readerMeasurementsAccepted": false,
+        "geometryUsedForCandidates": false
+      },
+      {
+        "attemptLabel": "primary-a-r3b",
+        "qualification": "failed",
+        "reason": "tool_failed",
+        "failureSha256": "b54aa66179f9f5cf21d3163d48784b91f8b1f039ed73c9a249dd55beb8ac9e32",
+        "runBindingSha256": "597e456e3ced7f7ee3a2a21b0a67c7ecd36d7c6bb671ad9ef4fd5aeee454f992",
+        "verificationSha256": null,
+        "sourceSha256": null,
+        "readerMeasurementsAccepted": false,
+        "geometryUsedForCandidates": false
+      },
+      {
+        "attemptLabel": "primary-a-r4",
+        "qualification": "failed",
+        "reason": "tool_failed",
+        "failureSha256": "b54aa66179f9f5cf21d3163d48784b91f8b1f039ed73c9a249dd55beb8ac9e32",
+        "runBindingSha256": "2360faaf7646250d53b01c3e5f402141c1792ad67a9cbc9c44d3a3482a305135",
+        "verificationSha256": null,
+        "sourceSha256": null,
+        "readerMeasurementsAccepted": false,
+        "geometryUsedForCandidates": false
+      }
+    ],
+    "r4SceneRestoration": {
+      "exception": "EXC_CRASH/SIGABRT during NSUserActivity default initialization in Flutter state restoration",
+      "crashSha256": "7858213a93ab8abc0ffee126af95f66d691c672feae3da71dd8046d6ebda21a3",
+      "boundDiagnosisSha256": "d1b6ae583e7c642fc58105e81cb7ca3e980e837002b679b00cdbb82b364ca012",
+      "exceptionReason": null,
+      "runtimeSceneConfigurationName": null,
+      "jetsam": false,
+      "staleCopiedLedgerExcludedReceiptSha256": "d464d8078696fa857f3502020ca4ce65c781be59fe28c55a9ce4e5a096837395",
+      "correction": "stable private activity only when absent, then ordinary Flutter forwarding; audit mode unchanged"
+    },
+    "r5LedgerLoss": {
+      "scope": "reader-extension-native-complete-ledger-loss-exclusion",
+      "status": "unqualified",
+      "reason": "reader_ledger_capacity",
+      "sourceSha256": "4133f384883df993dc2dba1ec5be1390f29ebd2652d4a533a1594f2013f315c9",
+      "ledgerSha256": "38eb800bdab39e437acdbfe998355b9e652f8451f264c6e42ed81936114f4c05",
+      "verificationSha256": "fbcb52f63c4bfffec43f23d090c1e0678389f7ad255714ff06642c0df69de749",
+      "ledgerBytes": 249620,
+      "records": 402,
+      "droppedCount": 16,
+      "nativeExecution": "settled_TEST_EXECUTE_SUCCEEDED",
+      "readerGeometryUsedForCandidates": false,
+      "readerMemoryComparisonQualified": false,
+      "originalLimitsUnchanged": {
+        "rows": 512,
+        "bytes": 250000
+      },
+      "automaticRetry": false,
+      "newCloudWindows": 0
+    },
+    "r6PreexistingSqliteReadiness": {
+      "baselineFailureReceiptSha256": "53f7c99d6d5b2b15b676b0d800e36900c3bb0a6358a574328f669cdfa66ecad0",
+      "oldSourceAlsoFailed": true,
+      "newRecorderRegressionProven": false,
+      "causalProofReceiptSha256": "3b0a8dbad74341541651a196e8046b4d6243b4d5aa41517b6691a699cba242bc",
+      "correction": "await existing metadata opening future before enumeration and preserve the original opening error during cleanup",
+      "fixedFullFlutterSuitePassed": true
+    },
+    "quality100Predispatch": {
+      "receiptSha256": "8d1eb7a5711c7ba8cc9f19e838b4d117dc11126b0c679ce82fb0802bce48a844",
+      "scope": "reader-extension-local-quality-pre-dispatch-failure",
+      "status": "unrun",
+      "batchId": "reader_quality_100_r1",
+      "reason": "read_only_IAM_policy_25second_timeout",
+      "failureSha256": "d43ca551f39daaec7bf62a5e5f0cfdad49b8c971cd1bd192b607417eee2286a1",
+      "timeoutCommandSha256": "e7771d2b568e5acbf427e32408bdc6477124804549880999392541e65dec553e",
+      "nativeReaderDispatched": false,
+      "newCloudWindowAllocated": false,
+      "guardsChanged": false,
+      "originalAttemptPreserved": true,
+      "subsequentCaseTag": "quality-100-r2",
+      "subsequentResult": "two_source_bound_captures_human_verdict_pending"
+    }
+  },
+  "cleanup": {
+    "cloudCurrentPrincipalStates": {
+      "FINISHED": 34
+    },
+    "localOwnedBackend": "closed_pid_absent",
+    "localOwnedBrokers": "closed_all31_recorded_actual_addresses_and_kernel_listeners_verified",
+    "privateEvidenceArchive": {
+      "status": "verified",
+      "archiveLabel": "reader-extension-final-evidence-r1.tar.gz",
+      "archiveSha256": "03347b93bf9992bc21079d6fe9e268e90705b08e6b33736c585f48d067316211",
+      "archiveBytes": 1324435634,
+      "receiptSha256": "612bb99faafed130207e9de2685284b79af34e8850231597f8e237c7ef69d1d4",
+      "logicalFileCount": 36578,
+      "entries": 48139,
+      "allLogicalFileHashesVerified": true,
+      "allSymlinkTargetsVerified": true,
+      "liveOwnedCurrentIdTokenExcludedByRemoval": true,
+      "workingCopyRecovery": {
+        "scope": "reader-extension-recovery-from-verified-private-archive",
+        "status": "restored",
+        "archiveSha256": "03347b93bf9992bc21079d6fe9e268e90705b08e6b33736c585f48d067316211",
+        "restoredEntries": 48139,
+        "restoredLogicalFiles": 36578,
+        "allRestoredFileHashesVerified": true,
+        "allSymlinkTargetsVerified": true,
+        "liveTokenRestored": false,
+        "archivePreserved": true,
+        "causeOfTemporaryDirectoryRemoval": "unavailable",
+        "elapsedSeconds": 55.792603969573975,
+        "receiptSha256": "8a412d1525372f9837ef84b32492c87bd026169c3927a60c146781eb77c857a6"
+      },
+      "sourceArtifactsRemovedAtPackaging": false
+    },
+    "sharedDatabase": "left running",
+    "localListenerReceiptSha256": "7de9ea8e3d934f97d1ff027ecd46eb4ade9622de0cc42cfe201b6d6f48472827",
+    "configuredEndpointCount": 31,
+    "reachableConfiguredEndpoints": 0,
+    "allAddressesKernelListenMatches": 0,
+    "ownedCurrentLoginToken": "removed_existing_credentials_unchanged",
+    "postReviewPrivateEvidenceSupplement": {
+      "schemaVersion": 1,
+      "scope": "post-review-private-evidence-supplement",
+      "status": "verified",
+      "archiveSha256": "98981f49c809eb058e7c89d4d057e791ce4cf5afef9d27858c0eec467cddfebe",
+      "archiveBytes": 39773439,
+      "indexSha256": "c414200066a99524fd692b2edf114d40bc301f082652ff56952c03dbe730f770",
+      "baseArchiveSha256": "03347b93bf9992bc21079d6fe9e268e90705b08e6b33736c585f48d067316211",
+      "entries": 1933,
+      "logicalFileCount": 1424,
+      "logicalBytes": 141101434,
+      "deduplicatedHardlinks": 576,
+      "allLogicalFileHashesVerified": true,
+      "allSymlinkTargetsVerified": true,
+      "sourceUnchanged": true,
+      "toolsUnchanged": true,
+      "currentMobileSourceSha256": "de707ee1fb8f40e6e847dc7c3c905a88b6e5195e230e117b6223ad669af6c366",
+      "liveOwnedTokenAbsent": true,
+      "sourceArtifactsRemoved": false,
+      "archiveLabel": "reader-extension-post-review-supplement-r1.tar.gz",
+      "receiptSha256": "4ce87217ec6d8f439ad2bec9f878715a8474ac2ff7276320a631b03b66aabeb0"
+    }
+  },
+  "evidence": {
+    "final_readonly_reconciliation": {
+      "sha256": "ded5e92a7d8e85ad13c67df1e58ba516061f94f0292e74670ba790be9b33ced7",
+      "artifactLabel": "final-reconciliation.json",
+      "access": "private_original_retained"
+    },
+    "a_operator_failure": {
+      "sha256": "6e0ee8d96360f9c4be946f080c575173f83a5d36a4bcc4eafded049989e9fd56",
+      "artifactLabel": "operator-failure.json",
+      "access": "private_original_retained"
+    },
+    "a_authoritative_create_response": {
+      "sha256": "018cb3c1848e0f74171de6ed0143b0636766b7b4ec014273e9607f95220fa24b",
+      "artifactLabel": "create.raw",
+      "access": "private_original_retained"
+    },
+    "a_successful_post_metadata": {
+      "sha256": "6ef71e71a2e59808a09d0e4cd559dd2e91add36b5d30ed5ebee22c74f317d3bc",
+      "artifactLabel": "create.json",
+      "access": "private_original_retained"
+    },
+    "a_owned_cleanup": {
+      "sha256": "284dbd9ceff9e5b8677e9f12346804678b1beb8e0ddaf59ddfe115dfc3c6642a",
+      "artifactLabel": "cleanup-receipt.json",
+      "access": "private_original_retained"
+    },
+    "a_retained_six_minute_debit": {
+      "sha256": "8cd8656582c76863e52a9b5d0b376fc1df9adf819bd0a37652d3657a3172aa33",
+      "artifactLabel": "budget-debit.json",
+      "access": "private_original_retained"
+    },
+    "a_device_os_facts": {
+      "sha256": "77a9f0d637162af540c113fac1acd314a708587235b9958f96485c32cebe7d81",
+      "artifactLabel": "device-receipt.json",
+      "access": "private_original_retained"
+    },
+    "a_physical_admission": {
+      "sha256": "b8703826f5cd4130008a834fd5a29587904397ce3e0a22cd1f262915f538dd99",
+      "artifactLabel": "physical-admission-evidence.json",
+      "access": "private_original_retained"
+    },
+    "a_readonly_clock_failure": {
+      "sha256": "411605d3ed65f5f94ac46ef28926f0dd5593a1577fc975e9c8646943b599f85d",
+      "artifactLabel": "read-only-utc-consistency-failure.json",
+      "access": "private_original_retained"
+    },
+    "c_explicit_unrun": {
+      "sha256": "23888cb089e71996697f037cc666c02b98d9d9b33867fbee061c5c2417bb7b10",
+      "artifactLabel": "unrun-reader_resolution_c_r1-actual-a-clock-refusal.json",
+      "access": "private_original_retained"
+    },
+    "android_r3_build": {
+      "sha256": "b506d49b52bafadabdbe4f26b75d41af0bf6c2c45a45a00b7abd209a5bb2c689",
+      "artifactLabel": "build-receipt.json",
+      "access": "private_original_retained"
+    },
+    "final_catalog": {
+      "sha256": "2eae44013be13a8d8dd23ede8f438cdb818e09cb488c3c5ad6bddb1c1661dc23",
+      "artifactLabel": "catalog.raw",
+      "access": "private_original_retained"
+    },
+    "final_usage": {
+      "sha256": "09010c116f916a58244b9ecfb2f53b913e088231bbe6d2a907f0057462058fc5",
+      "artifactLabel": "month-usage.raw",
+      "access": "private_original_retained"
+    },
+    "final_current_principal_inventory": {
+      "sha256": "bcd1c9b5ec1f1ceb3563a837bf14ffb8f61f39638fdff3c2cbe1ed1759ce095e",
+      "artifactLabel": "current-principal-sessions.raw",
+      "access": "private_original_retained"
+    },
+    "unused_c_preview": {
+      "sha256": "1ee862e53f39595ed1e01842241c958f24e7891300a137ea7df385f1d7c0a00b",
+      "artifactLabel": "reader-budget-preview.json",
+      "access": "private_original_retained"
+    },
+    "frozen_other_services_baseline": {
+      "sha256": "bc62a7cb8b1851a27fc4cf8c64dd66fdcf64153726beb3d6e835c1e23cd2ef22",
+      "artifactLabel": "frozen-other-services-cost.json",
+      "access": "private_original_retained"
+    }
+  },
+  "interpretationLimits": [
+    "One observation per arm on one iPhone; no repeatability, confidence interval or P95.",
+    "Observed first-page target-paint time is on the Dart monotonic clock; no raster-complete or physical-presentation timing.",
+    "Scripted forward/back/rapid selection and one real OS background/return are not gesture, enlarged-text, rotation or narrated-reader qualification.",
+    "B/C actual decode dimensions and resampling may differ; A/C combines resolution and decode.",
+    "Sampled process maxima are not true peaks; GPU/package retention and leak conclusions are unknown.",
+    "Natural retention and QA-owned eviction are separate; no zero/unavailable equivalence.",
+    "Only verified PNG payload bytes are counted; status, TLS and network overhead are excluded.",
+    "No JPEG/WebP performance/quality or fleet/old-phone safety claim follows.",
+    "Android was not installed or entered natively; no low-memory reader comparison was obtained.",
+    "Budget is the retained conservative model, not an invoice or account spending lock; later other-services spend is unknown.",
+    "FrameTiming batches are attributed to callback delivery phase; a delayed batch can include frames from an earlier phase. Exact frame occurrence-phase aggregates are unavailable."
+  ],
+  "productionRollout": false,
+  "applicationSourceRole": "observed_r7_release_build"
+}

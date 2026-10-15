@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "scope": "reader-resolution-extension-formal-review-r1",
+  "status": "complete_patches_verified",
+  "reviewContext": "three_fresh_context_free_agents_same_session_model",
+  "baselineCommit": "4721dccf090b29ce7b2d773d789873dbfbb324ae",
+  "reviewedDiffSha256": "bbfd63dc6bded5704c515fbb2c2bbff28ae3fde92e499830fda60434354ab288",
+  "reviewedDiffBytes": 536377,
+  "blindHunter": "No actionable findings.",
+  "findings": [
+    {
+      "id": "EH1",
+      "severity": "high",
+      "category": "patch",
+      "location": "tools/image-optimization/reader_resolution_experiment.py",
+      "finding": "A native read crossing a phase boundary can disappear from phase summaries, including a null read.",
+      "requiredAction": "Report boundary-crossing reads explicitly and disqualify ambiguous memory phases.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "EH2",
+      "severity": "high",
+      "category": "patch",
+      "location": "tools/image-optimization/reader_resolution_experiment.py",
+      "finding": "Lifecycle counts can qualify without ordered integer background/return timestamps.",
+      "requiredAction": "Require timestamp presence/order and preserve explicit unavailable lifecycle evidence.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "EH3",
+      "severity": "medium",
+      "category": "patch",
+      "location": "app/mobile/lib/features/image_experiment/presentation/cubit/reader_resolution_cubit.dart",
+      "finding": "Quality-binding retirement failure can bypass owned cleanup and Cubit close.",
+      "requiredAction": "Run all owned cleanup while preserving the retirement error and coalesced close.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "EH4",
+      "severity": "medium",
+      "category": "patch",
+      "location": "app/mobile/lib/features/image_experiment/presentation/cubit/reader_resolution_observation.dart",
+      "finding": "Batched FrameTiming delivery can cross phase boundaries; recorded phase is callback delivery phase.",
+      "requiredAction": "Clarify reporting and machine-readable interpretation; do not infer exact frame-occurrence-phase counts/maxima.",
+      "status": "resolved_reporting_clarification",
+      "verification": "Explicit callback-delivery-phase metadata and limitation in public results/findings."
+    },
+    {
+      "id": "EH5",
+      "severity": "medium",
+      "category": "patch",
+      "location": "tools/image-optimization/reader_resolution_experiment.py",
+      "finding": "Finite geometry operands can overflow during physical-demand multiplication before ceil.",
+      "requiredAction": "Reject non-finite products through the structured refusal path.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "VG1",
+      "severity": "medium",
+      "category": "patch",
+      "location": "app/mobile/test/image_experiment/reader_resolution_test.dart",
+      "finding": "Fake providers do not exercise the real reader cache six-provider capacity branch.",
+      "requiredAction": "Add real-cache six-provider/capacity regression coverage.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "VG2",
+      "severity": "medium",
+      "category": "patch",
+      "location": "app/mobile/test/image_experiment/reader_resolution_test.dart",
+      "finding": "1x1 fake providers do not distinguish real full and bounded decode branches.",
+      "requiredAction": "Decode a synthetic PNG larger than the target through the real A/B cache providers.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "VG3",
+      "severity": "medium",
+      "category": "patch",
+      "location": "tools/image-optimization/test_native_reader_probes.py",
+      "finding": "Policy/helper tests and SDK compilation do not exercise accepted Activity callbacks through the lifecycle channel.",
+      "requiredAction": "Add accepted actual-Activity host-harness callback/channel coverage, clearly synthetic.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "VG4",
+      "severity": "high",
+      "category": "patch",
+      "location": "tools/image-optimization/reader_resolution_experiment.py",
+      "finding": "Primary qualification accepts a ledger without the required forward/back/rapid reader selection journey.",
+      "requiredAction": "Validate the bound primary selection sequence and rapid journey; quality keeps its separate two-page contract.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    },
+    {
+      "id": "VG5",
+      "severity": "medium",
+      "category": "patch",
+      "location": "tools/image-optimization/test_native_reader_probes.py",
+      "finding": "SDK-dependent probes entered the documented SDK-free test_native*.py default discovery.",
+      "requiredAction": "Separate explicit native integration discovery from the portable default and document prerequisites.",
+      "status": "resolved_and_verified",
+      "verification": "Complete local verification and focused regression evidence; original physical observations independently requalified offline."
+    }
+  ],
+  "intentGap": 0,
+  "badSpec": 0,
+  "deferred": 1,
+  "measuredR7EvidencePreserved": true,
+  "newPaidAllocations": 0,
+  "humanQualityAccepted": true,
+  "smallestAcceptedTestedQualityFactor": 0.75,
+  "deferredFindings": [
+    {
+      "severity": "medium",
+      "category": "defer",
+      "location": "tools/image-optimization/native_entry_driver.py:capture_observation finally",
+      "summary": "pre-existing process-group cleanup EPERM can mask bounded-observation error",
+      "baselineFunctionByteEquality": true,
+      "baselineCommit": "4721dccf090b29ce7b2d773d789873dbfbb324ae",
+      "firstFullHostRun": "312 tests, one error",
+      "isolatedRetest": "passed",
+      "secondFullHostRun": "312 passed, unchanged source",
+      "rootCause": "unavailable",
+      "auditReceiptSha256": "66c967173ef835dd277e26ba15c76d603c17f0090f8be0f2aa32c1694aad6096",
+      "deferredWorkRecorded": true
+    }
+  ],
+  "implementationSourceSha256": "de707ee1fb8f40e6e847dc7c3c905a88b6e5195e230e117b6223ad669af6c366",
+  "fullVerificationReceiptSha256": "26f68bb19636c1ab20a64f6337dc453d1aafc5907fe618d2f79475b8e834a4cb",
+  "realCacheMutationProofReceiptSha256": "01807c21da91f098898c468b03eb6feb9f9f7b919b87276ee72e735e60c6ab83",
+  "realCacheMutants": {
+    "capacity6To4": "expected_failure_attempt_capacity",
+    "fullArmAlwaysResize": "expected_failure_actual_decode_width1_expected12",
+    "infrastructureFailures": false,
+    "repositoryUnchanged": true
+  },
+  "allPatchFindingsResolved": true,
+  "newPhysicalBenchmarksAfterReview": false,
+  "verifiedPrivateSupplement": {
+    "archiveSha256": "98981f49c809eb058e7c89d4d057e791ce4cf5afef9d27858c0eec467cddfebe",
+    "allLogicalFileHashesVerified": true,
+    "allSymlinkTargetsVerified": true,
+    "sourceUnchanged": true
+  }
+}

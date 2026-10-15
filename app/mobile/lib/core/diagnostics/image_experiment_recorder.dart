@@ -3,6 +3,10 @@ import 'package:crypto/crypto.dart';
 
 /// Finite private ledger. Unknown fields and arbitrary strings are refused.
 class ImageExperimentRecorder {
+  ImageExperimentRecorder({bool includeLegacyCounterPlaceholders = true})
+    : _includeLegacyCounterPlaceholders = includeLegacyCounterPlaceholders;
+
+  final bool _includeLegacyCounterPlaceholders;
   final _clock = Stopwatch()..start();
   final _records = <Map<String, Object?>>[];
   // Reserve framing, separators and the explicit loss counter inside the byte cap.
@@ -17,6 +21,9 @@ class ImageExperimentRecorder {
     'referenceSha256',
     'settingsSha256',
     'scopeSha256',
+    'modelSha256',
+    'abisSha256',
+    'deviceFactsSha256',
   };
   static const _intKeys = {
     'generation',
@@ -52,6 +59,21 @@ class ImageExperimentRecorder {
     'sampleStartMicroseconds',
     'sampleEndMicroseconds',
     'sampleCadenceMicroseconds',
+    'pageIndex',
+    'selectionGeneration',
+    'decodedKeepAliveCount',
+    'frameCount',
+    'frameBuildTotalMicroseconds',
+    'frameRasterTotalMicroseconds',
+    'frameBuildMaxMicroseconds',
+    'frameRasterMaxMicroseconds',
+    'apiLevel',
+    'memTotalBytes',
+    'memoryClassMiB',
+    'backgroundCount',
+    'returnCount',
+    'backgroundEpochMilliseconds',
+    'returnedEpochMilliseconds',
   };
   static const _doubleKeys = {
     'logicalSlotWidth',
@@ -62,11 +84,23 @@ class ImageExperimentRecorder {
     'observedSlotWidth',
     'observedSlotHeight',
     'observedDpr',
+    'textScaleFactor',
+    'paddingLeft',
+    'paddingTop',
+    'paddingRight',
+    'paddingBottom',
+    'viewInsetLeft',
+    'viewInsetTop',
+    'viewInsetRight',
+    'viewInsetBottom',
   };
   static const _boolKeys = {
     'encodedVerified',
     'sourceShortage',
     'physicalPresentationVerified',
+    'lowRamDevice',
+    'isPhysicalDevice',
+    'backgrounded',
   };
   static const _strings = <String, Set<String>>{
     'phase': {
@@ -77,6 +111,9 @@ class ImageExperimentRecorder {
       'releasing',
       'post_release',
       'complete',
+      'reader',
+      'natural_retention',
+      'owned_eviction',
     },
     'memoryCounter': {'ios_phys_footprint', 'android_total_pss', 'unavailable'},
     'memoryReason': {
@@ -92,6 +129,16 @@ class ImageExperimentRecorder {
     'clockDomain': {'dart_monotonic'},
     'clockUnit': {'microseconds'},
     'fit': {'contain', 'cover'},
+    'orientation': {'portrait', 'landscape'},
+    'platform': {'ios', 'android'},
+    'deviceReason': {
+      'none',
+      'unsupported',
+      'read_failed',
+      'invalid_value',
+      'unavailable',
+    },
+    'qemu': {'0', '1', 'unavailable'},
     'role': {'isolated_raster_fixture'},
     'event': {
       'request',
@@ -111,6 +158,12 @@ class ImageExperimentRecorder {
       'release_complete',
       'layout',
       'dispatch',
+      'reader_geometry',
+      'reader_selection',
+      'page_paint',
+      'frame_aggregate',
+      'device_facts',
+      'lifecycle',
     },
     'ownership': {'owned', 'settling', 'settled', 'released', 'unavailable'},
     'reason': {
@@ -136,6 +189,9 @@ class ImageExperimentRecorder {
       'phase_budget_refused',
       'load_timeout',
       'layout_unavailable',
+      'lifecycle_unavailable',
+      'device_facts_unavailable',
+      'reader_incomplete',
     },
     'counterReason': {
       'missing_counter',
@@ -163,19 +219,20 @@ class ImageExperimentRecorder {
         'monotonicMicroseconds': monotonicMicroseconds,
         'clockDomain': 'dart_monotonic',
         'clockUnit': 'microseconds',
-        for (final counter in [
-          'dartHeapBytes',
-          'dartExternalBytes',
-          'decodedLruBytes',
-          'decodedLiveCount',
-          'decodedPendingCount',
-          'processBytes',
-          'nativeBytes',
-          'graphicsBytes',
-          'diskBytes',
-          'transferBytes',
-        ])
-          counter: null,
+        if (_includeLegacyCounterPlaceholders)
+          for (final counter in [
+            'dartHeapBytes',
+            'dartExternalBytes',
+            'decodedLruBytes',
+            'decodedLiveCount',
+            'decodedPendingCount',
+            'processBytes',
+            'nativeBytes',
+            'graphicsBytes',
+            'diskBytes',
+            'transferBytes',
+          ])
+            counter: null,
         'counterReason': 'missing_counter',
       };
       for (final entry in input.entries) {
@@ -192,7 +249,11 @@ class ImageExperimentRecorder {
         } else if (_doubleKeys.contains(key)) {
           if (value is! num || !value.isFinite) return;
         } else if (_boolKeys.contains(key)) {
-          if (value is! bool) return;
+          if (value is! bool &&
+              !(value == null &&
+                  const {'lowRamDevice', 'isPhysicalDevice'}.contains(key))) {
+            return;
+          }
         } else if (_strings.containsKey(key)) {
           if (value is! String || !_strings[key]!.contains(value)) return;
         } else {
