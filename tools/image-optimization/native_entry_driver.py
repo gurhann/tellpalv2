@@ -745,7 +745,7 @@ def validate_entry_outcome(broker, pairing):
             "nativeResult": "settled", "teardown": "authenticated_app_revoke_observed"}
 
 
-def validate_physical_prerequisites(config, build_path, prerequisite_path):
+def validate_physical_prerequisites(config, build_path, prerequisite_path, *, sequential_lease=None):
     build = strict_json(private_file(build_path, 2 * 1024 * 1024), 2 * 1024 * 1024)
     require(type(build) is dict, "build_binding_rejected")
     proof = strict_json(private_file(prerequisite_path))
@@ -763,12 +763,16 @@ def validate_physical_prerequisites(config, build_path, prerequisite_path):
         require(proof[name] is True, "physical_prerequisite_unavailable")
     require(type(proof["observedAt"]) is int and int(time.time() * 1000) - 300000 <= proof["observedAt"] <= int(time.time() * 1000), "device_receipt_stale")
     if values["platform"] == "ios":
+        require(sequential_lease is None, "reader_sequential_lease_rejected")
         require(proof["deviceModel"] == "iPhone 12" and proof["provider"] == "local" and
             proof["reservationExpiresAt"] is None and proof["reservationReceiptSha256"] is None, "device_selection_rejected")
-    else:
+    elif sequential_lease is None:
         require(proof["provider"] == "android_device_streaming" and proof["quotaVerified"] is True and
             type(proof["reservationExpiresAt"]) is int and proof["reservationExpiresAt"] > int((time.time() + 195) * 1000) and
             type(proof["reservationReceiptSha256"]) is str and HASH.fullmatch(proof["reservationReceiptSha256"]), "reservation_unavailable")
+    else:
+        from reader_android_window import validate_lease
+        validate_lease(sequential_lease, values, build, proof)
     for name in ("artifactSha256", "testArtifactSha256", "certificateSha256"):
         require(type(proof[name]) is str and HASH.fullmatch(proof[name]) and proof[name] == build.get(name), "artifact_binding_rejected")
     sources, source_hash = source_snapshot()
@@ -788,12 +792,18 @@ def validate_physical_prerequisites(config, build_path, prerequisite_path):
     return build, proof
 
 
-def verify_entry(config, manifest, output, deadline, *, case_id, build_path, prerequisite_path, quality_capture=False):
+def verify_entry(config, manifest, output, deadline, *, case_id, build_path, prerequisite_path,
+        quality_capture=False, sequential_lease=None):
     """Launch only already-installed bound artifacts after private prerequisite admission."""
     require(case_id in manifest.objects, "unknown_case")
     require(type(quality_capture) is bool and (not quality_capture or config.values["batchId"] == "native_quality_r1" or
         is_reader_batch(config.values["batchId"]) and config.values["batchId"].startswith("reader_quality_")), "capture_selection_rejected")
-    build, proof = validate_physical_prerequisites(config, build_path, prerequisite_path)
+    if sequential_lease is not None:
+        from reader_android_window import SequentialAndroidLease
+        require(type(sequential_lease) is SequentialAndroidLease and
+            deadline == sequential_lease.deadline, "reader_sequential_lease_rejected")
+    build, proof = validate_physical_prerequisites(config, build_path, prerequisite_path,
+        **({'sequential_lease': sequential_lease} if sequential_lease is not None else {}))
     backend_hash = validate_backend_startup(config)
     verifier = FirebaseVerifier(config)
     broker, server, thread, pairing = None, None, None, None
@@ -822,6 +832,8 @@ def verify_entry(config, manifest, output, deadline, *, case_id, build_path, pre
             command = ["xcodebuild", "-xctestrun", str(run_file), "-destination", "id=" + values["deviceSelector"],
                 "test-without-building", "-only-testing:ImageExperimentUITests/" + FIXTURE_TEST]
             launch_env = tool_environment()
+        if sequential_lease is not None:
+            sequential_lease.require_full_entry_budget()
         checked_run(command, output, "launcher", deadline=deadline, on_line=pairing, env=launch_env)
         outcome = validate_entry_outcome(broker, pairing)
         receipt = {"schemaVersion": 1, "scope": SCOPE, "deviceAlias": values["deviceAlias"], "platform": values["platform"],

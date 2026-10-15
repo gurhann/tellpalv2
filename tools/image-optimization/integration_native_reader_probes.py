@@ -437,6 +437,8 @@ class XCUIElement {
 import Foundation
 enum ImageExperimentRefusal: Error { case refused }
 func entries(_ batch: String) -> [[String: Any]] { (1...(ImageExperimentReaderPolicy.qualityBatches.contains(batch) ? 2 : 6)).map { ["caseId": "reader_page_\($0)", "mime": "image/png", "purposeAcceptanceReceipt": batch] } }
+precondition(ImageExperimentReaderPolicy.primaryBatches == Set(["reader_resolution_a_r1", "reader_resolution_b_r1", "reader_resolution_c_r1", "reader_resolution_075_r1"]))
+precondition(!ImageExperimentReaderPolicy.qualityBatches.contains("reader_resolution_075_r1"))
 for batch in ImageExperimentReaderPolicy.batches {
   precondition(ImageExperimentReaderPolicy.accepts(batch: batch, selected: "reader_page_1", entries: entries(batch)))
   var wrong = entries(batch); wrong.swapAt(0, 1)
@@ -508,6 +510,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 fun entries(batch: String) = JSONArray((1..(if (batch in ImageExperimentReaderPolicy.qualityBatches) 2 else 6)).map { JSONObject(mapOf("caseId" to "reader_page_$it", "mime" to "image/png", "purposeAcceptanceReceipt" to batch)) })
 fun main() {
+  check(ImageExperimentReaderPolicy.primaryBatches == setOf("reader_resolution_a_r1", "reader_resolution_b_r1", "reader_resolution_c_r1", "reader_resolution_075_r1"))
+  check("reader_resolution_075_r1" !in ImageExperimentReaderPolicy.qualityBatches)
   for (batch in ImageExperimentReaderPolicy.batches) {
     check(ImageExperimentReaderPolicy.accepts(batch, "reader_page_1", entries(batch)))
     check(!ImageExperimentReaderPolicy.accepts(batch, "reader_page_2", entries(batch)))

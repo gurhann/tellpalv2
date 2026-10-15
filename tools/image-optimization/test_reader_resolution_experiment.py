@@ -60,21 +60,21 @@ class ReaderSourceTests(unittest.TestCase):
         path.chmod(0o600)
         return path
 
-    def synthetic_sources(self):
+    def synthetic_sources(self, size=(3, 5)):
         records, references, archive = [], [], BytesIO()
         with zipfile.ZipFile(archive, 'w') as stream:
             for index in range(1, 19):
-                image = Image.new('RGB', (3, 5), (index, 40, 80))
+                image = Image.new('RGB', size, (index, 40, 80))
                 encoded = BytesIO(); image.save(encoded, format='PNG')
                 content = encoded.getvalue(); source = reader.digest(content)
-                raw = reader.MAGIC + struct.pack('>II', 3, 5) + image.convert('RGBA').tobytes()
+                raw = reader.MAGIC + struct.pack('>II', *size) + image.convert('RGBA').tobytes()
                 self.put('sources/' + source + '.source', content)
                 self.put('preparation-v7/normalized-references/' + source + '-rgba8-srgb-v1.pixels', raw)
                 references.append({'id': source + '-rgba8-srgb-v1', 'source_hash': source,
-                    'width': 3, 'height': 5, 'pixel_sha256': reader.digest(raw), 'bytes': len(raw)})
+                    'width': size[0], 'height': size[1], 'pixel_sha256': reader.digest(raw), 'bytes': len(raw)})
                 records.append({'content_id': 71, 'asset_id': index, 'page_number': index,
                     'language': None, 'role': 'story_page_source', 'source_owner_role': 'story_page',
-                    'sha256': source, 'metadata': {'width': 3, 'height': 5},
+                    'sha256': source, 'metadata': {'width': size[0], 'height': size[1]},
                     'cms_binding_verification': {'status': 'confirmed'}})
                 stream.writestr(str(index) + '.png', content)
             zip_manifest = b'{"synthetic":"ordered"}'
@@ -138,6 +138,7 @@ class ReaderSourceTests(unittest.TestCase):
     def test_prepare_primary_full_bounded_and_direct_candidates_separate_quality(self):
         receipt = reader.prepare_variants(self.pages, {'synthetic': True}, geometry(), self.root / 'prepared')
         self.assertEqual(len(receipt['manifests']), 3)
+        self.assertEqual(set(receipt['manifests']), reader.HISTORICAL_PRIMARY_BATCHES)
         for batch in receipt['manifests']:
             manifest = config.strict_json(Path(receipt['manifests'][batch]['path']).read_bytes())
             self.assertEqual(len(manifest['entries']), 6)
@@ -393,11 +394,12 @@ class ReaderResultTests(PrivateInputs):
                     audit_path='audit', frozen_geometry=geometry())
             guard.assert_called_once()
 
-    def fixture(self, batch='reader_resolution_a_r1'):
-        manifest = make_reader_manifest(self, batch)
+    def fixture(self, batch='reader_resolution_a_r1', *, admitted_manifest=None, observed_geometry=None):
+        manifest = admitted_manifest or make_reader_manifest(self, batch)
+        frozen = observed_geometry or geometry()
         binding = reader.reader_binding(manifest, {'batchId': batch, 'generation': 0,
             'sessionId': 'synthetic-reader-session', 'accessAlias': 'synthetic-access'},
-            None if batch == 'reader_resolution_a_r1' else geometry())
+            None if batch == 'reader_resolution_a_r1' else frozen)
         rows = []
         def row(event, at, **extra):
             rows.append({'event': event, 'monotonicMicroseconds': at, 'clockDomain': 'dart_monotonic',
@@ -408,7 +410,7 @@ class ReaderResultTests(PrivateInputs):
             ('owned_eviction', 102000000), ('complete', 112000000)]
         for name, at in phases: row('phase', at, phase=name)
         reader_start = 0 if quality else 20000000
-        row('reader_geometry', reader_start + 1, **geometry(), settingsSha256='8' * 64)
+        row('reader_geometry', reader_start + 1, **frozen, settingsSha256='8' * 64)
         row('device_facts', reader_start + 2, platform='ios', deviceFactsSha256='9' * 64,
             modelSha256='a' * 64, abisSha256='b' * 64, apiLevel=None, memTotalBytes=None,
             memoryClassMiB=None, lowRamDevice=None, isPhysicalDevice=True,
@@ -463,6 +465,400 @@ class ReaderResultTests(PrivateInputs):
         manifest, binding, rows, outcome = fixture
         return reader.qualify(config.frozen_json({'schemaVersion': 1, 'records': rows, 'droppedCount': 0}),
             binding, outcome, manifest, platform='ios')
+
+    def selected075_fixture(self):
+        sources = ReaderSourceTests()
+        sources.setUp()
+        self.addCleanup(sources.doCleanups)
+        pins = sources.synthetic_sources((30, 50))
+        patcher = patch.object(reader, 'PINS', pins)
+        patcher.start(); self.addCleanup(patcher.stop)
+        patcher = patch.object(reader, 'SOURCE_SIZE', (30, 50))
+        patcher.start(); self.addCleanup(patcher.stop)
+        pages, admission = reader.admit_sources(sources.root)
+        observed = {**geometry(), 'observedSlotWidth': 20.0, 'observedSlotHeight': 30.0}
+        receipt = reader.prepare_variants(pages, admission, observed, sources.root / '075',
+            batches=[reader.SELECTED075_BATCH])
+        self.values['batchId'] = reader.SELECTED075_BATCH
+        self.manifest = config.strict_json(Path(receipt['manifests'][reader.SELECTED075_BATCH]['path']).read_bytes())
+        manifest = self.admitted_manifest()
+        fixture = self.fixture(reader.SELECTED075_BATCH, admitted_manifest=manifest, observed_geometry=observed)
+        return fixture, sources.root
+
+    def qualify075(self, fixture, source_root):
+        manifest, binding, rows, outcome = fixture
+        return reader.qualify(config.frozen_json({'schemaVersion': 1, 'records': rows, 'droppedCount': 0}),
+            binding, outcome, manifest, platform='ios', source_root=source_root)
+
+    def test_selected075_is_six_page_primary_with_independent_bytes_and_explicit_upsampling(self):
+        fixture, root = self.selected075_fixture()
+        result = self.qualify075(fixture, root)
+        self.assertEqual(result['qualification'], 'unavailable')
+        self.assertEqual(result['sourceSufficiencyReason'], 'insufficient_pixels')
+        self.assertEqual(result['sourceShortagePages'], list(range(6)))
+        self.assertEqual(result['intentionalUndersamplingPerformanceEligibility'], 'observed_samples')
+        proof = result['intentionalUndersamplingProvenance']
+        self.assertTrue(proof['displayUpsamplingRequired'])
+        self.assertEqual(proof['factor'], .75)
+        self.assertEqual(proof['sourceBinding'], 'independently_admitted_originals')
+        self.assertEqual(len(proof['pages']), 6)
+        self.assertEqual(len([row for row in fixture[2] if row['event'] == 'reader_selection']), 18)
+        self.assertEqual(result['memory']['eligibility'], 'observed_samples')
+        self.assertIsNone(result['qualityAccepted'])
+
+    def test_selected075_real_broker_close_reload_and_qualify_preserve_byte_guards(self):
+        fixture, root = self.selected075_fixture()
+        manifest, binding, _, _ = fixture
+        selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+        Path(selected.values['privateOutputRoot']).mkdir(mode=0o700)
+        with self.assertRaisesRegex(config.EntryError, 'output_not_unique'):
+            config.load_manifest(selected)
+        broker = Broker(selected, manifest, lambda _: {})
+        self.addCleanup(broker.close)
+        broker.close()
+        self.assertEqual(manifest.objects, {})
+        self.assertEqual(tuple(self.base.glob('reader-readmission-*')), ())
+        self.assertTrue(Path(selected.values['privateOutputRoot']).is_dir())
+        with self.assertRaisesRegex(config.EntryError, 'reader_selected075_bytes_rejected'):
+            self.qualify075(fixture, root)
+        refreshed = reader.reload_reader_manifest(selected, manifest, binding)
+        self.assertEqual(len(refreshed.objects), 6)
+        result = self.qualify075((refreshed, *fixture[1:]), root)
+        self.assertEqual(result['intentionalUndersamplingPerformanceEligibility'], 'observed_samples')
+        self.assertEqual(result['qualification'], 'unavailable')
+        self.assertEqual(result['sourceSufficiencyReason'], 'insufficient_pixels')
+        self.assertEqual(manifest.objects, {})
+
+    def test_post_teardown_reload_refuses_changed_private_public_binding_and_encoded_bytes(self):
+        fixture, _ = self.selected075_fixture()
+        manifest, binding, _, _ = fixture
+        selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+        Path(selected.values['privateOutputRoot']).mkdir(mode=0o700)
+        broker = Broker(selected, manifest, lambda _: {})
+        broker.close()
+        manifest_path = Path(selected.values['manifestPath'])
+        original = manifest_path.read_bytes()
+        # Even JSON whitespace preserves public bytes but changes the frozen private manifest.
+        manifest_path.write_bytes(original + b' ')
+        with self.assertRaisesRegex(config.EntryError, 'reader_reloaded_manifest_binding_rejected'):
+            reader.reload_reader_manifest(selected, manifest, binding)
+        manifest_path.write_bytes(original)
+        for key, value in (('publicManifestSha256', 'f' * 64), ('batchId', 'reader_resolution_c_r1')):
+            with self.subTest(key=key), self.assertRaisesRegex(config.EntryError, 'reader_reloaded_manifest_binding_rejected'):
+                reader.reload_reader_manifest(selected, manifest, {**binding, key: value})
+        changed = config.strict_json(original)
+        changed['corpusSha256'] = 'f' * 64
+        changed_bytes = config.frozen_json(changed)
+        manifest_path.write_bytes(changed_bytes)
+        with self.assertRaisesRegex(config.EntryError, 'reader_reloaded_manifest_binding_rejected'):
+            reader.reload_reader_manifest(selected, manifest, binding)
+        replaced_private = config.Manifest(manifest.entries, {}, reader.digest(changed_bytes), manifest.public_bytes)
+        with self.assertRaisesRegex(config.EntryError, 'reader_reloaded_manifest_binding_rejected'):
+            reader.reload_reader_manifest(selected, replaced_private, binding)
+        manifest_path.write_bytes(original)
+        self.base.chmod(0o755)
+        try:
+            with self.assertRaisesRegex(config.EntryError, 'output_parent_not_private'):
+                reader.reload_reader_manifest(selected, manifest, binding)
+        finally:
+            self.base.chmod(0o700)
+        path = Path(self.manifest['entries'][0]['filePath'])
+        path.write_bytes(path.read_bytes()[:-1] + b'x')
+        with self.assertRaisesRegex(config.EntryError, 'fixture_bytes_rejected'):
+            reader.reload_reader_manifest(selected, manifest, binding)
+
+    def test_android_run_qualifies_reloaded_bytes_after_real_owned_broker_close(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        fixture, root = self.selected075_fixture()
+        manifest, binding, rows, outcome = fixture
+        outcome['platform'] = 'android'
+        for row in rows:
+            if row['event'] == 'memory_sample': row['memoryCounter'] = 'android_total_pss'
+            if row['event'] == 'device_facts':
+                row.update(platform='android', isPhysicalDevice=None, qemu='unavailable',
+                    apiLevel=30, lowRamDevice=True, memTotalBytes=1800 * 1024 ** 2, memoryClassMiB=128)
+        data = config.frozen_json({'schemaVersion': 1, 'records': rows, 'droppedCount': 0})
+        selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+        output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+        envelope = config.frozen_json({'batchId': reader.SELECTED075_BATCH, 'generation': 0,
+            'sessionId': 'synthetic-reader-session', 'accessAlias': 'synthetic-access'})
+        def verify(*args, **kwargs):
+            broker = host.Broker(selected, manifest, lambda _: {})
+            pairing = host.LauncherPairing(broker, 'android')
+            pairing.chunks = SimpleNamespace(finish=lambda: data)
+            broker.claim({})
+            broker.close()  # Actual cleanup retires the original manifest's bytes.
+            pairing.close()
+            self.assertEqual(manifest.objects, {})
+            return outcome
+        with patch.object(host, 'validate_physical_prerequisites', return_value=(
+                {'artifactSha256': 'a' * 64, 'testArtifactSha256': 'b' * 64}, {'deviceModel': 'Moto E20'})), \
+                patch.object(comparison, 'validate_comparison_audit'), \
+                patch.object(comparison, 'require_fresh_android_process'), \
+                patch.object(host, 'source_snapshot', return_value=({}, 'c' * 64)), \
+                patch.object(Broker, 'claim', return_value=envelope), \
+                patch.object(host, 'verify_entry', side_effect=verify), \
+                patch.object(reader, 'reload_reader_manifest', wraps=reader.reload_reader_manifest) as reload:
+            result = reader.run(selected, manifest, output, build_path='build', prerequisite_path='proof',
+                audit_path='audit', frozen_geometry=binding['geometry'], source_root=root,
+                root_elapsed_seconds=10, reservation_remaining_seconds=460)
+        reload.assert_called_once()
+        self.assertEqual(result['intentionalUndersamplingPerformanceEligibility'], 'observed_samples')
+        self.assertEqual(result['lowMemoryPhysicalQualification'], 'observed')
+        self.assertEqual(manifest.objects, {})
+        self.assertEqual(tuple(self.base.glob('reader-readmission-*')), ())
+        self.assertTrue((output / 'reader-result.json').is_file())
+
+    def test_sequential_reader_publishes_only_after_timely_finish_and_retains_late_forensics(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        import reader_android_window as window
+        root_epoch, root_monotonic = 1000000, 100.0
+        for completion in ('timely', 'late', 'clock_invalid'):
+            elapsed, wall_offset = [60], [0]
+            self.values['privateOutputRoot'] = str(self.base / completion)
+            manifest, binding, rows, outcome = self.fixture()
+            outcome['platform'] = 'android'
+            for row in rows:
+                if row['event'] == 'memory_sample': row['memoryCounter'] = 'android_total_pss'
+                if row['event'] == 'device_facts':
+                    row.update(platform='android', isPhysicalDevice=None, qemu='unavailable',
+                        apiLevel=30, lowRamDevice=True, memTotalBytes=1800 * 1024 ** 2, memoryClassMiB=128)
+            data = config.frozen_json({'schemaVersion': 1, 'records': rows, 'droppedCount': 0})
+            selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+            output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+            owned = window.SequentialAndroidWindow(root_epoch_milliseconds=root_epoch,
+                root_monotonic=root_monotonic, reservation_expires_at_milliseconds=root_epoch + 470000,
+                reservation_receipt_sha256='1' * 64, allocation_sha256='2' * 64,
+                device_selector_sha256='3' * 64, device_unit_sha256='4' * 64,
+                source_sha256='c' * 64, artifact_sha256='a' * 64, test_artifact_sha256='b' * 64,
+                certificate_sha256='8' * 64, watchdog_receipt_sha256='9' * 64)
+            envelope = config.frozen_json({'batchId': selected.values['batchId'], 'generation': 0,
+                'sessionId': 'synthetic-reader-session', 'accessAlias': 'synthetic-access'})
+            def verify(*args, **kwargs):
+                broker = host.Broker(selected, manifest, lambda _: {})
+                pairing = host.LauncherPairing(broker, 'android')
+                pairing.chunks = SimpleNamespace(finish=lambda: data)
+                broker.claim({})
+                broker.close(); pairing.close()
+                return outcome
+            original_finish = window.SequentialAndroidWindow.finish
+            def finish(target, *args, **kwargs):
+                self.assertFalse((output / 'reader-result.json').exists())
+                self.assertEqual((output / 'device-ledger.json').read_bytes(), data)
+                if completion == 'late': elapsed[0] = 241
+                if completion == 'clock_invalid': wall_offset[0] = 10
+                return original_finish(target, *args, **kwargs)
+            with self.subTest(completion=completion), \
+                    patch.object(window.time, 'monotonic', side_effect=lambda: root_monotonic + elapsed[0]), \
+                    patch.object(window.time, 'time', side_effect=lambda: root_epoch / 1000 + elapsed[0] + wall_offset[0]), \
+                    patch.object(host, 'validate_physical_prerequisites', return_value=(
+                        {'artifactSha256': 'a' * 64, 'testArtifactSha256': 'b' * 64}, {'deviceModel': 'Moto E20'})), \
+                    patch.object(comparison, 'validate_comparison_audit'), \
+                    patch.object(comparison, 'require_fresh_android_process'), \
+                    patch.object(host, 'source_snapshot', return_value=({}, 'c' * 64)), \
+                    patch.object(Broker, 'claim', return_value=envelope), \
+                    patch.object(host, 'verify_entry', side_effect=verify), \
+                    patch.object(window.SequentialAndroidWindow, 'finish', new=finish):
+                arguments = dict(build_path='build', prerequisite_path='proof', audit_path='audit', sequential_window=owned)
+                if completion == 'timely':
+                    result = reader.run(selected, manifest, output, **arguments)
+                    self.assertEqual(result['qualification'], 'qualified')
+                    self.assertEqual(config.strict_json((output / 'reader-result.json').read_bytes()), result)
+                    self.assertFalse((output / 'reader-failure-receipt.json').exists())
+                else:
+                    reason = 'reader_sequential_completion_late' if completion == 'late' else 'reader_sequential_clock_rejected'
+                    with self.assertRaisesRegex(config.EntryError, '^' + reason + '$'):
+                        reader.run(selected, manifest, output, **arguments)
+                    self.assertFalse((output / 'reader-result.json').exists())
+                    failure = config.strict_json((output / 'reader-failure-receipt.json').read_bytes())
+                    self.assertEqual(failure['reason'], reason)
+                    self.assertFalse(failure['automaticRetry'])
+                    elapsed[0], wall_offset[0] = 60, 0
+                    with self.assertRaisesRegex(config.EntryError, 'reader_sequential_order_rejected'):
+                        owned.enter(window.ORDER[1], geometry_sha256=reader.digest(config.frozen_json(binding['geometry'])))
+                self.assertIsNone(owned._active)
+            self.assertEqual((output / 'device-ledger.json').read_bytes(), data)
+            self.assertTrue((output / 'run-binding.json').exists())
+            self.assertTrue((output / 'broker-terminal-observation.json').exists())
+
+    def test_legacy_reader_malformed_device_model_has_finite_failure_receipt(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        for index, model in enumerate((None, 123, {}, [])):
+            self.values['privateOutputRoot'] = str(self.base / ('malformed-legacy-' + str(index)))
+            manifest = make_reader_manifest(self)
+            selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+            output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+            with self.subTest(model=model), \
+                    patch.object(host, 'validate_physical_prerequisites', return_value=({}, {'deviceModel': model})), \
+                    patch.object(comparison, 'validate_comparison_audit'), patch.object(host, 'verify_entry') as verify:
+                with self.assertRaisesRegex(config.EntryError, '^reader_device_selection_rejected$'):
+                    reader.run(selected, manifest, output, build_path='build', prerequisite_path='proof', audit_path='audit',
+                        root_elapsed_seconds=10, reservation_remaining_seconds=460)
+            verify.assert_not_called()
+            self.assertEqual(config.strict_json((output / 'reader-failure-receipt.json').read_bytes())['reason'],
+                'reader_device_selection_rejected')
+            self.assertFalse((output / 'reader-result.json').exists())
+
+    def test_failed_native_run_records_real_broker_revoke_and_complete_ledger_without_promotion(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        from test_reader_terminal_observation import ledger_chunks
+        for auth_fails in (False, True):
+            self.values['privateOutputRoot'] = str(self.base / ('failed-auth' if auth_fails else 'failed-ack'))
+            manifest, binding, rows, _ = self.fixture()
+            rows.append({**rows[-1], 'event': 'failure', 'reason': 'status_unavailable'})
+            data = config.frozen_json({'schemaVersion': 1, 'records': rows, 'droppedCount': 0})
+            selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+            output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+            envelope = config.frozen_json({'batchId': selected.values['batchId'], 'generation': 0,
+                'sessionId': 'synthetic-reader-session', 'accessAlias': 'synthetic-access'})
+            def verifier(_):
+                if auth_fails: raise config.EntryError('synthetic_verifier_failure')
+                return {'exp': 9999999999}
+            def verify(*args, **kwargs):
+                broker = host.Broker(selected, manifest, verifier)
+                broker.token = 'synthetic-token'; broker.admission_successful = True
+                pairing = host.LauncherPairing(broker, 'android')
+                pairing.chunks = ledger_chunks(data)
+                pairing.ready.set(); pairing.count = pairing.native_result_count = 1
+                pairing.native_result = 'refused'
+                try:
+                    broker.claim({})
+                    for entry in manifest.entries:
+                        broker.completed_fixture(entry['caseId'], entry['byteSize'], entry['outputSha256'])
+                    broker.revoke_from_app(broker.session_id, 'Bearer synthetic-token')
+                    return host.validate_entry_outcome(broker, pairing)
+                finally:
+                    broker.close(); pairing.close()
+            with patch.object(host, 'validate_physical_prerequisites', return_value=(
+                    {'artifactSha256': 'a' * 64, 'testArtifactSha256': 'b' * 64}, {'deviceModel': 'Moto E20'})), \
+                    patch.object(comparison, 'validate_comparison_audit'), \
+                    patch.object(comparison, 'require_fresh_android_process'), \
+                    patch.object(host, 'source_snapshot', return_value=({}, 'c' * 64)), \
+                    patch.object(Broker, 'claim', return_value=envelope), \
+                    patch.object(host, 'verify_entry', side_effect=verify):
+                with self.subTest(auth_fails=auth_fails), self.assertRaisesRegex(config.EntryError, '^native_entry_refused$'):
+                    reader.run(selected, manifest, output, build_path='build', prerequisite_path='proof',
+                        audit_path='audit', root_elapsed_seconds=10, reservation_remaining_seconds=460)
+            terminal = config.strict_json((output / 'broker-terminal-observation.json').read_bytes())
+            self.assertTrue(terminal['requestObserved'])
+            self.assertEqual(terminal['responseStatus'], 'revoked')
+            self.assertEqual(terminal['responseReason'], 'token_verification_failed' if auth_fails else 'app_revoked')
+            self.assertEqual(terminal['explicitAppRevokedObserved'], not auth_fails)
+            self.assertFalse(terminal['tokenPresentBeforeClose'])
+            self.assertEqual(terminal['fixtureDeliveryCount'], 6)
+            self.assertEqual(manifest.objects, {})
+            self.assertEqual((output / 'failure-device-ledger.json').read_bytes(), data)
+            failed = config.strict_json((output / 'failure-ledger-observation.json').read_bytes())
+            self.assertEqual(failed['status'], 'observed_unqualified')
+            self.assertEqual(failed['ledgerSha256'], reader.digest(data))
+            self.assertFalse((output / 'verification-receipt.json').exists())
+            self.assertFalse((output / 'reader-result.json').exists())
+
+    def test_terminal_observer_failure_preserves_native_refusal_and_original_broker_cleanup(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        from reader_terminal_observation import ReaderTerminalObservation
+        manifest = make_reader_manifest(self)
+        selected = config.Configuration(deepcopy(self.values), 'a' * 64)
+        output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+        def verify(*args, **kwargs):
+            broker = host.Broker(selected, manifest, lambda _: {'exp': 9999999999})
+            broker.token = 'synthetic-token'; broker.admission_successful = True
+            try:
+                response = broker.revoke_from_app(broker.session_id, 'Bearer synthetic-token')
+                self.assertEqual(response, {'status': 'revoked', 'reason': 'app_revoked'})
+                raise config.EntryError('synthetic_native_refused')
+            finally:
+                broker.close()
+        with patch.object(host, 'validate_physical_prerequisites', return_value=(
+                {'artifactSha256': 'a' * 64, 'testArtifactSha256': 'b' * 64}, {'deviceModel': 'Moto E20'})), \
+                patch.object(comparison, 'validate_comparison_audit'), \
+                patch.object(comparison, 'require_fresh_android_process'), \
+                patch.object(host, 'source_snapshot', return_value=({}, 'c' * 64)), \
+                patch.object(host, 'verify_entry', side_effect=verify), \
+                patch.object(ReaderTerminalObservation, 'request', side_effect=RuntimeError('observer')), \
+                patch.object(ReaderTerminalObservation, 'response', side_effect=RuntimeError('observer')), \
+                patch.object(ReaderTerminalObservation, 'before_close', side_effect=RuntimeError('observer')), \
+                patch.object(ReaderTerminalObservation, 'failed_ledger', side_effect=RuntimeError('observer')):
+            with self.assertRaisesRegex(config.EntryError, '^synthetic_native_refused$'):
+                reader.run(selected, manifest, output, build_path='build', prerequisite_path='proof',
+                    audit_path='audit', root_elapsed_seconds=10, reservation_remaining_seconds=460)
+        self.assertEqual(manifest.objects, {})
+        self.assertTrue((output / 'reader-failure-receipt.json').is_file())
+        self.assertFalse((output / 'verification-receipt.json').exists())
+
+    def test_selected075_requires_originals_not_a_self_reported_factor_or_purpose(self):
+        fixture = self.fixture(reader.SELECTED075_BATCH)
+        with self.assertRaisesRegex(config.EntryError, 'reader_selected075_sources_required'):
+            self.qualify(fixture)
+        fixture, root = self.selected075_fixture()
+        for key, value in (('sourceSha256', 'f' * 64), ('referenceSha256', 'f' * 64),
+                ('width', 3), ('encoderRevision', 'reader_v7_png_pillow12_r1')):
+            changed = deepcopy(fixture)
+            changed[0].entries[0][key] = value
+            with self.subTest(key=key), self.assertRaisesRegex(config.EntryError, 'reader_selected075_resize_binding_rejected'):
+                self.qualify075(changed, root)
+        changed = deepcopy(fixture)
+        changed[0].objects['reader_page_1'] = b'forged'
+        with self.assertRaisesRegex(config.EntryError, 'reader_selected075_bytes_rejected'):
+            self.qualify075(changed, root)
+        changed = deepcopy(fixture)
+        public = config.strict_json(changed[0].public_bytes)
+        public['corpusSha256'] = 'f' * 64
+        forged = config.Manifest(changed[0].entries, changed[0].objects, changed[0].private_sha256,
+            config.frozen_json(public))
+        changed[1]['publicManifestSha256'] = forged.public_sha256
+        with self.assertRaisesRegex(config.EntryError, 'reader_selected075_source_binding_rejected'):
+            self.qualify075((forged, *changed[1:]), root)
+
+    def test_selected075_run_rejects_missing_or_forged_provenance_before_native_verify(self):
+        import native_entry_driver as host
+        import native_artwork_comparison as comparison
+        fixture, root = self.selected075_fixture()
+        for scenario, reason in (('missing', 'reader_selected075_sources_required'),
+                ('source', 'reader_selected075_resize_binding_rejected'),
+                ('bytes', 'reader_selected075_bytes_rejected')):
+            manifest, binding, _, _ = deepcopy(fixture)
+            if scenario == 'source': manifest.entries[0]['sourceSha256'] = 'f' * 64
+            if scenario == 'bytes': manifest.objects['reader_page_1'] = b'forged'
+            selected = config.Configuration({**self.values, 'platform': 'ios'}, 'a' * 64)
+            output = self.base / ('pre-dispatch-' + scenario); output.mkdir(mode=0o700)
+            with patch.object(host, 'validate_physical_prerequisites', return_value=(
+                    {'artifactSha256': 'a' * 64, 'testArtifactSha256': 'b' * 64}, {})), \
+                    patch.object(comparison, 'validate_comparison_audit'), \
+                    patch.object(host, 'verify_entry', side_effect=config.EntryError('native_dispatch_reached')) as native:
+                with self.subTest(scenario=scenario), self.assertRaisesRegex(config.EntryError, '^' + reason + '$'):
+                    reader.run(selected, manifest, output, build_path='build', prerequisite_path='proof', audit_path='audit',
+                        frozen_geometry=binding['geometry'], source_root=None if scenario == 'missing' else root)
+                native.assert_not_called()
+
+    def test_selected075_missing_observations_or_ordinary_original_shortage_never_qualify(self):
+        fixture, root = self.selected075_fixture()
+        for event in ('memory_sample', 'lifecycle', 'device_facts'):
+            changed = deepcopy(fixture)
+            changed[2][:] = [row for row in changed[2] if row['event'] != event]
+            result = self.qualify075(changed, root)
+            with self.subTest(event=event):
+                self.assertEqual(result['intentionalUndersamplingPerformanceEligibility'], 'unavailable')
+                self.assertEqual(result['qualification'], 'unavailable')
+        changed = deepcopy(fixture)
+        changed[2][:] = [row for row in changed[2] if row['event'] != 'memory_sample' or not
+            22000000 < row['sampleStartMicroseconds'] < 26000000]
+        previous = None
+        for row in changed[2]:
+            if row['event'] == 'memory_sample':
+                row['sampleCadenceMicroseconds'] = None if previous is None else row['sampleStartMicroseconds'] - previous
+                previous = row['sampleStartMicroseconds']
+        self.assertEqual(self.qualify075(changed, root)['intentionalUndersamplingPerformanceEligibility'], 'unavailable')
+        changed = deepcopy(fixture)
+        changed[1]['geometry']['observedSlotWidth'] = 100.0
+        changed[1]['geometry']['observedSlotHeight'] = 100.0
+        with self.assertRaisesRegex(config.EntryError, 'reader_selected075_original_shortage'):
+            reader.selected075_provenance(changed[0], changed[1]['geometry'], root)
 
     def test_primary_decode_transfer_geometry_retention_eviction_and_null_facts_separate(self):
         result = self.qualify(self.fixture())

@@ -1,0 +1,208 @@
+{
+  "scope": "selected075-three-context-free-reviews-r1",
+  "diffSha256": "491d59b42192a56c485a6e6c8fb3c9ed5be37bfe551dcd2fec76bde32d2618e0",
+  "allReviewersLaunchedBeforeTriage": true,
+  "blindHunter": "No actionable findings.",
+  "findings": [
+    {
+      "id": "P1",
+      "reviewer": "edge-case-hunter",
+      "severity": "medium",
+      "category": "patch",
+      "file": "tools/image-optimization/reader_resolution_experiment.py",
+      "claim": "Late finish can mask the original native refusal/timeout exception",
+      "requiredAction": "Preserve the original failure while consuming and failing the lease",
+      "status": "resolved",
+      "verification": [
+        "test_real_run_preserves_native_exception_after_deadline_or_clock_failure_and_blocks_next_entry",
+        "test_successful_late_run_still_refuses_and_consumes_lease"
+      ]
+    },
+    {
+      "id": "P2",
+      "reviewer": "edge-case-hunter",
+      "severity": "medium",
+      "category": "patch",
+      "file": "tools/image-optimization/reader_android_window.py",
+      "claim": "Consumed-terminal check/add is not atomic across constructors",
+      "requiredAction": "Synchronize single-use admission and test concurrent constructors",
+      "status": "resolved",
+      "verification": "test_concurrent_constructors_cannot_both_consume_the_same_prior_terminal"
+    },
+    {
+      "id": "P3",
+      "reviewer": "edge-case-hunter",
+      "severity": "medium",
+      "category": "patch",
+      "file": "tools/image-optimization/reader_android_window.py",
+      "claim": "Concurrent enter can issue overlapping leases and skip order",
+      "requiredAction": "Synchronize per-window transitions and test concurrent entry",
+      "status": "resolved",
+      "verification": "test_concurrent_entries_issue_only_one_A_and_preserve_075_and_cleanup_order"
+    },
+    {
+      "id": "P4",
+      "reviewer": "edge-case-hunter",
+      "severity": "low",
+      "category": "patch",
+      "file": "tools/image-optimization/reader_android_window.py",
+      "claim": "Malformed lease window raises AttributeError before finite refusal",
+      "requiredAction": "Validate exact window type before reading its clock",
+      "status": "resolved",
+      "verification": "test_malformed_lease_window_has_finite_refusal_before_attribute_access"
+    },
+    {
+      "id": "P5",
+      "reviewer": "verification-gap",
+      "severity": "medium",
+      "category": "patch",
+      "file": "tools/image-optimization/test_native_entry_driver.py",
+      "claim": "Deleting the final150-second dispatch check survives existing tests",
+      "requiredAction": "Exercise real verify_entry with preparation consuming the entry margin; mutation must fail",
+      "status": "resolved",
+      "verification": "test_real_verify_entry_rechecks150_after_preparation_and_never_dispatches_launcher"
+    },
+    {
+      "id": "P6",
+      "reviewer": "verification-gap",
+      "severity": "medium",
+      "category": "patch",
+      "file": "tools/image-optimization/test_reader_resolution_experiment.py",
+      "claim": "Deleting pre-native075 provenance survives existing tests",
+      "requiredAction": "Exercise reader.run invalid originals/bytes before native entry; mutation must fail",
+      "status": "resolved",
+      "verification": "test_selected075_run_rejects_missing_or_forged_provenance_before_native_verify"
+    }
+  ],
+  "patchStatus": "resolved",
+  "intentGap": false,
+  "badSpec": false,
+  "deferred": [],
+  "schemaVersion": 1,
+  "status": "passed",
+  "baselineCommit": "3d5e4856ae8f168769bb54fb2a17501706a69c6c",
+  "currentSignedMobileSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+  "mutationProofSha256": "2e4846f8462b0f50271089e7183add59b078a5bfcb2a9f22bbdd5b8187bdd99e",
+  "mutationCases": [
+    {
+      "label": "dispatch-check-deleted",
+      "module": "native_entry_driver",
+      "test": "test_native_entry_driver.PhysicalPrerequisiteTests.test_real_verify_entry_rechecks150_after_preparation_and_never_dispatches_launcher",
+      "exitCode": 1,
+      "expectedBehavioralFailure": "launcher_was_dispatched",
+      "originalSha256": "81e0ee4ca318178769dcd4463cf51f95453dbe1e7b742f19cee235baf968d756",
+      "mutantSha256": "266db939fa9974ec962e2494763163818a5f02391ecc540ed5206c2ab2ae760e",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0e32ce60585e370ed03c4b535f8d0d9a55d194d02fc7a6d88fa1102e8b132791",
+      "repositorySourceUnchanged": true
+    },
+    {
+      "label": "early-provenance-deleted",
+      "module": "reader_resolution_experiment",
+      "test": "test_reader_resolution_experiment.ReaderResultTests.test_selected075_run_rejects_missing_or_forged_provenance_before_native_verify",
+      "exitCode": 1,
+      "expectedBehavioralFailure": "native_dispatch_reached",
+      "originalSha256": "54c253ad93119487f884419e2f6204f8c54d312d6a325225630c8fe22ce8fe86",
+      "mutantSha256": "a81b1af62c0312ffed50a4264b9094d40c996e62c4fa47edc16040686c54101a",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "ac950829db5e8b84162e4b1d475b45f438d20e30dde75fa1974f3a9402c2b76c",
+      "repositorySourceUnchanged": true
+    }
+  ],
+  "r3Profile": {
+    "name": "nine_minutes_matrix_r3",
+    "maximumProviderExpiryRootMilliseconds": 538000,
+    "cancelAtRootSeconds": 510,
+    "hardCleanupRootSeconds": 538,
+    "currentAllocationMaximumBillableMinutes": 9,
+    "limitScope": "current_allocation_only",
+    "priorTerminalFieldsAccepted": false,
+    "arbitraryDurationAccepted": false,
+    "retainedModeledUpperUsd": null,
+    "historicalTenUsdScopeApplies": false,
+    "priorDebitsReclaimed": false
+  },
+  "physicalBenchmarkNotCreatedByReview": true,
+  "postReviewRuntimeExtension": {
+    "scope": "finite_twelve_minute_profile_and_actual_primary_reconciliation",
+    "currentPortableHostTests": 350,
+    "verificationReceiptSha256": "d73c6b8711a72d264e17b5218140823aa09b0a57d7a533170db6e09143ca90e6",
+    "windowSha256": "c7a8ad35d4c5974c0b4670052901b7c5655f96da71363e28da52d7341af42645",
+    "signedSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+    "nativeAndMobileSourceChanged": false,
+    "additionalProfileRequestedExpirySeconds": 658,
+    "actualExpiryCeilingSeconds": 718,
+    "nativeMaxSeconds": 180,
+    "fullEntryMinSeconds": 150,
+    "freshFinalReviewStatus": "passed_with_three_resolved_patches"
+  },
+  "firstRoundVerification": {
+    "currentPortableHostTests": 348,
+    "focusedTests": 78,
+    "verificationReceiptSha256": "96cac29c0fbee0f1d121024bfd5dd3dcaae552f8ebc9c85599e9d48c371db283"
+  },
+  "currentPortableHostTests": 354,
+  "focusedTests": 130,
+  "verificationReceiptSha256": "d78ba53bc9d696c5564242f7c1ebecf36f54abed3910800d3d9c999b162bcf81",
+  "allActionableFindingsResolved": true,
+  "totalResolvedPatchFindings": 9,
+  "finalReviewRound": {
+    "scope": "selected075-three-context-free-reviews-r2",
+    "diffSha256": "9d04b368c94b646387498e9492b57cca22672075aa2ba44010a79e4c1006d3fd",
+    "allReviewersLaunchedBeforeTriage": true,
+    "blindHunter": "No actionable findings.",
+    "intentGap": false,
+    "badSpec": false,
+    "deferred": [],
+    "findings": [
+      {
+        "id": "R2P1",
+        "reviewer": "edge-case-hunter",
+        "severity": "medium",
+        "category": "patch",
+        "file": "tools/image-optimization/reader_resolution_experiment.py",
+        "claim": "An eligible result could be written before a late or clock-invalid lease finish",
+        "requiredAction": "Publish only after successful sequential finish and retain raw failure evidence",
+        "status": "resolved",
+        "verification": "test_sequential_reader_publishes_only_after_timely_finish_and_retains_late_forensics"
+      },
+      {
+        "id": "R2P2",
+        "reviewer": "edge-case-hunter",
+        "severity": "medium",
+        "category": "patch",
+        "file": "tools/image-optimization/reader_android_window.py",
+        "claim": "Malformed deviceModel could raise AttributeError and omit a finite failure receipt",
+        "requiredAction": "Validate string type in both sequential and legacy reader checks",
+        "status": "resolved",
+        "verification": [
+          "test_reader_run_malformed_device_model_fails_with_identity_receipt_before_native",
+          "test_legacy_reader_malformed_device_model_has_finite_failure_receipt"
+        ]
+      },
+      {
+        "id": "R2P3",
+        "reviewer": "verification-gap",
+        "severity": "medium",
+        "category": "patch",
+        "file": "tools/image-optimization/test_native_entry_driver.py",
+        "claim": "Deleting the reader-to-driver lease forwarding survived prior coverage",
+        "requiredAction": "Exercise the real caller chain with149 seconds remaining; deletion must dispatch and fail",
+        "status": "resolved",
+        "verification": "test_reader_run_forwards_lease_to_real_verify_and_refuses149_before_launcher"
+      }
+    ],
+    "verificationReceiptSha256": "d78ba53bc9d696c5564242f7c1ebecf36f54abed3910800d3d9c999b162bcf81",
+    "forwardingMutantReceiptSha256": "6f815cb0bfa3ef7608b09b830a3f5a74417f2431030d10bc768b8cde4e5b6f9a",
+    "forwardingMutantExpectedBehavioralFailure": "launcher_was_dispatched",
+    "currentHostToolSha256": {
+      "native_entry_driver.py": "81e0ee4ca318178769dcd4463cf51f95453dbe1e7b742f19cee235baf968d756",
+      "reader_android_window.py": "8386c4e198933e2d3e5303fca55cbdeb902754614f120c06480b41d530ae4962",
+      "reader_resolution_experiment.py": "c37e368b9d73ef2ac7a7aacc65f9a6d1ae5a5a6e732f13a302f048ec3fb301df"
+    },
+    "signedSourceSha256": "f570e4d098fbeb1663843f7f24ab520e3b57079296cfe9051bec2342ed116b25",
+    "signedSourceFileCount": 310,
+    "physicalObservationsReclassified": false,
+    "physicalRetryRequiredForHostOnlyPatch": false
+  }
+}

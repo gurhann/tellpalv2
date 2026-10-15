@@ -14,7 +14,8 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[2]
 SCOPE = "image-optimization-native-fixture-r1"
 READER_BATCHES = frozenset(("reader_resolution_a_r1", "reader_resolution_b_r1",
-    "reader_resolution_c_r1", "reader_quality_full_r1", "reader_quality_100_r1", "reader_quality_075_r1"))
+    "reader_resolution_c_r1", "reader_resolution_075_r1", "reader_quality_full_r1",
+    "reader_quality_100_r1", "reader_quality_075_r1"))
 READER_CASES = tuple(f"reader_page_{index}" for index in range(1, 7))
 ID = re.compile(r"[A-Za-z0-9_-]{1,64}")
 HASH = re.compile(r"[0-9a-f]{64}")

@@ -465,6 +465,171 @@ class PhysicalPrerequisiteTests(SourceBindingInputs):
         self.proof_path.write_bytes(frozen_json(self.proof))
         return driver.validate_physical_prerequisites(self.configuration(), self.build_path, self.proof_path)
 
+    def test_real_prerequisites_use_exact_typed_lease_while_legacy195_still_refuses(self):
+        from types import SimpleNamespace
+        import reader_android_window as window
+        root_epoch = self.now - 300000
+        root_monotonic = window.time.monotonic() - 300
+        self.values['batchId'] = window.ORDER[0]
+        self.proof.update(batchId=window.ORDER[0], deviceModel='Moto E20', reservationExpiresAt=root_epoch + 470000)
+        self.proof_path.write_bytes(frozen_json(self.proof))
+        owned = window.SequentialAndroidWindow(root_epoch_milliseconds=root_epoch,
+            root_monotonic=root_monotonic, reservation_expires_at_milliseconds=self.proof['reservationExpiresAt'],
+            reservation_receipt_sha256=self.proof['reservationReceiptSha256'], allocation_sha256='2' * 64,
+            device_selector_sha256=self.proof['deviceSelectorSha256'], device_unit_sha256='4' * 64,
+            source_sha256=self.build['sourceSha256'], artifact_sha256=self.build['artifactSha256'],
+            test_artifact_sha256=self.build['testArtifactSha256'], certificate_sha256=self.build['certificateSha256'],
+            watchdog_receipt_sha256='9' * 64)
+        with self.assertRaisesRegex(EntryError, 'reservation_unavailable'): self.validate()
+        # At 299 seconds, native entry still has at least 150 seconds before cancel.
+        with patch.object(window.time, 'monotonic', return_value=root_monotonic + 299), \
+                patch.object(window.time, 'time', return_value=(root_epoch + 299000) / 1000):
+            self.proof['observedAt'] = root_epoch + 299000
+            self.proof_path.write_bytes(frozen_json(self.proof))
+            lease = owned.enter(window.ORDER[0])
+            selected = self.configuration()
+            self.assertEqual(driver.validate_physical_prerequisites(selected, self.build_path, self.proof_path,
+                sequential_lease=lease), (self.build, self.proof))
+            with patch.object(driver, 'validate_backend_startup', side_effect=EntryError('backend_still_required')):
+                with self.assertRaisesRegex(EntryError, 'backend_still_required'):
+                    driver.verify_entry(selected, SimpleNamespace(objects={'case_a': b''}), self.base, lease.deadline,
+                        case_id='case_a', build_path=self.build_path, prerequisite_path=self.proof_path,
+                        sequential_lease=lease)
+            with self.assertRaisesRegex(EntryError, 'lease'):
+                driver.verify_entry(selected, SimpleNamespace(objects={'case_a': b''}), self.base, lease.deadline + 1,
+                    case_id='case_a', build_path=self.build_path, prerequisite_path=self.proof_path,
+                    sequential_lease=lease)
+
+    def test_real_verify_entry_rechecks150_after_preparation_and_never_dispatches_launcher(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        import reader_android_window as window
+        root_epoch, root_monotonic = self.now - 60000, time.monotonic() - 60
+        elapsed = [60]
+        self.values['batchId'] = window.ORDER[0]
+        self.proof.update(batchId=window.ORDER[0], deviceModel='Moto E20', reservationExpiresAt=root_epoch + 470000)
+        self.proof_path.write_bytes(frozen_json(self.proof))
+        self.build['testAppId'] = self.values['expectedAppId'] + '.test'
+        self.build_path.write_bytes(frozen_json(self.build))
+        owned = window.SequentialAndroidWindow(root_epoch_milliseconds=root_epoch,
+            root_monotonic=root_monotonic, reservation_expires_at_milliseconds=self.proof['reservationExpiresAt'],
+            reservation_receipt_sha256=self.proof['reservationReceiptSha256'], allocation_sha256='2' * 64,
+            device_selector_sha256=self.proof['deviceSelectorSha256'], device_unit_sha256='4' * 64,
+            source_sha256=self.build['sourceSha256'], artifact_sha256=self.build['artifactSha256'],
+            test_artifact_sha256=self.build['testArtifactSha256'], certificate_sha256=self.build['certificateSha256'],
+            watchdog_receipt_sha256='9' * 64)
+        server = SimpleNamespace(serve_forever=lambda **_: None, shutdown=lambda: None, server_close=lambda: None)
+        broker = SimpleNamespace(metadata=lambda: {}, close=Mock())
+        pairing = SimpleNamespace(close=Mock())
+        commands = []
+        def command(argv, output, alias, **kwargs):
+            commands.append(alias)
+            if alias == 'device-state':
+                elapsed[0] = 91  # Only 149 seconds remain from the admitted 180-second lease.
+                return b'device\n'
+            raise EntryError('launcher_was_dispatched')
+        with patch.object(window.time, 'monotonic', side_effect=lambda: root_monotonic + elapsed[0]), \
+                patch.object(window.time, 'time', side_effect=lambda: (root_epoch + elapsed[0] * 1000) / 1000):
+            selected = self.configuration()
+            lease = owned.enter(window.ORDER[0])
+            with patch.object(driver, 'validate_physical_prerequisites', wraps=driver.validate_physical_prerequisites) as prerequisites, \
+                    patch.object(driver, 'validate_backend_startup', return_value='f' * 64), \
+                    patch.object(driver, 'FirebaseVerifier'), patch.object(driver, 'Broker', return_value=broker), \
+                    patch.object(driver, 'create_server', return_value=server), \
+                    patch.object(driver, 'LauncherPairing', return_value=pairing), \
+                    patch.object(driver, 'checked_run', side_effect=command):
+                with self.assertRaisesRegex(EntryError, '^reader_sequential_entry_refused$'):
+                    driver.verify_entry(selected, SimpleNamespace(objects={'case_a': b'synthetic'}), self.base,
+                        lease.deadline, case_id='case_a', build_path=self.build_path,
+                        prerequisite_path=self.proof_path, sequential_lease=lease)
+                prerequisites.assert_called_once()
+            self.assertEqual(commands, ['device-state'])
+            broker.close.assert_called_once(); pairing.close.assert_called_once()
+
+    def reader_window(self, root_epoch, root_monotonic):
+        import reader_android_window as window
+        self.proof.update(batchId=window.ORDER[0], deviceModel='Moto E20', reservationExpiresAt=root_epoch + 470000)
+        self.proof_path.write_bytes(frozen_json(self.proof))
+        self.build['testAppId'] = self.values['expectedAppId'] + '.test'
+        self.build_path.write_bytes(frozen_json(self.build))
+        return window.SequentialAndroidWindow(root_epoch_milliseconds=root_epoch,
+            root_monotonic=root_monotonic, reservation_expires_at_milliseconds=self.proof['reservationExpiresAt'],
+            reservation_receipt_sha256=self.proof['reservationReceiptSha256'], allocation_sha256='2' * 64,
+            device_selector_sha256=self.proof['deviceSelectorSha256'], device_unit_sha256='4' * 64,
+            source_sha256=self.build['sourceSha256'], artifact_sha256=self.build['artifactSha256'],
+            test_artifact_sha256=self.build['testArtifactSha256'], certificate_sha256=self.build['certificateSha256'],
+            watchdog_receipt_sha256='9' * 64)
+
+    def test_reader_run_forwards_lease_to_real_verify_and_refuses149_before_launcher(self):
+        from types import SimpleNamespace
+        import reader_android_window as window
+        import reader_resolution_experiment as reader
+        import native_artwork_comparison as comparison
+        from test_reader_resolution_experiment import make_reader_manifest
+        root_epoch, root_monotonic = self.now - 60000, time.monotonic() - 60
+        elapsed, commands = [60], []
+        manifest = make_reader_manifest(self)
+        selected = self.configuration()
+        output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+        owned = self.reader_window(root_epoch, root_monotonic)
+        server = SimpleNamespace(serve_forever=lambda **_: None, shutdown=lambda: None, server_close=lambda: None)
+        def command(argv, target, alias, **kwargs):
+            commands.append(alias)
+            if alias == 'device-state':
+                elapsed[0] = 91
+                return b'device\n'
+            raise EntryError('launcher_was_dispatched')
+        with patch.object(window.time, 'monotonic', side_effect=lambda: root_monotonic + elapsed[0]), \
+                patch.object(window.time, 'time', side_effect=lambda: (root_epoch + elapsed[0] * 1000) / 1000), \
+                patch.object(driver, 'validate_physical_prerequisites', wraps=driver.validate_physical_prerequisites) as prerequisites, \
+                patch.object(comparison, 'validate_comparison_audit'), patch.object(comparison, 'require_fresh_android_process'), \
+                patch.object(driver, 'validate_backend_startup', return_value='f' * 64), \
+                patch.object(driver, 'FirebaseVerifier'), patch.object(driver, 'create_server', return_value=server), \
+                patch.object(driver, 'checked_run', side_effect=command):
+            with self.assertRaisesRegex(EntryError, '^reader_sequential_entry_refused$'):
+                reader.run(selected, manifest, output, sequential_window=owned, build_path=self.build_path,
+                    prerequisite_path=self.proof_path, audit_path='synthetic-audit')
+            self.assertEqual(prerequisites.call_count, 2)
+            self.assertIs(prerequisites.call_args_list[0].kwargs['sequential_lease'],
+                prerequisites.call_args_list[1].kwargs['sequential_lease'])
+            self.assertEqual(commands, ['device-state'])
+            self.assertIsNone(owned._active)
+            self.assertTrue(owned._failed)
+            with self.assertRaisesRegex(EntryError, 'reader_sequential_order_rejected'):
+                owned.enter(window.ORDER[1], geometry_sha256='a' * 64)
+        failure = json.loads((output / 'reader-failure-receipt.json').read_bytes())
+        self.assertEqual(failure['reason'], 'reader_sequential_entry_refused')
+        self.assertFalse((output / 'reader-result.json').exists())
+        self.assertFalse((output / 'verification-receipt.json').exists())
+
+    def test_reader_run_malformed_device_model_fails_with_identity_receipt_before_native(self):
+        import reader_android_window as window
+        import reader_resolution_experiment as reader
+        from test_reader_resolution_experiment import make_reader_manifest
+        root_epoch, root_monotonic = self.now - 60000, time.monotonic() - 60
+        for index, model in enumerate((None, 123, {}, [])):
+            self.values['privateOutputRoot'] = str(self.base / ('malformed-sequential-' + str(index)))
+            manifest = make_reader_manifest(self)
+            selected = self.configuration()
+            output = Path(selected.values['privateOutputRoot']); output.mkdir(mode=0o700)
+            owned = self.reader_window(root_epoch, root_monotonic)
+            self.proof['deviceModel'] = model
+            self.proof_path.write_bytes(frozen_json(self.proof))
+            with self.subTest(model=model), \
+                    patch.object(window.time, 'monotonic', return_value=root_monotonic + 60), \
+                    patch.object(window.time, 'time', return_value=(root_epoch + 60000) / 1000), \
+                    patch.object(driver, 'verify_entry') as verify:
+                with self.assertRaisesRegex(EntryError, '^reader_sequential_identity_rejected$'):
+                    reader.run(selected, manifest, output, sequential_window=owned, build_path=self.build_path,
+                        prerequisite_path=self.proof_path, audit_path='synthetic-audit')
+                verify.assert_not_called()
+                with self.assertRaisesRegex(EntryError, 'reader_sequential_order_rejected'):
+                    owned.enter(window.ORDER[1], geometry_sha256='a' * 64)
+            failure = json.loads((output / 'reader-failure-receipt.json').read_bytes())
+            self.assertEqual(failure['reason'], 'reader_sequential_identity_rejected')
+            self.assertFalse(failure['automaticRetry'])
+            self.assertFalse((output / 'reader-result.json').exists())
+
     def test_complete_synthetic_android_and_iphone_prerequisites_pass_real_validator(self):
         self.assertEqual(self.validate(), (self.build, self.proof))
         self.values.update(platform="ios", expectedAppId="com.tellpal.tellpalMobilePoc.imageexperiment.release")

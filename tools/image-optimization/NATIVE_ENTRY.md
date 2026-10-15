@@ -171,3 +171,79 @@ Physical qualification must separately verify profile and debugger-free release,
 The 2026-10-11 read-only readiness receipt separately records connected selected iPhone 12 transport, zero valid configured signing identities, an exact privately observed/accepted console project and current principal Owner role. The user-selected console's Device Streaming monthly Android Studio physical streaming quota showed a Blaze limit of 4000 minutes and usage 0; a separate Spark row showed 30 and usage 0. These configured limits do not establish a free billing balance, reservation/session or installed artifact/authentication binding. Automated testing quota is a different observation. Real project/device selectors and original console/device receipts stay private; no IAM/quota/billing/auth/install/reservation operation was performed.
 
 Rollback stops dispatch, revokes only this session, closes owned server/client sockets and workers, settles provider/Cubit/composition owners and removes only exact experiment cache/build/app/test outputs after identity checks. Preserve private original inputs, failed receipts, existing apps/media, canonical QA account and historical trackers. The driver never removes another reservation, forwarding rule or existing app.
+
+## Selected 0.75× reader primary
+
+`reader_resolution_075_r1` is an explicit six-page primary. Default preparation still
+produces exactly historical A/B/C; the two-page quality batches keep their separate
+no-memory contract. Its PNGs are resized directly from admitted v7 original pixels
+with Pillow 12 LANCZOS, `reducing_gap=None`, RGB PNG level 9 and `optimize=False`.
+`qualify(..., source_root=...)` independently admits the pinned originals and
+re-encodes all six files, checking manifest/source/reference/geometry/dimensions and
+exact bytes. A declared factor or preparation receipt alone cannot qualify it.
+Legacy `qualification` and `sourceSufficiencyReason` retain encoded pixel shortages.
+Only `intentionalUndersamplingPerformanceEligibility=observed_samples` reports the
+separate performance eligibility; its provenance explicitly requires display
+upsampling and supplies no new human quality acceptance.
+
+An operator may supply one `reader_android_window.SequentialAndroidWindow` to
+`reader_resolution_experiment.run(..., sequential_window=window)` for A→075→C on
+one fixed allocation/build/unit. It admits no quality/B batch, overlap, replay,
+changed geometry or continuation after a failed invocation. Provider expiration is
+bounded by root+470 seconds; the operator's independent cancellation and hard
+cleanup remain root+450/root+478. Every native dispatch needs at least 150 seconds
+for complete phases and a driver deadline of at most 180 seconds. Both physical
+prerequisite passes validate the same typed lease. Without that lease, the original
+300/105/195 policy is unchanged. This host protocol performs no cloud allocation,
+clock calibration or provider cleanup: retain original private ownership,
+watchdog, UTC, physical-device and terminal-cleanup evidence separately.
+
+The separate finite `seven_minutes_after_terminal_r2` profile keeps the same
+entry, identity and native invocation guards. It requires a private original
+first-root authoritative cleanup receipt, its exact SHA-256, a whole-root duration
+at least that receipt's elapsed duration and at most 59000 ms, and a distinct
+current provider-name SHA-256. It permits provider expiry through root+418000 ms,
+cancellation at root+390 seconds and hard cleanup at root+418 seconds. The first
+root retains one rounded minute and this profile permits at most seven, preserving
+the aggregate eight-minute bound and the historical modeled upper amount. A prior
+terminal receipt cannot authorize another window in the same process; the private
+operator also owns the cross-process allocation ledger and the one remaining root
+limit. `limits_receipt` exposes these fixed limits without querying billing or
+usage. The operator requests root+375-second expiry and independently validates
+the actual ACTIVE readback; this module performs no provider request.
+
+After the human explicitly lifted the historical USD10 ceiling, the distinct
+`nine_minutes_matrix_r3` profile permits one complete A→075→C allocation with
+provider expiry at most root+538000 ms, independent cancellation at root+510
+seconds and hard cleanup at root+538 seconds (at most nine rounded minutes).
+The operator requests absolute root+500-second expiry and must verify the actual
+ACTIVE readback. This finite profile accepts no prior-terminal/debit fields or
+arbitrary duration; its limits receipt has no historical USD10 amount or guarantee.
+It retains the same identity, geometry, once-only order, ≥150-second admission and
+≤180-second native invocation guards. The default eight-minute and historical
+seven-minute profiles retain their original policies and receipts.
+
+The separately named `twelve_minutes_matrix_r11` profile retains those same
+native/identity/geometry/order guards while accommodating slower pre-measurement
+clock qualification: actual provider expiry ≤root+718000 ms, cancellation at690s,
+hard cleanup at718s, at most12 rounded minutes for the current allocation only.
+The operator requests root+658s and verifies the actual provider readback. This
+profile accepts no prior-terminal/debit fields, arbitrary duration or historical
+USD10 guarantee. It does not change or extend any earlier allocation.
+
+Terminal-receipt consumption is atomic across constructor threads; per-window
+entry, completion and cleanup transitions are serialized. A native invocation
+error remains the reported error even if lease finalization also detects lateness
+or a clock fault. Such a lease still fails and cannot authorize the next condition;
+a late otherwise successful invocation is still refused.
+
+Reader host runs also retain a passive private `broker-terminal-observation.json`
+before broker-owned cleanup. It records finite revoke request/response facts,
+pre-close reason, token presence, explicit app revocation, and hashed fixture/build/
+manifest/session identities. It performs no extra authentication or state call.
+Observer errors cannot prevent the original close or replace its exception. A
+failed Android native run may retain a complete digest-verified
+`failure-device-ledger.json`; missing/corrupt chunks produce an unavailable
+`failure-ledger-observation.json`. These files remain unqualified failure evidence.
+They cannot create a verification receipt, claim native settlement or replace the
+original outcome guards.

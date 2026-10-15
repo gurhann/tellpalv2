@@ -399,6 +399,13 @@ void main() {
         }
         expect(() => config.objectUri('reader_page_7'), throwsFormatException);
       }
+      final selected = readerWire(
+        batch: 'reader_resolution_075_r1',
+      ).configuration();
+      expect(selected.isReader, isTrue);
+      expect(selected.readerQuality, isFalse);
+      expect(selected.readerFullDecode, isFalse);
+      expect(selected.readerPageCount, 6);
       final wire = readerWire();
       wire.metadata['expectedAppId'] =
           'com.tellpal.tellpal_mobile_poc.imageexperiment.profile';

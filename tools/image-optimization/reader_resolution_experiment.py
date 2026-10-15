@@ -10,6 +10,7 @@ from hashlib import sha256
 from io import BytesIO
 import math
 from pathlib import Path
+import secrets
 import statistics
 import struct
 import sys
@@ -39,6 +40,9 @@ PROTECTED_STREAMING_USD = 5.85
 RESERVE_USD = .50
 PHASES = ('baseline', 'reader', 'natural_retention', 'owned_eviction', 'complete')
 SOURCE_SIZE = (1712, 2778)
+HISTORICAL_PRIMARY_BATCHES = frozenset(('reader_resolution_a_r1',
+    'reader_resolution_b_r1', 'reader_resolution_c_r1'))
+SELECTED075_BATCH = 'reader_resolution_075_r1'
 
 
 def digest(data):
@@ -252,7 +256,7 @@ def prepare_variants(pages, admission, observed_geometry, output, *, batches=Non
     """Every candidate is resized directly from immutable v7, never another candidate."""
     require(type(pages) is tuple and len(pages) == 6 and
         tuple(page.page_number for page in pages) == tuple(range(1, 7)), 'reader_source_order_rejected')
-    selected = frozenset(batch for batch in READER_BATCHES if batch.startswith('reader_resolution_')) if batches is None else frozenset(batches)
+    selected = HISTORICAL_PRIMARY_BATCHES if batches is None else frozenset(batches)
     require(selected and selected <= READER_BATCHES, 'reader_purpose_rejected')
     require(observed_geometry is not None or selected == {'reader_resolution_a_r1'}, 'reader_geometry_unavailable')
     frozen = geometry(observed_geometry) if observed_geometry is not None else None
@@ -267,7 +271,7 @@ def prepare_variants(pages, admission, observed_geometry, output, *, batches=Non
     for batch in sorted(selected):
         entries = []
         is_full = batch in ('reader_resolution_a_r1', 'reader_resolution_b_r1', 'reader_quality_full_r1')
-        factor = .75 if batch == 'reader_quality_075_r1' else 1.0
+        factor = .75 if batch in ('reader_quality_075_r1', SELECTED075_BATCH) else 1.0
         selected_pages = quality_pages if batch.startswith('reader_quality_') else pages
         for page, case_id in zip(selected_pages, READER_CASES):
             demand = ({'width': page.width, 'height': page.height, 'sourcePixelsSufficient': None}
@@ -562,7 +566,58 @@ def require_primary_selection_journey(rows, bounds):
         rapid_times[-1] - rapid_times[0] <= 1000000, 'reader_selection_rapid_rejected')
 
 
-def qualify(data, binding, outcome, manifest, *, platform):
+def selected075_provenance(manifest, observed, source_root):
+    """Independently admit originals and reproduce all six finite 0.75x PNGs."""
+    require(source_root is not None, 'reader_selected075_sources_required')
+    pages, admission = admit_sources(source_root)
+    public = strict_json(manifest.public_bytes)
+    require(public.get('batchId') == SELECTED075_BATCH and
+        public.get('corpusSha256') == digest(frozen_json(admission)) and
+        public.get('sourceSha256') == digest(frozen_json([page.source_sha256 for page in pages])) and
+        public.get('referenceSha256') == digest(frozen_json([page.reference_sha256 for page in pages])),
+        'reader_selected075_source_binding_rejected')
+    provenance = []
+    for page, entry in zip(pages, manifest.entries):
+        expected = contain_dimensions(page.width, page.height, observed['observedSlotWidth'],
+            observed['observedSlotHeight'], observed['observedDpr'], .75)
+        original_demand = contain_dimensions(page.width, page.height, observed['observedSlotWidth'],
+            observed['observedSlotHeight'], observed['observedDpr'])
+        require(original_demand['sourcePixelsSufficient'] is True,
+            'reader_selected075_original_shortage')
+        require(entry['sourceSha256'] == page.source_sha256 and
+            entry['referenceSha256'] == page.reference_sha256 and
+            (entry['width'], entry['height']) == (expected['width'], expected['height']) and
+            entry['arm'] == 'candidate' and entry['encoderRevision'] == 'reader_lanczos_pillow12_r1',
+            'reader_selected075_resize_binding_rejected')
+        encoded = encode_page(page, expected)
+        require(manifest.objects.get(entry['caseId']) == encoded and
+            entry['byteSize'] == len(encoded) and entry['outputSha256'] == digest(encoded),
+            'reader_selected075_bytes_rejected')
+        provenance.append({'pageIndex': page.page_number - 1,
+            'sourceSha256': page.source_sha256, 'referenceSha256': page.reference_sha256,
+            'outputSha256': digest(encoded), 'originalSourceDemand': original_demand,
+            'preparedDimensions': expected})
+    return {'factor': .75, 'sourceBinding': 'independently_admitted_originals',
+        'resampler': 'direct_v7_LANCZOS_reducing_gap_none',
+        'pngSettings': {'mode': 'RGB', 'compressLevel': 9, 'optimize': False},
+        'displayUpsamplingRequired': True, 'pages': provenance}
+
+
+def reload_reader_manifest(config, previous, binding):
+    """Re-admit private inputs after the broker retires its owned encoded bytes."""
+    from native_entry_config import Configuration, load_manifest
+    # The original run directory now exists. Re-admission validates all original
+    # manifest/input paths against a fresh, uncreated sibling output candidate.
+    candidate = Path(config.values['privateOutputRoot']).parent / ('reader-readmission-' + secrets.token_hex(16))
+    admission_config = Configuration({**config.values, 'privateOutputRoot': str(candidate)}, config.config_sha256)
+    refreshed = load_manifest(admission_config)
+    require(refreshed.private_sha256 == previous.private_sha256 and
+        refreshed.public_sha256 == previous.public_sha256 == binding.get('publicManifestSha256') and
+        binding.get('batchId') == config.values['batchId'], 'reader_reloaded_manifest_binding_rejected')
+    return refreshed
+
+
+def qualify(data, binding, outcome, manifest, *, platform, source_root=None):
     require(platform in ('ios', 'android') and binding.get('batchId') in READER_BATCHES and
         validate_reader_entries(binding['batchId'], manifest.entries) and
         binding.get('publicManifestSha256') == manifest.public_sha256 and
@@ -587,6 +642,8 @@ def qualify(data, binding, outcome, manifest, *, platform):
         if entry['profileRevision'] != 'reader_discover_r1':
             require((entry['logicalSlotWidth'], entry['logicalSlotHeight'], entry['dpr']) ==
                 tuple(observed[key] for key in GEOMETRY_FIELDS[:3]), 'reader_geometry_changed')
+    selected075 = (selected075_provenance(manifest, observed, source_root)
+        if binding['batchId'] == SELECTED075_BATCH else None)
     painted = [row for row in rows if row.get('event') == 'page_paint']
     require(required_pages <= {row['pageIndex'] for row in painted}, 'reader_page_paint_unavailable')
     page_results = []
@@ -675,9 +732,10 @@ def qualify(data, binding, outcome, manifest, *, platform):
         facts[0].get('apiLevel') == 30 and facts[0].get('lowRamDevice') is True and
         type(facts[0].get('memTotalBytes')) is int and 1536 * 1024 ** 2 <= facts[0]['memTotalBytes'] <= 2 * 1024 ** 3 and
         type(facts[0].get('memoryClassMiB')) is int and facts[0]['memoryClassMiB'] > 0)
-    metric_eligible = (quality or memory['eligibility'] == 'observed_samples' and
-        lifecycle_observed and facts_available and (platform != 'android' or low_memory) and
-        all(page['sourceDemand']['sourcePixelsSufficient'] is True for page in page_results))
+    observation_eligible = (not quality and memory['eligibility'] == 'observed_samples' and
+        lifecycle_observed and facts_available and (platform != 'android' or low_memory))
+    metric_eligible = quality or observation_eligible and all(
+        page['sourceDemand']['sourcePixelsSufficient'] is True for page in page_results)
     shortages = [page['pageIndex'] for page in page_results if page['sourceDemand']['sourcePixelsSufficient'] is not True]
     frames = [row for row in rows if row.get('event') == 'frame_aggregate']
     frame_observations = [type(row.get('frameCount')) is int and row['frameCount'] > 0 for row in frames]
@@ -687,6 +745,9 @@ def qualify(data, binding, outcome, manifest, *, platform):
         'qualification': 'awaiting_human_quality' if quality else 'qualified' if metric_eligible else 'unavailable',
         'sourceSufficiencyReason': 'insufficient_pixels' if shortages else 'sufficient',
         'sourceShortagePages': shortages,
+        'intentionalUndersamplingPerformanceEligibility': ('observed_samples' if observation_eligible else
+            'unavailable') if selected075 is not None else 'not_applicable',
+        'intentionalUndersamplingProvenance': selected075,
         'batchId': binding['batchId'], 'ledgerSha256': digest(data), 'recordCount': len(rows), 'droppedCount': 0,
         'sessionSha256': binding['sessionSha256'], 'geometry': observed, 'pages': page_results,
         'memory': memory, 'frames': frames, 'framesReason': frame_reason,
@@ -714,44 +775,111 @@ def run(config, manifest, output, **arguments):
         raise
 
 
-def _run(config, manifest, output, *, build_path, prerequisite_path, audit_path,
-        frozen_geometry=None, root_elapsed_seconds=None, reservation_remaining_seconds=None):
+def _run(config, manifest, output, *, sequential_window=None, **arguments):
+    if sequential_window is None:
+        return _run_observed(config, manifest, output, **arguments)
+    from reader_android_window import SequentialAndroidWindow
+    require(type(sequential_window) is SequentialAndroidWindow and
+        config.values['platform'] == 'android' and
+        arguments.get('root_elapsed_seconds') is None and
+        arguments.get('reservation_remaining_seconds') is None,
+        'reader_sequential_lease_rejected')
+    frozen = arguments.get('frozen_geometry')
+    frozen_sha256 = digest(frozen_json(geometry(frozen))) if frozen is not None else None
+    lease = sequential_window.enter(config.values['batchId'], geometry_sha256=frozen_sha256)
+    result = None
+    failed = False
+    try:
+        result = _run_observed(config, manifest, output, sequential_lease=lease, **arguments)
+    except BaseException:
+        failed = True
+        raise
+    finally:
+        try:
+            sequential_window.finish(lease, succeeded=result is not None,
+                geometry_sha256=digest(frozen_json(result['geometry'])) if result is not None else None)
+        except BaseException:
+            if not failed:
+                raise
+    write_private(Path(output) / 'reader-result.json', result)
+    return result
+
+
+def _run_observed(config, manifest, output, *, build_path, prerequisite_path, audit_path,
+        frozen_geometry=None, root_elapsed_seconds=None, reservation_remaining_seconds=None,
+        sequential_lease=None, source_root=None):
     """Observe an already installed reader launch; never create a paid allocation."""
     import native_entry_driver as host
     from native_fixture_server import Broker
     from native_artwork_comparison import (LedgerChunks, LOCK, validate_comparison_audit,
         require_fresh_android_process)
+    from reader_terminal_observation import ReaderTerminalObservation
     require(config.values['mode'] == 'release' and
         validate_reader_entries(config.values['batchId'], manifest.entries), 'reader_selection_rejected')
     if config.values['batchId'] != 'reader_resolution_a_r1':
         geometry(frozen_geometry)
-    build, proof = host.validate_physical_prerequisites(config, build_path, prerequisite_path)
+    sequential_arguments = {'sequential_lease': sequential_lease} if sequential_lease is not None else {}
+    build, proof = host.validate_physical_prerequisites(config, build_path, prerequisite_path,
+        **sequential_arguments)
     validate_comparison_audit(audit_path, build_path, build, proof, config.values['platform'])
     if config.values['platform'] == 'android':
         require(config.values['batchId'] != 'reader_resolution_b_r1' and
+            type(proof.get('deviceModel')) is str and
             proof.get('deviceModel', '').lower() in ('moto e20', 'motorola moto e20'), 'reader_device_selection_rejected')
-        entry_window_guard(root_elapsed_seconds, reservation_remaining_seconds)
+        if sequential_lease is None:
+            entry_window_guard(root_elapsed_seconds, reservation_remaining_seconds)
+    if config.values['batchId'] == SELECTED075_BATCH:
+        selected075_provenance(manifest, geometry(frozen_geometry), source_root)
     source_digest = host.source_snapshot()[1]
     tools = {name: digest((Path(__file__).parent / name).read_bytes()) for name in
-        ('reader_resolution_experiment.py', 'native_entry_config.py', 'native_fixture_server.py', 'native_entry_driver.py')}
+        ('reader_resolution_experiment.py', 'reader_android_window.py', 'reader_terminal_observation.py', 'native_entry_config.py',
+            'native_fixture_server.py', 'native_entry_driver.py')}
     output = Path(output)
     write_private(output / 'reader-tool-freeze.json', {'scope': SCOPE, 'sourceSha256': source_digest,
         'toolSha256': tools, 'privateManifestSha256': manifest.private_sha256,
         'publicManifestSha256': manifest.public_sha256, 'artifactSha256': build['artifactSha256'],
         'testArtifactSha256': build['testArtifactSha256']})
-    deadline = time.monotonic() + host.TOTAL_SECONDS
+    deadline = (time.monotonic() + host.TOTAL_SECONDS if sequential_lease is None else sequential_lease.deadline)
     if config.values['platform'] == 'android':
         require_fresh_android_process(config, output, deadline)
     require(LOCK.acquire(blocking=False), 'reader_overlap')
     original_broker, original_pairing = host.Broker, host.LauncherPairing
     state = {}
+    terminal = ReaderTerminalObservation(output, manifest, build, source_digest)
     class ObservedBroker(Broker):
         def claim(self, value):
             data = super().claim(value)
             state['binding'] = reader_binding(self.manifest, strict_json(data), frozen_geometry)
             state['binding']['physicalTwoGiBAdmitted'] = config.values['platform'] == 'android'
+            if sequential_lease is not None:
+                state['binding']['deviceUnitSha256'] = sequential_lease.window.device_unit_sha256
+                state['binding']['allocationSha256'] = sequential_lease.window.allocation_sha256
             write_private(output / 'run-binding.json', state['binding'])
             return data
+        def revoke_from_app(self, *args, **kwargs):
+            try:
+                terminal.request()
+            except Exception:
+                pass
+            try:
+                result = super().revoke_from_app(*args, **kwargs)
+            except Exception:
+                try:
+                    terminal.exception()
+                except Exception:
+                    pass
+                raise
+            try:
+                terminal.response(result)
+            except Exception:
+                pass
+            return result
+        def close(self):
+            try:
+                terminal.before_close(self)
+            except Exception:
+                pass
+            return super().close()
     class Pairing(original_pairing):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -764,7 +892,14 @@ def _run(config, manifest, output, *, build_path, prerequisite_path, audit_path,
         host.Broker, host.LauncherPairing = ObservedBroker, Pairing
         outcome = host.verify_entry(config, manifest, output, deadline, case_id=READER_CASES[0],
             build_path=build_path, prerequisite_path=prerequisite_path,
-            quality_capture=config.values['batchId'].startswith('reader_quality_'))
+            quality_capture=config.values['batchId'].startswith('reader_quality_'), **sequential_arguments)
+    except Exception:
+        if config.values['platform'] == 'android':
+            try:
+                terminal.failed_ledger(state.get('pairing'), state.get('binding'))
+            except Exception:
+                pass
+        raise
     finally:
         host.Broker, host.LauncherPairing = original_broker, original_pairing
         LOCK.release()
@@ -774,8 +909,16 @@ def _run(config, manifest, output, *, build_path, prerequisite_path, audit_path,
     if config.values['platform'] == 'android':
         data = state['pairing'].chunks.finish()
         write_private(output / 'device-ledger.json', data)
-        result = qualify(data, state['binding'], outcome, manifest, platform='android')
-        write_private(output / 'reader-result.json', result)
+        refreshed = (reload_reader_manifest(config, manifest, state['binding'])
+            if config.values['batchId'] == SELECTED075_BATCH else manifest)
+        try:
+            result = qualify(data, state['binding'], outcome, refreshed,
+                platform='android', source_root=source_root)
+        finally:
+            if refreshed is not manifest:
+                refreshed.objects.clear()
+        if sequential_lease is None:
+            write_private(output / 'reader-result.json', result)
         return result
     return {'scope': SCOPE, 'status': 'awaiting_private_device_ledger',
         'sessionSha256': state['binding']['sessionSha256'], 'qualityAccepted': None}

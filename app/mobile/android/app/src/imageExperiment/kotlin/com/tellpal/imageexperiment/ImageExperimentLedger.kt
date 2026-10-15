@@ -133,7 +133,7 @@ class ImageExperimentQualityLifetime(private val now: () -> Long = System::curre
 
 /** Reader permissions are finite and never widen a legacy single-case session. */
 object ImageExperimentReaderPolicy {
-    val primaryBatches = setOf("reader_resolution_a_r1", "reader_resolution_b_r1", "reader_resolution_c_r1")
+    val primaryBatches = setOf("reader_resolution_a_r1", "reader_resolution_b_r1", "reader_resolution_c_r1", "reader_resolution_075_r1")
     val qualityBatches = setOf("reader_quality_full_r1", "reader_quality_100_r1", "reader_quality_075_r1")
     val batches = primaryBatches + qualityBatches
     fun accepts(batch: String, selected: String, entries: JSONArray): Boolean = runCatching {
