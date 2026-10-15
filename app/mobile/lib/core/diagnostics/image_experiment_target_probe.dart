@@ -18,6 +18,9 @@ class ImageExperimentTargetProbe extends StatefulWidget {
     required this.onDecoded,
     required this.onFailure,
     this.onDraw,
+    this.requireAbsentKeys = false,
+    this.onRelease,
+    this.onQualityBinding,
   });
   final ImageExperimentProvider value;
   final ImageExperimentImageCache cache;
@@ -26,6 +29,9 @@ class ImageExperimentTargetProbe extends StatefulWidget {
   final bool Function() current;
   final void Function() onDecoded, onFailure;
   final void Function()? onDraw;
+  final bool requireAbsentKeys;
+  final void Function(Future<void>)? onRelease;
+  final void Function(Map<String, Object?>)? onQualityBinding;
   @override
   State<ImageExperimentTargetProbe> createState() =>
       _ImageExperimentTargetProbeState();
@@ -37,11 +43,33 @@ class _ImageExperimentTargetProbeState
   ImageStreamListener? _listener;
   ImageInfo? _info;
   bool _failed = false;
+  bool _resolving = false;
   bool _drawCompleted = false;
+  Future<void>? _remembering;
+  Size? _observedSize;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_stream != null) return;
+    if (_stream != null || _resolving) return;
+    _resolving = true;
+    if (widget.requireAbsentKeys) {
+      unawaited(_resolveCold());
+      return;
+    }
+    _resolve();
+  }
+
+  Future<void> _resolveCold() async {
+    try {
+      await widget.cache.requireAbsentKeys(widget.value);
+      if (!mounted || !widget.current()) return;
+      _resolve();
+    } catch (_) {
+      _failure();
+    }
+  }
+
+  void _resolve() {
     _stream = widget.value.provider.resolve(
       createLocalImageConfiguration(context),
     );
@@ -76,17 +104,15 @@ class _ImageExperimentTargetProbeState
       'ownership': 'owned',
     });
     image.dispose();
-    unawaited(
-      widget.cache
-          .remember(widget.value, () => mounted && widget.current())
-          .catchError((_) {
-            widget.recorder.record({
-              'event': 'failure',
-              'reason': 'invalid_fixture',
-              'generation': widget.generation,
-            });
-          }),
-    );
+    _remembering = widget.cache
+        .remember(widget.value, () => mounted && widget.current())
+        .catchError((_) {
+          widget.recorder.record({
+            'event': 'failure',
+            'reason': 'invalid_fixture',
+            'generation': widget.generation,
+          });
+        });
     // A synchronous image listener may run during build; notify after the frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || !widget.current()) return;
@@ -128,9 +154,13 @@ class _ImageExperimentTargetProbeState
                   mounted &&
                   widget.current() &&
                   (ModalRoute.of(context)?.isCurrent ?? false),
+              observeLayout: (size) {
+                _observedSize = size;
+              },
               draw: (frame) {
                 widget.recorder.record({
                   'event': 'draw',
+                  'caseSha256': ImageExperimentRecorder.hash(fixture.caseId),
                   'frameNumber': frame,
                   'providerSha256': widget.value.immutableKey,
                   'attemptSha256': widget.value.attemptSha256,
@@ -143,6 +173,20 @@ class _ImageExperimentTargetProbeState
                 });
                 if (!_drawCompleted && widget.onDraw != null) {
                   _drawCompleted = true;
+                  final size = _observedSize;
+                  final binding = <String, Object?>{
+                    'caseSha256': ImageExperimentRecorder.hash(fixture.caseId),
+                    'providerSha256': widget.value.immutableKey,
+                    'attemptSha256': widget.value.attemptSha256,
+                    'generation': widget.generation,
+                    'observedSlotWidth': size?.width ?? 0.0,
+                    'observedSlotHeight': size?.height ?? 0.0,
+                    'observedDpr': MediaQuery.devicePixelRatioOf(context),
+                    'actualDecodeWidth': _info!.image.width,
+                    'actualDecodeHeight': _info!.image.height,
+                  };
+                  widget.recorder.record({...binding, 'event': 'layout'});
+                  widget.onQualityBinding?.call(binding);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (mounted && widget.current()) widget.onDraw!();
                   });
@@ -158,19 +202,35 @@ class _ImageExperimentTargetProbeState
     if (_listener != null) _stream?.removeListener(_listener!);
     _info?.dispose();
     _info = null;
-    // Only the exact provider and transfer are owned by this departed route.
-    unawaited(widget.value.provider.evict());
-    unawaited(
-      widget.cache.release(widget.value, failed: _failed).catchError((_) {}),
-    );
-    widget.recorder.record({
-      'event': 'ownership',
-      'ownership': 'released',
-      'generation': widget.generation,
-      'providerSha256': widget.value.immutableKey,
-      'attemptSha256': widget.value.attemptSha256,
-    });
+    // Completion includes the listener, renderer frame boundary and exact cache owner.
+    final release = _releaseAfterFrame();
+    widget.onRelease?.call(release);
+    unawaited(release.catchError((_) {}));
     super.dispose();
+  }
+
+  Future<void> _releaseAfterFrame() async {
+    try {
+      await WidgetsBinding.instance.endOfFrame;
+      await _remembering;
+      await widget.value.provider.evict();
+      await widget.cache.release(widget.value, failed: _failed);
+      widget.recorder.record({
+        'event': 'ownership',
+        'ownership': 'released',
+        'caseSha256': ImageExperimentRecorder.hash(widget.value.fixture.caseId),
+        'generation': widget.generation,
+        'providerSha256': widget.value.immutableKey,
+        'attemptSha256': widget.value.attemptSha256,
+      });
+    } catch (_) {
+      widget.recorder.record({
+        'event': 'failure',
+        'reason': 'cleanup_unavailable',
+        'generation': widget.generation,
+      });
+      rethrow;
+    }
   }
 }
 
@@ -181,12 +241,14 @@ class _TargetImage extends LeafRenderObjectWidget {
     required this.alignment,
     required this.current,
     required this.draw,
+    required this.observeLayout,
   });
   final ui.Image image;
   final BoxFit fit;
   final Alignment alignment;
   final bool Function() current;
   final void Function(int) draw;
+  final void Function(Size) observeLayout;
   @override
   RenderObject createRenderObject(BuildContext context) => _TargetRenderImage(
     image: image.clone(),
@@ -194,6 +256,7 @@ class _TargetImage extends LeafRenderObjectWidget {
     alignment: alignment,
     current: current,
     draw: draw,
+    observeLayout: observeLayout,
   );
   @override
   void updateRenderObject(
@@ -205,7 +268,8 @@ class _TargetImage extends LeafRenderObjectWidget {
       ..fit = fit
       ..alignment = alignment
       ..current = current
-      ..draw = draw;
+      ..draw = draw
+      ..observeLayout = observeLayout;
   }
 }
 
@@ -216,9 +280,17 @@ class _TargetRenderImage extends RenderImage {
     required super.alignment,
     required this.current,
     required this.draw,
+    required this.observeLayout,
   });
   bool Function() current;
   void Function(int) draw;
+  void Function(Size) observeLayout;
+  @override
+  void performLayout() {
+    super.performLayout();
+    observeLayout(size);
+  }
+
   @override
   void paint(PaintingContext context, Offset offset) {
     if (!attached || image == null || !current() || size.isEmpty) return;

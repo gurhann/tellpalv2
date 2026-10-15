@@ -9,27 +9,31 @@ import java.io.File
 
 /** Re-encodes an independently validated whitelist into this application's private container. */
 object ImageExperimentLedger {
-    private val hashes = setOf("caseSha256", "providerSha256", "attemptSha256")
+    private val hashes = setOf("caseSha256", "providerSha256", "attemptSha256", "sessionSha256", "sourceSha256", "referenceSha256", "settingsSha256", "scopeSha256")
     private val integers = setOf("generation", "monotonicMicroseconds", "requestCount", "retryCount", "bodyBytes",
         "sourceWidth", "sourceHeight", "requiredWidth", "requiredHeight", "decodeWidth", "decodeHeight",
         "actualDecodeWidth", "actualDecodeHeight", "frameNumber", "dartHeapBytes", "dartExternalBytes",
         "decodedLruBytes", "decodedLiveCount", "decodedPendingCount", "processBytes", "nativeBytes",
-        "graphicsBytes", "diskBytes", "transferBytes", "firstRasterizedTargetFrame", "observerOverheadMicroseconds")
-    private val doubles = setOf("logicalSlotWidth", "logicalSlotHeight", "dpr", "alignmentX", "alignmentY")
+        "graphicsBytes", "diskBytes", "transferBytes", "firstRasterizedTargetFrame", "observerOverheadMicroseconds", "memoryBytes", "nativeReadMicroseconds", "nativeResultCode", "nativeResultCount", "sampleStartMicroseconds", "sampleEndMicroseconds", "sampleCadenceMicroseconds")
+    private val doubles = setOf("logicalSlotWidth", "logicalSlotHeight", "dpr", "alignmentX", "alignmentY", "observedSlotWidth", "observedSlotHeight", "observedDpr")
     private val booleans = setOf("encodedVerified", "sourceShortage", "physicalPresentationVerified")
     private val strings = mapOf(
+        "phase" to setOf("idle", "baseline", "load", "hold", "releasing", "post_release", "complete"),
+        "memoryCounter" to setOf("ios_phys_footprint", "android_total_pss", "unavailable"),
+        "memoryReason" to setOf("none", "mach_result", "mach_count", "missing_counter", "sample_failed", "session_inactive", "sample_timeout"),
+        "thermalState" to setOf("nominal", "fair", "serious", "critical", "unavailable"),
         "clockDomain" to setOf("dart_monotonic"), "clockUnit" to setOf("microseconds"),
         "fit" to setOf("contain", "cover"), "role" to setOf("isolated_raster_fixture"),
         "event" to setOf("request", "body", "encoded_verified", "decoded", "draw", "failure", "revoke", "cache_state",
-            "status", "status_request", "status_body", "ownership"),
+            "status", "status_request", "status_body", "ownership", "phase", "memory_sample", "release_complete", "layout", "dispatch"),
         "ownership" to setOf("owned", "settling", "settled", "released", "unavailable"),
         "reason" to setOf("none", "invalid_fixture", "session_inactive", "status_unavailable", "status_revoked",
             "missing_counter", "unverified_visibility", "frame_unavailable", "timing_unavailable", "clock_unmapped",
             "retained_layer_ambiguity", "route_departed", "stale_attempt", "internal_settlement_unavailable",
-            "export_capacity", "pin_refused", "transport_refused", "decode_refused", "cleanup_unavailable"),
+            "export_capacity", "pin_refused", "transport_refused", "decode_refused", "cleanup_unavailable", "phase_budget_refused", "load_timeout", "layout_unavailable"),
         "counterReason" to setOf("missing_counter", "unverified_visibility", "frame_unavailable", "timing_unavailable",
             "clock_unmapped", "retained_layer_ambiguity", "internal_settlement_unavailable"),
-        "cacheState" to setOf("network-cold", "disk-warm/decoded-cold", "decoded-warm", "unavailable"))
+        "cacheState" to setOf("namespace_keys_absent", "network-cold", "disk-warm/decoded-cold", "decoded-warm", "unavailable"))
 
     fun validate(raw: String): ByteArray {
         require(raw.toByteArray(Charsets.UTF_8).size <= 262_144)
@@ -90,4 +94,41 @@ object ImageExperimentLedger {
         } catch (_: Exception) { false }
         finally { temporary?.delete() }
     }
+}
+
+/** Self PSS is a distinct OS accounting view, never an iOS footprint equivalent. */
+object ImageExperimentMemory {
+    fun sample(): Map<String, Any?> {
+        val start = android.os.SystemClock.elapsedRealtimeNanos()
+        var bytes: Long? = null
+        var reason = "sample_failed"
+        try {
+            val info = android.os.Debug.MemoryInfo()
+            android.os.Debug.getMemoryInfo(info)
+            val pss = info.totalPss
+            if (pss >= 0) { bytes = Math.multiplyExact(pss.toLong(), 1024L); reason = "none" }
+            else reason = "missing_counter"
+        } catch (_: Exception) { }
+        return mapOf("memoryBytes" to bytes, "memoryCounter" to "android_total_pss",
+            "memoryReason" to reason, "nativeReadMicroseconds" to
+                (android.os.SystemClock.elapsedRealtimeNanos() - start) / 1000L,
+            "nativeResultCode" to null, "nativeResultCount" to null, "thermalState" to "unavailable")
+    }
+}
+
+/** A single native hold lease. Cleared/expired evidence cannot be republished for this attempt. */
+class ImageExperimentQualityLifetime(private val now: () -> Long = System::currentTimeMillis) {
+    private var started = false
+    var deadline: Long = 0L
+        private set
+    fun begin(sessionExpiresAt: Long): Boolean {
+        val current = now()
+        if (started || sessionExpiresAt <= current) return false
+        val limit = runCatching { Math.addExact(current, 10_000L) }.getOrNull() ?: return false
+        started = true
+        deadline = minOf(limit, sessionExpiresAt)
+        return isActive()
+    }
+    fun isActive(): Boolean = deadline > now()
+    fun invalidate() { started = true; deadline = 0L }
 }

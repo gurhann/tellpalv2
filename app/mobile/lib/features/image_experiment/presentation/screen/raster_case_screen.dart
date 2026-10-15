@@ -14,9 +14,12 @@ class RasterCaseScreen extends StatelessWidget {
   final String caseId;
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) =>
-        ImageExperimentResolver.of(context).get<RasterCaseCubit>()
-          ..load(caseId),
+    create: (_) {
+      final composition = ImageExperimentResolver.of(context).composition;
+      final cubit = composition.container<RasterCaseCubit>();
+      composition.startCase(cubit, caseId);
+      return cubit;
+    },
     child: const RasterCaseView(),
   );
 }

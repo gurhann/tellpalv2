@@ -16,6 +16,7 @@ class _ImageExperimentAppState extends State<ImageExperimentApp>
     with WidgetsBindingObserver {
   StreamSubscription<void>? _revocations;
   bool _refused = false;
+  bool _refusing = false;
   @override
   void initState() {
     super.initState();
@@ -27,13 +28,29 @@ class _ImageExperimentAppState extends State<ImageExperimentApp>
   }
 
   void _refuse() {
-    if (!mounted || _refused) return;
-    setState(() => _refused = true);
-    // Route removal settles listeners/render handles before cache/container teardown.
+    if (!mounted || _refusing) return;
+    _refusing = true;
+    if (!widget.composition.phases.enabled ||
+        !widget.composition.phases.quality) {
+      setState(() => _refused = true);
+      unawaited(
+        WidgetsBinding.instance.endOfFrame
+            .then((_) => widget.composition.close())
+            .catchError((_) {}),
+      );
+      return;
+    }
     unawaited(
-      WidgetsBinding.instance.endOfFrame
-          .then((_) => widget.composition.close())
-          .catchError((_) {}),
+      () async {
+        try {
+          await widget.composition.invalidateQualityBinding();
+        } catch (_) {}
+        if (!mounted) return;
+        setState(() => _refused = true);
+        // Native quality evidence is retired before the route can paint a placeholder.
+        await WidgetsBinding.instance.endOfFrame;
+        await widget.composition.close();
+      }().catchError((_) {}),
     );
   }
 

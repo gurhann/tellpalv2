@@ -55,7 +55,7 @@ void main() {
       final count = (value['records'] as List).length;
       expect(count, inInclusiveRange(1, 512));
       expect(value['droppedCount'], 600 - count);
-      expect(utf8.encode(raw).length, lessThanOrEqualTo(262144));
+      expect(utf8.encode(raw).length, lessThanOrEqualTo(250000));
       expect(raw, isNot(contains('secret')));
       expect(raw, isNot(contains('credential')));
       expect(

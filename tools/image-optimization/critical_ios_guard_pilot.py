@@ -32,26 +32,30 @@ EXPECTED_STAGES = {"alternate-trust": "NATIVE_PROBE", "expired-envelope": "NATIV
     "wrong-uid-envelope": "NATIVE_ENVELOPE_BINDING", "corrupt-bytes": "DIAGNOSTIC_UNAVAILABLE"}
 MAX_LEDGER_BYTES = 262144
 OBSERVER_LOCK = threading.Lock()
-HASH_FIELDS = frozenset(("caseSha256", "providerSha256", "attemptSha256"))
+HASH_FIELDS = frozenset(("caseSha256", "providerSha256", "attemptSha256", "sessionSha256", "sourceSha256", "referenceSha256", "settingsSha256", "scopeSha256"))
 INT_FIELDS = frozenset(("generation", "monotonicMicroseconds", "requestCount", "retryCount", "bodyBytes",
     "sourceWidth", "sourceHeight", "requiredWidth", "requiredHeight", "decodeWidth", "decodeHeight",
     "actualDecodeWidth", "actualDecodeHeight", "frameNumber", "dartHeapBytes", "dartExternalBytes",
     "decodedLruBytes", "decodedLiveCount", "decodedPendingCount", "processBytes", "nativeBytes", "graphicsBytes",
-    "diskBytes", "transferBytes", "firstRasterizedTargetFrame", "observerOverheadMicroseconds"))
-DOUBLE_FIELDS = frozenset(("logicalSlotWidth", "logicalSlotHeight", "dpr", "alignmentX", "alignmentY"))
+    "diskBytes", "transferBytes", "firstRasterizedTargetFrame", "observerOverheadMicroseconds", "memoryBytes", "nativeReadMicroseconds", "nativeResultCode", "nativeResultCount", "sampleStartMicroseconds", "sampleEndMicroseconds", "sampleCadenceMicroseconds"))
+DOUBLE_FIELDS = frozenset(("logicalSlotWidth", "logicalSlotHeight", "dpr", "alignmentX", "alignmentY", "observedSlotWidth", "observedSlotHeight", "observedDpr"))
 BOOL_FIELDS = frozenset(("encodedVerified", "sourceShortage", "physicalPresentationVerified"))
 STRING_FIELDS = {
+    "phase": {"idle", "baseline", "load", "hold", "releasing", "post_release", "complete"},
+    "memoryCounter": {"ios_phys_footprint", "android_total_pss", "unavailable"},
+    "memoryReason": {"none", "mach_result", "mach_count", "missing_counter", "sample_failed", "session_inactive", "sample_timeout"},
+    "thermalState": {"nominal", "fair", "serious", "critical", "unavailable"},
     "clockDomain": {"dart_monotonic"}, "clockUnit": {"microseconds"}, "fit": {"contain", "cover"},
     "role": {"isolated_raster_fixture"}, "event": {"request", "body", "encoded_verified", "decoded", "draw",
-        "failure", "revoke", "cache_state", "status", "status_request", "status_body", "ownership"},
+        "failure", "revoke", "cache_state", "status", "status_request", "status_body", "ownership", "phase", "memory_sample", "release_complete", "layout", "dispatch"},
     "ownership": {"owned", "settling", "settled", "released", "unavailable"},
     "reason": {"none", "invalid_fixture", "session_inactive", "status_unavailable", "status_revoked", "missing_counter",
         "unverified_visibility", "frame_unavailable", "timing_unavailable", "clock_unmapped", "retained_layer_ambiguity",
         "route_departed", "stale_attempt", "internal_settlement_unavailable", "export_capacity", "pin_refused",
-        "transport_refused", "decode_refused", "cleanup_unavailable"},
+        "transport_refused", "decode_refused", "cleanup_unavailable", "phase_budget_refused", "load_timeout", "layout_unavailable"},
     "counterReason": {"missing_counter", "unverified_visibility", "frame_unavailable", "timing_unavailable",
         "clock_unmapped", "retained_layer_ambiguity", "internal_settlement_unavailable"},
-    "cacheState": {"network-cold", "disk-warm/decoded-cold", "decoded-warm", "unavailable"},
+    "cacheState": {"namespace_keys_absent", "network-cold", "disk-warm/decoded-cold", "decoded-warm", "unavailable"},
 }
 
 
@@ -315,7 +319,7 @@ def validate_ledger(data, receipt):
         row.get("attemptSha256") == identity["expectedAttemptSha256"] and
         row.get("generation") == receipt["generation"] for row in rows), "guard_ledger_binding_rejected")
     for row in rows:
-        for key in HASH_FIELDS:
+        for key in ("caseSha256", "providerSha256", "attemptSha256"):
             expected = receipt["caseSha256"] if key == "caseSha256" else identity["expected" + key[0].upper() + key[1:]]
             require(key not in row or row[key] == expected, "guard_ledger_binding_rejected")
         if any(key in row for key in HASH_FIELDS):

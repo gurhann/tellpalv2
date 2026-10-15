@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 import 'package:tellpal_mobile_poc/core/diagnostics/image_experiment_recorder.dart';
 import 'package:tellpal_mobile_poc/core/network/image_experiment_http_client.dart';
 import 'fixture.dart';
@@ -14,6 +16,9 @@ void main() {
   late StreamSubscription<HttpRequest> subscription;
   final received = <Map<String, Object?>>[];
   var behavior = 'success';
+  final largePng = Uint8List(4374954)
+    ..setRange(0, fixtureBytes.length, fixtureBytes);
+  var emittedFragments = 0;
   late Completer<void> delayedStatus, revokeStarted, lateStatusReturned;
   final responseOrder = <String>[];
   setUp(() async {
@@ -66,6 +71,7 @@ void main() {
     );
     received.clear();
     behavior = 'success';
+    emittedFragments = 0;
     delayedStatus = Completer<void>();
     revokeStarted = Completer<void>();
     lateStatusReturned = Completer<void>();
@@ -101,6 +107,27 @@ void main() {
         request.response.headers.contentType = ContentType('image', 'png');
         request.response.contentLength = fixtureBytes.length + 1;
         request.response.add([...fixtureBytes, 0]);
+      } else if (behavior == 'large-fragments') {
+        request.response.headers.contentType = ContentType('image', 'png');
+        request.response.contentLength = largePng.length;
+        try {
+          for (var offset = 0; offset < largePng.length; offset += 4096) {
+            request.response.add(
+              Uint8List.sublistView(
+                largePng,
+                offset,
+                (offset + 4096).clamp(0, largePng.length),
+              ),
+            );
+            await request.response.flush();
+            emittedFragments++;
+            await Future<void>.delayed(const Duration(milliseconds: 1));
+          }
+          await request.response.close();
+        } catch (_) {
+          /* An owned client cancellation is expected in the abort case. */
+        }
+        return;
       } else if (behavior == 'pending') {
         return;
       } else if (request.uri.path.endsWith('/status')) {
@@ -159,6 +186,63 @@ void main() {
   });
   FixtureWire wire() =>
       FixtureWire(cert: cert, origin: 'https://localhost:${server.port}');
+  for (final abort in [false, true]) {
+    test(
+      'fragmented 4.37MB PNG has one exact completion total, abort=$abort',
+      () async {
+        behavior = 'large-fragments';
+        final manifest = fixtureManifest();
+        final entry =
+            (manifest['entries'] as List).single as Map<String, dynamic>;
+        entry['byteSize'] = largePng.length;
+        entry['outputSha256'] = sha256.convert(largePng).toString();
+        final fixtureWire = FixtureWire(
+          cert: cert,
+          origin: 'https://localhost:${server.port}',
+          manifest: manifest,
+        );
+        final configuration = fixtureWire.configuration();
+        final recorder = ImageExperimentRecorder();
+        final client = ImageExperimentHttpClient(
+          configuration,
+          recorder,
+          observation: {
+            'caseSha256': '1' * 64,
+            'providerSha256': '2' * 64,
+            'attemptSha256': '3' * 64,
+          },
+        );
+        try {
+          final response = await client.send(
+            http.Request('GET', configuration.objectUri('synthetic')),
+          );
+          if (abort) {
+            final iterator = StreamIterator(response.stream);
+            expect(await iterator.moveNext(), true);
+            client.close();
+            await iterator.cancel();
+          } else {
+            final receivedBody = await response.stream.toBytes();
+            expect(receivedBody, largePng);
+            expect(emittedFragments, greaterThan(512));
+          }
+          final exported = await recorder.export();
+          final value = jsonDecode(exported) as Map;
+          final rows = (value['records'] as List).cast<Map>();
+          final bodies = rows.where((row) => row['event'] == 'body').toList();
+          expect(bodies.length, abort ? 0 : 1);
+          if (!abort) expect(bodies.single['bodyBytes'], largePng.length);
+          expect(value['droppedCount'], 0);
+          expect(rows.length, lessThan(10));
+          expect(utf8.encode(exported).length, lessThanOrEqualTo(250000));
+        } finally {
+          client.close();
+          await configuration.credentials.close();
+        }
+      },
+    );
+  }
+
   test('pin mismatch prevents all HTTP bytes and bearer headers', () async {
     final configuration = wire().configuration();
     final client = ImageExperimentHttpClient(

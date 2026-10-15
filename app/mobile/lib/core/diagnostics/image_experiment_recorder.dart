@@ -5,9 +5,19 @@ import 'package:crypto/crypto.dart';
 class ImageExperimentRecorder {
   final _clock = Stopwatch()..start();
   final _records = <Map<String, Object?>>[];
-  int _bytes = 0;
+  // Reserve framing, separators and the explicit loss counter inside the byte cap.
+  int _bytes = 128;
   int droppedCount = 0;
-  static const _hashKeys = {'caseSha256', 'providerSha256', 'attemptSha256'};
+  static const _hashKeys = {
+    'caseSha256',
+    'providerSha256',
+    'attemptSha256',
+    'sessionSha256',
+    'sourceSha256',
+    'referenceSha256',
+    'settingsSha256',
+    'scopeSha256',
+  };
   static const _intKeys = {
     'generation',
     'monotonicMicroseconds',
@@ -35,6 +45,13 @@ class ImageExperimentRecorder {
     'transferBytes',
     'firstRasterizedTargetFrame',
     'observerOverheadMicroseconds',
+    'memoryBytes',
+    'nativeReadMicroseconds',
+    'nativeResultCode',
+    'nativeResultCount',
+    'sampleStartMicroseconds',
+    'sampleEndMicroseconds',
+    'sampleCadenceMicroseconds',
   };
   static const _doubleKeys = {
     'logicalSlotWidth',
@@ -42,6 +59,9 @@ class ImageExperimentRecorder {
     'dpr',
     'alignmentX',
     'alignmentY',
+    'observedSlotWidth',
+    'observedSlotHeight',
+    'observedDpr',
   };
   static const _boolKeys = {
     'encodedVerified',
@@ -49,6 +69,26 @@ class ImageExperimentRecorder {
     'physicalPresentationVerified',
   };
   static const _strings = <String, Set<String>>{
+    'phase': {
+      'idle',
+      'baseline',
+      'load',
+      'hold',
+      'releasing',
+      'post_release',
+      'complete',
+    },
+    'memoryCounter': {'ios_phys_footprint', 'android_total_pss', 'unavailable'},
+    'memoryReason': {
+      'none',
+      'mach_result',
+      'mach_count',
+      'missing_counter',
+      'sample_failed',
+      'session_inactive',
+      'sample_timeout',
+    },
+    'thermalState': {'nominal', 'fair', 'serious', 'critical', 'unavailable'},
     'clockDomain': {'dart_monotonic'},
     'clockUnit': {'microseconds'},
     'fit': {'contain', 'cover'},
@@ -66,6 +106,11 @@ class ImageExperimentRecorder {
       'status_request',
       'status_body',
       'ownership',
+      'phase',
+      'memory_sample',
+      'release_complete',
+      'layout',
+      'dispatch',
     },
     'ownership': {'owned', 'settling', 'settled', 'released', 'unavailable'},
     'reason': {
@@ -88,6 +133,9 @@ class ImageExperimentRecorder {
       'transport_refused',
       'decode_refused',
       'cleanup_unavailable',
+      'phase_budget_refused',
+      'load_timeout',
+      'layout_unavailable',
     },
     'counterReason': {
       'missing_counter',
@@ -99,6 +147,7 @@ class ImageExperimentRecorder {
       'internal_settlement_unavailable',
     },
     'cacheState': {
+      'namespace_keys_absent',
       'network-cold',
       'disk-warm/decoded-cold',
       'decoded-warm',
@@ -157,7 +206,7 @@ class ImageExperimentRecorder {
         return;
       }
       _records.add(Map.unmodifiable(row));
-      _bytes += size;
+      _bytes += size + 1;
     } catch (_) {
       /* Observation cannot affect the consumer. */
     }

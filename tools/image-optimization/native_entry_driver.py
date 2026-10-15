@@ -771,9 +771,10 @@ def validate_physical_prerequisites(config, build_path, prerequisite_path):
     return build, proof
 
 
-def verify_entry(config, manifest, output, deadline, *, case_id, build_path, prerequisite_path):
+def verify_entry(config, manifest, output, deadline, *, case_id, build_path, prerequisite_path, quality_capture=False):
     """Launch only already-installed bound artifacts after private prerequisite admission."""
     require(case_id in manifest.objects, "unknown_case")
+    require(type(quality_capture) is bool and (not quality_capture or config.values["batchId"] == "native_quality_r1"), "capture_selection_rejected")
     build, proof = validate_physical_prerequisites(config, build_path, prerequisite_path)
     backend_hash = validate_backend_startup(config)
     verifier = FirebaseVerifier(config)
@@ -792,12 +793,14 @@ def verify_entry(config, manifest, output, deadline, *, case_id, build_path, pre
             # Installation is a prior operator-owned action, never performed by this driver.
             command = ["adb", "-s", values["deviceSelector"], "shell", "am", "instrument", "-w", "-r",
                 "-e", "imageExperimentMetadata", metadata, build["testAppId"] + "/com.tellpal.imageexperiment.ImageExperimentInstrumentation"]
+            if quality_capture:
+                command[-1:-1] = ["-e", "imageExperimentQualityCapture", "1"]
             launch_env = None
         else:
             selected = checked_run(["xcrun", "devicectl", "device", "info", "details", "--device", values["deviceSelector"]],
                 output, "device-state", deadline=deadline)
             require(selected and b"disconnected" not in selected.lower(), "device_unavailable")
-            run_file = destination_run(build, output, metadata, audit=False)
+            run_file = destination_run(build, output, metadata, audit=False, quality_capture=quality_capture)
             command = ["xcodebuild", "-xctestrun", str(run_file), "-destination", "id=" + values["deviceSelector"],
                 "test-without-building", "-only-testing:ImageExperimentUITests/" + FIXTURE_TEST]
             launch_env = tool_environment()
@@ -805,6 +808,7 @@ def verify_entry(config, manifest, output, deadline, *, case_id, build_path, pre
         outcome = validate_entry_outcome(broker, pairing)
         receipt = {"schemaVersion": 1, "scope": SCOPE, "deviceAlias": values["deviceAlias"], "platform": values["platform"],
             "mode": values["mode"], "caseSha256": sha256(case_id.encode()).hexdigest(),
+            "sessionSha256": sha256(broker.session_id.encode()).hexdigest(), "generation": 0,
             "artifactSha256": build["artifactSha256"], "testArtifactSha256": build["testArtifactSha256"],
             "backendStartupSha256": backend_hash, "paired": True, "reachability": "proxied", **outcome,
             "decodedAdmission": None, "decodedAdmissionReason": "private_device_ledger_not_collected",

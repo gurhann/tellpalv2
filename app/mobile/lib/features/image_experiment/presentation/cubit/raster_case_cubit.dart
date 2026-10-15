@@ -10,7 +10,7 @@ class RasterCaseCubit extends Cubit<RasterCaseState> {
   RasterCaseCubit(this._getCase, this._configuration)
     : super(const RasterCaseState()) {
     _revocations = _configuration.credentials.revocations.listen(
-      (_) => refuse(),
+      (_) => _retireThenRefuse(),
     );
   }
   final GetRasterCase _getCase;
@@ -18,6 +18,21 @@ class RasterCaseCubit extends Cubit<RasterCaseState> {
   StreamSubscription<void>? _revocations;
   Timer? _timer;
   int _attempt = 0;
+  Future<void> Function()? _beforeRefusal;
+  void retireBeforeRefusal(Future<void> Function() operation) {
+    _beforeRefusal = operation;
+  }
+
+  void _retireThenRefuse() {
+    _timer?.cancel();
+    final retire = _beforeRefusal;
+    if (retire == null) {
+      refuse();
+      return;
+    }
+    unawaited(retire().then((_) => refuse(), onError: (Object _) => refuse()));
+  }
+
   bool current(int attempt) =>
       !isClosed && attempt == _attempt && _configuration.credentials.isActive;
   Future<void> load(String caseId) async {
@@ -28,6 +43,7 @@ class RasterCaseCubit extends Cubit<RasterCaseState> {
       return;
     }
     emit(RasterCaseState(status: RasterCaseStatus.loading, attempt: attempt));
+    _timer = Timer(const Duration(seconds: 10), () => fail(attempt));
     final result = await _getCase(caseId);
     if (!current(attempt)) return;
     result.fold(
@@ -48,7 +64,6 @@ class RasterCaseCubit extends Cubit<RasterCaseState> {
             attempt: attempt,
           ),
         );
-        _timer = Timer(const Duration(seconds: 10), () => fail(attempt));
       },
     );
   }
@@ -64,6 +79,13 @@ class RasterCaseCubit extends Cubit<RasterCaseState> {
     _timer?.cancel();
     _attempt++;
     emit(state.copyWith(status: RasterCaseStatus.error));
+  }
+
+  void releaseTarget() {
+    if (isClosed) return;
+    _attempt++;
+    _timer?.cancel();
+    emit(const RasterCaseState(status: RasterCaseStatus.released));
   }
 
   void refuse() {

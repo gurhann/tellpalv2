@@ -133,6 +133,7 @@ class PrivatePathMatrix(PrivateTest):
     def test_repository_nonprivate_and_symlink_outputs_rejected(self):
         public = self.parent / 'public'
         public.mkdir(mode=0o755)
+        public.chmod(0o755) # The privacy fixture must not depend on a prior test's umask.
         link = self.parent / 'escape'
         link.symlink_to(self.parent, target_is_directory=True)
         for path in (preflight.ROOT, public, link, self.parent / 'missing'):

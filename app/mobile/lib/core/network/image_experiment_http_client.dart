@@ -464,6 +464,7 @@ class ImageExperimentHttpClient extends http.BaseClient {
       outgoing.headers.set('X-Experiment-Session', configuration.sessionId);
       outgoing.headers.set(HttpHeaders.acceptEncodingHeader, 'identity');
       recorder.record({
+        ...observation,
         'event':
             request.url.path == '/experiment/v1/session/status' ||
                 request.url.path == '/experiment/v1/session/revoke'
@@ -507,12 +508,6 @@ class ImageExperimentHttpClient extends http.BaseClient {
             close();
             throw StateError('transport_refused');
           }
-          recorder.record({
-            ...observation,
-            'event': isStatus ? 'status_body' : 'body',
-            'bodyBytes': chunk.length,
-            'generation': configuration.generation,
-          });
           return chunk;
         } catch (_) {
           ImageExperimentRefusalObservation.report(
@@ -523,7 +518,19 @@ class ImageExperimentHttpClient extends http.BaseClient {
         }
       });
       return http.StreamedResponse(
-        _finish(stream, timer),
+        _finish(stream, timer, () {
+          configuration.credentials.requireActive();
+          if (_closed || (fixture != null && bytes != maximum)) {
+            throw StateError('transport_refused');
+          }
+          // One completed-response total keeps large PNGs independent of wire fragmentation.
+          recorder.record({
+            ...observation,
+            'event': isStatus ? 'status_body' : 'body',
+            'bodyBytes': bytes,
+            'generation': configuration.generation,
+          });
+        }),
         response.statusCode,
         contentLength: response.contentLength < 0
             ? null
@@ -548,9 +555,14 @@ class ImageExperimentHttpClient extends http.BaseClient {
     }
   }
 
-  Stream<List<int>> _finish(Stream<List<int>> source, Timer timer) async* {
+  Stream<List<int>> _finish(
+    Stream<List<int>> source,
+    Timer timer,
+    void Function() completed,
+  ) async* {
     try {
       yield* source;
+      completed();
     } catch (_) {
       ImageExperimentRefusalObservation.report(
         ImageExperimentFixtureStage.responseBody,

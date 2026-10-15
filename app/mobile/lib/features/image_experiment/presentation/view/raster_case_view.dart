@@ -40,8 +40,10 @@ class RasterCaseView extends StatelessWidget {
               current: () => cubit.current(state.attempt),
               onDecoded: () => cubit.success(state.attempt),
               onFailure: () => cubit.fail(state.attempt),
-              onDraw: () =>
-                  resolver.composition.requestTeardown(verifiedDraw: true),
+              requireAbsentKeys: resolver.composition.phases.enabled,
+              onDraw: resolver.composition.targetPainted,
+              onRelease: resolver.composition.ownTargetRelease,
+              onQualityBinding: resolver.composition.publishQualityBinding,
             ),
           );
         }
@@ -60,6 +62,7 @@ class RasterCaseView extends StatelessWidget {
           RasterCaseStatus.empty => 'No admitted fixture',
           RasterCaseStatus.loaded => 'Fixture unavailable',
           RasterCaseStatus.refused => 'Experiment entry refused',
+          RasterCaseStatus.released => 'Experiment image released',
         };
         return Center(child: Text(text, style: AppTypography.description));
       },

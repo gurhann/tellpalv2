@@ -1,0 +1,43 @@
+{
+  "activeOrPending": 0,
+  "allOwnedSessionsFinished": true,
+  "allocationLimitReached": true,
+  "allocationPerformed": false,
+  "catalogSha256": "350964a1d491fa55d3719833b3e9592cafae7b683fd773c7f42b53d7473a5696",
+  "closedWholeRootCeilMinutes": 29,
+  "costModelRevision": "closed_root_ceil_plus_one_second_r2",
+  "evidence": {
+    "budget-admissionSha256": "16aa7af9536e4a70081e6195492fdc5cfdb60f950681cb0fc2a6063497e21f09",
+    "budget-snapshotSha256": "f86f52e63d9ae92d5e315266350b1b72c7e121c3c696d5da725ac58ae616ba3e",
+    "owned-receiptsSha256": "dfef124e53fb11c7a137cb68b7728747eda38d974717b24c97179647b1827893"
+  },
+  "finalInvoiceKnown": false,
+  "historicalMaximumQuotaMinutes": 45,
+  "inventorySha256": "decb4ea1a1ee5dac07af24fb0cf378e71e60148507fe4a0ef3ead234a8acd1cb",
+  "latestReportedQuotaMinutes": 42,
+  "maximumReservations": 13,
+  "minuteUsd": 0.15,
+  "noCostTierMinutes": 30,
+  "observedAt": 1792050320.9107578,
+  "oldUpperMinutesRetained": 40,
+  "providerHardCap": false,
+  "reconciledMonthlyUpperMinutes": 69,
+  "reportedConsole": {
+    "dateFrom": "2026-10-01",
+    "dateTo": "2026-10-15",
+    "finalInvoice": false,
+    "observationDate": "2026-10-15",
+    "project": "tellpal-ee0dd",
+    "reportedSubtotalTry": 0,
+    "rowsDisplayed": false,
+    "service": "Firebase Test Lab",
+    "usedAsBudgetCredit": false
+  },
+  "reservationCount": 13,
+  "schemaVersion": 1,
+  "scope": "story16-final-readonly-cost-reconciliation",
+  "totalUsdLimit": 10,
+  "usageCostUpperTry": 286.5461625039749,
+  "usageCostUpperUsd": 5.85,
+  "usageSha256": "3f32099a512a9af98daf670ae71bc9cb45665cc351a9056ba5d4dd4ae0465ba6"
+}

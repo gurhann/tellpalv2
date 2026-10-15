@@ -75,6 +75,40 @@ class ImageExperimentInstrumentation : Instrumentation() {
         finishCompleted.await(250, java.util.concurrent.TimeUnit.MILLISECONDS)
     }
 
+    private fun exportLedger() {
+            val ledgerFile = java.io.File(targetContext.noBackupFilesDir, "image_experiment/ledger.json")
+            require(ledgerFile.canonicalFile.parentFile == java.io.File(targetContext.noBackupFilesDir, "image_experiment").canonicalFile)
+            require(android.system.Os.lstat(ledgerFile.path).st_mode and android.system.OsConstants.S_IFMT == android.system.OsConstants.S_IFREG)
+            require(ledgerFile.length() in 1..262_144)
+            val ledger = ImageExperimentLedger.validate(ledgerFile.readText(Charsets.UTF_8))
+            val digest = java.security.MessageDigest.getInstance("SHA-256").digest(ledger).joinToString("") { "%02x".format(it) }
+            val chunks = (ledger.size + 3071) / 3072
+            for (index in 0 until chunks) sendStatus(2, Bundle().apply {
+                putString("event", "ledger-chunk")
+                putString("index", index.toString())
+                putString("count", chunks.toString())
+                putString("ledgerSha256", digest)
+                putString("payloadBase64", Base64.encodeToString(ledger.copyOfRange(index * 3072,
+                    minOf((index + 1) * 3072, ledger.size)), Base64.NO_WRAP))
+            })
+    }
+
+    private fun reportQualityBinding(activity: ImageExperimentActivity) {
+        val completed = java.util.concurrent.CountDownLatch(1)
+        var snapshot: Map<String, Any?>? = null
+        activity.runOnUiThread {
+            try { snapshot = activity.readQualityBinding() }
+            finally { completed.countDown() }
+        }
+        require(completed.await(150, java.util.concurrent.TimeUnit.MILLISECONDS))
+        val encoded = org.json.JSONObject.wrap(snapshot).toString().toByteArray(Charsets.UTF_8)
+        require(encoded.size <= 4096)
+        sendStatus(3, Bundle().apply {
+            putString("event", "quality-binding")
+            putString("bindingBase64", Base64.encodeToString(encoded, Base64.NO_WRAP))
+        })
+    }
+
     override fun onCreate(arguments: Bundle?) {
         this.arguments = arguments ?: Bundle()
         start()
@@ -143,16 +177,19 @@ class ImageExperimentInstrumentation : Instrumentation() {
             val start = SystemClock.elapsedRealtime()
             while (!bootstrap.isRevoked && !activity.isFinishing && !activity.isDestroyed &&
                 SystemClock.elapsedRealtime() - start < 180_000) {
+                if (arguments.getString("imageExperimentQualityCapture") == "1") reportQualityBinding(activity)
                 Thread.sleep(100)
             }
             synchronized(creationLock) { admissionClosed = true }
             require(bootstrap.isRevoked && bootstrap.launcherOutcome.isSettled())
+            exportLedger()
             result.putString("reason", "NATIVE_LAUNCHER_SETTLED")
             finish(Activity.RESULT_OK, result)
         } catch (_: Exception) {
             ImageExperimentRefusalObservation.report(stage, observeRefusal)
             synchronized(creationLock) { admissionClosed = true; creationLock.notifyAll() }
             runCatching { cleanupOwnedActivity() }
+            runCatching { exportLedger() }
             result.putString("reason", "NATIVE_LAUNCHER_REFUSED")
             runCatching { refusalDiagnostics.firstStage?.let { result.putString("diagnosticStage", it.code) } }
             finish(Activity.RESULT_CANCELED, result)

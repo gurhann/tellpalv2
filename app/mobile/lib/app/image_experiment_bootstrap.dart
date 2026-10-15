@@ -56,6 +56,29 @@ class ImageExperimentBootstrap {
     }
   }
 
+  Future<bool> clearQualityBinding() async {
+    try {
+      return await _channel
+              .invokeMethod<bool>('clearQualityBinding')
+              .timeout(const Duration(milliseconds: 500)) ??
+          false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> publishQualityBinding(Map<String, Object?> value) async {
+    if (_revoked) return false;
+    try {
+      return await _channel
+              .invokeMethod<bool>('publishQualityBinding', value)
+              .timeout(const Duration(milliseconds: 500)) ??
+          false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<bool> storeLedger(String ledger) async {
     try {
       return await _channel

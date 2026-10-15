@@ -16,6 +16,7 @@ import 'package:tellpal_mobile_poc/core/diagnostics/image_experiment_recorder.da
 import 'package:tellpal_mobile_poc/core/network/image_experiment_http_client.dart';
 import 'package:tellpal_mobile_poc/core/network/image_experiment_image_cache.dart';
 import 'package:tellpal_mobile_poc/features/image_experiment/domain/entity/raster_case.dart';
+import 'package:tellpal_mobile_poc/core/diagnostics/image_experiment_target_probe.dart';
 import 'fixture.dart';
 
 class _Files implements FileSystem {
@@ -56,6 +57,8 @@ class _Cache extends ImageExperimentImageCache {
         'b' * 64,
         fixture,
       );
+  @override
+  Future<void> requireAbsentKeys(ImageExperimentProvider value) async {}
   @override
   bool verified(ImageExperimentProvider value) => true;
   @override
@@ -100,8 +103,22 @@ void main() {
     bool failCache = false,
     bool stallCache = false,
     bool confirmedRemote = false,
+    bool quality = false,
   }) {
-    final configuration = FixtureWire().configuration();
+    final manifest = fixtureManifest();
+    if (quality) {
+      manifest['batchId'] = 'native_quality_r1';
+      (manifest['entries'] as List).single['purposeAcceptanceReceipt'] =
+          'native_quality_r1';
+    }
+    final wire = FixtureWire(manifest: manifest);
+    if (quality) {
+      wire.envelope['batchId'] = 'native_quality_r1';
+      wire.metadata['batchId'] = 'native_quality_r1';
+      wire.metadata['expectedAppId'] =
+          'com.tellpal.tellpal_mobile_poc.imageexperiment.release';
+    }
+    final configuration = wire.configuration();
     final container = GetIt.asNewInstance();
     container.registerSingleton<ImageExperimentConfiguration>(configuration);
     container.initImageExperiment();
@@ -133,6 +150,69 @@ void main() {
       cache: cache,
       container: container,
       recorder: recorder,
+    );
+  }
+
+  for (final revoked in [false, true]) {
+    testWidgets(
+      'native quality marker retires before target removal revoked=$revoked',
+      (tester) async {
+        final value = (await tester.runAsync(
+          () async => setup(quality: true, confirmedRemote: true),
+        ))!;
+        final clearing = Completer<bool>();
+        final calls = <String>[];
+        String? outcome;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async {
+              calls.add(call.method);
+              if (call.method == 'publishQualityBinding') return true;
+              if (call.method == 'clearQualityBinding') return clearing.future;
+              if (call.method == 'storeLedger') return true;
+              if (call.method == 'revoke') {
+                outcome = (call.arguments as Map)['result'] as String;
+              }
+              return null;
+            });
+        await tester.pumpWidget(
+          ImageExperimentApp(composition: value.composition),
+        );
+        for (
+          var step = 0;
+          step < 30 && !calls.contains('publishQualityBinding');
+          step++
+        ) {
+          await tester.runAsync(() async {
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+          });
+          await tester.pump(const Duration(milliseconds: 20));
+        }
+        expect(calls, ['publishQualityBinding']);
+        expect(find.byType(ImageExperimentTargetProbe), findsOneWidget);
+        if (revoked) {
+          value.composition.configuration.credentials.revoke();
+        } else {
+          await tester.pump(const Duration(seconds: 10));
+        }
+        await tester.pump();
+        expect(calls, ['publishQualityBinding', 'clearQualityBinding']);
+        expect(find.byType(ImageExperimentTargetProbe), findsOneWidget);
+        expect(value.composition.phases.phase, 'hold');
+        clearing.complete(true);
+        for (var step = 0; step < 30 && outcome == null; step++) {
+          await tester.runAsync(() async {
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+          });
+          await tester.pump(const Duration(milliseconds: 20));
+        }
+        expect(find.byType(ImageExperimentTargetProbe), findsNothing);
+        expect(outcome, revoked ? 'refused' : 'settled');
+        expect(calls.where((call) => call == 'clearQualityBinding').length, 1);
+        expect(value.cache.releases, 1);
+        expect(tester.takeException(), null);
+        await tester.pumpWidget(const SizedBox());
+        await tester.runAsync(value.composition.close);
+      },
     );
   }
 

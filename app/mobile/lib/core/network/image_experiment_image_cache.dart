@@ -80,31 +80,50 @@ class ImageExperimentImageCache extends LibraryImageCache {
             4) {
       throw const FormatException('attempt_capacity');
     }
+    final newlyOwned = !_identities.containsKey(transfer);
     _identities[immutable] = fixture;
     _identities[transfer] = fixture;
     final geometry = fixture.geometry;
-    recorder.record({
-      'event': 'ownership',
-      'ownership': 'owned',
-      'role': fixture.role,
-      'caseSha256': ImageExperimentRecorder.hash(fixture.caseId),
-      'providerSha256': immutable,
-      'attemptSha256': ImageExperimentRecorder.hash(transfer),
-      'generation': configuration.generation,
-      'sourceWidth': fixture.width,
-      'sourceHeight': fixture.height,
-      'logicalSlotWidth': fixture.logicalSlotWidth,
-      'logicalSlotHeight': fixture.logicalSlotHeight,
-      'dpr': fixture.dpr,
-      'fit': fixture.fit,
-      'alignmentX': fixture.alignmentX,
-      'alignmentY': fixture.alignmentY,
-      'requiredWidth': geometry.requiredWidth,
-      'requiredHeight': geometry.requiredHeight,
-      'decodeWidth': geometry.decodeWidth,
-      'decodeHeight': geometry.decodeHeight,
-      'sourceShortage': geometry.sourceShortage,
-    });
+    if (newlyOwned) {
+      recorder.record({
+        'event': 'ownership',
+        'ownership': 'owned',
+        'role': fixture.role,
+        'sourceSha256': fixture.sourceSha256,
+        'referenceSha256': fixture.referenceSha256,
+        'scopeSha256': ImageExperimentRecorder.hash(
+          '$imageExperimentScope/${configuration.batchId}',
+        ),
+        'settingsSha256': ImageExperimentRecorder.hash(
+          jsonEncode([
+            fixture.encoderRevision,
+            fixture.logicalSlotWidth,
+            fixture.logicalSlotHeight,
+            fixture.dpr,
+            fixture.fit,
+            fixture.alignmentX,
+            fixture.alignmentY,
+          ]),
+        ),
+        'caseSha256': ImageExperimentRecorder.hash(fixture.caseId),
+        'providerSha256': immutable,
+        'attemptSha256': ImageExperimentRecorder.hash(transfer),
+        'generation': configuration.generation,
+        'sourceWidth': fixture.width,
+        'sourceHeight': fixture.height,
+        'logicalSlotWidth': fixture.logicalSlotWidth,
+        'logicalSlotHeight': fixture.logicalSlotHeight,
+        'dpr': fixture.dpr,
+        'fit': fixture.fit,
+        'alignmentX': fixture.alignmentX,
+        'alignmentY': fixture.alignmentY,
+        'requiredWidth': geometry.requiredWidth,
+        'requiredHeight': geometry.requiredHeight,
+        'decodeWidth': geometry.decodeWidth,
+        'decodeHeight': geometry.decodeHeight,
+        'sourceShortage': geometry.sourceShortage,
+      });
+    }
     final base = CachedNetworkImageProvider(
       configuration.objectUri(fixture.caseId).toString(),
       cacheManager: this,
@@ -188,6 +207,7 @@ class ImageExperimentImageCache extends LibraryImageCache {
         'encodedVerified': true,
         'caseSha256': ImageExperimentRecorder.hash(fixture.caseId),
         'providerSha256': identity(fixture),
+        'attemptSha256': ImageExperimentRecorder.hash(key),
         'generation': configuration.generation,
       });
     } finally {
@@ -220,6 +240,31 @@ class ImageExperimentImageCache extends LibraryImageCache {
       return 'image/webp';
     }
     return null;
+  }
+
+  Future<void> requireAbsentKeys(ImageExperimentProvider value) async {
+    final key = await value.provider.obtainKey(ImageConfiguration.empty);
+    final status = PaintingBinding.instance.imageCache.statusForKey(key);
+    final immutableFile = await getFileFromCache(value.immutableKey);
+    final transferFile = await getFileFromCache(value.transferKey);
+    configuration.credentials.requireActive();
+    if (immutableFile != null ||
+        transferFile != null ||
+        status.live ||
+        status.pending ||
+        status.keepAlive) {
+      throw const FormatException('cache_keys_present');
+    }
+    recorder.record({
+      'event': 'cache_state',
+      'cacheState': 'namespace_keys_absent',
+      'reason': 'none',
+      'ownership': 'owned',
+      'generation': configuration.generation,
+      'caseSha256': ImageExperimentRecorder.hash(value.fixture.caseId),
+      'providerSha256': value.immutableKey,
+      'attemptSha256': value.attemptSha256,
+    });
   }
 
   bool verified(ImageExperimentProvider value) =>

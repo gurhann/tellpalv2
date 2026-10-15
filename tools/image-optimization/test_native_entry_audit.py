@@ -341,6 +341,7 @@ class AuditCliTests(AuditInputs):
         output = self.base / "authenticated-launcher"
         output.mkdir(mode=0o700)
         broker, server = Mock(), Mock()
+        broker.session_id = "synthetic-session"
         broker.metadata.return_value = {"schemaVersion": 1, "caseId": "case_a"}
         calls = []
         def launch(command, output, alias, **kwargs):

@@ -35,7 +35,9 @@ enum ImageExperimentAuditStage: String, CaseIterable {
       let sessionId = metadata["sessionId"] as? String, let nonce = metadata["launchNonce"] as? String
     else { throw NSError(domain: "NATIVE_LAUNCHER_REFUSED", code: 1) }
     let app = XCUIApplication(bundleIdentifier: appId)
+    app.terminate()
     app.launchEnvironment = ["IMAGE_EXPERIMENT_METADATA": encoded]
+    if ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_QUALITY_CAPTURE"] == "1" { XCUIDevice.shared.orientation = .portrait }
     app.launch()
     defer {
       if launcherResult == "refused" {
@@ -58,10 +60,60 @@ enum ImageExperimentAuditStage: String, CaseIterable {
     // Keep the same selected test launcher alive; never attach screenshots or raw responses.
     let deadline = Date().addingTimeInterval(180)
     let closed = app.otherElements["imageExperimentClosed"]
-    while app.state == .runningForeground && !closed.exists && Date() < deadline { Thread.sleep(forTimeInterval: 0.1) }
+    let capture = ProcessInfo.processInfo.environment["IMAGE_EXPERIMENT_QUALITY_CAPTURE"] == "1"
+    var captured = false
+    while app.state == .runningForeground && !closed.exists && Date() < deadline {
+      let binding = app.otherElements["imageExperimentQualityBinding"]
+      if capture && !captured && binding.exists {
+        try storeQualityCapture(app: app, binding: binding, sessionId: sessionId, caseId: metadata["caseId"] as? String)
+        captured = true
+      }
+      Thread.sleep(forTimeInterval: 0.1)
+    }
+    guard !capture || captured else { throw NSError(domain: "QUALITY_CAPTURE_REFUSED", code: 1) }
     guard closed.exists, closed.value as? String == "settled"
     else { throw NSError(domain: "NATIVE_TEARDOWN_REFUSED", code: 1) }
     launcherResult = "settled"
+  }
+
+  private func storeQualityCapture(app: XCUIApplication, binding: XCUIElement, sessionId: String, caseId: String?) throws {
+    let beforeAt = Int64(Date().timeIntervalSince1970 * 1000)
+    guard let before = binding.value as? String, before.utf8.count <= 4096,
+      let bytes = Data(base64Encoded: before),
+      let row = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
+      row["sessionSha256"] as? String == ImageExperimentBootstrap.sha256(Data(sessionId.utf8)),
+      let caseId, row["caseSha256"] as? String == ImageExperimentBootstrap.sha256(Data(caseId.utf8)),
+      row["phase"] as? String == "hold", row["orientation"] as? String == "portrait",
+      row["nativeContext"] as? String == "foreground_application",
+      let holdDeadline = row["holdDeadlineEpochMilliseconds"] as? NSNumber,
+      beforeAt >= holdDeadline.int64Value - 10_000, beforeAt < holdDeadline.int64Value,
+      XCUIDevice.shared.orientation == .portrait, app.state == .runningForeground
+      else { throw ImageExperimentRefusal.refused }
+    let png = XCUIScreen.main.screenshot().pngRepresentation
+    let afterAt = Int64(Date().timeIntervalSince1970 * 1000)
+    guard afterAt < holdDeadline.int64Value, XCUIDevice.shared.orientation == .portrait,
+      binding.exists, binding.value as? String == before, app.state == .runningForeground,
+      !app.otherElements["imageExperimentClosed"].exists else { throw ImageExperimentRefusal.refused }
+    let manager = FileManager.default
+    let support = manager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+    let directory = support.appendingPathComponent("image_experiment", isDirectory: true)
+    try manager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+    guard directory.resolvingSymlinksInPath().deletingLastPathComponent() == support.resolvingSymlinksInPath()
+    else { throw ImageExperimentRefusal.refused }
+    let pngPath = directory.appendingPathComponent("quality.png")
+    let receiptPath = directory.appendingPathComponent("quality-capture.json")
+    for path in [pngPath, receiptPath] where manager.fileExists(atPath: path.path) {
+      guard try manager.attributesOfItem(atPath: path.path)[.type] as? FileAttributeType == .typeRegular
+      else { throw ImageExperimentRefusal.refused }
+      try manager.removeItem(at: path)
+    }
+    try png.write(to: pngPath, options: [.atomic])
+    let receipt: [String: Any] = ["schemaVersion": 1, "before": row, "after": row,
+      "beforeReadEpochMilliseconds": beforeAt, "afterReadEpochMilliseconds": afterAt,
+      "pngSha256": ImageExperimentBootstrap.sha256(png), "pngBytes": png.count,
+      "capture": "private_xctest_screen", "orientation": "portrait", "attachments": false]
+    try JSONSerialization.data(withJSONObject: receipt, options: [.sortedKeys]).write(to: receiptPath, options: [.atomic])
+    for path in [pngPath, receiptPath] { try manager.setAttributes([.posixPermissions: 0o600], ofItemAtPath: path.path) }
   }
 
   func testInstallationAudit() throws {
@@ -265,6 +317,23 @@ enum ImageExperimentAuditStage: String, CaseIterable {
       !ImageExperimentTimeBounds.allowsSession(issued: 0, expires: 1, now: 1),
       !ImageExperimentTimeBounds.allowsSession(issued: .min, expires: .max, now: 0)
     else { throw ImageExperimentRefusal.refused }
+  }
+
+  func testNativeQualityLifetimeRefusesExpiredClearedAndOverflowingHolds() throws {
+    var clock: Int64 = 1000
+    let lease = ImageExperimentQualityLifetime(now: { clock })
+    guard lease.begin(sessionExpiresAt: 31_000), lease.isActive, lease.deadline == 11_000,
+      !lease.begin(sessionExpiresAt: 31_000) else { throw ImageExperimentRefusal.refused }
+    clock = 11_000
+    guard !lease.isActive else { throw ImageExperimentRefusal.refused }
+    lease.invalidate()
+    guard !lease.isActive, !lease.begin(sessionExpiresAt: 31_000) else { throw ImageExperimentRefusal.refused }
+    let revoked = ImageExperimentQualityLifetime(now: { 1000 })
+    revoked.invalidate()
+    guard !revoked.begin(sessionExpiresAt: 31_000), !revoked.isActive,
+      !ImageExperimentQualityLifetime(now: { 1000 }).begin(sessionExpiresAt: 1000),
+      !ImageExperimentQualityLifetime(now: { Int64.max }).begin(sessionExpiresAt: Int64.max)
+      else { throw ImageExperimentRefusal.refused }
   }
 
   func testLedgerWhitelistAndShadowedBytes() throws {

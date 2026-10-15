@@ -59,6 +59,8 @@ void main() {
       ),
     );
     final value = cache.provider(configuration.cases.values.single, 'one');
+    final rebuilt = cache.provider(configuration.cases.values.single, 'one');
+    expect(rebuilt.transferKey, value.transferKey);
     final file = files.fs.file('/fixture')..writeAsBytesSync(fixtureBytes);
     await tester.runAsync(
       () => cache.validateResponse(
@@ -74,6 +76,12 @@ void main() {
     expect(cache.verified(value), true);
     final records = (jsonDecode(await recorder.export())['records'] as List)
         .cast<Map>();
+    expect(
+      records
+          .where((e) => e['event'] == 'ownership' && e['ownership'] == 'owned')
+          .length,
+      1,
+    );
     final owned = records.firstWhere((e) => e['event'] == 'ownership');
     expect(owned['logicalSlotWidth'], 1.0);
     expect(owned['dpr'], 1.0);

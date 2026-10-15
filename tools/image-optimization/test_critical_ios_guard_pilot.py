@@ -421,10 +421,11 @@ class AuditAndSourceTests(GuardInputs):
             with self.subTest(key=key), self.assertRaises(EntryError):
                 pilot.validate_audit(path, build_path, build, changed_proof)
 
-    def test_new_observer_and_tests_are_outside_unchanged_292_signed_inputs(self):
+    def test_guard_observer_stays_outside_current_signed_source_selection(self):
         sources, digest = host.source_snapshot()
-        self.assertEqual(len(sources), 292)
-        self.assertEqual(digest, "d386e0e62b2029f57653ee5729a3ef49612c8c2ceeae0e3c31f6f3f22b098935")
+        # Story 1.6 intentionally changes runtime inputs and requires a new signed build.
+        self.assertIn("app/mobile/lib/app/image_experiment_phase_coordinator.dart", sources)
+        self.assertEqual(digest, sha256(frozen_json(sources)).hexdigest())
         self.assertNotIn("tools/image-optimization/critical_ios_guard_pilot.py", sources)
         self.assertNotIn("tools/image-optimization/test_critical_ios_guard_pilot.py", sources)
         self.assertNotIn("tools/image-optimization/fixtures/critical-ios-provider-vector-r1.json", sources)

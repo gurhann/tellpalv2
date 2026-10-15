@@ -12,7 +12,7 @@ object ImageExperimentHandshakeTests {
     fun run(observeRefusal: ((ImageExperimentRefusalStage) -> Unit)? = null) {
         ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestVector, observeRefusal) { sharedVector() }
         ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestGate, observeRefusal) { onceOnlyGate() }
-        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestOutcome, observeRefusal) { explicitLauncherOutcome() }
+        ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestOutcome, observeRefusal) { explicitLauncherOutcome(); qualityLifetime() }
         ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestJson, observeRefusal) { boundedJsonStructure() }
         ImageExperimentRefusalObservation.run(ImageExperimentRefusalStage.selfTestProof, observeRefusal) {
             val key = KeyPairGenerator.getInstance("EC").apply { initialize(ECGenParameterSpec("secp256r1")) }.generateKeyPair()
@@ -46,6 +46,22 @@ object ImageExperimentHandshakeTests {
         require(gate.revoke() && !gate.revoke() && gate.isRevoked() && !gate.take())
         val early = ImageExperimentAdmissionGate()
         require(early.revoke() && !early.take())
+    }
+
+    private fun qualityLifetime() {
+        var now = 1000L
+        val lease = ImageExperimentQualityLifetime { now }
+        require(lease.begin(31_000) && lease.isActive() && lease.deadline == 11_000L)
+        require(!lease.begin(31_000))
+        now = 11_000
+        require(!lease.isActive())
+        lease.invalidate()
+        require(!lease.isActive() && !lease.begin(31_000))
+        val cancelled = ImageExperimentQualityLifetime { 1000L }
+        cancelled.invalidate()
+        require(!cancelled.begin(31_000) && !cancelled.isActive())
+        require(!ImageExperimentQualityLifetime { 1000L }.begin(1000))
+        require(!ImageExperimentQualityLifetime { Long.MAX_VALUE }.begin(Long.MAX_VALUE))
     }
 
     private fun explicitLauncherOutcome() {

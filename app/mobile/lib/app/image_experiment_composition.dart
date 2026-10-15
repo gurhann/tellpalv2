@@ -6,6 +6,8 @@ import '../core/network/image_experiment_http_client.dart';
 import '../core/diagnostics/image_experiment_recorder.dart';
 import '../core/network/image_experiment_image_cache.dart';
 import 'image_experiment_bootstrap.dart';
+import 'image_experiment_phase_coordinator.dart';
+import '../features/image_experiment/presentation/cubit/raster_case_cubit.dart';
 import 'image_experiment_configuration.dart';
 import 'image_experiment_router.dart';
 import 'image_experiment_composition.config.dart';
@@ -37,14 +39,119 @@ class ImageExperimentComposition {
   final ImageExperimentBootstrap bootstrap;
   final ImageExperimentConfiguration configuration;
   Future<void>? _closing;
+  late final phases = ImageExperimentPhaseCoordinator(
+    configuration,
+    container<ImageExperimentRecorder>(),
+  );
+  Map<String, Object?>? _pendingQualityBinding;
+  Future<bool>? _qualityPublication;
+  Future<void>? _qualityInvalidation;
+  final _targetReleases = <Future<void>>[];
+  void ownTargetRelease(Future<void> release) {
+    _targetReleases.add(release);
+  }
+
+  void startCase(RasterCaseCubit cubit, String caseId) {
+    if (phases.enabled && phases.quality) {
+      cubit.retireBeforeRefusal(invalidateQualityBinding);
+    }
+    phases.start(
+      beforeRelease: invalidateQualityBinding,
+      load: () {
+        container<ImageExperimentRecorder>().record({
+          'event': 'dispatch',
+          'generation': configuration.generation,
+          'sessionSha256': ImageExperimentRecorder.hash(
+            configuration.sessionId,
+          ),
+          'caseSha256': ImageExperimentRecorder.hash(caseId),
+        });
+        unawaited(cubit.load(caseId));
+      },
+      release: () async {
+        await invalidateQualityBinding();
+        cubit.releaseTarget();
+        await WidgetsBinding.instance.endOfFrame;
+        if (_targetReleases.isEmpty) throw StateError('cleanup_unavailable');
+        await Future.wait(_targetReleases);
+      },
+      finish: () => requestTeardown(),
+    );
+  }
+
+  void targetPainted() {
+    _verifiedDraw = true;
+    if (phases.enabled) {
+      phases.painted();
+      if (phases.quality &&
+          phases.phase == 'hold' &&
+          _pendingQualityBinding != null) {
+        _qualityPublication = bootstrap.publishQualityBinding({
+          ..._pendingQualityBinding!,
+          'sessionSha256': ImageExperimentRecorder.hash(
+            configuration.sessionId,
+          ),
+        });
+        unawaited(
+          _qualityPublication!.then((stored) {
+            if (!stored && !_endRequested && _closing == null) {
+              container<ImageExperimentRecorder>().record({
+                'event': 'failure',
+                'reason': 'layout_unavailable',
+                'generation': configuration.generation,
+              });
+              requestTeardown();
+            }
+          }),
+        );
+      }
+      return;
+    }
+    requestTeardown(verifiedDraw: true);
+  }
+
+  void publishQualityBinding(Map<String, Object?> value) {
+    if (phases.enabled &&
+        phases.quality &&
+        phases.active &&
+        phases.phase == 'load') {
+      _pendingQualityBinding = Map.unmodifiable(value);
+    }
+  }
+
+  Future<void> invalidateQualityBinding() {
+    if (!phases.enabled || !phases.quality) return Future.value();
+    return _qualityInvalidation ??= _invalidateQualityBinding();
+  }
+
+  Future<void> _invalidateQualityBinding() async {
+    _pendingQualityBinding = null;
+    await _qualityPublication;
+    if (!await bootstrap.clearQualityBinding()) {
+      throw StateError('cleanup_unavailable');
+    }
+  }
+
   bool _endRequested = false;
   bool _verifiedDraw = false;
   void requestTeardown({bool verifiedDraw = false}) {
     if (_endRequested) return;
     _endRequested = true;
-    _verifiedDraw = verifiedDraw;
+    _verifiedDraw = _verifiedDraw || verifiedDraw;
+    phases.cancel();
     unawaited(
-      container<ImageExperimentTransport>().close().catchError((_) {
+      () async {
+        try {
+          await invalidateQualityBinding();
+        } catch (_) {
+          container<ImageExperimentRecorder>().record({
+            'event': 'failure',
+            'reason': 'cleanup_unavailable',
+            'generation': configuration.generation,
+          });
+        }
+        await container<ImageExperimentTransport>().close();
+      }().catchError((_) {
         configuration.credentials.revoke();
       }),
     );
@@ -126,11 +233,16 @@ class ImageExperimentComposition {
       }
     }
 
+    await attempt(invalidateQualityBinding);
+    await attempt(phases.close);
     await attempt(transport.close, maximumMilliseconds: 2000);
     configuration.credentials.revoke();
     await attempt(() async {
       container<ImageExperimentRouter>().dispose();
     });
+    await attempt(() async {
+      await Future.wait(_targetReleases);
+    }, maximumMilliseconds: 2000);
     await attempt(
       () => container<ImageExperimentImageCache>().close(),
       maximumMilliseconds: 7000,
@@ -148,6 +260,7 @@ class ImageExperimentComposition {
     await attempt(() async {
       final result =
           _verifiedDraw &&
+              (!phases.enabled || phases.phase == 'complete') &&
               transport.authenticatedRevokeObserved &&
               ledgerStored &&
               !failed

@@ -50,9 +50,10 @@ def _expanded_path(value, original, test_host=None):
     return no_symlink(value)
 
 
-def destination_run(build, output, encoded, *, audit):
+def destination_run(build, output, encoded, *, audit, quality_capture=False):
     """Preserve the original run file; discard install paths and unrelated test selection."""
     require(type(encoded) is str and 0 < len(encoded) <= (8192 if audit else 24000), "xctestrun_metadata_rejected")
+    require(type(quality_capture) is bool and not (quality_capture and audit), "capture_selection_rejected")
     app_id, runner_id = build.get("expectedAppId"), build.get("testAppId")
     require(app_id in ("com.tellpal.tellpalMobilePoc.imageexperiment.profile",
         "com.tellpal.tellpalMobilePoc.imageexperiment.release") and
@@ -104,6 +105,8 @@ def destination_run(build, output, encoded, *, audit):
         UITargetAppEnvironmentVariables=app_environment,
         OnlyTestIdentifiers=[AUDIT_TEST if audit else FIXTURE_TEST], ParallelizationEnabled=False,
         SystemAttachmentLifetime="keepNever", UserAttachmentLifetime="keepNever")
+    if quality_capture:
+        selected["EnvironmentVariables"]["IMAGE_EXPERIMENT_QUALITY_CAPTURE"] = "1"
     run = {"ImageExperimentUITests": selected, "__xctestrun_metadata__": metadata}
     destination = Path(output) / ("installation-audit.xctestrun" if audit else "fixture-entry.xctestrun")
     write_private(destination, plistlib.dumps(run, fmt=plistlib.FMT_XML, sort_keys=True))

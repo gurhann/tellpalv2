@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review with fresh context and the selected session model
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 10-08-2026 16:45
-last_updated: 2026-10-14
+last_updated: 2026-10-15
 project: TellPal V2 - Image Optimization P0
 project_key: NOKEY
 tracking_system: file-system
@@ -43,5 +43,6 @@ development_status:
   1-4-compare-frozen-candidates-and-worker-resource-costs: review
   # Preparation accepted and verified; completion-r1 records remaining native execution gates.
   1-5-prepare-native-image-measurement-and-admission: done
-  1-6-measure-native-image-quality-and-resource-costs: backlog
+  # Native evidence collected:24 primary/12 captures/10 controls; all13 cloud windows closed. Review fixes verified; Android quality accepted, iPhone sharpness concern retains its open quality gate.
+  1-6-measure-native-image-quality-and-resource-costs: review
   epic-1-retrospective: optional
