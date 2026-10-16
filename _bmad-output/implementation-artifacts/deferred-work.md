@@ -79,3 +79,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/image-optimization/spec-1-6-reader-resolution-extension.md`
   summary: Preserve bounded process-observation errors when owned process-group cleanup yields EPERM.
   evidence: The unchanged `capture_observation` function in `native_entry_driver.py` raised `PermissionError` from its `finally` cleanup during the first post-review 312-test host run, masking the expected bounded-output `EntryError`. Its function bytes equal baseline `4721dccf090b29ce7b2d773d789873dbfbb324ae`; the same isolated test and a complete 312-test rerun passed without source changes. The original failed run and audit remain retained; audit SHA-256 `66c967173ef835dd277e26ba15c76d603c17f0090f8be0f2aa32c1694aad6096`. Root cause remains unavailable.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-p1-image-revision-readiness-contract.md`
+  summary: Repair the pre-existing canonical architecture link to the missing backend tasks document.
+  evidence: `architecture.md` links `.kiro/specs/tellpal-v2-backend/tasks.md`, which is absent; the link predates the P1 baseline124a5b22fd324793a5d14220715c839617b6848b.

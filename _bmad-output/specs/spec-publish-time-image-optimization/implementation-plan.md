@@ -1,6 +1,6 @@
 # Implementation Phases and Acceptance
 
-Status: planning draft, 2026-10-08. Phases describe prospective independently reviewable work; they are not scheduled stories or implementation approval. Confirm the relevant open questions before starting each dependent phase. Notify the human before long implementation so model/reasoning settings can be adjusted.
+Status: parent implementation plan remains a draft; P1 design accepted on 2026-10-16, runtime implementation pending. Phases describe prospective independently reviewable work; they are not scheduled stories or broad implementation approval. The [P1 contract](../../../be/docs/image-revision-readiness-contract.md) and [ADR-0021](../../../be/docs/adr/ADR-0021-image-revision-readiness-contract.md) record the accepted invariants. Confirm remaining dependent gates before implementation; P2 and the complete publication workflow are not declared ready. Notify the human before long implementation so model/reasoning settings can be adjusted.
 
 ## Intended publication boundary
 
@@ -11,7 +11,7 @@ flowchart TD
     Jobs --> Verify[Upload and independently verify every required output]
     Verify --> Ready[Atomically publish immutable ready revision]
     Ready --> Gate[Apply agreed publication and access policy]
-    Gate --> Consumer[Listing, detail and reader consume verified renditions]
+    Gate --> Consumer[Versioned detail and reader consume admitted verified renditions]
     Jobs --> Failure[Failure or obsolete attempt: keep candidate unready]
     Verify --> Failure
     Failure --> Retry[Explicit safe retry]
@@ -19,11 +19,11 @@ flowchart TD
     Previous[Previous eligible live and admitted session revisions] --> Retain[Retain under agreed access and rollback policy]
 ```
 
-This is the intended new delivery contract, not current behavior. Editorial publication may remain a separate state; the exact request/ready/live relationship is OQ-5. A new revision cannot become ordinarily deliverable before required optimization succeeds. Processing can be asynchronous; the CMS HTTP request need not perform conversion. Already verified source/profile outputs may be reused idempotently, subject to the agreed freshness/readiness contract. Do not re-encode on every GET or repeatedly degrade derivative inputs.
+This is the intended new delivery contract, not current behavior. P1 resolves the core request/READY/LIVE relationship: Publish automatically starts preparation and automatically promotes the verified current eligible revision, without extra per-revision manual approval. `asset` atomically finalizes the complete manifest/job under success/failure attempt fencing; `content` atomically checks generation, editorial/access eligibility and exact READY identity before LIVE adoption. A new revision cannot become ordinarily deliverable before verification and adoption. Processing is asynchronous; the CMS HTTP request need not convert. Verified immutable role/source/profile outputs may be reused; equal/growing outputs require explicit profile admission. Current listing placeholders remain unchanged. OQ-5 still gates exact protected delivery/access/cache/renewal/retention policy.
 
 ## P0 — Slot, corpus and resource qualification
 
-Use `rendition-evaluation.md` and `client-image-contract.md`. The first bounded local JPEG comparison remains complete: [findings](p0-small-jpeg-findings.md) record 63 pairs, size regressions and a separate pre-encode color diagnostic. This slice does not close P0; the research adds no new converter/device benchmark.
+Use `rendition-evaluation.md` and `client-image-contract.md`. The first bounded local JPEG comparison remains complete: [findings](p0-small-jpeg-findings.md) record 63 pairs, size regressions and a separate pre-encode color diagnostic. Subsequent [P0f quality findings](../../implementation-artifacts/image-optimization/p0f-quality-closure-findings.md) accept Android 1.0× / iPhone 0.75× PNG for the displayed examples/geometries only, with the [original raw-evidence limitation](../../implementation-artifacts/image-optimization/p0f-evidence-retention.json). No production profile or whole-P0 closure follows; this P1 documentation work adds no converter/device benchmark.
 
 | Slice | Concrete result | Acceptance evidence |
 | --- | --- | --- |
@@ -37,13 +37,17 @@ Agree role-specific quality, dimensions, transfer, latency, decode/live/preload 
 
 ## P1 — Revision/readiness contract
 
-Define required roles per content type/language/experience and a ready revision containing observed asset metadata, source fingerprint and profile/encoder version. Preserve ADR-0010 source mapping: STORY textless source artwork is separate from localized reading and shared listening covers; LULLABY `listing_cover_media_id` supplies static list artwork while `listening_cover_media_id` supplies playback/detail artwork, potentially animated. Do not wire one generic cover job to all these fields. Specify captured processing ID, attempt, lease and source/profile ownership for successful and failed callbacks; job completion and ready-manifest publication must be atomic. Reuse the listing pattern and harden the page experiment. Account for source/profile changes, overlapping publish/retry requests, restart recovery and deduplicated work with database constraints.
+**Accepted documentation design; implementation pending.** The [contract](../../../be/docs/image-revision-readiness-contract.md) contains role/ownership matrices, typed identities and independently recomputed canonical hash/escaping examples, state/transaction boundaries, mutation/consumer compatibility, and D01–D17 Given/When/Then walkthroughs. [ADR-0021](../../../be/docs/adr/ADR-0021-image-revision-readiness-contract.md), [project memory](../../../be/docs/project-memory.md) and [canonical architecture](../../../architecture.md) record it. These are design-coverage checks, not runtime tests.
 
-Agree publication requests versus ready/live pointers and what existing `processingStatus` means. Enumerate create/update/status/mark-ready/admin commands so none can bypass new-contract readiness. Plan compatibility with legacy `DELIVERY` and original-asset consumers rather than treating old completion flags as proof. Preserve module directions; no content entity imports into asset internals or new cycles.
+Resolved invariants:
 
-Resolve OQ-3 with explicit source/profile/quality and byte-acceptance examples: already compliant encoded bytes may be copied/referenced only if formally admitted as a verified immutable role/profile rendition. Research recommends avoiding unnecessary lossy generations; reuse and equal-size/growing-output success are not yet approved. Resolve OQ-4 normalization and OQ-5 protected HTTP cache/renewal/retention policy; signed URLs do not establish public/shared-cache eligibility. No CDN is required.
+- Initial exact-language STORY/READING scope requires localized cover/detail and ordered page illustrations; source/listening/narration/LULLABY and existing listing roles stay separate. Preserve ADR-0006/0008/0010/0017/0019, current listing placeholders and module boundaries.
+- `content` owns desired generation and automatic eligible-current-READY promotion after Publish starts durable preparation; `asset` owns actual-byte/complete-profile identity and verified immutable jobs/manifests. No additional per-revision manual approval. READY is not LIVE.
+- Every required output is independently verified; manifest publication and owning job completion share one transaction. Success and failure require `PROCESSING` and compare job/attempt/unexpired lease/source/profile; first committed terminal outcome wins. Identical replay returns read-only proof, contradictory callbacks cannot mutate terminal state/READY, and explicit retry claims a new attempt. Content adoption additionally compares generation and eligibility. External I/O stays outside DB transactions. Restarts/deduplication use durable reconciliation and full conflict equality.
+- Only verified immutable role/source/profile outputs qualify for reuse/copy/reference; no raw fallback or repeated derivative encoding. Equal/growing output requires explicit profile admission/evidence. Current versus retained lookup differs; retention survives mutable page lifetime and last-page removal invalidates desired readiness.
+- Create/update/status/manual-ready and legacy completion cannot certify the future contract. Legacy runtime and original consumers remain until separately reviewed versioned migration; immutable identity does not grant access, renewal or cache rights.
 
-**Exit:** examples cover new/unchanged/changed source/profile, first publish, failed replacement, stale success/failure, compliant-source admission and retained-session/cache renewal. Record adopted durable changes in an ADR, project memory and canonical architecture before implementation. Proposed schema/API details remain undecided until these examples agree.
+**Remaining gates:** OQ-2 representative quality/resource/geometry qualification and numerical profiles; OQ-3 concrete compliant-source and equal/growing-byte profile admission; OQ-4 alpha/color/orientation/animation policy and broader role approval; OQ-5 exact production access/EXT-MEDIA/EXT-PUBLICATION, cache/renewal/revocation/session/retention policy; and applicable OQ-6 native qualification limits. P1 establishes future schema/API obligations, not concrete migrations/endpoints or runtime proof. The core P1 contract is recorded; its documentation completion does not clear P2 or the whole publication workflow.
 
 ## P2 — Verified image generation
 
@@ -87,7 +91,7 @@ Read-only production inventory and any production writes/deployment require thei
 | --- | --- |
 | Real encoding | Actual JPEG/PNG and any adopted codec fixtures; stored byte/MIME/hash/dimension/decode checks; aspect/title/color/alpha/orientation and animation cases |
 | Publication/admission | First publication, pending/failed replacement, ordinary/tester/subscriber and exact-language/experience cases; no status/admin bypass or original fallback |
-| Concurrency/recovery | Actual PostgreSQL constraints/transactions; duplicate requests, expired lease, restart, stale success/failure and source/profile replacement during processing |
+| Concurrency/recovery | Actual PostgreSQL constraints/transactions; duplicate requests, expired lease, restart, stale/replaced and same-attempt contradictory terminal callbacks, first-outcome/replay/retry rules and source/profile replacement during processing |
 | Integrity/storage | Missing/corrupt source/output, mismatched metadata, partial upload, unknown registry-only outputs and retry with protected retained revisions |
 | Resource limits | Excess bytes/pixels/frames, slow converter, full raster/subsampling controls, heap/native/RSS/container, temp disk, encoder threading/concurrency and worker teardown |
 | Mobile geometry/quality | Actual slot/DPR/fit/alignment, manifest dimensions, tall/wide/text/alpha, source shortage, rotation/window changes and preserved framing; Story1.1/1.2 regression |

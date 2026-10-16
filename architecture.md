@@ -517,3 +517,42 @@ Bu doküman, [tasks.md](./.kiro/specs/tellpal-v2-backend/tasks.md) içindeki uyg
 `content::api` supplies bounded scalar STORY summaries; `asset::api` supplies only verified ready cover variants. `LISTING_COVER` preparation verifies actual stored JPEG bytes before an atomic two-variant ready manifest. Captured processing ID, attempt, lease, source and profile guard both completion and failure; stale callbacks cannot modify a replacement attempt. Queries never prepare artwork or expose full media.
 
 The approved `user` → `category::api` edge admits real verified Firebase identities through an empty-by-default local/test allowlist and a server subscriber-fixture subset. `/api/test/library` is unavailable in production profiles. This endpoint and its fixtures establish controlled listing behavior, not production entitlement or protected-media rights. See ADR-0019 and the Story 1.1 evidence artifact for the contract and acceptance limits.
+
+### STORY okuma görselleri revizyon/hazırlık sözleşmesi (ADR-0021)
+
+2026-10-16 tarihinde kabul edilen [P1 sözleşmesi](be/docs/image-revision-readiness-contract.md) ve
+[ADR-0021](be/docs/adr/ADR-0021-image-revision-readiness-contract.md), gelecek implementasyonun
+tasarımını tanımlar; mevcut runtime değişmemiştir. İlk kapsam dil bazında STORY/READING yerelleştirilmiş
+okuma kapağı/detail ve sıralı sayfa görselleridir. Kaynak artwork, listening, narration, LULLABY ve
+mevcut listing rolleri ayrıdır; listing placeholder davranışı korunur.
+
+`content`, yayın niyeti/nesli, dil/sayfa sırası, editoryal/erişim uygunluğu ve LIVE işaretçisinin sahibidir.
+Yayınla isteği kalıcı hazırlığı otomatik başlatır; tüm zorunlu görseller doğrulandığında hâlâ güncel ve
+uygun olan nesil ek revizyon onayı olmadan otomatik yayına alınır. `asset`, gerçek kaynak byte
+parmak izi, tüm yakalanmış profil/encoder/normalizasyon ayarları, immutable çıktılar ve kalıcı işleri
+sahiplenir. READY ve LIVE ayrıdır; eski `PUBLISHED`/`COMPLETED` veya manuel hazır komutları yeni
+sözleşmenin kanıtı değildir. Görsel kimliği yayın neslinden ayrılarak görsel dışı düzenlemelerde
+doğrulanmış medyanın tekrar kodlanmadan kullanılması sağlanır.
+
+Gelecek implementasyonda tüm çıktıların depodaki MIME/byte/SHA/boyut/decode doğrulaması zorunludur.
+Manifest ve iş tamamlanması tek atomik DB transaction'ında kaydedilir; başarı ve hata aynı
+iş/deneme/lease/kaynak/profil sahipliğiyle korunur. `content`, güncel nesil/uygunluk ve tam READY
+kimliğini public `asset::api` üzerinden kısa DB tutarlılık sınırında doğrulayarak LIVE işaretçisini
+atomik değiştirir; modüller arası entity/repository erişimi açılmaz. İndirme, dönüşüm, depolama ve
+URL imzalama DB transaction'larına girmez. Kalıcı intent ve uzlaştırma restart sonrasında devam eder.
+
+Terminal geçiş yalnızca `PROCESSING` durumundan yapılır ve ilk commit edilen sonuç kazanır.
+Aynı denemenin geç başarı/hata bildirimi terminal sonucu veya immutable READY kaydını değiştiremez;
+aynı sonucun tekrarı salt okunur kanıt döndürür. Açık retry yeni yakalanmış deneme/lease kimliği alır.
+
+Başarısız veya eski aday önceki uygun live/session revizyonunu korur; ilk yayın doğrulama olmadan
+yeni sözleşmede erişilemez kalır. Saklanan snapshot mutable sayfa satırlarının ömründen bağımsızdır;
+son sayfanın silinmesi güncel adayı açıkça geçersiz kılar. Immutable kimlik yetki, URL yenileme veya
+cache izni vermez. Reuse yalnızca doğrulanmış rol/kaynak/profil çıktılarıyla, eşit/büyüyen çıktı ise
+açık profil kabulüyle mümkündür. Yeni ortak aggregate veya modül bağımlılığı eklenmez.
+
+Üretim profilleri/sayısal sınırlar, alpha/renk/orientation/animasyon politikaları, korumalı erişim/cache/
+yenileme/retention, tüketici geçişi ve rollout ayrı kapılardır. P0 Android 1× / iPhone 0.75× kararı
+yalnızca gösterilen örnek/geometrileri kapsar ve ham kanıt saklama kısıtı devam eder. Bu karar P0'ın
+tamamını kapatmaz; P2 veya tüm yayın akışını hazır ilan etmez. ADR-0006/0008/0010/0017/0019 ve
+mevcut yayın/tüketici davranışları korunur.

@@ -6,6 +6,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 - `AGENTS.md`
 - `architecture.md`
+- [`be/docs/image-revision-readiness-contract.md`](image-revision-readiness-contract.md) — accepted P1 design; runtime implementation and downstream delivery/profile gates remain pending.
 - `be/docs/admin-api-rules.md`
 - `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
@@ -13,6 +14,8 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `be/docs/adr/`
 
 ## Active Architectural Decisions
+
+- [`ADR-0021`](adr/ADR-0021-image-revision-readiness-contract.md): accepted future STORY/READING image contract per language. `content` owns publication generation and automatic current-eligible-READY promotion after Publish starts durable preparation; `asset` owns actual-byte/complete-profile identities, verified immutable outputs and atomic attempt-fenced manifest/job completion for success and failure. Terminal transitions require `PROCESSING`; first committed outcome wins, identical replay is read-only proof, contradictory callbacks cannot mutate terminal state/READY, and explicit retry claims a new attempt. Preserve eligible live/session revisions on failure, separate READY from LIVE, reuse only admitted immutable role/source/profile media, and require explicit equal/growing-output admission. Retained snapshots must survive mutable page-row removal; legacy flags/manual-ready do not certify the new contract. Documentation only: runtime, listing placeholders, original consumers and ADR-0006/0008/0010/0017/0019 remain unchanged. Production profiles/normalization/access/cache/retention and versioned rollout remain gated; bounded P0 quality evidence does not close full P0 or make P2 ready.
 
 - `ADR-0019`: Story 1.1 Library home uses per-language opt-in category order and explicit content-language mapping, one preview default of five, lightweight module APIs, verified real LISTING_COVER revisions with captured attempt/lease/source/profile guards, and local/test Firebase UID admission. The approved public edge is `user` → `category::api`. CMS `/categories/home` preserves card order; the isolated Flutter entry follows ADR-0018 and retains the PoC. Runtime evidence and remaining gates live in `library-1-1-evidence.md`; test audience is not production authorization.
 
