@@ -1,0 +1,122 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.tellpal:tellpal-v2-backend >-------------------
+[INFO] Building tellpal-v2-backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ tellpal-v2-backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 35 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ tellpal-v2-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 500 source files with javac [debug parameters release 25] to target/classes
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java: /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java uses or overrides a deprecated API.
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ tellpal-v2-backend ---
+[INFO] Copying 4 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ tellpal-v2-backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 85 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/PostgresIntegrationTestBase.java: Some input files use or override a deprecated API.
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/PostgresIntegrationTestBase.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ tellpal-v2-backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.219 s <<< FAILURE! -- in com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest
+[ERROR] com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest.actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata -- Time elapsed: 0.065 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:143)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:45)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:152)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest$Endpoint.<init>(ReadingStorageTransportTest.java:98)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest.lambda$actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata$0(ReadingStorageLiveProbeTest.java:91)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest.withPrivateDirectory(ReadingStorageLiveProbeTest.java:123)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest.actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata(ReadingStorageLiveProbeTest.java:90)
+
+[INFO] Running com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.006 s <<< FAILURE! -- in com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest
+[ERROR] com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt -- Time elapsed: 0.002 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:143)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:45)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:152)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest$Endpoint.<init>(ReadingStorageTransportTest.java:98)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt(ReadingStorageTransportTest.java:42)
+
+[ERROR] com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkMetadataStallFailsWithinBoundAndMakesOneAttempt -- Time elapsed: 0.002 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:143)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:45)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:152)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest$Endpoint.<init>(ReadingStorageTransportTest.java:98)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkMetadataStallFailsWithinBoundAndMakesOneAttempt(ReadingStorageTransportTest.java:30)
+
+[ERROR] com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.readingCloneSetsTimeoutsAndOneAttemptWithoutChangingLegacyOptions -- Time elapsed: 0.002 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:511)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:335)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:297)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:143)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:45)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:152)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest$Endpoint.<init>(ReadingStorageTransportTest.java:98)
+	at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.readingCloneSetsTimeoutsAndOneAttemptWithoutChangingLegacyOptions(ReadingStorageTransportTest.java:57)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   ReadingStorageLiveProbeTest.actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata:90->withPrivateDirectory:123->lambda$actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata$0:91 » Socket Operation not permitted
+[ERROR]   ReadingStorageTransportTest.readingCloneSetsTimeoutsAndOneAttemptWithoutChangingLegacyOptions:57 » Socket Operation not permitted
+[ERROR]   ReadingStorageTransportTest.realSdkMetadataStallFailsWithinBoundAndMakesOneAttempt:30 » Socket Operation not permitted
+[ERROR]   ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt:42 » Socket Operation not permitted
+[INFO] 
+[ERROR] Tests run: 9, Failures: 0, Errors: 4, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.849 s
+[INFO] Finished at: 2026-10-16T19:46:52+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project tellpal-v2-backend: 
+[ERROR] 
+[ERROR] See /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

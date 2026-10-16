@@ -1,0 +1,76 @@
+{
+  "run": "review-full-verify.txt",
+  "surefire": {
+    "tests": 431,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failsafe": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "selected_suites_not_additional_to_total": [
+    {
+      "class": "com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "ambiguousCreateFailureStopsWithoutLaterCreateAttemptsOrNewKey",
+        "invalidLivePrivateInputHasFiniteSanitizedFailureAndNoReceipt",
+        "actualAdapterAndWrapperIndependentlyEnforceConflictEqualityAndPinnedMetadata",
+        "unknownDuplicateRelativeAndTraversalTargetOptionsAreRefused",
+        "receiptCreationIsExclusivePrivateAndPreservesPartialOwnership",
+        "rejectsWrongCredentialTypeProjectTokenEndpointAndEmailBindingBeforeKeyParsing",
+        "dryRunDoesNotOpenEvenMissingCredentialOrReceiptParents"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.ApplicationModulesTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exposesExpectedModuleGraph",
+        "verifiesModuleBoundaries"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt",
+        "realSdkMetadataStallFailsWithinBoundAndMakesOneAttempt",
+        "readingCloneSetsTimeoutsAndOneAttemptWithoutChangingLegacyOptions"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "realChildRendersDirectOriginalAndVerifiesPersistedPixels",
+        "persistedWrongMimeShaDimensionsAndEncodedLimitCannotVerify",
+        "parentHeapAdmissionRejectsUnboundedReservationBeforeChildLaunch",
+        "exitingChildMayLoseItsRssStatusButLiveProbeErrorsStillFailClosed",
+        "resourceAdmissionAndActualRssOrDiskExhaustionFailWithObservedExit",
+        "timeoutAndConcurrencyObserveActualChildExit",
+        "rejectsMalformedAlphaFramesMetadataByteAndPixelBombs",
+        "missingRssWithTransientAliveStateRequiresBoundedConfirmedExit",
+        "storageRejectsWrongVersionMissingTruncatedAndTransactionIo",
+        "validCrcAnimationColorAndOversizedMetadataAreExplicitlyRejected",
+        "canonicalFramingAndRoleSpecificProfileIdentity"
+      ]
+    }
+  ]
+}

@@ -134,7 +134,14 @@ class FirebaseStorageAssetClient implements AssetStorageClient {
         var retries=storage.getOptions().getRetrySettings().toBuilder().setMaxAttempts(1)
                 .setTotalTimeoutDuration(duration).setInitialRpcTimeoutDuration(duration).setMaxRpcTimeoutDuration(duration).build();
         var transport=com.google.cloud.http.HttpTransportOptions.newBuilder().setConnectTimeout(timeout).setReadTimeout(timeout).build();
-        var bounded=storage.getOptions().toBuilder().setRetrySettings(retries).setTransportOptions(transport).build().getService();
+        var noRetry=com.google.cloud.storage.StorageRetryStrategy.getDefaultStorageRetryStrategy().getNonidempotentHandler();
+        // The SDK media-read loop consults this handler again outside maxAttempts.
+        var strategy=new com.google.cloud.storage.StorageRetryStrategy() {
+            @Override public com.google.api.gax.retrying.ResultRetryAlgorithm<?> getIdempotentHandler() { return noRetry; }
+            @Override public com.google.api.gax.retrying.ResultRetryAlgorithm<?> getNonidempotentHandler() { return noRetry; }
+        };
+        var bounded=storage.getOptions().toBuilder().setRetrySettings(retries).setTransportOptions(transport)
+                .setStorageRetryStrategy(strategy).build().getService();
         return new FirebaseStorageAssetClient(bounded,serviceAccountCredentials,properties);
     }
 

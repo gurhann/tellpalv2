@@ -1,0 +1,4 @@
+DRY_RUN_ZERO_CREDENTIAL_READS_ZERO_NETWORK LIVE_GCS_NOT_EXECUTED
+PROPOSED_KEY local/reading/p2-storage-probe/<generated-UUID>/fixture.png
+CREATE_ATTEMPTS 4 RETAINED_OBJECTS_MAX 1 OPERATION_MILLIS 3000 RUN_SECONDS 60
+REVIEW_LIVE_COMMAND /opt/homebrew/opt/python@3.14/bin/python3.14 /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/tools/reading_storage_probe.py --project probe-local --bucket probe-bucket --credential /nonexistent/private/credential.json --receipt /nonexistent/private/receipt --execute-live --java /usr/bin/java

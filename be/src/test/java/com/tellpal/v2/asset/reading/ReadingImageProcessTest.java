@@ -198,6 +198,8 @@ class ReadingImageProcessTest {
         assertThatThrownBy(() -> ReadingIdentity.canonical("ö")).hasMessageContaining("Non-ASCII");
         var profile=ReadingProfiles.capture(Role.READING_COVER,ReadingFixtures.profile());
         assertThat(ReadingProfiles.capture(Role.READING_DETAIL,ReadingFixtures.profile()).fingerprint()).isNotEqualTo(profile.fingerprint());
-        assertThat(profile.descriptor()).contains("MaxDirect".replace("MaxDirect","directMiB"),"rssProbe","compressionQuality","LOCAL_TEST_ONLY");
+        assertThat(profile.descriptor()).contains("MaxDirect".replace("MaxDirect","directMiB"),"rssProbe","compressionQuality","LOCAL_TEST_ONLY",
+                "SDK_DEFAULT_NONIDEMPOTENT_HANDLER_FOR_BOTH_CLASSIFICATIONS", "SOCKET_INACTIVITY_WITH_BETWEEN_CALL_MONOTONIC_CHECKS",
+                "DEFERRED_UNQUALIFIED_SLOW_TRICKLE", "FirebaseStorageAssetClient$1", "DefaultStorageRetryStrategy$InterceptorImpl");
     }
 }

@@ -576,3 +576,12 @@ Publish, durable desired-generation mutation/invalidation and eligible adoption.
 page experiment, legacy statuses and consumers remain unchanged. No new delivery endpoint, signed
 URL, session/cache/retention right, deployment, backfill or deletion is introduced. See
 [engine documentation](be/docs/reading-image-preparation.md) for implementation and evidence limits.
+
+Reading-only SDK clones use the existing SDK non-idempotent no-retry handler for both classifications,
+preventing internal HTTP media resumptions without changing legacy clients. New profile identities
+bind this policy and adapter/SDK-handler implementation bytes. Socket timeouts enforce inactivity;
+outer monotonic checks cannot preempt a continuously progressing blocking read. Absolute in-flight
+duration, including slow trickles/authentication, remains a production-qualification gate. The
+SDK-only correction adds no storage worker/process/IPC layer. Diagnostic launcher watchdog evidence
+does not close this gate; live GCS execution remains separately authorized. See
+[storage-probe evidence](be/docs/evidence/p2-storage-probe/README.md).

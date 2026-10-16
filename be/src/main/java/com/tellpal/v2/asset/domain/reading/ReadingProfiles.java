@@ -31,6 +31,17 @@ public final class ReadingProfiles {
                 evidence.put(type.getName(),digest(input));
             } catch(java.io.IOException e) { throw new IllegalStateException("Engine class identity unavailable",e); }
         }
+        for(String name:java.util.List.of("com.tellpal.v2.asset.infrastructure.storage.FirebaseStorageAssetClient",
+                "com.tellpal.v2.asset.infrastructure.storage.FirebaseStorageAssetClient$1",
+                "com.google.cloud.storage.StorageRetryStrategy",
+                "com.google.cloud.storage.DefaultStorageRetryStrategy",
+                "com.google.cloud.storage.DefaultStorageRetryStrategy$InterceptorImpl",
+                com.google.cloud.storage.StorageRetryStrategy.getDefaultStorageRetryStrategy().getNonidempotentHandler().getClass().getName())) {
+            try(var input=ReadingProfiles.class.getResourceAsStream("/"+name.replace('.','/')+".class")) {
+                if(input==null) throw new IllegalStateException("Storage retry implementation identity unavailable");
+                evidence.put(name,digest(input));
+            } catch(java.io.IOException e) { throw new IllegalStateException("Storage retry implementation identity unavailable",e); }
+        }
         return Map.copyOf(evidence);
     }
     private static String digest(java.io.InputStream input) throws java.io.IOException {
@@ -58,7 +69,11 @@ public final class ReadingProfiles {
                 "rendering","QUALITY","colorRendering","QUALITY","outputType","TYPE_INT_RGB","directFromOriginal",true));
         descriptor.put("durationAdmission","SHARED_MONOTONIC_REVISION_WITH_REMAINING_OPERATION_CAP");
         descriptor.put("parentAdmission",Map.of("maxHeapDivisor",4,"availableHeapDivisor",2,"scope","PARENT_ONLY","reservation","DECLARED_PARENT_MEMORY_BYTES"));
-        descriptor.put("storage",Map.of("rpcTimeoutMillis",limits.sourceMillis(),"connectTimeoutMillis",limits.sourceMillis(),"readTimeoutMillis",limits.sourceMillis(),"maxAttempts",1,"readChunkBytes",1048576));
+        descriptor.put("storage",Map.of("rpcTimeoutMillis",limits.sourceMillis(),"connectTimeoutMillis",limits.sourceMillis(),
+                "readTimeoutMillis",limits.sourceMillis(),"maxAttempts",1,"readChunkBytes",1048576,
+                "retryPolicy","SDK_DEFAULT_NONIDEMPOTENT_HANDLER_FOR_BOTH_CLASSIFICATIONS",
+                "transportTimeoutSemantics","SOCKET_INACTIVITY_WITH_BETWEEN_CALL_MONOTONIC_CHECKS",
+                "absoluteInFlightDeadline","DEFERRED_UNQUALIFIED_SLOW_TRICKLE"));
         descriptor.put("source", Map.of("formats",java.util.List.of("RGB8_NONINTERLACED_PNG","BASELINE_JFIF_RGB8_JPEG"),"frames",1,"color","SRGB_ONLY",
                 "bits",8,"alpha","FORBIDDEN","orientation","IDENTITY_ONLY","metadata","STRICT_CONTAINER_ALLOWLIST",
                 "metadataBytes",65536,"crc","REQUIRED","trailingBytes","FORBIDDEN"));

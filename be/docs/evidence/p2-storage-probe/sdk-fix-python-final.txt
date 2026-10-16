@@ -1,0 +1,13 @@
+test_default_dry_run_cannot_start_maven_preparation (test_reading_storage_probe.SupervisorTest.test_default_dry_run_cannot_start_maven_preparation) ... ok
+test_descendant_holding_pipes_is_terminated (test_reading_storage_probe.SupervisorTest.test_descendant_holding_pipes_is_terminated) ... ok
+test_explicit_preparation_never_launches_storage_child (test_reading_storage_probe.SupervisorTest.test_explicit_preparation_never_launches_storage_child) ... ok
+test_launch_environment_cannot_inject_credentials_or_java_options (test_reading_storage_probe.SupervisorTest.test_launch_environment_cannot_inject_credentials_or_java_options) ... ok
+test_output_overflow_stops_and_reaps_real_child (test_reading_storage_probe.SupervisorTest.test_output_overflow_stops_and_reaps_real_child) ... ok
+test_success_is_reaped_without_forwarding_sensitive_output (test_reading_storage_probe.SupervisorTest.test_success_is_reaped_without_forwarding_sensitive_output) ... ok
+test_supervisor_receipt_is_private_exclusive_and_retained (test_reading_storage_probe.SupervisorTest.test_supervisor_receipt_is_private_exclusive_and_retained) ... ok
+test_timeout_kills_and_reaps_real_child (test_reading_storage_probe.SupervisorTest.test_timeout_kills_and_reaps_real_child) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.717s
+
+OK

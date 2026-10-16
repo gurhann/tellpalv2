@@ -1,0 +1,83 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.tellpal:tellpal-v2-backend >-------------------
+[INFO] Building tellpal-v2-backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ tellpal-v2-backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 35 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ tellpal-v2-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 500 source files with javac [debug parameters release 25] to target/classes
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java: /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java uses or overrides a deprecated API.
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/main/java/com/tellpal/v2/purchase/web/webhook/RevenueCatWebhookExceptionHandler.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ tellpal-v2-backend ---
+[INFO] Copying 4 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ tellpal-v2-backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 85 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/PostgresIntegrationTestBase.java: Some input files use or override a deprecated API.
+[INFO] /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/PostgresIntegrationTestBase.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ tellpal-v2-backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/Users/gurhankucuk/.m2/repository/com/google/guava/guava/33.4.0-jre/guava-33.4.0-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.469 s -- in com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest
+[INFO] Running com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 15.25 s <<< FAILURE! -- in com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest
+[ERROR] com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt -- Time elapsed: 15.03 s <<< ERROR!
+java.util.concurrent.TimeoutException: realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt() timed out after 15 seconds
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	Suppressed: org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+		at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+		at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+		at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+		at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:41)
+		at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35)
+		at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:195)
+		at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt(ReadingStorageTransportTest.java:47)
+		Suppressed: java.lang.InterruptedException
+			at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1788)
+			at java.base/java.util.concurrent.ThreadPoolExecutor.awaitTermination(ThreadPoolExecutor.java:1416)
+			at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest$Endpoint.close(ReadingStorageTransportTest.java:171)
+			at com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt(ReadingStorageTransportTest.java:42)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   ReadingStorageTransportTest.realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt » Timeout realSdkPartialMediaStallFailsWithinBoundWithPinnedGenerationAndOneAttempt() timed out after 15 seconds
+[INFO] 
+[ERROR] Tests run: 9, Failures: 0, Errors: 1, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.240 s
+[INFO] Finished at: 2026-10-16T19:47:29+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project tellpal-v2-backend: 
+[ERROR] 
+[ERROR] See /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

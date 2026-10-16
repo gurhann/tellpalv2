@@ -1,0 +1,14 @@
+SCOPE PACKAGED_LOCAL_SDK_FAULT_INJECTION NO_CREDENTIALS NO_LIVE_GCS NO_PRODUCTION_ADMISSION
+RUNTIME 25.0.4.1+1-LTS Eclipse Adoptium Linux aarch64
+ADAPTER_ORIGIN jar:nested:/work/tellpal-v2-backend-0.0.1-SNAPSHOT.jar/!BOOT-INF/classes/!/com/tellpal/v2/asset/infrastructure/storage/FirebaseStorageAssetClient.class
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (jar:nested:/work/tellpal-v2-backend-0.0.1-SNAPSHOT.jar/!BOOT-INF/lib/guava-33.4.0-jre.jar!/)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+CONTENT sentinels=6 sha256=8b5e363b38a93b70202d4bd5ed7d584a89f857e8eb372d0825be8edef69215ea
+CASE NORMAL PASS elapsedMillis=482 metadata=1 media=1 pinned=true firstBodyByteFlushed=false
+CASE METADATA_STALL PASS elapsedMillis=220 metadata=1 media=0 pinned=true firstBodyByteFlushed=false
+CASE BODY_STALL PASS elapsedMillis=326 metadata=1 media=1 pinned=true firstBodyByteFlushed=true
+RESULT PASS packaged actual adapter/SDK pinned bytes and inactivity stalls; absolute slow-trickle bound DEFERRED
+
+DOCKER_EXIT_CODE 0
