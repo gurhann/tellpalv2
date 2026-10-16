@@ -1,0 +1,11 @@
+SCOPE synthetic-local-runtime-availability-only; no-production-profile-or-visual-quality-acceptance
+RUNTIME 25.0.2 vendor=Homebrew vm=OpenJDK 64-Bit Server VM os=Mac OS X arch=aarch64
+ENCODER format=png writer=com.sun.imageio.plugins.png.PNGImageWriter writerProvider=Oracle Corporation/1.0
+VERIFIED format=png mime=image/png bytes=149157 sha256=ea6033481d8418140d31723627177e652da8b25e02533c642c3793ac3c9a09da width=257 height=193 reader=com.sun.imageio.plugins.png.PNGImageReader readerProvider=Oracle Corporation/1.0 exactRgbPixels=true
+NEGATIVE format=png missing=REJECTED
+NEGATIVE format=png truncated=REJECTED_BY_INDEPENDENT_BYTE_HASH_CHECK
+ENCODER format=jpeg writer=com.sun.imageio.plugins.jpeg.JPEGImageWriter writerProvider=Oracle Corporation/0.5
+VERIFIED format=jpeg mime=image/jpeg bytes=23857 sha256=1153c14ab2c07422ddc555cbc2a3dfbc9fa33186b5c9f7009ade9f1370be57a1 width=257 height=193 reader=com.sun.imageio.plugins.jpeg.JPEGImageReader readerProvider=Oracle Corporation/0.5 exactRgbPixels=false
+NEGATIVE format=jpeg missing=REJECTED
+NEGATIVE format=jpeg truncated=REJECTED_BY_INDEPENDENT_BYTE_HASH_CHECK
+RESULT PASS two persisted formats, two fresh readers, PNG exact RGB, four negative cases

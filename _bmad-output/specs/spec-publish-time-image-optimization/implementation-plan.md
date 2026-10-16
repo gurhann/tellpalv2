@@ -1,6 +1,6 @@
 # Implementation Phases and Acceptance
 
-Status: parent implementation plan remains a draft; P1 design accepted on 2026-10-16, runtime implementation pending. Phases describe prospective independently reviewable work; they are not scheduled stories or broad implementation approval. The [P1 contract](../../../be/docs/image-revision-readiness-contract.md) and [ADR-0021](../../../be/docs/adr/ADR-0021-image-revision-readiness-contract.md) record the accepted invariants. Confirm remaining dependent gates before implementation; P2 and the complete publication workflow are not declared ready. Notify the human before long implementation so model/reasoning settings can be adjusted.
+Status: parent implementation plan remains a draft; P1 design accepted on 2026-10-16, the full publication runtime remains pending while the separately approved P2 engine slice is implemented and verified. Phases describe prospective independently reviewable work; they are not scheduled stories or broad implementation approval. The [P1 contract](../../../be/docs/image-revision-readiness-contract.md) and [ADR-0021](../../../be/docs/adr/ADR-0021-image-revision-readiness-contract.md) record the accepted invariants. Confirm remaining dependent gates before implementation; P2 and the complete publication workflow are not declared ready. Notify the human before long implementation so model/reasoning settings can be adjusted.
 
 ## Intended publication boundary
 
@@ -50,6 +50,16 @@ Resolved invariants:
 **Remaining gates:** OQ-2 representative quality/resource/geometry qualification and numerical profiles; OQ-3 concrete compliant-source and equal/growing-byte profile admission; OQ-4 alpha/color/orientation/animation policy and broader role approval; OQ-5 exact production access/EXT-MEDIA/EXT-PUBLICATION, cache/renewal/revocation/session/retention policy; and applicable OQ-6 native qualification limits. P1 establishes future schema/API obligations, not concrete migrations/endpoints or runtime proof. The core P1 contract is recorded; its documentation completion does not clear P2 or the whole publication workflow.
 
 ## P2 — Verified image generation
+
+**Bounded engine slice approved and verified on 2026-10-16.** The human approved the
+[P2 implementation specification](../../implementation-artifacts/spec-p2-verified-reading-image-preparation.md):
+build the internal engine using explicit local test profiles, keep production profiles disabled,
+admit only narrow supported opaque 8-bit sRGB PNG/JPEG semantics and add no new delivery/access or
+deletion policy. [ADR-0022](../../../be/docs/adr/ADR-0022-reading-image-preparation-engine.md) and
+[engine documentation](../../../be/docs/reading-image-preparation.md) preserve this boundary. Test
+profile numbers/growth evidence do not admit production settings. Existing experiments/consumers
+and P3 Publish/CMS/LIVE integration remain separate. Completing this slice does not close all P2
+production quality/resource/access gates or full P0.
 
 Extend existing listing/page conversion infrastructure for the agreed STORY reading cover, detail and page roles. Validate retained originals, normalize orientation/mirroring and explicit color/alpha semantics, resize once per output, encode/admit compliant bytes into immutable revision paths, then independently reread/verify stored MIME, bytes, checksum, dimensions and decoding. Do not repeatedly encode derivatives. Prove actual Java25/deployment provider/binary round-trip for any adopted codec; an extension, writer registry or successful build is insufficient. No plan-only completion or partially ready multi-output revision qualifies.
 

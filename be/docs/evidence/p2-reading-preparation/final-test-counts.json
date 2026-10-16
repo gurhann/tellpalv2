@@ -1,0 +1,102 @@
+{
+  "scope": "Final accepted Maven verify; include only suites present in this run log, excluding stale target XML. P2/module counts are part of full totals, not additional.",
+  "run_log": "final-full-verify.txt",
+  "surefire": {
+    "tests": 421,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failsafe": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "p2_and_module_suites": [
+    {
+      "class": "com.tellpal.v2.ApplicationModulesTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exposesExpectedModuleGraph",
+        "verifiesModuleBoundaries"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "realChildRendersDirectOriginalAndVerifiesPersistedPixels",
+        "persistedWrongMimeShaDimensionsAndEncodedLimitCannotVerify",
+        "parentHeapAdmissionRejectsUnboundedReservationBeforeChildLaunch",
+        "exitingChildMayLoseItsRssStatusButLiveProbeErrorsStillFailClosed",
+        "resourceAdmissionAndActualRssOrDiskExhaustionFailWithObservedExit",
+        "timeoutAndConcurrencyObserveActualChildExit",
+        "rejectsMalformedAlphaFramesMetadataByteAndPixelBombs",
+        "missingRssWithTransientAliveStateRequiresBoundedConfirmedExit",
+        "storageRejectsWrongVersionMissingTruncatedAndTransactionIo",
+        "validCrcAnimationColorAndOversizedMetadataAreExplicitlyRejected",
+        "canonicalFramingAndRoleSpecificProfileIdentity"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingPreparationGuardsIntegrationTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "currentOriginalOrRegistryBindingChangingInsideRetainedCreateCannotScheduleStaleCapture",
+        "scheduleAndSuccessCannotCommitWhenTotalBudgetExpiresInPostgresLockWait",
+        "readCommittedCallerStillGetsAnIndependentRepeatableReadCommittedSnapshot",
+        "readyFindUsesOneTotalBudgetAcrossAllPersistedOutputs",
+        "workerTotalBudgetExpiryRecordsOwnedFailureAndReleasesParentCapacity",
+        "jpegOriginalCompletesThroughCaptureActualChildAndIndependentStoredPngPixelDecode",
+        "parentPrepareRejectsExcessiveActualHeapReservationBeforeAnySourceIo",
+        "expiredUnreplacedProcessingTokenRejectsBothFirstTerminalCallbacks",
+        "leaseExpiryDuringRealPostgresRowLockWaitRejectsBothSuccessAndFailure",
+        "finalCaptureAndFinalBindingRecheckCannotSchedulePastTotalBudget"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "longFailureEvidenceDoesNotPreventOwnedFailureAndDeduplicatesReplay",
+        "restartAfterPartialObjectsReverifiesAndCompletesWithoutPartialReady",
+        "postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult",
+        "equalPngBytesRequireExplicitGrowthAdmissionBeforeRealWorkerCanComplete",
+        "wrongGeometryChildCannotCertifyEvenAValidPersistedPng",
+        "manifestAndCompletionRollbackTogetherOnDatabaseFailure",
+        "explicitRetryAndLateTerminalCallbacksRemainFenced",
+        "growingPngBytesRequireExplicitGrowthAdmissionBeforeRealWorkerCanComplete",
+        "concurrentClaimAndExpiredReplacementAllowOnlyOneOwner",
+        "sourceByteLanguageChangesAndInvalidOrProductionInputsFailClosed",
+        "contentExactLanguageSnapshotBecomesInvalidAfterLastPageDeletionWhileReadySurvives",
+        "completeStoredRoleSetDeduplicatesAndReverifiesIntegrity",
+        "sameBytesWithReorderedPagesOrChangedRoleGeometryCreateDifferentRevisions",
+        "identicalOriginalBytesAtANewStorageGenerationReuseTheVerifiedRevision"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.content.reading.ReadingImageSourceSnapshotTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exactLanguageMissingAndEmptyInputsNeverBecomeOldValidSnapshot",
+        "orderedPageAndLocalizationProvenanceAreScalarAndLanguageSpecific"
+      ]
+    }
+  ]
+}

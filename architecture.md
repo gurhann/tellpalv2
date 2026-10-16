@@ -556,3 +556,23 @@ yenileme/retention, tüketici geçişi ve rollout ayrı kapılardır. P0 Android
 yalnızca gösterilen örnek/geometrileri kapsar ve ham kanıt saklama kısıtı devam eder. Bu karar P0'ın
 tamamını kapatmaz; P2 veya tüm yayın akışını hazır ilan etmez. ADR-0006/0008/0010/0017/0019 ve
 mevcut yayın/tüketici davranışları korunur.
+
+### P2 STORY/READING preparation engine boundary (ADR-0022)
+
+The approved [P2 engine specification](_bmad-output/implementation-artifacts/spec-p2-verified-reading-image-preparation.md)
+adds an internal, disabled-by-default preparation boundary; bounded implementation, reviews and verification are complete.
+`content::api` supplies a consistent exact-language scalar cover/detail/page snapshot, including invalid
+or empty input. `asset::api` owns captured-byte/profile work, version-pinned immutable storage,
+complete manifests and atomic attempt-fenced job finalization. Retained page provenance does not
+depend on mutable page-row lifetime. This adds no asset-to-content module dependency.
+
+[ADR-0022](be/docs/adr/ADR-0022-reading-image-preparation-engine.md) permits explicit local test profiles
+only: narrow opaque RGB8 sRGB PNG/JPEG admission, PNG output directly from originals, no upscale,
+explicit growth admission and supervised child-process/resource limits. Production admission remains
+closed; broader normalization, numerical production budgets and device quality remain gated.
+
+READY certifies captured media, not publication generation, LIVE or access. P3 still must connect
+Publish, durable desired-generation mutation/invalidation and eligible adoption. Existing listing,
+page experiment, legacy statuses and consumers remain unchanged. No new delivery endpoint, signed
+URL, session/cache/retention right, deployment, backfill or deletion is introduced. See
+[engine documentation](be/docs/reading-image-preparation.md) for implementation and evidence limits.

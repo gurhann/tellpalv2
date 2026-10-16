@@ -1,0 +1,67 @@
+{
+  "scope": "P2 matrix and module boundary tests from accepted Maven verify; not summed with earlier runs",
+  "suites": [
+    {
+      "class": "com.tellpal.v2.ApplicationModulesTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exposesExpectedModuleGraph",
+        "verifiesModuleBoundaries"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "realChildRendersDirectOriginalAndVerifiesPersistedPixels",
+        "persistedWrongMimeShaDimensionsAndEncodedLimitCannotVerify",
+        "resourceAdmissionAndActualRssOrDiskExhaustionFailWithObservedExit",
+        "timeoutAndConcurrencyObserveActualChildExit",
+        "rejectsMalformedAlphaFramesMetadataByteAndPixelBombs",
+        "storageRejectsWrongVersionMissingTruncatedAndTransactionIo",
+        "validCrcAnimationColorAndOversizedMetadataAreExplicitlyRejected",
+        "canonicalFramingAndRoleSpecificProfileIdentity"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "longFailureEvidenceDoesNotPreventOwnedFailureAndDeduplicatesReplay",
+        "restartAfterPartialObjectsReverifiesAndCompletesWithoutPartialReady",
+        "postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult",
+        "equalPngBytesRequireExplicitGrowthAdmissionBeforeRealWorkerCanComplete",
+        "wrongGeometryChildCannotCertifyEvenAValidPersistedPng",
+        "manifestAndCompletionRollbackTogetherOnDatabaseFailure",
+        "explicitRetryAndLateTerminalCallbacksRemainFenced",
+        "growingPngBytesRequireExplicitGrowthAdmissionBeforeRealWorkerCanComplete",
+        "concurrentClaimAndExpiredReplacementAllowOnlyOneOwner",
+        "sourceByteLanguageChangesAndInvalidOrProductionInputsFailClosed",
+        "contentExactLanguageSnapshotBecomesInvalidAfterLastPageDeletionWhileReadySurvives",
+        "completeStoredRoleSetDeduplicatesAndReverifiesIntegrity",
+        "sameBytesWithReorderedPagesOrChangedRoleGeometryCreateDifferentRevisions",
+        "identicalOriginalBytesAtANewStorageGenerationReuseTheVerifiedRevision"
+      ]
+    },
+    {
+      "class": "com.tellpal.v2.content.reading.ReadingImageSourceSnapshotTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "exactLanguageMissingAndEmptyInputsNeverBecomeOldValidSnapshot",
+        "orderedPageAndLocalizationProvenanceAreScalarAndLanguageSpecific"
+      ]
+    }
+  ]
+}

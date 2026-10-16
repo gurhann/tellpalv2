@@ -127,6 +127,49 @@ class FirebaseStorageAssetClient implements AssetStorageClient {
                 Channels.newInputStream(reader)));
     }
 
+    @Override
+    public AssetStorageClient withReadingDeadline(long millis) {
+        int timeout=Math.toIntExact(millis);
+        var duration=java.time.Duration.ofMillis(millis);
+        var retries=storage.getOptions().getRetrySettings().toBuilder().setMaxAttempts(1)
+                .setTotalTimeoutDuration(duration).setInitialRpcTimeoutDuration(duration).setMaxRpcTimeoutDuration(duration).build();
+        var transport=com.google.cloud.http.HttpTransportOptions.newBuilder().setConnectTimeout(timeout).setReadTimeout(timeout).build();
+        var bounded=storage.getOptions().toBuilder().setRetrySettings(retries).setTransportOptions(transport).build().getService();
+        return new FirebaseStorageAssetClient(bounded,serviceAccountCredentials,properties);
+    }
+
+    @Override
+    public Optional<VersionedStorageObject> observeVersion(String path) {
+        Blob blob = storage.get(blobId(path));
+        return blob == null ? Optional.empty() : Optional.of(version(path, blob));
+    }
+
+    @Override
+    public InputStream openVersion(VersionedStorageObject object) {
+        BlobId pinned = BlobId.of(properties.bucketName(), stripLeadingSlash(object.path()), Long.valueOf(object.version()));
+        Blob blob=storage.get(pinned);
+        if(blob==null || !version(object.path(),blob).equals(object)) throw new IllegalStateException("PINNED_STORAGE_METADATA_CHANGED");
+        ReadChannel reader=storage.reader(pinned, Storage.BlobSourceOption.generationMatch());
+        reader.setChunkSize(1024*1024);
+        return Channels.newInputStream(reader);
+    }
+
+    @Override
+    public VersionedStorageObject createImmutable(String path, String mime, byte[] bytes) {
+        try {
+            Blob blob = storage.create(BlobInfo.newBuilder(blobId(path)).setContentType(mime).build(), bytes,
+                    Storage.BlobTargetOption.doesNotExist());
+            return version(path, blob);
+        } catch (com.google.cloud.storage.StorageException conflict) {
+            if (conflict.getCode() != 412) throw conflict;
+            return observeVersion(path).orElseThrow(() -> new IllegalStateException("Immutable conflict object disappeared"));
+        }
+    }
+
+    private static VersionedStorageObject version(String path, Blob blob) {
+        return new VersionedStorageObject(path, blob.getGeneration().toString(), normalizeMimeType(blob.getContentType()), blob.getSize());
+    }
+
     private BlobId blobId(String objectPath) {
         return BlobId.of(properties.bucketName(), stripLeadingSlash(objectPath));
     }

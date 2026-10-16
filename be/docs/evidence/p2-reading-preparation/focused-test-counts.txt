@@ -1,0 +1,4 @@
+com.tellpal.v2.ApplicationModulesTest: tests=2 failures=0 errors=0 skipped=0
+com.tellpal.v2.asset.reading.ReadingImageProcessTest: tests=8 failures=0 errors=0 skipped=0
+com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest: tests=9 failures=0 errors=0 skipped=0
+com.tellpal.v2.content.reading.ReadingImageSourceSnapshotTest: tests=2 failures=0 errors=0 skipped=0

@@ -76,7 +76,7 @@ public class AssetStorageClientRegistry {
         return clientFor(provider).openObject(requireObjectPath(objectPath), range);
     }
 
-    private AssetStorageClient clientFor(StorageProvider provider) {
+    public AssetStorageClient clientFor(StorageProvider provider) {
         if (provider == null) {
             throw new IllegalArgumentException("Storage provider must not be null");
         }

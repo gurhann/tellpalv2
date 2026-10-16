@@ -1,0 +1,151 @@
+17:23:39.209 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+17:23:39.211 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+17:23:39.215 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 2.0.2
+17:23:39.323 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+17:23:39.518 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Environment variables, system properties and defaults. Resolved dockerHost=unix:///Users/gurhankucuk/.colima/default/docker.sock
+17:23:39.519 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is 127.0.0.1
+17:23:39.528 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 29.5.2
+  API Version: 1.54
+  Operating System: Ubuntu 24.04.4 LTS
+  Total Memory: 3905 MB
+17:23:39.567 [main] INFO tc.testcontainers/ryuk:0.13.0 -- Creating container for image: testcontainers/ryuk:0.13.0
+17:23:39.666 [main] INFO tc.testcontainers/ryuk:0.13.0 -- Container testcontainers/ryuk:0.13.0 is starting: a2c47a9d5c31c2f520eb86fddc65dcd45c4ab34fbf7600a36e3881d855d37f6d
+17:23:39.801 [main] INFO tc.testcontainers/ryuk:0.13.0 -- Container testcontainers/ryuk:0.13.0 started in PT0.233296S
+17:23:39.808 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+17:23:39.808 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+17:23:39.808 [main] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
+17:23:39.808 [main] INFO tc.postgres:15 -- Creating container for image: postgres:15
+17:23:39.835 [main] INFO tc.postgres:15 -- Container postgres:15 is starting: c12c88fd925d88ee0d06aeae2c0be6df9b4254c1c93ca0b845843da46330cde6
+17:23:40.512 [main] INFO tc.postgres:15 -- Container postgres:15 started in PT0.703303S
+17:23:40.512 [main] INFO tc.postgres:15 -- Container is started (JDBC URL: jdbc:postgresql://127.0.0.1:32775/test?loggerLevel=OFF)
+17:23:40.558 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest]: ReadingPreparationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:23:40.622 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tellpal.v2.TellPalApplication for test class com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-10-16T17:23:40.803+03:00 INFO  [main] c.t.v.a.r.ReadingPreparationIntegrationTest requestId=none Starting ReadingPreparationIntegrationTest using Java 25-loom with PID 88697 (started by gurhankucuk in /Users/gurhankucuk/Documents/GitHub/tellpalv2/be)
+2026-10-16T17:23:40.803+03:00 INFO  [main] c.t.v.a.r.ReadingPreparationIntegrationTest requestId=none The following 1 profile is active: "test"
+2026-10-16T17:23:41.376+03:00 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate requestId=none Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-16T17:23:41.438+03:00 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate requestId=none Finished Spring Data repository scanning in 58 ms. Found 16 JPA repository interfaces.
+2026-10-16T17:23:41.701+03:00 INFO  [main] com.zaxxer.hikari.HikariDataSource requestId=none HikariPool-1 - Starting...
+2026-10-16T17:23:41.788+03:00 INFO  [main] com.zaxxer.hikari.pool.HikariPool requestId=none HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@178cfe5e
+2026-10-16T17:23:41.788+03:00 INFO  [main] com.zaxxer.hikari.HikariDataSource requestId=none HikariPool-1 - Start completed.
+2026-10-16T17:23:41.802+03:00 INFO  [main] org.flywaydb.core.FlywayExecutor requestId=none Database: jdbc:postgresql://127.0.0.1:32775/test?loggerLevel=OFF (PostgreSQL 15.19)
+2026-10-16T17:23:41.835+03:00 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory requestId=none Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-16T17:23:41.837+03:00 INFO  [main] o.f.core.internal.command.DbValidate requestId=none Successfully validated 35 migrations (execution time 00:00.020s)
+2026-10-16T17:23:41.845+03:00 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory requestId=none Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-16T17:23:41.897+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Current version of schema "public": << Empty Schema >>
+2026-10-16T17:23:41.902+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "1 - create languages table"
+2026-10-16T17:23:41.917+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "2 - seed languages"
+2026-10-16T17:23:41.931+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "3 - create admin tables"
+2026-10-16T17:23:41.951+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "4 - create media assets table"
+2026-10-16T17:23:41.967+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "5 - create content tables"
+2026-10-16T17:23:41.993+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "6 - create contributor tables"
+2026-10-16T17:23:42.011+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "7 - create category tables"
+2026-10-16T17:23:42.031+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "8 - create content free access table"
+2026-10-16T17:23:42.042+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "9 - create user tables"
+2026-10-16T17:23:42.056+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "10 - create event tables"
+2026-10-16T17:23:42.086+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "11 - create purchase tables"
+2026-10-16T17:23:42.117+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "12 - create asset processing tables"
+2026-10-16T17:23:42.129+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "13 - add asset processing context columns"
+2026-10-16T17:23:42.139+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "14 - alter media assets checksum sha256 type"
+2026-10-16T17:23:42.151+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "15 - localize story page illustrations"
+2026-10-16T17:23:42.162+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "16 - drop story page level illustration"
+2026-10-16T17:23:42.172+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "17 - align category types with content types"
+2026-10-16T17:23:42.185+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "18 - add story page textless illustration"
+2026-10-16T17:23:42.193+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "19 - add content textless cover"
+2026-10-16T17:23:42.202+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "20 - add contributor roles and normalized name"
+2026-10-16T17:23:42.215+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "21 - normalize content contributor sort orders"
+2026-10-16T17:23:42.226+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "22 - scope asset processing targets"
+2026-10-16T17:23:42.241+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "23 - add story narrations"
+2026-10-16T17:23:42.255+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "24 - add content listening cover"
+2026-10-16T17:23:42.267+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "25 - add lullaby playback"
+2026-10-16T17:23:42.287+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "26 - add lullaby instrument catalog"
+2026-10-16T17:23:42.303+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "27 - harden lullaby instrument invariants"
+2026-10-16T17:23:42.313+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "28 - remove audio story canonical type"
+2026-10-16T17:23:42.322+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "29 - add lullaby listing cover"
+2026-10-16T17:23:42.332+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "30 - add piano instrument catalog entry"
+2026-10-16T17:23:42.340+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "31 - localize existing instrument catalog"
+2026-10-16T17:23:42.349+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "32 - add story page media revisions"
+2026-10-16T17:23:42.362+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "33 - category home configuration"
+2026-10-16T17:23:42.371+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "34 - listing cover revisions"
+2026-10-16T17:23:42.384+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Migrating schema "public" to version "35 - reading image preparation"
+2026-10-16T17:23:42.400+03:00 INFO  [main] o.f.core.internal.command.DbMigrate requestId=none Successfully applied 35 migrations to schema "public", now at version v35 (execution time 00:00.234s)
+2026-10-16T17:23:42.461+03:00 INFO  [main] org.hibernate.orm.jpa requestId=none HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-16T17:23:42.486+03:00 INFO  [main] org.hibernate.orm.core requestId=none HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-10-16T17:23:42.658+03:00 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo requestId=none No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-16T17:23:42.694+03:00 INFO  [main] o.hibernate.orm.connections.pooling requestId=none HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:32775/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.19
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-16T17:23:43.324+03:00 INFO  [main] org.hibernate.orm.core requestId=none HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-16T17:23:43.349+03:00 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean requestId=none Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-16T17:23:43.387+03:00 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories requestId=none Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-16T17:23:45.421+03:00 INFO  [main] o.s.b.a.e.web.EndpointLinksResolver requestId=none Exposing 3 endpoints beneath base path '/actuator'
+2026-10-16T17:23:45.458+03:00 INFO  [main] c.t.v.a.r.ReadingPreparationIntegrationTest requestId=none Started ReadingPreparationIntegrationTest in 4.777 seconds (process running for 8.522)
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-10-16T17:23:57.893+03:00 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean requestId=none Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-16T17:23:57.895+03:00 INFO  [main] com.zaxxer.hikari.HikariDataSource requestId=none HikariPool-1 - Shutdown initiated...
+2026-10-16T17:23:57.895+03:00 INFO  [main] com.zaxxer.hikari.HikariDataSource requestId=none HikariPool-1 - Shutdown completed.
+[ERROR] Tests run: 9, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 18.84 s <<< FAILURE! -- in com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest
+[ERROR] com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult -- Time elapsed: 1.835 s <<< ERROR!
+java.util.concurrent.ExecutionException: org.springframework.dao.InvalidDataAccessApiUsageException: NON_OWNING_TERMINAL_CALLBACK
+	at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:124)
+	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:193)
+	at com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult(ReadingPreparationIntegrationTest.java:166)
+Caused by: org.springframework.dao.InvalidDataAccessApiUsageException: NON_OWNING_TERMINAL_CALLBACK
+	at org.springframework.orm.jpa.EntityManagerFactoryUtils.convertJpaAccessExceptionIfPossible(EntityManagerFactoryUtils.java:461)
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.translateExceptionIfPossible(HibernateExceptionTranslator.java:112)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:223)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:576)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:346)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:157)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+	at com.tellpal.v2.asset.infrastructure.persistence.reading.JdbcReadingJobStore$$SpringCGLIB$$0.fail(<generated>)
+	at com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.lambda$postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult$2(ReadingPreparationIntegrationTest.java:165)
+Caused by: java.lang.IllegalStateException: NON_OWNING_TERMINAL_CALLBACK
+	at com.tellpal.v2.asset.infrastructure.persistence.reading.JdbcReadingJobStore.requireProcessing(JdbcReadingJobStore.java:150)
+	at com.tellpal.v2.asset.infrastructure.persistence.reading.JdbcReadingJobStore.lambda$fail$0(JdbcReadingJobStore.java:90)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:137)
+	at com.tellpal.v2.asset.infrastructure.persistence.reading.JdbcReadingJobStore.fail(JdbcReadingJobStore.java:87)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:135)
+	... 4 more
+
+2026-10-16T17:23:58.280+03:00 INFO  [main] c.tngtech.archunit.core.PluginLoader requestId=none Detected Java version 25-loom
+[ERROR] Errors: 
+[ERROR]   ReadingPreparationIntegrationTest.postgresDuplicateScheduleAndSuccessFailureRacePreserveFirstTerminalResult:166 » Execution org.springframework.dao.InvalidDataAccessApiUsageException: NON_OWNING_TERMINAL_CALLBACK
+[ERROR] Tests run: 21, Failures: 0, Errors: 1, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project tellpal-v2-backend: 
+[ERROR] 
+[ERROR] See /Users/gurhankucuk/Documents/GitHub/tellpalv2/be/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

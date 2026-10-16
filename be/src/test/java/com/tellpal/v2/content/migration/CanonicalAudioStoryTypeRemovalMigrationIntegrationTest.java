@@ -97,7 +97,7 @@ class CanonicalAudioStoryTypeRemovalMigrationIntegrationTest {
 
         migrateLatest();
 
-        assertThat(schemaVersion()).isEqualTo("34");
+        assertThat(schemaVersion()).isEqualTo("35");
         assertThat(count("contents", contentId)).isEqualTo(1);
         assertThat(count("contents", meditationId)).isEqualTo(1);
         assertThat(count("contents", lullabyId)).isEqualTo(1);
@@ -110,7 +110,7 @@ class CanonicalAudioStoryTypeRemovalMigrationIntegrationTest {
     void cleanDatabaseRemovesAudioStoryFromCanonicalChecksAndKeepsScopedProcessingRules() throws Exception {
         migrateLatest();
 
-        assertThat(schemaVersion()).isEqualTo("34");
+        assertThat(schemaVersion()).isEqualTo("35");
         assertThatThrownBy(() -> execute("""
                 insert into contents (type, external_key, is_active, page_count)
                 values ('AUDIO_STORY', 'rejected-audio-story', true, null)

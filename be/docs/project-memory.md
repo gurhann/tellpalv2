@@ -7,6 +7,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `AGENTS.md`
 - `architecture.md`
 - [`be/docs/image-revision-readiness-contract.md`](image-revision-readiness-contract.md) — accepted P1 design; runtime implementation and downstream delivery/profile gates remain pending.
+- [`be/docs/reading-image-preparation.md`](reading-image-preparation.md) — bounded P2 internal engine; test-only admission, implemented/tested with workflow reviews complete. Production profiles and P3 publication integration remain gated.
 - `be/docs/admin-api-rules.md`
 - `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
@@ -14,6 +15,8 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `be/docs/adr/`
 
 ## Active Architectural Decisions
+
+- [`ADR-0022`](adr/ADR-0022-reading-image-preparation-engine.md): approved bounded P2 engine/test-profile scope. Exact-language STORY/READING cover/detail/ordered pages use captured byte/profile identities, version-pinned immutable storage and atomic attempt-fenced manifest/job completion. Narrow supported opaque RGB8 sRGB PNG/JPEG inputs, direct-original PNG output and explicit growth admission; unsupported normalization/source shortage fails. Production admission remains closed. Internal READY grants no LIVE/access; P3 owns current-generation orchestration/adoption. Retain scalar page provenance/orphan evidence without deletion. Child-process/resource, PostgreSQL and packaged-runtime verification are tracked separately; the approved bounded engine acceptance is complete; production qualification remains pending. Existing listing/experiment/publication consumers remain unchanged.
 
 - [`ADR-0021`](adr/ADR-0021-image-revision-readiness-contract.md): accepted future STORY/READING image contract per language. `content` owns publication generation and automatic current-eligible-READY promotion after Publish starts durable preparation; `asset` owns actual-byte/complete-profile identities, verified immutable outputs and atomic attempt-fenced manifest/job completion for success and failure. Terminal transitions require `PROCESSING`; first committed outcome wins, identical replay is read-only proof, contradictory callbacks cannot mutate terminal state/READY, and explicit retry claims a new attempt. Preserve eligible live/session revisions on failure, separate READY from LIVE, reuse only admitted immutable role/source/profile media, and require explicit equal/growing-output admission. Retained snapshots must survive mutable page-row removal; legacy flags/manual-ready do not certify the new contract. Documentation only: runtime, listing placeholders, original consumers and ADR-0006/0008/0010/0017/0019 remain unchanged. Production profiles/normalization/access/cache/retention and versioned rollout remain gated; bounded P0 quality evidence does not close full P0 or make P2 ready.
 
