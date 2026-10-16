@@ -30,6 +30,7 @@ import com.tellpal.v2.asset.api.AssetProcessingCommands.ScheduleAssetProcessingC
 @Service
 public class StoryPageManagementService {
 
+    private final com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication;
     private final ContentRepository contentRepository;
     private final ContentAssetReferenceValidator assetReferenceValidator;
     private final AssetProcessingApi assetProcessingApi;
@@ -37,7 +38,9 @@ public class StoryPageManagementService {
     public StoryPageManagementService(
             ContentRepository contentRepository,
             ContentAssetReferenceValidator assetReferenceValidator,
-            AssetProcessingApi assetProcessingApi) {
+            AssetProcessingApi assetProcessingApi,
+            com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication) {
+        this.readingPublication = readingPublication;
         this.contentRepository = contentRepository;
         this.assetReferenceValidator = assetReferenceValidator;
         this.assetProcessingApi = assetProcessingApi;
@@ -122,6 +125,7 @@ public class StoryPageManagementService {
                 command.bodyText(),
                 command.audioMediaId(),
                 command.illustrationMediaId());
+        if(readingPublication.enabled()) contentRepository.saveAndFlush(content);
         schedulePageMedia(content, command.languageCode());
         StoryPage persistedContent = contentRepository.save(content)
                 .findStoryPage(command.pageNumber())
@@ -141,6 +145,7 @@ public class StoryPageManagementService {
     }
 
     private void schedulePageMedia(Content content, LanguageCode languageCode) {
+        readingChanged(content,languageCode);
         if (content.getType() != com.tellpal.v2.content.domain.ContentType.STORY) return;
         var orderedSources = content.getStoryPages().stream()
                 .sorted(java.util.Comparator.comparingInt(StoryPage::getPageNumber))
@@ -158,7 +163,12 @@ public class StoryPageManagementService {
                 content.getExternalKey(), null, null, orderedSources.size(), orderedSources));
     }
 
+    private void readingChanged(Content content,LanguageCode language) {
+        readingPublication.changed(content,language);
+    }
+
     private Content loadContent(Long contentId) {
+        readingPublication.lock(contentId);
         return contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }

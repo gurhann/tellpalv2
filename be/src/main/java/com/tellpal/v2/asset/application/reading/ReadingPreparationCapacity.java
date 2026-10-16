@@ -9,7 +9,7 @@ public final class ReadingPreparationCapacity implements AutoCloseable {
     private ReadingPreparationCapacity() { }
     public static ReadingPreparationCapacity acquire() {
         requireNoTransaction();
-        if (!CAPACITY.tryAcquire()) throw new IllegalStateException("READING_PARENT_CAPACITY_EXHAUSTED");
+        if (!CAPACITY.tryAcquire()) throw new ReadingVerificationInconclusiveException("READING_PARENT_CAPACITY_EXHAUSTED");
         return new ReadingPreparationCapacity();
     }
     /** Admission reserves at most one quarter of parent max heap and half of currently allocatable heap. */
@@ -17,7 +17,7 @@ public final class ReadingPreparationCapacity implements AutoCloseable {
         Runtime runtime=Runtime.getRuntime();
         long available=runtime.maxMemory()-(runtime.totalMemory()-runtime.freeMemory());
         if(profile.parentMemoryBytes()>runtime.maxMemory()/4 || profile.parentMemoryBytes()>available/2)
-            throw new IllegalStateException("READING_PARENT_HEAP_ADMISSION_EXCEEDED");
+            throw new ReadingVerificationInconclusiveException("READING_PARENT_HEAP_ADMISSION_EXCEEDED");
     }
     public static void requireNoTransaction() {
         if (TransactionSynchronizationManager.isActualTransactionActive()) throw new IllegalStateException("READING_IO_INSIDE_TRANSACTION");

@@ -83,3 +83,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-p1-image-revision-readiness-contract.md`
   summary: Repair the pre-existing canonical architecture link to the missing backend tasks document.
   evidence: `architecture.md` links `.kiro/specs/tellpal-v2-backend/tasks.md`, which is absent; the link predates the P1 baseline124a5b22fd324793a5d14220715c839617b6848b.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-p3-reading-publication-orchestration.md`
+  summary: Qualify the existing broader CMS visual suite on macOS without blanket baseline regeneration.
+  evidence: The incidental 31-test P3 review invocation reported 15 passes and 16 failures: four missing Darwin category/contributor baselines (the baseline Git tree contains win32 only) and twelve 1–13-pixel registry/mockup differences on unchanged routes/shared layout code; raw log and images remain at /private/tmp/p3-review-visual.log and /private/tmp/p3-review-unrelated-visual-artifacts/. The required P3 content-detail checks passed separately.

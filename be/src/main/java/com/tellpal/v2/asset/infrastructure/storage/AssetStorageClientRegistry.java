@@ -38,6 +38,7 @@ public class AssetStorageClientRegistry {
             String objectPath,
             String mimeType,
             Instant issuedAt) {
+        ReadingSourceNamespace.requireLegacyWrite(objectPath);
         if (mimeType == null || mimeType.isBlank()) {
             throw new IllegalArgumentException("Signed upload MIME type must not be blank");
         }
@@ -57,6 +58,7 @@ public class AssetStorageClientRegistry {
             String mimeType,
             long byteSize,
             InputStream content) {
+        ReadingSourceNamespace.requireLegacyWrite(objectPath);
         if (mimeType == null || mimeType.isBlank()) {
             throw new IllegalArgumentException("Upload MIME type must not be blank");
         }

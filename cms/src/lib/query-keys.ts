@@ -51,6 +51,10 @@ export const queryKeys = {
         "localizations",
         normalizeLanguageCode(languageCode),
       ] as const,
+    readingPublications: (contentId: number) =>
+      ["contents", "reading-publication", contentId] as const,
+    readingPublication: (contentId: number, language: string) =>
+      ["contents", "reading-publication", contentId, language] as const,
     storyPages: (contentId: number) =>
       ["contents", "detail", contentId, "story-pages"] as const,
     storyPage: (contentId: number, pageNumber: number) =>
@@ -74,7 +78,13 @@ export const queryKeys = {
     playback: (contentId: number) =>
       ["contents", "detail", contentId, "playback"] as const,
     instruments: (contentId: number, languageCode?: string) =>
-      ["contents", "detail", contentId, "instruments", languageCode ?? null] as const,
+      [
+        "contents",
+        "detail",
+        contentId,
+        "instruments",
+        languageCode ?? null,
+      ] as const,
   },
   categories: {
     all: ["categories"] as const,

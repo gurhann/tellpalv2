@@ -131,6 +131,12 @@ export function useContentLocalizationActions(contentId: number) {
 
     await Promise.all([
       queryClient.invalidateQueries({
+        queryKey: queryKeys.contents.readingPublication(
+          contentId,
+          localization.languageCode,
+        ),
+      }),
+      queryClient.invalidateQueries({
         queryKey: queryKeys.contents.lists(),
       }),
       queryClient.invalidateQueries({
@@ -146,7 +152,11 @@ export function useContentLocalizationActions(contentId: number) {
   }
 
   const saveLocalization = useMutation({
-    mutationFn: async ({ mode, values, contentType }: SaveLocalizationVariables) => {
+    mutationFn: async ({
+      mode,
+      values,
+      contentType,
+    }: SaveLocalizationVariables) => {
       const payload = toLocalizationPayload(values, contentType);
 
       if (mode === "create") {

@@ -232,6 +232,7 @@ describe("Content integration", () => {
           });
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -306,6 +307,7 @@ describe("Content integration", () => {
           );
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -370,6 +372,7 @@ describe("Content integration", () => {
           );
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -442,6 +445,7 @@ describe("Content integration", () => {
           });
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -548,6 +552,7 @@ describe("Content integration", () => {
           });
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -574,6 +579,7 @@ describe("Content integration", () => {
       expect(screen.getByDisplayValue("Regenraum Fokus")).toBeVisible();
     });
 
+    await waitFor(() => expect(screen.getByRole("button", { name: /publish locale/i })).toBeEnabled());
     fireEvent.click(screen.getByRole("button", { name: /publish locale/i }));
 
     expect(await screen.findAllByText("Published")).not.toHaveLength(0);
@@ -646,6 +652,7 @@ describe("Content integration", () => {
           });
         }
 
+        if (url.pathname.endsWith("/reading-publication")) return jsonResponse({ enabled: false, contract: "INTERNAL_LOCAL_TEST", state: "DISABLED", generation: null, liveRevision: null, diagnostic: null, retryable: false });
         throw new Error(`Unexpected request to ${method} ${url.pathname}`);
       });
 
@@ -658,6 +665,7 @@ describe("Content integration", () => {
 
     await screen.findByRole("heading", { name: /locale workspace/i });
 
+    await waitFor(() => expect(screen.getByRole("button", { name: /publish locale/i })).toBeEnabled());
     fireEvent.click(screen.getByRole("button", { name: /publish locale/i }));
 
     expect(

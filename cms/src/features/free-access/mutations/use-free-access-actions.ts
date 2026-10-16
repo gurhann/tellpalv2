@@ -24,7 +24,8 @@ export function useFreeAccessActions() {
       const response = await freeAccessAdminApi.grantFreeAccess(input);
       return mapAdminFreeAccessGrant(response);
     },
-    onSuccess: async (_entry: FreeAccessGrantViewModel) => {
+    onSuccess: async (entry: FreeAccessGrantViewModel) => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.contents.readingPublication(entry.contentId, entry.languageCode) });
       await queryClient.invalidateQueries({
         queryKey: queryKeys.freeAccess.lists(),
       });
@@ -48,7 +49,8 @@ export function useFreeAccessActions() {
         contentId,
       };
     },
-    onSuccess: async () => {
+    onSuccess: async (entry) => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.contents.readingPublication(entry.contentId, entry.languageCode) });
       await queryClient.invalidateQueries({
         queryKey: queryKeys.freeAccess.lists(),
       });

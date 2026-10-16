@@ -26,11 +26,17 @@ import com.tellpal.v2.asset.api.AssetProcessingRecord;
 @Service
 public class ContentPublicationService {
 
+    private final com.tellpal.v2.content.application.publication.ReadingPublicationService readingPublication;
+    private final com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingGuard;
     private final ContentRepository contentRepository;
     private final AssetProcessingApi assetProcessingApi;
     private final ContentPublicationPolicy publicationPolicy = new ContentPublicationPolicy();
 
-    public ContentPublicationService(ContentRepository contentRepository, AssetProcessingApi assetProcessingApi) {
+    public ContentPublicationService(ContentRepository contentRepository, AssetProcessingApi assetProcessingApi,
+            com.tellpal.v2.content.application.publication.ReadingPublicationService readingPublication,
+            com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingGuard) {
+        this.readingPublication = readingPublication;
+        this.readingGuard = readingGuard;
         this.contentRepository = contentRepository;
         this.assetProcessingApi = assetProcessingApi;
     }
@@ -44,6 +50,7 @@ public class ContentPublicationService {
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         publicationPolicy.publish(content, localization, command.publishedAt());
         Content savedContent = contentRepository.save(content);
+        readingPublication.request(savedContent,command.languageCode());
         return toLocalizationRecord(savedContent, command.languageCode());
     }
 
@@ -56,6 +63,7 @@ public class ContentPublicationService {
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         publicationPolicy.archive(content, localization);
         Content savedContent = contentRepository.save(content);
+        readingGuard.changed(savedContent,command.languageCode());
         return toLocalizationRecord(savedContent, command.languageCode());
     }
 
@@ -77,6 +85,7 @@ public class ContentPublicationService {
     }
 
     private Content loadContent(Long contentId) {
+        readingGuard.lock(contentId);
         return contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }

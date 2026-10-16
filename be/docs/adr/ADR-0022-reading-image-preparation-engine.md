@@ -4,6 +4,8 @@
 
 Accepted implementation boundary on 2026-10-16 through explicit P2 decisions and approval of the [P2 specification](../../../_bmad-output/implementation-artifacts/spec-p2-verified-reading-image-preparation.md). The bounded engine is implemented and its tests/packaged conversion pass; workflow reviews are complete. [Evidence](../evidence/p2-reading-preparation/verification.md) distinguishes engine checks, the subsequent authorized storage-only live proof, and unapproved production profiles/deployment.
 
+The later bounded local/test Publish orchestration is recorded separately in [ADR-0023](ADR-0023-reading-publication-orchestration.md); it does not admit production profiles or ordinary consumer rollout.
+
 ## Context
 
 ADR-0021 fixes the desired publication/readiness contract. The existing page experiment cannot supply that contract: manifest publication and job completion are separate, profile/source identity is incomplete, retained page FKs depend on mutable rows and ordinary object uploads can overwrite paths. Existing experiment profiles and P0 quality observations do not admit a production STORY reading profile.

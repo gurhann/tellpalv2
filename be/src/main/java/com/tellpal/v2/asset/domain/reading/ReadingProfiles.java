@@ -25,7 +25,14 @@ public final class ReadingProfiles {
         for(Class<?> type:java.util.List.of(ReadingProfiles.class,ReadingIdentity.class,
                 com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageChild.class,
                 com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector.class,
-                com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess.class)) {
+                com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess.class,
+                com.tellpal.v2.asset.application.reading.ReadingSourceAdmissionService.class,
+                com.tellpal.v2.asset.application.reading.ReadingImagePreparationService.class,
+                com.tellpal.v2.asset.application.reading.ReadingPublicationReadyService.class,
+                com.tellpal.v2.asset.application.reading.ReadingPreparationCapacity.class,
+                com.tellpal.v2.asset.application.reading.ReadingVerificationInconclusiveException.class,
+                com.tellpal.v2.asset.infrastructure.persistence.reading.JdbcReadingSourceAdmissionStore.class,
+                com.tellpal.v2.asset.infrastructure.storage.ReadingSourceNamespace.class)) {
             try(var input=type.getResourceAsStream("/"+type.getName().replace('.','/')+".class")) {
                 if(input==null) throw new IllegalStateException("Engine class identity unavailable");
                 evidence.put(type.getName(),digest(input));
@@ -74,6 +81,7 @@ public final class ReadingProfiles {
                 "retryPolicy","SDK_DEFAULT_NONIDEMPOTENT_HANDLER_FOR_BOTH_CLASSIFICATIONS",
                 "transportTimeoutSemantics","SOCKET_INACTIVITY_WITH_BETWEEN_CALL_MONOTONIC_CHECKS",
                 "absoluteInFlightDeadline","DEFERRED_UNQUALIFIED_SLOW_TRICKLE"));
+        descriptor.put("sourceAuthority","CAPTURED_SOURCE_ADMISSION_ID_EPOCH_OR_LEGACY_P2");
         descriptor.put("source", Map.of("formats",java.util.List.of("RGB8_NONINTERLACED_PNG","BASELINE_JFIF_RGB8_JPEG"),"frames",1,"color","SRGB_ONLY",
                 "bits",8,"alpha","FORBIDDEN","orientation","IDENTITY_ONLY","metadata","STRICT_CONTAINER_ALLOWLIST",
                 "metadataBytes",65536,"crc","REQUIRED","trailingBytes","FORBIDDEN"));

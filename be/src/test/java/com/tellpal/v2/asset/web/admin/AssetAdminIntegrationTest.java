@@ -94,6 +94,24 @@ class AssetAdminIntegrationTest extends AdminApiIntegrationTestSupport {
     }
 
     @Test
+    void authenticatedRegistryRejectsBackendOwnedReadingNamespaceWithoutInsertingMedia() throws Exception {
+        String accessToken = authenticateAdmin();
+        String path = "test/reading/admitted/" + java.util.UUID.randomUUID();
+        Long before = jdbcTemplate.queryForObject("select count(*) from media_assets", Long.class);
+        mockMvc.perform(post("/api/admin/media")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType("application/json")
+                        .content("""
+                                {"provider":"FIREBASE_STORAGE","objectPath":"%s","kind":"ORIGINAL_IMAGE"}
+                                """.formatted(path)))
+                .andExpect(status().isBadRequest());
+        org.assertj.core.api.Assertions.assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from media_assets", Long.class)).isEqualTo(before);
+        org.assertj.core.api.Assertions.assertThat(jdbcTemplate.queryForObject(
+                "select count(*) from media_assets where object_path=?", Long.class, path)).isZero();
+    }
+
+    @Test
     void duplicateAssetRegistrationReturnsConflict() throws Exception {
         String accessToken = authenticateAdmin();
 

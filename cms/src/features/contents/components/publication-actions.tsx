@@ -16,6 +16,7 @@ import type {
   ContentReadViewModel,
 } from "@/features/contents/model/content-view-model";
 import { useContentLocalizationActions } from "@/features/contents/mutations/use-content-localization-actions";
+import { useReadingPublication } from "@/features/contents/queries/use-reading-publication";
 import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
 import type { ApiProblemDetail } from "@/types/api";
@@ -43,10 +44,30 @@ function getGenericActionProblem(error: unknown): ApiProblemDetail {
   };
 }
 
-export function PublicationActions({
+export function PublicationActions(props: PublicationActionsProps) {
+  return props.content.summary.supportsStoryPages ? (
+    <ReadingPublicationActions {...props} />
+  ) : (
+    <PublicationActionBody {...props} />
+  );
+}
+
+function ReadingPublicationActions(props: PublicationActionsProps) {
+  const reading = useReadingPublication(
+    props.content.summary.id,
+    props.localization.languageCode,
+    true,
+  );
+  return <PublicationActionBody {...props} reading={reading} />;
+}
+
+function PublicationActionBody({
   content,
   localization,
-}: PublicationActionsProps) {
+  reading,
+}: PublicationActionsProps & {
+  reading?: ReturnType<typeof useReadingPublication>;
+}) {
   const { formatDateTime, locale } = useI18n();
   const { publishLocalization, archiveLocalization } =
     useContentLocalizationActions(content.summary.id);
@@ -112,7 +133,11 @@ export function PublicationActions({
         }),
         {
           loading: copy.publishLoading,
-          success: copy.publishSuccess,
+          success: reading?.data?.enabled
+            ? locale === "tr"
+              ? "Okuma hazırlığı istendi."
+              : "Reading preparation requested."
+            : copy.publishSuccess,
         },
       );
     } catch (error) {
@@ -168,13 +193,86 @@ export function PublicationActions({
           </p>
         </div>
 
+        {reading?.isError ? (
+          <div role="alert" className="grid gap-2 text-sm text-destructive">
+            <p>
+              {locale === "tr"
+                ? "Okuma hazırlığı durumu alınamadı."
+                : "Reading preparation status could not be loaded."}
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void reading.refetch()}
+            >
+              {locale === "tr" ? "Durumu yenile" : "Refresh status"}
+            </Button>
+          </div>
+        ) : null}
+        {reading?.data?.enabled ? (
+          <div className="grid gap-2 text-sm" role="status" aria-live="polite">
+            <p className="font-medium">
+              {readingStateLabel(reading.data.state, locale === "tr")}
+            </p>
+            <p className="text-muted-foreground">
+              {locale === "tr"
+                ? "Yerel/test okuma sözleşmesi; mobil dağıtım durumunu değiştirmez."
+                : "Local/test reading contract; ordinary mobile delivery is unchanged."}
+            </p>
+            {reading.data.liveRevision && reading.data.state !== "LIVE" ? (
+              <p>
+                {locale === "tr"
+                  ? "Önceki doğrulanmış revizyon uygunluğunu koruyor."
+                  : "The previous verified revision remains eligible."}
+              </p>
+            ) : null}
+            {reading.data.diagnostic ? (
+              <p>
+                {reading.data.diagnostic === "SOURCE_NOT_ADMITTED"
+                  ? locale === "tr"
+                    ? "Yeni kabul edilmiş değişmez görsel kimliklerini seçin ve yeniden deneyin."
+                    : "Select newly admitted immutable image IDs, then retry."
+                  : locale === "tr"
+                    ? "Güncel okuma görselleri doğrulanamadı. Kaynakları kontrol edip yeniden deneyin."
+                    : "Current reading images could not be verified. Check the sources and retry."}
+              </p>
+            ) : null}
+            {reading.data.retryable ? (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={reading.retry.isPending}
+                onClick={() => reading.retry.mutate()}
+              >
+                {locale === "tr"
+                  ? "Okuma hazırlığını yeniden dene"
+                  : "Retry reading preparation"}
+              </Button>
+            ) : null}
+            {reading.retry.isError ? (
+              <p role="alert">
+                {locale === "tr"
+                  ? "Yeniden deneme isteği tamamlanamadı."
+                  : "The retry request could not be completed."}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
         <div className="grid gap-3 sm:grid-cols-2">
           <Button
             type="button"
             onClick={() => void handlePublish()}
             disabled={
               isMutating ||
-              (localization.isPublished && !localization.isArchived)
+              reading?.isLoading ||
+              reading?.isError ||
+              (localization.isPublished &&
+                !localization.isArchived &&
+                !(
+                  reading?.data?.enabled &&
+                  ["NOT_REQUESTED", "WITHDRAWN", "FAILED"].includes(reading.data.state)
+                ))
             }
           >
             {isPublishing ? (
@@ -201,4 +299,25 @@ export function PublicationActions({
       </CardContent>
     </Card>
   );
+}
+
+function readingStateLabel(state: string, turkish: boolean) {
+  const labels: Record<string, [string, string]> = {
+    NOT_REQUESTED: [
+      "Okuma hazırlığı istenmedi",
+      "Reading preparation not requested",
+    ],
+    PENDING: ["Okuma hazırlığı bekliyor", "Reading preparation pending"],
+    PREPARING: ["Okuma görselleri hazırlanıyor", "Preparing reading images"],
+    LIVE: [
+      "Doğrulanmış okuma revizyonu benimsendi",
+      "Verified reading revision adopted",
+    ],
+    FAILED: ["Okuma hazırlığı başarısız", "Reading preparation failed"],
+    WITHDRAWN: [
+      "Okuma uygunluğu geri çekildi",
+      "Reading eligibility withdrawn",
+    ],
+  };
+  return labels[state]?.[turkish ? 0 : 1] ?? "";
 }

@@ -4,6 +4,8 @@
 
 Accepted P1 design on 2026-10-16; implementation pending. The human approved automatic image preparation on Publish, automatic promotion of the verified current eligible revision, and preservation of the previous eligible publication on failure. This ADR authorizes no runtime rollout, production profile, deployment, backfill or deletion.
 
+The later bounded local/test implementations are recorded in [ADR-0022](ADR-0022-reading-image-preparation-engine.md) and [ADR-0023](ADR-0023-reading-publication-orchestration.md). Production qualification and ordinary consumer migration remain separate gates.
+
 ## Context
 
 Editorial `PUBLISHED`, localization `COMPLETED`, registry plans and manual-ready commands do not prove verified stored images. Listing already has atomic guarded manifest/job completion, while page experiment publication and job completion are separate and its terminal callbacks lack the same captured attempt fencing. Source-ID-only ready lookup cannot detect changed bytes under an unchanged ID. Mutable page FKs also constrain retained revisions.

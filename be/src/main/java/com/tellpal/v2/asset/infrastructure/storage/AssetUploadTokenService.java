@@ -48,6 +48,7 @@ public class AssetUploadTokenService {
             long byteSize,
             Instant issuedAt,
             Instant expiresAt) {
+        ReadingSourceNamespace.requireLegacyWrite(objectPath);
         AssetUploadTokenClaims claims = new AssetUploadTokenClaims(
                 provider,
                 objectPath,

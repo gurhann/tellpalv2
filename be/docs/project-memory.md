@@ -6,8 +6,8 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 - `AGENTS.md`
 - `architecture.md`
-- [`be/docs/image-revision-readiness-contract.md`](image-revision-readiness-contract.md) — accepted P1 design; runtime implementation and downstream delivery/profile gates remain pending.
-- [`be/docs/reading-image-preparation.md`](reading-image-preparation.md) — bounded P2 internal engine; test-only admission, implemented/tested with workflow reviews complete. Production profiles and P3 publication integration remain gated.
+- [`be/docs/image-revision-readiness-contract.md`](image-revision-readiness-contract.md) — accepted P1 design; bounded local/test implementations are recorded in ADR-0022/0023, while production and downstream delivery/profile gates remain pending.
+- [`be/docs/reading-image-preparation.md`](reading-image-preparation.md) — bounded P2 internal engine; test-only admission, implemented/tested with workflow reviews complete. Production profiles remain gated; bounded local/test P3 is recorded separately in ADR-0023.
 - `be/docs/admin-api-rules.md`
 - `be/docs/backend-architecture-guide.tr.md`
 - `be/docs/code-documentation-guidelines.md`
@@ -15,6 +15,9 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 - `be/docs/adr/`
 
 ## Active Architectural Decisions
+
+- [`ADR-0023`](adr/ADR-0023-reading-publication-orchestration.md): bounded local/test P3 connects Publish to durable exact-language STORY/READING generation/claim/reconciliation and automatic verified adoption. Explicit immutable source admission creates new original IDs in a reserved backend-only namespace; legacy IDs are not sealed/rebound. Asset source/availability epochs and a DB-only complete-proof guard fence adoption; content mutations share a content-row lock. Desired and retained LIVE generations remain separate; full effective runtime/encoder profile drift renews desired capture even with unchanged limits, and Retry detaches obsolete jobs. Inconclusive resource/time rejection preserves healthy retained availability; observed corruption/withdrawal still fences it. Archive/deactivation closes eligibility without deleting evidence. CMS polls independent exact-language status and preserves dirty inputs. Default/production execution, ordinary consumers, access/session/cache/retention policy, cloud runs and P4 migration remain closed. See [verification evidence](evidence/p3-reading-publication/verification.md).
+
 
 - [`ADR-0022`](adr/ADR-0022-reading-image-preparation-engine.md): approved bounded P2 engine/test-profile scope. Exact-language STORY/READING cover/detail/ordered pages use captured byte/profile identities, version-pinned immutable storage and atomic attempt-fenced manifest/job completion. Narrow supported opaque RGB8 sRGB PNG/JPEG inputs, direct-original PNG output and explicit growth admission; unsupported normalization/source shortage fails. Production admission remains closed. Internal READY grants no LIVE/access; P3 owns current-generation orchestration/adoption. Retain scalar page provenance/orphan evidence without deletion. Child-process/resource, PostgreSQL and packaged-runtime verification are tracked separately; the approved bounded engine acceptance is complete; production qualification remains pending. Existing listing/experiment/publication consumers remain unchanged.
 

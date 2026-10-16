@@ -56,6 +56,7 @@ class FirebaseStorageAssetClient implements AssetStorageClient {
 
     @Override
     public StorageSignedUploadUrl createSignedUploadUrl(String objectPath, String mimeType, Instant issuedAt) {
+        ReadingSourceNamespace.requireLegacyWrite(objectPath);
         Instant expiresAt = issuedAt.plus(properties.signedUploadTtl());
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId(objectPath))
                 .setContentType(mimeType)
@@ -77,6 +78,7 @@ class FirebaseStorageAssetClient implements AssetStorageClient {
 
     @Override
     public void uploadObject(String objectPath, String mimeType, long byteSize, InputStream content) {
+        ReadingSourceNamespace.requireLegacyWrite(objectPath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId(objectPath))
                 .setContentType(mimeType)
                 .build();

@@ -112,7 +112,10 @@ public class JdbcReadingJobStore implements ReadingJobStore {
                 t.jobId(),t.number(),t.lease(),kind,detail);
     }
     @Override public void integrity(String revision,boolean valid,String detail) {
-        jdbc.update("insert into reading_image_integrity(revision,valid,detail) values(?,?,?)",revision,valid,detail);
+        transaction.executeWithoutResult(s -> {
+            jdbc.update("insert into reading_image_integrity(revision,valid,detail) values(?,?,?)",revision,valid,detail);
+            if(!valid) jdbc.update("insert into reading_publication_availability(revision,valid) values(?,false) on conflict(revision) do update set valid=false,epoch=reading_publication_availability.epoch+1",revision);
+        });
     }
     @Override public void planCapture(UUID owner,String path,String provider,String sha256) {
         jdbc.update("insert into reading_image_source_captures(capture_id,object_path,provider,sha256) values(?,?,?,?) on conflict do nothing",owner,path,provider,sha256);

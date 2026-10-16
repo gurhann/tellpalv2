@@ -55,7 +55,7 @@ class ReadingPreparationGuardsIntegrationTest extends PostgresIntegrationTestBas
     private ReadingImagePreparationService service(ReadingObjectStorage storage) {
         var environment=new MockEnvironment();environment.setActiveProfiles("test");
         return new ReadingImagePreparationService(assets,storage,jobs,environment,
-                new AssetStorageFirebaseProperties(true,"fixture","fixture","unused","test",null,null,null),true);
+                new AssetStorageFirebaseProperties(true,"fixture","fixture","unused","test",null,null,null),true, org.mockito.Mockito.mock(com.tellpal.v2.asset.application.reading.ReadingSourceAdmissionService.class));
     }
     private TestProfile budget(long millis) {
         var p=ReadingFixtures.profile();
@@ -152,7 +152,7 @@ class ReadingPreparationGuardsIntegrationTest extends PostgresIntegrationTestBas
                 return super.read(provider,object,limit,millis);
             }
         };
-        assertThatThrownBy(() -> service(slow).find(prepared.jobId())).hasMessageContaining("READY_INTEGRITY_FAILED").hasRootCauseMessage("REVISION_DURATION_LIMIT");
+        assertThatThrownBy(() -> service(slow).find(prepared.jobId())).hasMessageContaining("READING_VERIFICATION_INCONCLUSIVE").hasRootCauseMessage("REVISION_DURATION_LIMIT");
         assertThat(reads.get()).isEqualTo(3);
         assertThat(remaining.get(2)).isLessThan(remaining.get(0));
         assertThat(jobs.find(prepared.jobId()).manifest()).isEqualTo(ready.manifest());

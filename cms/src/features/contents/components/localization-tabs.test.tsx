@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -7,6 +7,8 @@ import {
 } from "@/features/contents/test/fixtures";
 
 import { ContentLocalizationTabs } from "./localization-tabs";
+
+vi.mock("@/features/contents/queries/use-reading-publication", () => ({ useReadingPublication: () => ({ data: { enabled: false }, isLoading: false, isError: false, retry: { isPending: false } }) }));
 
 const contentLocalizationActionsMock = vi.hoisted(() => ({
   useContentLocalizationActions: vi.fn(),
@@ -148,4 +150,13 @@ describe("ContentLocalizationTabs", () => {
       screen.getByRole("button", { name: /create localization/i }),
     ).toBeVisible();
   });
+});
+
+it("preserves dirty title and selected language across terminal publication cache updates", async () => {
+  const { rerender } = render(<ContentLocalizationTabs content={storyContentViewModel} initialLanguageCode="tr" />);
+  fireEvent.change(screen.getByLabelText(/^title$/i), { target: { value: "Unsaved editorial title" } });
+  const next = { ...storyContentViewModel, localizations: storyContentViewModel.localizations.map(l => ({ ...l, status: "PUBLISHED" as const, processingStatus: "COMPLETED" as const, publishedAt: "2026-10-17T00:00:00Z" })) };
+  rerender(<ContentLocalizationTabs content={next} initialLanguageCode="tr" />);
+  await waitFor(() => expect(screen.getByLabelText(/^title$/i)).toHaveValue("Unsaved editorial title"));
+  expect(screen.getByRole("tab", { name: /turkish/i })).toHaveAttribute("aria-selected", "true");
 });

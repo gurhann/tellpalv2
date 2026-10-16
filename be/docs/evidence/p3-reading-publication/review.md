@@ -1,0 +1,34 @@
+# P3 independent review and triage
+
+Date: 2026-10-17. Three context-free reviewers inspected the complete tracked/untracked diff concurrently after implementation verification. The unrelated pre-existing `.memlog.md` change is outside the implementation and commit scope.
+
+All findings below are routine implementation corrections or concrete missing regression checks under the approved specification. No new product decision or frozen-scope change is required. Identical UI findings from the blind and edge reviews are deduplicated.
+
+| Finding | Evidence and impact | Severity | Route |
+| --- | --- | --- | --- |
+| Published `NOT_REQUESTED` / `WITHDRAWN` cannot Publish | CMS action permits published retry only for `FAILED`; legacy publication opt-in and reactivation cannot start current preparation. | medium | patch |
+| Resource rejection invalidates healthy retained LIVE | Fresh verification catches capacity/memory rejection as integrity failure without observing corrupt media. | high | patch |
+| Effective runtime profile drift retains obsolete job | Persisted profile comparison contains limits only; changed implementation fingerprints can leave Retry bound to an old completed job. | medium | patch |
+| Automatic scheduler wiring lacks an executed end-to-end check | Existing orchestration tests call reconcile/worker directly and suppress scheduled polling. | medium | patch |
+| New localized page persistence path lacks enabled coverage | SQL fixtures bypass the new conditional flush before snapshot assembly. | medium | patch |
+| Reserved namespace registration guard lacks HTTP coverage | Existing negative tests cover storage signing/upload, not ordinary admin registry insertion or absence of its side effects. | medium | patch |
+
+## Repair outcomes
+
+| Accepted patch | Change | Executed focused proof |
+| --- | --- | --- |
+| Published opt-in / reactivation | Enabled NOT_REQUESTED, WITHDRAWN and FAILED permit Publish; LIVE/PENDING/PREPARING and legacy-disabled published duplicates remain gated. | Seven new parameterized component cases in `publication-actions.test.tsx`; 9 component cases total PASS. |
+| Inconclusive resource rejection | Typed capacity/heap rejection and elapsed-budget/timeout causes do not append false integrity observations. Source/output corruption, missing pinned output and withdrawal retain fail-closed epochs. | `inconclusiveCapacityRejectionPreservesHealthyLiveButActualCorruptionClosesIt`, `freshVerificationEnforcesParentMemoryBeforeDecodeAndOneSharedRevisionDeadline`, existing older-success fencing and source/output corruption cases PASS. |
+| Full effective profile drift | Asset public API captures complete role/limits/runtime/encoder fingerprints outside transactions. Content persists and selects by that identity, renews generation/capture on drift, fences claims by it and releases the job binding on explicit Retry. | `sameLimitsDifferentRuntimeIdentityRecapturesAndRetryDetachesObsoleteCompletedJobWhileRetainingLive` PASS; historical immutable work/manifest uses real encoded disk outputs and a deliberately different runtime descriptor at the same limits. It proves retained old LIVE generation/revision, new desired generation/current job, rejection of obsolete completed work and Retry detachment/recovery. Numeric-profile drift test also PASS. |
+| Automatic Spring scheduling | A separate Spring-wired test supplies disk storage through the existing registry boundary, enables both actual 100 ms scheduled polls and only issues Publish before waiting. | `ReadingPublicationSchedulerIntegrationTest.publishAutomaticallyReachesLiveThroughSpringScheduledReconcilerAndWorker` PASS with real PNG, child encoder, generation-pinned disk objects and PostgreSQL; no direct reconcile/worker calls. Removing either scheduling annotation or breaking durable intent selection prevents LIVE and fails the test. |
+| New localized-page application command | Enabled application command coverage exercises the conditional flush rather than SQL insertion. | `newPageLocalizationCommandPersistsPositiveBindingBeforeAdvancingAndAdoptingDesiredGeneration` PASS: adds a page, upserts its new localization, asserts positive persisted ID in captured bindings, advanced desired generation, retained old LIVE, and subsequent actual preparation/adoption. |
+| Reserved registry HTTP path | Authenticated ordinary registration cannot insert the backend-owned admission namespace. | `AssetAdminIntegrationTest.authenticatedRegistryRejectsBackendOwnedReadingNamespaceWithoutInsertingMedia` PASS (400 and unchanged media_assets count); existing allowed create/list/update/download registration regression PASS. |
+
+The repaired focused PostgreSQL run passed 39 tests with zero failures/errors/skips and exit 0 (`/private/tmp/p3-review-focused-repaired.log`). The initial failing focused log remains outside the repository (`/private/tmp/p3-review-focused.log`) and is explained in [verification](verification.md). Post-review full backend and CMS gate results are retained there separately; initial pre-review success is not substituted for repair verification. No new product decision, frozen-spec edit, cloud operation or consumer migration was introduced. The parent subsequently inspected all six repairs and their executed evidence; all six are closed.
+
+
+Post-review verification completed successfully: backend `bash ./mvnw verify` 455 Surefire + 1 Failsafe tests, zero failures/errors/skips, BUILD SUCCESS, exit 0 (`/private/tmp/p3-review-verify.log`); all CMS Vitest 90 files/383 tests, build, existing content Playwright 1 case and scoped P3 content-detail visuals 8 cases exit 0. The incidental broader visual selection is explicitly **FAILED** (15 passed/16 failed), with missing Darwin baselines and inspected sparse rasterization differences documented separately in [verification](verification.md); no broad visual PASS is claimed. The safe test count/name summary includes current-run P3 methods and excludes stale XML. Only meaningful generated `module-asset.adoc`/`module-content.adoc` additions remain; PlantUML ordering noise and own test-results artifacts were restored. The implementation handoff performed no staging, commit or push; the parent owns the local completion commit.
+
+## Parent closure
+
+All eight frozen matrix rows and the ordinary-consumer acceptance were audited against executed passing tests. All six accepted patches are closed. No intent-gap or specification loopback was required, and the approved frozen block SHA-256 remains `a88faeedace17253cb62b060c76b5c39e7343ffce92def3f494d09d0498e043b`. The incidental pre-existing visual-suite issues were appended to deferred work; no broader baseline was regenerated. Colima was stopped after an empty running-container check, and global Docker context remains `desktop-linux`.

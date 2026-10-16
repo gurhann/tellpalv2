@@ -1,0 +1,117 @@
+P3 post-review Maven verify: safe test counts and names only
+Baseline HEAD: ed4bf60c30d806518fae3394b2d6e0fdfb1b70d5
+Raw log: /private/tmp/p3-review-verify.log
+Only classes reported by this completed run are included; stale XML reports are excluded.
+No HTTP headers, tokens, URLs or system-out are retained.
+
+surefire-reports: tests=455, failures=0, errors=0, skipped=0
+  com.tellpal.v2.ApplicationModulesTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.TellPalApplicationSmokeTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.application.AdminAuthenticationServiceTest: tests=8, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.application.AdminRoleManagementServiceTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.infrastructure.security.AdminJwtServiceTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.infrastructure.security.AdminPasswordHasherTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherPropertyTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.infrastructure.security.InMemoryAdminAuthenticationAttemptGuardTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.web.admin.AdminAuthControllerTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.admin.web.admin.AdminAuthIntegrationTest: tests=7, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.AssetProcessingIntegrationTest: tests=18, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.AssetProcessingTargetTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.AssetRegistryIntegrationTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.StoryDetailHeroQueryServiceTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.application.AssetProcessingFollowupSnapshotTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.media.ListingCoverProcessingExecutorTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.media.ListingCoverRenditionProcessorTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.media.PageImageRenditionProcessorTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.media.RegisteringAssetProcessingJobExecutorTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest: tests=7, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.reading.ReadingImageProcessTest: tests=11, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.reading.ReadingPreparationGuardsIntegrationTest: tests=10, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest: tests=14, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.web.admin.AssetAdminControllerTest: tests=14, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.web.admin.AssetAdminIntegrationTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.asset.web.admin.AssetProcessingAdminIntegrationTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.CategoryManagementIntegrationTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.LibraryHomeIntegrationTest: tests=10, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.LibraryStoryDetailIntegrationTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.application.AdminCategoryCurationQueryServiceTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.domain.CategoryDisplayOrderPropertyTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.migration.CategoryTypeMigrationIntegrationTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.migration.LibraryHomeOptInMigrationIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.web.admin.CategoryAdminControllerTest: tests=17, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.web.admin.CategoryAdminIntegrationTest: tests=13, failures=0, errors=0, skipped=0
+  com.tellpal.v2.category.web.admin.CategoryHomeAdminIntegrationTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.ContentFreeAccessServiceIntegrationTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.ContentManagementIntegrationTest: tests=8, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.ContentPublicationServiceIntegrationTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.StoryDetailMetadataQueryServiceTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportServiceTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.domain.ContentTest: tests=20, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.domain.ContributorTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.domain.StoryPageCountPropertyTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.domain.StoryPublicationReadinessPolicyTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.infrastructure.persistence.JdbcContentRegistryReadRepositoryIntegrationTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.migration.CanonicalAudioStoryTypeRemovalMigrationIntegrationTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.migration.ContentCoverOwnershipMigrationIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.migration.ContributorRoleMigrationIntegrationTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.migration.InstrumentCatalogMigrationIntegrationTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.migration.LullabyPlaybackMigrationIntegrationTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.publication.ReadingPublicationAdminIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest: tests=21, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.publication.ReadingPublicationSchedulerIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.reading.ReadingImageSourceSnapshotTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ContentAdminControllerTest: tests=21, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ContentAdminIntegrationTest: tests=21, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ContentPublicationAdminIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ContributorAdminControllerTest: tests=21, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ContributorAdminIntegrationTest: tests=25, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.FreeAccessAdminControllerTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.FreeAccessAdminIntegrationTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.admin.ListingCoverAdminSourceIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.content.web.mobile.PublicDeliveryIntegrationTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.event.application.EventTrackingServicePropertyTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.event.web.mobile.EventMobileControllerTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.event.web.mobile.EventMobileIntegrationTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.purchase.application.PurchaseAttributionServicePropertyTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.purchase.web.webhook.RevenueCatWebhookIntegrationTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.shared.LanguageSeedIntegrationTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.application.LibraryHomeTestQueryServiceTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.domain.AppUserPrimaryProfilePropertyTest: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.migration.FirebaseMigrationIntegrationTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.LibraryHomeProfileContextTest: tests=5, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.LibraryHomeTestControllerTest: tests=4, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.LibraryStoryDetailTestControllerTest: tests=2, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.ProfileMobileControllerTest: tests=6, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.TestStoryPageMediaControllerTest: tests=3, failures=0, errors=0, skipped=0
+  com.tellpal.v2.user.web.mobile.UserProfileMobileIntegrationTest: tests=4, failures=0, errors=0, skipped=0
+
+failsafe-reports: tests=1, failures=0, errors=0, skipped=0
+  com.tellpal.v2.ApplicationModulesDocumentationIT: tests=1, failures=0, errors=0, skipped=0
+
+Executed P3 test methods (from current successful run XML):
+  PASS com.tellpal.v2.asset.web.admin.AssetAdminIntegrationTest.authenticatedRegistryRejectsBackendOwnedReadingNamespaceWithoutInsertingMedia
+  PASS com.tellpal.v2.content.publication.ReadingPublicationAdminIntegrationTest.authenticatedCapabilityIsExplicitDisabledByDefaultAndLanguageValidationIsFinite
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.freshVerificationEnforcesParentMemoryBeforeDecodeAndOneSharedRevisionDeadline
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.disabledAndProductionAdmissionPreserveLegacyAndNeverPrepare
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.olderSuccessfulObservationCannotOverwriteALaterIntegrityFailure
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.failedLegacyReplacementRetainsLiveAndExplicitRetryDoesNotSpin
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.sameLimitsDifferentRuntimeIdentityRecapturesAndRetryDetachesObsoleteCompletedJobWhileRetainingLive
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.inconclusiveCapacityRejectionPreservesHealthyLiveButActualCorruptionClosesIt
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.metadataOnlyEditReusesJobAndLastPageRemovalExplicitlyInvalidatesWhileRetainingLive
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.sourceAdmissionPreservesOriginalRequiresExplicitBindingAndRefusesLegacyWrites
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.restartAfterExpiredDispatchLeaseRecoversIntentAndRejectsOldAttachment
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.staleClaimAndForgedSnapshotSourcesOrProfilesCannotAdopt
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.restartAfterSchedulingAndReadyRecoversAndConcurrentAdoptersCommitOneLive
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.languageMutationsDoNotAdvanceOrAdoptAnotherScope
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.integrityLossRetryRequiresFreshSuccessfulVerificationAndSourceWithdrawalFencesProof
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.disablingDuringExternalVerificationCannotAdoptAnInFlightProof
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.deactivationAndManualFlagsCannotManufactureLive
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.enabledInternalLiveDoesNotChangeOrdinaryOriginalListingOrTesterContracts
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.publishCommitsIntentThenActualStoredBytesAreAutomaticallyAdoptedAndDuplicatesAreIdempotent
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.archiveThenChangedSourceAndNewPublishCannotReopenHistoricalLive
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.admissionOrphanEvidenceSurvivesInterruptedCreateAndPinnedSourceCorruptionFailsClosed
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.profileChangeAfterReadyAdvancesGenerationAndCannotAdoptOldProfile
+  PASS com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.newPageLocalizationCommandPersistsPositiveBindingBeforeAdvancingAndAdoptingDesiredGeneration
+  PASS com.tellpal.v2.content.publication.ReadingPublicationSchedulerIntegrationTest.publishAutomaticallyReachesLiveThroughSpringScheduledReconcilerAndWorker

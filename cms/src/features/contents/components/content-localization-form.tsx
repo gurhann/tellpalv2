@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 
 import { ProblemAlert } from "@/components/feedback/problem-alert";
@@ -261,6 +261,10 @@ export function ContentLocalizationForm({
     ),
     defaultValues: initialValues,
   });
+  useEffect(() => {
+    form.reset(initialValues, { keepDirtyValues: true });
+  }, [form, initialValues]);
+
   const { saveLocalization } = useContentLocalizationActions(
     content.summary.id,
   );

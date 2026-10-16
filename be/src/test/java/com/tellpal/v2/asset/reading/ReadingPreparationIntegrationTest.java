@@ -41,7 +41,7 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
         when(assets.findById(4L)).thenReturn(Optional.of(MediaAsset.register(StorageProvider.FIREBASE_STORAGE,"original/page",MediaKind.ORIGINAL_IMAGE)));
         var env=new MockEnvironment();env.setActiveProfiles("test");
         var properties=new AssetStorageFirebaseProperties(true,"synthetic","synthetic","unused","test",null,null,null);
-        service=new ReadingImagePreparationService(assets,disk.storage(),jobs,env,properties,true);
+        service=new ReadingImagePreparationService(assets,disk.storage(),jobs,env,properties,true, org.mockito.Mockito.mock(com.tellpal.v2.asset.application.reading.ReadingSourceAdmissionService.class));
         worker=new ReadingImageWorker(service,jobs,disk.storage(),Clock.systemUTC());
     }
     @Test void completeStoredRoleSetDeduplicatesAndReverifiesIntegrity() throws Exception {
@@ -95,7 +95,7 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(service.prepare(snapshot,ReadingFixtures.profiles()).revision()).isNotEqualTo(first.revision());
         assertThatThrownBy(() -> service.prepare(new Snapshot(9,"tr",List.of(),List.of("EMPTY_PAGE_SET")),ReadingFixtures.profiles())).hasMessageContaining("Invalid reading snapshot");
         var env=new MockEnvironment();env.setActiveProfiles("test","production");
-        var blocked=new ReadingImagePreparationService(mock(MediaAssetRepository.class),disk.storage(),jobs,env,new AssetStorageFirebaseProperties(true,"x","x","x","test",null,null,null),true);
+        var blocked=new ReadingImagePreparationService(mock(MediaAssetRepository.class),disk.storage(),jobs,env,new AssetStorageFirebaseProperties(true,"x","x","x","test",null,null,null),true, org.mockito.Mockito.mock(com.tellpal.v2.asset.application.reading.ReadingSourceAdmissionService.class));
         assertThatThrownBy(() -> blocked.prepare(snapshot,ReadingFixtures.profiles())).hasMessageContaining("NO_QUALIFIED_PRODUCTION");
     }
     @Test void manifestAndCompletionRollbackTogetherOnDatabaseFailure() throws Exception {

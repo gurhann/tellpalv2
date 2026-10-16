@@ -522,7 +522,8 @@ The approved `user` → `category::api` edge admits real verified Firebase ident
 
 2026-10-16 tarihinde kabul edilen [P1 sözleşmesi](be/docs/image-revision-readiness-contract.md) ve
 [ADR-0021](be/docs/adr/ADR-0021-image-revision-readiness-contract.md), gelecek implementasyonun
-tasarımını tanımlar; mevcut runtime değişmemiştir. İlk kapsam dil bazında STORY/READING yerelleştirilmiş
+tasarımını tanımlar; P1 belgelendirme adımı runtime değişikliği yapmamıştır. Sonraki yerel/test
+implementasyonları aşağıda ADR-0022/0023 altında açıklanır. İlk kapsam dil bazında STORY/READING yerelleştirilmiş
 okuma kapağı/detail ve sıralı sayfa görselleridir. Kaynak artwork, listening, narration, LULLABY ve
 mevcut listing rolleri ayrıdır; listing placeholder davranışı korunur.
 
@@ -571,8 +572,8 @@ only: narrow opaque RGB8 sRGB PNG/JPEG admission, PNG output directly from origi
 explicit growth admission and supervised child-process/resource limits. Production admission remains
 closed; broader normalization, numerical production budgets and device quality remain gated.
 
-READY certifies captured media, not publication generation, LIVE or access. P3 still must connect
-Publish, durable desired-generation mutation/invalidation and eligible adoption. Existing listing,
+READY certifies captured media, not publication generation, LIVE or access. P3 owns the separate
+Publish, durable desired-generation mutation/invalidation and eligible-adoption boundary described below. Existing listing,
 page experiment, legacy statuses and consumers remain unchanged. No new delivery endpoint, signed
 URL, session/cache/retention right, deployment, backfill or deletion is introduced. See
 [engine documentation](be/docs/reading-image-preparation.md) for implementation and evidence limits.
@@ -585,3 +586,28 @@ duration, including slow trickles/authentication, remains a production-qualifica
 SDK-only correction adds no storage worker/process/IPC layer. Diagnostic launcher watchdog evidence
 does not close this gate; live GCS execution remains separately authorized. See
 [storage-probe evidence](be/docs/evidence/p2-storage-probe/README.md).
+
+
+### Internal local/test STORY/READING publication (ADR-0023)
+
+[ADR-0023](be/docs/adr/ADR-0023-reading-publication-orchestration.md) adds disabled-by-default,
+explicit local/test P3 orchestration. Publish commits exact-language durable intent; an external-I/O-free
+claim/attachment/adoption protocol reconnects P2 work after restart. All relevant content/page/access
+writers lock the content aggregate before publication scope rows. Pure assembly compares the current
+ordered snapshot inside that lock. Desired generation, dispatch lease and complete effective runtime/encoder identity of current explicit profiles
+fence automatic adoption; retained LIVE stores its own generation, revision and manifest proof.
+
+`asset::api` exposes explicit immutable source admission and a fresh outside-transaction verification
+operation followed by a DB-only proof guard. Admission conditionally copies pinned verified bytes to
+new backend-owned original IDs and preserves old originals; explicit content/page rebinding is required.
+Signed writes, upload tokens, registry registration and unconditional upload paths cannot target the
+reserved namespace. Source eligibility/availability epochs fence stale verification and adoption;
+immutable manifests and orphan evidence remain retained. Consistent lock order is content, scope,
+source admissions in asset-ID order, then availability. No asset-to-content dependency is introduced.
+
+A failed candidate preserves the previous eligible LIVE independently of the newest page set. Archive
+and deactivation close eligibility, and a subsequent Publish needs a fresh adoption before opening the
+new intent. Manual editorial/processing flags cannot certify LIVE. The admin status/retry API and CMS
+feedback identify this local/test contract and preserve unsaved input/language. Existing ordinary,
+listing and tester delivery, protected access, sessions, cache/retention and P4 consumer migration remain
+unchanged. Production activation and cloud execution need separate authorization and qualification.

@@ -22,7 +22,7 @@ public record ReadingWork(Snapshot snapshot, List<Source> sources, Map<Role, Pro
         for(int i=0;i<sources.size();i++) {
             var a=sources.get(i);var b=other.sources().get(i);
             if(!a.binding().equals(b.binding()) || a.provider()!=b.provider() || !a.retained().equals(b.retained())
-                    || !a.sha256().equals(b.sha256()) || a.width()!=b.width() || a.height()!=b.height()) return false;
+                    || !a.sha256().equals(b.sha256()) || a.width()!=b.width() || a.height()!=b.height() || !java.util.Objects.equals(a.admissionId(),b.admissionId()) || !java.util.Objects.equals(a.admissionEpoch(),b.admissionEpoch())) return false;
         }
         return true;
     }
@@ -62,7 +62,11 @@ public record ReadingWork(Snapshot snapshot, List<Source> sources, Map<Role, Pro
 
     public record Profile(TestProfile limits, String descriptor, String fingerprint) { }
     public record Source(Binding binding, StorageProvider provider, VersionedStorageObject original,
-            VersionedStorageObject retained, String sha256, int width, int height) { }
+            VersionedStorageObject retained, String sha256, int width, int height, java.util.UUID admissionId, Long admissionEpoch) {
+        public Source(Binding binding, StorageProvider provider, VersionedStorageObject original, VersionedStorageObject retained, String sha256,int width,int height) {
+            this(binding,provider,original,retained,sha256,width,height,null,null);
+        }
+    }
     public record Attempt(UUID jobId, int number, UUID lease, long expiresEpochMillis, String sourceSet, String profileSet) { }
     public record Output(Binding binding, String sourceSha256, String profileFingerprint, String renditionKey,
             StorageProvider provider, VersionedStorageObject stored, String sha256, int width, int height) { }

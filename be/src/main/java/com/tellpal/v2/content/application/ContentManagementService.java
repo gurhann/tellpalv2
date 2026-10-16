@@ -46,28 +46,24 @@ import com.tellpal.v2.asset.api.AssetProcessingTarget;
 @Service
 public class ContentManagementService {
 
+    private final com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication;
     private final ContentRepository contentRepository;
     private final ContentAssetReferenceValidator assetReferenceValidator;
     private final AssetProcessingApi assetProcessingApi;
     private final InstrumentCatalogRepository instrumentCatalogRepository;
 
-    public ContentManagementService(
-            ContentRepository contentRepository,
-            ContentAssetReferenceValidator assetReferenceValidator,
-            AssetProcessingApi assetProcessingApi,
-            InstrumentCatalogRepository instrumentCatalogRepository) {
-        this.contentRepository = contentRepository;
-        this.assetReferenceValidator = assetReferenceValidator;
-        this.assetProcessingApi = assetProcessingApi;
-        this.instrumentCatalogRepository = instrumentCatalogRepository;
-    }
+    private final com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers;
 
-    private com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers;
-
-    @org.springframework.beans.factory.annotation.Autowired
-    public ContentManagementService(ContentRepository contents,ContentAssetReferenceValidator validator,AssetProcessingApi processing,
-            InstrumentCatalogRepository instruments,com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers) {
-        this(contents,validator,processing,instruments);this.listingCovers=listingCovers;
+    public ContentManagementService(ContentRepository contents, ContentAssetReferenceValidator validator,
+            AssetProcessingApi processing, InstrumentCatalogRepository instruments,
+            com.tellpal.v2.asset.api.LibraryCoverPreparationApi listingCovers,
+            com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication) {
+        this.contentRepository = contents;
+        this.assetReferenceValidator = validator;
+        this.assetProcessingApi = processing;
+        this.instrumentCatalogRepository = instruments;
+        this.listingCovers = listingCovers;
+        this.readingPublication = readingPublication;
     }
 
     /** Schedules cover-only preparation from the current localized reading cover; publication is unchanged. */
@@ -110,6 +106,7 @@ public class ContentManagementService {
         content.updateDetails(command.externalKey(), command.ageRange(), command.active());
         content.updateCoverMediaIds(command.textlessCoverMediaId(), command.listeningCoverMediaId(), command.listingCoverMediaId());
         Content savedContent = contentRepository.save(content);
+        readingChanged(savedContent,null);
         if (savedContent.getType() == ContentType.LULLABY
                 && savedContent.getLullabyPlayback() != null
                 && (externalKeyChanged || listeningCoverChanged)) {
@@ -126,6 +123,7 @@ public class ContentManagementService {
         Content content = loadContent(command.contentId());
         content.deactivate();
         contentRepository.save(content);
+        readingChanged(content,null);
     }
 
     /**
@@ -152,6 +150,7 @@ public class ContentManagementService {
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
+        readingChanged(savedContent,command.languageCode());
         scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration(), true);
         return toLocalizationRecord(savedContent, command.languageCode());
     }
@@ -179,6 +178,7 @@ public class ContentManagementService {
                 command.publishedAt());
         upsertNarration(content, command.languageCode(), command.narration());
         Content savedContent = contentRepository.save(content);
+        readingChanged(savedContent,command.languageCode());
         scheduleNarrationProcessing(savedContent, command.languageCode(), command.narration(), narrationChanged);
         return toLocalizationRecord(savedContent, command.languageCode());
     }
@@ -196,6 +196,7 @@ public class ContentManagementService {
         ContentLocalization localization = loadLocalization(content, command.languageCode());
         localization.markProcessingStatus(command.processingStatus());
         Content savedContent = contentRepository.save(content);
+        readingChanged(savedContent,command.languageCode());
         return toLocalizationRecord(savedContent, command.languageCode());
     }
 
@@ -432,7 +433,12 @@ public class ContentManagementService {
     }
 
 
+    private void readingChanged(Content content,LanguageCode language) {
+        readingPublication.changed(content,language);
+    }
+
     private Content loadContent(Long contentId) {
+        readingPublication.lock(contentId);
         return contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }

@@ -72,22 +72,7 @@ function LocalizationWorkspacePane({
     () => mapLocalizationToFormValues(localization),
     [localization],
   );
-  const localizationFormKey = [
-    localization.languageCode,
-    localization.title,
-    localization.description ?? "",
-    localization.bodyText ?? "",
-    localization.coverAssetId ?? "",
-    localization.audioAssetId ?? "",
-    localization.durationMinutes ?? "",
-    localization.status,
-    localization.processingStatus,
-    localization.publishedAt ?? "",
-    localization.narration?.audioAssetId ?? "",
-    localization.narration?.durationMinutes ?? "",
-    localization.narration?.processingStatus ?? "",
-    localization.narration?.processingError ?? "",
-  ].join("|");
+  const localizationFormKey = `${content.summary.id}:${localization.languageCode}`;
 
   return (
     <div className="grid gap-4">
@@ -140,7 +125,7 @@ export function ContentLocalizationTabs({
     preferredCreateLanguageCode ?? availableLanguages[0]?.code ?? "en";
   const requestedLanguageIsMissing = Boolean(
     normalizedInitialLanguageCode &&
-      !existingLanguageCodes.has(normalizedInitialLanguageCode),
+    !existingLanguageCodes.has(normalizedInitialLanguageCode),
   );
   const localizationTabs: LanguageTabItem[] = useMemo(
     () =>
@@ -237,7 +222,8 @@ export function ContentLocalizationTabs({
           role="status"
         >
           <span>
-            {normalizedInitialLanguageCode?.toUpperCase()} {locale === "tr"
+            {normalizedInitialLanguageCode?.toUpperCase()}{" "}
+            {locale === "tr"
               ? "bu içerik için henüz mevcut değil."
               : "is not available for this content yet."}
           </span>

@@ -201,6 +201,7 @@ public class AssetRegistryService implements AssetRegistryApi {
     public AssetRecord register(RegisterMediaAssetCommand command) {
         StorageProvider provider = AssetApiMapper.toDomain(command.provider());
         String objectPath = command.objectPath().trim();
+        com.tellpal.v2.asset.infrastructure.storage.ReadingSourceNamespace.requireLegacyWrite(objectPath);
         if (mediaAssetRepository.existsByProviderAndObjectPath(provider, objectPath)) {
             throw new MediaAssetAlreadyExistsException(provider, objectPath);
         }
@@ -364,6 +365,7 @@ public class AssetRegistryService implements AssetRegistryApi {
 
     private String requireManagedFirebasePath(String objectPath) {
         try {
+            com.tellpal.v2.asset.infrastructure.storage.ReadingSourceNamespace.requireLegacyWrite(objectPath);
             return assetStorageObjectPathBuilder.requireManagedFirebasePath(objectPath);
         } catch (IllegalArgumentException exception) {
             throw new MediaAssetUploadTokenInvalidException("Asset upload token points outside the managed Firebase prefix", exception);

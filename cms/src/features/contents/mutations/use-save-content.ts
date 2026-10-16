@@ -96,6 +96,7 @@ export function useSaveContent(options: UseSaveContentOptions) {
       );
 
       const refreshes = Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents.readingPublications(savedContent.contentId) }),
         queryClient.invalidateQueries({
           queryKey: queryKeys.contents.lists(),
         }),

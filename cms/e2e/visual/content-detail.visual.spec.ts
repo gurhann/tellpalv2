@@ -94,8 +94,9 @@ test.beforeEach(async ({ page }) => {
   await mockVisualAuth(page);
 });
 
+for (const state of ["DISABLED", "PENDING", "FAILED", "LIVE"] as const) {
 for (const viewport of visualViewports) {
-  test(`content detail visual - ${viewport.name}`, async ({ page }) => {
+  test(`content detail visual - ${state} - ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({
       width: viewport.width,
       height: viewport.height,
@@ -144,7 +145,11 @@ for (const viewport of visualViewports) {
       });
     });
 
+    await page.route("**/api/admin/contents/1/reading-publication?*", async route => {
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ enabled: state !== "DISABLED", contract: "INTERNAL_LOCAL_TEST", state, generation: state === "DISABLED" ? null : 1, liveRevision: state === "LIVE" || state === "FAILED" ? "a".repeat(64) : null, diagnostic: state === "FAILED" ? "SOURCE_NOT_ADMITTED" : null, retryable: state === "FAILED" }) });
+    });
     await page.goto("/contents/1?language=tr");
+    await expect(page.getByRole("button", { name: "Publish locale", exact: true })).toBeEnabled();
     await installVisualStyles(page);
 
     const contentDetail = page.locator("body");
@@ -153,15 +158,35 @@ for (const viewport of visualViewports) {
     await expect(
       page.getByRole("heading", { name: "Locale workspace", exact: true }),
     ).toBeVisible();
+    if (state !== "DISABLED") await expect(page.getByText("Local/test reading contract; ordinary mobile delivery is unchanged.")).toBeVisible();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(viewport.width);
     await expect(contentDetail).toHaveScreenshot(
-      `content-detail-${viewport.name}.png`,
+      state === "DISABLED" ? `content-detail-${viewport.name}.png` : `content-detail-reading-${state.toLowerCase()}-${viewport.name}.png`,
       {
         animations: "disabled",
         caret: "hide",
       },
     );
+    if (state === "FAILED") {
+      await page.getByLabel("Title", { exact: true }).fill("Unsaved title during retry");
+      await page.route("**/api/admin/contents/1/reading-publication/retry?*", async route => {
+        expect(new URL(route.request().url()).searchParams.get("languageCode")).toBe("tr");
+        await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ enabled: true, contract: "INTERNAL_LOCAL_TEST", state: "PENDING", generation: 1, liveRevision: "a".repeat(64), diagnostic: null, retryable: false }) });
+      });
+      await page.getByRole("button", { name: "Retry reading preparation" }).click();
+      await expect(page.getByText("Reading preparation pending")).toBeVisible();
+      await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Unsaved title during retry");
+      expect(new URL(page.url()).searchParams.get("language")).toBe("tr");
+    }
+    if (state === "PENDING") {
+      await page.getByLabel("Title", { exact: true }).fill("Unsaved title during adoption");
+      await page.route("**/api/admin/contents/1/reading-publication?*", async route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ enabled: true, contract: "INTERNAL_LOCAL_TEST", state: "LIVE", generation: 1, liveRevision: "a".repeat(64), diagnostic: null, retryable: false }) }));
+      await expect(page.getByText("Verified reading revision adopted")).toBeVisible({ timeout: 6000 });
+      await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Unsaved title during adoption");
+    }
   });
+}
+
 }

@@ -15,6 +15,43 @@ const processingStatusValues = [
   "FAILED",
 ] as const;
 
+export const readingPublicationStatusSchema = z.object({
+  enabled: z.boolean(),
+  contract: z.literal("INTERNAL_LOCAL_TEST"),
+  state: z.enum([
+    "DISABLED",
+    "NOT_REQUESTED",
+    "PENDING",
+    "PREPARING",
+    "LIVE",
+    "FAILED",
+    "WITHDRAWN",
+  ]),
+  generation: z.number().int().positive().nullable(),
+  liveRevision: z
+    .string()
+    .regex(/^[0-9a-f]{64}$/)
+    .nullable(),
+  liveGeneration: z.number().int().positive().nullable().optional(),
+  liveManifestDigest: z.string().regex(/^[0-9a-f]{64}$/).nullable().optional(),
+  diagnostic: z
+    .enum([
+      "SOURCE_NOT_ADMITTED",
+      "INVALID_READING_OBLIGATIONS",
+      "READING_PREPARATION_FAILED",
+      "MEDIA_INTEGRITY_FAILED",
+      "SOURCE_DIMENSIONS_INSUFFICIENT",
+      "CURRENT_CONTENT_INELIGIBLE",
+      "STALE_MEDIA_PROOF",
+      "RETAINED_MEDIA_UNAVAILABLE",
+    ])
+    .nullable(),
+  retryable: z.boolean(),
+});
+export type ReadingPublicationStatus = z.infer<
+  typeof readingPublicationStatusSchema
+>;
+
 export const contentTypeSchema = z.enum(contentTypeValues);
 export const contentLocalizationStatusSchema = z.enum(localizationStatusValues);
 export const contentProcessingStatusSchema = z.enum(processingStatusValues);
@@ -216,6 +253,22 @@ export const contentAdminBacklogDependencies = {
 } as const;
 
 export const contentAdminApi = {
+  getReadingPublication(
+    contentId: number,
+    language: string,
+    signal?: AbortSignal,
+  ) {
+    return apiClient.get(
+      `${basePath}/${contentId}/reading-publication?languageCode=${encodeURIComponent(language)}`,
+      { responseSchema: readingPublicationStatusSchema, signal },
+    );
+  },
+  retryReadingPublication(contentId: number, language: string) {
+    return apiClient.post(
+      `${basePath}/${contentId}/reading-publication/retry?languageCode=${encodeURIComponent(language)}`,
+      { responseSchema: readingPublicationStatusSchema },
+    );
+  },
   listContents() {
     return apiClient.get<AdminContentReadResponse[]>(basePath, {
       responseSchema: adminContentReadListResponseSchema,

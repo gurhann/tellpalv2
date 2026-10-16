@@ -22,9 +22,11 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
     private final Environment environment;
     private final String prefix;
     private final boolean enabled;
+    private final ReadingSourceAdmissionService admissions;
     private final ObjectMapper mapper=new ObjectMapper();
     public ReadingImagePreparationService(MediaAssetRepository assets,ReadingObjectStorage storage,ReadingJobStore jobs,
-            Environment environment,AssetStorageFirebaseProperties properties,@Value("${tellpal.asset.reading.test-engine-enabled:false}") boolean enabled) {
+            Environment environment,AssetStorageFirebaseProperties properties,@Value("${tellpal.asset.reading.test-engine-enabled:false}") boolean enabled, ReadingSourceAdmissionService admissions) {
+        this.admissions = admissions;
         this.assets=assets;this.storage=storage;this.jobs=jobs;this.environment=environment;this.enabled=enabled;
         this.prefix=properties.pathPrefix();
     }
@@ -36,6 +38,13 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
             throw new IllegalStateException("NO_QUALIFIED_PRODUCTION_READING_PROFILE");
     }
     @Override public Preparation prepare(Snapshot snapshot,Map<Role,TestProfile> requested) {
+        return prepare(snapshot,requested,false);
+    }
+    /** Uses explicit immutable admission identities while preserving the legacy P2 capture contract. */
+    public Preparation prepareAdmitted(Snapshot snapshot,Map<Role,TestProfile> requested) {
+        return prepare(snapshot,requested,true);
+    }
+    private Preparation prepare(Snapshot snapshot,Map<Role,TestProfile> requested,boolean admitted) {
         requireTestAdmission(); snapshot.requireComplete();
         if(!requested.keySet().equals(Set.of(Role.values()))) throw new IllegalArgumentException("ALL_ROLE_PROFILES_REQUIRED");
         var deadline=ReadingDeadline.start(requested.values().stream().mapToLong(TestProfile::revisionMillis).min().orElseThrow());
@@ -47,7 +56,7 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
             var sources=new ArrayList<Source>();
             for(var binding:snapshot.bindings()) {
                 deadline.check();
-                sources.add(capture(captureOwner,binding,profiles.get(binding.role()).limits(),deadline));
+                sources.add(capture(captureOwner,binding,profiles.get(binding.role()).limits(),deadline,admitted));
             }
             for(var source:sources) {
                 deadline.check();
@@ -56,10 +65,10 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
                         || !storage.observe(source.provider(),current.getObjectPath(),deadline.remainingMillis(profiles.get(source.binding().role()).limits().sourceMillis())).equals(source.original())) throw new IllegalStateException("SOURCE_BINDING_CHANGED_DURING_CAPTURE");
             }
             deadline.check();
-            String sourceSet=ReadingIdentity.hash("tellpal.reading.sources.v1",sources.stream().map(source -> Map.of("binding",source.binding(),"provider",source.provider(),"retained",source.retained(),"sha256",source.sha256(),"width",source.width(),"height",source.height())).toList());
+            String sourceSet=ReadingIdentity.hash("tellpal.reading.sources.v1",sources.stream().map(source -> Map.of("binding",source.binding(),"provider",source.provider(),"retained",source.retained(),"sha256",source.sha256(),"width",source.width(),"height",source.height(),"sourceAuthority", source.admissionId()==null?"LEGACY_CAPTURE":source.admissionId()+":"+source.admissionEpoch())).toList());
             var fingerprints=new TreeMap<String,Object>(); profiles.forEach((r,p) -> fingerprints.put(r.name(),p.fingerprint()));
             String profileSet=ReadingIdentity.hash("tellpal.reading.profiles.v1",fingerprints);
-            var obligations=sources.stream().map(s -> Map.of("binding",s.binding(),"rendition",rendition(s,profiles.get(s.binding().role())))).toList();
+            var obligations=sources.stream().map(s -> Map.of("binding",s.binding(),"rendition",rendition(s,profiles.get(s.binding().role())),"sourceAuthority",s.admissionId()==null?"LEGACY_CAPTURE":s.admissionId()+":"+s.admissionEpoch())).toList();
             String revision=ReadingIdentity.hash("tellpal.reading.revision.v1",Map.of("schema",1,"type","STORY","experience","READING",
                     "contentId",snapshot.contentId(),"language",snapshot.language(),"obligations",obligations));
             deadline.check();
@@ -70,10 +79,12 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
             return result;
         } catch(IOException e) { throw new IllegalStateException("READING_CAPTURE_REJECTED:"+e.getMessage(),e); }
     }
-    private Source capture(UUID captureOwner,Binding binding,TestProfile profile,ReadingDeadline deadline) throws IOException {
+    private Source capture(UUID captureOwner,Binding binding,TestProfile profile,ReadingDeadline deadline,boolean admitted) throws IOException {
         var asset=assets.findById(binding.assetId()).orElseThrow(() -> new IllegalArgumentException("SOURCE_ASSET_MISSING"));
         if(asset.getMediaType()!=MediaAssetType.IMAGE || asset.getKind()!=MediaKind.ORIGINAL_IMAGE) throw new IllegalArgumentException("RETAINED_ORIGINAL_IMAGE_REQUIRED");
-        var original=storage.observe(asset.getProvider(),asset.getObjectPath(),deadline.remainingMillis(profile.sourceMillis()));
+        var authority=admitted?admissions.require(binding.assetId(),false):null;
+        var original=authority==null?storage.observe(asset.getProvider(),asset.getObjectPath(),deadline.remainingMillis(profile.sourceMillis())):admissions.object(authority);
+        if(authority!=null && (!asset.getObjectPath().equals(original.path()) || !asset.getProvider().name().equals(authority.get("provider")))) throw new IllegalStateException("ADMISSION_BINDING_MISMATCH");
         byte[] bytes=storage.read(asset.getProvider(),original,profile.maxSourceBytes(),deadline.remainingMillis(profile.sourceMillis()));
         deadline.check();
         var decoded=ReadingImageInspector.decode(bytes,profile);
@@ -81,19 +92,24 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
         if(!original.mime().equals(decoded.mime())) throw new IOException("SOURCE_STORAGE_MIME_MISMATCH");
         if(decoded.image().getWidth()<profile.width() || decoded.image().getHeight()<profile.height()) throw new IOException("SOURCE_SHORTAGE_NO_UPSCALE");
         String sha=ReadingIdentity.sha(bytes);
+        if(authority!=null && !sha.equals(authority.get("sha256"))) throw new IllegalStateException("ADMITTED_SOURCE_INTEGRITY_FAILED");
         String path=prefix+"/reading/sources/"+sha;
         jobs.planCapture(captureOwner,path,asset.getProvider().name(),sha);
         var retained=storage.create(asset.getProvider(),path,original.mime(),bytes,profile.maxSourceBytes(),deadline.remainingMillis(profile.sourceMillis()));
         jobs.observeCapture(captureOwner,path,retained.version());
         deadline.check();
-        return new Source(binding,asset.getProvider(),original,retained,sha,decoded.image().getWidth(),decoded.image().getHeight());
+        return new Source(binding,asset.getProvider(),original,retained,sha,decoded.image().getWidth(),decoded.image().getHeight(),authority==null?null:(UUID)authority.get("id"),authority==null?null:((Number)authority.get("epoch")).longValue());
     }
     @Override public Preparation find(UUID jobId) {
+        return find(jobId,null);
+    }
+    /** Shares the caller's monotonic budget without changing the legacy public find contract. */
+    Preparation find(UUID jobId,ReadingDeadline sharedDeadline) {
         long started=System.nanoTime();
         requireTestAdmission();
         try(var capacity=ReadingPreparationCapacity.acquire()) {
             var result=jobs.find(jobId);var work=jobs.work(jobId);
-            var deadline=ReadingDeadline.since(started,work.profiles().values().stream().mapToLong(p -> p.limits().revisionMillis()).min().orElseThrow());
+            var deadline=sharedDeadline==null?ReadingDeadline.since(started,work.profiles().values().stream().mapToLong(p -> p.limits().revisionMillis()).min().orElseThrow()):sharedDeadline;
             work.profiles().values().forEach(p -> ReadingPreparationCapacity.requireParentMemory(p.limits()));
             deadline.check();
             if(result.state()==State.COMPLETED) verifyReady(result,work,deadline);
@@ -117,6 +133,7 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
             jobs.integrity(result.revision(),true,"Fresh pinned stored-object verification");
             deadline.check();
         } catch(IOException | RuntimeException e) {
+            if (ReadingVerificationInconclusiveException.causedByResourceRejection(e)) throw new IllegalStateException("READING_VERIFICATION_INCONCLUSIVE", e);
             jobs.integrity(result.revision(),false,e.getMessage()==null?e.getClass().getSimpleName():e.getMessage());
             throw new IllegalStateException("READY_INTEGRITY_FAILED",e);
         }

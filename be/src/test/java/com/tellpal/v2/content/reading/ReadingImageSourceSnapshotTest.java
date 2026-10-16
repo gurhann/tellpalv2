@@ -12,7 +12,7 @@ import com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role;
 class ReadingImageSourceSnapshotTest {
     @Test void exactLanguageMissingAndEmptyInputsNeverBecomeOldValidSnapshot() {
         var repository=mock(ContentRepository.class);var content=mock(Content.class);
-        when(repository.findById(9L)).thenReturn(Optional.of(content));when(content.getType()).thenReturn(ContentType.STORY);
+        when(repository.findById(9L)).thenReturn(Optional.of(content));when(content.getType()).thenReturn(ContentType.STORY);when(content.getId()).thenReturn(9L);
         when(content.findLocalization(LanguageCode.TR)).thenReturn(Optional.empty());when(content.getStoryPages()).thenReturn(Set.of());
         var service=new ReadingImageSourceSnapshotService(repository);
         assertThat(service.capture(9,"tr").errors()).containsExactly("EXACT_LANGUAGE_COVER_REQUIRED","EMPTY_PAGE_SET");
@@ -22,7 +22,7 @@ class ReadingImageSourceSnapshotTest {
     @Test void orderedPageAndLocalizationProvenanceAreScalarAndLanguageSpecific() {
         var repository=mock(ContentRepository.class);var content=mock(Content.class);var cover=mock(ContentLocalization.class);
         var page=mock(StoryPage.class);var localized=mock(StoryPageLocalization.class);
-        when(repository.findById(9L)).thenReturn(Optional.of(content));when(content.getType()).thenReturn(ContentType.STORY);
+        when(repository.findById(9L)).thenReturn(Optional.of(content));when(content.getType()).thenReturn(ContentType.STORY);when(content.getId()).thenReturn(9L);
         when(content.findLocalization(LanguageCode.TR)).thenReturn(Optional.of(cover));when(cover.getId()).thenReturn(7L);when(cover.getCoverMediaId()).thenReturn(3L);
         when(content.getStoryPages()).thenReturn(Set.of(page));when(page.getId()).thenReturn(11L);when(page.getPageNumber()).thenReturn(1);
         when(page.findLocalization(LanguageCode.TR)).thenReturn(Optional.of(localized));when(localized.getId()).thenReturn(17L);when(localized.getIllustrationMediaId()).thenReturn(4L);

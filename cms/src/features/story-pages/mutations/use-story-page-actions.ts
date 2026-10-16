@@ -31,6 +31,9 @@ export function useStoryPageActions({
   async function invalidateStoryPageQueries(pageNumber?: number) {
     await Promise.all([
       queryClient.invalidateQueries({
+        queryKey: queryKeys.contents.readingPublications(contentId),
+      }),
+      queryClient.invalidateQueries({
         queryKey: queryKeys.contents.storyPages(contentId),
       }),
       queryClient.invalidateQueries({

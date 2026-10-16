@@ -29,12 +29,15 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
 
     static final String DEFAULT_ACCESS_KEY = "default";
 
+    private final com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication;
     private final ContentRepository contentRepository;
     private final ContentFreeAccessRepository contentFreeAccessRepository;
 
     public ContentFreeAccessService(
             ContentRepository contentRepository,
-            ContentFreeAccessRepository contentFreeAccessRepository) {
+            ContentFreeAccessRepository contentFreeAccessRepository,
+            com.tellpal.v2.content.application.publication.ReadingPublicationMutationGuard readingPublication) {
+        this.readingPublication = readingPublication;
         this.contentRepository = contentRepository;
         this.contentFreeAccessRepository = contentFreeAccessRepository;
     }
@@ -57,6 +60,7 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
                 accessKey,
                 command.contentId(),
                 command.languageCode()));
+        readingChanged(content,command.languageCode());
         return ContentFreeAccessMapper.toRecord(savedEntry);
     }
 
@@ -65,6 +69,8 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
      */
     @Transactional
     public void revokeFreeAccess(RevokeContentFreeAccessCommand command) {
+        Content content=loadContent(command.contentId());
+        readingChanged(content,command.languageCode());
         contentFreeAccessRepository.findByAccessKeyAndContentIdAndLanguageCode(
                         normalizeAccessKey(command.accessKey()),
                         command.contentId(),
@@ -117,7 +123,12 @@ public class ContentFreeAccessService implements ContentFreeAccessApi {
         return resolveFreeAccess(languageCode, requestedAccessKey).contains(requiredContentId);
     }
 
+    private void readingChanged(Content content,LanguageCode language) {
+        readingPublication.changed(content,language);
+    }
+
     private Content loadContent(Long contentId) {
+        readingPublication.lock(contentId);
         return contentRepository.findById(requireContentId(contentId))
                 .orElseThrow(() -> new ContentNotFoundException(contentId));
     }
