@@ -1,0 +1,3 @@
+LIVE_GCS PLANNED; one retained synthetic object maximum; no cleanup/new-key retry
+CHILD_EXIT EXIT_CODE 0 CHILD_EXIT_OBSERVED True
+WORKER_RECEIPT_VERIFIED

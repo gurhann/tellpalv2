@@ -60,3 +60,7 @@ The packaged probe exercises actual engine child/provider/runtime/byte persisten
 P0 Android 1×/iPhone 0.75× approval remains limited to the shown TR71/TR19 geometries; Android 0.75× text blur, unresolved JPEG/WebP sharpness and the missing original raw-evidence limitation persist. No P0 originals were recreated by assertion.
 
 P3 Publish/CMS/current-generation invalidation/LIVE adoption remains unimplemented. Retained READY preservation is not a test of eligible LIVE rollback or first-publication access. Existing legacy Publish/status/consumer behavior is unchanged. Production profiles, protected media/renewal/cache/session/retention, deployment, backfill and deletion remain unapproved.
+
+## Subsequent storage-only live diagnostic
+
+The engine-acceptance evidence above is historical. A separately authorized [2026-10-16 live GCS diagnostic](../p2-storage-probe/live-gcs-2026-10-16.md) subsequently passed the selected synthetic immutable create/conflict and pinned stored-byte/decode cases. This does not extend the earlier engine run into an integrated production/READY claim or qualify remote outages, slow trickles, production profiles, P0 quality or P3.

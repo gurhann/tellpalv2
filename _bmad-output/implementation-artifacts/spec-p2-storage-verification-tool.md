@@ -85,6 +85,10 @@ Focused SDK/process, launcher and dry-run tests; then `bash ./mvnw test` and `ba
 
 SDK-only correction and diagnostic completed; nine unintegrated storage-runtime classes were removed. Actual focused 21 checks and post-review Python18/Java7/dry-run checks passed. Full test431 and verify431+1 passed without skips/errors. Pinned Temurin packaged SDK proof passed six pixels, generation pinning and one-attempt metadata/body stalls. See [evidence](../../be/docs/evidence/p2-storage-probe/README.md). Absolute in-flight/slow-trickle proof remains deferred; live GCS was not executed. Three independent review layers completed; six local patches resolved. Post-patch full test/verify and packaged SDK proof passed again. Sprint sync skipped because story_key is unset.
 
+## Subsequent authorized live diagnostic
+
+On 2026-10-16, after the completed credential-free build, the human approved the concrete existing target, private credential copy and one-retained-object command with “olur”. One invocation passed real GCS conditional create/equality/conflict and pinned stored MIME/bytes/SHA/decode/six-pixel checks; the child exited and both receipts verified. The 81-byte PNG remains at the owned local test key. See [actual live evidence](../../be/docs/evidence/p2-storage-probe/live-gcs-2026-10-16.md). No production/P3 or absolute-deadline qualification follows; the frozen implementation scope remains historical and unchanged.
+
 ## Suggested Review Order
 
 **Reading SDK correction**

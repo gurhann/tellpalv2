@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted implementation boundary on 2026-10-16 through explicit P2 decisions and approval of the [P2 specification](../../../_bmad-output/implementation-artifacts/spec-p2-verified-reading-image-preparation.md). The bounded engine is implemented and its tests/packaged conversion pass; workflow reviews are complete. [Evidence](../evidence/p2-reading-preparation/verification.md) separates those checks from unapproved production profiles, live Firebase proof and deployment.
+Accepted implementation boundary on 2026-10-16 through explicit P2 decisions and approval of the [P2 specification](../../../_bmad-output/implementation-artifacts/spec-p2-verified-reading-image-preparation.md). The bounded engine is implemented and its tests/packaged conversion pass; workflow reviews are complete. [Evidence](../evidence/p2-reading-preparation/verification.md) distinguishes engine checks, the subsequent authorized storage-only live proof, and unapproved production profiles/deployment.
 
 ## Context
 
@@ -31,7 +31,7 @@ Preparation snapshots are not a substitute for P3 current-source/generation comp
 
 The host and official deployment-base JRE need separate runtime evidence. Local filesystem or mocked GCS tests do not establish live Firebase generation/precondition behavior. Missing or skipped evidence must remain explicit. Full production profile/resource/device and protected-delivery qualification remain open.
 
-The [storage diagnostic](../reading-image-storage-probe.md) and [original failed body-stall evidence](../evidence/p2-storage-probe/focused-tests-attempt-4.txt) motivated the approved SDK-only correction. A diagnostic process watchdog can contain its own run; it does not supply an absolute production storage deadline or qualify slow-trickle behavior. Live execution remains separately authorized and has not occurred in this implementation.
+The [storage diagnostic](../reading-image-storage-probe.md) and [original failed body-stall evidence](../evidence/p2-storage-probe/focused-tests-attempt-4.txt) motivated the approved SDK-only correction. A diagnostic process watchdog can contain its own run; it does not supply an absolute production storage deadline or qualify slow-trickle behavior. A subsequent separately authorized [live storage diagnostic](../evidence/p2-storage-probe/live-gcs-2026-10-16.md) passed the selected synthetic create/conflict/pinned-decode cases on 2026-10-16. It changes no implementation policy, production profile or P3 admission; future live invocations remain separately authorized.
 
 ## Alternatives Considered
 
