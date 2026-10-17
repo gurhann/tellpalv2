@@ -146,3 +146,32 @@ klon oluşturma ve Java çalıştırıcısını başlatma için açık yeni insa
 Komut süreç olarak oluşturulmadı; devam makbuzu/klon/backend/ledger oluşmadığı tekrar
 doğrulandı. Bu reddi aşan alternatif veya dolaylı yürütme yapılmadı. Somut devam planı
 onay bekliyor.
+
+## Kullanıcı onayı sonrası yerel devam
+
+Kullanıcının “Onaylıyorum” yanıtıyla önceki devam kapısı açıldı. Ayrı ve exclusive
+`resume-1.approval.json` yazıldı. PostgreSQL18 araçlarıyla kaynak salt okunur dump'a
+alındı; sabit yerel klon oluşturulup restore edildi. İlk sıfır byte dump ayrı dosyada
+korundu. Yeni dump 1.801.956 byte'tır.
+
+İlk Java süreci açıldı. JDBC bağlantısı Postgres.app'in uygulama izin kontrolünde
+durdu ve `Postgres.app failed to verify "trust" authentication` hatasıyla kapandı.
+Migration ve fixture başlamadı. Sonradan yapılan salt okunur doğrulamada kaynak ve
+klon V36'dır; ilgili 11 iş tablosu aynıdır ve deneme içeriği sayısı 0'dır.
+[Devam makbuzu](execution-resume-1-2026-10-17.json) sonucu ayrı kaydeder.
+
+Ledger yalnız `OPEN` ve önceki girişe ait `AUTH_LOGIN_RESERVED 1` satırlarını içerir.
+Storage aşaması ayrılmadı; görsel okuma/yazma ve bu yürütmenin oluşturduğu nesne sayısı 0.
+Ek login yapılmadı. `preflight.json` ve `ready.json` oluşmadı; mobil karşılaştırma başlamadı.
+İlk giriş ve yapılandırma okuması önceki bölümdeki sayımlarda kalır.
+
+Kullanıcı Mac'in kilidini açtıktan sonra Postgres ayarları incelendi. Java 25.0.2
+çalıştırıcısı için izin `Ask` görünür. Bu hata, izin penceresinin zaman aşımıyla
+uyumludur; [Postgres.app belgesi](https://postgresapp.com/documentation/app-permissions.html)
+aynı hata ve ayar yolunu açıklar. İzin değiştirilmedi; genel izin koruması açıktır.
+Java için kalıcı `Allow` izni ayrıca kullanıcıya sunuldu. Bu izin aynı çalıştırıcıyı
+kullanan diğer Java programlarını da kapsayabilir.
+
+İzin düzeltmesi, başarısız denemenin yeniden başlatıldığı anlamına gelmez. Mevcut
+ledger ve hata kanıtları korunur. Tek seferlik devam başarısız olduğundan yeniden
+yürütme için yeni, somut karar gerekir. Gerçek medya ve cihaz kalite kanıtı açık kalır.
