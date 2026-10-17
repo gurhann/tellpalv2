@@ -269,3 +269,25 @@ olarak çalıştı. `/tmp/p4a2-repair-verify.log` **exit 0** ile bitti. Güncel 
 dokümantasyon testidir. PostgreSQL 15.19 Testcontainers kullanıldı; mevcut yerel DB'ye migration
 uygulanmadı. `git diff --check` de geçti. Generator kaynaklı ilgisiz story_detail farkı bırakılmadı.
 Ana oturum bağımsız inceleme kapanışını ve son dosya temizliğini yönetir.
+
+### Android emülatör geometri doğrulaması ve dar onarım — 2026-10-17
+
+`MAC_EK` üzerindeki SDK ve AVD bulundu. Fiziksel disk 480,1 GB olsa da `MAC_EK` bölümü
+118,5 GB ve doludur; yaklaşık 360,1 GB bölüm dışı alan bulunur. [Alan incelemesi](mac-ek-space-2026-10-17.md)
+salt okunur sonuçları taşır; silme veya bölüm değişikliği yapılmadı.
+
+İç diskte yeni geçici AVD açıldı. Ağsız Flutter ekranında gerçek `RenderClipRect` ölçümü ve
+kapak/iki sayfa için altı ekran kaydı alındı. Kol düğmesinin değişen metni sayfa slotunu
+48 logical pixel değiştiriyordu. Metin alanı sabitlendi; iki kol kapakta
+`411,428571×457,142857`, sayfalarda `411,428571×694,285714`, DPR `2.625` oldu.
+Önce/sonra ham kayıtlar, hot reload kaynak hash'i, ilk test başarısızlığı ve sınırlar
+[emülatör kanıtında](emulator-geometry-2026-10-17.md) açıklanır.
+
+Yeni regresyonlar dahil son seri Flutter suite **414 test** ile geçti; analiz temizdir.
+İlk paralel suite'te değişmeyen bir Library testi `loaded/loading` başarısızlığı verdi;
+aynı dosyanın 8 testi ayrıca geçti. Bu başarısızlık kayıttan çıkarılmadı. Bağımsız blind review
+yeni bulgu vermedi. Emülatör sonlandırıldı; yalnız onun geçici oturumu kapandı.
+
+Bu, çalışan emülatör geometri kanıtıdır; fiziksel cihaz, gerçek medya/byte/decode/bellek veya
+kalite kabulü değildir. Sayısal çalışma ve bulut işlemi onaylanmadı/başlatılmadı. P4b ve P0 ham
+kanıt sınırlamaları sürer. Normal tüketiciler, backend/frontend, TR71, legacy #112 ve `.memlog.md` korundu.

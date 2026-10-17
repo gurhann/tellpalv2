@@ -65,10 +65,13 @@ class _ComparisonViewState extends State<ReadingImageComparisonView>
                     state.entryIndex,
                     !state.canonicalSource,
                   ),
-                  child: Text(
-                    state.canonicalSource
-                        ? 'Rendition göster'
-                        : 'Canonical PNG kaynak göster',
+                  child: IndexedStack(
+                    index: state.canonicalSource ? 1 : 0,
+                    alignment: Alignment.center,
+                    children: const [
+                      Text('Canonical PNG kaynak göster'),
+                      Text('Rendition göster'),
+                    ],
                   ),
                 ),
               ],

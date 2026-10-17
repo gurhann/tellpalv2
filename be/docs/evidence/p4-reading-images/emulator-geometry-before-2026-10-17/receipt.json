@@ -1,0 +1,161 @@
+{
+  "kind": "EMULATOR_OFFLINE_GEOMETRY",
+  "physicalDevice": false,
+  "mediaConfigured": false,
+  "codeCommit": "b6a69284e9db18d3f4b7172615de7801e7b23d8c",
+  "android": "16",
+  "api": 36,
+  "framebuffer": [
+    1080,
+    2400
+  ],
+  "densityDpi": 420,
+  "fontScaleAndroid": 1.0,
+  "buildMode": "debug",
+  "measurements": [
+    {
+      "name": "cover-rendition",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "457.14285714285717"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=457.1)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "457.14285714285717",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "457.14285714285717"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Canonical PNG kaynak göster",
+        "Ağsız geometri: 411.4 × 457.1 • DPR 2.625 • cover"
+      ]
+    },
+    {
+      "name": "cover-source",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "457.14285714285717"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=457.1)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "457.14285714285717",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "457.14285714285717"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Rendition göster",
+        "Ağsız geometri: 411.4 × 457.1 • DPR 2.625 • cover"
+      ]
+    },
+    {
+      "name": "page1-rendition",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "694.2857142857143"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=694.3)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "694.2857142857143",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "694.2857142857143"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Canonical PNG kaynak göster",
+        "Ağsız geometri: 411.4 × 694.3 • DPR 2.625 • contain"
+      ]
+    },
+    {
+      "name": "page1-source",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "742.2857142857143"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=742.3)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "742.2857142857143",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "742.2857142857143"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Rendition göster",
+        "Ağsız geometri: 411.4 × 742.3 • DPR 2.625 • contain"
+      ]
+    },
+    {
+      "name": "page2-rendition",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "694.2857142857143"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=694.3)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "694.2857142857143",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "694.2857142857143"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Canonical PNG kaynak göster",
+        "Ağsız geometri: 411.4 × 694.3 • DPR 2.625 • contain"
+      ]
+    },
+    {
+      "name": "page2-source",
+      "slotLogical": {
+        "width": "411.42857142857144",
+        "height": "742.2857142857143"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.4, h=742.3)",
+        "minWidth": "411.42857142857144",
+        "minHeight": "742.2857142857143",
+        "maxWidth": "411.42857142857144",
+        "maxHeight": "742.2857142857143"
+      },
+      "screenText": [
+        "Okuma görsel karşılaştırması",
+        "QA • canonical PNG kaynak / doğrulanmış rendition",
+        "Kapak",
+        "Sayfa 1",
+        "Sayfa 2",
+        "Rendition göster",
+        "Ağsız geometri: 411.4 × 742.3 • DPR 2.625 • contain"
+      ]
+    }
+  ]
+}
