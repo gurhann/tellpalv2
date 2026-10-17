@@ -1,5 +1,5 @@
 ---
-title: 'P3: automatic reading publication and CMS feedback'
+title: 'P3: okuma görsellerinin otomatik yayını ve CMS geri bildirimi'
 type: 'feature'
 created: '2026-10-17'
 status: 'done'
@@ -11,119 +11,120 @@ context:
   - '{project-root}/_bmad-output/implementation-artifacts/image-optimization/p3-preimplementation-investigation.md'
 ---
 
-<frozen-after-approval reason="human-owned P3 scope">
+<frozen-after-approval reason="kullanıcının onayladığı P3 kapsamı">
 
-## Intent
+## Amaç
 
-**Problem:** Publish changes editorial flags without P2 current-generation adoption or preparation feedback.
+**Sorun:** Yayınla işlemi editoryal durumları değiştiriyor; ancak P2 görsellerinin güncel yayın nesline kabulünü ve hazırlık geri bildirimini sağlamıyor.
 
-**Approach:** Durable exact-language STORY/READING preparation, automatic eligible LIVE adoption and CMS pending/failure/retry feedback; no extra revision approval.
+**Yaklaşım:** STORY/READING görsellerini tam dil eşleşmesiyle, kalıcı iş kayıtları üzerinden hazırlamak, uygun ve doğrulanmış sürümü otomatik olarak LIVE durumuna almak, CMS'de bekleme/hata/yeniden deneme durumlarını göstermek. Her sürüm için ayrıca onay istenmez.
 
-## Boundaries & Constraints
+## Kapsam ve kısıtlar
 
-**Always:** Follow P1/ADR-0021/0022 and the mandatory investigation companion. Enable only explicit local/test scopes/profiles; default/production disabled. New internal LIVE eligibility is separate from ordinary delivery. Keep eligible prior LIVE on failure; verify before first LIVE. Serialize mutations/adoption, fence attempts/restarts and keep external I/O outside transactions. Preserve unrelated changes.
+**Her zaman:** P1, ADR-0021/0022 ve zorunlu inceleme belgesine uy. Yalnız açıkça seçilmiş yerel/test kapsamlarını ve profillerini etkinleştir; özellik varsayılan olarak ve üretimde kapalıdır. Yeni iç LIVE uygunluğu, mevcut dağıtım akışından ayrıdır. Yeni aday başarısız olduğunda uygun önceki LIVE sürümünü koru; ilk LIVE kabulünden önce doğrulama yap. Değişiklikleri ve yayına kabulü aynı kilitleme düzeninde sırala. Deneme ve yeniden başlatma kontrolleriyle eski işlemlerin güncel sonucu değiştirmesini engelle. Dış I/O işlemlerini DB transaction dışında tut. İlgisiz mevcut değişiklikleri koru.
 
-P3 accepts new immutable source-admission IDs only. Copy/verify selected originals into a reserved backend-only namespace with new original IDs; preserve originals and require explicit rebinding. Reject non-admitted IDs. Preserve P2 callers; reuse SDK conditional/pinned operations. Changed bytes require a new admitted ID.
+P3 yalnız değişmez kaynak kabulünden (source admission) geçmiş yeni kimlikleri kullanır. Seçilen orijinalleri yalnız backend'in yazabildiği ayrılmış bir alana kopyala ve doğrula; yeni orijinal kimlikleri oluştur. Eski orijinalleri koru; içerik bağlantıları yeni kimliklere açıkça değiştirilmelidir. Kabul edilmemiş kimlikleri reddet. Mevcut P2 çağrılarını koru; SDK'nın koşullu yazma ve belirli nesne sürümünü okuma işlemlerini kullan. Kaynak baytları değişirse yeni bir kabul edilmiş kimlik gerekir.
 
-**Ask First:** Production profiles/activation, broader roles, source-authority changes, new media access, cloud runs, deployment or backfill.
+**Önce onay al:** Üretim profilleri veya etkinleştirme, kapsamın başka görsel rollerine açılması, hangi kaynağın esas alınacağını belirleyen kuralların değiştirilmesi, yeni medya erişimi, bulut çalıştırmaları, dağıtım veya toplu geriye dönük işleme (backfill).
 
-**Never:** Storage process/IPC layers, signed writes/unconditional uploads into admitted sources, automatic legacy sealing/rebinding, per-revision approval, deletion, P4 consumer migration, new session/cache/retention policy or claims of ordinary mobile rollout.
+**Yapma:** Depolama için process/IPC katmanı ekleme. Kabul edilmiş kaynaklara imzalı yazma veya koşulsuz yükleme açma. Eski kaynakları otomatik olarak değişmez ilan etme ya da yeniden bağlama. Her sürüm için ek onay isteme. Silme yapma. P4 tüketici geçişini bu kapsama alma. Yeni oturum/cache/saklama politikası ekleme veya normal mobil dağıtımın tamamlandığını söyleme.
 
-## I/O & Edge-Case Matrix
+## Girdi/çıktı ve sınır durumları
 
-| Scenario | Required outcome |
+| Senaryo | Beklenen sonuç |
 | --- | --- |
-| First Publish | Commit intent; prepare asynchronously; adopt exact current verified proof automatically. |
-| Duplicate / restart | Reconcile durable work idempotently; never lose intent or duplicate LIVE. |
-| Failed/invalid replacement | Retain eligible R1; expose failure and explicit retry for current obligations. |
-| Mutation / obsolete completion | Advance/invalidate generation; reject stale attachment/adoption. |
-| Archive / deactivation / bypass flags | Withdraw eligibility; retained evidence survives; manual flags cannot create LIVE. |
-| Source / integrity change | Admission/availability epochs fence adoption; no raw fallback or status-only proof. |
-| CMS polling | Preserve unsaved input/language; stop terminal polling; finite sanitized errors. |
-| Disabled / production | Preserve legacy behavior; no new preparation/adoption. |
+| İlk Yayınla | Yayınlama talebini kalıcı kaydet; hazırlığı asenkron başlat; yalnız güncel ve tam eşleşen doğrulanmış kanıtla otomatik yayına kabul et. |
+| Tekrarlanan istek / yeniden başlatma | Kalıcı işleri aynı istekte aynı sonucu verecek şekilde sürdür; talebi kaybetme ve LIVE kabulünü çoğaltma. |
+| Başarısız veya geçersiz yeni sürüm | Uygun R1'i koru; hatayı ve güncel gereksinimler için açık yeniden deneme seçeneğini göster. |
+| Değişiklik / eski işin tamamlanması | Yayın neslini ilerlet veya geçersiz kıl; eski işin güncel nesle bağlanmasını ve yayına kabulünü reddet. |
+| Arşivleme / devre dışı bırakma / manuel durum değişikliği | Uygunluğu geri çek; geçmiş kanıtı koru. Manuel durum alanları LIVE oluşturamaz. |
+| Kaynak / bütünlük değişikliği | Kaynak kabulü ve erişilebilirlik sayaçları (epoch) ile eski kanıtın kabulünü engelle. Orijinale sessizce dönme; yalnız durum bilgisine dayanarak doğrulanmış sayma. |
+| CMS durum sorgulaması | Kaydedilmemiş girdileri ve seçili dili koru. İş son duruma ulaştığında periyodik sorgulamayı durdur; yalnız tanımlı, hassas bilgi içermeyen hata kodlarını göster. |
+| Özellik kapalı / üretim | Mevcut davranışı koru; yeni hazırlık veya LIVE kabulü yapma. |
 
 </frozen-after-approval>
 
-## Code Map
+## Kod haritası
 
-Java paths use `be/src/main/java/com/tellpal/v2/`; CMS paths use `cms/src/`. The mandatory companion maps all supporting files/tests.
+Java yolları `be/src/main/java/com/tellpal/v2/`, CMS yolları `cms/src/` altındadır. Zorunlu inceleme belgesi destekleyici dosyaları ve testleri de listeler.
 
-- `content/application/ContentPublicationService.java:42` — transactional command seam; source assembly currently uses REQUIRES_NEW.
-- `asset/application/reading/ReadingImagePreparationService.java:38,91` — prepare/find perform storage I/O; reuse outside transactions.
-- `content/application/ContentManagementService.java:101`, `StoryPageManagementService.java:50` — shared mutation guard/invalidation coverage.
-- `features/contents/components/publication-actions.tsx:104`; `localization-tabs.tsx:75` — feedback; status-based form keys risk dirty-input loss.
+- `content/application/ContentPublicationService.java:42` — transaction içindeki komut giriş noktası; kaynak görüntüsü alınırken REQUIRES_NEW kullanılır.
+- `asset/application/reading/ReadingImagePreparationService.java:38,91` — prepare/find depolama I/O'su yapar; bu çağrıları transaction dışında kullan.
+- `content/application/ContentManagementService.java:101`, `StoryPageManagementService.java:50` — ortak değişiklik koruması ve geçersiz kılma noktaları.
+- `features/contents/components/publication-actions.tsx:104`; `localization-tabs.tsx:75` — hazırlık geri bildirimi; duruma bağlı form anahtarları kaydedilmemiş girdileri kaybettirebilir.
 
-## Tasks & Acceptance
+## Görevler ve kabul
 
-- [x] `be/src/main/resources/db/migration/V36__reading_publication_orchestration.sql` — additive source admission, availability and content scope/generation/LIVE persistence; no historical certification.
-- [x] `asset/api/ReadingSourceAdmissionApi.java`, `asset/application/reading/ReadingSourceAdmissionService.java` — verified pinned admission and durable orphan/eligibility persistence mapped in companion.
-- [x] `asset/infrastructure/storage/FirebaseStorageAssetClient.java`, `AssetStorageClientRegistry.java`, `asset/application/AssetRegistryService.java` — protect reserved sources; preserve legacy uploads elsewhere.
-- [x] `asset/api/ReadingPublicationReadyApi.java`, existing reading API/service/work/profile/store files — admitted pinned preparation, fresh verification outside transactions and DB-only exact adoption guard.
-- [x] `content/api/ReadingPublicationApi.java`, `content/application/publication/ReadingPublicationService.java` and companion-mapped domain/store/reconciler/config files — durable generation/claim/reconcile/retry/eligibility; explicit profiles, no defaults.
-- [x] `content/application/ReadingImageSnapshotAssembler.java` and mapped mutation/repository services — common lock/invalidation, metadata reuse, invalid empty pages; retained LIVE independent.
-- [x] `content/web/admin/ReadingPublicationAdminController.java` and existing Publish response — authenticated capability/status/retry; document finite errors.
-- [x] `features/contents/api/content-admin.ts`, `features/contents/queries/use-reading-publication.ts` and mapped models/mutations/components — truthful feedback, retry, dirty-form protection and query invalidation.
-- [x] `be/src/test/java/com/tellpal/v2/content/publication/ReadingPublicationIntegrationTest.java` and companion-mapped race/HTTP/source/CMS tests — actual encoded/stored bytes and PostgreSQL matrix coverage.
-- [x] `be/docs/adr/ADR-0023-reading-publication-orchestration.md`, project memory, architecture and evidence — record bounded implementation and remaining production/P4 gates.
+- [x] `be/src/main/resources/db/migration/V36__reading_publication_orchestration.sql` — kaynak kabulü, erişilebilirlik ve içerik kapsamı/nesli/LIVE kayıtları için mevcut yapıya ek tablolar oluştur; geçmiş verileri kendiliğinden doğrulanmış sayma.
+- [x] `asset/api/ReadingSourceAdmissionApi.java`, `asset/application/reading/ReadingSourceAdmissionService.java` — belirli nesne sürümünü doğrulayarak kaynak kabulü yap; sahipsiz kalan deneme nesneleri ve uygunluk kayıtlarını inceleme belgesindeki düzene göre kalıcı tut.
+- [x] `asset/infrastructure/storage/FirebaseStorageAssetClient.java`, `AssetStorageClientRegistry.java`, `asset/application/AssetRegistryService.java` — ayrılmış kaynak alanını koru; diğer alanlardaki mevcut yükleme davranışını sürdür.
+- [x] `asset/api/ReadingPublicationReadyApi.java` ve mevcut reading API/service/work/profile/store dosyaları — kabul edilmiş kaynakların belirli sürümlerini kullan; transaction dışında yeniden doğrula; yayına kabulde yalnız DB işlemleriyle tam eşleşme kontrolü yap.
+- [x] `content/api/ReadingPublicationApi.java`, `content/application/publication/ReadingPublicationService.java` ve inceleme belgesindeki domain/store/reconciler/config dosyaları — kalıcı nesil, iş sahiplenme, toparlama, yeniden deneme ve uygunluk akışını kur. Profiller açıkça verilmeli; varsayılan profil olmamalı.
+- [x] `content/application/ReadingImageSnapshotAssembler.java` ve ilgili değişiklik/repository servisleri — ortak kilitleme ve geçersiz kılma uygula; yalnız metadata değiştiğinde görselleri yeniden kullan; boş sayfa kümesini geçersiz say. Korunan LIVE kimliğini yeni adaydan bağımsız tut.
+- [x] `content/web/admin/ReadingPublicationAdminController.java` ve mevcut Yayınla yanıtı — kimliği doğrulanmış kullanıcıya özelliğin açık/kapalı bilgisini, durumu ve yeniden denemeyi sun; tanımlı hata kodlarını belgele.
+- [x] `features/contents/api/content-admin.ts`, `features/contents/queries/use-reading-publication.ts` ve ilgili model/mutation/component dosyaları — doğru durum bilgisi, yeniden deneme, kaydedilmemiş form verilerinin korunması ve sorgu önbelleğinin geçersiz kılınmasını sağla.
+- [x] `be/src/test/java/com/tellpal/v2/content/publication/ReadingPublicationIntegrationTest.java` ve ilgili yarış/HTTP/kaynak/CMS testleri — gerçekten kodlanmış ve kaydedilmiş görsellerle, PostgreSQL üzerinde yukarıdaki senaryoları doğrula.
+- [x] `be/docs/adr/ADR-0023-reading-publication-orchestration.md`, proje hafızası, mimari ve kanıt kayıtları — tamamlanan sınırlı kapsamı ve açık kalan üretim/P4 koşullarını kaydet.
 
-**Acceptance Criteria:**
-- Given existing legacy fixtures, when the feature is disabled or new internal LIVE changes, then ordinary delivery/listing/tester contracts remain unchanged.
+**Kabul ölçütü:**
+- Mevcut test verilerinde, özellik kapalıyken veya yeni iç LIVE kimliği değişirken normal dağıtım, listeleme ve tester sözleşmeleri değişmemelidir.
 
-## Spec Change Log
+## Spec değişiklik kaydı
 
-## Verification
+- 2026-10-17: Kullanıcının isteğiyle belge Türkçeye çevrildi. Onaylanan kapsam, kısıtlar, beklenen sonuçlar ve tamamlanma durumu korunmuştur. Teknik kimlikler, dosya yolları, komutlar ve inceleme bağlantıları değiştirilmemiştir. Onaylı İngilizce metin `c63106171daca9fa931bbe2c4dec17f73bba9d0b` commit'inde korunur; bu çeviri yeni uygulama veya üretim onayı değildir.
 
-Focused source/adoption/mutation/restart/admin tests and `bash ./mvnw verify` from `be/`, including module boundaries, real encoding/storage and no-I/O assertions. CMS Vitest, content Playwright/1280–1440 visuals and `npm run build`. Retain failures/results; no cloud run or production claim.
+## Doğrulama
 
+Kaynak kabulü, yayına kabul, değişiklik, yeniden başlatma ve admin akışlarının odaklı testlerini çalıştır. `be/` altında `bash ./mvnw verify` çalıştır; modül sınırlarını, gerçek kodlama/depolama işlemlerini ve transaction içinde dış I/O yapılmadığını doğrula. CMS için Vitest, içerik Playwright akışı, 1280–1440 genişliklerindeki görsel testler ve `npm run build` çalıştır. Hataları ve sonuçları sakla; bulut çalıştırması yapma veya üretime hazır olunduğunu söyleme.
 
-## Suggested Review Order
+## Önerilen inceleme sırası
 
-**Publish and adoption**
+**Yayınla ve yayına kabul**
 
-- Commit durable intent at the existing Publish boundary.
+- Mevcut Yayınla giriş noktasında kalıcı talebin nasıl kaydedildiğini incele.
   [ContentPublicationService.java:48](../../be/src/main/java/com/tellpal/v2/content/application/ContentPublicationService.java#L48)
 
-- Reconcile outside transactions; adopt only current fenced proof.
+- Transaction dışında ilerleyen akışı ve yalnız güncel kanıtın kabulünü incele.
   [ReadingPublicationService.java:93](../../be/src/main/java/com/tellpal/v2/content/application/publication/ReadingPublicationService.java#L93)
 
-- Advance desired generation when complete runtime profile identity changes.
+- Tam runtime profil kimliği değiştiğinde yayın neslinin nasıl yenilendiğini incele.
   [JdbcReadingPublicationStore.java:60](../../be/src/main/java/com/tellpal/v2/content/infrastructure/persistence/publication/JdbcReadingPublicationStore.java#L60)
 
-**Immutable media and persistence**
+**Değişmez medya ve kalıcı kayıtlar**
 
-- Create verified new source IDs without rebinding existing originals.
+- Mevcut orijinalleri yeniden bağlamadan doğrulanmış yeni kaynak kimliklerinin nasıl üretildiğini incele.
   [ReadingSourceAdmissionService.java:44](../../be/src/main/java/com/tellpal/v2/asset/application/reading/ReadingSourceAdmissionService.java#L44)
 
-- Reserve observation epochs, verify stored bytes, then guard adoption.
+- Doğrulama sayaçlarını, kaydedilmiş baytların kontrolünü ve yayına kabul korumasını incele.
   [ReadingPublicationReadyService.java:65](../../be/src/main/java/com/tellpal/v2/asset/application/reading/ReadingPublicationReadyService.java#L65)
 
-- Keep historical LIVE and desired obligations separately in additive tables.
+- Geçmiş LIVE kimliği ile yeni adayın gereksinimlerini ayıran tabloları incele.
   [V36__reading_publication_orchestration.sql:36](../../be/src/main/resources/db/migration/V36__reading_publication_orchestration.sql#L36)
 
-**Mutation and CMS feedback**
+**Değişiklikler ve CMS geri bildirimi**
 
-- Serialize content mutations before publication scope changes.
+- İçerik değişikliklerinin yayın kapsamı değişmeden önce nasıl kilitlendiğini incele.
   [ReadingPublicationMutationGuard.java:33](../../be/src/main/java/com/tellpal/v2/content/application/publication/ReadingPublicationMutationGuard.java#L33)
 
-- Expose truthful preparation states and finite explicit retry.
+- Hazırlık durumlarının ve açık yeniden denemenin nasıl sunulduğunu incele.
   [publication-actions.tsx:64](../../cms/src/features/contents/components/publication-actions.tsx#L64)
 
-- Poll exact-language state independently from dirty editors.
+- Dil bazlı durum sorgusunun kaydedilmemiş form girdilerinden nasıl ayrıldığını incele.
   [use-reading-publication.ts:11](../../cms/src/features/contents/queries/use-reading-publication.ts#L11)
 
-**Verification and supporting evidence**
+**Testler ve destekleyici kayıtlar**
 
-- Prove automatic Publish-to-LIVE through real Spring scheduled components.
+- Gerçek Spring zamanlayıcılarıyla Yayınla işleminden LIVE'a otomatik geçişi doğrulayan testi incele.
   [ReadingPublicationSchedulerIntegrationTest.java:57](../../be/src/test/java/com/tellpal/v2/content/publication/ReadingPublicationSchedulerIntegrationTest.java#L57)
 
-- Exercise retained identity, corruption, concurrency, source admission and runtime drift.
+- Korunan kimlik, bozulma, eşzamanlılık, kaynak kabulü ve runtime değişikliği testlerini incele.
   [ReadingPublicationIntegrationTest.java:37](../../be/src/test/java/com/tellpal/v2/content/publication/ReadingPublicationIntegrationTest.java#L37)
 
-- Keep activation explicitly bounded to configured local/test profiles.
+- Etkinleştirmenin açıkça yapılandırılmış yerel/test profilleriyle sınırlandığını kontrol et.
   [ReadingPublicationProperties.java:32](../../be/src/main/java/com/tellpal/v2/content/application/publication/ReadingPublicationProperties.java#L32)
 
-- Review executed results and separate existing broader visual baseline failures.
+- Çalıştırılmış kontrolleri ve kapsam dışındaki mevcut görsel baseline hatalarının ayrımını incele.
   [verification.md:1](../../be/docs/evidence/p3-reading-publication/verification.md#L1)
 
-- Inspect independent findings, repair proofs and final review closure.
+- Bağımsız inceleme bulgularını, düzeltme kanıtlarını ve kapanış kaydını incele.
   [review.md:1](../../be/docs/evidence/p3-reading-publication/review.md#L1)
