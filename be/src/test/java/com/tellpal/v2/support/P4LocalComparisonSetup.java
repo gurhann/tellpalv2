@@ -83,7 +83,8 @@ public final class P4LocalComparisonSetup {
         require(ready.path("runId").asText().equals(P4LocalComparisonLedger.RUN)
                 && ready.path("qaUid").asText().equals("jLRypTmoBrhhX21HsDJojurcKTC3")
                 && ready.path("planSha256").asText().equals(P4LocalComparisonLedger.PLAN_SHA)
-                && ready.path("expiresAtEpochMillis").asLong()>System.currentTimeMillis()+180000,"REAL_QA_CREDENTIAL_READY_REQUIRED");
+                && ready.path("expiresAtEpochMillis").isIntegralNumber() && ready.path("expiresAtEpochMillis").canConvertToLong()
+                && ready.path("expiresAtEpochMillis").longValue()>System.currentTimeMillis()+180000,"REAL_QA_CREDENTIAL_READY_REQUIRED");
     }
 
     static TestProfile profile(JsonNode plan) throws Exception {return JSON.treeToValue(plan.path("preparation"),TestProfile.class);}

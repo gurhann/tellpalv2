@@ -1,6 +1,10 @@
 # Mevcut #94 için tek ek mobil ölçüm penceresi
 
-Durum: **Öneri; henüz onaylanmadı veya uygulanmadı.**
+Durum: **Kullanıcı onayladı; yerel kapılar tamamlanmadan yürütülmez.**
+
+Kullanıcı “180 saniye ve gerekirse 1 ek giriş onaylı” yanıtını verdi. Aşağıdaki iki
+sayısal istisna artık onaylıdır. Yeni pencere yerel kontroller geçtikten sonra açılır.
+İlk pencerenin bitişi ve eski tüketim tarihsel kayıtlarda korunur.
 
 İlk 900 saniyelik pencere 17 Ekim 2026, 23.55.38,011 (Europe/Istanbul) itibarıyla
 doldu. Yerel hazırlık, test ve inceleme bu süreyi tüketti. Süre sınırı uzatılmadı;

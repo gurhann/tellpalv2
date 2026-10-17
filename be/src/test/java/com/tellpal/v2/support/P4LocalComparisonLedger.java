@@ -17,7 +17,12 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     private static final int[][] PHASES = {{3,3,0},{3,9,3},{4,8,5},{4,12,0},{0,8,0},{0,24,0}};
     private final FileChannel channel;
     private final Clock clock;
-    private final long started;
+    private long started;
+    private long windowMillis=900000;
+    private boolean approvedWindow,windowOpened=true;
+    private Path windowFile;
+    private java.util.function.LongSupplier nanoTime=System::nanoTime;
+    private long windowStartedNanos;
     private final Map<String,Long> objects = new HashMap<>();
     private final Set<String> once = new HashSet<>();
     private final Set<String> duplicateCreates = new HashSet<>();
@@ -44,31 +49,67 @@ final class P4LocalComparisonLedger implements AutoCloseable {
 
     /** Yalnız onaylı kapanmış makbuzun aynı süre ve tüketimle faz 5 devamıdır. */
     static P4LocalComparisonLedger resumeMedia(Path source,Path child,Clock clock) throws IOException {
+        byte[] frozen=frozenLedger(source,child,"mobile-continuation");
+        require(clock.millis()>=ORIGINAL_OPEN && clock.millis()<ORIGINAL_OPEN+900000,"RUN_WINDOW_OR_FAILED");
+        return new P4LocalComparisonLedger(child,clock,frozen,false);
+    }
+
+    /** Ayrı insan onaylı tek pencereyi hazırlar; kapılar geçmeden süre veya I/O açılmaz. */
+    static P4LocalComparisonLedger resumeApprovedWindow(Path source,Path child,Clock clock) throws IOException {
+        return resumeApprovedWindow(source,child,clock,System::nanoTime);
+    }
+
+    static P4LocalComparisonLedger resumeApprovedWindow(Path source,Path child,Clock clock,java.util.function.LongSupplier nanoTime) throws IOException {
+        byte[] frozen=frozenLedger(source,child,"mobile-window-180");
+        require(clock.millis()>=ORIGINAL_OPEN+900000,"ORIGINAL_WINDOW_NOT_FINISHED");
+        var ledger=new P4LocalComparisonLedger(child,clock,frozen,true);ledger.nanoTime=Objects.requireNonNull(nanoTime);return ledger;
+    }
+
+    private static byte[] frozenLedger(Path source,Path child,String childName) throws IOException {
         require(source.toRealPath().equals(source.toAbsolutePath().normalize())
                 && Files.isRegularFile(source,LinkOption.NOFOLLOW_LINKS)
                 && source.getParent().getFileName().toString().equals(RUN)
                 && source.getFileName().toString().equals("ledger.log")
-                && child.toAbsolutePath().normalize().equals(source.resolveSibling("mobile-continuation").resolve("ledger.log")),"CONTINUATION_PATH");
+                && child.toAbsolutePath().normalize().equals(source.resolveSibling(childName).resolve("ledger.log")),"CONTINUATION_PATH");
         require(Files.size(source)<=65536,"CONTINUATION_HASH");
         byte[] frozen=Files.readAllBytes(source);
         require(com.tellpal.v2.asset.domain.reading.ReadingIdentity.sha(frozen).equals(CONTINUATION_SHA),"CONTINUATION_HASH");
         require(new String(frozen,java.nio.charset.StandardCharsets.UTF_8).startsWith("OPEN "+PLAN_SHA+" "+ORIGINAL_OPEN+"\n"),"CONTINUATION_OPEN_CHANGED");
-        require(clock.millis()>=ORIGINAL_OPEN && clock.millis()<ORIGINAL_OPEN+900000,"RUN_WINDOW_OR_FAILED");
-        return new P4LocalComparisonLedger(child,clock,frozen);
+        return frozen;
     }
 
-    private P4LocalComparisonLedger(Path child,Clock clock,byte[] frozen) throws IOException {
-        this.clock=clock;this.started=ORIGINAL_OPEN;this.mediaOnly=true;
+    private P4LocalComparisonLedger(Path child,Clock clock,byte[] frozen,boolean approved) throws IOException {
+        this.clock=clock;this.started=approved?-1:ORIGINAL_OPEN;this.mediaOnly=true;
+        this.approvedWindow=approved;this.windowOpened=!approved;this.windowMillis=approved?180000:900000;
+        this.windowFile=child.resolveSibling("window.json");
         this.phase=5;this.reads=41;this.readBytes=215362417L;this.phaseReads=1;
         this.creates=14;this.writeBytes=74711347L;this.objectBytes=68374490L;
-        this.observations=8;this.verifications=4;
+        this.observations=8;this.verifications=approved?5:4;
         channel=FileChannel.open(child,Set.of(StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE),
                 PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")));
         try {
             var data=ByteBuffer.wrap(frozen);while(data.hasRemaining())channel.write(data);channel.force(true);
-            append("MEDIA_CONTINUATION "+CONTINUATION_SHA);
+            if(!approved)append("MEDIA_CONTINUATION "+CONTINUATION_SHA);
         } catch(IOException|RuntimeException failure) {channel.close();throw failure;}
     }
+
+    /** Çağıran tüm yerel kapıları tamamladıktan sonra tek exclusive zaman makbuzunu açar. */
+    synchronized void openApprovedWindow() throws IOException {
+        require(approvedWindow && !windowOpened && !failed,"APPROVED_WINDOW_ALREADY_USED");
+        windowStartedNanos=nanoTime.getAsLong();started=clock.millis();require(started>=ORIGINAL_OPEN+900000,"ORIGINAL_WINDOW_NOT_FINISHED");
+        String receipt="{\"startedAtEpochMillis\":"+started+",\"deadlineEpochMillis\":"+Math.addExact(started,180000)
+                +",\"windowMillis\":180000,\"priorLedgerSha256\":\""+CONTINUATION_SHA+"\",\"additionalLoginVerifications\":1}\n";
+        try(var window=FileChannel.open(windowFile,Set.of(StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE),
+                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")))) {
+            var data=java.nio.charset.StandardCharsets.UTF_8.encode(receipt);while(data.hasRemaining())window.write(data);window.force(true);
+            windowOpened=true;
+            append("MEDIA_WINDOW_STARTED "+started+" "+Math.addExact(started,180000));
+            append("AUTH_RESERVED 5");
+        } catch(IOException|RuntimeException failure) {failed=true;throw failure;}
+    }
+
+    synchronized long windowStartedAtEpochMillis() {require(windowOpened,"RUN_WINDOW_OR_FAILED");return started;}
+    synchronized long windowDeadlineEpochMillis() {require(windowOpened,"RUN_WINDOW_OR_FAILED");return Math.addExact(started,windowMillis);}
 
     synchronized void phase(int next) {
         require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
@@ -95,6 +136,7 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void read(String path, long bytes) {
+        requireActiveWindow();
         path(path);
         require(phase >= 0 && ++phaseReads <= PHASES[phase][1] && ++reads <= 64
                 && bytes > 0 && bytes <= 8 * MIB && readBytes + bytes <= 512 * MIB, "READ_BUDGET");
@@ -134,6 +176,7 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void verify() {
+        requireActiveWindow();
         require(phase == 5 && ++verifications <= 64, "AUTH_BUDGET");
         append("AUTH_RESERVED " + verifications);
     }
@@ -148,8 +191,16 @@ final class P4LocalComparisonLedger implements AutoCloseable {
         require(path != null && path.startsWith(PREFIX + "/") && !path.contains("..") && !path.contains("\\"), "STORAGE_SCOPE");
     }
 
+    private void requireActiveWindow() {
+        require(!failed && windowOpened && clock.millis()>=started && clock.millis()-started<windowMillis,"RUN_WINDOW_OR_FAILED");
+        if(approvedWindow) {
+            long elapsed=nanoTime.getAsLong()-windowStartedNanos;
+            require(elapsed>=0 && elapsed<180000000000L,"RUN_WINDOW_OR_FAILED");
+        }
+    }
+
     private void append(String line) {
-        require(!failed && clock.millis() >= started && clock.millis() - started < 900000, "RUN_WINDOW_OR_FAILED");
+        requireActiveWindow();
         try {
             var data = ByteBuffer.wrap((line + "\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
             while (data.hasRemaining()) channel.write(data);
@@ -164,7 +215,13 @@ final class P4LocalComparisonLedger implements AutoCloseable {
         if (!condition) throw new IllegalStateException(code);
     }
 
-    synchronized long remainingMillis() {return Math.max(0,900000-(clock.millis()-started));}
+    synchronized long remainingMillis() {
+        if(!windowOpened)return 0;
+        long wall=Math.max(0,windowMillis-(clock.millis()-started));
+        if(!approvedWindow)return wall;
+        long elapsed=nanoTime.getAsLong()-windowStartedNanos;
+        return elapsed<0?0:Math.min(wall,Math.max(0,(180000000000L-elapsed)/1000000));
+    }
 
     @Override public void close() throws IOException { channel.close(); }
 }

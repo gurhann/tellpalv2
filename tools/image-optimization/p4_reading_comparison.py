@@ -26,6 +26,7 @@ ENTRY = 'test_driver/reading_comparison_entry.dart'
 CHOICES = [(1, False), (1, True), (2, True), (2, False), (3, False), (3, True)]
 ORIGINAL_OPEN_MILLIS = 1792269638011
 ORIGINAL_DEADLINE_MILLIS = ORIGINAL_OPEN_MILLIS + 900000
+CONTINUATION_LEDGER_SHA = '60086ea1ad1bdccbcc2423481fcd5a20cd4777602c3e87b1c3636732b298b839'
 
 
 def require(value, code='COMPARISON_REFUSED'):
@@ -305,14 +306,32 @@ def validate_loaded(snapshot, ready, index, canonical):
 def run(args, android):
     state = getattr(args, 'state_dir', None) or STATE
     state = state.absolute()
+    window = None
+    window_deadline = ORIGINAL_DEADLINE_MILLIS
     if state != STATE:
-        require(state == STATE / 'mobile-continuation', 'CONTINUATION_SCOPE_CHANGED')
+        require(state in [STATE / 'mobile-continuation', STATE / 'mobile-window-180'], 'CONTINUATION_SCOPE_CHANGED')
         private_dir(state)
         approval = json.loads(private_file(state / 'approval.json'))
         require(approval.get('runId') == RUN_ID and approval.get('planSha256') == PLAN_SHA
                 and approval.get('contentId') == 94 and approval.get('newProductionAllowed') is False
                 and approval.get('priorLedgerSha256') == digest(STATE / 'ledger.log'), 'CONTINUATION_APPROVAL_REQUIRED')
-        require(ORIGINAL_OPEN_MILLIS <= time.time() * 1000 < ORIGINAL_DEADLINE_MILLIS, 'CONTINUATION_WINDOW_EXPIRED')
+        if state == STATE / 'mobile-window-180':
+            require(approval['priorLedgerSha256'] == CONTINUATION_LEDGER_SHA
+                    and type(approval.get('windowMillis')) is int and approval['windowMillis'] == 180000
+                    and type(approval.get('additionalLoginVerifications')) is int
+                    and approval['additionalLoginVerifications'] == 1, 'APPROVED_WINDOW_REQUIRED')
+            window = json.loads(private_file(state / 'window.json'))
+            require(type(window.get('startedAtEpochMillis')) is int
+                    and type(window.get('deadlineEpochMillis')) is int
+                    and window['deadlineEpochMillis'] - window['startedAtEpochMillis'] == 180000
+                    and type(window.get('windowMillis')) is int and window['windowMillis'] == 180000
+                    and window.get('priorLedgerSha256') == CONTINUATION_LEDGER_SHA
+                    and type(window.get('additionalLoginVerifications')) is int
+                    and window['additionalLoginVerifications'] == 1, 'APPROVED_WINDOW_CHANGED')
+            window_deadline = window['deadlineEpochMillis']
+            require(window['startedAtEpochMillis'] <= time.time() * 1000 < window_deadline, 'CONTINUATION_WINDOW_EXPIRED')
+        else:
+            require(ORIGINAL_OPEN_MILLIS <= time.time() * 1000 < window_deadline, 'CONTINUATION_WINDOW_EXPIRED')
         require(not (state / 'mobile.attempt.json').exists(), 'ATTEMPT_EXISTS_NO_RETRY')
     output = args.output.absolute()
     require(not output.exists(), 'OUTPUT_EXISTS_NO_RETRY')
@@ -326,12 +345,22 @@ def run(args, android):
         prior = json.loads(private_file(STATE / 'ready.json'))
         require(ready['contentId'] == 94 and ready['identity'] == prior['identity']
                 and ready['descriptor'] == prior['descriptor'], 'CONTINUATION_LIVE_CHANGED')
+        if window is not None:
+            require(ready.get('windowStartedAtEpochMillis') == window['startedAtEpochMillis']
+                    and ready.get('windowDeadlineEpochMillis') == window_deadline, 'READY_WINDOW_CHANGED')
     require(auth['runId'] == RUN_ID and auth['planSha256'] == PLAN_SHA and auth['qaUid'] == QA_UID)
     token = private_file(Path(auth['tokenFile']), 8192, external=True).decode().strip()
     configuration = runtime_configuration(ready, token)
     require(ready['identity']['contentId'] == ready['contentId'] and ready['identity']['language'] == 'tr')
+    remaining = min(180, (window_deadline - time.time() * 1000) / 1000) if state != STATE else 180
+    deadline = time.monotonic() + remaining
+    def check_window():
+        require(time.monotonic() < deadline and (state == STATE or time.time() * 1000 < window_deadline), 'MOBILE_WINDOW_EXPIRED')
+    check_window()
     android.preflight()
+    check_window()
     require(android.run('shell', 'pidof', PACKAGE) == str(connection['pid']), 'QA_PROCESS_CHANGED')
+    check_window()
     write_json(state / 'mobile.attempt.json', {'runId': RUN_ID, 'planSha256': PLAN_SHA, 'state': 'STARTED_NO_RETRY'})
     port = ready['loopbackPort']
     vm = None
@@ -339,25 +368,31 @@ def run(args, android):
     verified = False
     observations = []
     final = {'ok': False, 'status': 'NOT_CONFIGURED'}
-    deadline = time.monotonic() + min(180, (ORIGINAL_DEADLINE_MILLIS - time.time() * 1000) / 1000) if state != STATE else time.monotonic() + 180
     try:
+        check_window()
         android.run('reverse', '--no-rebind', 'tcp:' + str(port), 'tcp:' + str(port))
         reversed_port = True
+        check_window()
         vm = Vm(connection['websocket'])
+        check_window()
         vm.ready()
+        check_window()
         baseline = android.memory()
-        require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
+        check_window()
         vm.data(configuration)
         configuration.clear()
         token = None
+        check_window()
         for order, (index, canonical) in enumerate(CHOICES):
-            require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
+            check_window()
             if order:
                 vm.data({'action': 'select', 'entryIndex': index, 'canonicalSource': canonical})
+                check_window()
             snapshot = None
             for _ in range(240):
-                require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
+                check_window()
                 snapshot = vm.data({'action': 'snapshot'})
+                check_window()
                 require(snapshot['status'] != 'error', 'MEDIA_REFUSED_NO_RETRY')
                 if snapshot['status'] == 'loaded':
                     break
@@ -365,37 +400,50 @@ def run(args, android):
             loaded = [e for e in snapshot['events'] if e['kind'] == 'state' and e['status'] == 'loaded']
             require(loaded and type(loaded[-1].get('epoch')) is int, 'LOADED_EPOCH_REQUIRED')
             epoch = loaded[-1]['epoch']
-            require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
+            check_window()
             snapshot = vm.data({'action': 'paint', 'epoch': epoch})
+            check_window()
             require(snapshot.get('paintedEpoch') == epoch, 'PAINT_EPOCH_CHANGED')
             observation = validate_loaded(snapshot, ready, index, canonical)
             observation['memory'] = android.memory()
+            check_window()
             screenshot = output / (f'{order + 1:02d}-entry-{index}-' + ('source.png' if canonical else 'rendition.png'))
             observation['screenshotSha256'] = android.screenshot(screenshot)
+            check_window()
             observation['screenshot'] = screenshot.name
             observations.append(observation)
             write_json(output / f'{order + 1:02d}-observation.json', observation)
+            check_window()
         before_background = vm.data({'action': 'snapshot'})
+        check_window()
         android.run('shell', 'input', 'keyevent', 'KEYCODE_HOME')
         time.sleep(.5)
+        check_window()
         background = vm.data({'action': 'snapshot'})
+        check_window()
         require(background['activeImages'] == 0 and background['status'] == 'error', 'BACKGROUND_RETAINED_IMAGE')
         android.run('shell', 'am', 'start', '-n', PACKAGE + '/' + ACTIVITY)
         time.sleep(.5)
+        check_window()
         returned = vm.data({'action': 'snapshot'})
+        check_window()
         require(returned['activeImages'] == 0 and returned['status'] == 'error', 'RETURN_READMISSION_REQUIRED')
         def media_count(s):
             return len([e for e in s['events'] if e['kind'] == 'http' and e['endpoint'] == 'bytes'])
         require(media_count(before_background) == media_count(returned) == 6, 'UNPLANNED_MEDIA_REQUEST')
         final = vm.data({'action': 'stop'})
+        check_window()
         require(all(final[name] == 0 for name in ['activeBuffers', 'activeDescriptors', 'activeCodecs', 'activeImages']))
         time.sleep(.25)
         closed_screenshot = android.screenshot(output / '07-closed.png')
+        check_window()
+        closed_memory = android.memory()
+        check_window()
         write_json(output / 'verification.json', {'planSha256': PLAN_SHA, 'runId': RUN_ID,
             'device': connection['device'], 'apkSha256': connection['apkSha256'], 'baselineMemory': baseline,
             'observations': observations, 'background': background, 'returned': returned,
             'closed': final, 'closedScreenshotSha256': closed_screenshot,
-            'closedMemory': android.memory(), 'status': 'SIX_STATES_VERIFIED_EMULATOR_ONLY'})
+            'closedMemory': closed_memory, 'status': 'SIX_STATES_VERIFIED_EMULATOR_ONLY'})
         verified = True
         print('SIX_STATES_VERIFIED_EMULATOR_ONLY_PHYSICAL_QUALITY_OPEN')
     finally:

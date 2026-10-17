@@ -80,7 +80,94 @@ def local_run():
             yield args,android,vm,vm_factory,state
 
 
+def approved_window(args, state):
+    child=state/'mobile-window-180';child.mkdir(mode=0o700)
+    p4.write_new(state/'ledger.log',b'frozen')
+    # SHA bu testte yalıtılır; Java testleri gerçek mühürlü fixture'ı doğrular.
+    prior_sha=p4.digest(state/'ledger.log')
+    p4.write_json(child/'approval.json',{'runId':p4.RUN_ID,'planSha256':p4.PLAN_SHA,
+        'contentId':94,'newProductionAllowed':False,'priorLedgerSha256':prior_sha,
+        'windowMillis':180000,'additionalLoginVerifications':1})
+    start=int(time.time()*1000)-1000
+    window={'startedAtEpochMillis':start,'deadlineEpochMillis':start+180000,
+        'windowMillis':180000,'priorLedgerSha256':prior_sha,'additionalLoginVerifications':1}
+    p4.write_json(child/'window.json',window)
+    parent=json.loads((state/'ready.json').read_bytes());parent['descriptor']={}
+    (state/'ready.json').write_text(json.dumps(parent))
+    p4.write_json(child/'ready.json',{**parent,'windowStartedAtEpochMillis':start,
+        'windowDeadlineEpochMillis':start+180000})
+    p4.write_new(child/'qa-sign-in.ready.json',(state/'qa-sign-in.ready.json').read_bytes())
+    args.state_dir=child
+    return child,prior_sha,window
+
+
 class DriverGuardsTest(unittest.TestCase):
+    @patch.object(p4.time,'time',return_value=1792271000)
+    def test_new_approved_window_runs_after_original_expiry_without_parent_reset(self, fixed_time):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child,sha,window=approved_window(args,state)
+            with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha):p4.run(args,android)
+            self.assertTrue(json.loads((args.output/'attempt-result.json').read_bytes())['finished'])
+            self.assertEqual((state/'ledger.log').read_bytes(),b'frozen')
+            self.assertFalse((state/'mobile.attempt.json').exists())
+
+    def test_approved_window_expiry_or_extension_refuses_before_device(self):
+        for expire in [False,True]:
+            with self.subTest(expire=expire),local_run() as (args,android,vm,vm_factory,state):
+                child,sha,window=approved_window(args,state)
+                if not expire:
+                    window['deadlineEpochMillis']+=1
+                    (child/'window.json').write_text(json.dumps(window))
+                frozen_time=(window['deadlineEpochMillis']/1000 if expire else time.time())
+                code='CONTINUATION_WINDOW_EXPIRED' if expire else 'APPROVED_WINDOW_CHANGED'
+                with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha),patch.object(p4.time,'time',return_value=frozen_time),self.assertRaisesRegex(ValueError,code):
+                    p4.run(args,android)
+                android.run.assert_not_called();vm_factory.assert_not_called()
+                self.assertFalse((child/'mobile.attempt.json').exists())
+
+    def test_ready_cannot_claim_a_different_approved_deadline(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child,sha,window=approved_window(args,state)
+            ready=json.loads((child/'ready.json').read_bytes());ready['windowDeadlineEpochMillis']+=1
+            (child/'ready.json').write_text(json.dumps(ready))
+            with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha),self.assertRaisesRegex(ValueError,'READY_WINDOW_CHANGED'):
+                p4.run(args,android)
+            android.run.assert_not_called();vm_factory.assert_not_called()
+
+    def test_window_expiring_during_preflight_does_not_start_attempt_reverse_or_vm(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child,sha,window=approved_window(args,state);now=[100.0]
+            android.preflight.side_effect=lambda:now.__setitem__(0,281.0)
+            with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha),patch.object(p4.time,'monotonic',side_effect=lambda:now[0]),self.assertRaisesRegex(ValueError,'MOBILE_WINDOW_EXPIRED'):
+                p4.run(args,android)
+            android.run.assert_not_called();vm_factory.assert_not_called()
+            self.assertFalse((child/'mobile.attempt.json').exists())
+
+    def test_late_sixth_screenshot_cannot_claim_finished_or_start_background_controls(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child,sha,window=approved_window(args,state);now=[100.0]
+            def screenshot(path):
+                if path.name.startswith('06-'):now[0]=281.0
+                return 'synthetic-sha'
+            android.screenshot.side_effect=screenshot
+            with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha),patch.object(p4.time,'monotonic',side_effect=lambda:now[0]),self.assertRaisesRegex(ValueError,'MOBILE_WINDOW_EXPIRED'):
+                p4.run(args,android)
+            self.assertFalse((args.output/'verification.json').exists())
+            result=json.loads((args.output/'attempt-result.json').read_bytes())
+            self.assertFalse(result['finished']);self.assertEqual(result['statesRecorded'],5)
+            self.assertFalse(any(c.args==('shell','input','keyevent','KEYCODE_HOME') for c in android.run.call_args_list))
+            self.assertEqual(result['cleanup']['vmStop'],'PASS')
+
+    def test_spent_window_time_is_not_returned_as_a_fresh_180_seconds(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child,sha,window=approved_window(args,state);now=[100.0]
+            android.screenshot.side_effect=lambda path:now.__setitem__(0,279.5) or 'synthetic-sha'
+            # Makbuz başlangıcı bir saniye önce: en çok 179 saniye kalmıştır.
+            with patch.object(p4,'CONTINUATION_LEDGER_SHA',sha),patch.object(p4.time,'monotonic',side_effect=lambda:now[0]),self.assertRaisesRegex(ValueError,'MOBILE_WINDOW_EXPIRED'):
+                p4.run(args,android)
+            self.assertFalse(json.loads((args.output/'attempt-result.json').read_bytes())['finished'])
+            self.assertFalse((args.output/'verification.json').exists())
+
     def test_continuation_rejects_other_directory_before_device_io(self):
         with local_run() as (args,android,vm,vm_factory,state):
             args.state_dir=state/'other'
