@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "planSha256": "f024f17075a11cac9e61019503736cd384ac6ecf0db3236052c62df9fd439be3",
+  "codeCommitAtAttempt": "99f35a83f38b9bc408c89c62247fccb62970ee90",
+  "status": "FAILED_LOCAL_CLONE_BEFORE_STORAGE",
+  "stage": "SOURCE_DATABASE_DUMP",
+  "sourceServerVersion": "18.6 (Postgres.app)",
+  "selectedDumpClientVersion": "14.12 (Homebrew)",
+  "dumpBytes": 0,
+  "dumpSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "cloneDatabaseExists": false,
+  "backendStarted": false,
+  "storageLedgerCreated": false,
+  "cloudStorageCalls": 0,
+  "newStorageObjects": 0,
+  "qaSignInHelperCompleted": 1,
+  "qaVerifierReservationConsumed": 1,
+  "preparationExistingAppConfigReads": 1,
+  "sourceReadOnly": true,
+  "retryExecuted": false,
+  "failureArtifactsPreserved": true,
+  "realReadOnlySchemaChecks": {
+    "client14": "REJECTED_SERVER_VERSION_MISMATCH",
+    "client18": "PASS"
+  },
+  "physicalQualityEvidence": false
+}

@@ -1,6 +1,6 @@
 # P4a2 sınırlı gerçek karşılaştırma doğrulaması
 
-Tarih: 2026-10-17. **Yerel kod doğrulaması ve bağımsız inceleme tamamlandı. Gerçek run başlamadı.**
+Tarih: 2026-10-17. **Yerel kod doğrulaması ve inceleme tamamlandı. Onaylı yürütme yerel klonda durdu; görsel üretimi başlamadı.**
 
 Kullanıcı 822×1334 PNG profilini ve [tek denemenin sınırlarını](bounded-run-proposal-2026-10-17.md)
 açıkça onayladı. [JSON planı](bounded-run-proposal-2026-10-17.json) sonradan değiştirilmedi.
@@ -43,7 +43,7 @@ Token dosyası repo dışında,0700 dizinde0600 olur. Makbuz tokeni Java'ya taş
 |---|---|
 | Backend `bash ./mvnw -o -q verify` | **503 geçti**:479 Surefire +24 Failsafe; hata/atlama0. |
 | Yeni backend odaklı test |8 ledger,1 gerçek Spring kompozisyon testi ve1 PostgreSQL15.19/HTTP/disk-storage IT geçti. Gerçek encoder dört çıktı üretip otomatik LIVE oldu. |
-| Python backend launcher |10 test geçti. Default I/O yokluğu, plan/kaynak/DB/credential/restart ret kapıları. |
+| Python backend launcher |13 test geçti. Default I/O yokluğu, plan/kaynak/DB/credential/restart ret kapıları. |
 | Python mobil sürücü |16 test geçti. Özel dosya, tek attempt, kimlik/süre, geometri/payload ve loopback kontrolleri. |
 | Yeni Flutter probe |6 test geçti. Gerçek loopback HTTP ve native codec:822×1334 decode, gerçek payload boyutu, kimlik/SHA, background sonrası kaynak bırakma. |
 | Flutter analyzer |`lib`, `test_driver` ve yeni testte bulgu yok. |
@@ -111,3 +111,32 @@ Eski JPEG byte tabanı ve canonical PNG tabanı ayrı raporlanır. Canonical PNG
 denemeye ait kontroldür; eski JPEG'in cihazda birebir kontrol kolu olduğu iddia edilmez.
 822×1334 profilinin genel üretim onayı, fiziksel Android/iPhone kalite kabulü, JPEG/WebP
 bulanıklığının çözümü, P0 eksik ham kanıtı ve P4b genel tüketici entegrasyonu açık kalır.
+
+## Onaylı yürütmenin gerçek sonucu
+
+[Makine tarafından okunabilir makbuz](execution-attempt-2026-10-17.json):
+`FAILED_LOCAL_CLONE_BEFORE_STORAGE`. Mevcut Firebase uygulama yapılandırması1 salt okunur
+istekle alındı; yeni anahtar/IAM oluşturulmadı. Bu ön hazırlık isteği, storage/verifier
+run sayaçlarından ayrı kaydedildi. Kanonik mevcut QA hesabı için1 login helper çağrısı
+başarıyla tamamlandı; verifier bütçesindeki1 pay tüketildi. Token repo dışında tutuluyor.
+
+İlk `--execute` çağrısı kaynak DB dump adımında durdu. Sistem PATH'inde
+`pg_dump/pg_restore14.12`, kaynakta PostgreSQL18.6 vardı. Sıfır byte `source.dump`,
+`attempt.json`, mühürlü input ve giriş makbuzları korundu. Klon DB oluşmadı.
+Backend/worker/ledger başlamadı; yeni storage nesnesi ve görsel okuma/yazma sayısı0.
+Normal uygulama ve kaynak DB üzerinde yazma yapılmadı.
+
+Ön kontrolde kaçırılan sürüm uyumluluğu düzeltildi. Artık operator PATH'indeki
+psql/pg_dump/pg_restore/createdb major sürümleri, herhangi bir run kaydı veya klon
+başlamadan salt okunur sunucu sürümüyle eşleşmek zorunda. Eksik/bozuk/uyumsuz sürüm
+sabit hata koduyla reddedilir. Backend Python13 ve mobil Python16 test geçti.
+Hedefli bağımsız inceleme yeni bulgu üretmedi. Java/Flutter kodu değişmedi.
+
+Gerçek salt okunur schema denemesinde14 istemcisi version mismatch ile reddedildi;
+mevcut Postgres.app18 istemcisi geçti. Bu doğrulama dump verisi saklamadı, klon veya
+bulut üretimi başlatmadı. Başarısız run yeniden yürütülmedi.
+
+Sıradaki öneri [yerel klon devam planıdır](local-clone-recovery-2026-10-17.md).
+Ek kullanıcı onayı bekliyor. Fiziksel Android/iPhone, gerçek medya payload/decode/bellek
+ve görsel kalite kanıtı hâlâ açık. Emülatörde ayrı QA paketi yapılandırma bekliyor;
+gerçek karşılaştırma görüntüsü gösterilmiş sayılmaz.

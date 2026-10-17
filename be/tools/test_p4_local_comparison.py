@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
 from unittest.mock import patch
 
 import p4_local_comparison as p4
@@ -108,13 +109,73 @@ class P4LocalComparisonTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     p4.source_identity({}, 'jdbc:postgresql://localhost/source')
 
+    def toolchain_entry(self, versions=None, missing=None, server='180006', mode='--execute'):
+        versions = versions or {}
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory).resolve() / 'uncreated-state'
+            environment = {'PATH': '/operator-selected-bin', 'TELLPAL_DB_URL': 'jdbc:postgresql://127.0.0.1:5432/source'}
+            commands = []
+            def execute(args, **kwargs):
+                commands.append(args)
+                self.assertEqual(kwargs['env']['PGOPTIONS'], '-c default_transaction_read_only=on')
+                if args[-1] == 'SHOW server_version_num':
+                    return subprocess.CompletedProcess(args, 0, (server + '\n').encode(), b'')
+                self.assertEqual(args[-1], '--version', 'dump/create/restore hiç başlamamalıdır')
+                name = Path(args[0]).name
+                raw = versions.get(name, name + ' (PostgreSQL) 18.6 (Postgres.app)')
+                return subprocess.CompletedProcess(args, 0, raw.encode(), b'')
+            with patch.object(p4, 'DIRECTORY', state), patch.object(p4, 'checked_plan', return_value={}), \
+                 patch.object(p4, 'load_environment', return_value=environment), \
+                 patch.object(p4.shutil, 'which', side_effect=lambda name, path=None: None if name == missing else '/operator-selected-bin/' + name), \
+                 patch.object(p4.subprocess, 'run', side_effect=execute), \
+                 patch.object(p4, 'source_files', return_value=[]), patch.object(p4, 'sdk_configuration', return_value={}), \
+                 patch.object(p4, 'source_identity', return_value='source:on'), patch.object(p4, 'java_command', return_value=['java']), \
+                 patch.object(p4, 'private_create') as create, patch.object(p4, 'clone_database') as clone, \
+                 patch.object(p4.subprocess, 'Popen') as java, patch.object(p4, 'credential_gate') as credential, \
+                 contextlib.redirect_stdout(io.StringIO()) as output:
+                result = p4.main([mode, '--approval-sha256', p4.PLAN_SHA])
+                create.assert_not_called(); clone.assert_not_called(); java.assert_not_called(); credential.assert_not_called()
+                self.assertFalse((state / 'attempt.json').exists())
+                self.assertFalse((state / 'source.dump').exists())
+                if result != 0:
+                    self.assertFalse(state.exists(), 'red yeni state dizinini bile oluşturmamalıdır')
+                return result, output.getvalue(), commands
+
+    def test_launch_rejects_each_mismatched_major_before_any_durable_run_or_clone(self):
+        for name in ('psql', 'pg_dump', 'pg_restore', 'createdb'):
+            with self.subTest(tool=name):
+                result, output, commands = self.toolchain_entry({name: name + ' (PostgreSQL) 14.12'})
+                self.assertEqual(result, 2)
+                self.assertEqual(output.strip(), 'POSTGRES_TOOLCHAIN_VERSION_REFUSED')
+                self.assertTrue(all(command[-1] in ('SHOW server_version_num', '--version') for command in commands))
+
+    def test_launch_preflight_accepts_exact_major18_tools_without_writes(self):
+        result, output, commands = self.toolchain_entry(mode='--preflight')
+        self.assertEqual(result, 0)
+        self.assertIn('PREFLIGHT_PASS_SOURCE_V36_READONLY_HASHES_APPROVAL_NO_CLOUD', output)
+        self.assertEqual([Path(command[0]).name for command in commands], ['psql', 'psql', 'pg_dump', 'pg_restore', 'createdb'])
+
+    def test_launch_refuses_malformed_or_missing_tool_without_echoing_its_output(self):
+        for name in ('psql', 'pg_dump', 'pg_restore', 'createdb'):
+            with self.subTest(tool=name, fault='malformed'):
+                result, output, _ = self.toolchain_entry({name: 'synthetic-private-value'})
+                self.assertEqual(result, 2)
+                self.assertEqual(output.strip(), 'POSTGRES_TOOLCHAIN_VERSION_REFUSED')
+            with self.subTest(tool=name, fault='missing'):
+                result, output, _ = self.toolchain_entry(missing=name)
+                self.assertEqual(result, 2)
+                self.assertEqual(output.strip(), 'POSTGRES_TOOLCHAIN_VERSION_REFUSED')
+        result, output, _ = self.toolchain_entry(server='malformed-version')
+        self.assertEqual(result, 2)
+        self.assertEqual(output.strip(), 'POSTGRES_TOOLCHAIN_VERSION_REFUSED')
+
     def test_existing_attempt_survives_restart_and_refuses_launch(self):
         plan=p4.checked_plan()
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory).resolve()
             (path/'attempt.json').write_text('failed')
             args=type('Args', (), {'source':[], 'sdk_config':None, 'approval_sha256':p4.PLAN_SHA, 'java':None, 'preflight':False})()
-            with patch.object(p4, 'DIRECTORY', path), patch.object(p4, 'source_files', return_value=[]), \
+            with patch.object(p4, 'DIRECTORY', path), patch.object(p4, 'validate_pg_toolchain', return_value=18), patch.object(p4, 'source_files', return_value=[]), \
                     patch.object(p4, 'source_identity', return_value='source:on'), patch.object(p4, 'sdk_configuration', return_value={}), \
                     patch.object(p4, 'clone_database', side_effect=AssertionError('clone')):
                 with self.assertRaisesRegex(ValueError, 'EXISTING_ATTEMPT_NO_RETRY'):

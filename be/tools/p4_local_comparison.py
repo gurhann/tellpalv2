@@ -187,18 +187,42 @@ def pg_environment(environment, read_only):
     return result
 
 
-def pg_command(name):
-    found = shutil.which(name)
+def pg_command(name, environment=None):
+    selected = os.environ if environment is None else environment
+    found = shutil.which(name, path=selected.get('PATH'))
     require(found is not None, 'POSTGRES_TOOLS_REQUIRED')
     return found
 
 
 def pg_query(environment, source, query):
-    result = subprocess.run([pg_command('psql'), '-X', '-w', '-At', '-v', 'ON_ERROR_STOP=1',
+    result = subprocess.run([pg_command('psql', environment), '-X', '-w', '-At', '-v', 'ON_ERROR_STOP=1',
                              '-d', source.removeprefix('jdbc:'), '-c', query],
                             env=pg_environment(environment, True), capture_output=True, timeout=15)
     require(result.returncode == 0, 'SOURCE_READONLY_QUERY_FAILED')
     return result.stdout.decode().strip()
+
+
+class PostgresToolchainRefused(ValueError):
+    """Araç veya sunucu sürümü uygun değilse yalnız sabit hata kodu taşır."""
+
+
+def validate_pg_toolchain(environment, source):
+    """Operator PATH'indeki dört araç, salt okunur kaynak sunucunun major'ıyla eşleşir."""
+    try:
+        raw_server = pg_query(environment, source, 'SHOW server_version_num')
+        require(re.fullmatch(r'[1-9][0-9]{5,6}', raw_server), 'POSTGRES_VERSION_INVALID')
+        major = int(raw_server) // 10000
+        require(major >= 10, 'POSTGRES_VERSION_INVALID')
+        for name in ('psql', 'pg_dump', 'pg_restore', 'createdb'):
+            result = subprocess.run([pg_command(name, environment), '--version'],
+                                    env=pg_environment(environment, True), capture_output=True, timeout=5)
+            require(result.returncode == 0, 'POSTGRES_VERSION_INVALID')
+            version = result.stdout.decode('ascii').strip()
+            match = re.fullmatch(re.escape(name) + r' \(PostgreSQL\) ([1-9][0-9]*)\.[0-9]+(?: \([^\r\n]+\))?', version)
+            require(match is not None and int(match[1]) == major, 'POSTGRES_VERSION_INVALID')
+        return major
+    except (OSError, ValueError, subprocess.SubprocessError):
+        raise PostgresToolchainRefused('POSTGRES_TOOLCHAIN_VERSION_REFUSED') from None
 
 
 def source_identity(environment, source):
@@ -217,16 +241,16 @@ def clone_database(environment, source):
     dump = DIRECTORY / 'source.dump'
     with dump.open('xb') as output:
         os.chmod(dump, 0o600)
-        result = subprocess.run([pg_command('pg_dump'), '-w', '-Fc', '--no-owner', '--no-privileges',
+        result = subprocess.run([pg_command('pg_dump', environment), '-w', '-Fc', '--no-owner', '--no-privileges',
                                  '-d', source.removeprefix('jdbc:')],
                                 env=pg_environment(environment, True), stdout=output, stderr=subprocess.PIPE)
     require(result.returncode == 0, 'SOURCE_DUMP_FAILED_NO_RETRY')
     target = urlsplit(source.removeprefix('jdbc:'))
     args = ['-h', target.hostname, '-p', str(target.port or 5432), '-w']
-    result = subprocess.run([pg_command('createdb'), *args, '-T', 'template0', CLONE],
+    result = subprocess.run([pg_command('createdb', environment), *args, '-T', 'template0', CLONE],
                             env=pg_environment(environment, False), capture_output=True)
     require(result.returncode == 0, 'CLONE_CREATE_FAILED_NO_RETRY')
-    result = subprocess.run([pg_command('pg_restore'), *args, '--no-owner', '--no-privileges',
+    result = subprocess.run([pg_command('pg_restore', environment), *args, '--no-owner', '--no-privileges',
                              '--exit-on-error', '-d', CLONE, str(dump)],
                             env=pg_environment(environment, False), capture_output=True)
     require(result.returncode == 0, 'CLONE_RESTORE_FAILED_NO_RETRY')
@@ -244,6 +268,7 @@ def java_command(java):
 
 def launch(args, plan, environment):
     source, clone = database_urls(environment)
+    validate_pg_toolchain(environment, source)
     files = source_files(plan, args.source)
     sdk = sdk_configuration(args.sdk_config)
     identity = source_identity(environment, source)
@@ -299,6 +324,9 @@ def main(argv=None):
             return 0 if result.returncode == 0 else 2
         environment = load_environment(args.env_file)
         return launch(args, plan, environment)
+    except PostgresToolchainRefused:
+        print('POSTGRES_TOOLCHAIN_VERSION_REFUSED')
+        return 2
     except (OSError, ValueError, KeyError, subprocess.SubprocessError):
         print('REFUSED_LOCAL_PLAN_CONFIGURATION_OR_EXISTING_ATTEMPT_NO_RETRY')
         return 2

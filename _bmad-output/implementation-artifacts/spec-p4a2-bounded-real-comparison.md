@@ -58,6 +58,10 @@ context:
 
 ## Spec değişiklik kaydı
 
+- 2026-10-17: Gerçek yürütme yerel pg_dump14/sunucu18 uyumsuzluğunu açığa çıkardı.
+  Frozen amaç/sayılar korunarak, run başlamadan dört PostgreSQL aracının major eşleşmesi
+  ve launcher giriş testleri eklendi. Başarısız run kaydı korunuyor; yeniden yürütme ayrı onay ister.
+
 ## Doğrulama
 
 Wrapper `verify`, Python unittest; mobil değişirse ilgili widget/native HTTP testleri ve analyzer, annotation değişirse generator. Dry-run credential/buluta dokunmaz. İnceleme sonrası aynı onaylı run başlatılır.
@@ -67,7 +71,7 @@ Wrapper `verify`, Python unittest; mobil değişirse ilgili widget/native HTTP t
 **Tek yürütme ve girdi sınırı**
 
 - Kaynak/hash/klon/credential kontrolleri bulut çağrısından önce tamamlanır.
-  [p4_local_comparison.py:245](../../be/tools/p4_local_comparison.py#L245)
+  [p4_local_comparison.py:269](../../be/tools/p4_local_comparison.py#L269)
 
 - Yalnız yeni fixture, seçili job ve otomatik LIVE orkestrasyonu çalışır.
   [P4LocalComparisonSetup.java:91](../../be/src/test/java/com/tellpal/v2/support/P4LocalComparisonSetup.java#L91)
