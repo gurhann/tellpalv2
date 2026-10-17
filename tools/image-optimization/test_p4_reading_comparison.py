@@ -81,6 +81,78 @@ def local_run():
 
 
 class DriverGuardsTest(unittest.TestCase):
+    def test_continuation_rejects_other_directory_before_device_io(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            args.state_dir=state/'other'
+            with self.assertRaisesRegex(ValueError,'CONTINUATION_SCOPE_CHANGED'):
+                p4.run(args,android)
+            android.run.assert_not_called()
+            vm_factory.assert_not_called()
+
+    def test_continuation_rejects_changed_prior_ledger_before_device_io(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child=state/'mobile-continuation';child.mkdir(mode=0o700)
+            p4.write_new(state/'ledger.log',b'prior')
+            p4.write_json(child/'approval.json',{'runId':p4.RUN_ID,'planSha256':p4.PLAN_SHA,
+                'contentId':94,'newProductionAllowed':False,'priorLedgerSha256':'wrong'})
+            args.state_dir=child
+            with self.assertRaisesRegex(ValueError,'CONTINUATION_APPROVAL_REQUIRED'):
+                p4.run(args,android)
+            android.run.assert_not_called()
+            vm_factory.assert_not_called()
+
+    @patch.object(p4.time,'time',return_value=1792270138.011)
+    def test_continuation_rejects_changed_live_before_device_io(self, fixed_time):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child=state/'mobile-continuation';child.mkdir(mode=0o700)
+            p4.write_new(state/'ledger.log',b'prior')
+            p4.write_json(child/'approval.json',{'runId':p4.RUN_ID,'planSha256':p4.PLAN_SHA,
+                'contentId':94,'newProductionAllowed':False,'priorLedgerSha256':p4.digest(state/'ledger.log')})
+            p4.write_json(child/'ready.json',{**ready(),'contentId':95,'identity':{}})
+            p4.write_new(child/'qa-sign-in.ready.json',(state/'qa-sign-in.ready.json').read_bytes())
+            args.state_dir=child
+            with self.assertRaisesRegex(ValueError,'CONTINUATION_LIVE_CHANGED'):
+                p4.run(args,android)
+            android.run.assert_not_called()
+            vm_factory.assert_not_called()
+
+    @patch.object(p4.time,'time',return_value=1792270138.011)
+    def test_approved_continuation_preserves_parent_attempt_and_is_single_use(self, fixed_time):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child=state/'mobile-continuation';child.mkdir(mode=0o700)
+            p4.write_new(state/'ledger.log',b'prior')
+            p4.write_json(state/'mobile.attempt.json',{'state':'FAILED_PRESERVED'})
+            prior=(state/'mobile.attempt.json').read_bytes()
+            parent=json.loads((state/'ready.json').read_bytes());parent['descriptor']={}
+            (state/'ready.json').write_text(json.dumps(parent))
+            p4.write_json(child/'approval.json',{'runId':p4.RUN_ID,'planSha256':p4.PLAN_SHA,
+                'contentId':94,'newProductionAllowed':False,'priorLedgerSha256':p4.digest(state/'ledger.log')})
+            p4.write_json(child/'ready.json',parent)
+            p4.write_new(child/'qa-sign-in.ready.json',(state/'qa-sign-in.ready.json').read_bytes())
+            args.state_dir=child
+            p4.run(args,android)
+            self.assertTrue(json.loads((args.output/'attempt-result.json').read_bytes())['finished'])
+            self.assertEqual((state/'mobile.attempt.json').read_bytes(),prior)
+            self.assertEqual((state/'ledger.log').read_bytes(),b'prior')
+            self.assertTrue((child/'mobile.attempt.json').exists())
+            args.output=args.output.parent/'second-output'
+            vm_factory.reset_mock();android.reset_mock()
+            with self.assertRaisesRegex(ValueError,'ATTEMPT_EXISTS_NO_RETRY'):p4.run(args,android)
+            vm_factory.assert_not_called()
+            android.run.assert_not_called()
+
+    def test_expired_continuation_refuses_before_android_or_vm(self):
+        with local_run() as (args,android,vm,vm_factory,state):
+            child=state/'mobile-continuation';child.mkdir(mode=0o700)
+            p4.write_new(state/'ledger.log',b'prior')
+            p4.write_json(child/'approval.json',{'runId':p4.RUN_ID,'planSha256':p4.PLAN_SHA,
+                'contentId':94,'newProductionAllowed':False,'priorLedgerSha256':p4.digest(state/'ledger.log')})
+            args.state_dir=child
+            with patch.object(p4.time,'time',return_value=1792270538.011),self.assertRaisesRegex(ValueError,'CONTINUATION_WINDOW_EXPIRED'):
+                p4.run(args,android)
+            android.run.assert_not_called();vm_factory.assert_not_called()
+            self.assertFalse((child/'mobile.attempt.json').exists())
+
     def test_existing_mobile_attempt_refuses_new_output_before_reverse_or_vm(self):
         with local_run() as (args,android,vm,vm_factory,state):
             marker=state/'mobile.attempt.json'

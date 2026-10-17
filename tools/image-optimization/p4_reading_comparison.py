@@ -24,6 +24,8 @@ PACKAGE = 'com.tellpal.tellpal_mobile_poc.readingcomparison.media'
 ACTIVITY = 'com.tellpal.tellpal_mobile_poc.MainActivity'
 ENTRY = 'test_driver/reading_comparison_entry.dart'
 CHOICES = [(1, False), (1, True), (2, True), (2, False), (3, False), (3, True)]
+ORIGINAL_OPEN_MILLIS = 1792269638011
+ORIGINAL_DEADLINE_MILLIS = ORIGINAL_OPEN_MILLIS + 900000
 
 
 def require(value, code='COMPARISON_REFUSED'):
@@ -301,38 +303,55 @@ def validate_loaded(snapshot, ready, index, canonical):
 
 
 def run(args, android):
+    state = getattr(args, 'state_dir', None) or STATE
+    state = state.absolute()
+    if state != STATE:
+        require(state == STATE / 'mobile-continuation', 'CONTINUATION_SCOPE_CHANGED')
+        private_dir(state)
+        approval = json.loads(private_file(state / 'approval.json'))
+        require(approval.get('runId') == RUN_ID and approval.get('planSha256') == PLAN_SHA
+                and approval.get('contentId') == 94 and approval.get('newProductionAllowed') is False
+                and approval.get('priorLedgerSha256') == digest(STATE / 'ledger.log'), 'CONTINUATION_APPROVAL_REQUIRED')
+        require(ORIGINAL_OPEN_MILLIS <= time.time() * 1000 < ORIGINAL_DEADLINE_MILLIS, 'CONTINUATION_WINDOW_EXPIRED')
+        require(not (state / 'mobile.attempt.json').exists(), 'ATTEMPT_EXISTS_NO_RETRY')
     output = args.output.absolute()
     require(not output.exists(), 'OUTPUT_EXISTS_NO_RETRY')
     output.mkdir(mode=0o700)
     private_dir(output)
     private = private_dir(args.private_dir, external=True)
     connection = json.loads(private_file(private / 'connection.private.json'))
-    ready = json.loads(private_file(STATE / 'ready.json'))
-    auth = json.loads(private_file(STATE / 'qa-sign-in.ready.json'))
+    ready = json.loads(private_file(state / 'ready.json'))
+    auth = json.loads(private_file(state / 'qa-sign-in.ready.json'))
+    if state != STATE:
+        prior = json.loads(private_file(STATE / 'ready.json'))
+        require(ready['contentId'] == 94 and ready['identity'] == prior['identity']
+                and ready['descriptor'] == prior['descriptor'], 'CONTINUATION_LIVE_CHANGED')
     require(auth['runId'] == RUN_ID and auth['planSha256'] == PLAN_SHA and auth['qaUid'] == QA_UID)
     token = private_file(Path(auth['tokenFile']), 8192, external=True).decode().strip()
     configuration = runtime_configuration(ready, token)
     require(ready['identity']['contentId'] == ready['contentId'] and ready['identity']['language'] == 'tr')
     android.preflight()
     require(android.run('shell', 'pidof', PACKAGE) == str(connection['pid']), 'QA_PROCESS_CHANGED')
-    write_json(STATE / 'mobile.attempt.json', {'runId': RUN_ID, 'planSha256': PLAN_SHA, 'state': 'STARTED_NO_RETRY'})
+    write_json(state / 'mobile.attempt.json', {'runId': RUN_ID, 'planSha256': PLAN_SHA, 'state': 'STARTED_NO_RETRY'})
     port = ready['loopbackPort']
     vm = None
     reversed_port = False
     verified = False
     observations = []
     final = {'ok': False, 'status': 'NOT_CONFIGURED'}
-    deadline = time.monotonic() + 180
+    deadline = time.monotonic() + min(180, (ORIGINAL_DEADLINE_MILLIS - time.time() * 1000) / 1000) if state != STATE else time.monotonic() + 180
     try:
         android.run('reverse', '--no-rebind', 'tcp:' + str(port), 'tcp:' + str(port))
         reversed_port = True
         vm = Vm(connection['websocket'])
         vm.ready()
         baseline = android.memory()
+        require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
         vm.data(configuration)
         configuration.clear()
         token = None
         for order, (index, canonical) in enumerate(CHOICES):
+            require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
             if order:
                 vm.data({'action': 'select', 'entryIndex': index, 'canonicalSource': canonical})
             snapshot = None
@@ -346,6 +365,7 @@ def run(args, android):
             loaded = [e for e in snapshot['events'] if e['kind'] == 'state' and e['status'] == 'loaded']
             require(loaded and type(loaded[-1].get('epoch')) is int, 'LOADED_EPOCH_REQUIRED')
             epoch = loaded[-1]['epoch']
+            require(time.monotonic() < deadline, 'MOBILE_WINDOW_EXPIRED')
             snapshot = vm.data({'action': 'paint', 'epoch': epoch})
             require(snapshot.get('paintedEpoch') == epoch, 'PAINT_EPOCH_CHANGED')
             observation = validate_loaded(snapshot, ready, index, canonical)
@@ -411,6 +431,7 @@ def main(argv=None):
     modes.add_argument('--device-preflight', action='store_true')
     modes.add_argument('--run', action='store_true')
     parser.add_argument('--private-dir', type=Path)
+    parser.add_argument('--state-dir', type=Path)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--adb', type=Path)
     parser.add_argument('--aapt', type=Path)

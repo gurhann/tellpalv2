@@ -25,6 +25,9 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     private long writeBytes, readBytes, objectBytes;
     private int phaseCreates, phaseReads, phaseObservations;
     private boolean failed;
+    private boolean mediaOnly;
+    static final String CONTINUATION_SHA="60086ea1ad1bdccbcc2423481fcd5a20cd4777602c3e87b1c3636732b298b839";
+    static final long ORIGINAL_OPEN=1792269638011L;
 
     P4LocalComparisonLedger(Path path, Clock clock) throws IOException {this(path,clock,0);}
 
@@ -39,7 +42,36 @@ final class P4LocalComparisonLedger implements AutoCloseable {
         if(loginVerifications==1)append("AUTH_LOGIN_RESERVED 1");
     }
 
+    /** Yalnız onaylı kapanmış makbuzun aynı süre ve tüketimle faz 5 devamıdır. */
+    static P4LocalComparisonLedger resumeMedia(Path source,Path child,Clock clock) throws IOException {
+        require(source.toRealPath().equals(source.toAbsolutePath().normalize())
+                && Files.isRegularFile(source,LinkOption.NOFOLLOW_LINKS)
+                && source.getParent().getFileName().toString().equals(RUN)
+                && source.getFileName().toString().equals("ledger.log")
+                && child.toAbsolutePath().normalize().equals(source.resolveSibling("mobile-continuation").resolve("ledger.log")),"CONTINUATION_PATH");
+        require(Files.size(source)<=65536,"CONTINUATION_HASH");
+        byte[] frozen=Files.readAllBytes(source);
+        require(com.tellpal.v2.asset.domain.reading.ReadingIdentity.sha(frozen).equals(CONTINUATION_SHA),"CONTINUATION_HASH");
+        require(new String(frozen,java.nio.charset.StandardCharsets.UTF_8).startsWith("OPEN "+PLAN_SHA+" "+ORIGINAL_OPEN+"\n"),"CONTINUATION_OPEN_CHANGED");
+        require(clock.millis()>=ORIGINAL_OPEN && clock.millis()<ORIGINAL_OPEN+900000,"RUN_WINDOW_OR_FAILED");
+        return new P4LocalComparisonLedger(child,clock,frozen);
+    }
+
+    private P4LocalComparisonLedger(Path child,Clock clock,byte[] frozen) throws IOException {
+        this.clock=clock;this.started=ORIGINAL_OPEN;this.mediaOnly=true;
+        this.phase=5;this.reads=41;this.readBytes=215362417L;this.phaseReads=1;
+        this.creates=14;this.writeBytes=74711347L;this.objectBytes=68374490L;
+        this.observations=8;this.verifications=4;
+        channel=FileChannel.open(child,Set.of(StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE),
+                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")));
+        try {
+            var data=ByteBuffer.wrap(frozen);while(data.hasRemaining())channel.write(data);channel.force(true);
+            append("MEDIA_CONTINUATION "+CONTINUATION_SHA);
+        } catch(IOException|RuntimeException failure) {channel.close();throw failure;}
+    }
+
     synchronized void phase(int next) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         require(next == phase + 1 && next < PHASES.length, "PHASE_REPLAY_OR_ORDER");
         // Aşamanın en kötü payı başlamadan kalıcı ayrılır. Harcanmayan pay sonraki aşamaya aktarılmaz.
         int[] cap = PHASES[next];
@@ -50,11 +82,13 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void once(String action) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         require(once.add(action), "ACTION_REPLAY");
         append("ACTION " + action);
     }
 
     synchronized void scope(long id) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         require(id > 0 && id != 71 && id != 93 && id != 112, "FIXTURE_SCOPE");
         once("SEAL_CONTENT_ID");
         append("SEALED_CONTENT " + id);
@@ -69,6 +103,7 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void create(String path, long bytes) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         path(path);
         require(phase >= 0 && ++phaseCreates <= PHASES[phase][0] && ++creates <= 14
                 && bytes > 0 && bytes <= 8 * MIB && writeBytes + bytes <= 112 * MIB, "CREATE_BUDGET");
@@ -85,12 +120,14 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void observe(String path) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         path(path);
         require(phase >= 0 && ++phaseObservations <= PHASES[phase][2] && ++observations <= 16, "OBSERVE_BUDGET");
         append("OBSERVE_RESERVED " + observations + " " + path);
     }
 
     synchronized void conflict(String path) {
+        require(!mediaOnly,"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         require(phase == 2 && duplicateCreates.remove(path), "UNEXPECTED_CONFLICT");
         once("EXPECTED_CAPTURE_CONFLICT");
         observe(path);
@@ -102,6 +139,7 @@ final class P4LocalComparisonLedger implements AutoCloseable {
     }
 
     synchronized void record(String key, String value) {
+        require(!mediaOnly || Set.of("MEDIA_CONTINUATION_READY","CLOSED").contains(key),"MEDIA_CONTINUATION_READ_AUTH_ONLY");
         require(key.matches("[A-Z_]+") && value != null && !value.contains("\n") && !value.contains("\r"), "RECEIPT_VALUE");
         append(key + " " + value);
     }

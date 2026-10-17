@@ -199,3 +199,22 @@ otomatik tekrar yapılmadı.
 [Ayrıntılı gerçek sonuç](real-run-result-2026-10-17.md) ve
 [sayısal makbuz](execution-resume-2-2026-10-17.json) güncel durumu kaydeder.
 Önceki hata ve izin bölümleri tarihsel sırayı korur.
+
+## Mevcut #94 ile mobil devam hazırlığı
+
+Kullanıcı yeniden üretim olmadan aynı çıktılarla ölçümü istedi. Kapanmış ledger'ı
+değiştirmeyen, kalan read/auth tüketimini ve ilk son tarihi devralan dar test girişi
+eklendi. Create/observe/yayın/worker/migration kapalıdır. Üç bağımsız incelemenin
+üç patch'i giderildi. Wrapper tam paket **482 testle**, mobil Python21 ve launcher
+Python13 testle geçti. İlk tam test Docker kapalı olduğu için ortam hatası vermişti;
+mevcut Colima socket'i seçilince testler gerçek PostgreSQL15.19 ile geçti.
+
+İlk 900 saniyelik pencere yerel kontroller sırasında doldu. Gerçek Java girişinde
+context açılmadan ret doğrulandı. Child ledger ve mobile attempt oluşmadı; yeni
+cloud/auth/medya çağrısı yoktur. Hazır QA APK'sı ölçüm için yapılandırılmadı.
+[Hazırlık makbuzu](mobile-only-preparation-2026-10-17.json) bu sınırı kaydeder.
+Önceki ledger ve tüm hata makbuzları korunur. Mobil karşılaştırma tamamlanmadı.
+
+[Tek ek ölçüm penceresi önerisi](mobile-only-window-proposal-2026-10-17.md), yalnız
+180 saniyelik ek süre ve gerekirse tek ek QA girişi için ayrı kullanıcı kararı ister.
+Bu öneri onaylanmış veya yürütülmüş sayılmaz. Diğer toplam çağrı/byte sınırları korunur.

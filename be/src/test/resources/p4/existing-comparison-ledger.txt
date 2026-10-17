@@ -1,0 +1,90 @@
+OPEN f024f17075a11cac9e61019503736cd384ac6ecf0db3236052c62df9fd439be3 1792269638011
+AUTH_LOGIN_RESERVED 1
+ACTION CREATE_ONE_CONTENT
+ACTION SEAL_CONTENT_ID
+SEALED_CONTENT 94
+ACTION PUBLISH_ONCE
+PREFLIGHT_SEALED 94
+PHASE_RESERVED 0 3 3 0 25165824 25165824
+CREATE_RESERVED 1 6336857 1 6336857 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9778.png
+READ_RESERVED 1 6336857 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9778.png
+SOURCE_VERSION 1792269645260365:0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd:6336857
+CREATE_RESERVED 2 12278424 2 12278424 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9816.png
+READ_RESERVED 2 12278424 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9816.png
+SOURCE_VERSION 1792269647269014:c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27:5941567
+CREATE_RESERVED 3 18401202 3 18401202 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9818.png
+READ_RESERVED 3 18401202 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9818.png
+SOURCE_VERSION 1792269648966682:169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7:6122778
+PHASE_RESERVED 1 3 9 3 25165824 75497472
+OBSERVE_RESERVED 1 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9778.png
+READ_RESERVED 4 24738059 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9778.png
+CREATE_RESERVED 4 24738059 4 24738059 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+READ_RESERVED 5 31074916 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+READ_RESERVED 6 37411773 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+OBSERVE_RESERVED 2 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9816.png
+READ_RESERVED 7 43353340 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9816.png
+CREATE_RESERVED 5 30679626 5 30679626 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+READ_RESERVED 8 49294907 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+READ_RESERVED 9 55236474 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+OBSERVE_RESERVED 3 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9818.png
+READ_RESERVED 10 61359252 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/canonical/9818.png
+CREATE_RESERVED 6 36802404 6 36802404 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+READ_RESERVED 11 67482030 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+READ_RESERVED 12 73604808 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+PHASE_RESERVED 2 4 8 5 33554432 67108864
+ACTION RECONCILE_CAPTURE
+READ_RESERVED 13 79941665 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+CREATE_RESERVED 7 43139261 7 43139261 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+READ_RESERVED 14 86278522 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+READ_RESERVED 15 92615379 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+CREATE_RESERVED 8 49476118 7 43139261 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+ACTION EXPECTED_CAPTURE_CONFLICT
+OBSERVE_RESERVED 4 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+READ_RESERVED 16 98952236 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+READ_RESERVED 17 104893803 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+CREATE_RESERVED 9 55417685 8 49080828 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27
+READ_RESERVED 18 110835370 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27
+READ_RESERVED 19 116958148 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+CREATE_RESERVED 10 61540463 9 55203606 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7
+READ_RESERVED 20 123080926 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7
+OBSERVE_RESERVED 5 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+OBSERVE_RESERVED 6 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+OBSERVE_RESERVED 7 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+OBSERVE_RESERVED 8 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+SEALED_JOB bb9ae40b-e5ab-4054-885e-0b1fc14e841e
+PHASE_RESERVED 3 4 12 0 33554432 100663296
+ACTION RUN_EXACT_JOB
+READ_RESERVED 21 129417783 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+CREATE_RESERVED 11 64833184 10 58496327 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/230126349cc9db0487e2f77b0d488e53b4804acf2cd76d79b286fe54eb84e2f4.png
+READ_RESERVED 22 132710504 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/230126349cc9db0487e2f77b0d488e53b4804acf2cd76d79b286fe54eb84e2f4.png
+READ_RESERVED 23 136003225 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/230126349cc9db0487e2f77b0d488e53b4804acf2cd76d79b286fe54eb84e2f4.png
+READ_RESERVED 24 142340082 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd
+CREATE_RESERVED 12 68125905 11 61789048 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45.png
+READ_RESERVED 25 145632803 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45.png
+READ_RESERVED 26 148925524 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45.png
+READ_RESERVED 27 154867091 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27
+CREATE_RESERVED 13 71418626 12 65081769 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92.png
+READ_RESERVED 28 158159812 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92.png
+READ_RESERVED 29 161452533 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92.png
+READ_RESERVED 30 167575311 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/sources/169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7
+CREATE_RESERVED 14 74711347 13 68374490 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226.png
+READ_RESERVED 31 170868032 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226.png
+READ_RESERVED 32 174160753 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226.png
+PHASE_RESERVED 4 0 8 0 0 67108864
+ACTION RECONCILE_ADOPT
+READ_RESERVED 33 180497610 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+READ_RESERVED 34 186834467 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/8bd9c5c3-d064-449c-b9bd-e1210157841b
+READ_RESERVED 35 192776034 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/e0258e86-c729-4a1f-9b7e-8d61adffa380
+READ_RESERVED 36 198898812 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/admitted/c450480e-ed5f-4cd6-9762-46503c0e1b33
+READ_RESERVED 37 202191533 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/230126349cc9db0487e2f77b0d488e53b4804acf2cd76d79b286fe54eb84e2f4.png
+READ_RESERVED 38 205484254 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45.png
+READ_RESERVED 39 208776975 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92.png
+READ_RESERVED 40 212069696 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226.png
+FIXTURE_LIVE 94
+PHASE_RESERVED 5 0 24 0 0 201326592
+MEDIA_READY 94
+AUTH_RESERVED 2
+AUTH_RESERVED 3
+READ_RESERVED 41 215362417 local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09/reading/renditions/8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45.png
+AUTH_RESERVED 4
+CLOSED MEDIA_OWNERSHIP_RELEASED
