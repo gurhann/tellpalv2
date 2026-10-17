@@ -89,6 +89,7 @@ and broadly reusable (ADR-0001, ADR-0002, ADR-0004).
 
 ## Local Development Defaults
 
+- [P3 yerel CMS deneme rehberi](p3-local-cms-test.md): ortak storage path builder tek segmentleri korur; yalnız P2 ile uyumlu güvenli `local/test` alt prefix'leri kabul eder (ADR-0023). Launcher çocuk süreçlerinde legacy poller'ı kapatır ve onaylı UUID prefix'ini sabitler. Üretim varsayılanları değişmez; bulut denemesi kendi açık onay sınırına tabidir.
 - Always use existing Firebase UID `jLRypTmoBrhhX21HsDJojurcKTC3` for real authenticated development and QA unless the user explicitly changes the selection. Read `tools/mobile-test-account.json`; verify existence/enabled status before obtaining temporary sessions and store tokens outside the repository. This user-approved default does not change production access, account claims/subscriptions, synthetic unit fixtures, or the backend's empty-by-default test allowlist (ADR-0019).
 - The backend does not auto-seed sample CMS content for local environments.
 - `be/docs/admin-api-rules.md` is the canonical CMS admin validation and precondition reference for frontend and local seed work.

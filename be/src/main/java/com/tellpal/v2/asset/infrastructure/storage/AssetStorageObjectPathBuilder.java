@@ -76,8 +76,10 @@ public class AssetStorageObjectPathBuilder {
             throw new IllegalArgumentException("Firebase storage path prefix must not be blank");
         }
         String normalized = pathPrefix.trim().toLowerCase(Locale.ROOT);
-        if (normalized.contains("/") || normalized.contains("\\")) {
-            throw new IllegalArgumentException("Firebase storage path prefix must not contain path separators");
+        // ADR-0023: yalnız local/test denemeleri güvenli alt prefix ile ayrıştırılabilir.
+        if (normalized.contains("\\") || (normalized.contains("/")
+                && !normalized.matches("(local|test)(/[A-Za-z0-9_-]+)*"))) {
+            throw new IllegalArgumentException("Firebase storage alt prefix'i yalnız güvenli local/test segmentleri içerebilir");
         }
         return normalized;
     }

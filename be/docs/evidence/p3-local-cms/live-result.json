@@ -1,0 +1,101 @@
+{
+  "scope": "INTERNAL_LOCAL_TEST",
+  "contentId": 93,
+  "language": "tr",
+  "state": "LIVE",
+  "generation": 2,
+  "liveGeneration": 2,
+  "jobId": "1c61e316-9df1-4994-be1a-167a833a747c",
+  "jobStatus": "COMPLETED",
+  "attempt": 1,
+  "revision": "5d7bc3793d933e2b30f09ebbd63d590e798ecd3e736728004b91e19ab2ef264e",
+  "manifestDigest": "308d8b3f997111f9fc5c936e7dc9c1200fd0ef897948e291f39702513ef0f063",
+  "runtime": {
+    "arch": "aarch64",
+    "java": "25.0.2",
+    "os": "Mac OS X",
+    "vendor": "Homebrew",
+    "vm": "OpenJDK 64-Bit Server VM"
+  },
+  "encoder": {
+    "class": "com.sun.imageio.plugins.png.PNGImageWriter",
+    "compressionMode": "MODE_EXPLICIT",
+    "compressionQuality": "1.0",
+    "compressionType": "Deflate",
+    "format": "PNG",
+    "metadata": "NONE",
+    "progressive": "DISABLED",
+    "provider": "com.sun.imageio.plugins.png.PNGImageWriterSpi",
+    "version": "1.0"
+  },
+  "limits": {
+    "allowGrowth": true,
+    "concurrency": 1,
+    "directMiB": 8,
+    "diskBytes": 2100000,
+    "encoderThreads": 1,
+    "growthEvidence": "P3_LOCAL_CMS_SYNTHETIC_RGB8_80X60_TO_40X30_PNG_GROWTH_APPROVED",
+    "heapMiB": 64,
+    "height": 30,
+    "maxOutputBytes": 1000000,
+    "maxPixels": 100000,
+    "maxSourceBytes": 1000000,
+    "parentMemoryBytes": 16000000,
+    "processMiB": 256,
+    "revisionMillis": 30000,
+    "sourceMillis": 5000,
+    "width": 40
+  },
+  "availability": {
+    "revision": "5d7bc3793d933e2b30f09ebbd63d590e798ecd3e736728004b91e19ab2ef264e",
+    "epoch": 2,
+    "valid": true,
+    "checked_at": "2026-10-17T14:44:32.300374+03:00"
+  },
+  "independentPersistedVerification": [
+    {
+      "valid": true,
+      "detail": "Fresh pinned stored-object verification",
+      "checked_at": "2026-10-17T14:44:32.289587+03:00"
+    }
+  ],
+  "existing91PreservedAfterLive": true,
+  "outputs": [
+    {
+      "role": "READING_COVER",
+      "width": 40,
+      "height": 30,
+      "stored": {
+        "bytes": 3698,
+        "mime": "image/png",
+        "path": "local/p3-cms-d36eb058-1d59-48f0-a37d-b81d8b92fb4e/reading/renditions/d18ebeabc4aa35c25d0cfc87f40f9fe09458462777d68f58f851ea2ba2590cfb.png",
+        "version": "1792237466182281"
+      },
+      "sha256": "889d66e1585a98db5eb633c0484ee5327f10b55935bbecbbd2e10316d2dd10e6"
+    },
+    {
+      "role": "READING_DETAIL",
+      "width": 40,
+      "height": 30,
+      "stored": {
+        "bytes": 3698,
+        "mime": "image/png",
+        "path": "local/p3-cms-d36eb058-1d59-48f0-a37d-b81d8b92fb4e/reading/renditions/8099338aa51738330a22ca3a26953ac483bdef00f74dfcba795786abc1259695.png",
+        "version": "1792237468043766"
+      },
+      "sha256": "889d66e1585a98db5eb633c0484ee5327f10b55935bbecbbd2e10316d2dd10e6"
+    },
+    {
+      "role": "READING_PAGE",
+      "width": 40,
+      "height": 30,
+      "stored": {
+        "bytes": 3698,
+        "mime": "image/png",
+        "path": "local/p3-cms-d36eb058-1d59-48f0-a37d-b81d8b92fb4e/reading/renditions/050664f54bb24ed8cf15e417774bdafceb6c1fecb9d75d2af99471987b362ff6.png",
+        "version": "1792237469916765"
+      },
+      "sha256": "889d66e1585a98db5eb633c0484ee5327f10b55935bbecbbd2e10316d2dd10e6"
+    }
+  ]
+}

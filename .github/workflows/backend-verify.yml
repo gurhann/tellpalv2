@@ -34,5 +34,8 @@ jobs:
       - name: Make Maven wrapper executable
         run: chmod +x mvnw
 
+      - name: Python launcher testlerini çalıştır
+        run: python3 -m unittest discover -s tools -p 'test_*.py' -v
+
       - name: Run backend verify
         run: ./mvnw verify
