@@ -15,6 +15,35 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 class ReadingImageProcessTest {
     @TempDir Path directory;
+    @Test void realChildPreservesEveryRgbPixelAndCompressesAgainstUncompressedControl() throws Exception {
+        byte[] original=ReadingFixtures.quadrants("PNG");
+        var p=ReadingFixtures.profile();
+        var profile=new TestProfile(80,60,p.maxSourceBytes(),p.maxOutputBytes(),p.maxPixels(),p.parentMemoryBytes(),
+                p.heapMiB(),p.directMiB(),p.processMiB(),p.diskBytes(),p.sourceMillis(),p.revisionMillis(),1,1,true,p.growthEvidence());
+        var expected=javax.imageio.ImageIO.read(new ByteArrayInputStream(original));
+        var writer=javax.imageio.ImageIO.getImageWritersByFormatName("PNG").next();
+        var control=new ByteArrayOutputStream();
+        try(var stream=javax.imageio.ImageIO.createImageOutputStream(control)) {
+            writer.setOutput(stream);var parameters=writer.getDefaultWriteParam();
+            parameters.setCompressionMode(javax.imageio.ImageWriteParam.MODE_EXPLICIT);
+            parameters.setCompressionType("Deflate");parameters.setCompressionQuality(1.0f);
+            parameters.setProgressiveMode(javax.imageio.ImageWriteParam.MODE_DISABLED);
+            writer.write(null,new javax.imageio.IIOImage(expected,null,null),parameters);
+        } finally { writer.dispose(); }
+        var process=new ReadingImageProcess();byte[] output=process.convert(original,profile);
+        Path persisted=directory.resolve("compressed.png");Files.write(persisted,output);
+        var actual=javax.imageio.ImageIO.read(persisted.toFile());
+        assertThat(actual.getWidth()).isEqualTo(80);assertThat(actual.getHeight()).isEqualTo(60);
+        assertThat(actual.getRGB(0,0,80,60,null,0,80)).isEqualTo(expected.getRGB(0,0,80,60,null,0,80));
+        assertThat(output.length).isLessThan(control.size()/4);
+        assertThat(ReadingProfiles.capture(Role.READING_PAGE,profile).descriptor()).contains("\"compressionQuality\":\"0.0\"");
+        assertThat(ProcessHandle.of(process.lastPid()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+
+        var bounded=new TestProfile(80,60,p.maxSourceBytes(),output.length-1,p.maxPixels(),p.parentMemoryBytes(),
+                p.heapMiB(),p.directMiB(),p.processMiB(),p.diskBytes(),p.sourceMillis(),p.revisionMillis(),1,1,true,p.growthEvidence());
+        assertThatThrownBy(() -> process.convert(original,bounded)).hasMessageContaining("OUTPUT_BYTE_LIMIT");
+        assertThat(ProcessHandle.of(process.lastPid()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+    }
     @Test void realChildRendersDirectOriginalAndVerifiesPersistedPixels() throws Exception {
         byte[] original=ReadingFixtures.quadrants("PNG"); String sha=ReadingIdentity.sha(original);
         var process=new ReadingImageProcess(); byte[] output=process.convert(original,ReadingFixtures.profile());

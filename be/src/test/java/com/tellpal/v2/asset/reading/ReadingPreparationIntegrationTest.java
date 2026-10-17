@@ -221,6 +221,48 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(jdbc.queryForObject("select count(*) from reading_image_jobs",Integer.class)).isEqualTo(1);
         assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isEqualTo(1);
     }
+    @Test void oldPngEncoderIdentityGetsDistinctWorkAndIsRejectedBeforeConversion() throws Exception {
+        var current=service.prepare(ReadingFixtures.snapshot(),ReadingFixtures.profiles());
+        var work=jobs.work(current.jobId());
+        var legacyProfiles=new EnumMap<Role,Profile>(Role.class);
+        var mapper=new ObjectMapper();
+        for(var entry:work.profiles().entrySet()) {
+            var profile=entry.getValue();
+            String legacyDescriptor=profile.descriptor().replace("\"compressionQuality\":\"0.0\"","\"compressionQuality\":\"1.0\"");
+            assertThat(legacyDescriptor).isNotEqualTo(profile.descriptor());
+            var descriptor=mapper.readValue(legacyDescriptor,new com.fasterxml.jackson.core.type.TypeReference<Map<String,Object>>() {});
+            var legacy=new Profile(profile.limits(),ReadingIdentity.canonical(descriptor),ReadingIdentity.hash("tellpal.reading.profile.v1",descriptor));
+            assertThat(legacy.limits()).isEqualTo(profile.limits());
+            assertThat(legacy.fingerprint()).isNotEqualTo(profile.fingerprint());legacyProfiles.put(entry.getKey(),legacy);
+        }
+        var fingerprints=new TreeMap<String,Object>();legacyProfiles.forEach((role,profile) -> fingerprints.put(role.name(),profile.fingerprint()));
+        var obligations=work.sources().stream().map(source -> Map.of("binding",source.binding(),
+                "rendition",ReadingWork.rendition(source,legacyProfiles.get(source.binding().role())),"sourceAuthority","LEGACY_CAPTURE")).toList();
+        String revision=ReadingIdentity.hash("tellpal.reading.revision.v1",Map.of("schema",1,"type","STORY","experience","READING",
+                "contentId",work.snapshot().contentId(),"language",work.snapshot().language(),"obligations",obligations));
+        var legacyWork=new ReadingWork(work.snapshot(),work.sources(),legacyProfiles,work.sourceSet(),ReadingIdentity.hash("tellpal.reading.profiles.v1",fingerprints),revision);
+        var legacy=jobs.schedule(legacyWork);
+        assertThat(legacy.jobId()).isNotEqualTo(current.jobId());assertThat(legacy.revision()).isNotEqualTo(current.revision());
+        assertThat(legacyWork.sourceSet()).isEqualTo(work.sourceSet());assertThat(legacyWork.profileSet()).isNotEqualTo(work.profileSet());
+        for(var source:work.sources()) assertThat(ReadingWork.rendition(source,legacyProfiles.get(source.binding().role())))
+                .isNotEqualTo(ReadingWork.rendition(source,work.profiles().get(source.binding().role())));
+        var conversions=new java.util.concurrent.atomic.AtomicInteger();
+        var guarded=new com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess() {
+            @Override public byte[] convert(byte[] original,TestProfile profile) {
+                conversions.incrementAndGet();throw new AssertionError("Eski profil dönüşüme ulaşmamalı");
+            }
+        };
+        new ReadingImageWorker(service,jobs,disk.storage(),Clock.systemUTC(),guarded).run(legacy.jobId());
+        assertThat(conversions.get()).isZero();
+        assertThat(jobs.find(legacy.jobId()).state()).isEqualTo(State.FAILED);
+        assertThat(jobs.find(legacy.jobId()).diagnostic()).contains("ENCODER_RUNTIME_PROFILE_CHANGED");
+        assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isZero();
+        worker.run(current.jobId());var ready=service.find(current.jobId());
+        assertThat(ready.state()).withFailMessage("%s",ready.diagnostic()).isEqualTo(State.COMPLETED);
+        var manifest=mapper.readValue(ready.manifest(),Manifest.class);
+        assertThat(manifest.outputs()).allSatisfy(output -> assertThat(output.profileFingerprint()).isEqualTo(work.profiles().get(output.binding().role()).fingerprint()));
+        assertThat(jobs.find(legacy.jobId()).state()).isEqualTo(State.FAILED);
+    }
     @Test void equalPngBytesRequireExplicitGrowthAdmissionBeforeRealWorkerCanComplete() throws Exception {
         assertPngGrowthAdmission(true);
     }
@@ -230,15 +272,19 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
     private void assertPngGrowthAdmission(boolean equalOutput) throws Exception {
         byte[] original;
         if(equalOutput) {
-            // A real engine-produced source remains byte-identical after an identity-size PNG pass.
+            // Gerçek motorun çıktısı aynı boyutta yeniden kodlandığında byte kimliğini korur.
             original=new com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess()
                     .convert(ReadingFixtures.image(80,60),ReadingFixtures.profile());
         } else {
-            var solid=new java.awt.image.BufferedImage(80,60,java.awt.image.BufferedImage.TYPE_INT_RGB);
+            var checkerboard=new java.awt.image.BufferedImage(44,33,java.awt.image.BufferedImage.TYPE_INT_RGB);
+            for(int y=0;y<33;y++) for(int x=0;x<44;x++) checkerboard.setRGB(x,y,((x+y)&1)==0?0:0xffffff);
             var encoded=new java.io.ByteArrayOutputStream();
-            assertThat(javax.imageio.ImageIO.write(solid,"PNG",encoded)).isTrue();
+            assertThat(javax.imageio.ImageIO.write(checkerboard,"PNG",encoded)).isTrue();
             original=encoded.toByteArray();
         }
+        byte[] candidate=new com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess().convert(original,ReadingFixtures.profile());
+        if(equalOutput) assertThat(candidate).isEqualTo(original);
+        else assertThat(candidate.length).isGreaterThan(original.length);
         for(String path:List.of("original/cover","original/page")) {
             disk.objects.remove(path);Files.delete(disk.file(path));disk.createImmutable(path,"image/png",original);
         }
@@ -249,7 +295,7 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(jobs.find(denied.jobId()).diagnostic()).contains("OUTPUT_GROWTH_NOT_ADMITTED");
         assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isZero();
 
-        String evidence="Synthetic local PNG equal/growing-byte admission fixture; no production qualification";
+        String evidence="SYNTHETIC_LOCAL_PNG_EQUAL_GROWING_BYTES_NO_PRODUCTION_QUALIFICATION";
         var admittedProfile=profileWith(40,true,evidence);
         var admittedProfiles=Map.of(Role.READING_COVER,admittedProfile,Role.READING_DETAIL,admittedProfile,Role.READING_PAGE,admittedProfile);
         var admitted=service.prepare(ReadingFixtures.snapshot(),admittedProfiles);

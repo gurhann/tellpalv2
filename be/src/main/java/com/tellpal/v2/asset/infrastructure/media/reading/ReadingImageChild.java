@@ -42,7 +42,7 @@ public final class ReadingImageChild {
         var writer=ImageIO.getImageWritersByFormatName("PNG").next();
         try(var output=new BoundedImageOutput(Path.of(args[1]).toFile(),profile.maxOutputBytes())) {
             writer.setOutput(output); var parameters=writer.getDefaultWriteParam();
-            parameters.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); parameters.setCompressionType("Deflate"); parameters.setCompressionQuality(1.0f);
+            parameters.setCompressionMode(ImageWriteParam.MODE_EXPLICIT); parameters.setCompressionType("Deflate"); parameters.setCompressionQuality(com.tellpal.v2.asset.domain.reading.ReadingProfiles.PNG_COMPRESSION_QUALITY);
             parameters.setProgressiveMode(ImageWriteParam.MODE_DISABLED);
             writer.write(null,new IIOImage(result,null,null),parameters);
         } finally { writer.dispose(); }

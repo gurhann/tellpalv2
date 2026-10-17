@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "archivedPublicEvidence": {
+    "verification.json": {
+      "archive": "verification-before-optimization-guard.json",
+      "sha256": "ec773f06723017a1080e352c51b5c3bf0ecddfab3e78dee9deb51c80ac5cb0e6"
+    },
+    "probe.log": {
+      "archive": "probe-before-optimization-guard.log",
+      "sha256": "f4b8e2e92c4ba925fbdf1b522d3cd9384a9cee680dffaeed871c232a01148631"
+    }
+  },
+  "protectedSha256": {
+    "be/var/png-lossless-run-20261018-5e51e0a4/candidate.jar": "618e80178b8734c05d5b71abb6913528c264d7d773864bde3745e2079cbc70b4",
+    "be/var/png-lossless-run-20261018-5e51e0a4/probe-classes/PngLosslessProbe.class": "1681b16e7f784f6843603ebcbdca66dbf6ed3aee22d7cdb0d8df70983b039192",
+    "be/var/png-lossless-run-20261018-e81f83b0/candidate.jar": "618e80178b8734c05d5b71abb6913528c264d7d773864bde3745e2079cbc70b4",
+    "be/var/png-lossless-run-20261018-e81f83b0/new/9778.png": "7744c016ca5a8df9700d0ec6e93ec40955e1afafcd810b527c7611deaefff7bd",
+    "be/var/png-lossless-run-20261018-e81f83b0/new/9816.png": "5b345614b0d89f9946eddb89996dc0d3c1bcc9162a16922c4efe11b40ed0392b",
+    "be/var/png-lossless-run-20261018-e81f83b0/new/9818.png": "54c331c1007c6552f5f590e3e315664d27c17c2e5efe3ec41927417d6697904b",
+    "be/var/png-lossless-run-20261018-e81f83b0/new/metadata.json": "90d481e59a1ed969d5c1ac3130b31c2d5cfbbc9647dd0451aab9fdce889e82cd",
+    "be/var/png-lossless-run-20261018-e81f83b0/old/9778.png": "faca77f406a6545600582fe445adb79f68ed5fc408964f740e13b1bddcac03b3",
+    "be/var/png-lossless-run-20261018-e81f83b0/old/9816.png": "257be177b37e44fdcca263fda61635365db26cebd4aec940b79375a4650c3739",
+    "be/var/png-lossless-run-20261018-e81f83b0/old/9818.png": "99e87d97cce8fed29cf938e3c0dcc606776a3568b22271ee42d55e8ddc35b7e9",
+    "be/var/png-lossless-run-20261018-e81f83b0/old/metadata.json": "724e1da5c89de53740cba802b5047b631efd6ce766af4b891052d86200fc07f4",
+    "be/var/png-lossless-run-20261018-e81f83b0/probe-classes/PngLosslessProbe.class": "1681b16e7f784f6843603ebcbdca66dbf6ed3aee22d7cdb0d8df70983b039192",
+    "be/docs/evidence/png-lossless-compression/verification-before-optimization-guard.json": "ec773f06723017a1080e352c51b5c3bf0ecddfab3e78dee9deb51c80ac5cb0e6",
+    "be/docs/evidence/png-lossless-compression/probe-before-optimization-guard.log": "f4b8e2e92c4ba925fbdf1b522d3cd9384a9cee680dffaeed871c232a01148631",
+    "be/docs/evidence/png-lossless-compression/probe-setuid-rejection.log": "08ce46298a01cb717f007d27bebb77a843704210c43b6c8df67e54cadf3066f5",
+    "be/docs/evidence/png-lossless-compression/focused-tests.log": "b0c15e00e478536e41f61590ef178cabcd56149d6de0064ff4542b7e824bcb50",
+    "be/docs/evidence/png-lossless-compression/full-verify.log": "50337bb0253af0ed6468cd52b40258683b5a22bc9f94beaa2cf329bc4a35c044"
+  },
+  "allPreviousLocalRunAndArchivedEvidenceHashesUnchanged": true,
+  "pythonOptimizationGuard": {
+    "modes": [
+      "-O",
+      "PYTHONOPTIMIZE=1"
+    ],
+    "testCount": 2,
+    "testLogSha256": "27456bd2a896c6bb313e4c3d5657f08c391ff235bff911db6320b4c8747e3b64"
+  },
+  "newVerificationSha256": "6d3b7a4432a8f94b6ff073d332cbcd98dd0e4ac2338d2f6b46606e1c030a7ce2",
+  "newProbeLogSha256": "f4b8e2e92c4ba925fbdf1b522d3cd9384a9cee680dffaeed871c232a01148631",
+  "currentRun": "be/var/png-lossless-run-20261018-c1f43a2e"
+}

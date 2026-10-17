@@ -7,6 +7,8 @@ import com.tellpal.v2.asset.api.ReadingImagePreparationApi.*;
 
 /** Captures every engine setting including concrete codec/provider/runtime and synthetic admission. */
 public final class ReadingProfiles {
+    /** PNG writer'da 0.0 en güçlü kayıpsız DEFLATE ayarıdır; 1.0 sıkıştırmayı kapatır. */
+    public static final float PNG_COMPRESSION_QUALITY=0.0f;
     private ReadingProfiles() { }
     private static final class RuntimeEvidence {
         private static final Map<String,Object> VALUE=runtimeEvidence();
@@ -70,7 +72,7 @@ public final class ReadingProfiles {
                 "vm",System.getProperty("java.vm.name"),"os",System.getProperty("os.name"),"arch",System.getProperty("os.arch")));
         descriptor.put("runtimeAndEngineBinaries",RuntimeEvidence.VALUE);
         descriptor.put("encoder",Map.of("class",writer.getClass().getName(),"provider",provider.getClass().getName(),"version",provider.getVersion(),
-                "format","PNG","compressionMode","MODE_EXPLICIT","compressionType","Deflate","compressionQuality","1.0",
+                "format","PNG","compressionMode","MODE_EXPLICIT","compressionType","Deflate","compressionQuality",Float.toString(PNG_COMPRESSION_QUALITY),
                 "metadata","NONE","progressive","DISABLED"));
         descriptor.put("transform",Map.of("fit","EXACT_ASPECT_FIT_FLOOR","sourceMinimum","TARGET_BOX_BOTH_AXES","upscale",false,"resampler","JAVA2D_BICUBIC",
                 "rendering","QUALITY","colorRendering","QUALITY","outputType","TYPE_INT_RGB","directFromOriginal",true));
