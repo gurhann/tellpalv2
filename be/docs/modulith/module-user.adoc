@@ -9,6 +9,7 @@
 |Bean references
 |* `c.t.v.c.api.LibraryHomeQueryApi` (in Category)
 * `c.t.v.c.api.LibraryStoryDetailQueryApi` (in Category)
+* `c.t.v.c.api.ReadingImageComparisonApi` (in Content)
 * `c.t.v.a.api.AssetRegistryApi` (in Asset)
 * `c.t.v.a.api.StoryPageMediaManifestApi` (in Asset)
 * `c.t.v.a.api.AssetProcessingApi` (in Asset)

@@ -64,3 +64,49 @@ Ana oturum F1–F6 düzeltmelerini son kod ve çalışan regresyonlar üzerinden
 Onaylanan frozen spec bloğu ilk inceleme snapshot'ıyla birebir aynı kaldı. `.memlog.md` SHA-256 değeri uygulama öncesi ve sonrasında `338cc79fa0194c80e533a1bfc01c0a3349959cf88a6dfd5177c9c8f3e9e1800c` olarak doğrulandı.
 
 Doğrulama ayrıntıları ve Java golden yeniden üretimi [kanıt belgesindedir](verification.md). Bu kapanış yalnız P4a1'i kapsar; P4a2 gerçek hikâye/teslimat ve P4b kaynak/yaşam döngüsü kapıları açıktır. Fiziksel cihaz, gerçek transfer/decode veya üretim kalite kabulü verilmez.
+
+## P4a2 bağımsız inceleme ve onarım
+
+Tarih: 2026-10-17. Başlangıç: `39fee0c9106cd908f1aaade41545cdf858a36237`.
+Durum: 14 bulgu onarıldı ve doğrulandı. İkinci bağımsız sınır durumu ve doğrulama incelemesinde kalan somut kusur bulunmadı. Bu bölüm P4a1 sonuçlarını değiştirmez.
+
+Üç context-free BMad incelemesi aynı tam diff üzerinde yürüdü: blind hunter, edge-case hunter ve
+verification-gap reviewer. Takip edilmeyen dosyalar da diff'e alındı; başlangıçtan kalan ilgisiz
+`.memlog.md` dışlandı ve SHA-256 değeri korundu. İnceleme için staging yapılmadı.
+
+Storage transport bulgusu iki incelemede aynı iddia ve aynı onarımla geldi; birleştirildi. Diğer
+iddialar bağımsız değerlendirildi. REST ve HTTP payload denetimindeki son iki bulgu ana oturumdan
+geldi. Aşağıdaki sonuçların tümü `patch`: davranış, erişim sınırı ve sayısal çalıştırma kapısı zaten
+onaylı sözleşmede tanımlı. Yeni ürün kararı veya profil gerektirmeyen teknik uygulama/test onarımıdır.
+Frozen kapsam değişmez; loopback gerektiren intent/spec boşluğu belirlenmedi.
+
+| Kimlik | Önem | Bulgu ve gerekli onarım | Kaynak |
+|---|---|---|---|
+| P4a2-F1 | yüksek | Transport 429/503/reset, byte bozulması gözlenmeden sağlıklı availability'yi kapatıyor. Kanıtlanmış bütünlük ile belirsiz transport sonucunu ayır. | Blind + edge |
+| P4a2-F2 | yüksek | Retire sonrası ilk LIVE anchor'ı kayboluyor; yeniden admission yeni yayını sessizce alabilir. Anchor'ı Cubit yaşamında koru. | Blind |
+| P4a2-F3 | yüksek | Raw URI gate'i yüzde kodlamasıyla aynı handler'a gelen isteği atlayabilir. Handler ile tutarlı yol ve gerçek HTTP testi kullan. | Edge |
+| P4a2-F4 | orta | Büyük deadline SDK/int dönüşümünde taşabilir. Desteklenen teknik süre aralığını I/O öncesi reddet. | Edge |
+| P4a2-F5 | yüksek | Yavaş HTTP tüketimi buffer/permit'i sınırsız tutabilir. Açık sürede nonblocking yazım ve gerçek cleanup kanıtı gerekir. | Edge |
+| P4a2-F6 | yüksek | RawImage'ın native klonu sonraki frame'e kadar yaşar; yeni decode öncesi sahiplik sayımı eksik kalır. Gizli klonu kaldır veya gerçek detach'i bekle. | Edge |
+| P4a2-F7 | orta | Retire seçili sayfa/kolu varsayılana döndürüyor. Seçimi koru. | Edge |
+| P4a2-F8 | orta | Cached admission farklı istenen contentId altında kullanılabilir. Byte çağrısından önce bağlamı reddet. | Edge |
+| P4a2-F9 | orta | Canonical full-source decode kararı gerçek başarılı Cubit/view yoluyla sınanmıyor. Farklı kaynak/rendition boyutları ve gerçek PNG kullan. | Verification gap |
+| P4a2-F10 | orta | I/O sonrası bearer kontrolü kaldırılırsa testler fark etmiyor. İlk başarılı/son revoked doğrulama ve boş image body testi ekle. | Verification gap |
+| P4a2-F11 | orta | Ledger testi doğrudan reserve çağırıyor; gerçek delivery bağlantısı korumasız. Başarılı/başarısız read ve restart sonrası tavanı uçtan uca sına. | Verification gap |
+| P4a2-F12 | orta | Yeni endpoint mobile OpenAPI grubunda yok; response şemaları eksik. Dar yolu ve typed success/ProblemDetail sözleşmesini doğrula. | Ana oturum |
+| P4a2-F13 | orta | HTTP otomatik açma davranışı encoded payload sayımını belirsiz bırakıyor. Identity aktarımı ve Content-Encoding reddi ile semantiği sabitle. | Ana oturum |
+| P4a2-F14 | yüksek | I/O sonrası content kesitinden sonra ikinci Firebase doğrulaması dış I/O yapıyor. Son bearer sonucundan sonra aynı kimliğin DB-only uygunluğunu yeniden denetle. | Ana oturum |
+
+İlk uygulama ağacı 470 Surefire + 13 Failsafe ve 406 Flutter testiyle geçti. İnceleme bulguları bu
+sayının yeterlilik garantisi olmadığını gösterdi; onarım sonrası güncel sonuçlar aşağıdaki kapanışta kayıtlıdır.
+Fiziksel cihaz, gerçek Firebase teslimatı, üretim kalite ve sayısal profil kabulü bu incelemeyle kapanmaz.
+
+### P4a2 kapanış sonucu
+
+F1–F14 için uygulanan onarım ve çalışan test adları [doğrulama matrisinde](verification.md) kayıtlıdır. İkinci edge-case incelemesi yedi davranış bulgusunun kapandığını; ikinci verification-gap incelemesi gerçek PNG, I/O sonrası bearer/DB kesiti ve gerçek delivery bütçe bağlantısı testlerinin eksikleri kapattığını doğruladı. Yeni bulgu gelmedi.
+
+Son tam backend doğrulaması **470 Surefire + 23 Failsafe** testiyle geçti; failure/error/skip sıfırdır. Son Flutter turunda **412 test** geçti. Analyzer ve generator başarılıdır. Onarım sonrası loglar `/tmp/p4a2-repair-verify.log`, `/tmp/p4a2-repair-flutter.log`, `/tmp/p4a2-repair-analyze-final.log` ve `/tmp/p4a2-repair-generator.log` dosyalarıdır. XML toplamları ana oturum tarafından ayrıca doğrulandı.
+
+Son salt okunur yerel uygulama DB kontrolünde schema sürümü `36`, legacy asset_processing `112` durumu `PENDING`, TR71 sayfa ve Türkçe illustration bağı sayısı `18/18` bulundu. V37 yalnız izole test DB'lerinde çalıştırıldı. CMS `node` PID `55056`, `5173` portunda çalışıyor; `8080` dinleyicisi yok. Backend/frontend durdurulmadı. Frozen kapsam ve ilgisiz `.memlog.md` SHA-256 değerleri başlangıçla aynıdır.
+
+Doğrulama için bu oturumda açılan mevcut Colima profili, çalışan konteyner kalmadığı doğrulandıktan sonra kapatıldı. VM diski silinmedi. Başlangıçtaki `desktop-linux` Docker context tercihi korundu; uygulama veritabanı ve CMS bu test VM'inde değildi.

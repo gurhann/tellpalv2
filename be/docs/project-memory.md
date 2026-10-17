@@ -120,3 +120,8 @@ Follow root `AGENTS.md` for pre-deploy checks and environment-driven configurati
 - new cross-module dependencies into internal packages
 - registry endpoints that fetch every aggregate and then filter, sort, or paginate in application memory
 - deploy changes that bypass `ops/railway/README.md`, hard-code Railway/Firebase secrets, or leave bootstrap credentials configured after use
+
+## Kontrollü QA görsel karşılaştırması
+
+- [ADR-0024](adr/ADR-0024-reading-image-comparison.md): yalnız P4a2 local/test girişinde `user → content::api → asset::api` yönü açılır. Gerçek revoke kontrollü bearer ve kanonik QA UID, sunucuda seçilmiş ücretsiz Türkçe iki sayfalı kopyanın retained LIVE'ını doğrular. TR71 kapsam dışıdır. Pinned byte/SHA/MIME/header/tam decode sonrası final DB kontrolü gerekir. `private,no-store`, HTTP body boyunca tek teslimat, restart ile sıfırlanmayan V37 mantıksal auth kontrolü ve storage payload okuması işlem/byte rezervasyonları uygulanır.
+- ADR-0018'in dar QA istisnası: bellek owned raster/codec ve klonlamayan `CustomPainter`/`paintImage`; disk/global ImageCache/precache yoktur. Normal tüketici cache kuralı değişmez. Sayısal run/profil/bütçe yoksa yalnız ağsız geometri modu açılır. Gerçek fixture/bulut çalışması ve fiziksel cihaz kabulü [ayrı kanıttır](evidence/p4-reading-images/verification.md).

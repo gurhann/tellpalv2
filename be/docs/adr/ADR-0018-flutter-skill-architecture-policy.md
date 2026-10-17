@@ -63,3 +63,11 @@ The backend remains governed by `architecture.md`; CMS rules remain in `cms/AGEN
 Supersedes the state-management/dependency-composition and routing technology selections in
 the 2026-09-25 mobile spine (AD-2 and AD-6), while preserving their behavioral invariants.
 No prior ADR is superseded.
+
+## P4a2 için sınırlı QA istisnası (2026-10-17)
+
+[ADR-0024](ADR-0024-reading-image-comparison.md), yalnız bağımsız local/test görsel karşılaştırmasında
+`CachedNetworkImage` kuralı yerine sahipliği açık bellek raster'ı ve klonlamayan `CustomPainter`/`paintImage` kullanımını onaylar.
+HTTP, buffer, descriptor, codec ve image açıkça kapatılır; disk/global ImageCache/precache kullanılmaz.
+Feature-first katmanlar, Freezed Cubit, injectable ve auto_route kuralları sürer. Normal tüketici
+cache davranışı ve P4b üretim politikası bu istisnayla değişmez.

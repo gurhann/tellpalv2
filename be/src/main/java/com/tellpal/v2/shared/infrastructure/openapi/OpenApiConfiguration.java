@@ -79,7 +79,8 @@ public class OpenApiConfiguration {
                         "/api/profiles",
                         "/api/profiles/**",
                         "/api/events",
-                        "/api/events/**")
+                        "/api/events/**",
+                        "/api/test/reading-image-comparison/**")
                 .build();
     }
 

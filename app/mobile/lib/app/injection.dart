@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'library_configuration.dart';
 import 'injection.config.dart';
+export 'reading_image_comparison_injection.dart';
 
 final libraryGetIt = GetIt.asNewInstance();
 @InjectableInit(

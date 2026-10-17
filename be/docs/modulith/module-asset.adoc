@@ -12,6 +12,7 @@
 * `c.t.v.a.api.LibraryCoverQueryApi` (via `c.t.v.a.application.LibraryCoverQueryService`)
 * `c.t.v.a.api.StoryDetailHeroQueryApi` (via `c.t.v.a.application.StoryDetailHeroQueryService`)
 * `c.t.v.a.api.StoryPageMediaManifestApi` (via `c.t.v.a.application.StoryPageMediaManifestService`)
+* `c.t.v.a.api.ReadingImageDeliveryApi` (via `c.t.v.a.application.reading.ReadingImageDeliveryService`)
 * `c.t.v.a.api.ReadingImagePreparationApi` (via `c.t.v.a.application.reading.ReadingImagePreparationService`)
 * `c.t.v.a.api.ReadingPublicationReadyApi` (via `c.t.v.a.application.reading.ReadingPublicationReadyService`)
 * `c.t.v.a.api.ReadingSourceAdmissionApi` (via `c.t.v.a.application.reading.ReadingSourceAdmissionService`)

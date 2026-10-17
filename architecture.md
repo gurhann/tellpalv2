@@ -148,7 +148,7 @@ Her modül mümkün olduğunca şu iç yapıyı izler:
 | `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ninni playback/enstrüman seçimleri, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access`, `lullaby_playbacks`, `instrument_catalogs`, `instrument_catalog_localizations`, `lullaby_instruments` | `shared`, `asset.api`, `category.api` |
 | `category` | Kategori yaşam döngüsü ve dil bazlı kürasyon | `categories`, `category_localizations`, `category_contents` | `shared`, `content.api`, `asset.api` |
 | `asset` | Medya asset kaydı, Firebase Storage referansları, işleme/paketleme pipeline'ı | `media_assets`, `asset_processing` benzeri işlem kayıtları | `shared`, `content.api` |
-| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api`, `category.api` |
+| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api`, `category.api`, yalnız local/test P4a2 için `content.api` (ADR-0024) |
 | `event` | İçerik ve uygulama event ingest, idempotency, batch sync | `content_events`, `app_events` | `shared`, `user.api`, `content.api` |
 | `purchase` | Ürün kataloğu, RevenueCat event ingest, attribution snapshot | `subscription_products`, `purchase_events`, `purchase_context_snapshots`, lookup tabloları | `shared`, `user.api`, `event.api`, `content.api` |
 
@@ -611,3 +611,15 @@ new intent. Manual editorial/processing flags cannot certify LIVE. The admin sta
 feedback identify this local/test contract and preserve unsaved input/language. Existing ordinary,
 listing and tester delivery, protected access, sessions, cache/retention and P4 consumer migration remain
 unchanged. Production activation and cloud execution need separate authorization and qualification.
+
+### Kontrollü QA görsel karşılaştırması (ADR-0024)
+
+Yalnız bağımsız local/test P4a2 girişinde `user → content::api → asset::api` yönü kullanılır.
+Gerçek revoke kontrollü bearer/tek QA UID, sunucuda seçilmiş ücretsiz Türkçe iki sayfalı kopya ve
+retained LIVE proof birlikte doğrulanır. I/O dışındaki kısa DB kesitleri aynı kimliği yeniden sınar.
+Teslimat generation-pinned canonical PNG veya doğrulanmış rendition byte'ıdır; tüm yanıtlar
+`private,no-store` taşır. V37 toplam mantıksal auth kontrolü ve storage payload okuması işlem/byte rezervasyonu restart ile sıfırlanmaz. HTTP body
+bitene kadar tek teslimat gate'i tutulur. Normal Library/detail/reader davranışı değişmez.
+Flutter'da yalnız bu QA kapsamı diske/global ImageCache'e yazmayan owned raster ve borrowing painter istisnasını
+kullanır. Sayısal ayarlar yokken yalnız ağsız geometri ölçülür. [ADR-0024](be/docs/adr/ADR-0024-reading-image-comparison.md)
+ve [kanıt kaydı](be/docs/evidence/p4-reading-images/verification.md) gerçek çalışma ve cihaz kapılarını ayırır.
