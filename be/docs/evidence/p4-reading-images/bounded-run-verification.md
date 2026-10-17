@@ -140,3 +140,9 @@ Sıradaki öneri [yerel klon devam planıdır](local-clone-recovery-2026-10-17.m
 Ek kullanıcı onayı bekliyor. Fiziksel Android/iPhone, gerçek medya payload/decode/bellek
 ve görsel kalite kanıtı hâlâ açık. Emülatörde ayrı QA paketi yapılandırma bekliyor;
 gerçek karşılaştırma görüntüsü gösterilmiş sayılmaz.
+
+Devam komutu otomatik onay denetiminden geçmedi. Denetim, hata sonrası aynı run ile
+klon oluşturma ve Java çalıştırıcısını başlatma için açık yeni insan onayı istedi.
+Komut süreç olarak oluşturulmadı; devam makbuzu/klon/backend/ledger oluşmadığı tekrar
+doğrulandı. Bu reddi aşan alternatif veya dolaylı yürütme yapılmadı. Somut devam planı
+onay bekliyor.

@@ -24,5 +24,7 @@
     "client14": "REJECTED_SERVER_VERSION_MISMATCH",
     "client18": "PASS"
   },
-  "physicalQualityEvidence": false
+  "physicalQualityEvidence": false,
+  "continuationAutoReview": "REJECTED_EXPLICIT_NEW_HUMAN_APPROVAL_REQUIRED",
+  "continuationExecuted": false
 }
