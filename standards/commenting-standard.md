@@ -6,7 +6,7 @@ This standard defines when comments are required, which comment type to use, and
 the comment must contain. Comments exist to expose intent, contracts, business rules, and
 surprising decisions. They do not exist to narrate obvious code.
 
-All durable engineering comments are written in English.
+Yeni veya yeniden yazılan mühendislik açıklamaları açık, sade Türkçeyle yazılır. Gerekli teknik terimler İngilizce kalabilir; kod kimlikleri ve komutlar çevrilmez.
 
 ## Comment Types
 
@@ -84,7 +84,7 @@ Allowed only when the comment includes:
 
 ## Required Format
 
-- English only
+- Açık ve sade Türkçe; gerektiğinde yerleşik İngilizce teknik terimler
 - concise, behavior-oriented tone
 - prefer one summary sentence and one short clarifying paragraph when needed
 - describe intent, constraints, side effects, and failure semantics
@@ -120,9 +120,9 @@ Comments are usually unnecessary for:
 
 ```java
 /**
- * Application service for rotating refresh tokens for admin sessions.
+ * Admin oturumlarının refresh token yenilemesini yöneten uygulama servisi.
  *
- * <p>Expired, reused, and revoked refresh tokens are rejected as business failures.
+ * <p>Süresi dolan, tekrar kullanılan veya iptal edilen refresh tokenlar reddedilir.
  */
 public class AdminAuthenticationService {
 ```

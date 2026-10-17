@@ -23,7 +23,7 @@ Read order:
 
 ## Coding and Documentation Defaults
 
-- Durable comments and decision artifacts are written in English.
+- Yeni belgeler, karar kayıtları ve kalıcı açıklamalar açık, sade Türkçeyle yazılır; gerekli teknik terimler İngilizce kalabilir.
 - Public contracts and use-case flows are documented with concise, behavior-oriented comments.
 
 ## Module Interaction Defaults

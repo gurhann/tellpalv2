@@ -22,7 +22,7 @@ read. It complements architecture documents and ADRs; it does not replace them.
 
 ## Style
 
-- English only
+- Açık ve sade Türkçe; gerektiğinde yerleşik İngilizce teknik terimler
 - concise, behavior-oriented wording
 - explain intent, side effects, and failure semantics
 - use inline comments sparingly

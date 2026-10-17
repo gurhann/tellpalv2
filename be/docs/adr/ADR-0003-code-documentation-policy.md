@@ -18,7 +18,7 @@ The project uses a selective documentation policy:
 - method docs for public use-case methods and non-obvious business behavior
 - selective domain comments for invariants, state transitions, and visibility rules
 
-All durable code documentation is written in English and kept concise and behavior-oriented.
+Kalıcı kod açıklamaları kısa, açık ve davranış odaklı yazılır. Dil için [ADR-0013](ADR-0013-communication-and-documentation-language.md) uygulanır: 2026-10-17 tarihinden itibaren Türkçe kullanılır; gerekli teknik terimler İngilizce kalabilir.
 
 ## Consequences
 

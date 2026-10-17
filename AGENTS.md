@@ -46,12 +46,17 @@ BMad workflows and their subagents use the model selected for the current sessio
 overrides when delegating unless the user explicitly requests a different model. Apply new user
 selections without an additional confirmation; see `be/docs/adr/ADR-0020-bmad-session-model-selection.md`.
 
-Use Turkish for conversations, questions, progress updates, and final summaries; English for
-new long technical documents, ADRs, project memory, code comments, and API documentation.
-Explicit language requests take precedence. Preserve existing Turkish documents during routine
-edits; translate on request or agreed replacement. Product localization keeps its audience language
-(ADR-0013). Keep rules concise without dropping unique safeguards; read deployment details when
-working on deployment and archived tasks only for relevant history (ADR-0015).
+İletişim ve bundan sonra üretilen tüm belgeler Türkçe olmalıdır. Bu kural teknik belgeler,
+spec ve planlar, ADR'ler, proje hafızası, raporlar, kullanım/operasyon rehberleri, API açıklamaları
+ve kod yorumları/Javadoc için de geçerlidir. Açık, sade ve doğrudan yaz; kısa cümleler kullan,
+gereksiz ayrıntı ve jargondan kaçın. Anlamı netleştiren yerleşik teknik terimler İngilizce kalabilir;
+gerektiğinde ilk kullanımda kısa Türkçe açıklama ekle. Kod kimliklerini, API alan adlarını, komutları,
+dosya yollarını ve makine tarafından okunan anahtarları çevirme. Bu tercih BMad iş akışları ve
+alt ajanlar dahil tüm belge üretimine uygulanır; şablonlardaki İngilizce çıktı varsayılanından önceliklidir.
+Kullanıcı belirli bir çıktı için başka dil isterse o isteği uygula. Mevcut belgeleri topluca çevirme;
+yeni ve yeniden yazılan bölümleri Türkçe üret. Ürün içerikleri ve çevirileri hedef kitlenin dilini
+korur (ADR-0013). Kuralları, gerekli korumaları eksiltmeden kısa tut. Dağıtım ayrıntılarını dağıtım
+işlerinde, arşivlenmiş görevleri yalnız ilgili geçmiş gerektiğinde oku (ADR-0015).
 
 ## Build and Test Commands
 

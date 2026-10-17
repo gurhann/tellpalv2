@@ -1,4 +1,4 @@
-document_output_language: English
+document_output_language: Türkçe
 output_folder: '{project-root}/_bmad-output'
 bmb:
   name: BMad Builder

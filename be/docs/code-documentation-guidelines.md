@@ -54,7 +54,7 @@ If a type is only infrastructure plumbing and its intent is already obvious, pre
 
 ## Style Rules
 
-- Write durable comments and Javadoc in English.
+- Yeni veya yeniden yazılan yorumları ve Javadoc açıklamalarını açık, sade Türkçeyle yaz; gerekli teknik terimleri İngilizce bırak.
 - Keep them short and behavior-oriented.
 - Prefer describing preconditions, outcomes, side effects, ownership, and failure semantics.
 - Avoid verbose `@param` and `@return` sections unless they add real information beyond the signature.
@@ -67,28 +67,27 @@ If a type is only infrastructure plumbing and its intent is already obvious, pre
 
 ```java
 /**
- * Module-facing use case for rotating admin refresh tokens.
+ * Admin refresh token yenileme sözleşmesi.
  *
- * <p>Reuses, expired tokens, and revoked tokens are rejected as business failures.
+ * <p>Tekrar kullanılan, süresi dolan veya iptal edilen tokenlar reddedilir.
  */
 public interface ExampleApi {
 ```
 
 ```java
 /**
- * Application service that orchestrates content publication.
+ * İçeriğin yayınlanmasını yöneten uygulama servisi.
  *
- * <p>This service coordinates aggregate updates and external side effects inside a single
- * transaction boundary.
+ * <p>Aggregate güncellemelerini ve dış işlemleri ilgili transaction kurallarına göre yönetir.
  */
 public class ExampleService {
 ```
 
 ```java
 /**
- * Aggregate root for category curation rules.
+ * Kategori düzenleme kurallarını koruyan aggregate root.
  *
- * <p>Visible content ordering is owned per language and duplicate links are ignored.
+ * <p>Görünen içerik sırası dil bazındadır; tekrar eden bağlantılar eklenmez.
  */
 public class ExampleAggregate {
 ```

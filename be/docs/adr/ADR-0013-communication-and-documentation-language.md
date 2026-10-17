@@ -1,46 +1,50 @@
-# ADR-0013: Communication and Documentation Language
+# ADR-0013: İletişim ve belge dili
 
-## Status
+## Durum
 
-Accepted on 2026-09-09.
+2026-09-09 tarihinde kabul edildi. Proje sahibinin isteğiyle 2026-10-17 tarihinde güncellendi.
+Önceki İngilizce belge varsayılanının yerine aşağıdaki Türkçe varsayılanı geçer.
 
-## Context
+## Bağlam
 
-The project owner prefers Turkish for day-to-day communication and has chosen English for long
-technical documents. English may reduce token consumption for equivalent technical prose, but
-the project has not measured the savings; no fixed cost or usage-limit reduction is assumed.
-ADR-0003 already requires English for durable code documentation.
+Proje sahibi, bundan sonra üretilen tüm belgeleri Türkçe okumak istiyor.
+Belgeler açık ve sade olmalı; gerekli teknik terimler İngilizce kullanılabilmeli.
 
-## Decision
+## Karar
 
-- Use Turkish for conversations, clarification questions, progress updates, and final summaries.
-- Write new long technical documents in English, including architecture documents, specifications,
-  implementation plans, technical reports, and operational runbooks.
-- Continue writing ADRs, project memory, code comments, and API documentation in English.
-- Keep code identifiers, API field names, and established technical terms consistent in English.
-- Follow an explicit user request for a different language for a particular deliverable.
-- Preserve existing Turkish documents during routine edits; translate them when explicitly requested
-  or when a replacement document is agreed. This decision does not require bulk translation.
-- Product content and localization retain their intended audience languages.
+- İletişim, sorular, ilerleme bildirimleri ve sonuç özetleri Türkçe yazılır.
+- Yeni belgeler ve yeniden yazılan bölümler Türkçe üretilir. Teknik belgeler, spec ve planlar,
+  ADR'ler, proje hafızası, raporlar, kullanım ve operasyon rehberleri bu kapsamdadır.
+- API açıklamaları, kod yorumları ve Javadoc da aynı dil ve anlatım kuralına uyar.
+- Kısa cümleler, doğrudan anlatım ve anlaşılır sözcükler kullanılır. Gereksiz ayrıntı ve jargondan kaçınılır.
+- Yerleşik teknik terimler anlamı netleştiriyorsa İngilizce kalabilir. Gerekirse ilk kullanımda
+  kısa Türkçe açıklama eklenir; terimler zorla çevrilmez.
+- Kod kimlikleri, API alan adları, komutlar, dosya yolları, hata kodları ve makine anahtarları çevrilmez.
+- Kural BMad iş akışlarına, şablonlardan üretilen belgelere ve alt ajanlara da uygulanır.
+- Belirli bir çıktı için kullanıcının açık dil isteği önceliklidir.
+- Mevcut belgeler topluca çevrilmez. Yalnız eklenen veya yeniden yazılan bölümler Türkçe olur;
+  tam çeviri ayrıca istendiğinde yapılır.
+- Ürün içerikleri ve çevirileri hedef kitlenin dilini korur.
 
-## Consequences
+## Sonuçlar
 
-- The owner can discuss requirements and review outcomes in Turkish.
-- Long technical artifacts share the language of code and most technical terminology.
-- Potential token savings depend on the text and model and are not a guaranteed financial benefit.
-- Existing Turkish documents can coexist with new English documents.
+Belgeler proje sahibinin tercih ettiği dilde, kolay okunur biçimde hazırlanır.
+Teknik doğruluk için gereken İngilizce terimler korunur. Eski belgelerle birlikte çalışılabilir;
+bu karar toplu çeviri veya uygulama davranışı değişikliği gerektirmez.
 
-## Alternatives Considered
+## Değerlendirilen seçenekler
 
-- English for all communication: not selected because Turkish is the owner's preferred conversation language.
-- Turkish for all documents: not selected because the owner prefers English for long technical artifacts.
+- İngilizce teknik belgelere devam etmek: güncel kullanıcı tercihine uymadığı için seçilmedi.
+- Tüm teknik terimleri Türkçeleştirmek: anlamı bozabileceği için seçilmedi.
 
-## Related Files or Modules
+## İlgili dosyalar
 
-- `AGENTS.md`
-- `be/docs/project-memory.md`
-- `be/docs/adr/ADR-0003-code-documentation-policy.md`
+- [AGENTS.md](../../../AGENTS.md)
+- [Proje hafızası](../project-memory.md)
+- [Kod açıklama politikası](ADR-0003-code-documentation-policy.md)
+- [BMad ekip ayarları](../../../_bmad/custom/config.toml)
 
-## Supersedes / Superseded By
+## Önceki kararlarla ilişkisi
 
-- None. Extends ADR-0003 without replacing its code documentation policy.
+ADR-0003'ün açıklama kapsamı ve kalite kuralları korunur; yalnız İngilizce dil zorunluluğu bu kararla değiştirilir.
+Bu ADR'nin önceki İngilizce belge kararı, 2026-10-17 tarihli kullanıcı tercihiyle güncellenmiştir.

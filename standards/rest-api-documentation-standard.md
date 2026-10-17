@@ -72,4 +72,4 @@ Tags may be narrower than groups when it improves readability.
 - summaries are action-oriented
 - descriptions stay concise
 - do not repeat path or method names
-- use English
+- API açıklamalarını açık, sade Türkçeyle yaz; gerekli teknik terimleri İngilizce bırak

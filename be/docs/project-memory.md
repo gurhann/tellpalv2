@@ -29,7 +29,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 - `ADR-0001`: the backend is a Spring Modulith-style modular monolith and modules interact through APIs, events, and IDs.
 - `ADR-0002`: each top-level module owns its `domain` and `infrastructure` packages and may expose only `api`.
-- `ADR-0003`: public contracts and use-case flows use concise English documentation.
+- `ADR-0003`: herkese açık sözleşmeler ve kullanım akışları kısa, davranış odaklı açıklanır; dil için güncel ADR-0013 uygulanır.
 - `ADR-0004`: `shared` is a small stable kernel, not a dumping ground.
 - `ADR-0005`: REST endpoints use OpenAPI-based documentation with operation-level summaries, auth, and core error responses.
 - `ADR-0006`: story-page illustrations are localization-scoped and resolved from `story_page_localizations`, not page roots.
@@ -55,7 +55,7 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
   selections. AD-12 fixes DI/disposal ownership; all story readiness and backend-contract gates
   remain open until verified separately.
 
-- `ADR-0013`: follow the language policy in root `AGENTS.md` (Turkish communication, English technical documentation).
+- `ADR-0013`: iletişim ve bundan sonra üretilen tüm belgeler Türkçedir. Teknik belgeler, spec/plan, ADR, proje hafızası, rapor, rehber, API açıklamaları ve kod yorumları/Javadoc açık ve sade yazılır. Gerekli teknik terimler İngilizce kalabilir. Kod kimlikleri, komutlar, yollar ve makine anahtarları çevrilmez. BMad ve alt ajanlar da bu kurala uyar. Mevcut belgeler topluca çevrilmez; yeni veya yeniden yazılan bölümler Türkçe olur. Ürün çevirileri hedef dilini korur; açık kullanıcı isteği önceliklidir.
 - `ADR-0015`: keep unique safeguards, load deployment details for deployment work, and archive completed
   CMS tasks with stable links. Blind Hunter requires evidence-backed findings with no minimum count;
   all review layers remain enabled. See `be/docs/adr/ADR-0015-agent-context-efficiency.md`.
