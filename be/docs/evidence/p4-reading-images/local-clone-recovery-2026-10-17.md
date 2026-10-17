@@ -8,6 +8,10 @@ Postgres.app bağlantı iznini doğrulayamadığı için migration ve fixture ba
 kapandı. [Devam makbuzu](execution-resume-1-2026-10-17.json) bu sonucu kaydeder.
 İlk hata ve bu devamın özel makbuzları korunuyor. Java yeniden başlatılmadı.
 
+Sonraki ayrı izin onayıyla Java 25.0.2 için Postgres.app `Allow` ayarı uygulandı ve
+UI üzerinden doğrulandı. Genel izin koruması açık kaldı. Bu izin onayı denemeyi yeniden
+başlatmayı kapsamıyordu; başarısız yürütme ve ledger korundu.
+
 İlk yürütme PostgreSQL14 dump istemcisi ile18 sunucu uyumsuzluğunda durdu.
 [Başarısızlık makbuzu](execution-attempt-2026-10-17.json) ve ilk attempt korunuyor.
 Klon DB, backend, storage ledger veya yeni görsel oluşmadı. Mevcut Postgres.app18

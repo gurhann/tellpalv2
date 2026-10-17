@@ -175,3 +175,14 @@ kullanan diğer Java programlarını da kapsayabilir.
 İzin düzeltmesi, başarısız denemenin yeniden başlatıldığı anlamına gelmez. Mevcut
 ledger ve hata kanıtları korunur. Tek seferlik devam başarısız olduğundan yeniden
 yürütme için yeni, somut karar gerekir. Gerçek medya ve cihaz kalite kanıtı açık kalır.
+
+## Java bağlantı izni
+
+17 Ekim 2026, 23.38 (Europe/Istanbul): Kullanıcının “Java için Allow iznini ver”
+yanıtıyla Postgres.app ayarlarında yalnız Java 25.0.2 çalıştırıcısı için `Ask → Allow`
+uygulandı. Son UI durumu `Allow` olarak doğrulandı. “Ask for permission when apps
+connect without password” genel koruması açık kaldı. Diğer uygulama izinleri değişmedi.
+
+Bu adım bağlantı izniyle sınırlıdır. Backend veya görsel denemesi yeniden başlatılmadı;
+ledger, başarısızlık makbuzları ve mevcut yerel klon korundu. Önceki devam makbuzundaki
+`permissionChanged: false`, o makbuzun oluşturulduğu andaki durumu kaydeder.
