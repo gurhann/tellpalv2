@@ -1,0 +1,151 @@
+{
+  "kind": "EMULATOR_OFFLINE_GEOMETRY_RETRY",
+  "date": "2026-10-17",
+  "baselineCommit": "8f7adab818db262c9faa2385d299b3f851c3ddad",
+  "physicalDevice": false,
+  "mediaConfigured": false,
+  "avd": "Medium_Phone",
+  "readOnly": true,
+  "api": 36,
+  "nativeFramebuffer": [
+    1080,
+    2400
+  ],
+  "effectiveFramebuffer": [
+    822,
+    1828
+  ],
+  "nativeDensityDpi": 420,
+  "effectiveDensityDpi": 320,
+  "dpr": 2.0,
+  "fontScaleAndroid": 1.0,
+  "buildMode": "debug",
+  "package": "com.tellpal.tellpal_mobile_poc.readingcomparison.geometry",
+  "apkSha256": "75165f15456801b23785df3c63a6b2fb48b0945fb5676533799980312e150651",
+  "initScriptSha256": "19e62bffbf1e6cb389368e24ef7ffc723621b568a39447fba015b99452a399a9",
+  "measurements": [
+    {
+      "name": "cover-rendition",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "456.66666666666663"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=456.7)",
+        "minWidth": "411.0",
+        "minHeight": "456.66666666666663",
+        "maxWidth": "411.0",
+        "maxHeight": "456.66666666666663"
+      },
+      "sha256": "ba119708d975518f117b01b7eefcbdc94bb85be748f15e0c579b0fd75c5d6473",
+      "screenshot": "cover-rendition.png",
+      "tapPixels": null
+    },
+    {
+      "name": "cover-source",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "456.66666666666663"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=456.7)",
+        "minWidth": "411.0",
+        "minHeight": "456.66666666666663",
+        "maxWidth": "411.0",
+        "maxHeight": "456.66666666666663"
+      },
+      "sha256": "c7eb158a9aa82cc6d8069a587a9783c7308f98c30a9a35edd3f45cedcccefe31",
+      "screenshot": "cover-source.png",
+      "tapPixels": [
+        411,
+        344
+      ]
+    },
+    {
+      "name": "page1-source",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "694.0"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=694.0)",
+        "minWidth": "411.0",
+        "minHeight": "694.0",
+        "maxWidth": "411.0",
+        "maxHeight": "694.0"
+      },
+      "sha256": "91f009eb467e8494da2027545e7708407e85dfb572aab607a04061098ed6bdb7",
+      "screenshot": "page1-source.png",
+      "tapPixels": [
+        392,
+        250
+      ]
+    },
+    {
+      "name": "page1-rendition",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "694.0"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=694.0)",
+        "minWidth": "411.0",
+        "minHeight": "694.0",
+        "maxWidth": "411.0",
+        "maxHeight": "694.0"
+      },
+      "sha256": "d5ed1160fe5720355d813c03243ef07fe661ea2968b2248e06b8c12317ac0bc0",
+      "screenshot": "page1-rendition.png",
+      "tapPixels": [
+        411,
+        344
+      ]
+    },
+    {
+      "name": "page2-rendition",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "694.0"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=694.0)",
+        "minWidth": "411.0",
+        "minHeight": "694.0",
+        "maxWidth": "411.0",
+        "maxHeight": "694.0"
+      },
+      "sha256": "d5ed1160fe5720355d813c03243ef07fe661ea2968b2248e06b8c12317ac0bc0",
+      "screenshot": "page2-rendition.png",
+      "tapPixels": [
+        545,
+        250
+      ]
+    },
+    {
+      "name": "page2-source",
+      "slotLogical": {
+        "width": "411.0",
+        "height": "694.0"
+      },
+      "constraints": {
+        "type": "BoxConstraints",
+        "description": "BoxConstraints(w=411.0, h=694.0)",
+        "minWidth": "411.0",
+        "minHeight": "694.0",
+        "maxWidth": "411.0",
+        "maxHeight": "694.0"
+      },
+      "sha256": "91f009eb467e8494da2027545e7708407e85dfb572aab607a04061098ed6bdb7",
+      "screenshot": "page2-source.png",
+      "tapPixels": [
+        411,
+        344
+      ]
+    }
+  ]
+}

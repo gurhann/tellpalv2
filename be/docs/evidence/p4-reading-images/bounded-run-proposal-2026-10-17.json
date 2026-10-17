@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "status": "PROPOSED_NOT_APPROVED_NOT_EXECUTED",
+  "baselineCommit": "8f7adab818db262c9faa2385d299b3f851c3ddad",
+  "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "storagePrefix": "local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "database": {
+    "mode": "ISOLATED_LOCAL_CLONE",
+    "name": "tellpal_p4a2_cb5fe81a7ada4cb5adce6ddde1381d09",
+    "sourceReadOnly": true,
+    "sourceMigrationAllowed": false,
+    "cloneTargetMigration": 37,
+    "fixtureAllocation": "CREATE_EXACTLY_ONE_AND_SEAL_GENERATED_ID",
+    "excludeContentIds": [
+      71,
+      93
+    ]
+  },
+  "fixture": {
+    "sourceContentId": 71,
+    "language": "tr",
+    "newContentCount": 1,
+    "defaultFree": true,
+    "orderedPages": [
+      1,
+      2
+    ],
+    "legacyProcessing": "PENDING",
+    "categoryMembershipAllowed": false,
+    "audioWritesAllowed": false
+  },
+  "qaUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+  "sources": [
+    {
+      "assetId": 9778,
+      "bytes": 6336857,
+      "sha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+      "selected": true,
+      "uploaded": false
+    },
+    {
+      "assetId": 9816,
+      "bytes": 5941567,
+      "sha256": "c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27",
+      "selected": true,
+      "uploaded": false
+    },
+    {
+      "assetId": 9818,
+      "bytes": 6122778,
+      "sha256": "169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7",
+      "selected": true,
+      "uploaded": false
+    }
+  ],
+  "geometry": {
+    "kind": "MEDIUM_PHONE_OVERRIDE_EMULATOR",
+    "physicalDevice": false,
+    "dpr": 2.0,
+    "detailPhysicalSlot": [
+      822,
+      913.3333333333333
+    ],
+    "pagePhysicalSlot": [
+      822,
+      1388
+    ],
+    "requiredFullImage": [
+      822,
+      1334
+    ],
+    "targetBox": [
+      823,
+      1334
+    ],
+    "expectedOutput": [
+      822,
+      1334
+    ],
+    "format": "image/png"
+  },
+  "preparation": {
+    "width": 823,
+    "height": 1334,
+    "maxSourceBytes": 8388608,
+    "maxOutputBytes": 8388608,
+    "maxPixels": 4800000,
+    "parentMemoryBytes": 268435456,
+    "heapMiB": 256,
+    "directMiB": 16,
+    "processMiB": 512,
+    "diskBytes": 33554432,
+    "sourceMillis": 30000,
+    "revisionMillis": 180000,
+    "concurrency": 1,
+    "encoderThreads": 1,
+    "allowGrowth": false,
+    "growthEvidence": ""
+  },
+  "runtimePreflight": {
+    "cloudCalls": 0,
+    "deliveryLimitsValidated": 268435456,
+    "expectedOutput": [
+      822,
+      1334
+    ],
+    "javaRuntime": "25.0.2",
+    "javaVendor": "Homebrew",
+    "kind": "LOCAL_CONFIGURATION_VALIDATION_NO_CLOUD",
+    "parentMaxHeapBytes": 1073741824,
+    "preparation": {
+      "width": 823,
+      "height": 1334,
+      "maxSourceBytes": 8388608,
+      "maxOutputBytes": 8388608,
+      "maxPixels": 4800000,
+      "parentMemoryBytes": 268435456,
+      "heapMiB": 256,
+      "directMiB": 16,
+      "processMiB": 512,
+      "diskBytes": 33554432,
+      "sourceMillis": 30000,
+      "revisionMillis": 180000,
+      "concurrency": 1,
+      "encoderThreads": 1,
+      "allowGrowth": false,
+      "growthEvidence": ""
+    },
+    "roleFingerprints": {
+      "READING_COVER": "3533c4a607a9150871fec504c7dc5e954339309de021644b9ea4da056dfec745",
+      "READING_DETAIL": "b6d640046b03c1f3700277701ca3b50e519e74de87454851fa377ccc7390dfa2",
+      "READING_PAGE": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597"
+    }
+  },
+  "backend": {
+    "heapMiB": 1024,
+    "directMiB": 128,
+    "serverAddress": "127.0.0.1",
+    "portAllocation": "FREE_EPHEMERAL_PORT_ONLY",
+    "scheduledTasksAllowed": false,
+    "adminBootstrapAllowed": false,
+    "stubTokensEnabled": false,
+    "checkRevoked": true
+  },
+  "delivery": {
+    "maxEncodedBytes": 8388608,
+    "maxPixels": 4800000,
+    "maxMemoryBytes": 268435456,
+    "deadlineMillis": 30000,
+    "leaseMillis": 180000,
+    "maxTotalOperations": 64,
+    "maxTotalBytes": 67108864
+  },
+  "mobile": {
+    "maxEncodedBytes": 8388608,
+    "maxBufferBytes": 25165824,
+    "maxDecodePixels": 4800000,
+    "maxDecodedBytes": 20971520,
+    "maxPeakBytes": 134217728,
+    "maxOwnedImages": 1,
+    "transferMillis": 45000,
+    "decodeMillis": 10000,
+    "statusEveryMillis": 10000,
+    "maxStatusChecks": 18,
+    "maxControlMillis": 180000
+  },
+  "cloudLogicalCaps": {
+    "maxStorageApiCalls": 94,
+    "maxPinnedReads": 64,
+    "maxPinnedReadBytes": 536870912,
+    "maxConditionalCreateAttempts": 14,
+    "maxConditionalWritePayloadBytes": 117440512,
+    "maxObserveVersionCalls": 16,
+    "maxUniqueNewObjects": 13,
+    "maxUniqueNewObjectBytes": 109051904,
+    "maxFirebaseVerifierInvocations": 64,
+    "maxQaSignInInvocations": 1,
+    "maxCombinedLogicalInvocations": 159,
+    "sdkHttpOrBillableRequestCountIsNotClaimed": true
+  },
+  "phases": [
+    {
+      "name": "UPLOAD_LOCAL_CANONICAL_SOURCES",
+      "conditionalCreates": 3,
+      "pinnedReads": 3,
+      "explicitObservations": 0
+    },
+    {
+      "name": "ADMIT_THREE_SOURCES",
+      "conditionalCreates": 3,
+      "pinnedReads": 9,
+      "explicitObservations": 3
+    },
+    {
+      "name": "RECONCILE_EXACT_QA_SCOPE_ONCE",
+      "conditionalCreates": 4,
+      "pinnedReads": 8,
+      "explicitObservations": 4,
+      "expectedNestedConflictObservation": 1
+    },
+    {
+      "name": "RUN_EXACT_JOB_ONCE",
+      "conditionalCreates": 4,
+      "pinnedReads": 12,
+      "explicitObservations": 0
+    },
+    {
+      "name": "RECONCILE_EXACT_QA_SCOPE_ADOPT_ONCE",
+      "conditionalCreates": 0,
+      "pinnedReads": 8,
+      "explicitObservations": 0
+    },
+    {
+      "name": "COMPARE_SIX_STATES",
+      "conditionalCreates": 0,
+      "pinnedReads": 24,
+      "explicitObservations": 0,
+      "plannedSuccessfulMediaRequests": 6,
+      "durableDeliveryCapsAlsoApply": true
+    }
+  ],
+  "workflow": {
+    "maxPublishRequests": 1,
+    "maxReconcileCalls": 2,
+    "maxWorkerRunCalls": 1,
+    "maxJobAttempts": 1,
+    "automaticRetryAllowed": false,
+    "automaticCleanupAllowed": false,
+    "newCallsWindowSeconds": 900,
+    "mediaConfigurationWindowSeconds": 180,
+    "deadlineQualification": "SDK_ABSOLUTE_IN_FLIGHT_DURATION_REMAINS_OPEN"
+  },
+  "executionPrerequisites": [
+    "USER_APPROVES_NUMERICAL_PROFILE_AND_BOUNDED_RUN",
+    "OFFLINE_PHASE_BUDGET_AND_ISOLATION_TESTS_PASS",
+    "READ_ONLY_SOURCE_BASELINE_AND_CLONE_IDENTITY_VERIFIED",
+    "REAL_QA_EPHEMERAL_CREDENTIAL_READY",
+    "ALL_SCHEDULERS_DISABLED_BEFORE_CONTEXT_REFRESH",
+    "NATIVE_QA_TARGET_AND_DISPLAY_METRICS_MATCH",
+    "ROLE_FINGERPRINTS_MATCH_CURRENT_RUNTIME",
+    "PREFIX_AND_ONE_SHOT_LEDGER_CREATED_WITHOUT_RESET"
+  ],
+  "cloudCallsDuringThisPlanning": 0
+}
