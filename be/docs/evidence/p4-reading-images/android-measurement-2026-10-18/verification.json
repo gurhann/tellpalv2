@@ -1,0 +1,640 @@
+{
+  "status": "SIX_STATES_VERIFIED_EMULATOR_ONLY",
+  "measuredAtDate": "2026-10-18",
+  "timezone": "Europe/Istanbul",
+  "codeCommit": "5203084cb31633a8b745345b3bbb4fa90788cd7e",
+  "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "planSha256": "f024f17075a11cac9e61019503736cd384ac6ecf0db3236052c62df9fd439be3",
+  "authorization": {
+    "reply": "180 saniye ve gerekirse 1 ek giriş onaylı",
+    "newProductionAllowed": false,
+    "approvedWindowMillis": 180000,
+    "additionalQaSignInsUsed": 1,
+    "qaSignInsTotal": 2
+  },
+  "window": {
+    "startedAtEpochMillis": 1792271928426,
+    "deadlineEpochMillis": 1792272108426,
+    "windowMillis": 180000
+  },
+  "capture": {
+    "mobileAttemptFileModifiedAtEpochMillis": 1792272019515,
+    "verificationFileModifiedAtEpochMillis": 1792272056351,
+    "elapsedFromWindowStartToVerificationMillis": 127925
+  },
+  "device": {
+    "serial": "emulator-5554",
+    "physicalDevice": false,
+    "displayWidth": 822,
+    "displayHeight": 1828,
+    "densityDpi": 320,
+    "fontScale": 1
+  },
+  "apkSha256": "915377fed18f111517851a6b499f7f291b7a6a15a3b606989e4428e2aa5eb3a4",
+  "baselineMemory": {
+    "totalPssKiB": 175291,
+    "totalRssKiB": 201144,
+    "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+  },
+  "observations": [
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 1,
+        "canonicalSource": false,
+        "epoch": 1,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingDetail",
+        "pageNumber": 0,
+        "renditionKey": "8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45",
+        "profileFingerprint": "b6d640046b03c1f3700277701ca3b50e519e74de87454851fa377ccc7390dfa2",
+        "sourceSha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+        "displaySha256": "faca77f406a6545600582fe445adb79f68ed5fc408964f740e13b1bddcac03b3",
+        "encodedWidth": 822,
+        "encodedHeight": 1334,
+        "expectedPayloadBytes": 3292721,
+        "decodedWidth": 822,
+        "decodedHeight": 1334,
+        "physicalWidth": 822,
+        "physicalHeight": 914,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 3840,
+        "postTransferToLoadedUpperBoundMillis": 347
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 3292721,
+        "elapsedMillis": 1866
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 456.66666666666663,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 1,
+      "memory": {
+        "totalPssKiB": 205213,
+        "totalRssKiB": 194152,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "b57831d05f8d9def0eb650af75e95af070ad1f4bf63a7c12a5690cf58d07d165",
+      "screenshot": "01-entry-1-rendition.png"
+    },
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 1,
+        "canonicalSource": true,
+        "epoch": 3,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingDetail",
+        "pageNumber": 0,
+        "renditionKey": "8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45",
+        "profileFingerprint": "b6d640046b03c1f3700277701ca3b50e519e74de87454851fa377ccc7390dfa2",
+        "sourceSha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+        "displaySha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+        "encodedWidth": 1712,
+        "encodedHeight": 2778,
+        "expectedPayloadBytes": 6336857,
+        "decodedWidth": 1712,
+        "decodedHeight": 2778,
+        "physicalWidth": 822,
+        "physicalHeight": 914,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 3043,
+        "postTransferToLoadedUpperBoundMillis": 679
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 6336857,
+        "elapsedMillis": 2314
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 456.66666666666663,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 3,
+      "memory": {
+        "totalPssKiB": 209752,
+        "totalRssKiB": 197344,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "3a11c2db456e3f77e400a65ccda060768f60c86627a1195b6ca1c176e5cad178",
+      "screenshot": "02-entry-1-source.png"
+    },
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 2,
+        "canonicalSource": true,
+        "epoch": 5,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingPage",
+        "pageNumber": 1,
+        "renditionKey": "a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92",
+        "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+        "sourceSha256": "c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27",
+        "displaySha256": "c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27",
+        "encodedWidth": 1712,
+        "encodedHeight": 2778,
+        "expectedPayloadBytes": 5941567,
+        "decodedWidth": 1712,
+        "decodedHeight": 2778,
+        "physicalWidth": 822,
+        "physicalHeight": 1388,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 2705,
+        "postTransferToLoadedUpperBoundMillis": 579
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 5941567,
+        "elapsedMillis": 2112
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 694.0,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 5,
+      "memory": {
+        "totalPssKiB": 225645,
+        "totalRssKiB": 213024,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "2e07c23039c10d392bf5152c55d798d28c2ca48bea04a4870f0b76cc7480cd5e",
+      "screenshot": "03-entry-2-source.png"
+    },
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 2,
+        "canonicalSource": false,
+        "epoch": 7,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingPage",
+        "pageNumber": 1,
+        "renditionKey": "a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92",
+        "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+        "sourceSha256": "c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27",
+        "displaySha256": "257be177b37e44fdcca263fda61635365db26cebd4aec940b79375a4650c3739",
+        "encodedWidth": 822,
+        "encodedHeight": 1334,
+        "expectedPayloadBytes": 3292721,
+        "decodedWidth": 822,
+        "decodedHeight": 1334,
+        "physicalWidth": 822,
+        "physicalHeight": 1388,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 1625,
+        "postTransferToLoadedUpperBoundMillis": 132
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 3292721,
+        "elapsedMillis": 1479
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 694.0,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 7,
+      "memory": {
+        "totalPssKiB": 204923,
+        "totalRssKiB": 192396,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "8ee3e423ff223968347803ae953bc13e17a8f428d74d8f3a3bad7f2ac0d53df7",
+      "screenshot": "04-entry-2-rendition.png"
+    },
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 3,
+        "canonicalSource": false,
+        "epoch": 9,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingPage",
+        "pageNumber": 2,
+        "renditionKey": "02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226",
+        "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+        "sourceSha256": "169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7",
+        "displaySha256": "99e87d97cce8fed29cf938e3c0dcc606776a3568b22271ee42d55e8ddc35b7e9",
+        "encodedWidth": 822,
+        "encodedHeight": 1334,
+        "expectedPayloadBytes": 3292721,
+        "decodedWidth": 822,
+        "decodedHeight": 1334,
+        "physicalWidth": 822,
+        "physicalHeight": 1388,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 1696,
+        "postTransferToLoadedUpperBoundMillis": 242
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 3292721,
+        "elapsedMillis": 1442
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 694.0,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 9,
+      "memory": {
+        "totalPssKiB": 206821,
+        "totalRssKiB": 194300,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "6019197326241ba13e1b392ea8455ef1bf82f439d7ad7bdbda78e6f94a795651",
+      "screenshot": "05-entry-3-rendition.png"
+    },
+    {
+      "render": {
+        "kind": "state",
+        "status": "loaded",
+        "entryIndex": 3,
+        "canonicalSource": true,
+        "epoch": 11,
+        "activeBuffers": 0,
+        "activeDescriptors": 0,
+        "activeCodecs": 0,
+        "activeImages": 1,
+        "contentId": 94,
+        "language": "tr",
+        "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+        "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+        "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+        "liveGeneration": 4,
+        "role": "readingPage",
+        "pageNumber": 2,
+        "renditionKey": "02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226",
+        "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+        "sourceSha256": "169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7",
+        "displaySha256": "169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7",
+        "encodedWidth": 1712,
+        "encodedHeight": 2778,
+        "expectedPayloadBytes": 6122778,
+        "decodedWidth": 1712,
+        "decodedHeight": 2778,
+        "physicalWidth": 822,
+        "physicalHeight": 1388,
+        "requiredWidth": 822,
+        "requiredHeight": 1334,
+        "renderElapsedMillis": 2447,
+        "postTransferToLoadedUpperBoundMillis": 532
+      },
+      "httpPayload": {
+        "kind": "http",
+        "endpoint": "bytes",
+        "ok": true,
+        "payloadBytes": 6122778,
+        "elapsedMillis": 1886
+      },
+      "slot": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 694.0,
+        "dpr": 2.0
+      },
+      "paintedEpoch": 11,
+      "memory": {
+        "totalPssKiB": 220313,
+        "totalRssKiB": 207828,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "a12b9aaff2298144a72b527d73169cc467a13c6f9a10fc80866fbb21bb80a1d6",
+      "screenshot": "06-entry-3-source.png"
+    }
+  ],
+  "httpEvents": [
+    {
+      "kind": "http",
+      "endpoint": "manifest",
+      "ok": true,
+      "payloadBytes": 5187,
+      "elapsedMillis": 1422
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 3292721,
+      "elapsedMillis": 1866
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 6336857,
+      "elapsedMillis": 2314
+    },
+    {
+      "kind": "http",
+      "endpoint": "status",
+      "ok": true,
+      "payloadBytes": 5187,
+      "elapsedMillis": 320
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 5941567,
+      "elapsedMillis": 2112
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 3292721,
+      "elapsedMillis": 1479
+    },
+    {
+      "kind": "http",
+      "endpoint": "status",
+      "ok": true,
+      "payloadBytes": 5187,
+      "elapsedMillis": 254
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 3292721,
+      "elapsedMillis": 1442
+    },
+    {
+      "kind": "http",
+      "endpoint": "bytes",
+      "ok": true,
+      "payloadBytes": 6122778,
+      "elapsedMillis": 1886
+    }
+  ],
+  "payloadTotals": {
+    "imageHttpPayloadBytes": 28279365,
+    "renditionHttpPayloadBytes": 9878163,
+    "canonicalHttpPayloadBytes": 18401202,
+    "manifestAndStatusHttpPayloadBytes": 15561,
+    "allObservedHttpPayloadBytes": 28294926,
+    "oldJpegMetadataBytes": {
+      "9778": 1048225,
+      "9816": 1122418,
+      "9818": 1122572
+    },
+    "oldJpegWasDisplayed": false
+  },
+  "lifecycle": {
+    "background": {
+      "ok": true,
+      "configured": true,
+      "stopped": false,
+      "credentialActive": true,
+      "deadlineActive": true,
+      "status": "error",
+      "activeBuffers": 0,
+      "activeDescriptors": 0,
+      "activeCodecs": 0,
+      "activeImages": 0,
+      "httpEventCount": 9
+    },
+    "returned": {
+      "ok": true,
+      "configured": true,
+      "stopped": false,
+      "credentialActive": true,
+      "deadlineActive": true,
+      "status": "error",
+      "activeBuffers": 0,
+      "activeDescriptors": 0,
+      "activeCodecs": 0,
+      "activeImages": 0,
+      "httpEventCount": 9
+    },
+    "closed": {
+      "ok": true,
+      "configured": true,
+      "stopped": true,
+      "credentialActive": false,
+      "deadlineActive": false,
+      "status": "error",
+      "activeBuffers": 0,
+      "activeDescriptors": 0,
+      "activeCodecs": 0,
+      "activeImages": 0,
+      "httpEventCount": 9
+    }
+  },
+  "closedMemory": {
+    "totalPssKiB": 207602,
+    "totalRssKiB": 196144,
+    "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+  },
+  "closedScreenshotSha256": "82d1f4f544a4bb72de580a0ec16863d955bd367b3001d786c84b209af111fe58",
+  "attempt": {
+    "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+    "statesRecorded": 6,
+    "finished": true,
+    "cleanup": {
+      "vmStop": "PASS",
+      "vmClose": "PASS",
+      "reverse": "PASS",
+      "forward": "PASS"
+    }
+  },
+  "ownedBackendClosed": true,
+  "databaseReadOnlyAudit": {
+    "checkedAt": "2026-10-17T21:22:08.329502+00:00",
+    "readOnly": true,
+    "sourceMigrationVersion": 36,
+    "cloneMigrationVersion": 37,
+    "sourceLegacy112": "PENDING",
+    "cloneLegacy112": "PENDING",
+    "existingRows": {
+      "asset_processing": {
+        "previousRows": 112,
+        "currentRows": 114,
+        "previousRowsPreserved": true
+      },
+      "content_contributors": {
+        "previousRows": 462,
+        "currentRows": 462,
+        "previousRowsPreserved": true
+      },
+      "content_free_access": {
+        "previousRows": 0,
+        "currentRows": 1,
+        "previousRowsPreserved": true
+      },
+      "content_localizations": {
+        "previousRows": 296,
+        "currentRows": 297,
+        "previousRowsPreserved": true
+      },
+      "contents": {
+        "previousRows": 92,
+        "currentRows": 93,
+        "previousRowsPreserved": true
+      },
+      "lullaby_instruments": {
+        "previousRows": 10,
+        "currentRows": 10,
+        "previousRowsPreserved": true
+      },
+      "lullaby_playbacks": {
+        "previousRows": 8,
+        "currentRows": 8,
+        "previousRowsPreserved": true
+      },
+      "media_assets": {
+        "previousRows": 11257,
+        "currentRows": 11263,
+        "previousRowsPreserved": true
+      },
+      "story_narrations": {
+        "previousRows": 102,
+        "currentRows": 103,
+        "previousRowsPreserved": true
+      },
+      "story_page_localizations": {
+        "previousRows": 4655,
+        "currentRows": 4657,
+        "previousRowsPreserved": true
+      },
+      "story_pages": {
+        "previousRows": 1426,
+        "currentRows": 1428,
+        "previousRowsPreserved": true
+      }
+    },
+    "deliveryBudget": {
+      "operations": 25,
+      "reserved_bytes": 31572086,
+      "max_operations": 64,
+      "max_bytes": 67108864
+    },
+    "publication": {
+      "state": "LIVE",
+      "job_id": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+      "generation": 4,
+      "live_generation": 4,
+      "live_eligible": true
+    }
+  },
+  "cumulativeBudgets": {
+    "createInvocations": 14,
+    "writePayloadBytes": 74711347,
+    "uniqueObjects": 13,
+    "uniqueObjectBytes": 68374490,
+    "pinnedReadInvocations": 47,
+    "readPayloadBytes": 243641782,
+    "observeInvocations": 8,
+    "firebaseVerifierInvocationsIncludingLogin": 20,
+    "qaSignInInvocations": 2,
+    "storageLogicalInvocations": 69,
+    "combinedLogicalInvocations": 91
+  },
+  "preservation": {
+    "parentLedgerSha256": "60086ea1ad1bdccbcc2423481fcd5a20cd4777602c3e87b1c3636732b298b839",
+    "childLedgerSha256": "96dee3fb9e251a7438103f851dec78a09372d858e284e4967440a60de61c5fd1",
+    "childStartsWithUnchangedParentLedger": true,
+    "memlogSha256": "338cc79fa0194c80e533a1bfc01c0a3349959cf88a6dfd5177c9c8f3e9e1800c",
+    "previousFailureFiles": {
+      "ledger.failed-java-auth.log": {
+        "sha256": "03d44251367b97fe6daa68e2842879ad7598b885adc9603ed2a8725124000add",
+        "bytes": 106
+      },
+      "backend.failed-java-auth.log": {
+        "sha256": "d9c8cb9e1f70bdded2532ade56b482aaee073bc328920663267b9d61a6a7ab53",
+        "bytes": 15634
+      },
+      "backend.failed-java-auth.pid": {
+        "sha256": "7303ec2ef3f2739b24e3d725c0199eddb9205104e705d811a85ae16703be82cd",
+        "bytes": 6
+      }
+    }
+  },
+  "rawPrivateEvidenceSha256": {
+    "verification.json": "d7b0f87169b67b525347a407cd8c112e24d2021579efac9052b982bc137cb686",
+    "attempt-result.json": "29298a77e29ca0d6278b5bd8b703819dfe2bb196a7f974cfbb1f63752c2e9ccf"
+  },
+  "limits": [
+    "ANDROID_EMULATOR_ONLY",
+    "NO_PHYSICAL_ANDROID_OR_IPHONE_QUALITY_APPROVAL",
+    "DEBUG_MEMORY_SNAPSHOTS_NOT_PEAK_OR_GPU_TOTAL",
+    "POST_TRANSFER_TO_LOADED_IS_UPPER_BOUND_NOT_PURE_DECODE",
+    "HTTP_PAYLOAD_EXCLUDES_HEADERS_TLS_AND_SDK_INTERNAL_REQUESTS",
+    "SINGLE_ELIGIBLE_RENDITION_NOT_MULTI_PROFILE_PRODUCTION_PROOF",
+    "NO_NORMAL_MOBILE_CONSUMER_MIGRATION",
+    "P4B_AND_P0_RAW_EVIDENCE_GAP_REMAIN_OPEN",
+    "NO_GENERAL_PRODUCTION_PROFILE_APPROVAL"
+  ]
+}

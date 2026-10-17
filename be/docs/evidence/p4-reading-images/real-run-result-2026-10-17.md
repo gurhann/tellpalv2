@@ -1,6 +1,12 @@
 # 822×1334 PNG denemesinin sonucu
 
-Durum: **Backend hazırlığı tamamlandı; Android karşılaştırması tamamlanmadı.**
+Güncel durum (18 Ekim 2026): **Mevcut #94 ile Android emülatöründe altı durum
+tamamlandı.** Yeni üretim yapılmadı. [Ölçüm raporu ve ekranlar](android-measurement-2026-10-18.md)
+son sonucu kaydeder. Fiziksel kalite ve genel P4 açık kalır.
+
+## 17 Ekim ilk gerçek çalışmanın tarihsel kaydı
+
+Aşağıdaki bölümler, ilk mobil karşılaştırmanın tamamlanamadığı andaki sonucu korur.
 
 Kullanıcı aynı sınırlar içinde yeniden başlatmayı açıkça onayladı. Önceki hata
 dosyaları hash'leriyle ayrı dosyalarda korundu. Aynı run/prefix, kaynaklar, profil,

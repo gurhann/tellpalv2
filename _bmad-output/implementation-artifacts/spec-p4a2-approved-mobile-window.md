@@ -76,8 +76,20 @@ paket doğrulaması ayrıca kaydedilir. Ek login ve gerçek pencere bu kapıdan 
 Wrapper tam paket **490 testle** geçti; hata/atlama yok. Python mobil27 ve launcher13
 test geçti. İlk final paketteki tek hata, test fixture'ının persisted JSON yerine
 valueToTree sayı türü kullanmasıydı; wire JSON ile düzeltildi. Sekiz odaklı test ve
-ardından tam490 test yeniden geçti. Üç inceleme katmanı ve hedefli yeniden inceleme
-açık bulgu bırakmadı. Gerçek pencere ve ek login henüz açılmadı.
+ardından tam 490 test yeniden geçti. Üç inceleme katmanı ve hedefli yeniden inceleme
+açık bulgu bırakmadı. Bu bölüm ölçüm öncesi yerel kapının sonucudur.
+
+## Gerçek ölçüm sonucu
+
+Yerel kapılardan sonra aynı QA hesabına yalnız bir ek giriş yapıldı. Tek ek pencere
+açıldı. Yeni üretim olmadan #94'ün detail ve iki sayfası için kaynak/çıktı altı durum
+emülatörde tamamlandı. Başarı kaydı pencere başlangıcından 127.925 ms sonra yazıldı.
+Arka plan, geri dönüş ve kapanışta sahip olunan kaynaklar 0 oldu; ek medya isteği yoktu.
+Bize ait backend kapandı. Önceki ledger, hata kayıtları ve 11 tablodaki eski satırlar korundu.
+
+Pinned read 47/64, toplam okuma 243.641.782 byte, verifier 20/64, sign-in 2/2;
+create 14 ve observe 8 değişmedi. Fiziksel kalite ve genel P4/P4b açık kalır.
+[Gerçek ölçüm ve ekranlar](../../be/docs/evidence/p4-reading-images/android-measurement-2026-10-18.md).
 
 ## Önerilen inceleme sırası
 

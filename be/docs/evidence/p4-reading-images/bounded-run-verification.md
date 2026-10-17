@@ -1,6 +1,9 @@
 # P4a2 sınırlı gerçek karşılaştırma doğrulaması
 
-Tarih: 2026-10-17. **Yerel kod doğrulaması ve inceleme tamamlandı. Onaylı yürütme yerel klonda durdu; görsel üretimi başlamadı.**
+Güncel durum (18 Ekim 2026): **Backend çıktıları ve mevcut #94 ile emülatörde altı
+karşılaştırma tamamlandı.** [Son ölçüm raporu](android-measurement-2026-10-18.md)
+gerçek byte, render, kaynak kullanımı ve ekran kanıtını içerir. Fiziksel kalite ve
+genel P4 açık kalır. Aşağıdaki tarihli bölümler önceki kapı ve denemeleri korur.
 
 Kullanıcı 822×1334 PNG profilini ve [tek denemenin sınırlarını](bounded-run-proposal-2026-10-17.md)
 açıkça onayladı. [JSON planı](bounded-run-proposal-2026-10-17.json) sonradan değiştirilmedi.
@@ -218,3 +221,20 @@ cloud/auth/medya çağrısı yoktur. Hazır QA APK'sı ölçüm için yapıland�
 [Tek ek ölçüm penceresi önerisi](mobile-only-window-proposal-2026-10-17.md), yalnız
 180 saniyelik ek süre ve gerekirse tek ek QA girişi için ayrı kullanıcı kararı ister.
 Bu öneri onaylanmış veya yürütülmüş sayılmaz. Diğer toplam çağrı/byte sınırları korunur.
+
+## 18 Ekim onaylı ek pencerenin sonucu
+
+Kullanıcı 180 saniyeyi ve gerekirse tek ek girişi açıkça onayladı. Yeni pencere için
+koruma kodu, tam 490 Maven ve 40 Python testi ile üç bağımsız inceleme geçti.
+Sonra aynı QA hesabına bir ek giriş yapıldı. Aynı #94/job/revision/manifest ve
+822×1334 PNG çıktılarıyla altı durum tamamlandı; yeni üretim yapılmadı.
+
+Başarı kanıtı pencere başlangıcından 127.925 ms sonra yazıldı. Altı görsel gövdesi
+28.279.365 byte aldı. Pinned read toplam 47, verifier 20, sign-in 2 oldu. Diğer tavanlar
+ve önceki tüketim korundu. Parent ledger ve hata arşivleri değişmedi; 11 tabloda eski
+kayıtlar korundu, kaynak V36 ve legacy #112 PENDING kaldı. Bize ait backend kapandı.
+
+[Rapor](android-measurement-2026-10-18.md) ve
+[sayısal kanıt](android-measurement-2026-10-18/verification.json) son durumu kaydeder.
+Bu sonuç fiziksel Android/iPhone, JPEG/WebP, P0 ham kanıtı, genel üretim profili veya
+P4b/normal mobil tüketici geçişi için tamamlanma onayı değildir.
