@@ -186,3 +186,16 @@ connect without password” genel koruması açık kaldı. Diğer uygulama izinl
 Bu adım bağlantı izniyle sınırlıdır. Backend veya görsel denemesi yeniden başlatılmadı;
 ledger, başarısızlık makbuzları ve mevcut yerel klon korundu. Önceki devam makbuzundaki
 `permissionChanged: false`, o makbuzun oluşturulduğu andaki durumu kaydeder.
+
+## Aynı sınırlar içinde onaylanan tekrarın sonucu
+
+Kullanıcının açık tekrar onayıyla eski Java hata dosyaları hash'leriyle korunarak
+tek Java yürütmesi daha başlatıldı. Yeni giriş yapılmadı. Backend #94 için dört
+822×1334 PNG çıktısını doğruladı ve otomatik LIVE oluşturdu. Mobil ölçüm ilk render
+makbuzundan önce durdu; altı durum tamamlanmadı. Sahip olunan kaynaklar bırakıldı ve
+bize ait backend kapandı. Gerçek çağrı/byte sayaçları korundu; yeni üretim veya
+otomatik tekrar yapılmadı.
+
+[Ayrıntılı gerçek sonuç](real-run-result-2026-10-17.md) ve
+[sayısal makbuz](execution-resume-2-2026-10-17.json) güncel durumu kaydeder.
+Önceki hata ve izin bölümleri tarihsel sırayı korur.

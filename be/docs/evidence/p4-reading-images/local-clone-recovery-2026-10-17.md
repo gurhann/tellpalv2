@@ -1,6 +1,10 @@
 # Yerel klon adımına bir kez devam önerisi
 
-Durum: **Kullanıcı onayıyla uygulandı; Java bağlantı izninde durdu.**
+Durum: **Bu ilk devam Java izninde durdu. Sonraki açık tekrar onayıyla backend LIVE
+tamamlandı; mobil karşılaştırma durdu.**
+
+Güncel durum [gerçek deneme sonucunda](real-run-result-2026-10-17.md) kayıtlıdır.
+Aşağıdaki ilk devam ve izin kayıtları tarihsel olarak korunur.
 
 Kullanıcının “Onaylıyorum” yanıtından sonra aşağıdaki tek devam uygulandı.
 PostgreSQL18 araçlarıyla klon oluşturma ve restore başarılı oldu. İlk Java süreci,

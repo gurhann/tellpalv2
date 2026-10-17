@@ -1,0 +1,343 @@
+{
+  "schema": 1,
+  "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "planSha256": "f024f17075a11cac9e61019503736cd384ac6ecf0db3236052c62df9fd439be3",
+  "codeCommitAtContinuation": "55e7bd510fa6bb8d43c758a7827b816815777023",
+  "authorization": "EXPLICIT_USER_APPROVAL_SECOND_JAVA_EXECUTION",
+  "userReply": "Tamam, aynı sınırlar içinde 822×1334 PNG denemesini tekrar başlatalım. Önceki hata kayıtlarını koru.",
+  "status": "BACKEND_LIVE_MOBILE_COMPARISON_FAILED_BEFORE_FIRST_RENDER_RECEIPT",
+  "backend": {
+    "identity": {
+      "contentId": 94,
+      "language": "tr",
+      "liveGeneration": 4,
+      "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d",
+      "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+      "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e"
+    },
+    "outputCount": 4,
+    "outputs": [
+      {
+        "binding": {
+          "role": "READING_COVER",
+          "localizationId": 297,
+          "pageId": null,
+          "pageNumber": 0,
+          "assetId": 11261
+        },
+        "sourceRaster": {
+          "generation": "1792269663477096",
+          "mime": "image/png",
+          "byteSize": 6336857,
+          "sha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+          "width": 1712,
+          "height": 2778
+        },
+        "renditions": [
+          {
+            "renditionKey": "230126349cc9db0487e2f77b0d488e53b4804acf2cd76d79b286fe54eb84e2f4",
+            "profileFingerprint": "3533c4a607a9150871fec504c7dc5e954339309de021644b9ea4da056dfec745",
+            "raster": {
+              "generation": "1792269675845226",
+              "mime": "image/png",
+              "byteSize": 3292721,
+              "sha256": "faca77f406a6545600582fe445adb79f68ed5fc408964f740e13b1bddcac03b3",
+              "width": 822,
+              "height": 1334
+            }
+          }
+        ]
+      },
+      {
+        "binding": {
+          "role": "READING_DETAIL",
+          "localizationId": 297,
+          "pageId": null,
+          "pageNumber": 0,
+          "assetId": 11261
+        },
+        "sourceRaster": {
+          "generation": "1792269663477096",
+          "mime": "image/png",
+          "byteSize": 6336857,
+          "sha256": "0276b92bed64c9a6b96bd759e639caf0a048bd05d9c4b494c82de1189a6ababd",
+          "width": 1712,
+          "height": 2778
+        },
+        "renditions": [
+          {
+            "renditionKey": "8d3c882f7d82a7f4e0f80894b04322407494dc96eb4e26bb3408de0e501a3c45",
+            "profileFingerprint": "b6d640046b03c1f3700277701ca3b50e519e74de87454851fa377ccc7390dfa2",
+            "raster": {
+              "generation": "1792269679426694",
+              "mime": "image/png",
+              "byteSize": 3292721,
+              "sha256": "faca77f406a6545600582fe445adb79f68ed5fc408964f740e13b1bddcac03b3",
+              "width": 822,
+              "height": 1334
+            }
+          }
+        ]
+      },
+      {
+        "binding": {
+          "role": "READING_PAGE",
+          "localizationId": 4656,
+          "pageId": 1427,
+          "pageNumber": 1,
+          "assetId": 11262
+        },
+        "sourceRaster": {
+          "generation": "1792269668981425",
+          "mime": "image/png",
+          "byteSize": 5941567,
+          "sha256": "c395094ca2cc9a254a4a51adf81678f3926f7ebcf195b2985cadfd788d85fa27",
+          "width": 1712,
+          "height": 2778
+        },
+        "renditions": [
+          {
+            "renditionKey": "a02aac0b9869606049e1714b72faa459fef9913363e3801e8da62c02f5dbab92",
+            "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+            "raster": {
+              "generation": "1792269683043058",
+              "mime": "image/png",
+              "byteSize": 3292721,
+              "sha256": "257be177b37e44fdcca263fda61635365db26cebd4aec940b79375a4650c3739",
+              "width": 822,
+              "height": 1334
+            }
+          }
+        ]
+      },
+      {
+        "binding": {
+          "role": "READING_PAGE",
+          "localizationId": 4657,
+          "pageId": 1428,
+          "pageNumber": 2,
+          "assetId": 11263
+        },
+        "sourceRaster": {
+          "generation": "1792269671650934",
+          "mime": "image/png",
+          "byteSize": 6122778,
+          "sha256": "169ba605f7f917214fa80502da19e09f956b9dd9f2e5a1c4ecf856a881d1d9a7",
+          "width": 1712,
+          "height": 2778
+        },
+        "renditions": [
+          {
+            "renditionKey": "02d8b7d9015ec2cb1a930552392bac42e33c951c7232bad8ff076075c23c1226",
+            "profileFingerprint": "211116712fb25e2aad13386a35aea54882a58c583dc379a6c6edeb5a630b6597",
+            "raster": {
+              "generation": "1792269686662686",
+              "mime": "image/png",
+              "byteSize": 3292721,
+              "sha256": "99e87d97cce8fed29cf938e3c0dcc606776a3568b22271ee42d55e8ddc35b7e9",
+              "width": 822,
+              "height": 1334
+            }
+          }
+        ]
+      }
+    ],
+    "automaticLive": true,
+    "normalApiIsolationPassed": true,
+    "sourceMigrationVersion": 36,
+    "cloneMigrationVersion": 37,
+    "sourceLegacy112": "PENDING",
+    "existingCloneRowsPreserved": true,
+    "businessTablesCompared": 11,
+    "preservationCheckMethod": "JSON_AGG_STRUCTURED_ROWS_UTC_TIMESTAMPS",
+    "closed": true,
+    "processAliveAfterClose": false
+  },
+  "budget": {
+    "createInvocations": 14,
+    "writePayloadBytes": 74711347,
+    "uniqueObjects": 13,
+    "uniqueObjectBytes": 68374490,
+    "pinnedReadInvocations": 41,
+    "readPayloadBytes": 215362417,
+    "observeInvocations": 8,
+    "firebaseVerifierInvocationsIncludingPriorLogin": 4,
+    "qaSignInInvocationsTotal": 1,
+    "additionalQaSignInInvocations": 0,
+    "deliveryV37": {
+      "operations": 4,
+      "reservedBytes": 3292721,
+      "maxOperations": 64,
+      "maxBytes": 67108864
+    }
+  },
+  "oldAssetBytes": {
+    "9778": 1048225,
+    "9816": 1122418,
+    "9818": 1122572
+  },
+  "preservedFailureFiles": {
+    "ledger.log": {
+      "archive": "ledger.failed-java-auth.log",
+      "sha256": "03d44251367b97fe6daa68e2842879ad7598b885adc9603ed2a8725124000add",
+      "bytes": 106
+    },
+    "backend.log": {
+      "archive": "backend.failed-java-auth.log",
+      "sha256": "d9c8cb9e1f70bdded2532ade56b482aaee073bc328920663267b9d61a6a7ab53",
+      "bytes": 15634
+    },
+    "backend.pid": {
+      "archive": "backend.failed-java-auth.pid",
+      "sha256": "7303ec2ef3f2739b24e3d725c0199eddb9205104e705d811a85ae16703be82cd",
+      "bytes": 6
+    }
+  },
+  "mobile": {
+    "attempt": {
+      "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+      "statesRecorded": 0,
+      "finished": false,
+      "cleanup": {
+        "vmStop": "PASS",
+        "vmClose": "PASS",
+        "reverse": "PASS",
+        "forward": "PASS"
+      }
+    },
+    "diagnostic": {
+      "ok": true,
+      "configured": true,
+      "stopped": true,
+      "credentialActive": false,
+      "deadlineActive": false,
+      "status": "error",
+      "slot": null,
+      "events": [
+        {
+          "kind": "state",
+          "status": "loading",
+          "entryIndex": 1,
+          "canonicalSource": false,
+          "epoch": 1,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "http",
+          "endpoint": "manifest",
+          "ok": true,
+          "payloadBytes": 5187,
+          "elapsedMillis": 844
+        },
+        {
+          "kind": "state",
+          "status": "initial",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 2,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "http",
+          "endpoint": "bytes",
+          "ok": false,
+          "elapsedMillis": 1049
+        },
+        {
+          "kind": "state",
+          "status": "loading",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 3,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "http",
+          "endpoint": "bytes",
+          "ok": false,
+          "elapsedMillis": 7
+        },
+        {
+          "kind": "state",
+          "status": "error",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 4,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "state",
+          "status": "error",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 5,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "state",
+          "status": "error",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 6,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        },
+        {
+          "kind": "state",
+          "status": "error",
+          "entryIndex": 2,
+          "canonicalSource": false,
+          "epoch": 7,
+          "activeBuffers": 0,
+          "activeDescriptors": 0,
+          "activeCodecs": 0,
+          "activeImages": 0
+        }
+      ],
+      "activeBuffers": 0,
+      "activeDescriptors": 0,
+      "activeCodecs": 0,
+      "activeImages": 0
+    },
+    "closed": {
+      "kind": "CLOSED_AFTER_FAILED_FIRST_STATE",
+      "memory": {
+        "totalPssKiB": 207092,
+        "totalRssKiB": 190348,
+        "kind": "DEBUG_EMULATOR_SNAPSHOT_NOT_PEAK_PROFILE"
+      },
+      "screenshotSha256": "2b6accff8c9718f5a4b4eab26ca0cf6a34c4a4b1f93f340dc71905a0d6583506",
+      "physicalDevice": false
+    },
+    "completeRenderReceipts": 0,
+    "actualSuccessfulImagePayloadMeasurement": false,
+    "physicalDevice": false,
+    "qualityAccepted": false,
+    "rootCause": "USER_CONFIRMED_MANUAL_CHOICE_CHANGE_INTERRUPTED_FIXED_SEQUENCE_HTTP_FAILURE_CAUSE_UNRECORDED",
+    "httpStatusAndOriginalExceptionNotRecorded": true,
+    "userConfirmedManualChoiceChange": true,
+    "userReply": "Evet, düğmeye dokundum"
+  },
+  "limitsUnchanged": true,
+  "newPrefixOpened": false,
+  "cloudCleanupPerformed": false,
+  "productionDeploymentPerformed": false,
+  "ledgerSha256AtClose": "60086ea1ad1bdccbcc2423481fcd5a20cd4777602c3e87b1c3636732b298b839"
+}
