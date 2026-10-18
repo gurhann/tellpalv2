@@ -65,11 +65,158 @@ void main() {
   );
   TestWidgetsFlutterBinding.ensureInitialized();
   tearDown(() {
+    expect(ReadingComparisonRaster.reservedSlots, 0);
+    expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
     expect(ReadingComparisonRaster.activeBuffers, 0);
     expect(ReadingComparisonRaster.activeDescriptors, 0);
     expect(ReadingComparisonRaster.activeCodecs, 0);
     expect(ReadingComparisonRaster.activeImages, 0);
   });
+  test(
+    'P4b2 pending iptal gerçek native cleanup bitmeden slotu açmaz',
+    () async {
+      final bytes = await png();
+      final cancellation = ReadingComparisonCancellation();
+      final before = ReadingComparisonRaster.bufferCreationAttempts;
+      final pending = ReadingComparisonRaster.decode(
+        bytes,
+        raster(width: 4, height: 4),
+        2,
+        2,
+        limits(pixels: 16),
+        cancellation,
+      );
+      expect(ReadingComparisonRaster.reservedSlots, 1);
+      expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.from(16));
+      expect(ReadingComparisonRaster.bufferCreationAttempts - before, 1);
+      cancellation.cancel();
+      final cancelled = expectLater(pending, throwsStateError);
+      expect(ReadingComparisonRaster.reservedSlots, 1);
+      await expectLater(
+        ReadingComparisonRaster.decode(
+          bytes,
+          raster(width: 4, height: 4),
+          1,
+          1,
+          limits(pixels: 100),
+          ReadingComparisonCancellation(),
+        ),
+        throwsStateError,
+      );
+      expect(ReadingComparisonRaster.bufferCreationAttempts - before, 1);
+      await cancelled;
+      expect(ReadingComparisonRaster.reservedSlots, 0);
+      expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
+    },
+  );
+  test(
+    'P4b2 resident devir farklı run ve eski double-dispose yeni ownerı korur',
+    () async {
+      final bytes = await png();
+      Future<ReadingComparisonRaster> decode(ReadingComparisonLimits budget) =>
+          ReadingComparisonRaster.decode(
+            bytes,
+            raster(width: 4, height: 4),
+            2,
+            2,
+            budget,
+            ReadingComparisonCancellation(),
+          );
+      final first = await decode(limits(pixels: 16));
+      addTearDown(first.dispose);
+      final before = ReadingComparisonRaster.bufferCreationAttempts;
+      final different = ReadingComparisonLimits(
+        runId: 'different',
+        maxOwnedImages: 1,
+        maxEncodedBytes: 4000000,
+        maxBufferBytes: 12000000,
+        maxDecodePixels: 100,
+        maxDecodedBytes: 400,
+        maxPeakBytes: 12002000,
+        transferMillis: 1000,
+        decodeMillis: 1000,
+        statusEveryMillis: 1000,
+        maxStatusChecks: 2,
+        maxControlMillis: 3000,
+      );
+      for (final budget in [limits(pixels: 16), different]) {
+        await expectLater(decode(budget), throwsStateError);
+        expect(ReadingComparisonRaster.reservedSlots, 1);
+        expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.from(16));
+        expect(first.image!.debugDisposed, isFalse);
+        expect(ReadingComparisonRaster.bufferCreationAttempts, before);
+      }
+      first.dispose();
+      final second = await decode(different);
+      addTearDown(second.dispose);
+      first.dispose();
+      expect(ReadingComparisonRaster.reservedSlots, 1);
+      expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.from(16));
+      expect(second.image!.debugDisposed, isFalse);
+      second.dispose();
+    },
+  );
+  test('P4b2 geçersiz hedef ve ön iptal native öncesinde reddedilir', () async {
+    final bytes = await png();
+    final before = ReadingComparisonRaster.bufferCreationAttempts;
+    for (final size in [0, -1, 5, 0x7fffffffffffffff]) {
+      await expectLater(
+        ReadingComparisonRaster.decode(
+          bytes,
+          raster(width: 4, height: 4),
+          size,
+          size,
+          limits(pixels: 16),
+          ReadingComparisonCancellation(),
+        ),
+        throwsStateError,
+      );
+    }
+    await expectLater(
+      ReadingComparisonRaster.decode(
+        bytes,
+        raster(width: 4, height: 4),
+        2,
+        2,
+        limits(pixels: 16),
+        ReadingComparisonCancellation()..cancel(),
+      ),
+      throwsStateError,
+    );
+    await expectLater(
+      ReadingComparisonRaster.decode(
+        Uint8List(2000001),
+        raster(width: 4, height: 4),
+        2,
+        2,
+        limits(pixels: 16),
+        ReadingComparisonCancellation(),
+      ),
+      throwsStateError,
+    );
+    expect(ReadingComparisonRaster.bufferCreationAttempts, before);
+  });
+  test(
+    'P4b2 kaynak piksel bütçesi hedef sığsa da native öncesinde reddedilir',
+    () async {
+      final bytes = await png();
+      final before = ReadingComparisonRaster.bufferCreationAttempts;
+      await expectLater(
+        ReadingComparisonRaster.decode(
+          bytes,
+          raster(width: 4, height: 4),
+          2,
+          2,
+          limits(pixels: 4),
+          ReadingComparisonCancellation(),
+        ),
+        throwsStateError,
+      );
+      expect(ReadingComparisonRaster.bufferCreationAttempts, before);
+      expect(ReadingComparisonRaster.reservedSlots, 0);
+      expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
+    },
+  );
   test(
     'gerçek native codec decode edilir ve sahip olunan image bırakılır',
     () async {
@@ -98,11 +245,13 @@ void main() {
           raster(width: 2, height: 2),
           2,
           2,
-          limits(pixels: 4),
+          limits(pixels: 16),
           ReadingComparisonCancellation(),
         ),
         throwsStateError,
       );
+      expect(ReadingComparisonRaster.reservedSlots, 0);
+      expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
       final cancellation = ReadingComparisonCancellation();
       final operation = ReadingComparisonRaster.decode(
         bytes,

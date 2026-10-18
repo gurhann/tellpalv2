@@ -1,0 +1,299 @@
+{
+  "baselineCommit": "6c37af44921cb85de220bee504b8fe0dfe3dfaf6",
+  "scope": "Yalnız aynı isolate içindeki QA raster sahipliği; native başlangıç gözlemi RSS/GPU ölçümü değildir.",
+  "privateRoot": "/Volumes/MAC_EK/tellpal-qa-private/p4b2-raster-reservation-20261018-6c37af4",
+  "sourceHashes": {
+    "app/mobile/lib/features/reading_images/presentation/widgets/reading_image_comparison_raster.dart": "90a9921fee6d8cdc2cea7241a84c52416adbb3f3e3a0f424842a5445b9008cca",
+    "app/mobile/test/reading_images/reading_image_comparison_raster_test.dart": "eb45ef69b864c6559af0c2e13b529660014c6d631d1447c3c20e60b5c1ac57d3",
+    "app/mobile/test/reading_images/reading_image_comparison_loaded_test.dart": "7e18bc0e87ed775165bf3cfdd5f9b98b7c4901427159c6fd66c694aa4f54dacc",
+    "app/mobile/test/reading_images/reading_image_consumer_qa_test.dart": "2e7199d4ee29e50ef67dcb08f78240e98d1119cc9d255948c0738ca2655b2bf5"
+  },
+  "snapshotFiles": 220,
+  "snapshotSha256": "8be24fe70604dd9ac759708fcc3f7d53a2dad30237db3acebafd17b11ef6d11d",
+  "sourceException": "app/mobile/lib/main_image_experiment.dart",
+  "verification": [
+    {
+      "log": "initial-red-02.private.log",
+      "exitCode": 1,
+      "purpose": "Eski geç kontrol: ikinci native başlangıç farkı beklenen 0 yerine 1; iki kalıcı loaded image değildir."
+    },
+    {
+      "log": "15-narrow-final.private.log",
+      "exitCode": 0,
+      "passed": 211,
+      "command": "flutter test --no-pub test/reading_images test/story_detail --reporter expanded",
+      "sourcePeriod": "İnceleme onarımı öncesi kaynak; son test sayıları değildir."
+    },
+    {
+      "log": "16-full-tracked-complete.private.log",
+      "exitCode": 0,
+      "passed": 473,
+      "command": "flutter test --no-pub --reporter expanded",
+      "sourcePeriod": "İnceleme onarımı öncesi kaynak; son test sayıları değildir."
+    },
+    {
+      "log": "17-analyze.private.log",
+      "exitCode": 0,
+      "result": "No issues found!",
+      "command": "flutter analyze --no-pub",
+      "sourcePeriod": "İnceleme onarımı öncesi kaynak; son test sayıları değildir."
+    },
+    {
+      "log": "19-matrix-final-serial.private.log",
+      "exitCode": 0,
+      "passed": 37,
+      "purpose": "Kabul testlerinin adlarını eşzamanlı reporter atlamasından bağımsız açık kaydetmek.",
+      "sourcePeriod": "İnceleme onarımı öncesi kaynak; son test sayıları değildir."
+    },
+    {
+      "log": "20-pixel-preflight-case.private.log",
+      "exitCode": 0,
+      "passed": 1,
+      "sourcePeriod": "İnceleme onarımı sonrası son kaynak"
+    },
+    {
+      "log": "21-mutation-pixel-preflight.private.log",
+      "exitCode": 1,
+      "purpose": "Yalnız declaredPixels ön kontrolü kaldırıldı; native başlangıç farkı beklenen 0 yerine 1."
+    },
+    {
+      "log": "22-narrow-final.private.log",
+      "exitCode": 0,
+      "passed": 212,
+      "command": "flutter test --no-pub test/reading_images test/story_detail --reporter expanded"
+    },
+    {
+      "log": "23-full-tracked-final.private.log",
+      "exitCode": 0,
+      "passed": 474,
+      "command": "flutter test --no-pub --reporter expanded"
+    },
+    {
+      "log": "24-analyze-final.private.log",
+      "exitCode": 0,
+      "result": "No issues found!",
+      "command": "flutter analyze --no-pub"
+    },
+    {
+      "log": "25-matrix-final-serial.private.log",
+      "exitCode": 0,
+      "passed": 38,
+      "purpose": "Son kaynak kabul testlerinin adlarını seri ve açık kaydetmek."
+    }
+  ],
+  "countsOverlap": true,
+  "logs": [
+    {
+      "file": "15-narrow-final.private.log",
+      "exitCode": 0,
+      "sha256": "61cbfd0b03990d0c9e2194c004318d4efb126b6be94fa4c7269774de8e1efa85"
+    },
+    {
+      "file": "16-full-tracked-complete.private.log",
+      "exitCode": 0,
+      "sha256": "2cc4cbbff70003626f5ad21b57179b427db2d1f338baf0efc00e112295650367"
+    },
+    {
+      "file": "17-analyze.private.log",
+      "exitCode": 0,
+      "sha256": "9a94510c60f28720d36cb243ef4a74f7e6bab14f4aaa04f543f85488a80fd7c9"
+    },
+    {
+      "file": "19-matrix-final-serial.private.log",
+      "exitCode": 0,
+      "sha256": "09a7903d95044b45cc4004298fe4d397bcc359157002b88c4246e76818fed6f7"
+    },
+    {
+      "file": "20-pixel-preflight-case.private.log",
+      "exitCode": 0,
+      "sha256": "c9c316ad5b79d33c50943ebddaa29657c3dd77987d2ce0eb511994ac2d9d4ca5"
+    },
+    {
+      "file": "21-mutation-pixel-preflight.private.log",
+      "exitCode": 1,
+      "sha256": "df3cd80fd9ffd346619bd7cc87de8831cf5a4f4561800df81ab7af6147bcae27"
+    },
+    {
+      "file": "22-narrow-final.private.log",
+      "exitCode": 0,
+      "sha256": "9ae0253a0172cc9c88e3f39c6fe6866f505a154713f1b538293fe7942ac2673c"
+    },
+    {
+      "file": "23-full-tracked-final.private.log",
+      "exitCode": 0,
+      "sha256": "2c027debf831d9da85a3e69e47841a991b04af145fe8ed24adf9ff1d447bbecd"
+    },
+    {
+      "file": "24-analyze-final.private.log",
+      "exitCode": 0,
+      "sha256": "6b98ff936ce9f981455500a0701d0fd4323f9731313f0d0140948297335e9543"
+    },
+    {
+      "file": "25-matrix-final-serial.private.log",
+      "exitCode": 0,
+      "sha256": "5599ec0cf9472595a72fe6245cc25cef5664b7b8d5d0d21e239995f2ca1bd703"
+    },
+    {
+      "file": "focused-04.private.log",
+      "exitCode": 0,
+      "sha256": "0a2143232ee0c0673fd35ee7301a441d22f65c1d4ebb861cc36cac54f123d40d"
+    },
+    {
+      "file": "initial-red-02.private.log",
+      "exitCode": 1,
+      "sha256": "705e3c8ccb1aee0a6f03271539ae83a8433ec53b7cf4f8afe30c08d5915b79a7"
+    },
+    {
+      "file": "mutation-05-remove-reservation.private.log",
+      "exitCode": 1,
+      "sha256": "69d008725cd9ae3aa5f763d73f1dd426d5d00a7182902810a2d9a49f110d5941"
+    },
+    {
+      "file": "mutation-06-late-reservation.private.log",
+      "exitCode": 1,
+      "sha256": "e83bd486d43c64a5ad148cb81eb33ab6e4e3403e4031ffdc8191e9d347b71b55"
+    },
+    {
+      "file": "mutation-07-early-success-release.private.log",
+      "exitCode": 1,
+      "sha256": "425a09b6a452064040008ae86bcd591096e594e04f190ffcccfea3390a60de7e"
+    },
+    {
+      "file": "mutation-08-missing-error-release.private.log",
+      "exitCode": 1,
+      "sha256": "5981cbc4d7fff23b2839b57d766fe75d439ad64f10433bf8a5ba1c1b528f8a68"
+    },
+    {
+      "file": "mutation-09-missing-dispose-release.private.log",
+      "exitCode": 1,
+      "sha256": "68f9458cbef6cf7d976cda0f36e52014ac802879fbef8e535dc292c26d3608ef"
+    },
+    {
+      "file": "mutation-10-double-dispose-other-owner.private.log",
+      "exitCode": 1,
+      "sha256": "0322ee1e97b34f6e4f879a01f1c5f6d98178d3642cfcf277e848ee10777f6647"
+    },
+    {
+      "file": "mutation-11-new-run-resets-owner.private.log",
+      "exitCode": 1,
+      "sha256": "425a09b6a452064040008ae86bcd591096e594e04f190ffcccfea3390a60de7e"
+    }
+  ],
+  "mutations": {
+    "results": [
+      {
+        "mutation": "05-remove-reservation",
+        "exitCode": 1,
+        "sourceSha256": "78fadfd6b9a39fa232ce29faa7c8474b17e43bb95d479f799b1634cd1fb59dd2",
+        "test": "P4b2 pending",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "06-late-reservation",
+        "exitCode": 1,
+        "sourceSha256": "141a4b41b30de5ff47cda5fa96f963b2935f584c49713a19f3f451ad85af4be6",
+        "test": "P4b2 pending",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "07-early-success-release",
+        "exitCode": 1,
+        "sourceSha256": "142208c3edf9cfb3270da067fa668363041ffc70d892ea6123261ff8b35f81df",
+        "test": "P4b2 resident",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "08-missing-error-release",
+        "exitCode": 1,
+        "sourceSha256": "065c25251f091944846747e723dda04c5d6f1d60333cef1528dee44aff2b4a6d",
+        "test": "gerçek header",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "09-missing-dispose-release",
+        "exitCode": 1,
+        "sourceSha256": "de8f2b93387baed6dd74f9835d45ea6fd45c4999b77e2a78b2c5597deafc7990",
+        "test": "gerçek native codec",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "10-double-dispose-other-owner",
+        "exitCode": 1,
+        "sourceSha256": "513b43bdeab80e296c33290b62ba0d6dd5ce08cba38e1210238036ed6facf898",
+        "test": "P4b2 resident",
+        "assertionFailure": true,
+        "compileFailure": false
+      },
+      {
+        "mutation": "11-new-run-resets-owner",
+        "exitCode": 1,
+        "sourceSha256": "cd56d318784106a7414a35eeef8939de6363b315848c9d17bf2dda04fc911407",
+        "test": "P4b2 resident",
+        "assertionFailure": true,
+        "compileFailure": false
+      }
+    ],
+    "restoredSha256": "90a9921fee6d8cdc2cea7241a84c52416adbb3f3e3a0f424842a5445b9008cca",
+    "allMutationsKilledByAssertions": true
+  },
+  "audit": {
+    "protectedFilesChecked": 3272,
+    "protectedMismatches": [],
+    "oldRunFilesChecked": 72,
+    "oldRunMismatches": [],
+    "oldP4a5FilesChecked": 192,
+    "oldP4a5Mismatches": [],
+    "oldP4b1FilesChecked": 296,
+    "oldP4b1Mismatches": [],
+    "frozenSha256": "b5fc2eedc2d3eb04df45e39450cffd9e3d9c2c43aac978c5042458fdee9a4fb2",
+    "frozenMatches": true,
+    "snapshotFiles": 220,
+    "snapshotSha256": "8be24fe70604dd9ac759708fcc3f7d53a2dad30237db3acebafd17b11ef6d11d",
+    "sourceMismatches": [],
+    "sourceException": "app/mobile/lib/main_image_experiment.dart",
+    "runtimeLauncherMatches": true,
+    "missingRelativeDartDependencies": [],
+    "trackedTestFiles": 49,
+    "missingTrackedTests": [],
+    "forbiddenCopiedFiles": []
+  },
+  "auditReceiptSha256": "5b33421979795673815fc0e694f2ce87fc74e170a656fcc69ed20a20410d0644",
+  "openGates": [
+    "Güncel tek-parent UI yolunda resident Cubit çakışması kanıtlanmadı.",
+    "Fiziksel Android/iPhone kalite, RSS/GPU/peak, genel P4b ve üretim profili kabulü açık."
+  ],
+  "reviewPatchMutation": {
+    "removedGuard": "declaredPixels > maxDecodePixels ön kontrolü",
+    "remainingChecks": "Diğer ön kontroller ve descriptor sonrası actualPixels denetimi korunur.",
+    "mutationSha256": "c5aef4cd77c400ed52a51a23b8c096348c925e8ea8f4172f6071110b7e989047",
+    "restoredSha256": "90a9921fee6d8cdc2cea7241a84c52416adbb3f3e3a0f424842a5445b9008cca",
+    "exitCode": 1,
+    "assertionFailure": true,
+    "compileFailure": false
+  },
+  "reviewPatch": {
+    "triage": "medium/patch",
+    "change": "Yalnız bir test eklendi; intent ve ürün kodu değişmedi.",
+    "test": "P4b2 kaynak piksel bütçesi hedef sığsa da native öncesinde reddedilir",
+    "input": "Gerçek 4×4 PNG, eşleşen 4×4 metadata, 2×2 hedef, limits(pixels:4).",
+    "expected": "Ret, değişmeyen bufferCreationAttempts, reservedSlots=0 ve reservedDecodedBytes=0.",
+    "old13LogsUnchanged": true,
+    "old7MutationRecordsUnchanged": true
+  },
+  "reviews": {
+    "layers": 3,
+    "initialFindings": 1,
+    "closedFindings": 1,
+    "openFindings": 0,
+    "triage": "medium/patch",
+    "runtimeChangedForPatch": false,
+    "closureReceipt": "review-closure-02.private.json",
+    "closureReceiptSha256": "07239db76ed38fbdc09c3dbf7ac0c313842afbbf24cc84fccc9f33dbfefd8a2a",
+    "targetedReviewerClosure": "Önceki bulgu kapandı; yeni test ve yalnız ön guard mutasyonu doğrulandı."
+  }
+}

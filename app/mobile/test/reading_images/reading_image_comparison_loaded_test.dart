@@ -121,6 +121,49 @@ Future<void> loaded(
 }
 
 void main() {
+  tearDown(() {
+    expect(ReadingComparisonRaster.reservedSlots, 0);
+    expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
+    expect(ReadingComparisonRaster.activeImages, 0);
+  });
+  testWidgets(
+    'P4b2 aynı gate iki Cubit resident owner varken ikinci native çağrı başlamaz',
+    (tester) async {
+      final config = media(Uri.parse('http://127.0.0.1:1'));
+      await tester.runAsync(() async {
+        final repo = NativeRepository(await png(4), await png(2));
+        final gate = ReadingComparisonWorkGate();
+        ReadingImageComparisonCubit owner() => ReadingImageComparisonCubit(
+          LoadReadingImageComparison(repo),
+          repo,
+          config,
+          gate,
+          const ReadingComparisonClock(),
+        );
+        final first = owner(), second = owner();
+        try {
+          await loaded(first);
+          final image = first.state.raster!.image!;
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.from(64));
+          final before = ReadingComparisonRaster.bufferCreationAttempts;
+          await loaded(second);
+          expect(second.state.error, 'media_refused');
+          expect(repo.byteCalls, 2);
+          expect(image.debugDisposed, isFalse);
+          expect(ReadingComparisonRaster.bufferCreationAttempts - before, 0);
+          first.retire('released');
+          await loaded(second);
+          expect(second.state.status, 'loaded');
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+        } finally {
+          await first.close();
+          await second.close();
+          await config.account!.credentials.close();
+        }
+      });
+    },
+  );
   testWidgets(
     'F4 büyük server lease değeri Timer öncesi ve byte çağrısından önce reddedilir',
     (tester) async {

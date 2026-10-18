@@ -8,17 +8,24 @@ import '../../domain/entity/reading_image_manifest.dart';
 
 /// Sahibi açık tek native görüntü. Global/disk ImageCache kullanılmaz.
 class ReadingComparisonRaster {
-  ReadingComparisonRaster._(this.image);
+  ReadingComparisonRaster._(this.image, this._reservation);
   static int activeBuffers = 0,
       activeDescriptors = 0,
       activeCodecs = 0,
       activeImages = 0;
+  static _RasterReservation? _owner;
+  static int get reservedSlots => _owner == null ? 0 : 1;
+  static BigInt get reservedDecodedBytes => _owner?.bytes ?? BigInt.zero;
+  final _RasterReservation _reservation;
+  static int _bufferCreationAttempts = 0;
+  static int get bufferCreationAttempts => _bufferCreationAttempts;
   ui.Image? image;
   void dispose() {
     if (image != null) {
       image!.dispose();
       image = null;
       activeImages--;
+      _reservation.release();
     }
   }
 
@@ -30,6 +37,7 @@ class ReadingComparisonRaster {
     ReadingComparisonLimits limits,
     ReadingComparisonCancellation cancellation,
   ) async {
+    _RasterReservation? reservation;
     ui.ImmutableBuffer? buffer;
     ui.ImageDescriptor? descriptor;
     ui.Codec? codec;
@@ -42,6 +50,26 @@ class ReadingComparisonRaster {
               BigInt.from(limits.maxBufferBytes)) {
         throw StateError('buffer_limit');
       }
+      final outputBytes =
+          BigInt.from(width) * BigInt.from(height) * BigInt.from(4);
+      final declaredPixels =
+          BigInt.from(metadata.width) * BigInt.from(metadata.height);
+      if (width <= 0 ||
+          height <= 0 ||
+          width > metadata.width ||
+          height > metadata.height ||
+          declaredPixels > BigInt.from(limits.maxDecodePixels) ||
+          outputBytes > BigInt.from(limits.maxDecodedBytes) ||
+          BigInt.from(bytes.length) * BigInt.from(3) +
+                  declaredPixels * BigInt.from(16) +
+                  outputBytes >
+              BigInt.from(limits.maxPeakBytes)) {
+        throw StateError('decode_resource_or_metadata');
+      }
+      if (_owner != null) throw StateError('owned_image_limit');
+      reservation = _RasterReservation(outputBytes);
+      _owner = reservation;
+      _bufferCreationAttempts++;
       buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
       activeBuffers++;
       cancellation.check();
@@ -83,7 +111,8 @@ class ReadingComparisonRaster {
           image.height != height) {
         throw StateError('decode_deadline_or_dimensions');
       }
-      final owned = ReadingComparisonRaster._(image);
+      final owned = ReadingComparisonRaster._(image, reservation);
+      reservation = null;
       image = null;
       return owned;
     } finally {
@@ -103,6 +132,21 @@ class ReadingComparisonRaster {
         buffer.dispose();
         activeBuffers--;
       }
+      reservation?.release();
+    }
+  }
+}
+
+/// Token yalnız kendi rezervasyonunu bırakır; eski dispose yeni sahibine dokunamaz.
+class _RasterReservation {
+  _RasterReservation(this.bytes);
+  final BigInt bytes;
+  bool _released = false;
+  void release() {
+    if (_released) return;
+    _released = true;
+    if (identical(ReadingComparisonRaster._owner, this)) {
+      ReadingComparisonRaster._owner = null;
     }
   }
 }

@@ -249,7 +249,69 @@ void _select(
 );
 
 void main() {
+  testWidgets(
+    'P4b2 loopback farklı gate ikinci byte teslim edilir native başlamaz',
+    (tester) async {
+      await _native(tester, () async {
+        final server = _Loopback();
+        await server.start();
+        final configuration = media(server.origin);
+        final repo = ReadingImageComparisonRepositoryImpl(
+          ReadingImageComparisonDataSource(configuration),
+          configuration,
+        );
+        ReadingImageComparisonCubit owner() => ReadingImageComparisonCubit(
+          LoadReadingImageComparison(repo),
+          repo,
+          configuration,
+          ReadingComparisonWorkGate(),
+          ManualComparisonClock(),
+        );
+        final first = owner(), second = owner();
+        Future<void> select(ReadingImageComparisonCubit c) async {
+          final terminal = c.stream.firstWhere(
+            (s) => s.status == 'loaded' || s.status == 'error',
+          );
+          _select(c);
+          await terminal.timeout(const Duration(seconds: 3));
+        }
+
+        try {
+          await select(first);
+          final image = first.state.raster!.image!;
+          final bytesBefore = server.payloadBytes;
+          final attempts = ReadingComparisonRaster.bufferCreationAttempts;
+          final reserved = ReadingComparisonRaster.reservedDecodedBytes;
+          await select(second);
+          expect(second.state.error, 'media_refused');
+          expect(second.state.raster, isNull);
+          expect(server.delivered.length, 2);
+          expect(server.payloadBytes - bytesBefore, server.output.length);
+          expect(ReadingComparisonRaster.bufferCreationAttempts, attempts);
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          expect(ReadingComparisonRaster.reservedDecodedBytes, reserved);
+          expect(image.debugDisposed, isFalse);
+          first.retire('released');
+          expect(image.debugDisposed, isTrue);
+          expect(ReadingComparisonRaster.reservedSlots, 0);
+          expect(second.state.status, 'error');
+          expect(server.delivered.length, 2);
+          await select(second);
+          expect(second.state.status, 'loaded');
+          expect(server.delivered.length, 3);
+          expect(ReadingComparisonRaster.bufferCreationAttempts - attempts, 1);
+        } finally {
+          await first.close();
+          await second.close();
+          await configuration.account!.credentials.close();
+          await server.close();
+        }
+      });
+    },
+  );
   tearDown(() {
+    expect(ReadingComparisonRaster.reservedSlots, 0);
+    expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
     expect(ReadingComparisonRaster.activeImages, 0);
     expect(ReadingComparisonRaster.activeBuffers, 0);
     expect(ReadingComparisonRaster.activeDescriptors, 0);
@@ -364,6 +426,11 @@ void main() {
             1,
           );
           expect(ReadingComparisonRaster.activeImages, 1);
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          expect(
+            ReadingComparisonRaster.reservedDecodedBytes,
+            greaterThan(BigInt.zero),
+          );
           final shot = await _native(
             tester,
             () =>
@@ -513,6 +580,8 @@ void main() {
         expect(firstImage.debugDisposed, isTrue);
         expect(cubit.state.raster, isNull);
         expect(ReadingComparisonRaster.activeImages, 0);
+        expect(ReadingComparisonRaster.reservedSlots, 0);
+        expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
         tester.binding.scheduleForcedFrame();
         await tester.pump();
         expect(find.byType(ReadingImageComparisonRaster), findsNothing);
@@ -644,6 +713,11 @@ void main() {
             )
             .first;
         expect(ReadingComparisonRaster.activeImages, 1);
+        expect(ReadingComparisonRaster.reservedSlots, 1);
+        expect(
+          ReadingComparisonRaster.reservedDecodedBytes,
+          greaterThan(BigInt.zero),
+        );
         expect(server.requests, isEmpty);
         expect(find.byType(ReadingImageConsumerFlowScreen), findsOneWidget);
         expect(tester.widget<PopScope>(parentPopScope).canPop, isFalse);
@@ -681,6 +755,8 @@ void main() {
         await _wait(tester, () => cubit.isClosed);
         expect(nativeImage.debugDisposed, isTrue);
         expect(ReadingComparisonRaster.activeImages, 0);
+        expect(ReadingComparisonRaster.reservedSlots, 0);
+        expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
         expect(find.text('QA akışı kapandı'), findsOneWidget);
         expect(find.byType(ReadingConsumerImageSlot), findsNothing);
         expect(tester.widget<PopScope>(parentPopScope).canPop, isTrue);
@@ -979,6 +1055,11 @@ void main() {
             _select(cubit);
             await loaded.timeout(const Duration(seconds: 3));
             final image = cubit.state.raster!.image!;
+            expect(ReadingComparisonRaster.reservedSlots, 1);
+            expect(
+              ReadingComparisonRaster.reservedDecodedBytes,
+              greaterThan(BigInt.zero),
+            );
             switch (event) {
               case 'account':
                 configuration.account!.credentials.revoke();
@@ -1014,6 +1095,8 @@ void main() {
             );
             expect(image.debugDisposed, isTrue);
             expect(cubit.state.raster, isNull);
+            expect(ReadingComparisonRaster.reservedSlots, 0);
+            expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
             final bytes = server.delivered.length;
             await Future<void>.delayed(const Duration(milliseconds: 20));
             expect(
@@ -1264,6 +1347,11 @@ void main() {
           await Future<void>.delayed(const Duration(milliseconds: 20));
           expect(server.requests, isEmpty);
           expect(ReadingComparisonRaster.activeImages, 1);
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          expect(
+            ReadingComparisonRaster.reservedDecodedBytes,
+            greaterThan(BigInt.zero),
+          );
           final loaded = cubit.stream.firstWhere((s) => s.status == 'loaded');
           release.complete();
           await old;
@@ -1272,6 +1360,11 @@ void main() {
           expect(server.delivered.single['pageNumber'], '2');
           expect(cubit.state.entryIndex, 3);
           expect(ReadingComparisonRaster.activeImages, 1);
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          expect(
+            ReadingComparisonRaster.reservedDecodedBytes,
+            greaterThan(BigInt.zero),
+          );
         } finally {
           if (!release.isCompleted) release.complete();
           await old;
