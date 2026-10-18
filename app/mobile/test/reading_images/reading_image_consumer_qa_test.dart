@@ -77,6 +77,25 @@ class _ObservedStatusSource extends ReadingImageComparisonDataSource {
   }
 }
 
+/// Bekletilen gerçek HTTP status yanıtının transport sonunu gözler.
+class _CompletedStatusSource extends ReadingImageComparisonDataSource {
+  _CompletedStatusSource(super.configuration);
+  final statusCompleted = Completer<void>();
+  @override
+  Future<Uint8List> read(
+    String path,
+    Map<String, String> query,
+    ReadingComparisonCancellation cancellation,
+    int limit,
+  ) async {
+    try {
+      return await super.read(path, query, cancellation, limit);
+    } finally {
+      if (path == 'status') statusCompleted.complete();
+    }
+  }
+}
+
 /// Tüm byte'lar sentetiktir. Sunucu yalnız loopback üzerinde ve test boyunca yaşar.
 class _Loopback {
   late HttpServer server;
@@ -88,6 +107,7 @@ class _Loopback {
   int manifestStatus = 200;
   bool corrupt = false;
   Completer<void>? holdBytes, bytesEntered;
+  Completer<void>? holdStatus, statusEntered;
   bool partialStatus = false;
   late final Completer<void> statusOpened, statusDisconnected;
   Socket? statusSocket;
@@ -164,6 +184,10 @@ class _Loopback {
           request.response.add(data);
           payloadBytes += data.length;
         } else {
+          if (request.uri.path.endsWith('/status')) {
+            statusEntered?.complete();
+            await holdStatus?.future;
+          }
           request.response.statusCode = manifestStatus;
           request.response.headers.contentType = ContentType.json;
           final data = utf8.encode(jsonEncode(descriptor));
@@ -212,6 +236,7 @@ class _Loopback {
   Uri get origin => Uri.parse('http://127.0.0.1:${server.port}');
   Future<void> close() async {
     if (holdBytes != null && !holdBytes!.isCompleted) holdBytes!.complete();
+    if (holdStatus != null && !holdStatus!.isCompleted) holdStatus!.complete();
     statusSocket?.destroy();
     await server.close(force: true);
   }
@@ -249,6 +274,135 @@ void _select(
 );
 
 void main() {
+  for (final outcome in ['failure', 'live', 'success']) {
+    testWidgets(
+      'P4b3 gerçek reader sayfa değişimi pending HTTP status=$outcome',
+      (tester) async {
+        tester.view.physicalSize = const Size(487.5, 1055);
+        tester.view.devicePixelRatio = 1.25;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final server = _Loopback();
+        late ReadingImageComparisonConfiguration configuration;
+        late ReadingImageComparisonCubit cubit;
+        late ManualComparisonClock clock;
+        late _CompletedStatusSource source;
+        await _native(tester, () async {
+          await server.start();
+          server.holdStatus = Completer<void>();
+          server.statusEntered = Completer<void>();
+          server.descriptor['leaseMillis'] = 10000;
+          configuration = media(server.origin);
+          source = _CompletedStatusSource(configuration);
+          final repo = ReadingImageComparisonRepositoryImpl(
+            source,
+            configuration,
+          );
+          clock = ManualComparisonClock();
+          cubit = ReadingImageComparisonCubit(
+            LoadReadingImageComparison(repo),
+            repo,
+            configuration,
+            _NativeGate(Zone.current),
+            clock,
+          );
+          comparisonGetIt.registerFactory<ReadingImageComparisonCubit>(
+            () => cubit,
+          );
+        });
+        try {
+          await tester.pumpWidget(
+            const ReadingImageComparisonApp(contentId: 71, consumerQa: true),
+          );
+          await _wait(tester, () => cubit.state.status == 'loaded');
+          await tester.tap(find.text('QA sayfalarını aç'));
+          await _wait(
+            tester,
+            () => cubit.state.status == 'loaded' && cubit.state.entryIndex == 2,
+          );
+          final oldImage = cubit.state.raster!.image!;
+          final admission = cubit.admittedComparison;
+          await _native(tester, () async {
+            clock.advance(1000);
+            await server.statusEntered!.future.timeout(
+              const Duration(seconds: 3),
+            );
+          });
+          final epoch = cubit.state.epoch;
+          await tester.tap(find.text('Sonraki'));
+          await _wait(
+            tester,
+            () => cubit.state.status == 'loaded' && cubit.state.entryIndex == 3,
+          );
+          expect(find.text('Sayfa 2/2'), findsOneWidget);
+          expect(cubit.state.epoch, greaterThan(epoch));
+          expect(oldImage.debugDisposed, isTrue);
+          expect(identical(cubit.admittedComparison, admission), isTrue);
+          final current = cubit.state;
+          final image = current.raster!.image!;
+          expect(ReadingComparisonRaster.reservedSlots, 1);
+          final attempts = ReadingComparisonRaster.bufferCreationAttempts;
+          final delivered = server.delivered.length;
+          expect(delivered, 3);
+          await _native(tester, () async {
+            if (outcome == 'failure') server.manifestStatus = 403;
+            if (outcome == 'live') {
+              (server.descriptor['identity'] as Map)['liveGeneration'] = 2;
+            }
+            server.holdStatus!.complete();
+          });
+          if (outcome == 'success') {
+            await _native(tester, () async {
+              await source.statusCompleted.future.timeout(
+                const Duration(seconds: 3),
+              );
+              await Future<void>.delayed(Duration.zero);
+            });
+            await tester.pump();
+            expect(identical(cubit.state, current), isTrue);
+            expect(identical(cubit.admittedComparison, admission), isTrue);
+            expect(image.debugDisposed, isFalse);
+            expect(ReadingComparisonRaster.reservedSlots, 1);
+            expect(find.byType(ReadingImageComparisonRaster), findsOneWidget);
+          } else {
+            await _wait(tester, () => cubit.state.status == 'error');
+            expect(
+              cubit.state.error,
+              outcome == 'failure' ? 'status_refused' : 'live_changed',
+            );
+            expect(image.debugDisposed, isTrue);
+            expect(cubit.state.raster, isNull);
+            expect(cubit.admittedComparison, isNull);
+            expect(ReadingComparisonRaster.reservedSlots, 0);
+            expect(ReadingComparisonRaster.reservedDecodedBytes, BigInt.zero);
+            expect(find.byType(ReadingImageComparisonRaster), findsNothing);
+          }
+          await tester.pump(const Duration(milliseconds: 100));
+          expect(server.delivered.length, delivered);
+          expect(ReadingComparisonRaster.bufferCreationAttempts, attempts);
+          expect(
+            server.requests.where((u) => u.path.endsWith('/manifest')).length,
+            1,
+          );
+          expect(
+            server.requests.where((u) => u.path.endsWith('/status')).length,
+            1,
+          );
+          expect(tester.takeException(), isNull);
+        } finally {
+          await _native(tester, () async {
+            if (!server.holdStatus!.isCompleted) server.holdStatus!.complete();
+            await cubit.close().timeout(const Duration(seconds: 3));
+            await configuration.account!.credentials.close();
+            await server.close();
+            await comparisonGetIt.reset();
+          });
+          await tester.pumpWidget(const SizedBox());
+        }
+      },
+    );
+  }
+
   testWidgets(
     'P4b2 loopback farklı gate ikinci byte teslim edilir native başlamaz',
     (tester) async {

@@ -126,7 +126,307 @@ class StatusHoldingRepository extends HoldingRepository {
   }
 }
 
+/// Aynı metadata nesnesi her admission'da döner; istek yaşamı ayrıca korunmalıdır.
+class AdmissionStatusRepository extends StatusHoldingRepository {
+  AdmissionStatusRepository({int leaseMillis = 10000}) {
+    final f = Fixture();
+    sharedAdmission = ReadingImageComparison(
+      f.manifest,
+      f.context,
+      1,
+      leaseMillis,
+    );
+  }
+  late final ReadingImageComparison sharedAdmission;
+  final mediaWork =
+      <Completer<Either<ReadingComparisonFailure, ReadingComparisonBytes>>>[];
+  final mediaCancellations = <ReadingComparisonCancellation>[];
+
+  @override
+  Future<Either<ReadingComparisonFailure, ReadingImageComparison>> manifest(
+    int id,
+    ReadingComparisonCancellation c,
+  ) async {
+    manifestCalls++;
+    return Right(sharedAdmission);
+  }
+
+  @override
+  Future<Either<ReadingComparisonFailure, ReadingComparisonBytes>> bytes(
+    ReadingImageComparison value,
+    ReadingImageBinding binding,
+    ReadingImageRendition rendition,
+    bool canonical,
+    ReadingComparisonCancellation c,
+  ) {
+    bytesCalls++;
+    mediaCancellations.add(c);
+    final work =
+        Completer<Either<ReadingComparisonFailure, ReadingComparisonBytes>>();
+    mediaWork.add(work);
+    return work.future;
+  }
+
+  void releaseMedia(int index) => mediaWork[index].complete(
+    const Left(ReadingComparisonFailure('cancelled')),
+  );
+
+  void finishStatus(String outcome) {
+    switch (outcome) {
+      case 'failure':
+        pendingStatus.complete(
+          const Left(ReadingComparisonFailure('withdrawn')),
+        );
+      case 'exception':
+        pendingStatus.completeError(StateError('status_exception'));
+      case 'live':
+        pendingStatus.complete(
+          Right(
+            ReadingImageComparison(
+              sharedAdmission.manifest,
+              sharedAdmission.context,
+              2,
+              10000,
+            ),
+          ),
+        );
+      case 'invalid':
+        pendingStatus.complete(
+          Right(
+            ReadingImageComparison(
+              ReadingImageManifest(
+                identity: sharedAdmission.manifest.identity,
+                images: const [],
+              ),
+              sharedAdmission.context,
+              1,
+              10000,
+            ),
+          ),
+        );
+      case 'success':
+        pendingStatus.complete(Right(sharedAdmission));
+    }
+  }
+}
+
+Future<void> settleStatus() => Future<void>.delayed(Duration.zero);
+
 void main() {
+  for (final selection in ['page', 'geometry', 'choice']) {
+    for (final outcome in [
+      'failure',
+      'exception',
+      'live',
+      'invalid',
+      'success',
+    ]) {
+      test('P4b3 aynı admission seçim=$selection status=$outcome', () async {
+        final repo = AdmissionStatusRepository();
+        final config = media(Uri.parse('http://127.0.0.1:1'));
+        final clock = ManualComparisonClock();
+        final gate = ReadingComparisonWorkGate();
+        final cubit = ReadingImageComparisonCubit(
+          LoadReadingImageComparison(repo),
+          repo,
+          config,
+          gate,
+          clock,
+        );
+        try {
+          choose(cubit, 2);
+          await settleStatus();
+          clock.advance(1000);
+          await repo.statusEntered.future;
+          final epoch = cubit.state.epoch;
+          switch (selection) {
+            case 'page':
+              choose(cubit, 3);
+            case 'geometry':
+              cubit.select(
+                id: 71,
+                entryIndex: 2,
+                canonicalSource: false,
+                width: 120,
+                height: 80,
+                dpr: 1.25,
+                fit: ReadingImageFit.cover,
+              );
+            case 'choice':
+              cubit.changeChoice(3, true);
+              cubit.select(
+                id: 71,
+                entryIndex: 3,
+                canonicalSource: true,
+                width: 100,
+                height: 100,
+                dpr: 1,
+                fit: ReadingImageFit.contain,
+              );
+          }
+          expect(cubit.state.epoch, greaterThan(epoch));
+          expect(repo.statusCancellation!.cancelled, isFalse);
+          expect(repo.mediaCancellations.first.cancelled, isTrue);
+          expect(repo.bytesCalls, 1);
+          repo.releaseMedia(0);
+          await settleStatus();
+          expect(repo.bytesCalls, 2);
+          final selected = cubit.state;
+          final admission = cubit.admittedComparison;
+          repo.finishStatus(outcome);
+          await settleStatus();
+          if (outcome == 'success') {
+            expect(identical(cubit.state, selected), isTrue);
+            expect(identical(cubit.admittedComparison, admission), isTrue);
+            expect(repo.mediaCancellations.last.cancelled, isFalse);
+          } else {
+            expect(
+              cubit.state.error,
+              outcome == 'failure' || outcome == 'exception'
+                  ? 'status_refused'
+                  : 'live_changed',
+            );
+            expect(cubit.admittedComparison, isNull);
+            expect(cubit.state.raster, isNull);
+            expect(repo.mediaCancellations.last.cancelled, isTrue);
+          }
+          var gateReleased = false;
+          final drained = gate.run(() async {
+            gateReleased = true;
+          });
+          await settleStatus();
+          expect(
+            gateReleased,
+            isFalse,
+            reason: 'Eski medya bitmeden kapasite açılmaz',
+          );
+          expect(
+            (repo.manifestCalls, repo.bytesCalls, repo.statusCalls),
+            (1, 2, 1),
+          );
+          cubit.retire('test_cleanup');
+          repo.releaseMedia(1);
+          await drained;
+        } finally {
+          if (!repo.pendingStatus.isCompleted) repo.finishStatus('success');
+          for (final work in repo.mediaWork) {
+            if (!work.isCompleted) {
+              work.complete(const Left(ReadingComparisonFailure('cancelled')));
+            }
+          }
+          await cubit.close();
+          await config.account!.credentials.close();
+        }
+      });
+    }
+  }
+
+  for (final outcome in ['success', 'failure', 'exception', 'live']) {
+    test(
+      'P4b3 aynı nesneli readmission eski status=$outcome sonucunu reddeder',
+      () async {
+        final repo = AdmissionStatusRepository();
+        final config = media(Uri.parse('http://127.0.0.1:1'));
+        final clock = ManualComparisonClock();
+        final cubit = ReadingImageComparisonCubit(
+          LoadReadingImageComparison(repo),
+          repo,
+          config,
+          ReadingComparisonWorkGate(),
+          clock,
+        );
+        try {
+          choose(cubit, 2);
+          await settleStatus();
+          clock.advance(1000);
+          await repo.statusEntered.future;
+          final oldAdmission = cubit.admittedComparison;
+          cubit.retry();
+          expect(repo.statusCancellation!.cancelled, isTrue);
+          choose(cubit, 3);
+          repo.releaseMedia(0);
+          await settleStatus();
+          expect(repo.manifestCalls, 2);
+          expect(identical(cubit.admittedComparison, oldAdmission), isTrue);
+          final selected = cubit.state;
+          repo.finishStatus(outcome);
+          await settleStatus();
+          expect(identical(cubit.state, selected), isTrue);
+          expect(identical(cubit.admittedComparison, oldAdmission), isTrue);
+          expect(repo.mediaCancellations.last.cancelled, isFalse);
+          expect((repo.bytesCalls, repo.statusCalls), (2, 1));
+        } finally {
+          for (final work in repo.mediaWork) {
+            if (!work.isCompleted) {
+              work.complete(const Left(ReadingComparisonFailure('cancelled')));
+            }
+          }
+          if (!repo.pendingStatus.isCompleted) repo.finishStatus('success');
+          await cubit.close();
+          await config.account!.credentials.close();
+        }
+      },
+    );
+  }
+
+  for (final lifecycle in ['account', 'background', 'lease']) {
+    for (final outcome in ['success', 'failure', 'exception']) {
+      test(
+        'P4b3 $lifecycle sonrası eski status=$outcome state canlandırmaz',
+        () async {
+          final repo = AdmissionStatusRepository(leaseMillis: 2000);
+          final config = media(Uri.parse('http://127.0.0.1:1'));
+          final clock = ManualComparisonClock();
+          final cubit = ReadingImageComparisonCubit(
+            LoadReadingImageComparison(repo),
+            repo,
+            config,
+            ReadingComparisonWorkGate(),
+            clock,
+          );
+          try {
+            choose(cubit, 2);
+            await settleStatus();
+            clock.advance(1000);
+            await repo.statusEntered.future;
+            switch (lifecycle) {
+              case 'account':
+                config.account!.credentials.revoke();
+              case 'background':
+                cubit.visibility(false);
+              case 'lease':
+                clock.advance(1000);
+            }
+            expect(
+              cubit.state.error,
+              {
+                'account': 'account_changed',
+                'background': 'background',
+                'lease': 'lease_expired',
+              }[lifecycle],
+            );
+            final retired = cubit.state;
+            expect(repo.statusCancellation!.cancelled, isTrue);
+            repo.finishStatus(outcome);
+            await settleStatus();
+            expect(identical(cubit.state, retired), isTrue);
+            expect(cubit.admittedComparison, isNull);
+            expect(cubit.state.raster, isNull);
+            expect(
+              (repo.manifestCalls, repo.bytesCalls, repo.statusCalls),
+              (1, 1, 1),
+            );
+          } finally {
+            if (!repo.pendingStatus.isCompleted) repo.finishStatus('success');
+            repo.releaseMedia(0);
+            await cubit.close();
+            await config.account!.credentials.close();
+          }
+        },
+      );
+    }
+  }
+
   for (final outcome in ['success', 'failure', 'exception']) {
     for (final statusFirst in [true, false]) {
       test(

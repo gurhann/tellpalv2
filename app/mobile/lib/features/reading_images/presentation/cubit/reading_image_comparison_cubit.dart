@@ -320,20 +320,30 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     }
     _checking = true;
     final admission = _admission!;
-    final epoch = _epoch;
     final cancellation = ReadingComparisonCancellation();
     _statusCancellation = cancellation;
-    _statusWork = _checkStatus(admission, epoch, cancellation);
+    _statusWork = _checkStatus(admission, cancellation);
   }
+
+  // Seçim çizim neslini yeniler; status mevcut admission/isteğe bağlı kalır.
+  bool _ownsStatus(
+    ReadingImageComparison admission,
+    ReadingComparisonCancellation cancellation,
+  ) =>
+      !_closingStarted &&
+      !isClosed &&
+      _visible &&
+      !cancellation.cancelled &&
+      identical(_statusCancellation, cancellation) &&
+      identical(_admission, admission);
 
   Future<void> _checkStatus(
     ReadingImageComparison admission,
-    int epoch,
     ReadingComparisonCancellation cancellation,
   ) async {
     try {
       final result = await repository.status(admission, cancellation);
-      if (!_owns(epoch)) return;
+      if (!_ownsStatus(admission, cancellation)) return;
       result.fold((_) => retire('status_refused'), (fresh) {
         final valid = const ValidateReadingImageManifest()(
           manifest: fresh.manifest,
@@ -348,7 +358,7 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
         }
       });
     } catch (_) {
-      if (_owns(epoch)) retire('status_refused');
+      if (_ownsStatus(admission, cancellation)) retire('status_refused');
     } finally {
       _checking = false;
     }
