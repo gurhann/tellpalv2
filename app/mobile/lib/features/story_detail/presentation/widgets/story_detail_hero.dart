@@ -33,9 +33,11 @@ class StoryDetailHero extends StatefulWidget {
     super.key,
     required this.state,
     required this.strings,
+    this.fit = BoxFit.cover,
   });
   final StoryDetailState state;
   final StoryDetailStrings strings;
+  final BoxFit fit;
   @override
   State<StoryDetailHero> createState() => _StoryDetailHeroState();
 }
@@ -164,7 +166,7 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
       cacheManager: _cache,
       memCacheWidth: size.$1,
       memCacheHeight: size.$2,
-      fit: BoxFit.cover,
+      fit: widget.fit,
       placeholder: (_, _) => const ColoredBox(color: AppColors.placeholder),
       imageBuilder: (context, provider) {
         // Match OctoImage's admitted decoder key; the unresized key would start
@@ -198,7 +200,7 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
         });
         return Image(
           image: bounded,
-          fit: BoxFit.cover,
+          fit: widget.fit,
           excludeFromSemantics: true,
         );
       },

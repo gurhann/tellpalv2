@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:crypto/crypto.dart';
 import 'package:file/file.dart' as files;
@@ -20,6 +21,8 @@ import 'package:tellpal_mobile_poc/features/image_experiment/presentation/cubit/
 import 'package:tellpal_mobile_poc/features/image_experiment/presentation/cubit/reader_resolution_state.dart';
 import 'package:tellpal_mobile_poc/features/image_experiment/presentation/view/reader_resolution_images.dart';
 import 'package:tellpal_mobile_poc/story_player_page.dart';
+import 'package:tellpal_mobile_poc/story_manifest.dart';
+import 'package:tellpal_mobile_poc/core/presentation/widgets/reading_image_viewport.dart';
 import 'package:tellpal_mobile_poc/story_reader_images.dart';
 import 'fixture.dart';
 
@@ -214,6 +217,78 @@ FixtureWire readerWire({
   return wire;
 }
 
+class _RasterHttpClient implements HttpClient {
+  @override
+  Future<HttpClientRequest> getUrl(Uri url) async => _RasterHttpRequest();
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _RasterHttpRequest implements HttpClientRequest {
+  @override
+  Future<HttpClientResponse> close() async => _RasterHttpResponse();
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _RasterHttpResponse extends Stream<List<int>>
+    implements HttpClientResponse {
+  @override
+  int get statusCode => HttpStatus.ok;
+  @override
+  int get contentLength => fixtureBytes.length;
+  @override
+  HttpClientResponseCompressionState get compressionState =>
+      HttpClientResponseCompressionState.notCompressed;
+  @override
+  StreamSubscription<List<int>> listen(
+    void Function(List<int>)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) => Stream<List<int>>.value(fixtureBytes).listen(
+    onData,
+    onError: onError,
+    onDone: onDone,
+    cancelOnError: cancelOnError,
+  );
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _LayoutImages implements StoryReaderImages {
+  final provider = MemoryImage(fixtureBytes);
+  final events = <String>[];
+  StoryReaderGeometry? geometry;
+
+  @override
+  Future<ImageProvider> prepare(StoryPage page) async {
+    events.add('prepare:${page.pageNumber}');
+    return provider;
+  }
+
+  @override
+  void observeLayout(StoryReaderGeometry value) {
+    geometry = value;
+    events.add('observe');
+  }
+
+  @override
+  Widget display(BuildContext context, StoryPage page) {
+    events.add('display:${page.pageNumber}');
+    return Image(
+      key: const ValueKey('reader-layout-image'),
+      image: provider,
+      fit: BoxFit.contain,
+    );
+  }
+
+  @override
+  void selected(StoryPage page, int generation) {
+    events.add('selected:${page.pageNumber}');
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const channel = MethodChannel('tellpal/image_experiment');
@@ -260,6 +335,128 @@ void main() {
     padding: EdgeInsets.zero,
     viewInsets: EdgeInsets.zero,
   );
+
+  for (final owned in [false, true]) {
+    testWidgets(
+      'reader ortak alanı yeniden ölçer ve medya sırasını korur; owned=$owned',
+      (tester) async {
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        debugNetworkImageHttpClientProvider = () => _RasterHttpClient();
+        try {
+          final configuration = readerWire().configuration();
+          final source = ReaderManifestSource(configuration);
+          final images = owned ? _LayoutImages() : null;
+          final controller = StoryReaderController();
+          for (final sample in [
+            (size: const Size(390, 844), dpr: 1.25, scale: 1.0),
+            (size: const Size(844, 500), dpr: 2.0, scale: 1.3),
+            (size: const Size(800, 1280), dpr: 3.0, scale: 1.5),
+          ]) {
+            tester.view.physicalSize = sample.size * sample.dpr;
+            tester.view.devicePixelRatio = sample.dpr;
+            await tester.pumpWidget(
+              MaterialApp(
+                home: MediaQuery(
+                  data: MediaQueryData(
+                    size: sample.size,
+                    devicePixelRatio: sample.dpr,
+                    textScaler: TextScaler.linear(sample.scale),
+                    padding: const EdgeInsets.only(top: 24, bottom: 16),
+                    viewInsets: const EdgeInsets.only(bottom: 12),
+                  ),
+                  child: StoryPlayerPage(
+                    client: source,
+                    contentId: 71,
+                    languageCode: 'tr',
+                    images: images,
+                    controller: controller,
+                    grantRefreshWindow: Duration.zero,
+                  ),
+                ),
+              ),
+            );
+            for (var i = 0; i < 4; i++) {
+              await tester.runAsync(
+                () => Future<void>.delayed(const Duration(milliseconds: 20)),
+              );
+              await tester.pump(const Duration(milliseconds: 20));
+            }
+            final viewport = find.byType(ReadingImageViewport);
+            expect(viewport, findsOneWidget);
+            final rect = tester.getRect(viewport);
+            expect(rect.width, sample.size.width);
+            expect(rect.height, greaterThan(0));
+            expect(
+              tester.widget<ReadingImageViewport>(viewport).fit,
+              BoxFit.contain,
+            );
+            final imageFinder = find.descendant(
+              of: viewport,
+              matching: find.byType(Image),
+            );
+            final imageRect = tester.getRect(imageFinder);
+            expect(imageRect.size, const Size(1, 1));
+            expect(
+              (imageRect.center - rect.center).distance,
+              lessThan(.000001),
+            );
+            final image = tester.widget<Image>(imageFinder);
+            expect(image.fit, BoxFit.contain);
+            if (images != null) {
+              expect(images.geometry!.slot.width, closeTo(rect.width, .000001));
+              expect(
+                images.geometry!.slot.height,
+                closeTo(rect.height, .000001),
+              );
+              expect(images.geometry!.dpr, sample.dpr);
+              expect(images.geometry!.textScale, sample.scale);
+              expect(
+                images.geometry!.padding,
+                const EdgeInsets.only(top: 24, bottom: 16),
+              );
+              expect(
+                images.geometry!.viewInsets,
+                const EdgeInsets.only(bottom: 12),
+              );
+              expect(identical(image.image, images.provider), true);
+              for (var index = 0; index < images.events.length; index++) {
+                if (images.events[index].startsWith('display:')) {
+                  expect(images.events[index - 1], 'observe');
+                }
+              }
+              expect(
+                images.events.indexOf('selected:1'),
+                lessThan(images.events.indexOf('prepare:1')),
+              );
+            } else {
+              expect(image.image, isA<NetworkImage>());
+              expect(image.semanticLabel, 'Hikâye sayfası 1');
+            }
+            expect(find.text('Önceki'), findsOneWidget);
+            expect(find.text('Sonraki'), findsOneWidget);
+            expect(find.text('Bu sayfada ses yok.'), findsOneWidget);
+            expect(tester.takeException(), isNull);
+          }
+          if (images != null) {
+            controller.selectPage(1);
+            await tester.pump();
+            expect(images.events, contains('selected:2'));
+            await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 20)),
+            );
+            await tester.pump();
+            expect(images.events, contains('prepare:2'));
+            expect(images.events, contains('display:2'));
+          }
+          await tester.pumpWidget(const SizedBox());
+          await configuration.credentials.close();
+        } finally {
+          debugNetworkImageHttpClientProvider = null;
+        }
+      },
+    );
+  }
 
   for (final arm in ['a', 'b']) {
     test(

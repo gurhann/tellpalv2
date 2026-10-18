@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tellpal_mobile_poc/app/injection.dart';
 import 'package:tellpal_mobile_poc/app/library_configuration.dart';
 import 'package:tellpal_mobile_poc/core/theme/library_theme.dart';
+import 'package:tellpal_mobile_poc/core/presentation/widgets/reading_image_viewport.dart';
 import 'package:tellpal_mobile_poc/core/error/failure.dart';
 import 'package:tellpal_mobile_poc/features/library/presentation/cubit/artwork_cubit.dart';
 import 'package:tellpal_mobile_poc/features/story_detail/domain/use_case/get_story_detail.dart';
@@ -121,6 +122,14 @@ void main() {
                 ),
               );
               await tester.pump();
+              final viewport = find.byType(ReadingImageViewport);
+              final hero = find.byType(StoryDetailHero);
+              expect(tester.getRect(hero), tester.getRect(viewport));
+              expect(tester.widget<StoryDetailHero>(hero).fit, BoxFit.cover);
+              expect(
+                tester.getSize(hero).aspectRatio,
+                closeTo(size.shortestSide >= 600 ? 1.1 : .9, .0001),
+              );
               final strings = StoryDetailStrings(language);
               final heroLabel = tester
                   .getSemantics(find.byType(StoryDetailHero))

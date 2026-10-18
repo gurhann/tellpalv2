@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/library_theme.dart';
+import '../../../../core/presentation/widgets/reading_image_viewport.dart';
 import '../../domain/use_case/select_reading_image_rendition.dart';
 import '../cubit/reading_image_comparison_cubit.dart';
 import '../cubit/reading_image_comparison_state.dart';
@@ -91,65 +92,63 @@ class _ComparisonViewState extends State<ReadingImageComparisonView>
               child: LayoutBuilder(
                 builder: (context, area) {
                   final cover = state.entryIndex < 2;
-                  final width = area.maxWidth;
-                  final height = cover
-                      ? width /
-                            (MediaQuery.sizeOf(context).shortestSide >= 600
-                                ? 1.1
-                                : .9)
-                      : area.maxHeight;
+                  Widget buildSlot(
+                    BuildContext context,
+                    ReadingImageViewportGeometry geometry,
+                  ) {
+                    final fit = geometry.fit == BoxFit.cover
+                        ? ReadingImageFit.cover
+                        : ReadingImageFit.contain;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted && state.status != 'error') {
+                        context.read<ReadingImageComparisonCubit>().select(
+                          id: widget.contentId,
+                          entryIndex: state.entryIndex == 0
+                              ? 1
+                              : state.entryIndex,
+                          canonicalSource: state.canonicalSource,
+                          width: geometry.slot.width,
+                          height: geometry.slot.height,
+                          dpr: geometry.dpr,
+                          fit: fit,
+                        );
+                      }
+                    });
+                    return ClipRect(
+                      key: const ValueKey('reading-comparison-slot'),
+                      child: state.raster == null
+                          ? ColoredBox(
+                              color: AppColors.placeholder,
+                              child: Center(
+                                child: Text(
+                                  state.status == 'loading'
+                                      ? 'Yükleniyor'
+                                      : 'Ağsız geometri: ${geometry.slot.width.toStringAsFixed(1)} × ${geometry.slot.height.toStringAsFixed(1)} • DPR ${geometry.dpr} • ${fit.name}',
+                                  style: AppTypography.label,
+                                ),
+                              ),
+                            )
+                          : ReadingImageComparisonRaster(
+                              raster: state.raster!,
+                              fit: geometry.fit,
+                            ),
+                    );
+                  }
+
                   return SingleChildScrollView(
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: SizedBox(
-                        width: width,
-                        height: height,
-                        child: LayoutBuilder(
-                          builder: (context, slot) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted && state.status != 'error') {
-                                context
-                                    .read<ReadingImageComparisonCubit>()
-                                    .select(
-                                      id: widget.contentId,
-                                      entryIndex: state.entryIndex == 0
-                                          ? 1
-                                          : state.entryIndex,
-                                      canonicalSource: state.canonicalSource,
-                                      width: slot.maxWidth,
-                                      height: slot.maxHeight,
-                                      dpr: MediaQuery.devicePixelRatioOf(
-                                        context,
-                                      ),
-                                      fit: cover
-                                          ? ReadingImageFit.cover
-                                          : ReadingImageFit.contain,
-                                    );
-                              }
-                            });
-                            return ClipRect(
-                              key: const ValueKey('reading-comparison-slot'),
-                              child: state.raster == null
-                                  ? ColoredBox(
-                                      color: AppColors.placeholder,
-                                      child: Center(
-                                        child: Text(
-                                          state.status == 'loading'
-                                              ? 'Yükleniyor'
-                                              : 'Ağsız geometri: ${slot.maxWidth.toStringAsFixed(1)} × ${slot.maxHeight.toStringAsFixed(1)} • DPR ${MediaQuery.devicePixelRatioOf(context)} • ${cover ? 'cover' : 'contain'}',
-                                          style: AppTypography.label,
-                                        ),
-                                      ),
-                                    )
-                                  : ReadingImageComparisonRaster(
-                                      raster: state.raster!,
-                                      fit: cover
-                                          ? BoxFit.cover
-                                          : BoxFit.contain,
-                                    ),
-                            );
-                          },
-                        ),
+                        width: area.maxWidth,
+                        child: cover
+                            ? ReadingImageViewport.detail(builder: buildSlot)
+                            : SizedBox(
+                                height: area.maxHeight,
+                                child: ReadingImageViewport(
+                                  fit: BoxFit.contain,
+                                  builder: buildSlot,
+                                ),
+                              ),
                       ),
                     ),
                   );

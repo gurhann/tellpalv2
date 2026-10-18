@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'core/presentation/widgets/reading_image_viewport.dart';
 import 'story_manifest.dart';
 import 'story_manifest_client.dart';
 import 'story_reader_images.dart';
@@ -358,40 +359,45 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
             child: ColoredBox(
               color: Colors.black,
               child: Center(
-                child: widget.images == null
-                    ? Image.network(
-                        page.illustration.url.toString(),
-                        key: ValueKey(page.illustration.url),
-                        fit: BoxFit.contain,
-                        semanticLabel: 'Hikâye sayfası ${page.pageNumber}',
-                        loadingBuilder: (context, child, progress) =>
-                            progress == null
-                            ? child
-                            : const CircularProgressIndicator(),
-                        errorBuilder: (context, error, stackTrace) => Center(
-                          child: TextButton(
-                            onPressed: _refreshGrants,
-                            child: const Text(
-                              'Görsel açılamadı · bağlantıyı yenile',
-                            ),
-                          ),
-                        ),
-                      )
-                    : LayoutBuilder(
-                        builder: (context, constraints) {
-                          final media = MediaQuery.of(this.context);
-                          widget.images!.observeLayout(
-                            StoryReaderGeometry(
-                              slot: constraints.biggest,
-                              dpr: media.devicePixelRatio,
-                              textScale: media.textScaler.scale(1),
-                              padding: media.padding,
-                              viewInsets: media.viewInsets,
-                            ),
-                          );
-                          return widget.images!.display(context, page);
-                        },
+                child: ReadingImageViewport(
+                  fit: BoxFit.contain,
+                  builder: (context, geometry) {
+                    final media = MediaQuery.of(this.context);
+                    widget.images?.observeLayout(
+                      StoryReaderGeometry(
+                        slot: geometry.slot,
+                        dpr: geometry.dpr,
+                        textScale: media.textScaler.scale(1),
+                        padding: media.padding,
+                        viewInsets: media.viewInsets,
                       ),
+                    );
+                    return Center(
+                      child: widget.images == null
+                          ? Image.network(
+                              page.illustration.url.toString(),
+                              key: ValueKey(page.illustration.url),
+                              fit: geometry.fit,
+                              semanticLabel:
+                                  'Hikâye sayfası ${page.pageNumber}',
+                              loadingBuilder: (context, child, progress) =>
+                                  progress == null
+                                  ? child
+                                  : const CircularProgressIndicator(),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Center(
+                                    child: TextButton(
+                                      onPressed: _refreshGrants,
+                                      child: const Text(
+                                        'Görsel açılamadı · bağlantıyı yenile',
+                                      ),
+                                    ),
+                                  ),
+                            )
+                          : widget.images!.display(context, page),
+                    );
+                  },
+                ),
               ),
             ),
           ),

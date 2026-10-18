@@ -8,6 +8,7 @@ import '../../../../app/library_configuration.dart';
 import '../../../../app/injection.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/theme/library_theme.dart';
+import '../../../../core/presentation/widgets/reading_image_viewport.dart';
 import '../../../../core/preview/domain/entity/library_preview.dart';
 import '../../../../core/artwork/artwork_cubit.dart';
 import '../../../../core/network/library_image_cache.dart';
@@ -162,7 +163,6 @@ class _HeroArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final detail = state.detail!;
-    final tablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     return Semantics(
       label: detail.title,
       header: true,
@@ -171,9 +171,8 @@ class _HeroArea extends StatelessWidget {
           bottomLeft: Radius.circular(16),
           bottomRight: Radius.circular(16),
         ),
-        child: AspectRatio(
-          aspectRatio: tablet ? 1.1 : .9,
-          child: Stack(
+        child: ReadingImageViewport.detail(
+          builder: (context, geometry) => Stack(
             fit: StackFit.expand,
             children: [
               if (state.visible)
@@ -186,6 +185,7 @@ class _HeroArea extends StatelessWidget {
                     key: ValueKey('${state.attempt}:${state.heroAttempt}'),
                     state: state,
                     strings: strings,
+                    fit: geometry.fit,
                   ),
                 )
               else
