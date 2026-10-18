@@ -1,0 +1,25 @@
+{
+  "proposalSha256": "079bfbe37c238bfcfc5cc3bc84f5ef420f5f7577b05b868dcd5622f73e267bf6",
+  "decision": "A",
+  "runId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+  "qaUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+  "evidenceHashes": {
+    "backend/failure.json": "87ba6bbfd5751234b9f07b8255f5fe0ddd7a34b971244638c0a62a11c0fcf952",
+    "backend/ledger.log": "b3fd94a0c26845e73ac46a9849ff5760a3d81c3ad9a324d5cbc3f3c54162ebbb",
+    "receipts/local-backend-failure-cleanup-01.private.json": "8032f024e22439d7f1c6663d0e1644476b6eccc22069c257b68c1c5bc72951da",
+    "receipts/local-db-role-readonly-01.private.json": "1a4069601265be6cb82bb4188a3d8bffb69bdea5d2c1f955bf55acfd579b2289",
+    "receipts/root-local-backend-refusal-handoff-01.private.json": "9f65f6905ebfabee1abf526395d12abf9141a4e94225650a61def22e5107b7d5",
+    "android/local-waiting-reservation-01.private.json": "ed86d98fe5c4dfa386d851e8a1e182d6fadfc6e1d576b902a1988198c78537c8",
+    "android/connection.private.json": "3ecd2bc551933c72b52884f0e77175c7ac8b622216ac77525b2240808f0cc551",
+    "recovery-protected-before.private.json": "bae525c0fbcc08a1688bf9a41eca4fcd5fa098be2dcdb1a15cd040b74714cdc7",
+    "receipts/local-runtime-recovery-human-approval-01.private.json": "1f052a5805b63eb85e26b866030a3398e449bd01d7bb9a200bee2f90833cbd4e"
+  },
+  "buildName": "build-0002",
+  "apkSha256": "102521e8c77a30784e3f2af185f5e810d539edfb69f76eea8aa4a541a9685166",
+  "localDbUsername": "gurhankucuk",
+  "additionalQaStarts": 1,
+  "qaStartsTotalCeiling": 3,
+  "additionalBackendStarts": 1,
+  "backendStartsTotalCeiling": 2,
+  "measurementCeilingsChanged": false
+}
