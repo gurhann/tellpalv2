@@ -117,4 +117,5 @@ class ReadingImageComparisonHarness {
   static ReadingImageComparisonConfiguration configuration =
       const ReadingImageComparisonConfiguration.geometry();
   static int contentId = 0;
+  static bool consumerQa = false;
 }

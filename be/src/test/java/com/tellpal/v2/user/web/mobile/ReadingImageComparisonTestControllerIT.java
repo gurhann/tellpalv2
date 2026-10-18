@@ -62,6 +62,31 @@ class ReadingImageComparisonTestControllerIT extends com.tellpal.v2.support.Post
         var binary=json.path("paths").path("/api/test/reading-image-comparison/bytes").path("get").path("responses").path("200").path("content").path("image/png").path("schema");
         org.assertj.core.api.Assertions.assertThat(binary.path("format").asText()).isEqualTo("binary");
     }
+    @Test void actualHttpPreservesDetailAndOrderedPageSelectionsWithOneIdentityAndNoStore() throws Exception {
+        var identity=new ReadingImageComparisonApi.Identity(94,"tr",4,"revision","manifest",java.util.UUID.randomUUID());
+        var client=java.net.http.HttpClient.newHttpClient();
+        for(int page=0;page<=2;page++) {
+            var role=page==0?com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role.READING_DETAIL
+                    :com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role.READING_PAGE;
+            var selection=new com.tellpal.v2.asset.api.ReadingImageDeliveryApi.Selection(role,page,"key-"+page,false);
+            byte[] payload={(byte)(page+1),7,9};
+            when(actualService.read("Bearer ephemeral",identity,selection)).thenReturn(payload);
+            String query="?contentId=94&language=tr&liveGeneration=4&revision=revision&manifestDigest=manifest&jobId="+identity.jobId()
+                    +"&role="+role+"&pageNumber="+page+"&renditionKey=key-"+page+"&canonicalSource=false";
+            var response=client.send(java.net.http.HttpRequest.newBuilder(java.net.URI.create("http://127.0.0.1:"+port+"/api/test/reading-image-comparison/bytes"+query))
+                    .header("Authorization","Bearer ephemeral").GET().build(),java.net.http.HttpResponse.BodyHandlers.ofByteArray());
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(200);
+            org.assertj.core.api.Assertions.assertThat(response.headers().firstValue("Cache-Control")).contains("private,no-store");
+            org.assertj.core.api.Assertions.assertThat(response.headers().firstValue("Content-Type")).contains("image/png");
+            org.assertj.core.api.Assertions.assertThat(response.body()).containsExactly(payload);
+            verify(actualService).read("Bearer ephemeral",identity,selection);
+            long deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(5);
+            while(writer.activeTransfers()!=0 && System.nanoTime()<deadline) Thread.sleep(10);
+            org.assertj.core.api.Assertions.assertThat(writer.activeTransfers()).isZero();
+            org.assertj.core.api.Assertions.assertThat(writer.heldPayloadBytes()).isZero();
+        }
+        verifyNoMoreInteractions(actualService);
+    }
     @Test void unsupportedContainerRefusesBeforeServiceIo() throws Exception {
         var service=mock(ReadingImageComparisonTestService.class);
         var mvc=MockMvcBuilders.standaloneSetup(new ReadingImageComparisonTestController(service,new ReadingImageComparisonResponseWriter(1000))).addFilters(new ReadingImageComparisonCacheFilter()).build();

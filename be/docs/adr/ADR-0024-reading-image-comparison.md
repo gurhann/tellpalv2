@@ -33,3 +33,25 @@ Yeni QA fixture üretimi/yükleme/admission/yayın için ayrı sayısal bulut ç
 - İlk identity/liveGeneration route/Cubit yaşamı boyunca anchor olarak kalır. Lease/status/background sonrasında yeniden admission aynı anchor'ı karşılamalıdır. Seçili sayfa/kol korunur; farklı contentId byte öncesi reddedilir.
 - `RawImage` yerine klonlamayan borrowing `CustomPainter`/`paintImage` kullanılır. Eski painter dispose edilen raster'dan görüntü alamaz. Owned native handle denetimleri engine display-list/GPU/RSS toplamının sıfırlandığını veya fiziksel peak bütçesini kanıtlamaz; cihaz profiling kapısı açıktır.
 - SDK ve mobil Timer teknik süre aralığı pozitif `int32` milisaniyeyle sınırlıdır. Bu, üretim profil seçimi değildir. Mobil HTTP otomatik gzip açmaz; `Accept-Encoding: identity` ister ve beklenmeyen Content-Encoding'i reddeder. Byte ölçümü HTTP payload'ıdır; TLS/header maliyeti değildir.
+
+## P4a4: ortak widget’larda ayrı QA teslimatı (2026-10-18)
+
+[Onaylı plan](../../../_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md)
+normal detail ve reader’ın gerçek görsel yerleşimini saf ortak frame’lere çıkarır. Ayrı opt-in
+QA rotaları aynı frame’lerde yalnız doğrulanmış rendition gösterir. Mevcut karşılaştırma girişi
+varsayılan kalır; normal Library rotasına yeni bağ eklenmez.
+
+- QA parent tek mevcut Cubit, sabit LIVE anchor ve seri iş kapısını sahiplenir. Child route yalnız
+  content/page ID taşır. Rol ve sıralı page binding’i admitted manifestten çözülür; gerçek slot,
+  DPR ve fit mevcut seçiciye verilir. Yetersiz varyant tipli ret verir; original fallback yoktur.
+- Güncel route dışında kalan slot seçimi veya eski raster’ı boyayamaz. Akış kapanışı eski işi
+  bekler; hesap/background/lease/status/LIVE kontrolleri aynı anchor ve sahiplik kurallarını korur.
+  Yeni transport, retry, precache, disk veya global ImageCache eklenmez.
+- QA ürün başlığı, kategori veya grant üretmez. Ses alanı açıkça “Bu QA denemesinde ses kapalı” der.
+  Normal metadata, AudioPlayer, provider, prefetch ve gezinme sahipliği mevcut ekranlarda kalır.
+- Güncel kimlik, **retained LIVE** kimliğidir. Bekleyen yeni desired iş sağlıklı retained çıktıyı
+  geçersiz kılmaz; yeni LIVE benimsenirse eski anchor teslimattan önce ve sonra reddedilir.
+
+Bu yerel uygulama gerçek #94 auth/storage veya cihaz çalışması açmaz. Eski çalışma pencereleri ve
+sayaçları yeni yetki değildir. Yeni üretim, genel tüketici geçişi, üretim profili, P4b ve fiziksel
+Android/iPhone kabulü açık kalır. Yerel optimize PNG/WebP dosyaları P3/LIVE sayılmaz.

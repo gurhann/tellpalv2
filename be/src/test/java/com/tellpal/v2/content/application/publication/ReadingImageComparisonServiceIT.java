@@ -255,4 +255,78 @@ class ReadingImageComparisonServiceIT extends PostgresIntegrationTestBase {
                 .isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
         verifyNoInteractions(delivery);
     }
+
+    @Test void consumerDetailAndOrderedPagesShareOneRetainedManifestWithoutOpeningPublicSurfaces() {
+        publish();complete();freeCopy();
+        jdbc.update("update content_localizations set processing_status='PENDING' where content_id=? and language_code='tr'",id);
+        var api=comparison(new ReadingImageDeliveryService(jobs,disk.storage(),new ReadingComparisonBudget(jdbc,manager)));
+        var admitted=api.manifest(id,"tr");
+        var entries=admitted.descriptor().images().stream()
+                .filter(e->e.source().binding().role()!=Role.READING_COVER).toList();
+        assertThat(entries).extracting(e->e.source().binding().role())
+                .containsExactly(Role.READING_DETAIL,Role.READING_PAGE,Role.READING_PAGE);
+        assertThat(entries).extracting(e->e.source().binding().pageNumber()).containsExactly(0,1,2);
+        assertThat(entries.subList(1,3)).extracting(e->e.source().binding().pageId())
+                .containsExactlyElementsOf(jdbc.queryForList("select id from story_pages where content_id=? order by page_number",Long.class,id));
+        for(var entry:entries) {
+            var binding=entry.source().binding();var output=entry.renditions().getFirst();
+            byte[] bytes=api.read(admitted.identity(),new ReadingImageDeliveryApi.Selection(binding.role(),binding.pageNumber(),output.renditionKey(),false));
+            assertThat(bytes).hasSize((int)output.raster().byteSize());
+            assertThat(java.util.HexFormat.of().formatHex(sha256(bytes))).isEqualTo(output.raster().sha256());
+            assertThat(api.status(admitted.identity()).identity()).isEqualTo(admitted.identity());
+        }
+        assertThat(publicContents.listContentsByIds(List.of(id),TR,null)).isEmpty();
+        assertThat(publicContents.findContent(id,TR,null)).isEmpty();
+        assertThat(publicContents.findStoryPages(id,TR)).isEmpty();
+        assertThat(listingPreviews.list(List.of(id),TR,false)).isEmpty();
+        assertThat(listingCovers.find(id,"tr",cover)).isEqualTo(LibraryCoverQueryApi.Covers.empty());
+        assertThat(experiment.findLatest(id,TR)).isEmpty();
+        assertThat(jdbc.queryForObject("select processing_status from content_localizations where content_id=? and language_code='tr'",String.class,id)).isEqualTo("PENDING");
+    }
+    byte[] sha256(byte[] bytes) {
+        try {return java.security.MessageDigest.getInstance("SHA-256").digest(bytes);}
+        catch(java.security.NoSuchAlgorithmException impossible) {throw new AssertionError(impossible);}
+    }
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(booleans={false,true})
+    void replacedLiveRefusesOldConsumerAnchorBeforeAndAfterStorage(boolean duringIo) throws Exception {
+        publish();complete();freeCopy();
+        long replacement=admissions.admit(original("replacement",82),ReadingFixtures.profile()).assetId();
+        var real=new ReadingImageDeliveryService(jobs,disk.storage(),new ReadingComparisonBudget(jdbc,manager));
+        var delivery=mock(ReadingImageDeliveryApi.class,org.mockito.AdditionalAnswers.delegatesTo(real));
+        var api=comparison(delivery);var admitted=api.manifest(id,"tr");
+        var detail=admitted.descriptor().images().stream().filter(e->e.source().binding().role()==Role.READING_DETAIL).findFirst().orElseThrow();
+        var selection=new ReadingImageDeliveryApi.Selection(Role.READING_DETAIL,0,detail.renditions().getFirst().renditionKey(),false);
+        clearInvocations(delivery);
+        if(duringIo) {
+            doAnswer(call->{byte[] bytes=real.read(call.getArgument(0),call.getArgument(1),call.getArgument(2));
+                edit(replacement,"New LIVE");complete();return bytes;}).when(delivery).read(any(),any(),any());
+        } else {edit(replacement,"New LIVE");complete();}
+        assertThatThrownBy(()->api.read(admitted.identity(),selection)).isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
+        verify(delivery,times(duringIo?1:0)).read(any(),any(),any());
+        assertThat(api.manifest(id,"tr").identity()).isNotEqualTo(admitted.identity());
+        assertThat(live()).isNotNull();
+    }
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings={"archive-before","archive-after","inactive-before","inactive-after","free-before","free-after"})
+    void closedEditorialAccessRefusesConsumerBytesAtBothDbCuts(String scenario) {
+        publish();complete();freeCopy();
+        var real=new ReadingImageDeliveryService(jobs,disk.storage(),new ReadingComparisonBudget(jdbc,manager));
+        var delivery=mock(ReadingImageDeliveryApi.class,org.mockito.AdditionalAnswers.delegatesTo(real));
+        var api=comparison(delivery);var admitted=api.manifest(id,"tr");
+        var detail=admitted.descriptor().images().stream().filter(e->e.source().binding().role()==Role.READING_DETAIL).findFirst().orElseThrow();
+        var selection=new ReadingImageDeliveryApi.Selection(Role.READING_DETAIL,0,detail.renditions().getFirst().renditionKey(),false);
+        Runnable close=()->{
+            if(scenario.startsWith("archive")) tx.executeWithoutResult(s->publishing.archiveLocalization(new ArchiveContentLocalizationCommand(id,TR)));
+            else if(scenario.startsWith("inactive")) management.updateContent(new UpdateContentCommand(id,external,null,false));
+            else jdbc.update("delete from content_free_access where content_id=?",id);
+        };
+        boolean duringIo=scenario.endsWith("after");clearInvocations(delivery);
+        if(duringIo) doAnswer(call->{byte[] bytes=real.read(call.getArgument(0),call.getArgument(1),call.getArgument(2));close.run();return bytes;})
+                .when(delivery).read(any(),any(),any());
+        else close.run();
+        assertThatThrownBy(()->api.read(admitted.identity(),selection)).isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
+        verify(delivery,times(duringIo?1:0)).read(any(),any(),any());
+        assertThatThrownBy(()->api.status(admitted.identity())).isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
+    }
 }

@@ -20,6 +20,7 @@ void main() {
   runApp(
     ReadingImageComparisonApp(
       contentId: ReadingImageComparisonHarness.contentId,
+      consumerQa: ReadingImageComparisonHarness.consumerQa,
     ),
   );
 }

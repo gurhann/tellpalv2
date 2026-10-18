@@ -148,3 +148,30 @@ route/Cubit yaşamı gerekir. Hata/lease/background seçili sayfa ve kolu korur.
 ile çizilir; ui.Image clone'u oluşturulmaz. Native sahiplik testi engine/GPU/RSS toplamı kanıtı değildir.
 HTTP identity payload dışında Content-Encoding kabul edilmez; gzip transparan açılmaz. Teknik
 Timer/SDK sınırı int32 milisaniyedir; sayısal üretim/deneme profili hâlâ ayrı karardır.
+
+## P4a4 ortak detail/reader QA girişi
+
+[P4a4 planı](../../_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md),
+normal detail ve reader’dan çıkarılan aynı sunum frame’lerini ayrı QA rotalarına bağlar.
+Debugger/test kompozisyonu `ReadingImageComparisonHarness.consumerQa=true` seçer; varsayılan
+`false` eski karşılaştırma ekranını korur. Bu bayrak tek başına ağ veya erişim açmaz; mevcut
+configuration, kanonik UID, local/test, açık sayısal sınırlar ve retained LIVE admission gerekir.
+Release giriş koruması sürer. Normal Library router’ı bu rotalara bağlanmaz.
+
+Parent flow tek Cubit ve ilk LIVE anchor’ını sahiplenir. Detail→iki gerçek page ID→geri geçişleri
+aynı admitted manifesti kullanır. Child route’larda descriptor/token/Cubit taşınmaz. Her görünür
+slot gerçek frame alanı, DPR ve fit ile mevcut seçiciyi çağırır. Rol/pageNumber/pageId birlikte
+eşleşmelidir. Route animasyonunda eski sayfa görünürlükten çıkınca tekrar seçim gönderemez.
+Yetersiz geometri, bozuk medya ve kimlik değişimi açık ret verir; canonical veya legacy fallback yoktur.
+
+QA yalnız rendition gösterir; eski kaynak/rendition karşılaştırma ekranı ayrı kalır. Ürün metadata’sı,
+kategori veya ses grant’i uydurulmaz. “Bu QA denemesinde ses kapalı” alanı AudioPlayer başlatmaz.
+Normal ekranlar kendi gerçek metadata, ses, provider ve cache sahiplerini ortak frame’e verir.
+Yeni prefetch, precache, disk cache, transport veya retry yoktur. Route/account/background/lease
+değişimi eski raster’ı temizler; kapanış mevcut native işi bitirmeden yeni kapasite açmaz.
+
+Yerel codec/loopback HTTP ve PostgreSQL/Tomcat testleri gerçek #94 teslimatı değildir. Mevcut
+#94 PNG’leri yeni bir gerçek denemede kullanılabilir; önce güncel retained kimliği ve ayrı
+süre/çağrı/byte kaydı onaylanmalıdır. Önceki pencereler ve tüketilmiş sayaçlar korunur. Bu dilim
+sıkıştırma kazancı, fiziksel kalite/peak bellek, üretim profili veya P4b kabulü sağlamaz. P0 ham
+kanıt eksikliği ve JPEG/WebP kalite belirsizliği açık kalır.

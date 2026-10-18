@@ -51,6 +51,9 @@ class _MeasuredCubit extends ReadingImageComparisonCubit {
     required double height,
     required double dpr,
     required ReadingImageFit fit,
+    ReadingImageRole? consumerRole,
+    int? pageId,
+    int pageNumber = 0,
   }) {
     measured = (slot: Size(width, height), dpr: dpr, fit: fit);
     super.select(
@@ -61,6 +64,9 @@ class _MeasuredCubit extends ReadingImageComparisonCubit {
       height: height,
       dpr: dpr,
       fit: fit,
+      consumerRole: consumerRole,
+      pageId: pageId,
+      pageNumber: pageNumber,
     );
   }
 }

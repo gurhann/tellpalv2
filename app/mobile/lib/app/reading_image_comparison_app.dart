@@ -4,8 +4,13 @@ import '../core/theme/library_theme.dart';
 import 'reading_image_comparison_router.dart';
 
 class ReadingImageComparisonApp extends StatefulWidget {
-  const ReadingImageComparisonApp({super.key, required this.contentId});
+  const ReadingImageComparisonApp({
+    super.key,
+    required this.contentId,
+    this.consumerQa = false,
+  });
   final int contentId;
+  final bool consumerQa;
   @override
   State<ReadingImageComparisonApp> createState() => _ComparisonAppState();
 }
@@ -24,8 +29,17 @@ class _ComparisonAppState extends State<ReadingImageComparisonApp> {
     theme: AppTypography.theme(),
     routerConfig: router.config(
       navigatorObservers: () => [AutoRouteObserver()],
-      deepLinkBuilder: (_) =>
-          DeepLink([ReadingImageComparisonRoute(contentId: widget.contentId)]),
+      deepLinkBuilder: (_) => DeepLink([
+        if (widget.consumerQa)
+          ReadingImageConsumerFlowRoute(
+            contentId: widget.contentId,
+            children: [
+              ReadingImageConsumerDetailRoute(contentId: widget.contentId),
+            ],
+          )
+        else
+          ReadingImageComparisonRoute(contentId: widget.contentId),
+      ]),
     ),
   );
 }

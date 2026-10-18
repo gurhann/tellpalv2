@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-import 'core/presentation/widgets/reading_image_viewport.dart';
+import 'core/presentation/widgets/reading_page_frame.dart';
 import 'story_manifest.dart';
 import 'story_manifest_client.dart';
 import 'story_reader_images.dart';
@@ -346,93 +346,67 @@ class _StoryPlayerPageState extends State<StoryPlayerPage> {
 
   Widget _buildReader(StoryManifest manifest) {
     final page = manifest.pages[_pageIndex];
-    return SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              'Sayfa ${page.pageNumber}/${manifest.pages.length} · Test sürümü ${manifest.revision.substring(0, min(8, manifest.revision.length))}',
-            ),
+    return ReadingPageFrame(
+      header: Text(
+        'Sayfa ${page.pageNumber}/${manifest.pages.length} · Test sürümü ${manifest.revision.substring(0, min(8, manifest.revision.length))}',
+      ),
+      imageBuilder: (context, geometry) {
+        final media = MediaQuery.of(this.context);
+        widget.images?.observeLayout(
+          StoryReaderGeometry(
+            slot: geometry.slot,
+            dpr: geometry.dpr,
+            textScale: media.textScaler.scale(1),
+            padding: media.padding,
+            viewInsets: media.viewInsets,
           ),
-          Expanded(
-            child: ColoredBox(
-              color: Colors.black,
-              child: Center(
-                child: ReadingImageViewport(
-                  fit: BoxFit.contain,
-                  builder: (context, geometry) {
-                    final media = MediaQuery.of(this.context);
-                    widget.images?.observeLayout(
-                      StoryReaderGeometry(
-                        slot: geometry.slot,
-                        dpr: geometry.dpr,
-                        textScale: media.textScaler.scale(1),
-                        padding: media.padding,
-                        viewInsets: media.viewInsets,
-                      ),
-                    );
-                    return Center(
-                      child: widget.images == null
-                          ? Image.network(
-                              page.illustration.url.toString(),
-                              key: ValueKey(page.illustration.url),
-                              fit: geometry.fit,
-                              semanticLabel:
-                                  'Hikâye sayfası ${page.pageNumber}',
-                              loadingBuilder: (context, child, progress) =>
-                                  progress == null
-                                  ? child
-                                  : const CircularProgressIndicator(),
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Center(
-                                    child: TextButton(
-                                      onPressed: _refreshGrants,
-                                      child: const Text(
-                                        'Görsel açılamadı · bağlantıyı yenile',
-                                      ),
-                                    ),
-                                  ),
-                            )
-                          : widget.images!.display(context, page),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          if (_loadingMedia || widget.images != null)
-            SizedBox(
+        );
+        return Center(
+          child: widget.images == null
+              ? Image.network(
+                  page.illustration.url.toString(),
+                  key: ValueKey(page.illustration.url),
+                  fit: geometry.fit,
+                  semanticLabel: 'Hikâye sayfası ${page.pageNumber}',
+                  loadingBuilder: (context, child, progress) => progress == null
+                      ? child
+                      : const CircularProgressIndicator(),
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: TextButton(
+                      onPressed: _refreshGrants,
+                      child: const Text('Görsel açılamadı · bağlantıyı yenile'),
+                    ),
+                  ),
+                )
+              : widget.images!.display(context, page),
+        );
+      },
+      progress: _loadingMedia || widget.images != null
+          ? SizedBox(
               height: 4,
               child: _loadingMedia ? const LinearProgressIndicator() : null,
-            ),
-          if (_mediaError != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(_mediaError!, textAlign: TextAlign.center),
-            ),
-          _buildAudioControls(page),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: _pageIndex == 0
-                      ? null
-                      : () => _selectPage(_pageIndex - 1),
-                  icon: const Icon(Icons.chevron_left),
-                  label: const Text('Önceki'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: _pageIndex + 1 >= manifest.pages.length
-                      ? null
-                      : () => _selectPage(_pageIndex + 1),
-                  icon: const Icon(Icons.chevron_right),
-                  label: const Text('Sonraki'),
-                ),
-              ],
-            ),
+            )
+          : null,
+      error: _mediaError == null
+          ? null
+          : Text(_mediaError!, textAlign: TextAlign.center),
+      audio: _buildAudioControls(page),
+      controls: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          OutlinedButton.icon(
+            onPressed: _pageIndex == 0
+                ? null
+                : () => _selectPage(_pageIndex - 1),
+            icon: const Icon(Icons.chevron_left),
+            label: const Text('Önceki'),
+          ),
+          OutlinedButton.icon(
+            onPressed: _pageIndex + 1 >= manifest.pages.length
+                ? null
+                : () => _selectPage(_pageIndex + 1),
+            icon: const Icon(Icons.chevron_right),
+            label: const Text('Sonraki'),
           ),
         ],
       ),

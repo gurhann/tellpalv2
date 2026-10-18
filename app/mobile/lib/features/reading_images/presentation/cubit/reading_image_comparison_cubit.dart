@@ -40,6 +40,9 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   int? _anchorGeneration, _routeContentId;
   String? _slot;
 
+  /// Yalnız mevcut doğrulanmış admission; retire sonrasında metadata tutulmaz.
+  ReadingImageComparison? get admittedComparison => _admission;
+
   void retire(String reason) {
     _epoch++;
     _slot = null;
@@ -80,6 +83,9 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     required double height,
     required double dpr,
     required ReadingImageFit fit,
+    ReadingImageRole? consumerRole,
+    int? pageId,
+    int pageNumber = 0,
   }) {
     if (!_visible || isClosed) return;
     if (configuration.mediaEnabled) {
@@ -91,7 +97,9 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
       }
       _routeContentId ??= id;
     }
-    final slot = '$id/$entryIndex/$canonicalSource/$width/$height/$dpr/$fit';
+    final slot =
+        '$id/$entryIndex/$canonicalSource/$width/$height/$dpr/$fit/'
+        '$consumerRole/$pageId/$pageNumber';
     if (slot == _slot) return;
     _slot = slot;
     final epoch = ++_epoch;
@@ -120,6 +128,9 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
         height,
         dpr,
         fit,
+        consumerRole,
+        pageId,
+        pageNumber,
       ),
     );
   }
@@ -135,6 +146,9 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     double height,
     double dpr,
     ReadingImageFit fit,
+    ReadingImageRole? consumerRole,
+    int? pageId,
+    int pageNumber,
   ) async {
     ReadingComparisonRaster? raster;
     Timer? decodeDeadline;
@@ -164,6 +178,21 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
         _controls();
       }
       final admission = _admission!;
+      if (consumerRole != null) {
+        if (canonical ||
+            consumerRole == ReadingImageRole.readingCover ||
+            admission.manifest.images.length != 4) {
+          throw StateError('consumer_binding');
+        }
+        final matching = admission.manifest.images.indexed.where((item) {
+          final binding = item.$2.source.binding;
+          return binding.role == consumerRole &&
+              binding.pageId == pageId &&
+              binding.pageNumber == pageNumber;
+        }).toList();
+        if (matching.length != 1) throw StateError('consumer_binding');
+        index = matching.single.$1;
+      }
       if (index < 0 || index >= admission.manifest.images.length) {
         throw StateError('binding');
       }
@@ -185,7 +214,7 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
         devicePixelRatio: dpr,
         fit: fit,
         maxDecodePixels: configuration.limits!.maxDecodePixels,
-      ).fold((f) => throw StateError(f.name), (s) => s);
+      ).fold((f) => throw f, (s) => s);
       final bytes = (await repository.bytes(
         admission,
         entry.source.binding,
@@ -229,6 +258,10 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
         ),
       );
       raster = null;
+    } on ReadingImageSelectionFailure catch (failure) {
+      if (_owns(epoch)) {
+        retire(consumerRole == null ? 'media_refused' : failure.name);
+      }
     } catch (_) {
       if (_owns(epoch)) retire('media_refused');
     } finally {

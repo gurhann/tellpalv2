@@ -623,3 +623,12 @@ bitene kadar tek teslimat gate'i tutulur. Normal Library/detail/reader davranı�
 Flutter'da yalnız bu QA kapsamı diske/global ImageCache'e yazmayan owned raster ve borrowing painter istisnasını
 kullanır. Sayısal ayarlar yokken yalnız ağsız geometri ölçülür. [ADR-0024](be/docs/adr/ADR-0024-reading-image-comparison.md)
 ve [kanıt kaydı](be/docs/evidence/p4-reading-images/verification.md) gerçek çalışma ve cihaz kapılarını ayırır.
+
+P4a4, bu mevcut hattı ayrı opt-in QA detail/reader rotalarında normal ekranlarla paylaşılan saf
+`core/presentation` frame’lerine bağlar. `app/` kompozisyonu tek mevcut Cubit/anchor ve iş kapısı
+sahibidir; child route’lar yalnız ID taşır. Güncel olmayan slot seçim/paint yapamaz. Manifestin
+detail ve sıralı page bağları gerçek slot/DPR/fit ile seçilir; shortage sessiz fallback üretmez.
+Normal ekranların metadata, provider, ses, prefetch ve cache sahipliği korunur; QA ses alanı kapalıdır.
+Yeni backend modül bağımlılığı veya üretim erişimi açılmaz. Retained LIVE güncel teslimat kimliğidir;
+bekleyen desired onun yerine geçmez. [P4a4 kapsamı](_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md)
+yerel kod/test dilimidir; gerçek #94 auth/storage/cihaz çalışması ve genel tüketici geçişi ayrı kalır.

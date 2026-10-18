@@ -71,3 +71,13 @@ No prior ADR is superseded.
 HTTP, buffer, descriptor, codec ve image açıkça kapatılır; disk/global ImageCache/precache kullanılmaz.
 Feature-first katmanlar, Freezed Cubit, injectable ve auto_route kuralları sürer. Normal tüketici
 cache davranışı ve P4b üretim politikası bu istisnayla değişmez.
+
+## P4a4 ortak sunum kapsamı (2026-10-18)
+
+Onaylı [P4a4 planı](../../../_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md),
+bu istisnayı ayrı opt-in QA detail/reader rotalarına taşır. Normal ekranlarla yalnız saf sunum
+frame’leri paylaşılır. Frame’ler `core/presentation` altında kalır; feature bağımlılığı taşımaz.
+QA kompozisyonu `app/` altında mevcut injectable Cubit, selector ve owned raster hattını kullanır.
+Tek parent akış anchor ve kapatma sahibidir; child route’lar yalnız ID taşır.
+Normal uygulamanın provider, ses, ön yükleme, erişim ve cache sahipliği korunur.
+Bu kapsam genel tüketici geçişi veya yeni bir medya/cache politikası değildir (ADR-0024).

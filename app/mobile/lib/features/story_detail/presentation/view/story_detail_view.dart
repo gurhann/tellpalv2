@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +7,7 @@ import '../../../../app/library_configuration.dart';
 import '../../../../app/injection.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/theme/library_theme.dart';
-import '../../../../core/presentation/widgets/reading_image_viewport.dart';
+import '../../../../core/presentation/widgets/reading_detail_artwork_frame.dart';
 import '../../../../core/preview/domain/entity/library_preview.dart';
 import '../../../../core/artwork/artwork_cubit.dart';
 import '../../../../core/network/library_image_cache.dart';
@@ -163,112 +162,91 @@ class _HeroArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final detail = state.detail!;
-    return Semantics(
-      label: detail.title,
-      header: true,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-        child: ReadingImageViewport.detail(
-          builder: (context, geometry) => Stack(
-            fit: StackFit.expand,
-            children: [
-              if (state.visible)
-                ImageFiltered(
-                  enabled:
-                      detail.isLocked &&
-                      state.heroStatus == StoryHeroStatus.loaded,
-                  imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: StoryDetailHero(
-                    key: ValueKey('${state.attempt}:${state.heroAttempt}'),
-                    state: state,
-                    strings: strings,
-                    fit: geometry.fit,
-                  ),
-                )
-              else
-                const ColoredBox(color: AppColors.placeholder),
-              if (detail.isLocked)
-                Positioned(
-                  top: MediaQuery.paddingOf(context).top + 16,
-                  right: 16,
-                  child: Semantics(
-                    container: true,
-                    label: strings.locked,
-                    child: Container(
-                      width: 48,
-                      height: 48,
-                      decoration: const BoxDecoration(
-                        color: AppColors.canvas,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.lock_outline,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned(
-                top: MediaQuery.paddingOf(context).top + 16,
-                left: 16,
-                child: Material(
+    return ReadingDetailArtworkFrame(
+      semanticLabel: detail.title,
+      blur:
+          state.visible &&
+          detail.isLocked &&
+          state.heroStatus == StoryHeroStatus.loaded,
+      artworkBuilder: (context, geometry) => state.visible
+          ? StoryDetailHero(
+              key: ValueKey('${state.attempt}:${state.heroAttempt}'),
+              state: state,
+              strings: strings,
+              fit: geometry.fit,
+            )
+          : const ColoredBox(color: AppColors.placeholder),
+      overlays: [
+        if (detail.isLocked)
+          Positioned(
+            top: MediaQuery.paddingOf(context).top + 16,
+            right: 16,
+            child: Semantics(
+              container: true,
+              label: strings.locked,
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: const BoxDecoration(
                   color: AppColors.canvas,
-                  shape: const CircleBorder(),
-                  child: IconButton(
-                    style: IconButton.styleFrom(
-                      minimumSize: const Size(48, 48),
-                      padding: const EdgeInsets.all(12),
-                      visualDensity: VisualDensity.standard,
-                    ),
-                    tooltip: strings.back,
-                    onPressed: () => context.router.maybePop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: AppColors.primary,
-                    ),
-                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.lock_outline, color: AppColors.primary),
+              ),
+            ),
+          ),
+        Positioned(
+          top: MediaQuery.paddingOf(context).top + 16,
+          left: 16,
+          child: Material(
+            color: AppColors.canvas,
+            shape: const CircleBorder(),
+            child: IconButton(
+              style: IconButton.styleFrom(
+                minimumSize: const Size(48, 48),
+                padding: const EdgeInsets.all(12),
+                visualDensity: VisualDensity.standard,
+              ),
+              tooltip: strings.back,
+              onPressed: () => context.router.maybePop(),
+              icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 16,
+          right: 16,
+          bottom: 8,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: detail.durationMinutes == null
+                      ? const SizedBox.shrink()
+                      : _Pill(
+                          icon: Icons.schedule,
+                          label: strings.minutes(detail.durationMinutes!),
+                        ),
                 ),
               ),
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 8,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: detail.durationMinutes == null
-                            ? const SizedBox.shrink()
-                            : _Pill(
-                                icon: Icons.schedule,
-                                label: strings.minutes(detail.durationMinutes!),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: detail.ageRange == null
-                            ? const SizedBox.shrink()
-                            : _Pill(
-                                icon: Icons.child_care,
-                                label: strings.age(detail.ageRange!),
-                              ),
-                      ),
-                    ),
-                  ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: detail.ageRange == null
+                      ? const SizedBox.shrink()
+                      : _Pill(
+                          icon: Icons.child_care,
+                          label: strings.age(detail.ageRange!),
+                        ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }
