@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'reading_resource_observation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tellpal_mobile_poc/app/image_experiment_configuration.dart';
@@ -326,12 +327,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
     record(event);
   }
 
-  Map<String, Object?> ownedResources() => {
-    'activeBuffers': ReadingComparisonRaster.activeBuffers,
-    'activeDescriptors': ReadingComparisonRaster.activeDescriptors,
-    'activeCodecs': ReadingComparisonRaster.activeCodecs,
-    'activeImages': ReadingComparisonRaster.activeImages,
-  };
+  Map<String, Object?> ownedResources() => readingOwnedResources();
 
   Map<String, Object?> snapshot() {
     Map<String, Object?>? slot;

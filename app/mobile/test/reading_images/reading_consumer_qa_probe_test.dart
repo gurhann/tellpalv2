@@ -64,7 +64,8 @@ class _NativeGate extends ReadingComparisonWorkGate {
   _NativeGate(this.zone);
   final Zone zone;
   @override
-  Future<void> run(Future<void> Function() work) => zone.run(() => super.run(work));
+  Future<void> run(Future<void> Function() work) =>
+      zone.run(() => super.run(work));
 }
 
 class _PaintCubit extends ReadingImageComparisonCubit {
@@ -118,8 +119,12 @@ void main() {
       final events = <Map<String, Object?>>[];
       final source = ObservedConsumerQaSource(configuration, events.add);
       source.reserve('manifest', {'contentId': '94', 'language': 'tr'});
-      for (var i = 0; i < 4; i++) { source.reserve('bytes', mediaQuery(i)); }
-      for (var i = 0; i < 18; i++) { source.reserve('status', identityQuery()); }
+      for (var i = 0; i < 4; i++) {
+        source.reserve('bytes', mediaQuery(i));
+      }
+      for (var i = 0; i < 18; i++) {
+        source.reserve('status', identityQuery());
+      }
       expect(events.length, 23);
       expect(() => source.reserve('bytes', mediaQuery(0)), throwsA(anything));
       expect(events.length, 23);
@@ -169,6 +174,11 @@ void main() {
       expect(stopped['credentialActive'], false);
       expect(stopped['deadlineActive'], false);
       expect(stopped['stopped'], true);
+      expect((stopped['resourceObservation'] as Map)['reservedSlots'], 0);
+      expect(
+        (stopped['resourceObservation'] as Map)['reservedDecodedBytes'],
+        '0',
+      );
       await tester.pumpWidget(const SizedBox());
       await comparisonGetIt.reset();
     },
@@ -183,13 +193,19 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       final prior = Bloc.observer;
       late ReadingConsumerQaProbe probe;
-      probe = ReadingConsumerQaProbe(initializeDependencies: (configuration) async {
-        configureReadingImageComparisonDependencies(configuration);
-        await comparisonGetIt.unregister<ReadingImageComparisonDataSource>();
-        comparisonGetIt.registerFactory<ReadingImageComparisonDataSource>(() => ObservedConsumerQaSource(configuration, probe.record));
-        await comparisonGetIt.unregister<ReadingComparisonWorkGate>();
-        comparisonGetIt.registerSingleton<ReadingComparisonWorkGate>(_NativeGate(Zone.current));
-      });
+      probe = ReadingConsumerQaProbe(
+        initializeDependencies: (configuration) async {
+          configureReadingImageComparisonDependencies(configuration);
+          await comparisonGetIt.unregister<ReadingImageComparisonDataSource>();
+          comparisonGetIt.registerFactory<ReadingImageComparisonDataSource>(
+            () => ObservedConsumerQaSource(configuration, probe.record),
+          );
+          await comparisonGetIt.unregister<ReadingComparisonWorkGate>();
+          comparisonGetIt.registerSingleton<ReadingComparisonWorkGate>(
+            _NativeGate(Zone.current),
+          );
+        },
+      );
       Bloc.observer = probe;
       late HttpServer server;
       var calls = 0;
@@ -295,7 +311,18 @@ void main() {
         );
         final painting = probe.handle('{"action":"paint","epoch":7}');
         await tester.pump();
-        expect(jsonDecode(await painting)['paintedEpoch'], 7);
+        final painted = jsonDecode(await painting);
+        expect(painted['paintedEpoch'], 7);
+        expect((painted['resourceObservation'] as Map)['reservedSlots'], 1);
+        expect(
+          (painted['resourceObservation'] as Map)['reservedDecodedBytes'],
+          '16',
+        );
+        expect(
+          ((painted['events'] as List).last['resourceObservation']
+              as Map)['lifetimeId'],
+          (painted['resourceObservation'] as Map)['lifetimeId'],
+        );
         final stale = probe.handle('{"action":"paint","epoch":7}');
         cubit.loaded(owned, 8);
         await tester.pump();

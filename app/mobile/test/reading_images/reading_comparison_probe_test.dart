@@ -229,6 +229,11 @@ void main() {
         expect(painted['ok'], true);
         expect(painted['paintedEpoch'], 7);
         expect(painted['activeImages'], 1);
+        expect((painted['resourceObservation'] as Map)['reservedSlots'], 1);
+        expect(
+          (painted['resourceObservation'] as Map)['reservedDecodedBytes'],
+          '16',
+        );
         final stale = probe.handle('{"action":"paint","epoch":7}');
         cubit.loaded(rasterValue, 8);
         await tester.pump();
@@ -251,131 +256,149 @@ void main() {
     },
   );
 
-  test(
+  testWidgets(
     'gerçek HTTP ve codec: payload ölçülür, rendition kimliği ve native sahiplik korunur',
-    () async {
-      final sourceBytes = await png(1712, 2778);
-      final outputBytes = await png(822, 1334);
-      final fixture = Fixture(
-        source: raster(
-          width: 1712,
-          height: 2778,
-          bytes: sourceBytes.length,
-          sha: sha256.convert(sourceBytes).toString(),
-          objectKey: 'private/source.png',
-        ),
-        profiles: [profile(width: 823, height: 1334)],
-      );
-      final manifest = seal([
-        for (final entry in fixture.manifest.images)
-          ReadingImageEntry(
-            source: entry.source,
-            renditions: [
-              rendition(
-                entry.source,
-                profile(width: 823, height: 1334),
-                bytes: outputBytes.length,
-                sha: sha256.convert(outputBytes).toString(),
-                objectKey: 'private/rendition.png',
-              ),
-            ],
+    (tester) async {
+      await tester.runAsync(() async {
+        final sourceBytes = await png(1712, 2778);
+        final outputBytes = await png(822, 1334);
+        final fixture = Fixture(
+          source: raster(
+            width: 1712,
+            height: 2778,
+            bytes: sourceBytes.length,
+            sha: sha256.convert(sourceBytes).toString(),
+            objectKey: 'private/source.png',
           ),
-      ], publication: identity(contentId: 94));
-      final envelope = http_fixture.envelope(fixture);
-      (envelope['identity'] as Map)['contentId'] = 94;
-      (envelope['identity'] as Map)['manifestDigest'] =
-          manifest.identity.manifestDigest;
-      final images = (envelope['descriptor'] as Map)['images'] as List;
-      for (var i = 0; i < images.length; i++) {
-        (images[i]['renditions'] as List).single['raster'] = http_fixture
-            .rasterJson(manifest.images[i].renditions.single.raster);
-      }
-      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-      final input = configuration(server.port);
-      final config = parseComparisonConfiguration(input);
-      var mediaRequests = 0;
-      server.listen((request) async {
-        expect(
-          request.headers.value('authorization'),
-          'Bearer ${input['token']}',
+          profiles: [profile(width: 823, height: 1334)],
         );
-        final media = request.uri.path.endsWith('/bytes');
-        final bytes = media ? outputBytes : utf8.encode(jsonEncode(envelope));
-        if (media) mediaRequests++;
-        request.response.headers.set('Cache-Control', 'private,no-store');
-        request.response.headers.contentType = media
-            ? ContentType('image', 'png')
-            : ContentType.json;
-        request.response.contentLength = bytes.length;
-        request.response.add(bytes);
-        await request.response.close();
-      });
-      final previous = Bloc.observer;
-      final probe = ReadingComparisonProbe();
-      Bloc.observer = probe;
-      configureReadingImageComparisonDependencies(config);
-      await comparisonGetIt.unregister<ReadingImageComparisonDataSource>();
-      comparisonGetIt.registerFactory<ReadingImageComparisonDataSource>(
-        () => ObservedReadingComparisonSource(config, probe.record),
-      );
-      final cubit = HttpOverrides.runWithHttpOverrides(
-        () => comparisonGetIt<ReadingImageComparisonCubit>(),
-        RealLocalHttp(),
-      );
-      try {
-        final completed = cubit.stream.firstWhere(
-          (state) => state.status == 'loaded' || state.status == 'error',
+        final manifest = seal([
+          for (final entry in fixture.manifest.images)
+            ReadingImageEntry(
+              source: entry.source,
+              renditions: [
+                rendition(
+                  entry.source,
+                  profile(width: 823, height: 1334),
+                  bytes: outputBytes.length,
+                  sha: sha256.convert(outputBytes).toString(),
+                  objectKey: 'private/rendition.png',
+                ),
+              ],
+            ),
+        ], publication: identity(contentId: 94));
+        final envelope = http_fixture.envelope(fixture);
+        (envelope['identity'] as Map)['contentId'] = 94;
+        (envelope['identity'] as Map)['manifestDigest'] =
+            manifest.identity.manifestDigest;
+        final images = (envelope['descriptor'] as Map)['images'] as List;
+        for (var i = 0; i < images.length; i++) {
+          (images[i]['renditions'] as List).single['raster'] = http_fixture
+              .rasterJson(manifest.images[i].renditions.single.raster);
+        }
+        final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+        final input = configuration(server.port);
+        final config = parseComparisonConfiguration(input);
+        var mediaRequests = 0;
+        server.listen((request) async {
+          expect(
+            request.headers.value('authorization'),
+            'Bearer ${input['token']}',
+          );
+          final media = request.uri.path.endsWith('/bytes');
+          final bytes = media ? outputBytes : utf8.encode(jsonEncode(envelope));
+          if (media) mediaRequests++;
+          request.response.headers.set('Cache-Control', 'private,no-store');
+          request.response.headers.contentType = media
+              ? ContentType('image', 'png')
+              : ContentType.json;
+          request.response.contentLength = bytes.length;
+          request.response.add(bytes);
+          await request.response.close();
+        });
+        final previous = Bloc.observer;
+        final probe = ReadingComparisonProbe();
+        final resourceBaseline = probe.snapshot();
+        Bloc.observer = probe;
+        configureReadingImageComparisonDependencies(config);
+        await comparisonGetIt.unregister<ReadingImageComparisonDataSource>();
+        comparisonGetIt.registerFactory<ReadingImageComparisonDataSource>(
+          () => ObservedReadingComparisonSource(config, probe.record),
         );
-        HttpOverrides.runWithHttpOverrides(
-          () => cubit.select(
-            id: 94,
-            entryIndex: 1,
-            canonicalSource: false,
-            width: 411,
-            height: 456.66666666666663,
-            dpr: 2,
-            fit: ReadingImageFit.cover,
-          ),
+        final cubit = HttpOverrides.runWithHttpOverrides(
+          () => comparisonGetIt<ReadingImageComparisonCubit>(),
           RealLocalHttp(),
         );
-        final loaded = await completed.timeout(const Duration(seconds: 10));
-        expect(loaded.status, 'loaded');
-        final snapshot = probe.snapshot();
-        final events = snapshot['events'] as List;
-        final measured = events
-            .where((e) => e['kind'] == 'http' && e['endpoint'] == 'bytes')
-            .single;
-        expect(measured['payloadBytes'], outputBytes.length);
-        final rendered = events.where((e) => e['status'] == 'loaded').single;
-        expect(rendered['decodedWidth'], 822);
-        expect(rendered['decodedHeight'], 1334);
-        expect(rendered['role'], 'readingDetail');
-        expect(rendered['requiredHeight'], 1334);
-        expect(
-          rendered['displaySha256'],
-          sha256.convert(outputBytes).toString(),
-        );
-        expect(mediaRequests, 1);
-        final exported = jsonEncode(snapshot);
-        expect(exported, isNot(contains(input['token'] as String)));
-        expect(exported, isNot(contains('objectKey')));
-        expect(exported, isNot(contains('private/source.png')));
-        cubit.visibility(false);
+        try {
+          final completed = cubit.stream.firstWhere(
+            (state) => state.status == 'loaded' || state.status == 'error',
+          );
+          HttpOverrides.runWithHttpOverrides(
+            () => cubit.select(
+              id: 94,
+              entryIndex: 1,
+              canonicalSource: false,
+              width: 411,
+              height: 456.66666666666663,
+              dpr: 2,
+              fit: ReadingImageFit.cover,
+            ),
+            RealLocalHttp(),
+          );
+          final loaded = await completed.timeout(const Duration(seconds: 10));
+          expect(loaded.status, 'loaded');
+          final snapshot = probe.snapshot();
+          final events = snapshot['events'] as List;
+          final measured = events
+              .where((e) => e['kind'] == 'http' && e['endpoint'] == 'bytes')
+              .single;
+          expect(measured['payloadBytes'], outputBytes.length);
+          final rendered = events.where((e) => e['status'] == 'loaded').single;
+          expect(
+            (rendered['resourceObservation'] as Map)['reservedDecodedBytes'],
+            '${822 * 1334 * 4}',
+          );
+          expect((snapshot['resourceObservation'] as Map)['reservedSlots'], 1);
+          expect(rendered['decodedWidth'], 822);
+          expect(rendered['decodedHeight'], 1334);
+          expect(rendered['role'], 'readingDetail');
+          expect(rendered['requiredHeight'], 1334);
+          expect(
+            rendered['displaySha256'],
+            sha256.convert(outputBytes).toString(),
+          );
+          expect(mediaRequests, 1);
+          final exported = jsonEncode(snapshot);
+          expect(exported, isNot(contains(input['token'] as String)));
+          expect(exported, isNot(contains('objectKey')));
+          expect(exported, isNot(contains('private/source.png')));
+          cubit.visibility(false);
+          expect(ReadingComparisonRaster.activeImages, 0);
+          cubit.visibility(true);
+          expect(cubit.state.error, 'readmission_required');
+          expect(mediaRequests, 1);
+          final drained = jsonDecode(await probe.handle('{"action":"stop"}'));
+          expect((drained['resourceObservation'] as Map)['reservedSlots'], 0);
+          // ignore: avoid_print
+          print(
+            'P4_RESOURCE_JSON:${jsonEncode({
+              'chain': 'loopback-codec',
+              'samples': [resourceBaseline, rendered, snapshot, drained],
+            })}',
+          );
+        } finally {
+          await cubit.close();
+          await config.account!.credentials.close();
+          await comparisonGetIt.reset();
+          Bloc.observer = previous;
+          await server.close(force: true);
+        }
         expect(ReadingComparisonRaster.activeImages, 0);
-        cubit.visibility(true);
-        expect(cubit.state.error, 'readmission_required');
-        expect(mediaRequests, 1);
-      } finally {
-        await cubit.close();
-        await config.account!.credentials.close();
-        await comparisonGetIt.reset();
-        Bloc.observer = previous;
-        await server.close(force: true);
-      }
-      expect(ReadingComparisonRaster.activeImages, 0);
-      expect(ReadingComparisonRaster.activeBuffers, 0);
-      expect(ReadingComparisonRaster.activeDescriptors, 0);
-      expect(ReadingComparisonRaster.activeCodecs, 0);
+        expect(ReadingComparisonRaster.activeBuffers, 0);
+        expect(ReadingComparisonRaster.activeDescriptors, 0);
+        expect(ReadingComparisonRaster.activeCodecs, 0);
+      });
+      await tester.pumpWidget(const SizedBox());
     },
   );
 }
