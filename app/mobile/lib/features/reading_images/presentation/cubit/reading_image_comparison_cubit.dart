@@ -32,9 +32,11 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   StreamSubscription<void>? _account;
   ReadingComparisonCancellation? _cancellation, _statusCancellation;
   Future<void> _tail = Future.value();
+  Future<void>? _statusWork, _closing;
   Timer? _poll, _lease, _control;
   int _epoch = 0, _checks = 0;
   bool _checking = false, _visible = true;
+  bool _closingStarted = false;
   ReadingImageComparison? _admission;
   ReadingImageIdentity? _anchor;
   int? _anchorGeneration, _routeContentId;
@@ -44,6 +46,11 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   ReadingImageComparison? get admittedComparison => _admission;
 
   void retire(String reason) {
+    if (_closingStarted || isClosed) return;
+    _retire(reason);
+  }
+
+  void _retire(String reason) {
     _epoch++;
     _slot = null;
     _admission = null;
@@ -67,6 +74,7 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   }
 
   void visibility(bool visible) {
+    if (_closingStarted || isClosed) return;
     _visible = visible;
     if (!visible) {
       retire('background');
@@ -87,7 +95,7 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     int? pageId,
     int pageNumber = 0,
   }) {
-    if (!_visible || isClosed) return;
+    if (_closingStarted || !_visible || isClosed) return;
     if (configuration.mediaEnabled) {
       if ((_routeContentId != null && _routeContentId != id) ||
           (_admission != null &&
@@ -135,7 +143,8 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     );
   }
 
-  bool _owns(int epoch) => !isClosed && _visible && epoch == _epoch;
+  bool _owns(int epoch) =>
+      !_closingStarted && !isClosed && _visible && epoch == _epoch;
   Future<void> _render(
     int epoch,
     ReadingComparisonCancellation cancellation,
@@ -297,8 +306,14 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     );
   }
 
-  Future<void> _check() async {
-    if (_checking || _admission == null || !_visible) return;
+  void _check() {
+    if (_closingStarted ||
+        isClosed ||
+        _checking ||
+        _admission == null ||
+        !_visible) {
+      return;
+    }
     if (++_checks > configuration.limits!.maxStatusChecks) {
       retire('control_count');
       return;
@@ -308,6 +323,14 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
     final epoch = _epoch;
     final cancellation = ReadingComparisonCancellation();
     _statusCancellation = cancellation;
+    _statusWork = _checkStatus(admission, epoch, cancellation);
+  }
+
+  Future<void> _checkStatus(
+    ReadingImageComparison admission,
+    int epoch,
+    ReadingComparisonCancellation cancellation,
+  ) async {
     try {
       final result = await repository.status(admission, cancellation);
       if (!_owns(epoch)) return;
@@ -324,12 +347,15 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
           retire('live_changed');
         }
       });
+    } catch (_) {
+      if (_owns(epoch)) retire('status_refused');
     } finally {
       _checking = false;
     }
   }
 
   void changeChoice(int index, bool canonical) {
+    if (_closingStarted || isClosed) return;
     _epoch++;
     _slot = null;
     _cancellation?.cancel();
@@ -345,6 +371,7 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   }
 
   void retry() {
+    if (_closingStarted || isClosed) return;
     final index = state.entryIndex, canonical = state.canonicalSource;
     retire('readmission_required');
     emit(
@@ -357,11 +384,14 @@ class ReadingImageComparisonCubit extends Cubit<ReadingImageComparisonState> {
   }
 
   @override
-  Future<void> close() async {
-    retire('closed');
+  Future<void> close() => _closing ??= _drain().then((_) => super.close());
+
+  Future<void> _drain() async {
+    _closingStarted = true;
+    _retire('closed');
     await _account?.cancel();
-    await _tail;
-    await super.close();
+    // İptal bildirimi yeterli değildir; HTTP ve native iş gerçekten bitmelidir.
+    await Future.wait([_tail, ?_statusWork]);
   }
 }
 

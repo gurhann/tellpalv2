@@ -49,6 +49,34 @@ class _NativeGate extends ReadingComparisonWorkGate {
       zone.run(() => super.run(work));
 }
 
+/// Gerçek transport finally'si ve çağırana dönen Future ayrı gözlenir.
+class _ObservedStatusSource extends ReadingImageComparisonDataSource {
+  _ObservedStatusSource(super.configuration);
+  final transportStopped = Completer<void>();
+  final releaseCompletion = Completer<void>();
+  ReadingComparisonCancellation? statusCancellation;
+  bool statusFinished = false;
+
+  @override
+  Future<Uint8List> read(
+    String path,
+    Map<String, String> query,
+    ReadingComparisonCancellation cancellation,
+    int limit,
+  ) async {
+    if (path != 'status') return super.read(path, query, cancellation, limit);
+    statusCancellation = cancellation;
+    try {
+      return await super.read(path, query, cancellation, limit);
+    } finally {
+      transportStopped.complete();
+      // Deterministik sıra kontrolü; ürün timeout'u veya transport değişikliği değildir.
+      await releaseCompletion.future;
+      statusFinished = true;
+    }
+  }
+}
+
 /// Tüm byte'lar sentetiktir. Sunucu yalnız loopback üzerinde ve test boyunca yaşar.
 class _Loopback {
   late HttpServer server;
@@ -60,8 +88,13 @@ class _Loopback {
   int manifestStatus = 200;
   bool corrupt = false;
   Completer<void>? holdBytes, bytesEntered;
+  bool partialStatus = false;
+  late final Completer<void> statusOpened, statusDisconnected;
+  Socket? statusSocket;
 
   Future<void> start() async {
+    statusOpened = Completer<void>();
+    statusDisconnected = Completer<void>();
     final source = await png(1200);
     output = await png(1000);
     final f = Fixture(
@@ -134,6 +167,36 @@ class _Loopback {
           request.response.statusCode = manifestStatus;
           request.response.headers.contentType = ContentType.json;
           final data = utf8.encode(jsonEncode(descriptor));
+          if (partialStatus && request.uri.path.endsWith('/status')) {
+            await request.drain<void>();
+            final socket = await request.response.detachSocket(
+              writeHeaders: false,
+            );
+            statusSocket = socket;
+            void disconnected() {
+              if (!statusDisconnected.isCompleted) {
+                statusDisconnected.complete();
+              }
+            }
+
+            socket.listen(
+              (_) {},
+              onDone: disconnected,
+              onError: (Object _) => disconnected(),
+            );
+            socket.add(
+              ascii.encode(
+                'HTTP/1.1 200 OK\r\n'
+                'Content-Type: application/json\r\n'
+                'Cache-Control: private,no-store\r\n'
+                'Content-Length: ${data.length}\r\n\r\n',
+              ),
+            );
+            socket.add(data.sublist(0, 1));
+            await socket.flush();
+            statusOpened.complete();
+            return;
+          }
           request.response.contentLength = data.length;
           request.response.add(data);
         }
@@ -149,6 +212,7 @@ class _Loopback {
   Uri get origin => Uri.parse('http://127.0.0.1:${server.port}');
   Future<void> close() async {
     if (holdBytes != null && !holdBytes!.isCompleted) holdBytes!.complete();
+    statusSocket?.destroy();
     await server.close(force: true);
   }
 }
@@ -635,6 +699,107 @@ void main() {
           if (!cubit.isClosed) {
             await cubit.close().timeout(const Duration(seconds: 3));
           }
+          await configuration.account!.credentials.close();
+          await server.close();
+          await comparisonGetIt.reset();
+        });
+        await tester.pumpWidget(const SizedBox());
+      }
+    },
+  );
+
+  testWidgets(
+    'gerçek QA parent yavaş status soketini iptal eder ve status Future bitmeden kapanmaz',
+    (tester) async {
+      tester.view.physicalSize = const Size(487.5, 1055);
+      tester.view.devicePixelRatio = 1.25;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final server = _Loopback();
+      late _ObservedStatusSource source;
+      late ManualComparisonClock clock;
+      late ReadingImageComparisonConfiguration configuration;
+      late ReadingImageComparisonCubit cubit;
+      await _native(tester, () async {
+        await server.start();
+        server.partialStatus = true;
+        server.descriptor['leaseMillis'] = 2000;
+        configuration = media(server.origin);
+        source = _ObservedStatusSource(configuration);
+        final repository = ReadingImageComparisonRepositoryImpl(
+          source,
+          configuration,
+        );
+        clock = ManualComparisonClock();
+        cubit = ReadingImageComparisonCubit(
+          LoadReadingImageComparison(repository),
+          repository,
+          configuration,
+          _NativeGate(Zone.current),
+          clock,
+        );
+        comparisonGetIt.registerFactory<ReadingImageComparisonCubit>(
+          () => cubit,
+        );
+      });
+      try {
+        await tester.pumpWidget(
+          const ReadingImageComparisonApp(contentId: 71, consumerQa: true),
+        );
+        await _wait(tester, () => cubit.state.status == 'loaded');
+        final image = cubit.state.raster!.image!;
+        await _native(tester, () async {
+          clock.advance(1000);
+          await server.statusOpened.future.timeout(const Duration(seconds: 3));
+        });
+        expect(
+          server.requests.where((u) => u.path.endsWith('/status')).length,
+          1,
+        );
+        expect(source.transportStopped.isCompleted, isFalse);
+        expect(source.statusCancellation!.cancelled, isFalse);
+        expect(server.statusDisconnected.isCompleted, isFalse);
+        await tester.tap(find.byTooltip('QA akışını kapat'));
+        expect(source.statusCancellation!.cancelled, isTrue);
+        await _native(tester, () async {
+          await source.transportStopped.future.timeout(
+            const Duration(seconds: 3),
+          );
+          await server.statusDisconnected.future.timeout(
+            const Duration(seconds: 3),
+          );
+        });
+        await tester.pump(const Duration(milliseconds: 350));
+        expect(image.debugDisposed, isTrue);
+        expect(source.statusFinished, isFalse);
+        expect(cubit.isClosed, isFalse);
+        expect(find.text('QA akışı kapandı'), findsNothing);
+        expect(find.byType(ReadingImageConsumerFlowScreen), findsOneWidget);
+        final parentPopScope = find
+            .descendant(
+              of: find.byType(ReadingImageConsumerFlowScope),
+              matching: find.byWidgetPredicate((widget) => widget is PopScope),
+            )
+            .first;
+        expect(tester.widget<PopScope>(parentPopScope).canPop, isFalse);
+        final requestCount = server.requests.length;
+        await _native(tester, () async {
+          source.releaseCompletion.complete();
+        });
+        await _wait(tester, () => cubit.isClosed);
+        expect(source.statusFinished, isTrue);
+        expect(find.text('QA akışı kapandı'), findsOneWidget);
+        expect(find.byType(ReadingConsumerImageSlot), findsNothing);
+        expect(find.byType(ReadingImageComparisonRaster), findsNothing);
+        expect(tester.widget<PopScope>(parentPopScope).canPop, isTrue);
+        expect(server.requests.length, requestCount);
+        expect(tester.takeException(), isNull);
+      } finally {
+        await _native(tester, () async {
+          if (!source.releaseCompletion.isCompleted) {
+            source.releaseCompletion.complete();
+          }
+          await cubit.close().timeout(const Duration(seconds: 3));
           await configuration.account!.credentials.close();
           await server.close();
           await comparisonGetIt.reset();

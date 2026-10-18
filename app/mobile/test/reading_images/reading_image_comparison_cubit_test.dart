@@ -83,7 +83,212 @@ class HoldingRepository extends PendingRepository {
   }
 }
 
+class StatusHoldingRepository extends HoldingRepository {
+  final statusEntered = Completer<void>();
+  final pendingStatus =
+      Completer<Either<ReadingComparisonFailure, ReadingImageComparison>>();
+  ReadingComparisonCancellation? statusCancellation, bytesCancellation;
+  ReadingImageComparison? statusAdmission;
+  int statusCalls = 0, bytesCalls = 0, manifestCalls = 0;
+
+  @override
+  Future<Either<ReadingComparisonFailure, ReadingImageComparison>> manifest(
+    int id,
+    ReadingComparisonCancellation c,
+  ) {
+    manifestCalls++;
+    return super.manifest(id, c);
+  }
+
+  @override
+  Future<Either<ReadingComparisonFailure, ReadingImageComparison>> status(
+    ReadingImageComparison value,
+    ReadingComparisonCancellation c,
+  ) {
+    statusCalls++;
+    statusCancellation = c;
+    statusAdmission = value;
+    if (!statusEntered.isCompleted) statusEntered.complete();
+    return pendingStatus.future;
+  }
+
+  @override
+  Future<Either<ReadingComparisonFailure, ReadingComparisonBytes>> bytes(
+    ReadingImageComparison value,
+    ReadingImageBinding binding,
+    ReadingImageRendition rendition,
+    bool canonical,
+    ReadingComparisonCancellation c,
+  ) {
+    bytesCalls++;
+    bytesCancellation = c;
+    return super.bytes(value, binding, rendition, canonical, c);
+  }
+}
+
 void main() {
+  for (final outcome in ['success', 'failure', 'exception']) {
+    for (final statusFirst in [true, false]) {
+      test(
+        'ortak close status ve medyayı bekler: $outcome, statusFirst=$statusFirst',
+        () async {
+          final repo = StatusHoldingRepository()..leaseMillis = 10000;
+          final config = media(Uri.parse('http://127.0.0.1:1'));
+          final clock = ManualComparisonClock();
+          final cubit = ReadingImageComparisonCubit(
+            LoadReadingImageComparison(repo),
+            repo,
+            config,
+            ReadingComparisonWorkGate(),
+            clock,
+          );
+          final states = <String>[];
+          final subscription = cubit.stream.listen((s) => states.add(s.status));
+          choose(cubit, 2);
+          await repo.bytesEntered.future;
+          clock.advance(1000);
+          await repo.statusEntered.future;
+          expect(repo.statusCalls, 1);
+          expect(repo.statusCancellation!.cancelled, isFalse);
+          final closing = cubit.close();
+          final secondClose = cubit.close();
+          expect(identical(closing, secondClose), isTrue);
+          expect(repo.statusCancellation!.cancelled, isTrue);
+          expect(repo.bytesCancellation!.cancelled, isTrue);
+          var closed = false;
+          final observedClose = closing.then((_) => closed = true);
+          final closedState = cubit.state;
+
+          // İptal edilmiş zamanlayıcının sıraya alınmış callback'i de geç gelebilir.
+          final callbacks = List<ManualComparisonTimer>.of(clock.timers);
+          choose(cubit, 3);
+          cubit.changeChoice(1, true);
+          cubit.retry();
+          cubit.visibility(false);
+          cubit.visibility(true);
+          config.account!.credentials.revoke();
+          for (final timer in callbacks) {
+            timer.callback(timer);
+          }
+          clock.advance(10000);
+          await Future<void>.delayed(Duration.zero);
+          expect(identical(cubit.state, closedState), isTrue);
+          expect(closed, isFalse);
+          expect(cubit.isClosed, isFalse);
+
+          void finishStatus() {
+            switch (outcome) {
+              case 'success':
+                repo.pendingStatus.complete(Right(repo.statusAdmission!));
+              case 'failure':
+                repo.pendingStatus.complete(
+                  const Left(ReadingComparisonFailure('late_refusal')),
+                );
+              case 'exception':
+                repo.pendingStatus.completeError(StateError('late_status'));
+            }
+          }
+
+          void finishMedia() => repo.pendingBytes.complete(
+            const Left(ReadingComparisonFailure('cancelled')),
+          );
+          if (statusFirst) {
+            finishStatus();
+          } else {
+            finishMedia();
+          }
+          await Future<void>.delayed(Duration.zero);
+          expect(closed, isFalse);
+          expect(cubit.isClosed, isFalse);
+          if (statusFirst) {
+            finishMedia();
+          } else {
+            finishStatus();
+          }
+          await observedClose;
+          await secondClose;
+          expect(cubit.isClosed, isTrue);
+          expect(cubit.state.error, 'closed');
+          expect(cubit.admittedComparison, isNull);
+          expect(cubit.state.raster, isNull);
+          expect(states.where((s) => s == 'loaded'), isEmpty);
+          expect(
+            (repo.manifestCalls, repo.bytesCalls, repo.statusCalls),
+            (1, 1, 1),
+          );
+          choose(cubit, 2);
+          cubit.changeChoice(2, false);
+          cubit.retry();
+          cubit.visibility(true);
+          expect(identical(cubit.state, closedState), isTrue);
+          await subscription.cancel();
+          await config.account!.credentials.close();
+        },
+      );
+    }
+  }
+
+  test(
+    'status başlamadan close mevcut medya işinin sonlanmasını bekler',
+    () async {
+      final repo = StatusHoldingRepository()..leaseMillis = 10000;
+      final config = media(Uri.parse('http://127.0.0.1:1'));
+      final cubit = ReadingImageComparisonCubit(
+        LoadReadingImageComparison(repo),
+        repo,
+        config,
+        ReadingComparisonWorkGate(),
+        ManualComparisonClock(),
+      );
+      choose(cubit, 2);
+      await repo.bytesEntered.future;
+      var closed = false;
+      final closing = cubit.close().then((_) => closed = true);
+      await Future<void>.delayed(Duration.zero);
+      expect(repo.statusCalls, 0);
+      expect(closed, isFalse);
+      repo.pendingBytes.complete(
+        const Left(ReadingComparisonFailure('cancelled')),
+      );
+      await closing;
+      expect(cubit.isClosed, isTrue);
+      await config.account!.credentials.close();
+    },
+  );
+
+  test(
+    'retire ile iptal edilmiş status da close drain kapsamındadır',
+    () async {
+      final repo = StatusHoldingRepository()..leaseMillis = 10000;
+      final config = media(Uri.parse('http://127.0.0.1:1'));
+      final clock = ManualComparisonClock();
+      final cubit = ReadingImageComparisonCubit(
+        LoadReadingImageComparison(repo),
+        repo,
+        config,
+        ReadingComparisonWorkGate(),
+        clock,
+      );
+      choose(cubit, 2);
+      await repo.bytesEntered.future;
+      clock.advance(1000);
+      await repo.statusEntered.future;
+      cubit.visibility(false);
+      expect(repo.statusCancellation!.cancelled, isTrue);
+      repo.pendingBytes.complete(
+        const Left(ReadingComparisonFailure('cancelled')),
+      );
+      var closed = false;
+      final closing = cubit.close().then((_) => closed = true);
+      await Future<void>.delayed(Duration.zero);
+      expect(closed, isFalse);
+      repo.pendingStatus.complete(Right(repo.statusAdmission!));
+      await closing;
+      expect(cubit.state.error, 'closed');
+      await config.account!.credentials.close();
+    },
+  );
+
   test(
     'lease süresi pending decode/transfer neslini kapatır; yeni LIVE otomatik alınmaz',
     () async {

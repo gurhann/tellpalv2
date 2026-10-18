@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-18",
+  "baselineCommit": "35d0bb384b0aba642e4cbfb8cc0a4000fdccf909",
+  "reviewStatus": "Üç bağımsız BMad incelemesi tamamlandı; açık bulgu yok.",
+  "finalTests": {
+    "log": "23-full-tracked-final.private.log",
+    "trackedTestFiles": 49,
+    "passed": 468,
+    "failed": 0
+  },
+  "analyzer": {
+    "log": "18-analyze-fixed.private.log",
+    "issues": 0
+  },
+  "earlierFocusedTests": {
+    "log": "09-reading-detail-fixtures.private.log",
+    "passed": 206,
+    "note": "Önceki kaynak dönemi; dar küme tam kümenin içindedir. Sayılar toplanmaz."
+  },
+  "snapshot": {
+    "files": 220,
+    "sha256": "426cb32e65dce0ad1b2e6214d676785d64788021c2cab837113d1e3259585e4f",
+    "exception": "app/mobile/lib/main_image_experiment.dart",
+    "exceptionNote": "Korunan dirty repo dosyası değiştirilmedi; özel kopyada HEAD sürümü kullanıldı.",
+    "sourceMismatches": [],
+    "missingRelativeDartDependencies": [],
+    "missingTrackedTests": [],
+    "runtimeLauncherMatches": true,
+    "forbiddenCopiedFiles": []
+  },
+  "taskSourceHashes": {
+    "app/mobile/lib/features/reading_images/presentation/cubit/reading_image_comparison_cubit.dart": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+    "app/mobile/test/reading_images/reading_image_comparison_cubit_test.dart": "8ecd081e7ec590b739d90f4f0a6c45689ffa1b274e62997bb592a9db9f710b45",
+    "app/mobile/test/reading_images/reading_image_consumer_qa_test.dart": "1dc08e3c2b8dd54a5a146ae7814d722eba63e34a86361dd1f514cba0956c6fef"
+  },
+  "protection": {
+    "receipt": "audit-post23.private.json",
+    "receiptSha256": "9dc1af466acba9ff0ccadfe43e83ad211b7d98c2f1b17183abb95e0a1aff4f66",
+    "protectedFiles": 3269,
+    "oldRunFiles": 72,
+    "oldP4a5PrivateFiles": 192,
+    "mismatches": [],
+    "frozenSha256": "7943349315705e710cfdb19c43d858fdb9b320a1a9e37f32dfa87784783bbee6",
+    "frozenMatches": true
+  },
+  "mutations": [
+    {
+      "receipt": "19-mutation-status-await-final-mutation.private.json",
+      "mutation": "await",
+      "originalSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "mutatedSha256": "08f439393d2fee4bc38180902a72521ee18a45daa1ff5e65fb2db281ea417f7b",
+      "restoredSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "restored": true,
+      "exitCode": 1
+    },
+    {
+      "receipt": "20-mutation-parent-await-final-mutation.private.json",
+      "mutation": "await",
+      "originalSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "mutatedSha256": "08f439393d2fee4bc38180902a72521ee18a45daa1ff5e65fb2db281ea417f7b",
+      "restoredSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "restored": true,
+      "exitCode": 1
+    },
+    {
+      "receipt": "21-mutation-status-cancel-final-mutation.private.json",
+      "mutation": "cancel",
+      "originalSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "mutatedSha256": "770365ae725bec4afb31c70d0b07ef5fe6813618c157c97a030a712a9a8910a0",
+      "restoredSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "restored": true,
+      "exitCode": 1
+    },
+    {
+      "receipt": "22-mutation-admission-final-mutation.private.json",
+      "mutation": "admission",
+      "originalSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "mutatedSha256": "866010dcd5ed9798dc2a9728ee1891339fd3ed4911bd51bc2fb90a1214a3ca07",
+      "restoredSha256": "1e2f13361400dd06b43145d8f713b2e6316ca7a1cdd3efb9d99293f7e27aca63",
+      "restored": true,
+      "exitCode": 1
+    }
+  ],
+  "privateLogHashes": [
+    {
+      "name": "01-focused.private.log",
+      "exitCode": 1,
+      "sha256": "1daab7fc7724ef101a6dc4e07b0620b187cb337841655596f815ac79eedd5e5b"
+    },
+    {
+      "name": "02-status-fixture.private.log",
+      "exitCode": 1,
+      "sha256": "a91852fecf33cbcc64704792a189835b6708c102ac91da17b0241a001259a6ee"
+    },
+    {
+      "name": "03-status-drained-request.private.log",
+      "exitCode": 1,
+      "sha256": "1c40735c43c09d7ff22635a103c22944bac741adc8b266ab6e03ac11d900366a"
+    },
+    {
+      "name": "04-status-diagnostic.private.log",
+      "exitCode": 1,
+      "sha256": "2f62132cfa74b01000d620ff851dc2576e4c2bb67b71259178512d8a3d39a3cf"
+    },
+    {
+      "name": "05-status-native-zone.private.log",
+      "exitCode": 1,
+      "sha256": "b8b318838aeac2eb88a20cd2d402f9c3fd9ead907562b13e05610a568b0786b8"
+    },
+    {
+      "name": "06-status-parent.private.log",
+      "exitCode": 0,
+      "sha256": "04906efc28450b32bd8930315d60a529a660e2beeb58706808091dc0230b04c9"
+    },
+    {
+      "name": "07-reading-detail.private.log",
+      "exitCode": 1,
+      "sha256": "f92df13f0023376d7c3804a11936d1ff3c475dde7878613beb3614c6a1863214"
+    },
+    {
+      "name": "08-reading-detail-complete.private.log",
+      "exitCode": 1,
+      "sha256": "e4098977b5de015dcc9a75546f2bb4adaa3db683e4a7abb0f5577839a28778a5"
+    },
+    {
+      "name": "09-reading-detail-fixtures.private.log",
+      "exitCode": 0,
+      "sha256": "6bb43d296ce8b4ec09aa6d42c4cbea59bb86db1a3de9df7039969e79dc737440"
+    },
+    {
+      "name": "10-mutation-status-await.private.log",
+      "exitCode": 1,
+      "sha256": "634943af0cfae8c5e8ca5016c90cede2b03f2e31ad3c6f2e64abbde76eaffb3e"
+    },
+    {
+      "name": "11-mutation-parent-await.private.log",
+      "exitCode": 1,
+      "sha256": "4dee70a764b790ce1e209afda98a940d8885c43579da44fe83de2a623d71afdf"
+    },
+    {
+      "name": "12-mutation-status-cancel.private.log",
+      "exitCode": 1,
+      "sha256": "a5a83cae7bedcb7b94bba0df0102a5551b7d1c09e0c85fe464fc83ebfdc9d044"
+    },
+    {
+      "name": "13-mutation-admission.private.log",
+      "exitCode": 1,
+      "sha256": "974c5bd4dffbc2ed3aa60ae6e027f31200d90beaa43c02386ac1eedad4ee44d3"
+    },
+    {
+      "name": "14-full-tracked.private.log",
+      "exitCode": 1,
+      "sha256": "f5d176a87cdb2dab46417c63041f7695322d683dd781b95fe96ea2887f22ce6f"
+    },
+    {
+      "name": "15-existing-tls-runtime.private.log",
+      "exitCode": 0,
+      "sha256": "54c94564f170cb497475ea04d7a97051f724f0a077787e8a04f56106ee672daa"
+    },
+    {
+      "name": "16-full-tracked-complete.private.log",
+      "exitCode": 0,
+      "sha256": "4c7b10cb9dc6a425a9fcb226fc68d5081704c577d161c97df619e0b6bd741775"
+    },
+    {
+      "name": "17-analyze.private.log",
+      "exitCode": 1,
+      "sha256": "f0ad97e52a19722362a9e46454df4605ce852ff6561241849e06a1b6c92fc6c9"
+    },
+    {
+      "name": "18-analyze-fixed.private.log",
+      "exitCode": 0,
+      "sha256": "ef3dbfce335ca33aa1c9dc9874530360b013bc82da3d5688ce2c5cebcabfc51f"
+    },
+    {
+      "name": "19-mutation-status-await-final.private.log",
+      "exitCode": 1,
+      "sha256": "634943af0cfae8c5e8ca5016c90cede2b03f2e31ad3c6f2e64abbde76eaffb3e"
+    },
+    {
+      "name": "20-mutation-parent-await-final.private.log",
+      "exitCode": 1,
+      "sha256": "9e6bcf2ee722f2b935d70c50ad48ee7f9b0742da86a37ce29594808440a6ca37"
+    },
+    {
+      "name": "21-mutation-status-cancel-final.private.log",
+      "exitCode": 1,
+      "sha256": "a5a83cae7bedcb7b94bba0df0102a5551b7d1c09e0c85fe464fc83ebfdc9d044"
+    },
+    {
+      "name": "22-mutation-admission-final.private.log",
+      "exitCode": 1,
+      "sha256": "974c5bd4dffbc2ed3aa60ae6e027f31200d90beaa43c02386ac1eedad4ee44d3"
+    },
+    {
+      "name": "23-full-tracked-final.private.log",
+      "exitCode": 0,
+      "sha256": "b82e2f8fb5528678a11a8b217477407d32c4c1828dbac6071b2e09bc2f5aaf9e"
+    }
+  ],
+  "limits": "Yalnız yerel/sentetik doğrulama. Gerçek backend/Firebase/storage/cihaz koşusu ve üretim/fiziksel kalite kabulü yok.",
+  "reviews": {
+    "layers": [
+      "blind-hunter",
+      "edge-case-hunter",
+      "verification-gap"
+    ],
+    "actionableFindings": 0,
+    "receipt": "review-01.private.json",
+    "receiptSha256": "cec3d7ab51678eafe6835433b175e70aeffda39046fd10b7568fea1b37cb1529",
+    "rootPatch": {
+      "severity": "medium",
+      "category": "patch",
+      "closed": true,
+      "summary": "Çalışan test kapsamı ile normal ses/gezinti kaynaklarının hash koruması ayrıldı."
+    },
+    "sourceChangedAfterTests": false
+  }
+}
