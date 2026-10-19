@@ -40,6 +40,12 @@ class ConsumerQaExpectedScope {
     12,
     'p4b5-7981ad25-c851-4ed6-af89-2d0fbfffd0f8',
   );
+  static const p4b5Retry = ConsumerQaExpectedScope._(
+    '06810424cfde11b22151aa4c719de448f5e4a1fa02d767c11765cac9627a2606',
+    120000,
+    12,
+    'p4b5-retry-afde2e82-70d1-430a-9094-d4532d5cd798',
+  );
   final String proposalSha256;
   final int windowMillis;
   final int maxStatusChecks;

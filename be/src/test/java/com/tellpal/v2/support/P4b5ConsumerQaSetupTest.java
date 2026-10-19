@@ -116,7 +116,7 @@ class P4b5ConsumerQaSetupTest {
         Path state=directory.toRealPath();var jdbc=mock(JdbcTemplate.class);
         String query="select operations,reserved_bytes,max_operations,max_bytes from reading_comparison_budgets where run_id=?";
         when(jdbc.queryForMap(query,P4b5ConsumerQaLedger.RUN)).thenReturn(Map.of("operations",52L,"reserved_bytes",57913854L,"max_operations",64L,"max_bytes",67108864L));
-        var ledger=new P4b5ConsumerQaLedger(state.resolve("ledger.log"),P4b5ConsumerQaLedgerTest.fixture("proposal.json"),P4b5ConsumerQaLedgerTest.fixture("terminal-ledger.txt"),P4b5ConsumerQaLedgerTest.fixture("retained-ready.json"),P4b5ConsumerQaLedgerTest.approval(),java.time.Clock.systemUTC(),()->0,false);
+        var ledger=P4b5ConsumerQaLedgerTest.ledger(P4b5ConsumerQaScope.P4B5,state.resolve("ledger.log"));
         ledger.importLoginReservation();ledger.openWindow(state.resolve("window"));ledger.request("manifest",new Object[]{"synthetic",94L,"tr"});ledger.verify();
         for(int i=0;i<4;i++)P4b5ConsumerQaLedgerTest.media(ledger,i);
         var links=P4b5ConsumerQaLedgerTest.JSON.createObjectNode();
@@ -132,11 +132,12 @@ class P4b5ConsumerQaSetupTest {
     final class CredentialFixture implements AutoCloseable {
         final Path state;final P4b5ConsumerQaLedger ledger;
         final com.fasterxml.jackson.databind.node.ObjectNode receipt,reservation,claims;
-        CredentialFixture(String name) throws Exception {
+        CredentialFixture(String name) throws Exception {this(name,P4b5ConsumerQaScope.P4B5);}
+        CredentialFixture(String name,P4b5ConsumerQaScope scope) throws Exception {
             state=Files.createDirectory(directory.resolve(name)).toRealPath();
-            ledger=new P4b5ConsumerQaLedger(state.resolve("ledger.log"),P4b5ConsumerQaLedgerTest.fixture("proposal.json"),P4b5ConsumerQaLedgerTest.fixture("terminal-ledger.txt"),P4b5ConsumerQaLedgerTest.fixture("retained-ready.json"),P4b5ConsumerQaLedgerTest.approval(),java.time.Clock.systemUTC(),()->0,false);
+            ledger=P4b5ConsumerQaLedgerTest.ledger(scope,state.resolve("ledger.log"));
             var json=P4b5ConsumerQaLedgerTest.JSON;
-            reservation=json.valueToTree(Map.of("proposalSha256",P4b5ConsumerQaLedger.PROPOSAL_SHA,"measurementId",P4b5ConsumerQaLedger.MEASUREMENT,"budgetRunId",P4b5ConsumerQaLedger.RUN,
+            reservation=json.valueToTree(Map.of("proposalSha256",scope.proposalSha256,"measurementId",scope.measurementId,"budgetRunId",P4b5ConsumerQaLedger.RUN,
                     "qaSignInInvocationsTotal",4,"firebaseVerifierReservationsTotal",32,"accountLookupReserved",1,"tokenExchangeReserved",1,"loginVerifierReserved",1));
             long now=System.currentTimeMillis()/1000;
             claims=json.valueToTree(Map.of("aud","tellpal-ee0dd","iss","https://securetoken.google.com/tellpal-ee0dd","sub",P4b5ConsumerQaLedger.UID,"user_id",P4b5ConsumerQaLedger.UID,"iat",now-10,"exp",now+600));
@@ -161,8 +162,8 @@ class P4b5ConsumerQaSetupTest {
     }
 
     @Test void actualCredentialWindowRejectsMissingWrongScopeReservationUidTokenAndExpiryBeforeLoginImport() throws Exception {
-        for(String mode:List.of("missing-login","measurement","missing-reservation","reservation-measurement","reservation-total","reservation-missing","reservation-wrong","uid","missing-token","token-path","token-format","token-header","token-signature","token-aud","token-iss","token-sub","token-user","token-expired","token-exp-type","token-future","receipt-expired","receipt-exp-type","receipt-token-exp-drift")) {
-            try(var fixture=new CredentialFixture(mode)) {
+        for(var scope:P4b5ConsumerQaScope.values())for(String mode:List.of("missing-login","measurement","missing-reservation","reservation-measurement","reservation-total","reservation-missing","reservation-wrong","uid","missing-token","token-path","token-format","token-header","token-signature","token-aud","token-iss","token-sub","token-user","token-expired","token-exp-type","token-future","receipt-expired","receipt-exp-type","receipt-token-exp-drift")) {
+            try(var fixture=new CredentialFixture(scope.name()+mode,scope)) {
                 switch(mode) {
                     case "measurement" -> fixture.receipt.put("measurementId","wrong");
                     case "reservation-measurement" -> fixture.reservation.put("measurementId","wrong");
@@ -200,7 +201,7 @@ class P4b5ConsumerQaSetupTest {
     }
 
     @Test void actualCredentialWindowValidEvidenceImportsOnceThenPreservesDatabaseAdmissionAndLocalGateOrder() throws Exception {
-        try(var fixture=new CredentialFixture("valid-login")) {
+        for(var scope:P4b5ConsumerQaScope.values())try(var fixture=new CredentialFixture(scope.name()+"valid-login",scope)) {
             var sequence=new ArrayList<String>();fixture.open(sequence);
             assertThat(sequence).containsExactly("DB_THEN_ADMISSION","LOCAL_GATE");
             assertThat(Files.readString(fixture.state.resolve("ledger.log"))).containsOnlyOnce("LOGIN_RESERVED 4 1 1 1 32").containsOnlyOnce("WINDOW_STARTED");
@@ -211,6 +212,14 @@ class P4b5ConsumerQaSetupTest {
             assertThat(sequence).containsExactly("DB_THEN_ADMISSION","LOCAL_GATE");
             assertThat(Files.readAllBytes(fixture.state.resolve("window.json"))).isEqualTo(window);
             assertThat(Files.readAllBytes(fixture.state.resolve("ready.json"))).isEqualTo(ready);
+        }
+    }
+
+    @Test void retryCredentialGateRejectsLegacyProposalAndMeasurementBeforeLoginImport() throws Exception {
+        try(var fixture=new CredentialFixture("cross-scope",P4b5ConsumerQaScope.P4B5_RETRY)) {
+            fixture.receipt.put("proposalSha256",P4b5ConsumerQaScope.P4B5.proposalSha256).put("measurementId",P4b5ConsumerQaScope.P4B5.measurementId);fixture.save();
+            assertThatThrownBy(()->fixture.open(new ArrayList<>())).hasMessage("LOGIN_SCOPE_OR_RESERVATION");
+            assertThat(Files.readString(fixture.state.resolve("ledger.log"))).doesNotContain("LOGIN_RESERVED","WINDOW_STARTED");
         }
     }
 

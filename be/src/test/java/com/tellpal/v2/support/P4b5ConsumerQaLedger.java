@@ -21,6 +21,7 @@ final class P4b5ConsumerQaLedger implements AutoCloseable {
     static final String RUN=P4LocalComparisonLedger.RUN;
     static final String UID="jLRypTmoBrhhX21HsDJojurcKTC3";
     static final int[] ORDER={1,2,3,1};
+    private final P4b5ConsumerQaScope scope;
     private final FileChannel channel;
     private final Clock clock;
     private final LongSupplier nanos;
@@ -32,27 +33,44 @@ final class P4b5ConsumerQaLedger implements AutoCloseable {
 
     P4b5ConsumerQaLedger(Path path,byte[] proposal,byte[] terminal,byte[] ready,JsonNode approval,
             Clock clock,LongSupplier nanos,boolean loginReserved) throws IOException {
-        require(ReadingIdentity.sha(proposal).equals(PROPOSAL_SHA),"PROPOSAL_CHANGED");
+        this(P4b5ConsumerQaScope.P4B5,path,proposal,terminal,ready,approval,clock,nanos,loginReserved,null);
+    }
+
+    P4b5ConsumerQaLedger(P4b5ConsumerQaScope scope,Path path,byte[] proposal,byte[] terminal,byte[] ready,JsonNode approval,
+            Clock clock,LongSupplier nanos,boolean loginReserved,byte[] priorProof) throws IOException {
+        this.scope=Objects.requireNonNull(scope);
+        require(ReadingIdentity.sha(proposal).equals(scope.proposalSha256),"PROPOSAL_CHANGED");
+        if(scope==P4b5ConsumerQaScope.P4B5_RETRY) {
+            require(priorProof!=null,"PRIOR_ATTEMPT_PROOF_REQUIRED");
+            try {scope.validatePriorProof(proposal,new ObjectMapper().readTree(priorProof));}
+            catch(IOException failure){throw failure;}
+            catch(Exception failure){throw new IllegalStateException("PRIOR_ATTEMPT_PROOF_CHANGED",failure);}
+        }
         require(terminal.length==752 && ReadingIdentity.sha(terminal).equals(TERMINAL_SHA),"TERMINAL_CHANGED");
         require(ReadingIdentity.sha(ready).equals(READY_SHA),"READY_CHANGED");
-        validateApproval(approval);
+        validateApproval(scope,approval);
         this.clock=Objects.requireNonNull(clock);this.nanos=Objects.requireNonNull(nanos);
         this.expected=new ObjectMapper().readTree(ready);
         channel=FileChannel.open(path,Set.of(StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE),
                 PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")));
         try {
-            append("OPEN_PENDING "+MEASUREMENT+" "+PROPOSAL_SHA+" "+TERMINAL_SHA+" 752");
+            append("OPEN_PENDING "+scope.measurementId+" "+scope.proposalSha256+" "+TERMINAL_SHA+" 752");
+            if(priorProof!=null)append("PRIOR_ATTEMPT "+ReadingIdentity.sha(priorProof));
             append("PRIOR_DEBT 14 74711347 13 68374490 51 256812666 8 31 3 73 107 39 44742970");
             if(loginReserved){auth=1;append("LOGIN_RESERVED 4 1 1 1 32");}
         } catch(RuntimeException failure){channel.close();throw failure;}
     }
 
-    static void validateApproval(JsonNode approval) {
+    P4b5ConsumerQaScope scope(){return scope;}
+
+    static void validateApproval(JsonNode approval) {validateApproval(P4b5ConsumerQaScope.P4B5,approval);}
+
+    static void validateApproval(P4b5ConsumerQaScope scope,JsonNode approval) {
         var keys=new HashSet<String>();approval.fieldNames().forEachRemaining(keys::add);
         require(keys.equals(Set.of("proposalSha256","decision","budgetRunId","measurementId","qaUid","contentId","windowMillis","newProductionAllowed"))
                 && approval.path("decision").asText().equals("A")
-                && approval.path("proposalSha256").asText().equals(PROPOSAL_SHA)
-                && approval.path("measurementId").asText().equals(MEASUREMENT)
+                && approval.path("proposalSha256").asText().equals(scope.proposalSha256)
+                && approval.path("measurementId").asText().equals(scope.measurementId)
                 && approval.path("budgetRunId").asText().equals(RUN) && approval.path("qaUid").asText().equals(UID)
                 && exact(approval.path("contentId"),94) && exact(approval.path("windowMillis"),120000)
                 && approval.path("newProductionAllowed").isBoolean() && !approval.path("newProductionAllowed").booleanValue(),"APPROVAL_REQUIRED");
@@ -66,7 +84,7 @@ final class P4b5ConsumerQaLedger implements AutoCloseable {
         require(!opened && !failed && !closed,"WINDOW_ALREADY_USED");
         wallStart=lastWall=clock.millis();monoStart=lastMono=nanos.getAsLong();
         try {
-            P4LocalComparisonSetup.privateJson(window,Map.of("proposalSha256",PROPOSAL_SHA,"budgetRunId",RUN,"measurementId",MEASUREMENT,
+            P4LocalComparisonSetup.privateJson(window,Map.of("proposalSha256",scope.proposalSha256,"budgetRunId",RUN,"measurementId",scope.measurementId,
                     "startedAtEpochMillis",wallStart,"deadlineEpochMillis",Math.addExact(wallStart,120000),"windowMillis",120000));
             append("WINDOW_STARTED "+wallStart+" "+Math.addExact(wallStart,120000));opened=true;
         } catch(Exception failure){failed=true;if(failure instanceof IOException io)throw io;throw new IllegalStateException("WINDOW_FAILED",failure);}

@@ -18,10 +18,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../test_driver/reading_consumer_qa_probe.dart';
 import 'reading_consumer_qa_probe_test.dart' as old;
 
-Map<String, dynamic> p4b5Config(int port) {
+Map<String, dynamic> p4b5Config(
+  int port, [
+  ConsumerQaExpectedScope selected = ConsumerQaExpectedScope.p4b5,
+]) {
   final input = old.config(port);
-  input['proposalSha256'] = ConsumerQaExpectedScope.p4b5.proposalSha256;
-  input['measurementId'] = ConsumerQaExpectedScope.p4b5.measurementId;
+  input['proposalSha256'] = selected.proposalSha256;
+  input['measurementId'] = selected.measurementId;
   input['windowDeadlineEpochMillis'] =
       (input['windowStartedAtEpochMillis'] as int) + 120000;
   return input;
@@ -107,6 +110,35 @@ void main() {
       parsed.account!.credentials.revoke();
     },
   );
+  test('iki P4b5 kapsamı birbirinin runtime mesajını kabul etmez', () {
+    for (final selected in [
+      ConsumerQaExpectedScope.p4b5,
+      ConsumerQaExpectedScope.p4b5Retry,
+    ]) {
+      final parsed = parseConsumerQaConfiguration(
+        p4b5Config(12345, selected),
+        expectedScope: selected,
+      );
+      expect(parsed.limits!.maxStatusChecks, 12);
+      final other = identical(selected, ConsumerQaExpectedScope.p4b5)
+          ? ConsumerQaExpectedScope.p4b5Retry
+          : ConsumerQaExpectedScope.p4b5;
+      for (final wrong in [
+        p4b5Config(12345, other),
+        {
+          ...p4b5Config(12345, selected),
+          'proposalSha256': other.proposalSha256,
+        },
+        {...p4b5Config(12345, selected), 'measurementId': other.measurementId},
+      ]) {
+        expect(
+          () => parseConsumerQaConfiguration(wrong, expectedScope: selected),
+          throwsA(anything),
+        );
+      }
+      parsed.account!.credentials.revoke();
+    }
+  });
   test('P4b5 gerçek HTTP öncesi en çok 12 status ve toplam 17 ayırır', () {
     final configuration = parseConsumerQaConfiguration(
       p4b5Config(12345),
@@ -163,136 +195,147 @@ void main() {
     await probe.stop();
     await tester.pump();
   });
-  testWidgets(
-    'gerçek loopback ve dört native paint ham JSON phase kabulüne gider',
-    (tester) async {
-      final prior = Bloc.observer;
-      final probe = ReadingConsumerQaProbe(
-        expectedScope: ConsumerQaExpectedScope.p4b5,
-        initializeDependencies: (_) async {},
-      );
-      final records = <Map<String, Object?>>[];
-      void capture(String phase) => records.add({
-        'phase': phase,
-        'sample': jsonDecode(jsonEncode(probe.snapshot())),
-      });
-      capture('baseline');
-      late HttpServer server;
-      late Uint8List bytes;
-      await tester.runAsync(() async {
-        bytes = await png(4, 4);
-        server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-        server.listen((request) async {
-          request.response.headers.contentType = ContentType('image', 'png');
-          request.response.contentLength = bytes.length;
-          request.response.add(bytes);
-          await request.response.close();
-        });
-        expect(
-          jsonDecode(
-            await probe.handle(jsonEncode(p4b5Config(server.port))),
-          )['ok'],
-          true,
+  for (final selected in [
+    ConsumerQaExpectedScope.p4b5,
+    ConsumerQaExpectedScope.p4b5Retry,
+  ]) {
+    testWidgets(
+      '${selected.measurementId} gerçek loopback ve dört native paint ham JSON phase kabulüne gider',
+      (tester) async {
+        final prior = Bloc.observer;
+        final probe = ReadingConsumerQaProbe(
+          expectedScope: selected,
+          initializeDependencies: (_) async {},
         );
-      });
-      Bloc.observer = probe;
-      final cubit = _PhaseCubit(PendingRepository());
-      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      try {
-        for (var index = 0; index < 4; index++) {
-          if (index > 0) cubit.drain();
-          late ReadingComparisonRaster owned;
-          await tester.runAsync(() async {
-            probe.record({
-              'kind': 'httpReservation',
-              'endpoint': 'bytes',
-              'ordinal': index + 1,
-            });
-            final client = HttpOverrides.runWithHttpOverrides(
-              () => HttpClient(),
-              RealLocalHttp(),
-            );
-            try {
-              final request = await client.getUrl(
-                Uri.parse('http://127.0.0.1:${server.port}/bytes'),
-              );
-              final response = await request.close();
-              final received = await response.fold<List<int>>(
-                [],
-                (all, part) => all..addAll(part),
-              );
-              probe.record({
-                'kind': 'http',
-                'endpoint': 'bytes',
-                'ok': response.statusCode == 200,
-                'payloadBytes': received.length,
-              });
-              owned = await ReadingComparisonRaster.decode(
-                Uint8List.fromList(received),
-                raster(width: 4, height: 4, bytes: received.length),
-                2,
-                2,
-                limits(pixels: 16),
-                ReadingComparisonCancellation(),
-              );
-            } finally {
-              client.close(force: true);
-            }
+        final records = <Map<String, Object?>>[];
+        void capture(String phase) => records.add({
+          'phase': phase,
+          'sample': jsonDecode(jsonEncode(probe.snapshot())),
+        });
+        capture('baseline');
+        late HttpServer server;
+        late Uint8List bytes;
+        await tester.runAsync(() async {
+          bytes = await png(4, 4);
+          server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+          server.listen((request) async {
+            request.response.headers.contentType = ContentType('image', 'png');
+            request.response.contentLength = bytes.length;
+            request.response.add(bytes);
+            await request.response.close();
           });
-          cubit.loaded(owned, index + 1);
-          await tester.pumpWidget(
-            Directionality(
-              textDirection: TextDirection.ltr,
-              child: Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: ReadingImageComparisonRaster(
-                    raster: owned,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+          expect(
+            jsonDecode(
+              await probe.handle(jsonEncode(p4b5Config(server.port, selected))),
+            )['ok'],
+            true,
           );
-          final paint = probe.handle('{"action":"paint","epoch":${index + 1}}');
-          await tester.pump();
-          records.add({
-            'phase': 'paint${index + 1}',
-            'sample': jsonDecode(await paint),
-          });
-        }
-        final before = probe.snapshot();
-        expect(before['observedLifecycle'], 'resumed');
-        expect(before['liveRasterAttached'], true);
-        expect(before['currentEpoch'], 4);
-        expect(before['lastPaintedEpoch'], 4);
-        capture('beforeBackground');
-        cubit.drain();
-        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-        expect(probe.snapshot()['observedLifecycle'], 'paused');
-        expect(probe.snapshot()['liveRasterAttached'], false);
-        capture('background');
+        });
+        Bloc.observer = probe;
+        final cubit = _PhaseCubit(PendingRepository());
         tester.binding.handleAppLifecycleStateChanged(
           AppLifecycleState.resumed,
         );
-        capture('resumed');
-        await cubit.close();
-        capture('closedUi');
-        final stopped = jsonDecode(await probe.handle('{"action":"stop"}'));
-        records.add({'phase': 'stopped', 'sample': stopped});
-        // Ham JSON özel test logundan Python'a geçer; yeni IPC veya storage yoktur.
-        // ignore: avoid_print
-        print(
-          'P4B5_RESOURCE_JSON:${jsonEncode({'chain': 'loopback-native', 'records': records})}',
-        );
-      } finally {
-        await probe.stop();
-        await tester.pumpWidget(const SizedBox());
-        await cubit.close();
-        Bloc.observer = prior;
-        await tester.runAsync(() => server.close(force: true));
-      }
-    },
-  );
+        try {
+          for (var index = 0; index < 4; index++) {
+            if (index > 0) cubit.drain();
+            late ReadingComparisonRaster owned;
+            await tester.runAsync(() async {
+              probe.record({
+                'kind': 'httpReservation',
+                'endpoint': 'bytes',
+                'ordinal': index + 1,
+              });
+              final client = HttpOverrides.runWithHttpOverrides(
+                () => HttpClient(),
+                RealLocalHttp(),
+              );
+              try {
+                final request = await client.getUrl(
+                  Uri.parse('http://127.0.0.1:${server.port}/bytes'),
+                );
+                final response = await request.close();
+                final received = await response.fold<List<int>>(
+                  [],
+                  (all, part) => all..addAll(part),
+                );
+                probe.record({
+                  'kind': 'http',
+                  'endpoint': 'bytes',
+                  'ok': response.statusCode == 200,
+                  'payloadBytes': received.length,
+                });
+                owned = await ReadingComparisonRaster.decode(
+                  Uint8List.fromList(received),
+                  raster(width: 4, height: 4, bytes: received.length),
+                  2,
+                  2,
+                  limits(pixels: 16),
+                  ReadingComparisonCancellation(),
+                );
+              } finally {
+                client.close(force: true);
+              }
+            });
+            cubit.loaded(owned, index + 1);
+            await tester.pumpWidget(
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: ReadingImageComparisonRaster(
+                      raster: owned,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            );
+            final paint = probe.handle(
+              '{"action":"paint","epoch":${index + 1}}',
+            );
+            await tester.pump();
+            records.add({
+              'phase': 'paint${index + 1}',
+              'sample': jsonDecode(await paint),
+            });
+          }
+          final before = probe.snapshot();
+          expect(before['observedLifecycle'], 'resumed');
+          expect(before['liveRasterAttached'], true);
+          expect(before['currentEpoch'], 4);
+          expect(before['lastPaintedEpoch'], 4);
+          capture('beforeBackground');
+          cubit.drain();
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.paused,
+          );
+          expect(probe.snapshot()['observedLifecycle'], 'paused');
+          expect(probe.snapshot()['liveRasterAttached'], false);
+          capture('background');
+          tester.binding.handleAppLifecycleStateChanged(
+            AppLifecycleState.resumed,
+          );
+          capture('resumed');
+          await cubit.close();
+          capture('closedUi');
+          final stopped = jsonDecode(await probe.handle('{"action":"stop"}'));
+          records.add({'phase': 'stopped', 'sample': stopped});
+          // Ham JSON özel test logundan Python'a geçer; yeni IPC veya storage yoktur.
+          // ignore: avoid_print
+          print(
+            '${identical(selected, ConsumerQaExpectedScope.p4b5) ? 'P4B5_RESOURCE_JSON' : 'P4B5_RETRY_RESOURCE_JSON'}:${jsonEncode({'chain': 'loopback-native', 'records': records})}',
+          );
+        } finally {
+          await probe.stop();
+          await tester.pumpWidget(const SizedBox());
+          await cubit.close();
+          Bloc.observer = prior;
+          await tester.runAsync(() => server.close(force: true));
+        }
+      },
+    );
+  }
 }

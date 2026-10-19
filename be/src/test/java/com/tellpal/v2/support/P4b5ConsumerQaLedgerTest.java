@@ -53,6 +53,19 @@ class P4b5ConsumerQaLedgerTest {
     }
     static ObjectNode approval(){return JSON.valueToTree(Map.of("proposalSha256",P4b5ConsumerQaLedger.PROPOSAL_SHA,"decision","A",
             "budgetRunId",P4b5ConsumerQaLedger.RUN,"measurementId",P4b5ConsumerQaLedger.MEASUREMENT,"qaUid",P4b5ConsumerQaLedger.UID,"contentId",94,"windowMillis",120000,"newProductionAllowed",false));}
+    static byte[] proposal(P4b5ConsumerQaScope scope) throws Exception {return Files.readAllBytes(Path.of("..").resolve(scope.proposal));}
+    static byte[] priorProof() throws Exception {
+        var proposal=JSON.readTree(proposal(P4b5ConsumerQaScope.P4B5_RETRY));
+        var proof=JSON.valueToTree(P4b5ConsumerQaScope.P4B5_RETRY.identity());
+        for(String key:List.of("previousAttemptEvidence","historicalEvidence","priorConsumption"))((ObjectNode)proof).set(key,proposal.path(key));
+        ((ObjectNode)proof).put("previousAttemptVerifiedByFileHashes",true).put("currentDatabaseQueried",false).put("oldBackendLedgerExists",false).put("actualStagesExecuted",false);
+        return JSON.writeValueAsBytes(proof);
+    }
+    static ObjectNode approval(P4b5ConsumerQaScope scope){var value=approval();value.put("proposalSha256",scope.proposalSha256).put("measurementId",scope.measurementId);return value;}
+    static P4b5ConsumerQaLedger ledger(P4b5ConsumerQaScope scope,Path path) throws Exception {
+        return new P4b5ConsumerQaLedger(scope,path,proposal(scope),fixture("terminal-ledger.txt"),fixture("retained-ready.json"),approval(scope),Clock.systemUTC(),()->0,false,
+                scope==P4b5ConsumerQaScope.P4B5_RETRY ? priorProof() : null);
+    }
     static ReadingImageComparisonApi.Identity identity() throws Exception {return JSON.treeToValue(JSON.readTree(fixture("retained-ready.json")).path("identity"),ReadingImageComparisonApi.Identity.class);}
     static ReadingImageDeliveryApi.Selection selection(int order) throws Exception {
         var image=JSON.readTree(fixture("retained-ready.json")).path("descriptor").path("images").get(P4b5ConsumerQaLedger.ORDER[order]);

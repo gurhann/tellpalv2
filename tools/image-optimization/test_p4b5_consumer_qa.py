@@ -155,6 +155,26 @@ class P4b5AcceptanceTest(unittest.TestCase):
             self.assertTrue((root / 'terminal.private.json').exists())
             self.assertEqual(qa.private_json(root / 'terminal.private.json')['status'], 'FAILED_NO_RETRY')
 
+    def test_retry_installed_apk_sha_is_checked_before_initial_start_claim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve();(root / 'receipts').mkdir();(root / 'android').mkdir()
+            c = qa.Controller(root, root, selected=qa.P4B5_RETRY);calls = []
+            class Android:
+                def preflight(self): pass
+                def pid(self): return ''
+                def run(self, *args, **kwargs):
+                    calls.append(args)
+                    if args[:3] == ('shell', 'pm', 'path'): return 'package:/data/app/synthetic/base.apk'
+                    if args[:2] == ('shell', 'sha256sum'): return 'b' * 64 + ' /data/app/synthetic/base.apk'
+                    if args[:3] == ('shell', 'am', 'start'): raise AssertionError('First start forbidden')
+                    return ''
+            with patch.object(c, 'gate'), patch.object(c, 'selected_build', return_value=({'apkSha256': 'a' * 64}, root)), self.assertRaisesRegex(ValueError, 'INSTALLED_APK_DRIFT'):
+                c.arm(Android())
+            self.assertTrue((root / 'install.claim.private.json').exists())
+            self.assertFalse((root / 'initial-start.claim.private.json').exists())
+            self.assertEqual(qa.private_json(root / 'install.claim.private.json')['measurementId'], qa.P4B5_RETRY.measurement_id)
+            self.assertEqual([args[0] for args in calls], ['install', 'shell', 'shell'])
+
     def test_scope_source_and_three_independent_reviews_gate_before_execution(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve(); (root / 'receipts').mkdir(mode=0o700)
@@ -306,6 +326,34 @@ class P4b5AcceptanceTest(unittest.TestCase):
                 else:
                     with self.subTest(mode=mode), self.assertRaises(ValueError): qa.validate_backend_result(c.state, ready, links)
 
+    def test_retry_backend_result_requires_exactly_one_prior_attempt_matching_bound_sha(self):
+        for mode in ['valid', 'missing', 'duplicate', 'wrong-sha']:
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve();controller, owner, ready, links, receipt = self.backend_fixture(root)
+                links['priorAttemptProofSha256'] = 'a' * 64
+                receipt.update(qa.scope(qa.P4B5_RETRY))
+                receipt['bindings'] = links
+                prior = 'PRIOR_ATTEMPT ' + links['priorAttemptProofSha256'] + '\n'
+                lines = [] if mode == 'missing' else [prior, prior] if mode == 'duplicate' else [
+                    'PRIOR_ATTEMPT ' + 'b' * 64 + '\n' if mode == 'wrong-sha' else prior]
+                ledger = (controller.state / 'ledger.log').read_text()
+                first, rest = ledger.split('\n', 1)
+                ledger = first + '\n' + ''.join(lines) + rest
+                (controller.state / 'ledger.log').write_text(ledger)
+                # Her varyantın dış SHA'sı ve terminal makbuzu tutarlıdır; yalnız PRIOR_ATTEMPT kuralı ayrıştırır.
+                receipt['terminalLedgerSha256'] = qa.digest(controller.state / 'ledger.log')
+                receipt['terminalLedgerLine'] = ledger.splitlines()[-1]
+                (controller.state / 'backend-closed.json').write_text(json.dumps(receipt))
+                before = {p.name: p.read_bytes() for p in controller.state.iterdir() if p.is_file()}
+                if mode == 'valid':
+                    result = qa.validate_backend_result(controller.state, ready, links, qa.P4B5_RETRY)
+                    self.assertTrue(result['measurementSucceeded'])
+                    self.assertEqual(result['finalBudget']['operations'], 52)
+                else:
+                    with self.assertRaisesRegex(ValueError, '^TERMINAL_PRIOR_ATTEMPT_BINDING$'):
+                        qa.validate_backend_result(controller.state, ready, links, qa.P4B5_RETRY)
+                self.assertEqual(before, {p.name: p.read_bytes() for p in controller.state.iterdir() if p.is_file()})
+
     def test_ready_backend_exited_or_waited_exit_cannot_turn_failure_into_success(self):
         for after_wait in [False, True]:
             for mode in ['pass', 'failure-file', 'failed-outcome', 'db-delta', 'ledger-failed']:
@@ -385,6 +433,24 @@ class P4b5AcceptanceTest(unittest.TestCase):
                 chains.append(item['chain'])
         self.assertEqual(chains, ['loopback-native'])
 
+    @unittest.skipUnless(os.environ.get('P4B5_RETRY_DART_JSON_LOG'), 'Yeni scope gerçek Dart JSON logu seçilmedi')
+    def test_retry_native_loopback_json_preserves_four_paints_and_phase_drain(self):
+        chains = []
+        for line in Path(os.environ['P4B5_RETRY_DART_JSON_LOG']).read_text().splitlines():
+            if 'P4B5_RETRY_RESOURCE_JSON:' not in line: continue
+            item = json.loads(line.split('P4B5_RETRY_RESOURCE_JSON:', 1)[1])
+            before = json.dumps(item, sort_keys=True)
+            report = qa.validate_phase_resources(item['records'])
+            self.assertTrue(report['measured'])
+            self.assertEqual(report['bufferCreationAttemptsDelta'], '4')
+            for phase in ['background', 'resumed', 'closedUi', 'stopped']:
+                invalid = copy.deepcopy(item['records'])
+                invalid[qa.PHASES.index(phase)]['sample']['resourceObservation']['reservedSlots'] = 1
+                with self.assertRaises(ValueError): qa.validate_phase_resources(invalid)
+            self.assertEqual(json.dumps(item, sort_keys=True), before)
+            chains.append(item['chain'])
+        self.assertEqual(chains, ['loopback-native'])
+
 
 
 class P4b5VmPatchTest(unittest.TestCase):
@@ -462,6 +528,8 @@ class P4b5VmPatchTest(unittest.TestCase):
                 def process_identity(self, pid, timeout=15): return owner
                 def run(self, *args, **kwargs):
                     if args[:3] == ('shell', 'am', 'start'): self.started = True
+                    if args[:3] == ('shell', 'pm', 'path'): return 'package:/data/app/synthetic/base.apk'
+                    if args[:2] == ('shell', 'sha256sum'): return 'a' * 64 + ' /data/app/synthetic/base.apk'
                     if args[0] == 'logcat': return 'Dart VM service is listening on http://127.0.0.1:23456/synthetic/'
                     return ''
             controller = qa.Controller(root, root)
@@ -470,6 +538,21 @@ class P4b5VmPatchTest(unittest.TestCase):
             saved = qa.private_json(root / 'android/baseline.private.json')
             self.assertEqual(saved['isolateId'], 'isolate/1');self.assertEqual(saved['sample'], baseline)
             self.assertEqual(clock[0], 25)
+
+    def test_retry_scope_late_driver_and_rpc_failure_keep_one_deadline_and_safe_identity(self):
+        for mode in ['late', 'rpc-error']:
+            with tempfile.TemporaryDirectory() as directory:
+                clock = [0.0];root = Path(directory).resolve();vm = self.vm(root, clock, mode)
+                vm.qa_scope = qa.P4B5_RETRY
+                with patch.object(qa.time, 'monotonic', side_effect=lambda: clock[0]):
+                    if mode == 'rpc-error':
+                        with self.assertRaisesRegex(ValueError, 'VM_REFUSED'): vm.ready()
+                        receipt = qa.private_json(next(root.glob('vm-rpc-failure-*.private.json')))
+                        self.assertEqual({key: receipt[key] for key in qa.scope(qa.P4B5_RETRY)}, qa.scope(qa.P4B5_RETRY))
+                        self.assertEqual(receipt['rpcErrorCode'], -32601)
+                    else:
+                        vm.ready();self.assertLess(clock[0], 30)
+                self.assertEqual(sum(request['method'] == 'ext.flutter.driver' for request in vm.socket.sent), 1)
 
     def test_never_registered_isolate_exit_replacement_and_deadline_never_call_driver(self):
         for mode in ['never', 'isolate-drift', 'main-drift', 'exit', 'start', 'late-exit', 'late-start']:

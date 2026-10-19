@@ -13,6 +13,7 @@ import sys
 import time
 from urllib.parse import urlsplit
 
+from p4b5_qa_scope import P4B5, P4B5_RETRY, select_scope
 import p4_consumer_qa as helpers
 from p4_resource_observation import validate_resource_observations
 
@@ -31,12 +32,12 @@ ACTIVE = ['activeBuffers', 'activeDescriptors', 'activeCodecs', 'activeImages']
 require = helpers.require
 
 
-def scope():
-    return {'proposalSha256': PROPOSAL_SHA, 'measurementId': MEASUREMENT, 'budgetRunId': RUN}
+def scope(selected=P4B5):
+    return selected.identity()
 
 
-def machine_approval():
-    return {**scope(), 'decision': 'A', 'qaUid': UID, 'contentId': 94, 'windowMillis': 120000, 'newProductionAllowed': False}
+def machine_approval(selected=P4B5):
+    return {**scope(selected), 'decision': 'A', 'qaUid': UID, 'contentId': 94, 'windowMillis': 120000, 'newProductionAllowed': False}
 
 
 def exact(value, expected):
@@ -85,16 +86,17 @@ class Vm(helpers.Vm):
     METHODS = frozenset(['getVM', 'getIsolate', 'streamListen', 'streamCancel', 'ext.flutter.driver'])
     STAGES = frozenset(['arm', 'baseline-gate', 'measurement'])
 
-    def _protocol(self, evidence, stage, deadline=None, owner_check=None):
+    def _protocol(self, evidence, stage, deadline=None, owner_check=None, selected=P4B5):
+        self.qa_scope = selected
         require(stage in self.STAGES, 'VM_STAGE_REFUSED')
         self.evidence, self.stage, self.startup_deadline = Path(evidence), stage, deadline
         self.owner_check = owner_check
         self.sequence, self.isolate, self.events = 0, None, []
 
-    def __init__(self, url, evidence, stage, deadline=None, owner_check=None):
+    def __init__(self, url, evidence, stage, deadline=None, owner_check=None, selected=P4B5):
         import socket
         import websocket
-        self._protocol(evidence, stage, deadline, owner_check)
+        self._protocol(evidence, stage, deadline, owner_check, selected)
         parsed = urlsplit(url)
         require(parsed.scheme == 'ws' and parsed.hostname == '127.0.0.1' and not parsed.query
                 and not parsed.username and not parsed.password and not parsed.fragment
@@ -151,7 +153,7 @@ class Vm(helpers.Vm):
                 if 'error' in result:
                     error = result['error']
                     code = error.get('code') if type(error) is dict else None
-                    receipt = {**scope(), 'stage': self.stage, 'rpcMethod': method}
+                    receipt = {**scope(self.qa_scope), 'stage': self.stage, 'rpcMethod': method}
                     if type(code) is int and -2147483648 <= code <= 2147483647: receipt['rpcErrorCode'] = code
                     numbered(self.evidence, 'vm-rpc-failure', receipt)
                     raise ValueError('VM_REFUSED')
@@ -217,10 +219,10 @@ def validate_before_background(paint, sample):
     require(loaded(sample) == loaded(paint), 'BEFORE_BACKGROUND_EPOCH_CHANGED')
 
 
-def validate_backend_result(state, ready, links):
+def validate_backend_result(state, ready, links, selected=P4B5):
     require(not (state / 'failure.json').exists(), 'BACKEND_MEASUREMENT_FAILED')
     receipt = private_json(state / 'backend-closed.json')
-    require(all(receipt.get(k) == v for k, v in scope().items()) and type(receipt.get('pid')) is int
+    require(all(receipt.get(k) == v for k, v in scope(selected).items()) and type(receipt.get('pid')) is int
             and receipt['pid'] == ready['pid'] and receipt.get('closed') is True
             and receipt.get('drainVerified') is True and receipt.get('outcome') == 'SUCCESS', 'BACKEND_SUCCESS_DRAIN_REQUIRED')
     require(exact(receipt.get('bindings'), links), 'BACKEND_RESULT_BINDING_DRIFT')
@@ -229,6 +231,8 @@ def validate_backend_result(state, ready, links):
     lines = ledger.decode().splitlines()
     require(lines and lines[-1] == receipt.get('terminalLedgerLine') and lines[-1].startswith('CLOSED ')
             and not any(line.startswith(('FAILED_', 'FAILED ')) for line in lines), 'TERMINAL_LEDGER_FAILED')
+    if selected is P4B5_RETRY:
+        require([line for line in lines if line.startswith('PRIOR_ATTEMPT ')] == ['PRIOR_ATTEMPT ' + links.get('priorAttemptProofSha256', '')], 'TERMINAL_PRIOR_ATTEMPT_BINDING')
     parts = lines[-1].split()
     require(len(parts) == 7 and all(re.fullmatch(r'0|[1-9][0-9]*', value) for value in parts[1:]), 'TERMINAL_LEDGER_FORMAT')
     reads, byte_count, auth, manifests, statuses, media = map(int, parts[1:])
@@ -323,7 +327,8 @@ def validate_samples(records, ready):
             'mediaPayloadBytes': 13170884, 'httpCompleted': len(final_http), 'physicalQualityAccepted': False}
 
 
-def runtime_configuration(ready, token):
+def runtime_configuration(ready, token, selected=P4B5):
+    require(all(ready.get(k) == v for k, v in scope(selected).items()), 'RUNTIME_SCOPE_CHANGED')
     require(type(token) is str and len(token) <= 8192 and re.fullmatch(r'[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+', token), 'TOKEN_FORMAT')
     claims = json.loads(base64.urlsafe_b64decode(token.split('.')[1] + '==='))
     require(claims.get('aud') == 'tellpal-ee0dd' and claims.get('iss') == 'https://securetoken.google.com/tellpal-ee0dd'
@@ -332,14 +337,69 @@ def runtime_configuration(ready, token):
             and type(claims.get('iat')) is int and claims['iat'] <= time.time(), 'TOKEN_SCOPE_OR_EXPIRY')
     start, end = ready.get('windowStartedAtEpochMillis'), ready.get('windowDeadlineEpochMillis')
     require(type(start) is int and type(end) is int and end - start == 120000 and start <= time.time() * 1000 < end, 'WINDOW_EXPIRED')
-    return {'action': 'configure', 'runId': RUN, 'measurementId': MEASUREMENT, 'proposalSha256': PROPOSAL_SHA,
+    return {'action': 'configure', 'runId': RUN, 'measurementId': selected.measurement_id, 'proposalSha256': selected.proposal_sha256,
             'uid': UID, 'contentId': 94, 'port': ready['loopbackPort'], 'token': token,
             'windowStartedAtEpochMillis': start, 'windowDeadlineEpochMillis': end}
 
 
+
+def expected_prior_proof(proposal):
+    return {**scope(P4B5_RETRY), **{name: proposal[name] for name in ['previousAttemptEvidence', 'historicalEvidence', 'priorConsumption']},
+            'previousAttemptVerifiedByFileHashes': True, 'currentDatabaseQueried': False,
+            'oldBackendLedgerExists': False, 'actualStagesExecuted': False}
+
+
+def validate_prior_proof(proposal_bytes, proof):
+    require(hashlib.sha256(proposal_bytes).hexdigest() == P4B5_RETRY.proposal_sha256, 'PRIOR_ATTEMPT_PROPOSAL_CHANGED')
+    proposal = json.loads(proposal_bytes)
+    require(exact(proof, expected_prior_proof(proposal)), 'PRIOR_ATTEMPT_PROOF_CHANGED')
+    validate_prior_files(proposal['previousAttemptEvidence'])
+
+
+def validate_prior_files(previous):
+    require(previous['privateRoot'] == str(P4B5.private_root) and len(previous['files']) == 12, 'PRIOR_ATTEMPT_SCOPE_CHANGED')
+    for name, sha in previous['files'].items():
+        relative = Path(name)
+        require(not relative.is_absolute() and relative == Path(os.path.normpath(name)) and '..' not in relative.parts, 'PRIOR_ATTEMPT_PATH_REFUSED')
+        require(hashlib.sha256(helpers.private_file(P4B5.private_root / relative, 4194304, external=True)).hexdigest() == sha, 'PRIOR_ATTEMPT_FILE_CHANGED')
+
+
+def validate_python_binding(binding, selected, source, run, runtime=True):
+    require(all(binding.get(k) == v for k, v in scope(selected).items()), 'PYTHON_BINDING_SCOPE')
+    binary, controller = Path(binding.get('pythonBinary', '')), Path(binding.get('controller', ''))
+    executable = Path(binding.get('pythonExecutable', ''))
+    require(executable.is_absolute() and executable.resolve() == binary, 'PYTHON_EXECUTABLE_CHANGED')
+    require(binary.is_absolute() and binary.resolve() == binary and binary.is_file()
+            and digest(binary) == binding.get('pythonBinarySha256'), 'PYTHON_BINARY_CHANGED')
+    expected = source / 'tools/image-optimization/p4b5_consumer_qa.py'
+    require(controller == expected and controller.resolve() == controller and digest(controller) == binding.get('controllerSha256'), 'PYTHON_CONTROLLER_CHANGED')
+    files = binding.get('files')
+    require(type(files) is dict and bool(files), 'PYTHON_IMPORT_CLOSURE_REQUIRED')
+    for name in ['p4b5_consumer_qa.py', 'p4b5_qa_scope.py', 'p4_consumer_qa.py', 'p4_resource_observation.py', 'p4_reading_comparison.py', 'native_test_login.py', 'native_entry_config.py']:
+        require(str(expected.parent / name) in files, 'PYTHON_IMPORT_CLOSURE_REQUIRED')
+    for name, sha in files.items():
+        path = Path(name)
+        require(path.is_absolute() and path.resolve() == path and path.is_file() and digest(path) == sha, 'PYTHON_IMPORT_CHANGED')
+    prefix = [str(executable), str(controller), '--scope', selected.measurement_id, '--proposal-sha256', selected.proposal_sha256]
+    require(exact(run.get('pythonCommandPrefix'), prefix), 'PYTHON_COMMAND_PREFIX_CHANGED')
+    if runtime:
+        import websocket
+        require(Path(sys.executable) == executable and Path(sys.executable).resolve() == binary and Path(__file__).resolve() == controller, 'PYTHON_RUNTIME_CHANGED')
+        # Çalışan helper ve websocket modülleri de incelenen kapalı dosya kümesine aittir.
+        for module in list(sys.modules.values()):
+            file = getattr(module, '__file__', None)
+            name = getattr(module, '__name__', '')
+            if file and (name in ['p4b5_qa_scope', 'p4_consumer_qa', 'p4_resource_observation', 'p4_reading_comparison', 'native_test_login', 'native_entry_config'] or name == 'websocket' or name.startswith('websocket.')):
+                path = Path(file).resolve()
+                require(str(path) in files and digest(path) == files[str(path)], 'PYTHON_RUNTIME_IMPORT_CHANGED')
+
 class Controller:
-    def __init__(self, private=PRIVATE, root=ROOT):
+    def __init__(self, private=None, root=ROOT, selected=P4B5):
+        require(selected is P4B5 or selected is P4B5_RETRY, 'UNKNOWN_QA_SCOPE')
+        self.qa_scope = selected
+        private = (PRIVATE if selected is P4B5 else selected.private_root) if private is None else private
         self.private, self.root = private, root
+        self.failure_writable = False
         self.state = private / 'backend'
 
     def receipt(self, name):
@@ -361,13 +421,13 @@ class Controller:
 
     def gate(self, reviews=True):
         self.ensure_open()
-        require(self.private == PRIVATE and helpers.private_dir(self.private, external=True) == PRIVATE, 'PRIVATE_ROOT_REQUIRED')
-        require(digest(self.root / PROPOSAL) == PROPOSAL_SHA, 'PROPOSAL_CHANGED')
+        require(self.private == (PRIVATE if self.qa_scope is P4B5 else self.qa_scope.private_root) and helpers.private_dir(self.private, external=True) == self.private, 'PRIVATE_ROOT_REQUIRED')
+        require(digest(self.root / self.qa_scope.proposal) == self.qa_scope.proposal_sha256, 'PROPOSAL_CHANGED')
         approval = self.receipt('receipts/human-approval-01.private.json')
-        require(approval.get('proposalSha256') == PROPOSAL_SHA and approval.get('measurementId') == MEASUREMENT
-                and approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla', 'HUMAN_APPROVAL_REQUIRED')
+        require(all(approval.get(k) == v for k, v in scope(self.qa_scope).items())
+                and (approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla' or (self.qa_scope is P4B5_RETRY and approval.get('answer') == 'A' and approval.get('approvedOption') == 'A — Planı ve tek sınırlı denemeyi onayla')), 'HUMAN_APPROVAL_REQUIRED')
         binding_path, binding = self.source_binding()
-        require(binding.get('proposalSha256') == PROPOSAL_SHA and binding.get('measurementId') == MEASUREMENT, 'SOURCE_BINDING_SCOPE')
+        require(all(binding.get(k) == v for k, v in scope(self.qa_scope).items()), 'SOURCE_BINDING_SCOPE')
         require(type(binding.get('files')) is dict and bool(binding['files']), 'SOURCE_BINDINGS_REQUIRED')
         for name, sha in binding['files'].items():
             relative = Path(name)
@@ -376,26 +436,29 @@ class Controller:
                     and digest(self.private / 'source' / relative) == sha, 'SOURCE_DRIFT')
         if reviews:
             run_path, run = self.latest_receipt('run-binding')
-            selected_path, _ = self.latest_receipt('selected-build')
+            selected_path, selected = self.latest_receipt('selected-build')
             classpath_path, classpath = self.latest_receipt('classpath-binding')
             require(type(classpath.get('files')) is dict and bool(classpath['files']), 'CLASSPATH_BINDINGS_REQUIRED')
             for name, sha in classpath['files'].items():
                 path = Path(name)
                 require(path.is_absolute() and path.resolve() == path and path.is_file() and digest(path) == sha, 'CLASSPATH_DRIFT')
-            require(all(run.get(k) == v for k, v in scope().items())
+            require(all(run.get(k) == v for k, v in scope(self.qa_scope).items())
                     and run.get('sourceBindingFile') == binding_path.name and run.get('classpathBindingFile') == classpath_path.name and run.get('selectedBuildFile') == selected_path.name
                     and run.get('sourceBindingSha256') == digest(binding_path)
                     and run.get('selectedBuildSha256') == digest(selected_path)
                     and run.get('classpathBindingSha256') == digest(classpath_path), 'RUN_BINDING_DRIFT')
+            if self.qa_scope is P4B5_RETRY:
+                require(all(value.get(k) == v for value in [selected, classpath] for k, v in scope(self.qa_scope).items()), 'REVIEWED_SCOPE_CHANGED')
+                self.retry_bindings(run)
             generation = run_path.name[len('run-binding-'):len('run-binding-') + 4]
             seen = set()
             for number in range(1, 4):
                 review = self.receipt(f'reviews/pre-run-{generation}-{number:02d}.private.json')
-                require(all(review.get(k) == v for k, v in scope().items())
+                require(all(review.get(k) == v for k, v in scope(self.qa_scope).items())
                         and review.get('sourceBindingSha256') == digest(binding_path)
                         and review.get('runBindingSha256') == digest(run_path)
                         and review.get('status') == 'PASS' and type(review.get('unresolvedFindings')) is int and review['unresolvedFindings'] == 0
-                        and type(review.get('reviewerId')) is str, 'THREE_PRE_RUN_REVIEWS_REQUIRED')
+                        and type(review.get('reviewerId')) is str and bool(review['reviewerId'].strip()), 'THREE_PRE_RUN_REVIEWS_REQUIRED')
                 seen.add(review['reviewerId'])
             require(len(seen) == 3, 'INDEPENDENT_REVIEWERS_REQUIRED')
             for name in ['install', 'initial-start', 'backend-start', 'login', 'window', 'measurement']:
@@ -404,12 +467,25 @@ class Controller:
                     require(private_json(claimed).get('runBindingSha256') == digest(run_path), 'ATTEMPT_BINDING_FROZEN')
         return binding
 
+    def retry_bindings(self, run):
+        for field, prefix in [('priorAttemptProof', 'prior-attempt-proof'), ('pythonBinding', 'python-binding')]:
+            name = run.get(field + 'File')
+            require(type(name) is str and re.fullmatch(prefix + r'-[0-9]{4}\.private\.json', name), 'NUMBERED_RECEIPT_REQUIRED')
+            path = self.private / 'receipts' / name
+            require(digest(path) == run.get(field + 'Sha256'), 'REVIEWED_RECEIPT_CHANGED')
+            value = private_json(path)
+            if field == 'priorAttemptProof':
+                validate_prior_proof((self.root / self.qa_scope.proposal).read_bytes(), value)
+            else:
+                validate_python_binding(value, self.qa_scope, self.private / 'source', run)
+
     def claim(self, name, details=None):
         binding = {}
         if list((self.private / 'receipts').glob('run-binding-*.private.json')):
             run_path, _ = self.latest_receipt('run-binding')
             binding['runBindingSha256'] = digest(run_path)
-        write_json(self.private / f'{name}.claim.private.json', {**scope(), **binding, 'state': 'RESERVED_NO_AUTOMATIC_RETRY', **(details or {})})
+        write_json(self.private / f'{name}.claim.private.json', {**scope(self.qa_scope), **binding, 'state': 'RESERVED_NO_AUTOMATIC_RETRY', **(details or {})})
+        self.failure_writable = True
 
     def build(self, args):
         binding = self.gate(reviews=False)
@@ -426,7 +502,7 @@ class Controller:
         directory.mkdir(mode=0o700)
         init = directory / 'p4b5.init.gradle'
         helpers.write_new(init, ("gradle.beforeProject { p -> p.pluginManager.withPlugin('com.android.application') { if(p.path == ':app') { "
-            "if(p.findProperty('target') != '" + ENTRY + "' || p.findProperty('imageExperiment') != null || gradle.startParameter.taskNames != [':app:assembleDebug']) "
+            "if(p.findProperty('target') != '" + self.qa_scope.entry + "' || p.findProperty('imageExperiment') != null || gradle.startParameter.taskNames != [':app:assembleDebug']) "
             "throw new GradleException('P4B5_TARGET_REFUSED'); p.extensions.getByName('androidComponents').finalizeDsl { a -> "
             "a.defaultConfig.applicationId = '" + PACKAGE + "' } } } }\n").encode())
         environment = os.environ.copy()
@@ -437,7 +513,7 @@ class Controller:
             require(len(gradles) == 1 and gradles[0].is_file(), 'EXISTING_GRADLE_REQUIRED')
             environment['TMPDIR'] = str(self.private / 'tmp')
             result = subprocess.run([str(gradles[0]), '--offline', '--console=plain', '-p', str(mobile / 'android'),
-                '-I', str(init), ':app:assembleDebug', '-Ptarget=' + ENTRY, '-Ptarget-platform=android-arm64', '-Pandroid.builder.sdkDownload=false'], env=environment,
+                '-I', str(init), ':app:assembleDebug', '-Ptarget=' + self.qa_scope.entry, '-Ptarget-platform=android-arm64', '-Pandroid.builder.sdkDownload=false'], env=environment,
                 stdout=log, stderr=subprocess.STDOUT, timeout=600)
             log.flush(); os.fsync(log.fileno())
         require(result.returncode == 0, 'BUILD_FAILED_PRIVATE_LOG')
@@ -448,8 +524,8 @@ class Controller:
         require(args.aapt is not None, 'AAPT_REQUIRED')
         badging = helpers.command([args.aapt, 'dump', 'badging', apk]).decode()
         require(re.search(r"package: name='" + re.escape(PACKAGE) + "'", badging), 'APK_PACKAGE_REFUSED')
-        write_json(directory / 'build.private.json', {**scope(), 'apkSha256': digest(apk), 'sourceBindingSha256': binding_sha,
-            'package': PACKAGE, 'mode': 'debug', 'entry': ENTRY})
+        write_json(directory / 'build.private.json', {**scope(self.qa_scope), 'apkSha256': digest(apk), 'sourceBindingSha256': binding_sha,
+            'package': PACKAGE, 'mode': 'debug', 'entry': self.qa_scope.entry})
         return str(directory)
 
     def selected_build(self):
@@ -458,14 +534,14 @@ class Controller:
         require(type(name) is str and re.fullmatch('build-[0-9]{4}', name), 'BUILD_NAME_REQUIRED')
         directory = self.private / 'android/builds' / name
         build = private_json(directory / 'build.private.json')
-        require(all(build.get(k) == v for k, v in scope().items()) and build.get('entry') == ENTRY and build.get('package') == PACKAGE
+        require(all(build.get(k) == v for k, v in scope(self.qa_scope).items()) and build.get('entry') == self.qa_scope.entry and build.get('package') == PACKAGE
                 and build.get('sourceBindingSha256') == digest(self.source_binding()[0])
                 and selected.get('apkSha256') == build.get('apkSha256') == digest(directory / 'consumer.apk'), 'BUILD_CHANGED')
         return build, directory
 
     def connection(self, android):
         value = self.receipt('android/connection.private.json')
-        require(all(value.get(k) == v for k, v in scope().items()), 'CONNECTION_SCOPE')
+        require(all(value.get(k) == v for k, v in scope(self.qa_scope).items()), 'CONNECTION_SCOPE')
         build, _ = self.selected_build()
         require(value.get('apkSha256') == build['apkSha256'], 'APK_CHANGED')
         android.preflight()
@@ -482,20 +558,21 @@ class Controller:
         run_path, run = self.latest_receipt('run-binding')
         source_path, _ = self.source_binding(); cp_path, cp = self.latest_receipt('classpath-binding')
         selected_path, selected = self.latest_receipt('selected-build')
-        require(all(run.get(k) == v for k, v in scope().items())
+        require(all(run.get(k) == v for k, v in scope(self.qa_scope).items())
                 and run.get('sourceBindingFile') == source_path.name and run.get('sourceBindingSha256') == digest(source_path)
                 and run.get('classpathBindingFile') == cp_path.name and run.get('classpathBindingSha256') == digest(cp_path)
                 and run.get('selectedBuildFile') == selected_path.name and run.get('selectedBuildSha256') == digest(selected_path), 'RUN_BINDING_DRIFT')
         return {'runBindingFile': run_path.name, 'runBindingSha256': digest(run_path),
-                **{k: run[k] for k in ['sourceBindingFile', 'sourceBindingSha256', 'classpathBindingFile', 'classpathBindingSha256', 'selectedBuildFile', 'selectedBuildSha256']},
+                **{k: run[k] for k in ['sourceBindingFile', 'sourceBindingSha256', 'classpathBindingFile', 'classpathBindingSha256', 'selectedBuildFile', 'selectedBuildSha256'] + (['priorAttemptProofFile', 'priorAttemptProofSha256', 'pythonBindingFile', 'pythonBindingSha256'] if self.qa_scope is P4B5_RETRY else [])},
                 'apkSha256': selected['apkSha256'], 'servingJavaBinarySha256': cp['javaBinarySha256']}
 
     def ready(self, window=False):
         ready = private_json(self.state / ('ready.json' if window else 'local-ready.json'))
         fixture = json.loads((self.root / 'be/src/test/resources/p4/consumer-retained-ready.json').read_bytes())
-        require(all(ready.get(k) == v for k, v in scope().items()) and ready.get('identity') == fixture['identity']
+        require(all(ready.get(k) == v for k, v in scope(self.qa_scope).items()) and ready.get('identity') == fixture['identity']
                 and ready.get('descriptor') == fixture['descriptor'], 'RETAINED_LIVE_CHANGED')
         claim = private_json(self.state / 'startup.claim.private.json')
+        require(all(claim.get(k) == v for k, v in scope(self.qa_scope).items()), 'BACKEND_CLAIM_SCOPE')
         require(type(ready.get('pid')) is int and ready['pid'] > 1 and claim.get('pid') == ready['pid'], 'BACKEND_CLAIM_PID')
         links = self.binding_links()
         require(all(ready.get(k) == v for k, v in links.items()) and claim.get('runBindingSha256') == links['runBindingSha256'], 'BACKEND_READY_BINDING_DRIFT')
@@ -504,7 +581,7 @@ class Controller:
 
     def backend_owner(self, ready=None):
         launch = private_json(self.state / 'launch.private.json')
-        require(all(launch.get(k) == v for k, v in scope().items()), 'BACKEND_LAUNCH_SCOPE')
+        require(all(launch.get(k) == v for k, v in scope(self.qa_scope).items()), 'BACKEND_LAUNCH_SCOPE')
         owner = {key: launch.get(key) for key in ['pid', 'processStartIdentity', 'commandSha256']}
         require(type(owner['pid']) is int and owner['pid'] > 1 and type(owner['processStartIdentity']) is str
                 and type(owner['commandSha256']) is str and re.fullmatch('[a-f0-9]{64}', owner['commandSha256']), 'BACKEND_LAUNCH_IDENTITY')
@@ -513,7 +590,7 @@ class Controller:
         startup = self.state / 'startup.claim.private.json'
         if startup.exists():
             claim = private_json(startup)
-            require(claim.get('proposalSha256') == PROPOSAL_SHA and claim.get('measurementId') == MEASUREMENT
+            require(claim.get('proposalSha256') == self.qa_scope.proposal_sha256 and claim.get('measurementId') == self.qa_scope.measurement_id
                     and type(claim.get('pid')) is int and claim['pid'] == owner['pid'], 'BACKEND_STARTUP_OWNER_CHANGED')
         return owner
 
@@ -537,11 +614,15 @@ class Controller:
         self.claim('install')
         android.run('install', '-r', str(directory / 'consumer.apk'), timeout=120)
         require(not android.pid(), 'QA_INITIAL_OWNERSHIP_CHANGED')
+        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', PACKAGE))
+        installed_sha = android.run('shell', 'sha256sum', installed).split()
+        require(len(installed_sha) == 2 and installed_sha[0] == build['apkSha256'], 'INSTALLED_APK_DRIFT')
+        write_json(self.private / 'android/installed-apk.private.json', {**scope(self.qa_scope), 'apkSha256': installed_sha[0], 'verifiedBeforeFirstStart': True})
         self.claim('initial-start', {'apkSha256': build['apkSha256']})
         android.run('shell', 'am', 'start', '-n', PACKAGE + '/' + helpers.ACTIVITY)
         deadline = time.monotonic() + 30
         pid, owned = helpers.observe_launch_pid(android, deadline)
-        write_json(self.private / 'android/owned-process.private.json', {**scope(), **owned})
+        write_json(self.private / 'android/owned-process.private.json', {**scope(self.qa_scope), **owned})
         uri = None
         while time.monotonic() < deadline:
             logs = android.run('logcat', '-d', '--pid=' + pid, '-s', 'flutter:I', timeout=helpers.arm_remaining(deadline))
@@ -552,7 +633,7 @@ class Controller:
         require(uri is not None, 'WAITING_VM_UNAVAILABLE')
         parsed = urlsplit(uri)
         host = helpers.available_host_port()
-        forward = {**scope(), **owned, 'hostPort': host, 'devicePort': parsed.port, 'serial': 'emulator-5554', 'baselineMappingAbsent': True}
+        forward = {**scope(self.qa_scope), **owned, 'hostPort': host, 'devicePort': parsed.port, 'serial': 'emulator-5554', 'baselineMappingAbsent': True}
         rows = [line.split() for line in android.run('forward', '--list').splitlines()]
         require(not any(len(row) == 3 and row[1] == 'tcp:' + str(host) for row in rows), 'FORWARD_PRESENT')
         helpers.require_owned_qa(android, owned)
@@ -561,6 +642,7 @@ class Controller:
         connection = {**forward, 'websocket': 'ws://127.0.0.1:' + str(host) + parsed.path + 'ws', 'apkSha256': build['apkSha256']}
         write_json(self.private / 'android/connection.private.json', connection)
         vm = Vm(connection['websocket'], self.private / 'receipts', 'arm', deadline, lambda: require_arm_owner(android, owned, deadline))
+        vm.qa_scope = self.qa_scope
         try:
             vm.ready()
             baseline = vm.data({'action': 'snapshot'})
@@ -569,14 +651,16 @@ class Controller:
                     and baseline['ok'] and not baseline['configured'] and not baseline['stopped']
                     and baseline['cubitCount'] == 0 and not baseline['credentialActive'] and not baseline['deadlineActive']
                     and all(baseline[k] == 0 for k in ACTIVE) and baseline['resourceObservation']['reservedSlots'] == 0, 'EMPTY_BASELINE_REQUIRED')
-            write_json(self.private / 'android/baseline.private.json', {**scope(), 'isolateId': vm.isolate, 'sample': baseline, **owned})
+            write_json(self.private / 'android/baseline.private.json', {**scope(self.qa_scope), 'isolateId': vm.isolate, 'sample': baseline, **owned})
         finally:
             vm.close()
 
     def baseline_gate(self, android):
         connection = self.connection(android)
         original = self.receipt('android/baseline.private.json')
+        require(all(original.get(k) == v for k, v in scope(self.qa_scope).items()), 'BASELINE_SCOPE')
         vm = Vm(connection['websocket'], self.private / 'receipts', 'baseline-gate')
+        vm.qa_scope = self.qa_scope
         try:
             vm.ready()
             require(vm.isolate == original.get('isolateId'), 'VM_ISOLATE_CHANGED')
@@ -594,8 +678,8 @@ class Controller:
         self.gate(); self.baseline_gate(android)
         self.claim('backend-start')
         self.state.mkdir(mode=0o700, exist_ok=True)
-        write_json(self.state / 'approval.json', machine_approval())
-        write_json(self.state / 'startup.reservation.private.json', {**scope(), 'kind': 'BACKEND_START', 'state': 'RESERVED_NO_AUTOMATIC_RETRY', 'maxStarts': 1})
+        write_json(self.state / 'approval.json', machine_approval(self.qa_scope))
+        write_json(self.state / 'startup.reservation.private.json', {**scope(self.qa_scope), 'kind': 'BACKEND_START', 'state': 'RESERVED_NO_AUTOMATIC_RETRY', 'maxStarts': 1})
 
     def login(self, args, android):
         self.gate(); self.baseline_gate(android)
@@ -605,7 +689,7 @@ class Controller:
                 and ready['localGateStartedAtEpochMillis'] <= now < ready['localGateDeadlineEpochMillis'] - 12000
                 and ready['localGateDeadlineEpochMillis'] - ready['localGateStartedAtEpochMillis'] == 300000, 'LOGIN_GATE_EXPIRED')
         self.claim('login')
-        reservation = {**scope(), 'qaSignInInvocationsTotal': 4, 'firebaseVerifierReservationsTotal': 32,
+        reservation = {**scope(self.qa_scope), 'qaSignInInvocationsTotal': 4, 'firebaseVerifierReservationsTotal': 32,
                        'accountLookupReserved': 1, 'tokenExchangeReserved': 1, 'loginVerifierReserved': 1}
         write_json(self.state / 'login.reservation.private.json', reservation)
         import native_test_login as native
@@ -633,6 +717,7 @@ class Controller:
         self.claim('measurement')
         output = self.private / 'observations'; output.mkdir(mode=0o700)
         vm = Vm(connection['websocket'], self.private / 'receipts', 'measurement')
+        vm.qa_scope = self.qa_scope
         records = []
         deadline = ready['windowDeadlineEpochMillis']; last_wall = time.time() * 1000
         mono_end = time.monotonic() + (deadline - last_wall) / 1000
@@ -649,6 +734,7 @@ class Controller:
             item = {'phase': phase, 'sample': sample}; records.append(item)
             write_json(output / f'{len(records):02d}-{phase}.private.json', item)
             return sample
+        vm.qa_scope = self.qa_scope
         try:
             vm.ready()
             original = self.receipt('android/baseline.private.json')
@@ -658,11 +744,11 @@ class Controller:
             port = ready['loopbackPort']
             rows = [line.split() for line in android.run('reverse', '--list').splitlines()]
             require(all(len(r) == 3 for r in rows) and not any(r[1] == 'tcp:' + str(port) for r in rows), 'REVERSE_PRESENT')
-            write_json(self.private / 'android/reverse-intent.private.json', {**scope(), 'serial': 'emulator-5554', 'devicePort': port, 'hostPort': port, 'baselineMappingAbsent': True})
+            write_json(self.private / 'android/reverse-intent.private.json', {**scope(self.qa_scope), 'serial': 'emulator-5554', 'devicePort': port, 'hostPort': port, 'baselineMappingAbsent': True})
             android.run('reverse', '--no-rebind', 'tcp:' + str(port), 'tcp:' + str(port))
             auth = private_json(self.state / 'qa-sign-in.ready.json')
             token = helpers.private_file(Path(auth['tokenFile']), 8192, external=True).decode().strip()
-            check(); configuration = runtime_configuration(ready, token)
+            check(); configuration = runtime_configuration(ready, token, self.qa_scope)
             require(vm.data(configuration).get('ok') is True, 'CONFIGURE_REFUSED')
             configuration.clear(); token = None
             transitions = [('QA sayfalarını aç', False), ('Sonraki', False), ('QA detail ekranına dön', True)]
@@ -695,9 +781,9 @@ class Controller:
             android.screenshot(output / '05-closed.png')
             result = validate_samples(records, ready)
             self.gate()
-            write_json(output / 'accepted.private.json', {**scope(), **result, 'rawSha256': {p.name: digest(p) for p in output.glob('*-*.private.json')}})
+            write_json(output / 'accepted.private.json', {**scope(self.qa_scope), **result, 'rawSha256': {p.name: digest(p) for p in output.glob('*-*.private.json')}})
         except Exception as error:
-            numbered(output, 'attempt-failure', {**scope(), 'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY'})
+            numbered(output, 'attempt-failure', {**scope(self.qa_scope), 'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY'})
             raise
         finally:
             try:
@@ -720,17 +806,23 @@ class Controller:
         if status.startswith('Z'):
             return {'pid': pid, 'processStartIdentity': ' '.join(match[1].split()), 'exited': True}
         words = shlex.split(match[2])
-        require('com.tellpal.v2.support.P4b5ConsumerQaSetup' in words and words[-2:] == ['--execute', str(self.state)], 'BACKEND_OWNERSHIP_CHANGED')
+        require('com.tellpal.v2.support.P4b5ConsumerQaSetup' in words and words[words.index('com.tellpal.v2.support.P4b5ConsumerQaSetup') + 1:] == self.qa_scope.backend_arguments(self.state), 'BACKEND_OWNERSHIP_CHANGED')
+        if self.qa_scope is P4B5_RETRY:
+            _, classpath = self.latest_receipt('classpath-binding')
+            tools = self.receipt('receipts/operational-tools.private.json')
+            expected = [str(Path(tools['backendJavaHome']) / 'bin/java'), '-Xmx1g', '-cp', os.pathsep.join(classpath['entries']),
+                        'com.tellpal.v2.support.P4b5ConsumerQaSetup', *self.qa_scope.backend_arguments(self.state)]
+            require(words == expected, 'BACKEND_EXACT_ARGV_CHANGED')
         return {'pid': pid, 'processStartIdentity': ' '.join(match[1].split()),
                 'commandSha256': hashlib.sha256(match[2].encode()).hexdigest()}
 
     def record_backend_launch(self, pid):
         self.ensure_open()
         reservation = private_json(self.private / 'backend-start.claim.private.json')
-        require(all(reservation.get(k) == v for k, v in scope().items()), 'BACKEND_START_NOT_RESERVED')
+        require(all(reservation.get(k) == v for k, v in scope(self.qa_scope).items()), 'BACKEND_START_NOT_RESERVED')
         owner = self.backend_identity(pid)
         require(owner is not None and owner.get('exited') is not True, 'BACKEND_ALREADY_EXITED')
-        write_json(self.state / 'launch.private.json', {**scope(), **owner})
+        write_json(self.state / 'launch.private.json', {**scope(self.qa_scope), **owner})
         return owner
 
     def cleanup_before_ready(self):
@@ -764,7 +856,7 @@ class Controller:
     def close_ready_backend(self):
         ready = self.ready(); owner = self.backend_owner(ready)
         def completed():
-            return validate_backend_result(self.state, ready, self.binding_links())
+            return validate_backend_result(self.state, ready, self.binding_links(), self.qa_scope)
         if not self.owned_backend_alive(owner):
             return completed()
         if not (self.state / 'close.request').exists():
@@ -801,31 +893,38 @@ class Controller:
             elif (self.private / 'initial-start.claim.private.json').exists(): results['qaProcess'] = {'status': 'FAILED', 'code': 'POSITIVE_OWNED_PID_REQUIRED'}
             if (self.state / 'local-ready.json').exists(): clean('backend', self.close_ready_backend)
             elif (self.state / 'launch.private.json').exists(): clean('backend', self.cleanup_before_ready)
-            write_json(self.private / 'cleanup.private.json', {**scope(), 'results': results, 'ok': bool(results) and all(r['status'] == 'PASS' for r in results.values())})
+            write_json(self.private / 'cleanup.private.json', {**scope(self.qa_scope), 'results': results, 'ok': bool(results) and all(r['status'] == 'PASS' for r in results.values())})
             return results
         finally:
             if not for_success and not (self.private / 'terminal.private.json').exists():
-                write_json(self.private / 'terminal.private.json', {**scope(), 'status': 'FAILED_NO_RETRY', 'reason': 'CLEANUP_CLOSED_ATTEMPT'})
+                write_json(self.private / 'terminal.private.json', {**scope(self.qa_scope), 'status': 'FAILED_NO_RETRY', 'reason': 'CLEANUP_CLOSED_ATTEMPT'})
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--stage', choices=['build', 'arm', 'reserve-backend', 'record-backend', 'login', 'open', 'run', 'cleanup'])
     parser.add_argument('--proposal-sha256')
+    parser.add_argument('--scope')
     parser.add_argument('--adb', type=Path)
     parser.add_argument('--pid', type=int)
     parser.add_argument('--aapt', type=Path)
     parser.add_argument('--admin-credential', type=Path)
     parser.add_argument('--web-api-config', type=Path)
     args = parser.parse_args(argv)
+    try:
+        selected = select_scope(args.scope)
+    except ValueError:
+        print('REFUSED_UNKNOWN_QA_SCOPE'); return 2
     if args.stage is None:
         print('DRY_RUN_ZERO_FILE_CREDENTIAL_DEVICE_DB_NETWORK_IO_P4B5'); return 0
-    controller = Controller()
+    controller = Controller(selected=selected)
     try:
-        require(args.proposal_sha256 == PROPOSAL_SHA, 'EXACT_PROPOSAL_REQUIRED')
+        require(args.proposal_sha256 == selected.proposal_sha256, 'EXACT_PROPOSAL_REQUIRED')
+        controller.ensure_open()
         if args.stage == 'build':
             print(controller.build(args)); return 0
         if args.stage == 'record-backend':
+            controller.gate()
             controller.record_backend_launch(args.pid)
             print('OWNED_BACKEND_PID_START_RECORDED_NO_AUTH'); return 0
         require(args.adb is not None, 'ADB_REQUIRED')
@@ -840,21 +939,23 @@ def main(argv=None):
             require(bool(results) and all(r['status'] == 'PASS' for r in results.values()), 'CLEANUP_FAILED')
             require(results.get('backend', {}).get('result', {}).get('measurementSucceeded') is True, 'BACKEND_MEASUREMENT_SUCCESS_REQUIRED')
             accepted = controller.receipt('observations/accepted.private.json')
-            write_json(controller.private / 'terminal.private.json', {**scope(), 'status': 'FOUR_UI_PAINTS_VERIFIED_EMULATOR_ONLY',
+            write_json(controller.private / 'terminal.private.json', {**scope(selected), 'status': 'FOUR_UI_PAINTS_VERIFIED_EMULATOR_ONLY',
                 'acceptedSha256': digest(controller.private / 'observations/accepted.private.json'),
                 'cleanupSha256': digest(controller.private / 'cleanup.private.json'), 'physicalQualityAccepted': False})
-        else: controller.cleanup(android)
+        else:
+            controller.gate()
+            controller.cleanup(android)
         print('P4B5_STAGE_COMPLETED_PRIVATE_EVIDENCE'); return 0
     except Exception as error:
-        if args.stage != 'build' and controller.private.exists():
+        if args.stage != 'build' and controller.failure_writable and controller.private.exists():
             if args.stage != 'cleanup' and 'android' in locals() and not (controller.private / 'cleanup.claim.private.json').exists():
                 try:
                     controller.cleanup(android)
                 except Exception as cleanup_error:
-                    numbered(controller.private / 'receipts', 'cleanup-failure', {**scope(), 'code': helpers.safe_code(cleanup_error)})
-            numbered(controller.private / 'receipts', 'terminal-failure', {**scope(), 'stage': args.stage, 'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY'})
+                    numbered(controller.private / 'receipts', 'cleanup-failure', {**scope(selected), 'code': helpers.safe_code(cleanup_error)})
+            numbered(controller.private / 'receipts', 'terminal-failure', {**scope(selected), 'stage': args.stage, 'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY'})
             if not (controller.private / 'terminal.private.json').exists():
-                write_json(controller.private / 'terminal.private.json', {**scope(), 'status': 'FAILED_NO_RETRY', 'stage': args.stage})
+                write_json(controller.private / 'terminal.private.json', {**scope(selected), 'status': 'FAILED_NO_RETRY', 'stage': args.stage})
         print('REFUSED_P4B5_NO_RETRY_PRIVATE_EVIDENCE'); return 2
 
 
