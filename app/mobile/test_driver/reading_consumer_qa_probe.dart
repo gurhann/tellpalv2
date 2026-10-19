@@ -20,16 +20,44 @@ const consumerQaRunId = 'p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09';
 const consumerQaProposalSha =
     '079bfbe37c238bfcfc5cc3bc84f5ef420f5f7577b05b868dcd5622f73e267bf6';
 
+/// Beklenen kapsam APK girişinde seçilir; runtime mesajından öğrenilmez.
+class ConsumerQaExpectedScope {
+  const ConsumerQaExpectedScope._(
+    this.proposalSha256,
+    this.windowMillis,
+    this.maxStatusChecks,
+    this.measurementId,
+  );
+  static const legacy = ConsumerQaExpectedScope._(
+    consumerQaProposalSha,
+    180000,
+    18,
+    null,
+  );
+  static const p4b5 = ConsumerQaExpectedScope._(
+    'e49eb8b706143f09c4fbf1738e2254f54e491d104954baf31e546a4497ec5833',
+    120000,
+    12,
+    'p4b5-7981ad25-c851-4ed6-af89-2d0fbfffd0f8',
+  );
+  final String proposalSha256;
+  final int windowMillis;
+  final int maxStatusChecks;
+  final String? measurementId;
+}
+
 void _require(bool condition) {
   if (!condition) throw const FormatException('probe_refused');
 }
 
 /// Sırlar yalnız runtime mesajından gelir. Sabit sayılar bu tek onaylı denemeye aittir.
 ReadingImageComparisonConfiguration parseConsumerQaConfiguration(
-  Map<String, dynamic> input,
-) {
+  Map<String, dynamic> input, {
+  ConsumerQaExpectedScope expectedScope = ConsumerQaExpectedScope.legacy,
+}) {
   _require(
     input.keys.toSet().difference({
+          if (expectedScope.measurementId != null) 'measurementId',
           'action',
           'runId',
           'proposalSha256',
@@ -40,12 +68,14 @@ ReadingImageComparisonConfiguration parseConsumerQaConfiguration(
           'windowStartedAtEpochMillis',
           'windowDeadlineEpochMillis',
         }).isEmpty &&
-        input.length == 9,
+        input.length == (expectedScope.measurementId == null ? 9 : 10),
   );
   _require(
     input['action'] == 'configure' &&
         input['runId'] == consumerQaRunId &&
-        input['proposalSha256'] == consumerQaProposalSha &&
+        input['proposalSha256'] == expectedScope.proposalSha256 &&
+        (expectedScope.measurementId == null ||
+            input['measurementId'] == expectedScope.measurementId) &&
         input['uid'] == imageExperimentQaUid,
   );
   _require(input['contentId'] is int && input['contentId'] == 94);
@@ -58,7 +88,7 @@ ReadingImageComparisonConfiguration parseConsumerQaConfiguration(
   _require(
     started is int &&
         deadline is int &&
-        deadline - started == 180000 &&
+        deadline - started == expectedScope.windowMillis &&
         started <= current &&
         current < deadline,
   );
@@ -117,7 +147,7 @@ ReadingImageComparisonConfiguration parseConsumerQaConfiguration(
       transferMillis: 45000,
       decodeMillis: 10000,
       statusEveryMillis: 10000,
-      maxStatusChecks: 18,
+      maxStatusChecks: expectedScope.maxStatusChecks,
       maxControlMillis: remaining,
     ),
   );
@@ -136,7 +166,12 @@ class ReadingConsumerQaWaiting extends StatelessWidget {
 
 /// İzin ve sayım gerçek HTTP'den önce yapılır; body/query/token kanıta girmez.
 class ObservedConsumerQaSource extends ReadingImageComparisonDataSource {
-  ObservedConsumerQaSource(super.configuration, this.record);
+  ObservedConsumerQaSource(
+    super.configuration,
+    this.record, {
+    this.expectedScope = ConsumerQaExpectedScope.legacy,
+  });
+  final ConsumerQaExpectedScope expectedScope;
   final void Function(Map<String, Object?>) record;
   int manifests = 0, statuses = 0, media = 0;
   bool failed = false;
@@ -163,7 +198,9 @@ class ObservedConsumerQaSource extends ReadingImageComparisonDataSource {
               query['jobId'] == 'bb9ae40b-e5ab-4054-885e-0b1fc14e841e',
         );
         if (path == 'status') {
-          _require(statuses < 18 && query.length == 6);
+          _require(
+            statuses < expectedScope.maxStatusChecks && query.length == 6,
+          );
           statuses++;
         } else {
           _require(
@@ -182,7 +219,9 @@ class ObservedConsumerQaSource extends ReadingImageComparisonDataSource {
           media++;
         }
       }
-      _require(manifests + statuses + media <= 23);
+      _require(
+        manifests + statuses + media <= 5 + expectedScope.maxStatusChecks,
+      );
       record({
         'kind': 'httpReservation',
         'endpoint': path,
@@ -228,9 +267,15 @@ class ObservedConsumerQaSource extends ReadingImageComparisonDataSource {
 
 /// Cubit ve native kaynak sahipliğini gözler; uygulama davranışını değiştirmez.
 class ReadingConsumerQaProbe extends BlocObserver {
-  ReadingConsumerQaProbe({this.initializeDependencies});
+  ReadingConsumerQaProbe({
+    this.initializeDependencies,
+    this.expectedScope = ConsumerQaExpectedScope.legacy,
+  });
+  final ConsumerQaExpectedScope expectedScope;
+  bool _configureAttempted = false;
   final FutureOr<void> Function(ReadingImageComparisonConfiguration)?
   initializeDependencies;
+  int? _lastPaintedEpoch;
   Future<void>? _stopping;
   final List<Map<String, Object?>> _events = [];
   ReadingImageComparisonCubit? _cubit;
@@ -331,7 +376,21 @@ class ReadingConsumerQaProbe extends BlocObserver {
 
   Map<String, Object?> snapshot() {
     Map<String, Object?>? slot;
+    var liveRasterAttached = false;
+    final currentRaster = _cubit?.state.raster;
     void visit(Element element) {
+      if (element.widget case ReadingImageComparisonRaster widget) {
+        final render = element.findRenderObject();
+        if (identical(widget.raster, currentRaster) &&
+            currentRaster?.image != null &&
+            render is RenderBox &&
+            render.attached &&
+            render.hasSize &&
+            !render.size.isEmpty &&
+            (ModalRoute.of(element)?.isCurrent ?? true)) {
+          liveRasterAttached = true;
+        }
+      }
       if (element.widget.key == const ValueKey('reading-consumer-slot') &&
           (ModalRoute.of(element)?.isCurrent ?? true)) {
         final box = element.findRenderObject();
@@ -364,6 +423,12 @@ class ReadingConsumerQaProbe extends BlocObserver {
       'cubitCount': _cubitCount,
       'slot': slot,
       'events': List.of(_events),
+      if (expectedScope.measurementId != null) ...{
+        'observedLifecycle': WidgetsBinding.instance.lifecycleState?.name,
+        'currentEpoch': _cubit?.state.epoch,
+        'lastPaintedEpoch': _lastPaintedEpoch,
+        'liveRasterAttached': liveRasterAttached,
+      },
       ...ownedResources(),
     };
   }
@@ -374,8 +439,16 @@ class ReadingConsumerQaProbe extends BlocObserver {
       final input = jsonDecode(message!) as Map<String, dynamic>;
       switch (input['action']) {
         case 'configure':
-          _require(!_configured && !_stopped);
-          final configuration = parseConsumerQaConfiguration(input);
+          _require(
+            !_configured &&
+                !_stopped &&
+                (expectedScope.measurementId == null || !_configureAttempted),
+          );
+          _configureAttempted = true;
+          final configuration = parseConsumerQaConfiguration(
+            input,
+            expectedScope: expectedScope,
+          );
           _configured = true;
           _configuration = configuration;
           _deadline = Timer(
@@ -392,7 +465,11 @@ class ReadingConsumerQaProbe extends BlocObserver {
               await comparisonGetIt
                   .unregister<ReadingImageComparisonDataSource>();
               comparisonGetIt.registerFactory<ReadingImageComparisonDataSource>(
-                () => ObservedConsumerQaSource(configuration, record),
+                () => ObservedConsumerQaSource(
+                  configuration,
+                  record,
+                  expectedScope: expectedScope,
+                ),
               );
             }
             _require(!_stopped && configuration.account!.credentials.isActive);
@@ -472,6 +549,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
           ReadingComparisonRaster.activeImages == 1 &&
           binding.lifecycleState == AppLifecycleState.resumed,
     );
+    _lastPaintedEpoch = epoch;
     return {...snapshot(), 'paintedEpoch': epoch};
   }
 
