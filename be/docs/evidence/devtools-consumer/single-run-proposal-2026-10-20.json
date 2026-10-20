@@ -1,0 +1,190 @@
+{
+  "artifact": {
+    "apk": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/android/builds/build-0002/consumer.apk",
+    "apkBytes": 84273783,
+    "apkSha256": "c331c42ac10ba445a7835f8db26829539e262ddad3b879be9692e5d34847cbe7",
+    "entry": "test_driver/reading_consumer_manual_retry_entry.dart",
+    "mode": "debug",
+    "pythonCommandPrefix": [
+      "/Users/gurhankucuk/Documents/GitHub/tellpalv2/tools/image-optimization/.venv/bin/python",
+      "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/source-0001/tools/image-optimization/p4b5_manual_consumer_qa.py",
+      "--scope",
+      "p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f",
+      "--proposal-sha256",
+      "a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6"
+    ],
+    "runBindingFile": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/receipts/run-binding-0002.private.json",
+    "runBindingSha256": "cceb45940273fc0b760cc99a8dc9a0c41c733263949e1bc8f27f7d18ad9da7a1",
+    "sourceBindingFile": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/receipts/source-binding-0002.private.json",
+    "sourceBindingSha256": "f9d1306819a1e8fa69bb13cdccd81fd2a2c06790b9a6e5bb16ba778591b579b6",
+    "sourceDirectory": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/source-0001"
+  },
+  "date": "2026-10-20",
+  "devTools": {
+    "debugEmulatorIsNotPhysicalPerformanceAcceptance": true,
+    "forceGcHeapDumpHotReloadAllowed": false,
+    "localLoopbackOnly": true,
+    "measurements": [
+      "selected rendition/role/language/revision",
+      "widget slot/DPR/fit and decode",
+      "actual HTTP payload bytes, not TLS/header total",
+      "four frame/screenshot/ACK bindings",
+      "owned handles/slots/bytes drain",
+      "heap/external/RSS with gaps preserved"
+    ],
+    "networkViewIsNotAllNativeTrafficProof": true,
+    "operatorConnectionRequiredBeforeLogin": true
+  },
+  "executionApprovalCreated": false,
+  "failurePolicy": "Hata, süre dolumu, kimlik/bütçe drift’i veya eksik kanıt terminaldir; otomatik tekrar veya tüketim iadesi yoktur.",
+  "freshDebtAndRetainedIdentityCheckRequiredBeforeLogin": true,
+  "historicalConsumptionFile": "be/docs/evidence/p4b5-manual-retry-measurement/bounded-run-proposal-2026-10-20.json",
+  "historicalConsumptionIsNotCurrentDatabaseEvidence": true,
+  "numericPolicyFile": "be/docs/evidence/p4b5-manual-retry-measurement/bounded-run-proposal-2026-10-20.json",
+  "numericPolicySha256": "a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6",
+  "operatorSteps": [
+    "Yerel artifact/araç/cihaz ve paket yokluğu kontrolü",
+    "Tek kurulum ve ilk başlangıç; aynı PID’de ağsız baseline",
+    "DevTools Memory/Network bağlantısını girişten önce doğrula",
+    "Tek backend hazırlığı; güncel DB borcu/retained kimlik ve yerel kapılar",
+    "En çok bir QA girişi; kullanıcı hazırken tek 120 saniye aç",
+    "Başlat: detail → sayfa 1 → sayfa 2 → detail; dört ekran/ACK",
+    "Home → aynı PID’ye dönüş → QA kapat; yeni medya/admission yok",
+    "Sahipliği doğrulanan QA/backend ve yalnız bu işe ait köprülerin kapanışı; rapor ve son incelemeler"
+  ],
+  "p4bComplete": false,
+  "preservation": {
+    "automaticRetryAllowed": false,
+    "newImageProductionAllowed": false,
+    "normalLibraryAudioCacheAccessUnchanged": true,
+    "oldEvidenceAndBudgetDebtPreserved": true,
+    "rawOutputsStayOnMacEk": true,
+    "uploadBackfillDeleteDeployAllowed": false
+  },
+  "purpose": "Mevcut #94 PNG’leriyle tek sınırlı QA detail/reader gözlemi; yeni üretim yoktur.",
+  "realClaimsCreated": false,
+  "resourceControl": {
+    "backendHeapBytes": 1073741824,
+    "backendLeaseMillis": 180000,
+    "controlWindowAndStatusLimitReduced": true,
+    "decodeMillis": 10000,
+    "imageEncodingProfileChanged": false,
+    "maxBufferBytes": 25165824,
+    "maxDecodePixels": 4800000,
+    "maxDecodedBytes": 20971520,
+    "maxEncodedBytes": 8388608,
+    "maxOwnedImages": 1,
+    "maxPeakBytes": 134217728,
+    "maxStatusChecks": 12,
+    "productionAdmission": false,
+    "resourceMemoryTransferDecodeLimitsChanged": false,
+    "statusEveryMillis": 10000,
+    "transferMillis": 45000
+  },
+  "retainedIdentity": {
+    "expectedDescriptorFixture": "be/src/test/resources/p4/consumer-retained-ready.json",
+    "expectedDescriptorFixtureSha256": "5cd354c3210b3a6af017bc807287c3d6f80e6ed81bcae19946da1730dd1d44b7",
+    "jobId": "bb9ae40b-e5ab-4054-885e-0b1fc14e841e",
+    "liveGeneration": 4,
+    "manifestDigest": "d4636ac8e61967aad2f2a53d9aa1da736214075a915f2dd53b7d1d80fe1a42e2",
+    "pageIdsInOrder": [
+      1427,
+      1428
+    ],
+    "revision": "3ddef109a065667d6e44f19aabce9151f1295d8f1e2502a4ba5b14e29a5d458d"
+  },
+  "reviews": [
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-01.private.json",
+      "reviewerId": "/root/devtools_final_apk_blind",
+      "sha256": "1b4a2ca44ed4e6231868347c698444660c69376c5df9540440bcca7b3c22abe0"
+    },
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-02.private.json",
+      "reviewerId": "/root/devtools_final_apk_edge",
+      "sha256": "054945876eb969175c5cedce761c7426390184d848ff72c14ce04816c32d6748"
+    },
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-03.private.json",
+      "reviewerId": "/root/devtools_final_apk_verification",
+      "sha256": "98b029ae04106b6cdcee2be491eb728414726f15dfa19c936bb397f310e14158"
+    }
+  ],
+  "scope": {
+    "budgetRunId": "p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09",
+    "contentId": 94,
+    "database": "tellpal_p4a2_cb5fe81a7ada4cb5adce6ddde1381d09",
+    "databaseUser": "gurhankucuk",
+    "device": "emulator-5554",
+    "emulatorConfigurationChangesAllowed": false,
+    "entry": "test_driver/reading_consumer_manual_retry_entry.dart",
+    "language": "tr",
+    "measurementId": "p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f",
+    "newEmulatorLaunchAllowed": false,
+    "normalAppPackageAffected": false,
+    "package": "com.tellpal.tellpal_mobile_poc.readingmanualretryqa",
+    "physicalDevice": false,
+    "privateRoot": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1",
+    "qaUid": "jLRypTmoBrhhX21HsDJojurcKTC3",
+    "storagePrefix": "local/p4a2-cb5fe81a-7ada-4cb5-adce-6ddde1381d09"
+  },
+  "singleAttemptLimits": {
+    "additionalAccountLookupsAtMost": 1,
+    "additionalDeliveryOperationsAtMost": 25,
+    "additionalLoginVerificationsAtMost": 1,
+    "additionalSignInsAtMost": 1,
+    "additionalTokenExchangesAtMost": 1,
+    "additionalVerifierInvocationsAtMostIncludingLogin": 22,
+    "automaticRetryAllowed": false,
+    "backendLocalReadyGateMillis": 300000,
+    "backendStartsAtMost": 1,
+    "backendStartupTimeoutMillis": 180000,
+    "canonicalSourceAllowed": false,
+    "existingLoginCleanupSeconds": 2,
+    "existingLoginTimeoutSeconds": 10,
+    "failedAttemptIsTerminal": true,
+    "httpRequestsAtMost": 17,
+    "humanLatencyCountsWithinWindow": true,
+    "humanReadyBeforeCredentialWindow": true,
+    "localBackendPreparationMillis": 300000,
+    "manifestRequestsAtMost": 1,
+    "manualStartAtMost": 1,
+    "mediaEntryOrder": [
+      1,
+      2,
+      3,
+      1
+    ],
+    "mediaPayloadBytesAtMost": 13170884,
+    "mediaRequestsAtMost": 4,
+    "qaAppBaselineReadinessMillis": 30000,
+    "qaInitialStartsAtMost": 1,
+    "qaInstallationTimeoutMillis": 120000,
+    "qaInstallationsAtMost": 1,
+    "readmissionAfterResumeAllowed": false,
+    "renditionBytesEach": 3292721,
+    "samePidForegroundReturnAllowed": true,
+    "statusRequestsAtMost": 12,
+    "successGuaranteed": false,
+    "vmServiceRequired": false,
+    "windowMillis": 120000,
+    "windowPauseOrExtensionAllowed": false,
+    "windowStartsAfterLocalAndCredentialGates": true
+  },
+  "status": "PROPOSED_NOT_APPROVED_NOT_EXECUTED",
+  "unchangedCumulativeCeilings": {
+    "combinedLogicalCalls": 159,
+    "conditionalCreateAttempts": 14,
+    "deliveryOperations": 64,
+    "deliveryReservedBytes": 67108864,
+    "firebaseVerifierInvocations": 64,
+    "observeCalls": 16,
+    "pinnedReads": 64,
+    "readPayloadBytes": 536870912,
+    "storageLogicalCalls": 94,
+    "uniqueObjectBytes": 109051904,
+    "uniqueObjects": 13,
+    "writePayloadBytes": 117440512
+  },
+  "version": 1
+}

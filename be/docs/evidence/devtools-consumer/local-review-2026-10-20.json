@@ -1,0 +1,75 @@
+{
+  "apkCreated": false,
+  "commitCreated": false,
+  "copyProposal": {
+    "bytes": 8565689,
+    "files": 1166,
+    "path": "copy-payload-audit-2026-10-20.json",
+    "sha256": "7c216bde7d93947dbc385520c96668be6a4ef0061bcc6ac8fe8861cc40effaa9"
+  },
+  "date": "2026-10-20",
+  "decisionNeeded": 0,
+  "defer": 0,
+  "diff": {
+    "path": "local-preparation-review.diff",
+    "sha256": "3eead8d6f1da8c0df564ff5d401ba534e3f030ccfc4c3d5c93630f8ad720e6bb"
+  },
+  "dismiss": 0,
+  "executionApprovalCreated": false,
+  "failedLayers": [],
+  "killedRegressionMutants": 3,
+  "layers": [
+    {
+      "agent": "consumer_prepare_blind",
+      "findings": [],
+      "id": "blind-hunter",
+      "status": "PASS"
+    },
+    {
+      "agent": "consumer_prepare_edge",
+      "findings": [],
+      "id": "edge-case-hunter",
+      "status": "PASS"
+    },
+    {
+      "agent": "consumer_prepare_verification",
+      "findings": [],
+      "id": "verification-gap",
+      "status": "PASS"
+    },
+    {
+      "agent": "consumer_prepare_acceptance",
+      "findings": [],
+      "id": "acceptance-auditor",
+      "status": "PASS"
+    }
+  ],
+  "patch": 0,
+  "pending": [
+    "Tam liste/hedef için kopya ve offline APK hazırlığı onayı",
+    "Kaynak/APK/run bağları ve üç ön inceleme",
+    "Ayrı gerçek koşu onayı",
+    "Tek gerçek gözlem ve son incelemeler"
+  ],
+  "protectedFiles": {
+    "count": 3368,
+    "sha256": "6a0f96304f0a23e5a819bda75f56d7241b47262b8462215c4ed9268475bf7923",
+    "unchanged": true
+  },
+  "python": {
+    "historicalDartJsonInputs": true,
+    "newNativeEvidence": false,
+    "passed": true,
+    "skipped": 0,
+    "tests": 80
+  },
+  "realQaActions": 0,
+  "scope": "Yalnız bu tur eklenen Python testleri ve yerel hazırlık kanıtı; APK/run kabulü değildir.",
+  "source": {
+    "path": "tools/image-optimization/test_p4b5_manual_consumer_qa.py",
+    "sha256": "1c3b7eeca5c947c25d82b8811c3722a822b7f29b7eae05b43352be0f80faba92"
+  },
+  "sourceCopyCreated": false,
+  "specStatus": "in-progress",
+  "status": "LOCAL_PREPARATION_REVIEW_PASS"
+}

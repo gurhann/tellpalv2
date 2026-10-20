@@ -1,0 +1,39 @@
+{
+  "apkSha256": "c331c42ac10ba445a7835f8db26829539e262ddad3b879be9692e5d34847cbe7",
+  "date": "2026-10-20",
+  "executionApprovalCreated": false,
+  "protectedRepositoryFiles": 3369,
+  "protectedRepositorySha256": "e68c31f9659ceb31d6066d872ff2a337cac2d1a7a51b7b7c95d9b59f2dd85405",
+  "realClaimsCreated": false,
+  "reviews": [
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-01.private.json",
+      "reviewerId": "/root/devtools_final_apk_blind",
+      "sha256": "1b4a2ca44ed4e6231868347c698444660c69376c5df9540440bcca7b3c22abe0"
+    },
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-02.private.json",
+      "reviewerId": "/root/devtools_final_apk_edge",
+      "sha256": "054945876eb969175c5cedce761c7426390184d848ff72c14ce04816c32d6748"
+    },
+    {
+      "file": "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1/reviews/pre-run-0002-03.private.json",
+      "reviewerId": "/root/devtools_final_apk_verification",
+      "sha256": "98b029ae04106b6cdcee2be491eb728414726f15dfa19c936bb397f310e14158"
+    }
+  ],
+  "rootFinding": {
+    "code": "SOURCE_DRIFT_DEFAULT_CLI_ROOT",
+    "correctedByMetadataOnly": true,
+    "defaultCopyConstructorVerifiedIndependently": true,
+    "firstCandidatePreserved": true,
+    "firstCandidateRejectedLocally": true,
+    "sourceOrRuntimeChanged": false
+  },
+  "runBindingSha256": "cceb45940273fc0b760cc99a8dc9a0c41c733263949e1bc8f27f7d18ad9da7a1",
+  "runProposalFile": "single-run-proposal-2026-10-20.json",
+  "runProposalSha256": "fff01ae4780be54f1d40e9c9c03676f9f72ed84563277cc796137059da987de9",
+  "sourceBindingSha256": "f9d1306819a1e8fa69bb13cdccd81fd2a2c06790b9a6e5bb16ba778591b579b6",
+  "status": "THREE_OFFLINE_ARTIFACT_REVIEWS_PASS_REAL_RUN_NOT_APPROVED",
+  "unresolvedFindings": 0
+}
