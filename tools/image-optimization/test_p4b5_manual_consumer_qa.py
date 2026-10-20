@@ -209,10 +209,11 @@ class ManualAdapterBoundaryTest(unittest.TestCase):
                 android.remove_owned_configuration.return_value = None
                 android.pid.return_value = '' if status == 'dead' else '999'
                 if status == 'owner-file-damaged': (root / 'android/owned-process.private.json').write_text('broken')
-                if status == 'changed': android.owner.side_effect = ValueError('QA_OWNER_CHANGED')
+                android.owned_process_state.return_value = 'absent' if status == 'dead' else 'alive'
+                if status == 'changed': android.owned_process_state.side_effect = ValueError('QA_OWNER_CHANGED')
                 if status == 'cleanup-failed':
                     android.remove_owned_configuration.side_effect = ValueError('PRIVATE_CLEANUP_REFUSED')
-                    android.pid.side_effect = ['123', '']
+                    android.owned_process_state.side_effect = ['alive', 'absent']
                 results = controller.cleanup(android)
                 android.remove_owned_configuration.assert_called_once_with('a' * 64)
                 if status in ['changed', 'owner-file-damaged']: android.run.assert_not_called()
@@ -362,6 +363,11 @@ class _CliOwnedAndroid:
     def owner(self, expected, timeout=15):
         self.calls.append(('owner', expected['pid']))
         qa.require(self.pid() == str(expected['pid']), 'QA_OWNER_CHANGED')
+
+    def owned_process_state(self, expected):
+        if not self.alive: return 'absent'
+        self.owner(expected)
+        return 'alive'
 
     def run(self, *args, timeout=15):
         self.calls.append(args)
@@ -714,3 +720,87 @@ class ManualRealRunWindowTest(unittest.TestCase):
                         self.assertEqual(accepted['mediaPayloadBytes'], 13170884)
                 self.assertEqual(len(android.acknowledgements), 4)
                 self.assertEqual(len(list((root / 'observations').glob('*-*.private.json'))), 14)
+
+
+class ManualProcessTransportTest(unittest.TestCase):
+    def transport(self, mode):
+        import subprocess
+        calls = [];stopped = [False]
+        def run(arguments, **kwargs):
+            self.assertGreater(kwargs['timeout'], 0);self.assertLessEqual(kwargs['timeout'], 15)
+            command = arguments[3:];calls.append(command)
+            if command == ['shell', 'pidof', qa.PACKAGE]:
+                value = b'999' if mode == 'different-pid' else b'123' if mode in ['same-discovery', 'discovery-conflict'] and not stopped[0] else b''
+                return subprocess.CompletedProcess(arguments, 0 if value else 1, value, b'UNTRUSTED_TOKEN')
+            if command == ['shell', 'ls', '-1', '/proc']:
+                if mode == 'proc-denied' or (mode == 'after-unreadable' and stopped[0]):
+                    return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                present = mode not in ['absent', 'discovery-conflict'] and (not stopped[0] or mode in ['still-alive', 'after-unreadable', 'after-reused'])
+                return subprocess.CompletedProcess(arguments, 0, b'self\nstat\n' + (b'123\n' if present else b''), b'')
+            if command == ['shell', 'cat', '/proc/123/cmdline']:
+                if mode in ['cmdline-denied', 'absent']:
+                    return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                if mode == 'timeout': raise subprocess.TimeoutExpired(arguments, kwargs['timeout'], b'UNTRUSTED_TOKEN')
+                return subprocess.CompletedProcess(arguments, 0, b'FOREIGN_SECRET_COMMAND' if mode == 'foreign-command' else qa.PACKAGE.encode() + b'\x00', b'')
+            if command == ['shell', 'cat', '/proc/123/stat']:
+                if mode == 'stat-denied': return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                ticks = '999' if mode == 'different-ticks' or (mode == 'after-reused' and stopped[0]) else '456'
+                value = '123 (synthetic) ' + ' '.join(ticks if index == 19 else '0' for index in range(20))
+                return subprocess.CompletedProcess(arguments, 0, value.encode(), b'')
+            if command == ['shell', 'am', 'force-stop', qa.PACKAGE]:
+                stopped[0] = True
+                return subprocess.CompletedProcess(arguments, 0, b'', b'')
+            raise AssertionError(command)
+        return run, calls
+
+    def assert_private_diagnostics(self, android):
+        value = qa.safe_android_diagnostics(android)
+        self.assertLessEqual(len(value), 8)
+        self.assertTrue(all(set(event) == {'operation', 'code'} for event in value))
+        self.assertNotIn('UNTRUSTED_TOKEN', json.dumps(value));self.assertNotIn('FOREIGN_SECRET_COMMAND', json.dumps(value))
+        self.assertNotIn('/proc', json.dumps(value))
+        return value
+
+    def test_real_owner_uses_positive_proc_identity_even_when_discovery_is_empty(self):
+        for mode in ['alive', 'same-discovery', 'different-pid', 'different-ticks', 'foreign-command', 'cmdline-denied', 'stat-denied', 'absent', 'timeout']:
+            with self.subTest(mode=mode):
+                android = qa.ManualAndroid(Path('/synthetic/adb'), 'emulator-5554');transport, calls = self.transport(mode)
+                with patch.object(qa.subprocess, 'run', side_effect=transport):
+                    if mode in ['alive', 'same-discovery']:
+                        android.owner({'pid': 123, 'processStartTicks': '456'})
+                        self.assertIn(['shell', 'cat', '/proc/123/cmdline'], calls)
+                        self.assertIn(['shell', 'cat', '/proc/123/stat'], calls)
+                    else:
+                        with self.assertRaises(ValueError): android.owner({'pid': 123, 'processStartTicks': '456'})
+                self.assert_private_diagnostics(android)
+
+    def test_real_cleanup_requires_explicit_proc_absence_and_never_stops_changed_or_uncertain_owner(self):
+        expected_codes = {'different-pid': 'QA_OWNER_CHANGED', 'different-ticks': 'QA_OWNER_CHANGED', 'foreign-command': 'QA_PROCESS_COMMAND_CHANGED',
+                          'proc-denied': 'QA_PROCESS_READ_FAILED', 'cmdline-denied': 'QA_PROCESS_READ_FAILED', 'stat-denied': 'QA_PROCESS_READ_FAILED',
+                          'discovery-conflict': 'QA_PROCESS_STATE_UNCERTAIN', 'still-alive': 'QA_PROCESS_NOT_STOPPED',
+                          'after-unreadable': 'QA_PROCESS_READ_FAILED', 'after-reused': 'QA_OWNER_CHANGED', 'timeout': 'ADB_DEADLINE'}
+        for mode in ['alive', 'absent', *expected_codes]:
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve();(root / 'android').mkdir()
+                qa.prior.write_json(root / 'android/owned-process.private.json', {**qa.SCOPE.identity(), 'pid': 123, 'processStartTicks': '456'})
+                controller = qa.ManualController(root, root);android = qa.ManualAndroid(Path('/synthetic/adb'), 'emulator-5554')
+                transport, calls = self.transport(mode)
+                with patch.object(qa.subprocess, 'run', side_effect=transport): result = controller.cleanup(android)['qaProcess']
+                stops = calls.count(['shell', 'am', 'force-stop', qa.PACKAGE])
+                self.assertEqual(stops, 1 if mode in ['alive', 'still-alive', 'after-unreadable', 'after-reused'] else 0)
+                if mode in ['alive', 'absent']:
+                    self.assertEqual(result, {'status': 'PASS', 'result': {'processExitConfirmed': True}})
+                    self.assertIn({'operation': 'proc_list', 'code': 'PROC_ABSENT'}, self.assert_private_diagnostics(android))
+                else:
+                    self.assertEqual(result, {'status': 'FAILED', 'code': expected_codes[mode]})
+                    self.assertNotIn('processExitConfirmed', result)
+                receipt = qa.prior.private_json(root / 'cleanup.private.json')
+                self.assertEqual(receipt['androidDiagnostics'], self.assert_private_diagnostics(android))
+                self.assertEqual(receipt['ok'], mode in ['alive', 'absent'])
+
+    def test_diagnostics_keep_only_eight_fixed_codes(self):
+        android = qa.ManualAndroid(Path('/synthetic/adb'), 'emulator-5554')
+        transport, _ = self.transport('alive')
+        with patch.object(qa.subprocess, 'run', side_effect=transport):
+            for _ in range(12): android.owner({'pid': 123, 'processStartTicks': '456'})
+        self.assertEqual(len(self.assert_private_diagnostics(android)), 8)

@@ -67,10 +67,19 @@ class ManualConsumerQaCoordinator extends Cubit<ManualConsumerQaState>
   Future<void> initialize() async {
     try {
       await protocol.initialize();
+      protocol.diagnostics.emit(
+        ManualQaDiagnosticStage.baseline,
+        ManualQaDiagnosticCode.started,
+      );
       await protocol.receipt('baseline', probe.snapshot());
+      protocol.diagnostics.emit(
+        ManualQaDiagnosticStage.baseline,
+        ManualQaDiagnosticCode.complete,
+      );
       _emit('waiting');
       _poll = Timer.periodic(const Duration(milliseconds: 50), (_) => _tick());
     } catch (_) {
+      protocol.diagnostics.failed();
       await fail();
     }
   }

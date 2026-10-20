@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import '../reading_consumer_qa_probe.dart';
 import '../reading_resource_observation.dart';
 
@@ -22,6 +23,41 @@ void manualRequire(bool value) {
   if (!value) throw const FormatException('manual_qa_refused');
 }
 
+enum ManualQaDiagnosticStage {
+  support,
+  injection,
+  mount,
+  platform,
+  process,
+  directories,
+  permissions,
+  baseline,
+  failureMarker,
+}
+
+enum ManualQaDiagnosticCode { started, complete, failed, unavailable }
+
+/// Yalnız sabit aşama/kodlar logcat'e gider; hata metni ve yollar taşınmaz.
+class ManualQaDiagnostics {
+  ManualQaDiagnostics([void Function(String)? output])
+    : _output = output ?? debugPrint;
+  final void Function(String) _output;
+  ManualQaDiagnosticStage _stage = ManualQaDiagnosticStage.support;
+  int _count = 0;
+
+  void emit(ManualQaDiagnosticStage stage, ManualQaDiagnosticCode code) {
+    _stage = stage;
+    if (_count++ >= 16) return;
+    try {
+      _output('MANUAL_QA_DIAGNOSTIC stage=${stage.name} code=${code.name}');
+    } catch (_) {
+      // Tanı hedefinin hatası özel dosya korumalarını değiştirmez.
+    }
+  }
+
+  void failed() => emit(_stage, ManualQaDiagnosticCode.failed);
+}
+
 /// Testler yalnız platform/süreç/izin araç girdilerini değiştirir.
 class ManualQaPlatform {
   const ManualQaPlatform();
@@ -39,9 +75,11 @@ class ManualQaPrivateProtocol {
   ManualQaPrivateProtocol(
     this.support, {
     this.platform = const ManualQaPlatform(),
-  });
+    ManualQaDiagnostics? diagnostics,
+  }) : diagnostics = diagnostics ?? ManualQaDiagnostics();
   final Directory support;
   final ManualQaPlatform platform;
+  final ManualQaDiagnostics diagnostics;
   late final Directory root = Directory('${support.path}/manual-consumer-qa');
   late final Directory receipts = Directory('${root.path}/receipts');
   late final Directory secrets = Directory('${root.path}/startup');
@@ -56,13 +94,25 @@ class ManualQaPrivateProtocol {
   bool consumed = false, initialized = false, failureWritten = false;
 
   Future<void> initialize() async {
+    diagnostics.emit(
+      ManualQaDiagnosticStage.platform,
+      ManualQaDiagnosticCode.started,
+    );
     manualRequire(!initialized && platform.android);
+    diagnostics.emit(
+      ManualQaDiagnosticStage.process,
+      ManualQaDiagnosticCode.started,
+    );
     final stat = await platform.processStat();
     startTicks = stat.substring(stat.lastIndexOf(') ') + 2).split(' ')[19];
     manualRequire(RegExp(r'^[1-9][0-9]*$').hasMatch(startTicks));
     lifetimeId =
         (readingOwnedResources()['resourceObservation'] as Map)['lifetimeId']
             as String;
+    diagnostics.emit(
+      ManualQaDiagnosticStage.directories,
+      ManualQaDiagnosticCode.started,
+    );
     manualRequire(
       await FileSystemEntity.type(support.path, followLinks: false) ==
           FileSystemEntityType.directory,
@@ -70,6 +120,10 @@ class ManualQaPrivateProtocol {
     // Canonical yol eşitliği symlink'li ara bileşenleri de reddeder.
     manualRequire(
       await support.resolveSymbolicLinks() == support.absolute.path,
+    );
+    diagnostics.emit(
+      ManualQaDiagnosticStage.permissions,
+      ManualQaDiagnosticCode.started,
     );
     for (final directory in [root, receipts, secrets, captures]) {
       manualRequire(
@@ -81,6 +135,10 @@ class ManualQaPrivateProtocol {
       await _private(directory.path, directory: true);
     }
     initialized = true;
+    diagnostics.emit(
+      ManualQaDiagnosticStage.permissions,
+      ManualQaDiagnosticCode.complete,
+    );
   }
 
   Map<String, Object?> identity() => {
@@ -264,7 +322,13 @@ class ManualQaPrivateProtocol {
   }
 
   Future<void> failure() async {
-    if (!initialized || failureWritten) return;
+    if (!initialized || failureWritten) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.failureMarker,
+        ManualQaDiagnosticCode.unavailable,
+      );
+      return;
+    }
     final bytes = utf8.encode(
       jsonEncode({
         ...identity(),
@@ -274,7 +338,19 @@ class ManualQaPrivateProtocol {
       }),
     );
     manualRequire(totalBytes + bytes.length <= 12582912);
-    await _publish(File('${receipts.path}/terminal-failure.json'), bytes);
+    try {
+      await _publish(File('${receipts.path}/terminal-failure.json'), bytes);
+      diagnostics.emit(
+        ManualQaDiagnosticStage.failureMarker,
+        ManualQaDiagnosticCode.complete,
+      );
+    } catch (_) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.failureMarker,
+        ManualQaDiagnosticCode.failed,
+      );
+      rethrow;
+    }
     failureWritten = true;
     totalBytes += bytes.length;
   }

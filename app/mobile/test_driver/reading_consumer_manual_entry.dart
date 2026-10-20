@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -10,16 +10,63 @@ import 'manual_consumer_qa/injection.dart';
 import 'manual_consumer_qa/private_protocol.dart';
 
 Future<void> main() async {
+  await bootstrapManualConsumerQa();
+}
+
+/// Main ve testler aynı DI, coordinator ve özel protokol başlangıcını kullanır.
+Future<ManualConsumerQaCoordinator?> bootstrapManualConsumerQa({
+  Future<Directory> Function()? resolveSupport,
+  ManualQaPlatform platform = const ManualQaPlatform(),
+  void Function(Widget)? mount,
+  void Function(String)? diagnostic,
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final container = configureManualConsumerQa(GetIt.asNewInstance());
-  final coordinator = container<ManualConsumerQaCoordinator>(
-    param1: ManualQaPrivateProtocol(await getApplicationSupportDirectory()),
-  );
-  Bloc.observer = coordinator.probe;
-  runApp(
-    BlocProvider.value(value: coordinator, child: const ManualConsumerQaView()),
-  );
-  unawaited(coordinator.initialize());
+  final diagnostics = ManualQaDiagnostics(diagnostic);
+  ManualConsumerQaCoordinator? coordinator;
+  try {
+    diagnostics.emit(
+      ManualQaDiagnosticStage.support,
+      ManualQaDiagnosticCode.started,
+    );
+    final support = await (resolveSupport ?? getApplicationSupportDirectory)();
+    diagnostics.emit(
+      ManualQaDiagnosticStage.support,
+      ManualQaDiagnosticCode.complete,
+    );
+    diagnostics.emit(
+      ManualQaDiagnosticStage.injection,
+      ManualQaDiagnosticCode.started,
+    );
+    final container = configureManualConsumerQa(GetIt.asNewInstance());
+    coordinator = container<ManualConsumerQaCoordinator>(
+      param1: ManualQaPrivateProtocol(
+        support,
+        platform: platform,
+        diagnostics: diagnostics,
+      ),
+    );
+    Bloc.observer = coordinator.probe;
+    diagnostics.emit(
+      ManualQaDiagnosticStage.mount,
+      ManualQaDiagnosticCode.started,
+    );
+    (mount ?? runApp)(
+      BlocProvider.value(
+        value: coordinator,
+        child: const ManualConsumerQaView(),
+      ),
+    );
+    diagnostics.emit(
+      ManualQaDiagnosticStage.mount,
+      ManualQaDiagnosticCode.complete,
+    );
+    await coordinator.initialize();
+    return coordinator;
+  } catch (_) {
+    diagnostics.failed();
+    await coordinator?.fail();
+    return coordinator;
+  }
 }
 
 class ManualConsumerQaView extends StatelessWidget {

@@ -53,7 +53,7 @@ Ayrıntı belgesindeki dosya ve sembol haritası uygulanır. Yeni `test_driver/r
 
 ## Doğrulama
 
-Ayrıntı belgesindeki Flutter, Python ve Java kontrolleri uygulanır. İlk yerel test/build sonuçları [raporda](../../be/docs/evidence/p4b5-manual-consumer-measurement/verification-2026-10-20.md) korunur; inceleme kusurları nedeniyle koşu kabulü değildir. Yeniden türetme sonrası testler, yeni numaralı kaynak/APK bağları ve üç inceleme gerekir. Gerçek kurulum/başlangıç, backend, giriş ve ölçüm çalıştırılmadı; ayrı somut koşu onayı gereklidir.
+Ayrıntı belgesindeki Flutter, Python ve Java kontrolleri uygulanır. İlk yerel test/build sonuçları [raporda](../../be/docs/evidence/p4b5-manual-consumer-measurement/verification-2026-10-20.md) korunur; inceleme kusurları nedeniyle koşu kabulü değildir. Sonraki testler, kaynak/APK bağları, incelemeler ve onaylı gerçek deneme kendi tarihsel raporlarında tutulur. Gerçek deneme sonucu aşağıdadır.
 
 V2 ve sonraki düzeltmeler tarihsel raporlarında korunur. [Yerel hazırlık ve somut koşu teklifi](../../be/docs/evidence/p4b5-manual-consumer-measurement/pre-run-ready-2026-10-20.md) koşu öncesi durumu kaydeder: Flutter 188, Python 66 ve Java 24 test geçti; analyzer temizdir. Source-0007/build-0012, run-binding-0006 ile bağlıdır. Üç koşu öncesi incelemede açık bulgu yoktu; üç PASS kaydı aynı kaynak/run SHA'sına bağlandı. Sonraki ayrı onay ve başarısız gerçek deneme aşağıdadır. Yerel hazırlık, gerçek ölçüm kabulü veya tüm P4b5'in tamamlanması olarak gösterilmez.
 
@@ -63,17 +63,23 @@ Kullanıcının ayrı `a` onayıyla source-0007/build-0012/run-binding-0006 içi
 
 ## Önerilen inceleme sırası
 
-- Ayrı QA girişi mevcut router ve ortak tüketici ekranlarını kullanır.
-  [reading_consumer_manual_entry.dart:12](../../app/mobile/test_driver/reading_consumer_manual_entry.dart#L12)
+2026-10-20 yerel onarım: Kullanıcının “sorunu çözelim” isteğiyle [başlangıç ve süreç çıkışı patch'i](image-optimization/p4b5-manual-process-repair.md) uygulandı. Flutter 197 / Python 69 test ve analyzer geçti; üç son incelemede açık bulgu kalmadı. [Onarım raporu](../../be/docs/evidence/p4b5-manual-consumer-measurement/local-repair-2026-10-20.md) yerel kanıtı kaydeder. Yeni gerçek koşu açılmadı. Kapalı deneme ve eski kaynak/kanıt bağları korunur; yerel düzeltmenin gerçek Android başlangıcında kabulü henüz yoktur. P4b5 bu nedenle `in-review` kalır.
+
+- Gerçek main ve testler aynı DI, coordinator ve protokol başlangıcını kullanır.
+  [reading_consumer_manual_entry.dart:17](../../app/mobile/test_driver/reading_consumer_manual_entry.dart#L17)
 - Koordinatör tek Başlat, aşama sırası ve lifecycle kurallarını yürütür.
   [coordinator.dart:24](../../app/mobile/test_driver/manual_consumer_qa/coordinator.dart#L24)
-- Özel dosya protokolü kimlik, ekran kaydı onayı ve temizliği bağlar.
-  [private_protocol.dart:38](../../app/mobile/test_driver/manual_consumer_qa/private_protocol.dart#L38)
+- Başlangıç tanısı yalnız sabit sırsız aşama ve hata kodları taşır.
+  [private_protocol.dart:41](../../app/mobile/test_driver/manual_consumer_qa/private_protocol.dart#L41)
+- Sahiplik ve çıkış, boş keşif yerine kayıtlı süreç kanıtıyla doğrulanır.
+  [p4b5_manual_consumer_qa.py:249](../../tools/image-optimization/p4b5_manual_consumer_qa.py#L249)
 - Gerçek yürütme onayı yerel hazırlık onayından ayrı denetlenir.
-  [p4b5_manual_consumer_qa.py:243](../../tools/image-optimization/p4b5_manual_consumer_qa.py#L243)
+  [p4b5_manual_consumer_qa.py:332](../../tools/image-optimization/p4b5_manual_consumer_qa.py#L332)
 - Eksik ilk süreç kaydında sahiplik kanıtlanır; hazır backend kaynakları doğrulanarak bırakır.
-  [p4b5_manual_consumer_qa.py:428](../../tools/image-optimization/p4b5_manual_consumer_qa.py#L428)
-- Gerçek üretici ve CLI testi ilk kayıt yarışını ve geçersiz sahiplikleri sınar.
-  [test_p4b5_manual_consumer_qa.py:549](../../tools/image-optimization/test_p4b5_manual_consumer_qa.py#L549)
+  [p4b5_manual_consumer_qa.py:517](../../tools/image-optimization/p4b5_manual_consumer_qa.py#L517)
+- Gerçek adapter testi yaşayan sürecin boş keşifle çıkmış sayılmasını engeller.
+  [test_p4b5_manual_consumer_qa.py:777](../../tools/image-optimization/test_p4b5_manual_consumer_qa.py#L777)
+- Gerçek bootstrap testi ilk baseline'ı credential ve ağ işi olmadan doğrular.
+  [manual_consumer_bootstrap_test.dart:54](../../app/mobile/test/reading_images/manual_consumer_bootstrap_test.dart#L54)
 - Java testi ayrı onay ve kapsam kapısını sentetik girdilerle doğrular.
   [P4b5ConsumerQaManualTest.java:11](../../be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaManualTest.java#L11)

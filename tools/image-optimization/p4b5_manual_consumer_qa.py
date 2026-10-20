@@ -119,6 +119,18 @@ def validate_captures(raw_acks, raw_receipts, pngs):
     require(total <= 12582912, 'RECEIPT_TOTAL_SIZE')
 
 
+def safe_android_diagnostics(android):
+    operations = {'pidof', 'cmdline', 'stat', 'proc_list'}
+    codes = {'DEADLINE', 'READ_FAILED', 'INVALID_OUTPUT', 'EMPTY_DISCOVERY', 'COMMAND_CHANGED', 'START_CHANGED',
+             'PID_DIFFERENT', 'DISCOVERY_CONFLICT', 'PROC_ABSENT', 'PROC_PRESENT'}
+    try: snapshot = getattr(android, 'diagnostic_snapshot', lambda: [])()
+    except Exception: return []
+    if type(snapshot) is not list: return []
+    return [{'operation': event['operation'], 'code': event['code']} for event in snapshot[-8:]
+            if type(event) is dict and type(event.get('operation')) is str and type(event.get('code')) is str
+            and event['operation'] in operations and event['code'] in codes]
+
+
 class ManualAndroid(helpers.Android):
     """Mevcut ADB üstüne yalnız sabit app-private stdin/dosya işlemleri ekler."""
     def preflight(self, timeout=30):
@@ -166,25 +178,102 @@ class ManualAndroid(helpers.Android):
         require(result.returncode == 0 and result.stdout.startswith(b'\x89PNG\r\n\x1a\n'), 'SCREENSHOT_REFUSED')
         return result.stdout
 
+    def _diagnostic(self, operation, code):
+        events = getattr(self, '_diagnostics', [])
+        events.append({'operation': operation, 'code': code})
+        self._diagnostics = events[-8:]
+
+    def diagnostic_snapshot(self):
+        return [dict(event) for event in getattr(self, '_diagnostics', [])]
+
+    def _process_query(self, arguments, operation, timeout):
+        try:
+            result = subprocess.run(self.args + arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            self._diagnostic(operation, 'DEADLINE')
+            raise ValueError('ADB_DEADLINE') from None
+        except Exception:
+            self._diagnostic(operation, 'READ_FAILED')
+            raise ValueError('QA_PROCESS_READ_FAILED') from None
+        if result.returncode != 0 and not (operation == 'pidof' and result.returncode == 1):
+            self._diagnostic(operation, 'READ_FAILED')
+        return result
+
     def pid(self, timeout=15):
-        result = subprocess.run(self.args + ['shell', 'pidof', PACKAGE], capture_output=True, timeout=timeout)
+        result = self._process_query(['shell', 'pidof', PACKAGE], 'pidof', timeout)
         require(result.returncode in [0, 1], 'PID_QUERY_FAILED')
-        value = result.stdout.decode().strip()
-        require(not value or re.fullmatch('[1-9][0-9]*', value), 'ONE_QA_PID_REQUIRED')
+        try: value = result.stdout.decode('ascii').strip()
+        except Exception:
+            self._diagnostic('pidof', 'INVALID_OUTPUT')
+            raise ValueError('ONE_QA_PID_REQUIRED') from None
+        if not value: self._diagnostic('pidof', 'EMPTY_DISCOVERY')
+        if value and not re.fullmatch('[1-9][0-9]*', value):
+            self._diagnostic('pidof', 'INVALID_OUTPUT')
+            raise ValueError('ONE_QA_PID_REQUIRED')
         return value
 
     def process_identity(self, pid, timeout=15):
         require(type(pid) is int and pid > 1, 'QA_PID_REQUIRED')
         end = time.monotonic() + timeout
-        require(self.run('shell', 'cat', f'/proc/{pid}/cmdline', timeout=remaining(end)).split('\x00')[0] == PACKAGE, 'QA_PROCESS_COMMAND_CHANGED')
-        fields = self.run('shell', 'cat', f'/proc/{pid}/stat', timeout=remaining(end)).rsplit(') ', 1)[-1].split()
-        require(len(fields) > 19 and re.fullmatch('[1-9][0-9]*', fields[19]), 'QA_PROCESS_START_REQUIRED')
+        command = self._process_query(['shell', 'cat', f'/proc/{pid}/cmdline'], 'cmdline', remaining(end))
+        require(command.returncode == 0, 'QA_PROCESS_READ_FAILED')
+        if command.stdout.split(b'\x00')[0] != PACKAGE.encode():
+            self._diagnostic('cmdline', 'COMMAND_CHANGED')
+            raise ValueError('QA_PROCESS_COMMAND_CHANGED')
+        stat = self._process_query(['shell', 'cat', f'/proc/{pid}/stat'], 'stat', remaining(end))
+        require(stat.returncode == 0, 'QA_PROCESS_READ_FAILED')
+        try:
+            value = stat.stdout.decode('ascii')
+            fields = value.rsplit(') ', 1)[-1].split()
+            valid = value.startswith(str(pid) + ' (') and ') ' in value and len(fields) > 19 and re.fullmatch('[1-9][0-9]*', fields[19])
+        except Exception: valid = False
+        if not valid:
+            self._diagnostic('stat', 'INVALID_OUTPUT')
+            raise ValueError('QA_PROCESS_START_REQUIRED')
+        remaining(end)
         return {'pid': pid, 'processStartTicks': fields[19]}
+
+    def _discovered_owner(self, expected, end):
+        discovered = self.pid(timeout=remaining(end))
+        if discovered and discovered != str(expected['pid']):
+            self._diagnostic('pidof', 'PID_DIFFERENT')
+            raise ValueError('QA_OWNER_CHANGED')
+        return discovered
+
+    def _positive_owner(self, expected, end):
+        if self.process_identity(expected['pid'], timeout=remaining(end)) != {k: expected[k] for k in ['pid', 'processStartTicks']}:
+            self._diagnostic('stat', 'START_CHANGED')
+            raise ValueError('QA_OWNER_CHANGED')
+        remaining(end)
 
     def owner(self, expected, timeout=15):
         end = time.monotonic() + timeout
-        require(self.pid(timeout=remaining(end)) == str(expected['pid']) and self.process_identity(expected['pid'], timeout=remaining(end)) ==
-                {k: expected[k] for k in ['pid', 'processStartTicks']}, 'QA_OWNER_CHANGED')
+        self._discovered_owner(expected, end)
+        self._positive_owner(expected, end)
+
+    def owned_process_state(self, expected, timeout=15):
+        require(type(expected.get('pid')) is int and expected['pid'] > 1, 'QA_PID_REQUIRED')
+        end = time.monotonic() + timeout
+        discovered = self._discovered_owner(expected, end)
+        result = self._process_query(['shell', 'ls', '-1', '/proc'], 'proc_list', remaining(end))
+        require(result.returncode == 0, 'QA_PROCESS_READ_FAILED')
+        try:
+            names = result.stdout.decode('ascii').splitlines()
+            valid = len(result.stdout) <= 1048576 and {'self', 'stat'}.issubset(names) and all(re.fullmatch('[A-Za-z0-9_.-]+', name) for name in names)
+        except Exception: valid = False
+        if not valid:
+            self._diagnostic('proc_list', 'INVALID_OUTPUT')
+            raise ValueError('QA_PROCESS_STATE_UNCERTAIN')
+        remaining(end)
+        if str(expected['pid']) not in names:
+            if discovered:
+                self._diagnostic('proc_list', 'DISCOVERY_CONFLICT')
+                raise ValueError('QA_PROCESS_STATE_UNCERTAIN')
+            self._diagnostic('proc_list', 'PROC_ABSENT')
+            return 'absent'
+        self._positive_owner(expected, end)
+        self._diagnostic('proc_list', 'PROC_PRESENT')
+        return 'alive'
 
     def private_root(self, timeout=3):
         root = self.run('shell', '-T', shlex.join(['run-as', PACKAGE, 'pwd']), timeout=timeout).strip()
@@ -466,12 +555,10 @@ class ManualController(prior.Controller):
                 owner = prior.private_json(owned)
                 require(all(owner.get(k) == v for k, v in SCOPE.identity().items()), 'CLEANUP_PROCESS_SCOPE_CHANGED')
                 # Ölüm başarılı temizliktir; PID değişimi başka süreci durduramaz.
-                current = device().pid()
-                if not current:
+                if device().owned_process_state(owner) == 'absent':
                     return {'processExitConfirmed': True}
-                device().owner(owner)
                 device().run('shell', 'am', 'force-stop', PACKAGE)
-                require(not device().pid(), 'QA_PROCESS_NOT_STOPPED')
+                require(device().owned_process_state(owner) == 'absent', 'QA_PROCESS_NOT_STOPPED')
                 return {'processExitConfirmed': True}
             clean('qaProcess', stop_owned)
         elif (self.private / 'initial-start.claim.private.json').exists():
@@ -486,7 +573,8 @@ class ManualController(prior.Controller):
         elif (self.state / 'launch.private.json').exists():
             clean('backend', self.cleanup_before_ready)
         prior.write_json(self.private / 'cleanup.private.json', {**SCOPE.identity(), 'results': results,
-                'ok': bool(results) and all(r['status'] == 'PASS' for r in results.values())})
+                'ok': bool(results) and all(r['status'] == 'PASS' for r in results.values()),
+                'androidDiagnostics': safe_android_diagnostics(android)})
         if not for_success and not (self.private / 'terminal.private.json').exists():
             prior.write_json(self.private / 'terminal.private.json', {**SCOPE.identity(), 'status': 'FAILED_NO_RETRY'})
         return results
@@ -545,7 +633,7 @@ def main(argv=None):
                 try: controller.cleanup(android, backend_pid=args.pid if args.stage == 'record-backend' else None)
                 except Exception: pass
             prior.numbered(controller.private / 'receipts', 'terminal-failure', {**SCOPE.identity(), 'stage': args.stage,
-                    'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY'})
+                    'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY', 'androidDiagnostics': safe_android_diagnostics(android)})
             if not (controller.private / 'terminal.private.json').exists():
                 prior.write_json(controller.private / 'terminal.private.json', {**SCOPE.identity(), 'status': 'FAILED_NO_RETRY', 'stage': args.stage})
         print('REFUSED_MANUAL_QA_NO_RETRY_PRIVATE_EVIDENCE'); return 2
