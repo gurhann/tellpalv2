@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-20",
+  "baselineCommit": "aec7a7f31e1a2383e66c9bbc386bfda4f0d9b9bf",
+  "scope": "Yalnız bu turdaki tanı kodu, test ve kanıt değişiklikleri; eski pending hunk’lar ayrı tutuldu.",
+  "initialDiff": {
+    "file": "task-review.diff",
+    "sha256": "97b8671f8a6830400f2437e6cba27b7515cb05512825086c3a3a1c105317c747"
+  },
+  "finalDiff": {
+    "file": "task-review-0002.diff",
+    "sha256": "ce1b3374cf430b4cd27221e0068bb708059ec26eb3575993b0ed40f629f122f2"
+  },
+  "reviews": [
+    {
+      "reviewer": "/root/startup_local_blind",
+      "lens": "blind-hunter",
+      "findings": []
+    },
+    {
+      "reviewer": "/root/startup_local_verification",
+      "lens": "verification-gap",
+      "findings": []
+    },
+    {
+      "reviewer": "/root/startup_local_edge",
+      "lens": "edge-case-hunter",
+      "findings": [
+        {
+          "location": "app/mobile/test/reading_images/manual_consumer_startup_diagnostics_test.dart:88",
+          "claim": "Sabit /private/tmp yolu bulunmayan Linux ortamında yeni testler bootstrap öncesi başarısız olabilir.",
+          "severity": "medium",
+          "triage": "patch",
+          "status": "RESOLVED",
+          "resolution": "İki fixture sistem geçici dizininin canonical parent’ında createTemp kullanır; child ve negatif ham support yolları normalize edilmez."
+        }
+      ]
+    }
+  ],
+  "revalidation": {
+    "pythonTests": 13,
+    "flutterTests": 41,
+    "skipped": 0,
+    "analyzedDartFiles": 4,
+    "analyzer": "PASS",
+    "logs": [
+      "09-python-tests.log",
+      "10-flutter-tests.log",
+      "11-flutter-analyze.log"
+    ],
+    "linuxExecuted": false
+  },
+  "realQaExecution": false,
+  "historicalRootCauseKnown": false,
+  "p4bComplete": false,
+  "oldPrivateEvidenceFilesVerified": 14,
+  "protectedRepoFiles": 3377,
+  "protectedRepoPathHashChain": "07ebc2922999dea0007d1a210920caab490ae5e3e28cb7aae30829c2f6abb18c",
+  "sourceHashes": {
+    "tools/image-optimization/p4b5_manual_consumer_qa.py": "44d9794f74c60a698bfd9447b3c9bae57eca5166f09fd3ca7cd75c83b3ca0deb",
+    "app/mobile/test_driver/manual_consumer_qa/private_protocol.dart": "6ad52fd9ccfab71439bd2040e46fac29bd1376bcaf280a7af6bd8c86b0d670fa",
+    "tools/image-optimization/test_p4b5_startup_diagnostics.py": "a233a7a63fee91ef1429b84a2e2a389b4cb52839bf867125149fa3478ef420eb",
+    "app/mobile/test/reading_images/manual_consumer_startup_diagnostics_test.dart": "7ed8ebc1d902c28111a31ea63db50a2aaa024eacc27180e256e605c9e5a59e01"
+  }
+}
