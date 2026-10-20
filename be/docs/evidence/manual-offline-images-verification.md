@@ -101,6 +101,18 @@ Bu sonuç ekranın açıldığını, dosya sırasını ve bu emülatörün 1:1 g
 doğrular. Yeni kaynak kullanımı veya yaşam döngüsü yük testi yapılmadı.
 İnsan netlik/kırpılma değerlendirmesi, fiziksel cihaz ve P4b kabulü değildir.
 
+## Kullanıcı gözlemi — 2026-10-20
+
+Emülatördeki ağsız karşılaştırma sonrasında kullanıcı şu gözlemi bildirdi:
+“resimler arasında pek bi fark göremedim”. Bu, mevcut PNG/kayıpsız WebP
+karşılaştırmasında belirgin görsel fark fark edilmediğine ilişkin kullanıcı
+bildirimidir. Hangi çiftlerin incelendiği ve altı görselin tamamının görülüp
+görülmediği ayrıca teyit edilmedi.
+
+Bu sınırlı gözlem kaydedildi. Ayrı netlik/kırpılma kabulü, tam çözünürlüklü
+orijinal karşılaştırması, fiziksel cihaz ve genel üretim profili onayı açık
+kalır. HTTP byte, kaynak kullanımı veya P4b kabul durumu değişmedi.
+
 ## Saklama ve kabul sınırı
 
 Kaynak/test/build, üç manuel APK, iki eski QA APK yedeği, loglar ve ekranlar:
