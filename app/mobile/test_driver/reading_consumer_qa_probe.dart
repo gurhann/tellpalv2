@@ -46,6 +46,12 @@ class ConsumerQaExpectedScope {
     12,
     'p4b5-retry-afde2e82-70d1-430a-9094-d4532d5cd798',
   );
+  static const p4b5Manual = ConsumerQaExpectedScope._(
+    'f45fb1ac17bc8227af3fae5b284efd614409d590d57749fcff49e942a6e3ee92',
+    120000,
+    12,
+    'p4b5-manual-afa6ba59-d0af-493b-b4c3-91b8024b94a4',
+  );
   final String proposalSha256;
   final int windowMillis;
   final int maxStatusChecks;
@@ -275,9 +281,14 @@ class ObservedConsumerQaSource extends ReadingImageComparisonDataSource {
 class ReadingConsumerQaProbe extends BlocObserver {
   ReadingConsumerQaProbe({
     this.initializeDependencies,
+    this.mount,
+    this.onOverflow,
     this.expectedScope = ConsumerQaExpectedScope.legacy,
   });
   final ConsumerQaExpectedScope expectedScope;
+  final void Function(Widget)? mount;
+  final void Function()? onOverflow;
+  bool _overflow = false;
   bool _configureAttempted = false;
   final FutureOr<void> Function(ReadingImageComparisonConfiguration)?
   initializeDependencies;
@@ -292,7 +303,16 @@ class ReadingConsumerQaProbe extends BlocObserver {
   final Stopwatch _renderWatch = Stopwatch();
   final Stopwatch _postTransferWatch = Stopwatch();
   void record(Map<String, Object?> event) {
-    if (_events.length >= 128) _events.removeAt(0);
+    if (_overflow) return;
+    if (_events.length >= 128) {
+      if (expectedScope == ConsumerQaExpectedScope.p4b5Manual) {
+        _overflow = true;
+        onOverflow?.call();
+        unawaited(stop());
+        return;
+      }
+      _events.removeAt(0);
+    }
     _events.add(Map.unmodifiable(event));
     if (event['kind'] == 'http' &&
         event['endpoint'] == 'bytes' &&
@@ -383,6 +403,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
   Map<String, Object?> snapshot() {
     Map<String, Object?>? slot;
     var liveRasterAttached = false;
+    var liveRasterReadyForPaint = false;
     final currentRaster = _cubit?.state.raster;
     void visit(Element element) {
       if (element.widget case ReadingImageComparisonRaster widget) {
@@ -395,6 +416,13 @@ class ReadingConsumerQaProbe extends BlocObserver {
             !render.size.isEmpty &&
             (ModalRoute.of(element)?.isCurrent ?? true)) {
           liveRasterAttached = true;
+          final route = ModalRoute.of(element);
+          liveRasterReadyForPaint =
+              (route?.animation?.status ?? AnimationStatus.completed) ==
+                  AnimationStatus.completed &&
+              (route?.secondaryAnimation?.status ??
+                      AnimationStatus.dismissed) ==
+                  AnimationStatus.dismissed;
         }
       }
       if (element.widget.key == const ValueKey('reading-consumer-slot') &&
@@ -418,7 +446,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
 
     WidgetsBinding.instance.rootElement?.visitChildElements(visit);
     return {
-      'ok': true,
+      'ok': !_overflow,
       'configured': _configured,
       'stopped': _stopped,
       'credentialActive':
@@ -434,6 +462,8 @@ class ReadingConsumerQaProbe extends BlocObserver {
         'currentEpoch': _cubit?.state.epoch,
         'lastPaintedEpoch': _lastPaintedEpoch,
         'liveRasterAttached': liveRasterAttached,
+        if (expectedScope == ConsumerQaExpectedScope.p4b5Manual)
+          'liveRasterReadyForPaint': liveRasterReadyForPaint,
       },
       ...ownedResources(),
     };
@@ -479,7 +509,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
               );
             }
             _require(!_stopped && configuration.account!.credentials.isActive);
-            runApp(
+            (mount ?? runApp)(
               ReadingImageComparisonApp(
                 contentId: input['contentId'] as int,
                 consumerQa: true,
@@ -569,7 +599,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
     try {
       configuration?.account?.credentials.revoke();
       await _cubit?.close();
-      runApp(const ReadingConsumerQaWaiting());
+      (mount ?? runApp)(const ReadingConsumerQaWaiting());
       if (comparisonGetIt.isRegistered<ReadingComparisonWorkGate>()) {
         await comparisonGetIt<ReadingComparisonWorkGate>().run(() async {});
       }

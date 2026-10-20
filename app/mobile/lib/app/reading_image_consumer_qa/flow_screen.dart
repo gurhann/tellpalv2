@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/reading_images/presentation/cubit/reading_image_comparison_cubit.dart';
 import '../reading_image_comparison_injection.dart';
+import 'manual_qa_policy.dart';
 
 @RoutePage()
 class ReadingImageConsumerFlowScreen extends StatefulWidget {
@@ -37,8 +38,10 @@ class _ReadingImageConsumerFlowState
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) =>
-      cubit.visibility(state == AppLifecycleState.resumed);
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    cubit.visibility(state == AppLifecycleState.resumed);
+    ManualConsumerQaScope.maybeOf(context)?.lifecycle(state);
+  }
 
   @override
   void didPushNext() => cubit.visibility(false);
@@ -50,6 +53,7 @@ class _ReadingImageConsumerFlowState
 
   Future<void> _drain() async {
     await cubit.close();
+    if (mounted) await ManualConsumerQaScope.maybeOf(context)?.closed();
     if (!mounted) return;
     setState(() => _closed = true);
     await context.router.maybePop();
@@ -70,7 +74,10 @@ class _ReadingImageConsumerFlowState
       child: PopScope(
         canPop: _closed,
         onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) unawaited(_close());
+          if (!didPop) {
+            final policy = ManualConsumerQaScope.maybeOf(context);
+            if (policy == null || policy.accept('close')) unawaited(_close());
+          }
         },
         child: _closed
             ? const Scaffold(body: Center(child: Text('QA akışı kapandı')))

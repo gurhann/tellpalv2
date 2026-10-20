@@ -8,6 +8,7 @@ import '../../features/reading_images/presentation/cubit/reading_image_compariso
 import '../../features/reading_images/presentation/cubit/reading_image_comparison_state.dart';
 import '../reading_image_comparison_router.dart';
 import 'consumer_image_slot.dart';
+import 'manual_qa_policy.dart';
 
 @RoutePage()
 class ReadingImageConsumerReaderScreen extends StatefulWidget {
@@ -60,6 +61,8 @@ class _ConsumerReaderState extends State<ReadingImageConsumerReaderScreen> {
   }
 
   void _changePage(int pageId) {
+    final policy = ManualConsumerQaScope.maybeOf(context);
+    if (policy != null && !policy.accept('page2')) return;
     context.read<ReadingImageComparisonCubit>().changeChoice(0, false);
     context.router.replace(
       ReadingImageConsumerReaderRoute(
@@ -70,72 +73,91 @@ class _ConsumerReaderState extends State<ReadingImageConsumerReaderScreen> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<ReadingImageComparisonCubit, ReadingImageComparisonState>(
-        builder: (context, state) {
-          final pages =
-              context
-                  .read<ReadingImageComparisonCubit>()
-                  .admittedComparison
-                  ?.manifest
-                  .images
-                  .where(
-                    (e) =>
-                        e.source.binding.role == ReadingImageRole.readingPage,
-                  )
-                  .map((e) => e.source.binding)
-                  .toList() ??
-              const <ReadingImageBinding>[];
-          final index = pages.indexWhere((p) => p.pageId == widget.pageId);
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('QA deneme hikâyesi #${widget.contentId}'),
-              leading: IconButton(
-                tooltip: 'QA detail ekranına dön',
-                onPressed: () {
-                  final cubit = context.read<ReadingImageComparisonCubit>();
-                  if (cubit.state.status != 'error') {
-                    cubit.changeChoice(0, false);
-                  }
-                  context.router.maybePop();
-                },
-                icon: const Icon(Icons.arrow_back),
-              ),
-            ),
-            body: ReadingPageFrame(
-              header: Text('Sayfa ${_pageNumber ?? "?"}/2'),
-              imageBuilder: (context, geometry) => ReadingConsumerImageSlot(
-                contentId: widget.contentId,
-                role: ReadingImageRole.readingPage,
-                pageId: widget.pageId,
-                pageNumber: _pageNumber ?? -1,
-                geometry: geometry,
-              ),
-              audio: const Padding(
-                padding: EdgeInsets.all(12),
-                child: Text('Bu QA denemesinde ses kapalı'),
-              ),
-              controls: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: index <= 0
-                        ? null
-                        : () => _changePage(pages[index - 1].pageId!),
-                    icon: const Icon(Icons.chevron_left),
-                    label: const Text('Önceki'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: index < 0 || index + 1 >= pages.length
-                        ? null
-                        : () => _changePage(pages[index + 1].pageId!),
-                    icon: const Icon(Icons.chevron_right),
-                    label: const Text('Sonraki'),
-                  ),
-                ],
-              ),
-            ),
-          );
+  Widget build(
+    BuildContext context,
+  ) => BlocBuilder<ReadingImageComparisonCubit, ReadingImageComparisonState>(
+    builder: (context, state) {
+      final policy = ManualConsumerQaScope.maybeOf(context);
+      final pages =
+          context
+              .read<ReadingImageComparisonCubit>()
+              .admittedComparison
+              ?.manifest
+              .images
+              .where(
+                (e) => e.source.binding.role == ReadingImageRole.readingPage,
+              )
+              .map((e) => e.source.binding)
+              .toList() ??
+          const <ReadingImageBinding>[];
+      final index = pages.indexWhere((p) => p.pageId == widget.pageId);
+      return PopScope(
+        canPop: policy == null,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop && policy != null) policy.accept('invalidBack');
         },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              policy?.instruction ?? 'QA deneme hikâyesi #${widget.contentId}',
+            ),
+            leading: IconButton(
+              tooltip: 'QA detail ekranına dön',
+              onPressed: policy != null && !policy.allows('detail')
+                  ? null
+                  : () {
+                      if (policy != null && !policy.accept('detail')) return;
+                      final cubit = context.read<ReadingImageComparisonCubit>();
+                      if (cubit.state.status != 'error') {
+                        cubit.changeChoice(0, false);
+                      }
+                      if (policy == null) {
+                        context.router.maybePop();
+                      } else {
+                        context.router.pop();
+                      }
+                    },
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ),
+          body: ReadingPageFrame(
+            header: Text('Sayfa ${_pageNumber ?? "?"}/2'),
+            imageBuilder: (context, geometry) => ReadingConsumerImageSlot(
+              contentId: widget.contentId,
+              role: ReadingImageRole.readingPage,
+              pageId: widget.pageId,
+              pageNumber: _pageNumber ?? -1,
+              geometry: geometry,
+            ),
+            audio: const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text('Bu QA denemesinde ses kapalı'),
+            ),
+            controls: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: index <= 0 || policy != null
+                      ? null
+                      : () => _changePage(pages[index - 1].pageId!),
+                  icon: const Icon(Icons.chevron_left),
+                  label: const Text('Önceki'),
+                ),
+                OutlinedButton.icon(
+                  onPressed:
+                      index < 0 ||
+                          index + 1 >= pages.length ||
+                          (policy != null && !policy.allows('page2'))
+                      ? null
+                      : () => _changePage(pages[index + 1].pageId!),
+                  icon: const Icon(Icons.chevron_right),
+                  label: const Text('Sonraki'),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
+    },
+  );
 }

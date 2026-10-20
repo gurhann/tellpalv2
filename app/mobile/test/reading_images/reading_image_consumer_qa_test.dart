@@ -112,7 +112,8 @@ class _Loopback {
   late final Completer<void> statusOpened, statusDisconnected;
   Socket? statusSocket;
 
-  Future<void> start() async {
+  String expectedToken = 'synthetic-local-http-token';
+  Future<void> start({int contentId = 71}) async {
     statusOpened = Completer<void>();
     statusDisconnected = Completer<void>();
     final source = await png(1200);
@@ -141,8 +142,9 @@ class _Loopback {
           ],
         ),
     ];
-    final manifest = seal(images);
+    final manifest = seal(images, publication: identity(contentId: contentId));
     descriptor = envelope(f);
+    (descriptor['identity'] as Map<String, Object?>)['contentId'] = contentId;
     (descriptor['identity'] as Map<String, Object?>)['manifestDigest'] =
         manifest.identity.manifestDigest;
     final jsonImages =
@@ -168,10 +170,7 @@ class _Loopback {
         requests.add(request.uri);
         expect(request.headers.value('cache-control'), 'no-store');
         expect(request.headers.value('accept-encoding'), 'identity');
-        expect(
-          request.headers.value('authorization'),
-          'Bearer synthetic-local-http-token',
-        );
+        expect(request.headers.value('authorization'), 'Bearer $expectedToken');
         request.response.headers.set('Cache-Control', 'private,no-store');
         final bytesPath = request.uri.path.endsWith('/bytes');
         if (bytesPath) {
@@ -1530,3 +1529,8 @@ void main() {
     },
   );
 }
+
+// Aynı sentetik data source gerçek router/policy sınır testinde kullanılır.
+class ConsumerTestLoopback extends _Loopback {}
+
+ReadingComparisonWorkGate consumerTestGate(Zone zone) => _NativeGate(zone);

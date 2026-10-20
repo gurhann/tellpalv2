@@ -49,6 +49,7 @@ dependencies:
   file: 7.0.1
   http: 1.6.0
   crypto: 3.0.7
+  path_provider: 2.1.6
 
 dev_dependencies:
   sqflite_common_ffi: 2.3.7

@@ -13,7 +13,7 @@ import sys
 import time
 from urllib.parse import urlsplit
 
-from p4b5_qa_scope import P4B5, P4B5_RETRY, select_scope
+from p4b5_qa_scope import P4B5, P4B5_RETRY, P4B5_MANUAL, select_scope
 import p4_consumer_qa as helpers
 from p4_resource_observation import validate_resource_observations
 
@@ -231,7 +231,7 @@ def validate_backend_result(state, ready, links, selected=P4B5):
     lines = ledger.decode().splitlines()
     require(lines and lines[-1] == receipt.get('terminalLedgerLine') and lines[-1].startswith('CLOSED ')
             and not any(line.startswith(('FAILED_', 'FAILED ')) for line in lines), 'TERMINAL_LEDGER_FAILED')
-    if selected is P4B5_RETRY:
+    if selected is not P4B5:
         require([line for line in lines if line.startswith('PRIOR_ATTEMPT ')] == ['PRIOR_ATTEMPT ' + links.get('priorAttemptProofSha256', '')], 'TERMINAL_PRIOR_ATTEMPT_BINDING')
     parts = lines[-1].split()
     require(len(parts) == 7 and all(re.fullmatch(r'0|[1-9][0-9]*', value) for value in parts[1:]), 'TERMINAL_LEDGER_FORMAT')
@@ -395,8 +395,9 @@ def validate_python_binding(binding, selected, source, run, runtime=True):
 
 class Controller:
     def __init__(self, private=None, root=ROOT, selected=P4B5):
-        require(selected is P4B5 or selected is P4B5_RETRY, 'UNKNOWN_QA_SCOPE')
+        require(selected in (P4B5, P4B5_RETRY, P4B5_MANUAL), 'UNKNOWN_QA_SCOPE')
         self.qa_scope = selected
+        self.package = PACKAGE
         private = (PRIVATE if selected is P4B5 else selected.private_root) if private is None else private
         self.private, self.root = private, root
         self.failure_writable = False
@@ -415,6 +416,14 @@ class Controller:
     def source_binding(self):
         return self.latest_receipt('source-binding')
 
+    def copied_source(self):
+        if self.qa_scope is not P4B5_MANUAL:
+            return self.private / 'source'
+        _, binding = self.source_binding()
+        name = binding.get('sourceDirectory', '')
+        require(re.fullmatch('source-[0-9]{4}', name), 'NUMBERED_SOURCE_REQUIRED')
+        return self.private / name
+
     def ensure_open(self):
         require(not any((self.private / name).exists() for name in ['terminal.private.json', 'cleanup.claim.private.json', 'cleanup.private.json'])
                 and not any((self.state / name).exists() for name in ['close.request', 'backend-closed.json', 'failure.json']), 'ATTEMPT_CLOSED_NO_RETRY')
@@ -425,7 +434,7 @@ class Controller:
         require(digest(self.root / self.qa_scope.proposal) == self.qa_scope.proposal_sha256, 'PROPOSAL_CHANGED')
         approval = self.receipt('receipts/human-approval-01.private.json')
         require(all(approval.get(k) == v for k, v in scope(self.qa_scope).items())
-                and (approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla' or (self.qa_scope is P4B5_RETRY and approval.get('answer') == 'A' and approval.get('approvedOption') == 'A — Planı ve tek sınırlı denemeyi onayla')), 'HUMAN_APPROVAL_REQUIRED')
+                and ((approval.get('answer') == 'A' and approval.get('scope') == 'LOCAL_IMPLEMENTATION_ONLY') if self.qa_scope is P4B5_MANUAL else (approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla' or (self.qa_scope is P4B5_RETRY and approval.get('answer') == 'A' and approval.get('approvedOption') == 'A — Planı ve tek sınırlı denemeyi onayla'))), 'HUMAN_APPROVAL_REQUIRED')
         binding_path, binding = self.source_binding()
         require(all(binding.get(k) == v for k, v in scope(self.qa_scope).items()), 'SOURCE_BINDING_SCOPE')
         require(type(binding.get('files')) is dict and bool(binding['files']), 'SOURCE_BINDINGS_REQUIRED')
@@ -433,7 +442,7 @@ class Controller:
             relative = Path(name)
             require(not relative.is_absolute() and '..' not in relative.parts, 'SOURCE_PATH_REFUSED')
             require(digest(self.root / relative) == binding.get('repositoryFiles', binding['files'])[name]
-                    and digest(self.private / 'source' / relative) == sha, 'SOURCE_DRIFT')
+                    and digest(self.copied_source() / relative) == sha, 'SOURCE_DRIFT')
         if reviews:
             run_path, run = self.latest_receipt('run-binding')
             selected_path, selected = self.latest_receipt('selected-build')
@@ -447,7 +456,9 @@ class Controller:
                     and run.get('sourceBindingSha256') == digest(binding_path)
                     and run.get('selectedBuildSha256') == digest(selected_path)
                     and run.get('classpathBindingSha256') == digest(classpath_path), 'RUN_BINDING_DRIFT')
-            if self.qa_scope is P4B5_RETRY:
+            if self.qa_scope is P4B5_MANUAL:
+                self.execution_approval_gate(run_path)
+            if self.qa_scope is not P4B5:
                 require(all(value.get(k) == v for value in [selected, classpath] for k, v in scope(self.qa_scope).items()), 'REVIEWED_SCOPE_CHANGED')
                 self.retry_bindings(run)
             generation = run_path.name[len('run-binding-'):len('run-binding-') + 4]
@@ -477,7 +488,7 @@ class Controller:
             if field == 'priorAttemptProof':
                 validate_prior_proof((self.root / self.qa_scope.proposal).read_bytes(), value)
             else:
-                validate_python_binding(value, self.qa_scope, self.private / 'source', run)
+                validate_python_binding(value, self.qa_scope, self.copied_source(), run)
 
     def claim(self, name, details=None):
         binding = {}
@@ -491,7 +502,7 @@ class Controller:
         binding = self.gate(reviews=False)
         binding_path, _ = self.source_binding()
         binding_sha = digest(binding_path)
-        mobile = self.private / 'source/app/mobile'
+        mobile = self.copied_source() / 'app/mobile'
         tools = self.receipt('receipts/operational-tools.private.json')
         java = Path(tools['javaHome'])
         require((java / 'bin/java').is_file() and Path(tools['androidSdk']).is_dir(), 'EXISTING_TOOLS_REQUIRED')
@@ -504,7 +515,7 @@ class Controller:
         helpers.write_new(init, ("gradle.beforeProject { p -> p.pluginManager.withPlugin('com.android.application') { if(p.path == ':app') { "
             "if(p.findProperty('target') != '" + self.qa_scope.entry + "' || p.findProperty('imageExperiment') != null || gradle.startParameter.taskNames != [':app:assembleDebug']) "
             "throw new GradleException('P4B5_TARGET_REFUSED'); p.extensions.getByName('androidComponents').finalizeDsl { a -> "
-            "a.defaultConfig.applicationId = '" + PACKAGE + "' } } } }\n").encode())
+            "a.defaultConfig.applicationId = '" + self.package + "' } } } }\n").encode())
         environment = os.environ.copy()
         environment.update(JAVA_HOME=str(java), ANDROID_HOME=tools['androidSdk'], ANDROID_SDK_ROOT=tools['androidSdk'])
         log_fd = os.open(directory / 'build.log', os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
@@ -523,9 +534,9 @@ class Controller:
         helpers.write_new(apk, (mobile / 'build/app/outputs/apk/debug/app-debug.apk').read_bytes())
         require(args.aapt is not None, 'AAPT_REQUIRED')
         badging = helpers.command([args.aapt, 'dump', 'badging', apk]).decode()
-        require(re.search(r"package: name='" + re.escape(PACKAGE) + "'", badging), 'APK_PACKAGE_REFUSED')
+        require(re.search(r"package: name='" + re.escape(self.package) + "'", badging), 'APK_PACKAGE_REFUSED')
         write_json(directory / 'build.private.json', {**scope(self.qa_scope), 'apkSha256': digest(apk), 'sourceBindingSha256': binding_sha,
-            'package': PACKAGE, 'mode': 'debug', 'entry': self.qa_scope.entry})
+            'package': self.package, 'mode': 'debug', 'entry': self.qa_scope.entry})
         return str(directory)
 
     def selected_build(self):
@@ -534,7 +545,7 @@ class Controller:
         require(type(name) is str and re.fullmatch('build-[0-9]{4}', name), 'BUILD_NAME_REQUIRED')
         directory = self.private / 'android/builds' / name
         build = private_json(directory / 'build.private.json')
-        require(all(build.get(k) == v for k, v in scope(self.qa_scope).items()) and build.get('entry') == self.qa_scope.entry and build.get('package') == PACKAGE
+        require(all(build.get(k) == v for k, v in scope(self.qa_scope).items()) and build.get('entry') == self.qa_scope.entry and build.get('package') == self.package
                 and build.get('sourceBindingSha256') == digest(self.source_binding()[0])
                 and selected.get('apkSha256') == build.get('apkSha256') == digest(directory / 'consumer.apk'), 'BUILD_CHANGED')
         return build, directory
@@ -546,7 +557,7 @@ class Controller:
         require(value.get('apkSha256') == build['apkSha256'], 'APK_CHANGED')
         android.preflight()
         helpers.require_owned_qa(android, value)
-        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', PACKAGE))
+        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', self.package))
         installed_sha = android.run('shell', 'sha256sum', installed).split()
         require(len(installed_sha) == 2 and installed_sha[0] == build['apkSha256'], 'INSTALLED_APK_DRIFT')
         parsed = urlsplit(value.get('websocket', ''))
@@ -563,7 +574,7 @@ class Controller:
                 and run.get('classpathBindingFile') == cp_path.name and run.get('classpathBindingSha256') == digest(cp_path)
                 and run.get('selectedBuildFile') == selected_path.name and run.get('selectedBuildSha256') == digest(selected_path), 'RUN_BINDING_DRIFT')
         return {'runBindingFile': run_path.name, 'runBindingSha256': digest(run_path),
-                **{k: run[k] for k in ['sourceBindingFile', 'sourceBindingSha256', 'classpathBindingFile', 'classpathBindingSha256', 'selectedBuildFile', 'selectedBuildSha256'] + (['priorAttemptProofFile', 'priorAttemptProofSha256', 'pythonBindingFile', 'pythonBindingSha256'] if self.qa_scope is P4B5_RETRY else [])},
+                **{k: run[k] for k in ['sourceBindingFile', 'sourceBindingSha256', 'classpathBindingFile', 'classpathBindingSha256', 'selectedBuildFile', 'selectedBuildSha256'] + (['priorAttemptProofFile', 'priorAttemptProofSha256', 'pythonBindingFile', 'pythonBindingSha256'] if self.qa_scope is not P4B5 else [])},
                 'apkSha256': selected['apkSha256'], 'servingJavaBinarySha256': cp['javaBinarySha256']}
 
     def ready(self, window=False):
@@ -602,11 +613,12 @@ class Controller:
         require(current is None or current == owner, 'BACKEND_OWNERSHIP_CHANGED')
         return current is not None
 
-    def backend_alive(self, ready):
+    def backend_alive(self, ready, timeout=3):
         self.ensure_open()
-        require(self.owned_backend_alive(self.backend_owner(ready)), 'BACKEND_NOT_RUNNING')
+        require(self.owned_backend_alive(self.backend_owner(ready), timeout=timeout), 'BACKEND_NOT_RUNNING')
 
     def arm(self, android):
+        require(self.qa_scope is not P4B5_MANUAL, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
         self.gate()
         build, directory = self.selected_build()
         android.preflight()
@@ -614,12 +626,12 @@ class Controller:
         self.claim('install')
         android.run('install', '-r', str(directory / 'consumer.apk'), timeout=120)
         require(not android.pid(), 'QA_INITIAL_OWNERSHIP_CHANGED')
-        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', PACKAGE))
+        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', self.package))
         installed_sha = android.run('shell', 'sha256sum', installed).split()
         require(len(installed_sha) == 2 and installed_sha[0] == build['apkSha256'], 'INSTALLED_APK_DRIFT')
         write_json(self.private / 'android/installed-apk.private.json', {**scope(self.qa_scope), 'apkSha256': installed_sha[0], 'verifiedBeforeFirstStart': True})
         self.claim('initial-start', {'apkSha256': build['apkSha256']})
-        android.run('shell', 'am', 'start', '-n', PACKAGE + '/' + helpers.ACTIVITY)
+        android.run('shell', 'am', 'start', '-n', self.package + '/' + helpers.ACTIVITY)
         deadline = time.monotonic() + 30
         pid, owned = helpers.observe_launch_pid(android, deadline)
         write_json(self.private / 'android/owned-process.private.json', {**scope(self.qa_scope), **owned})
@@ -656,6 +668,7 @@ class Controller:
             vm.close()
 
     def baseline_gate(self, android):
+        require(self.qa_scope is not P4B5_MANUAL, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
         connection = self.connection(android)
         original = self.receipt('android/baseline.private.json')
         require(all(original.get(k) == v for k, v in scope(self.qa_scope).items()), 'BASELINE_SCOPE')
@@ -770,7 +783,7 @@ class Controller:
             before = capture('beforeBackground')
             validate_before_background(records[4]['sample'], before)
             check(); android.run('shell', 'input', 'keyevent', 'KEYCODE_HOME'); time.sleep(.4)
-            capture('background'); check(); android.run('shell', 'am', 'start', '-n', PACKAGE + '/' + helpers.ACTIVITY); time.sleep(.4)
+            capture('background'); check(); android.run('shell', 'am', 'start', '-n', self.package + '/' + helpers.ACTIVITY); time.sleep(.4)
             capture('resumed'); check(); vm.tap('QA akışını kapat', True)
             for _ in range(50):
                 check(); sample = vm.data({'action': 'snapshot'})
@@ -807,7 +820,7 @@ class Controller:
             return {'pid': pid, 'processStartIdentity': ' '.join(match[1].split()), 'exited': True}
         words = shlex.split(match[2])
         require('com.tellpal.v2.support.P4b5ConsumerQaSetup' in words and words[words.index('com.tellpal.v2.support.P4b5ConsumerQaSetup') + 1:] == self.qa_scope.backend_arguments(self.state), 'BACKEND_OWNERSHIP_CHANGED')
-        if self.qa_scope is P4B5_RETRY:
+        if self.qa_scope is not P4B5:
             _, classpath = self.latest_receipt('classpath-binding')
             tools = self.receipt('receipts/operational-tools.private.json')
             expected = [str(Path(tools['backendJavaHome']) / 'bin/java'), '-Xmx1g', '-cp', os.pathsep.join(classpath['entries']),
@@ -917,6 +930,8 @@ def main(argv=None):
         print('REFUSED_UNKNOWN_QA_SCOPE'); return 2
     if args.stage is None:
         print('DRY_RUN_ZERO_FILE_CREDENTIAL_DEVICE_DB_NETWORK_IO_P4B5'); return 0
+    if selected is P4B5_MANUAL:
+        print('REFUSED_MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL'); return 2
     controller = Controller(selected=selected)
     try:
         require(args.proposal_sha256 == selected.proposal_sha256, 'EXACT_PROPOSAL_REQUIRED')

@@ -198,6 +198,7 @@ void main() {
   for (final selected in [
     ConsumerQaExpectedScope.p4b5,
     ConsumerQaExpectedScope.p4b5Retry,
+    ConsumerQaExpectedScope.p4b5Manual,
   ]) {
     testWidgets(
       '${selected.measurementId} gerçek loopback ve dört native paint ham JSON phase kabulüne gider',
@@ -326,7 +327,11 @@ void main() {
           // Ham JSON özel test logundan Python'a geçer; yeni IPC veya storage yoktur.
           // ignore: avoid_print
           print(
-            '${identical(selected, ConsumerQaExpectedScope.p4b5) ? 'P4B5_RESOURCE_JSON' : 'P4B5_RETRY_RESOURCE_JSON'}:${jsonEncode({'chain': 'loopback-native', 'records': records})}',
+            '${identical(selected, ConsumerQaExpectedScope.p4b5)
+                ? 'P4B5_RESOURCE_JSON'
+                : identical(selected, ConsumerQaExpectedScope.p4b5Retry)
+                ? 'P4B5_RETRY_RESOURCE_JSON'
+                : 'P4B5_MANUAL_RESOURCE_JSON'}:${jsonEncode({'chain': 'loopback-native', 'records': records})}',
           );
         } finally {
           await probe.stop();

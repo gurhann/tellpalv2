@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /** İki sabit scope ve önceki borç bağları gerçek ortamı açmadan sınanır. */
 class P4b5ConsumerQaScopeTest {
     @TempDir Path directory;
-    @Test void twoFixedScopesPreserveDefaultAndExactBackendArguments() throws Exception {
-        assertThat(P4b5ConsumerQaScope.values()).hasSize(2);
+    @Test void threeFixedScopesPreserveDefaultAndExactBackendArguments() throws Exception {
+        assertThat(P4b5ConsumerQaScope.values()).hasSize(3);
         assertThat(P4b5ConsumerQaScope.select(null)).isSameAs(P4b5ConsumerQaScope.P4B5);
         assertThatThrownBy(()->P4b5ConsumerQaScope.select("unknown")).hasMessage("UNKNOWN_QA_SCOPE");
         for(var scope:P4b5ConsumerQaScope.values()) {

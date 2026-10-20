@@ -49,19 +49,22 @@ class P4b5ConsumerQaSetupTest {
         Files.writeString(source,"changed");assertThatThrownBy(()->P4b5ConsumerQaSetup.validateBindings(directory,input)).hasMessage("SOURCE_DRIFT");
     }
     static final class ReviewedFixture {
+        final P4b5ConsumerQaScope scope;
         final Path root,repo,classes,javaBinary;final com.fasterxml.jackson.databind.node.ObjectNode input,run,source,classpath,selected;
         List<Path> actualEntries;
         final com.fasterxml.jackson.databind.ObjectMapper json=P4b5ConsumerQaLedgerTest.JSON;
-        ReviewedFixture(Path parent) throws Exception {
-            Files.createDirectories(parent);root=parent.toRealPath();repo=Files.createDirectories(root.resolve("source"));
+        ReviewedFixture(Path parent) throws Exception {this(parent,P4b5ConsumerQaScope.P4B5);}
+        ReviewedFixture(Path parent,P4b5ConsumerQaScope scope) throws Exception {
+            this.scope=scope;
+            Files.createDirectories(parent);root=parent.toRealPath();repo=Files.createDirectories(root.resolve(scope==P4b5ConsumerQaScope.P4B5_MANUAL?"source-0002":"source"));
             Files.createDirectories(root.resolve("receipts"));Files.createDirectories(root.resolve("reviews"));
             classes=Files.createDirectories(root.resolve("classes"));actualEntries=List.of(classes);Files.writeString(classes.resolve("One.class"),"synthetic-class");
             javaBinary=root.resolve("java");Files.writeString(javaBinary,"synthetic-java25");
             Files.writeString(repo.resolve("one.java"),"synthetic-source");
-            source=node();source.set("files",json.valueToTree(Map.of("one.java",sha(repo.resolve("one.java")))));write("receipts/source-binding-0001.private.json",source);
+            source=node();if(scope==P4b5ConsumerQaScope.P4B5_MANUAL)source.put("sourceDirectory","source-0002");source.set("files",json.valueToTree(Map.of("one.java",sha(repo.resolve("one.java")))));write("receipts/source-binding-0001.private.json",source);
             classpath=node();classpath.set("entries",json.valueToTree(List.of(classes.toString())));classpath.set("files",json.valueToTree(Map.of(classes.resolve("One.class").toString(),sha(classes.resolve("One.class")))));classpath.put("javaBinarySha256",sha(javaBinary));write("receipts/classpath-binding-0001.private.json",classpath);
             var buildRoot=Files.createDirectories(root.resolve("android/builds/build-0001"));Files.writeString(buildRoot.resolve("consumer.apk"),"synthetic-apk");
-            var build=node();build.put("apkSha256",sha(buildRoot.resolve("consumer.apk")));build.put("sourceBindingSha256",sha(root.resolve("receipts/source-binding-0001.private.json")));build.put("entry","test_driver/reading_p4b5_qa_entry.dart");build.put("package","com.tellpal.tellpal_mobile_poc.readingconsumerqa");build.put("mode","debug");write("android/builds/build-0001/build.private.json",build);
+            var build=node();build.put("apkSha256",sha(buildRoot.resolve("consumer.apk")));build.put("sourceBindingSha256",sha(root.resolve("receipts/source-binding-0001.private.json")));build.put("entry",scope.entry);build.put("package",scope==P4b5ConsumerQaScope.P4B5_MANUAL?"com.tellpal.tellpal_mobile_poc.readingmanualqa":"com.tellpal.tellpal_mobile_poc.readingconsumerqa");build.put("mode","debug");write("android/builds/build-0001/build.private.json",build);
             selected=node();selected.put("buildName","build-0001");selected.set("apkSha256",build.path("apkSha256"));write("receipts/selected-build-0001.private.json",selected);
             run=node();for(String name:List.of("sourceBinding","classpathBinding","selectedBuild")) {
                 String file=Map.of("sourceBinding","source-binding-0001.private.json","classpathBinding","classpath-binding-0001.private.json","selectedBuild","selected-build-0001.private.json").get(name);
@@ -77,7 +80,7 @@ class P4b5ConsumerQaSetupTest {
             input=json.createObjectNode();input.put("runBindingFile","run-binding-0001.private.json");input.put("runBindingSha256",runSha);
             input.set("sourceBindingFile",run.path("sourceBindingFile"));input.set("sourceBindingSha256",run.path("sourceBindingSha256"));input.set("sourceBindings",source.path("files"));input.set("classpathEntries",classpath.path("entries"));input.set("classpathBindings",classpath.path("files"));
         }
-        com.fasterxml.jackson.databind.node.ObjectNode node(){var n=json.createObjectNode();n.put("proposalSha256",P4b5ConsumerQaLedger.PROPOSAL_SHA);n.put("measurementId",P4b5ConsumerQaLedger.MEASUREMENT);n.put("budgetRunId",P4b5ConsumerQaLedger.RUN);return n;}
+        com.fasterxml.jackson.databind.node.ObjectNode node(){var n=json.createObjectNode();n.put("proposalSha256",scope.proposalSha256);n.put("measurementId",scope.measurementId);n.put("budgetRunId",P4b5ConsumerQaLedger.RUN);return n;}
         String sha(Path path) throws Exception {return com.tellpal.v2.asset.domain.reading.ReadingIdentity.sha(Files.readAllBytes(path));}
         void write(String name,Object value) throws Exception {P4LocalComparisonSetup.privateJson(root.resolve(name),value);}
         void replace(String name,Object value) throws Exception {Files.write(root.resolve(name),json.writeValueAsBytes(value));}

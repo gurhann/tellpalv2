@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/presentation/widgets/reading_image_viewport.dart';
 import '../../core/theme/library_theme.dart';
+import 'manual_qa_policy.dart';
 import '../../features/reading_images/domain/entity/reading_image_manifest.dart';
 import '../../features/reading_images/domain/use_case/select_reading_image_rendition.dart';
 import '../../features/reading_images/presentation/cubit/reading_image_comparison_cubit.dart';
@@ -96,7 +97,11 @@ class _ConsumerImageSlotState extends State<ReadingConsumerImageSlot> {
                                   style: AppTypography.label,
                                 ),
                                 TextButton(
-                                  onPressed: cubit.retry,
+                                  onPressed:
+                                      ManualConsumerQaScope.maybeOf(context) ==
+                                          null
+                                      ? cubit.retry
+                                      : null,
                                   child: const Text('Yeniden admission'),
                                 ),
                               ],

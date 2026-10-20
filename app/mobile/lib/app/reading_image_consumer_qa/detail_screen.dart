@@ -9,6 +9,7 @@ import '../../features/reading_images/presentation/cubit/reading_image_compariso
 import '../reading_image_comparison_router.dart';
 import 'consumer_image_slot.dart';
 import 'flow_screen.dart';
+import 'manual_qa_policy.dart';
 
 @RoutePage()
 class ReadingImageConsumerDetailScreen extends StatefulWidget {
@@ -45,76 +46,93 @@ class _ConsumerDetailState extends State<ReadingImageConsumerDetailScreen>
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<ReadingImageComparisonCubit, ReadingImageComparisonState>(
-        builder: (context, state) {
-          final comparison = state.comparison;
-          final ready =
-              !_covered &&
-              state.status == 'loaded' &&
-              comparison?.manifest.identity.contentId == widget.contentId &&
-              comparison?.manifest.images.length == 4;
-          return Scaffold(
-            body: ListView.builder(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.paddingOf(context).bottom + 24,
-              ),
-              itemCount: 2,
-              itemBuilder: (context, index) => index == 0
-                  ? ReadingDetailArtworkFrame(
-                      semanticLabel: 'QA deneme hikâyesi #${widget.contentId}',
-                      artworkBuilder: (context, geometry) =>
-                          ReadingConsumerImageSlot(
-                            contentId: widget.contentId,
-                            role: ReadingImageRole.readingDetail,
-                            geometry: geometry,
-                            visible: !_covered,
-                          ),
-                      overlays: [
-                        Positioned(
-                          top: MediaQuery.paddingOf(context).top + 16,
-                          left: 16,
-                          child: IconButton.filled(
-                            tooltip: 'QA akışını kapat',
-                            onPressed: ReadingImageConsumerFlowScope.of(
-                              context,
-                            ).close,
-                            icon: const Icon(Icons.arrow_back),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text('QA deneme hikâyesi #${widget.contentId}'),
-                          FilledButton(
-                            onPressed: !ready
-                                ? null
-                                : () {
-                                    final page = comparison!.manifest.images
-                                        .firstWhere(
-                                          (e) =>
-                                              e.source.binding.role ==
-                                              ReadingImageRole.readingPage,
-                                        )
-                                        .source
-                                        .binding;
-                                    context.router.push(
-                                      ReadingImageConsumerReaderRoute(
-                                        contentId: widget.contentId,
-                                        pageId: page.pageId!,
-                                      ),
-                                    );
-                                  },
-                            child: const Text('QA sayfalarını aç'),
-                          ),
-                        ],
+  Widget build(
+    BuildContext context,
+  ) => BlocBuilder<ReadingImageComparisonCubit, ReadingImageComparisonState>(
+    builder: (context, state) {
+      final policy = ManualConsumerQaScope.maybeOf(context);
+      final comparison = state.comparison;
+      final ready =
+          !_covered &&
+          state.status == 'loaded' &&
+          comparison?.manifest.identity.contentId == widget.contentId &&
+          comparison?.manifest.images.length == 4;
+      return Scaffold(
+        body: ListView.builder(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.paddingOf(context).bottom + 24,
+          ),
+          itemCount: 2,
+          itemBuilder: (context, index) => index == 0
+              ? ReadingDetailArtworkFrame(
+                  semanticLabel: 'QA deneme hikâyesi #${widget.contentId}',
+                  artworkBuilder: (context, geometry) =>
+                      ReadingConsumerImageSlot(
+                        contentId: widget.contentId,
+                        role: ReadingImageRole.readingDetail,
+                        geometry: geometry,
+                        visible: !_covered,
+                      ),
+                  overlays: [
+                    Positioned(
+                      top: MediaQuery.paddingOf(context).top + 16,
+                      left: 16,
+                      child: IconButton.filled(
+                        tooltip: 'QA akışını kapat',
+                        onPressed: policy != null && !policy.allows('close')
+                            ? null
+                            : () {
+                                if (policy != null && !policy.accept('close')) {
+                                  return;
+                                }
+                                ReadingImageConsumerFlowScope.of(
+                                  context,
+                                ).close();
+                              },
+                        icon: const Icon(Icons.arrow_back),
                       ),
                     ),
-            ),
-          );
-        },
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        policy?.instruction ??
+                            'QA deneme hikâyesi #${widget.contentId}',
+                      ),
+                      FilledButton(
+                        onPressed:
+                            !ready ||
+                                (policy != null && !policy.allows('page1'))
+                            ? null
+                            : () {
+                                if (policy != null && !policy.accept('page1')) {
+                                  return;
+                                }
+                                final page = comparison!.manifest.images
+                                    .firstWhere(
+                                      (e) =>
+                                          e.source.binding.role ==
+                                          ReadingImageRole.readingPage,
+                                    )
+                                    .source
+                                    .binding;
+                                context.router.push(
+                                  ReadingImageConsumerReaderRoute(
+                                    contentId: widget.contentId,
+                                    pageId: page.pageId!,
+                                  ),
+                                );
+                              },
+                        child: const Text('QA sayfalarını aç'),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
       );
+    },
+  );
 }

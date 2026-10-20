@@ -40,7 +40,7 @@ final class P4b5ConsumerQaLedger implements AutoCloseable {
             Clock clock,LongSupplier nanos,boolean loginReserved,byte[] priorProof) throws IOException {
         this.scope=Objects.requireNonNull(scope);
         require(ReadingIdentity.sha(proposal).equals(scope.proposalSha256),"PROPOSAL_CHANGED");
-        if(scope==P4b5ConsumerQaScope.P4B5_RETRY) {
+        if(scope!=P4b5ConsumerQaScope.P4B5) {
             require(priorProof!=null,"PRIOR_ATTEMPT_PROOF_REQUIRED");
             try {scope.validatePriorProof(proposal,new ObjectMapper().readTree(priorProof));}
             catch(IOException failure){throw failure;}

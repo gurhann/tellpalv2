@@ -49,14 +49,15 @@ public final class P4b5ConsumerQaSetup {
                     "measurementId",selected.measurementId,"budgetRunId",P4b5ConsumerQaLedger.RUN,
                     "kind","BACKEND_START","state","RESERVED_NO_AUTOMATIC_RETRY","maxStarts",1))),"STARTUP_RESERVATION_CHANGED");
             var input=JSON.readTree(privateBytes(directory.resolve("inputs.private.json"),4194304));
+            String localUser=localDbUsername(input);
+            Path repo=Path.of(input.path("repoRoot").asText()).toRealPath();
+            require(repo.getParent().equals(selected.privateRoot),"PRIVATE_SOURCE_ROOT_REQUIRED");
+            var bindingLinks=validateReviewedRuntime(selected,selected.privateRoot,repo,input,runtimeEntries(),
+                    Path.of(System.getProperty("java.home"),"bin","java"),Runtime.getRuntime().maxMemory());
             P4LocalComparisonSetup.privateJson(directory.resolve("startup.claim.private.json"),Map.of("proposalSha256",selected.proposalSha256,
                     "measurementId",selected.measurementId,"pid",ProcessHandle.current().pid(),
                     "runBindingSha256",input.path("runBindingSha256").asText()));claimed=true;
-            String localUser=localDbUsername(input);
-            Path repo=Path.of(input.path("repoRoot").asText()).toRealPath();
-            require(repo.equals(selected.privateRoot.resolve("source")),"PRIVATE_SOURCE_ROOT_REQUIRED");
-            var bindingLinks=validateReviewedRuntime(selected,selected.privateRoot,repo,input,runtimeEntries(),
-                    Path.of(System.getProperty("java.home"),"bin","java"),Runtime.getRuntime().maxMemory());
+
             byte[] proposal=Files.readAllBytes(repo.resolve(selected.proposal));
             byte[] terminal=privateBytes(HISTORICAL_TERMINAL,65536);
             byte[] expected=Files.readAllBytes(repo.resolve("be/src/test/resources/p4/consumer-retained-ready.json"));
@@ -76,7 +77,7 @@ public final class P4b5ConsumerQaSetup {
                 connection.setReadOnly(true);
                 validateDatabase(new JdbcTemplate(new org.springframework.jdbc.datasource.SingleConnectionDataSource(connection,true)));
             }
-            byte[] priorProof=selected==P4b5ConsumerQaScope.P4B5_RETRY ? privateBytes(receipt(selected.privateRoot,bindingLinks.path("priorAttemptProofFile").asText(),"prior-attempt-proof"),4194304) : null;
+            byte[] priorProof=selected!=P4b5ConsumerQaScope.P4B5 ? privateBytes(receipt(selected.privateRoot,bindingLinks.path("priorAttemptProofFile").asText(),"prior-attempt-proof"),4194304) : null;
             var ledger=new P4b5ConsumerQaLedger(selected,directory.resolve("ledger.log"),proposal,terminal,expected,approval,Clock.systemUTC(),System::nanoTime,false,priorProof);
             finalLedger=ledger;
             try(ledger;var serving=new OwnedContext(context(directory,prior,oldInputs,plan,ledger,localUser))) {
@@ -187,13 +188,15 @@ public final class P4b5ConsumerQaSetup {
     static JsonNode validateReviewedRuntime(P4b5ConsumerQaScope selected,Path root,Path repo,JsonNode input,List<Path> actualEntries,Path javaBinary,long heap) throws Exception {
         require(!closedAttempt(root),"ATTEMPT_CLOSED_NO_RETRY");
         require(heap==1073741824L,"SERVING_HEAP_CHANGED");
-        require(repo.equals(root.resolve("source")),"PRIVATE_SOURCE_ROOT_REQUIRED");
+        require(repo.getParent().equals(root),"PRIVATE_SOURCE_ROOT_REQUIRED");
         Path runPath=receipt(root,input.path("runBindingFile").asText(),"run-binding");
         byte[] runBytes=privateBytes(runPath,4194304);
         String runSha=ReadingIdentity.sha(runBytes);
         require(runSha.equals(input.path("runBindingSha256").asText()),"REVIEWED_RUN_CHANGED");
         var run=JSON.readTree(runBytes);selected.validate(run);
         var source=boundReceipt(selected,root,run,"sourceBinding","source-binding");
+        String sourceDirectory=selected==P4b5ConsumerQaScope.P4B5_MANUAL?source.path("sourceDirectory").asText():"source";
+        require((selected!=P4b5ConsumerQaScope.P4B5_MANUAL || sourceDirectory.matches("source-[0-9]{4}")) && repo.equals(root.resolve(sourceDirectory)),"PRIVATE_SOURCE_ROOT_REQUIRED");
         var classpath=boundReceipt(selected,root,run,"classpathBinding","classpath-binding");
         var selectedBuild=boundReceipt(selected,root,run,"selectedBuild","selected-build");
         require(input.path("sourceBindingFile").equals(run.path("sourceBindingFile"))
@@ -209,7 +212,7 @@ public final class P4b5ConsumerQaSetup {
         var build=JSON.readTree(privateBytes(buildRoot.resolve("build.private.json"),65536));selected.validate(build);
         require(build.path("sourceBindingSha256").equals(run.path("sourceBindingSha256"))
                 && build.path("entry").asText().equals(selected.entry)
-                && build.path("package").asText().equals("com.tellpal.tellpal_mobile_poc.readingconsumerqa")
+                && build.path("package").asText().equals(selected==P4b5ConsumerQaScope.P4B5_MANUAL?"com.tellpal.tellpal_mobile_poc.readingmanualqa":"com.tellpal.tellpal_mobile_poc.readingconsumerqa")
                 && build.path("mode").asText().equals("debug")
                 && selectedBuild.path("apkSha256").equals(build.path("apkSha256"))
                 && ReadingIdentity.sha(Files.readAllBytes(buildRoot.resolve("consumer.apk"))).equals(build.path("apkSha256").asText()),"APPROVED_APK_CHANGED");
@@ -227,7 +230,8 @@ public final class P4b5ConsumerQaSetup {
             reviewers.add(review.path("reviewerId").textValue());
         }
         require(reviewers.size()==3,"INDEPENDENT_REVIEWERS_REQUIRED");
-        if(selected==P4b5ConsumerQaScope.P4B5_RETRY) {
+        if(selected==P4b5ConsumerQaScope.P4B5_MANUAL)validateExecutionApproval(selected,root,runSha,selectedBuild.path("apkSha256").asText());
+        if(selected!=P4b5ConsumerQaScope.P4B5) {
             var proof=boundReceipt(selected,root,run,"priorAttemptProof","prior-attempt-proof");
             selected.validatePriorFiles(Files.readAllBytes(repo.resolve(selected.proposal)),proof);
             var python=boundReceipt(selected,root,run,"pythonBinding","python-binding");
@@ -235,9 +239,16 @@ public final class P4b5ConsumerQaSetup {
         }
         var links=JSON.createObjectNode();links.put("runBindingFile",runPath.getFileName().toString());links.put("runBindingSha256",runSha);
         for(String field:List.of("sourceBindingFile","sourceBindingSha256","classpathBindingFile","classpathBindingSha256","selectedBuildFile","selectedBuildSha256"))links.set(field,run.path(field));
-        if(selected==P4b5ConsumerQaScope.P4B5_RETRY)for(String field:List.of("priorAttemptProofFile","priorAttemptProofSha256","pythonBindingFile","pythonBindingSha256"))links.set(field,run.path(field));
+        if(selected!=P4b5ConsumerQaScope.P4B5)for(String field:List.of("priorAttemptProofFile","priorAttemptProofSha256","pythonBindingFile","pythonBindingSha256"))links.set(field,run.path(field));
         links.set("apkSha256",selectedBuild.path("apkSha256"));links.set("servingJavaBinarySha256",classpath.path("javaBinarySha256"));
         return links;
+    }
+
+    static void validateExecutionApproval(P4b5ConsumerQaScope selected,Path root,String runSha,String apkSha) throws Exception {
+        var approval=JSON.readTree(privateBytes(root.resolve("receipts/execution-approval-01.private.json"),65536));
+        var approved=JSON.valueToTree(selected.identity());
+        ((com.fasterxml.jackson.databind.node.ObjectNode)approved).put("decision","APPROVE_ONE_REAL_MANUAL_ATTEMPT").put("runBindingSha256",runSha).put("apkSha256",apkSha);
+        require(approval.equals(approved),"SEPARATE_REAL_EXECUTION_APPROVAL_REQUIRED");
     }
 
     static void validatePythonBinding(P4b5ConsumerQaScope selected,Path repo,JsonNode run,JsonNode python) throws Exception {
@@ -246,9 +257,10 @@ public final class P4b5ConsumerQaSetup {
         require(executable.isAbsolute() && executable.toRealPath().equals(binary),"PYTHON_EXECUTABLE_CHANGED");
         require(binary.isAbsolute() && binary.toRealPath().equals(binary) && Files.isRegularFile(binary)
                 && ReadingIdentity.sha(Files.readAllBytes(binary)).equals(python.path("pythonBinarySha256").asText()),"PYTHON_BINARY_CHANGED");
-        require(controller.equals(repo.resolve("tools/image-optimization/p4b5_consumer_qa.py")) && controller.toRealPath().equals(controller)
+        require(controller.equals(repo.resolve("tools/image-optimization/"+(selected==P4b5ConsumerQaScope.P4B5_MANUAL?"p4b5_manual_consumer_qa.py":"p4b5_consumer_qa.py"))) && controller.toRealPath().equals(controller)
                 && ReadingIdentity.sha(Files.readAllBytes(controller)).equals(python.path("controllerSha256").asText()),"PYTHON_CONTROLLER_CHANGED");
-        var files=python.path("files");require(files.isObject() && files.size()>0,"PYTHON_IMPORT_CLOSURE_REQUIRED");
+        var files=python.path("files");
+        if(selected==P4b5ConsumerQaScope.P4B5_MANUAL)require(files.has(controller.toString()) && files.has(repo.resolve("tools/mobile-test-account.json").toString()),"PYTHON_IMPORT_CLOSURE_REQUIRED");require(files.isObject() && files.size()>0,"PYTHON_IMPORT_CLOSURE_REQUIRED");
         for(String file:List.of("p4b5_consumer_qa.py","p4b5_qa_scope.py","p4_consumer_qa.py","p4_resource_observation.py","p4_reading_comparison.py","native_test_login.py","native_entry_config.py"))
             require(files.has(controller.getParent().resolve(file).toString()),"PYTHON_IMPORT_CLOSURE_REQUIRED");
         var entries=files.fields();while(entries.hasNext()) {
