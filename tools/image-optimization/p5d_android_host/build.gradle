@@ -1,0 +1,19 @@
+allprojects {
+    repositories {
+        exclusiveContent {
+            forRepository { maven { url rootProject.file('../../offline-maven') } }
+            filter {
+                includeModule('io.flutter', 'flutter_embedding_release')
+                includeModule('io.flutter', 'arm64_v8a_release')
+                includeVersion('com.google.guava', 'listenablefuture', '1.0')
+                includeVersion('com.google.guava', 'guava-parent', '26.0-android')
+                includeVersion('org.sonatype.oss', 'oss-parent', '9')
+                includeVersion('androidx.core', 'core-ktx', '1.2.0')
+            }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.layout.buildDirectory = file('../build')
+subprojects { layout.buildDirectory = rootProject.file("../build/${project.name}") }
