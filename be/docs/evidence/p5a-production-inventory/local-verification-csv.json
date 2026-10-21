@@ -1,0 +1,8 @@
+{
+  "queryFormat": "CSV_ROWS",
+  "testCount": 8,
+  "passed": 8,
+  "sqlSha256": "f126ef322e2a95c8bf34abeb292d205026a4c8ffe0f0252a423299f4c25499f4",
+  "liveConnectionOpened": false,
+  "postgresVersion": "18.6 (Homebrew)"
+}

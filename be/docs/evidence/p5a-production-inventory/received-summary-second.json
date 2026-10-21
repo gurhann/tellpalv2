@@ -1,0 +1,37 @@
+{
+  "queryVersion": "p5a-manual-core-v1",
+  "snapshotAt": "2026-10-21T07:40:07.479937+00:00",
+  "readOnly": "off",
+  "isolation": "read committed",
+  "coreComplete": false,
+  "complete": false,
+  "storageVerified": false,
+  "executable": false,
+  "status": "LIMIT_OR_TRANSACTION_REJECTED",
+  "counts": {
+    "pages": 1425,
+    "assets": 6263,
+    "stories": 78,
+    "legacy_jobs": 102,
+    "localizations": 253,
+    "metadata_bytes": 2646333,
+    "page_localizations": 4654,
+    "required_reading_bindings": 5160
+  },
+  "supplemental": {
+    "reading_image_jobs": "NOT_DEPLOYED",
+    "reading_publications": "NOT_DEPLOYED",
+    "listing_cover_revisions": "NOT_DEPLOYED",
+    "reading_image_integrity": "NOT_DEPLOYED",
+    "reading_image_manifests": "NOT_DEPLOYED",
+    "reading_source_admissions": "NOT_DEPLOYED",
+    "story_page_media_manifests": "NOT_DEPLOYED",
+    "reading_image_source_captures": "NOT_DEPLOYED",
+    "reading_image_attempt_evidence": "NOT_DEPLOYED",
+    "reading_publication_availability": "NOT_DEPLOYED",
+    "story_page_media_manifest_entries": "NOT_DEPLOYED"
+  },
+  "inputSha256": "262a7a7149c85a8eb983158d71602a4b8f29c4d2876494b4778954b154c42a8e",
+  "inputBytes": 13131,
+  "acceptedAsCompleteInventory": false
+}

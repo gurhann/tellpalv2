@@ -1,0 +1,9 @@
+{
+  "queryVersion": "p5a-manual-core-v2",
+  "testCount": 16,
+  "passed": 16,
+  "liveConnectionOpened": false,
+  "postgresVersion": "18.6 (Homebrew)",
+  "sqlSha256": "ec43644dbd41d90ae73a31dedf2c2b5cd5e4e04fcbc4e33714456861a793cb0e",
+  "note": "13 kontrol ilk çalıştırmada; kontrol örneği beklentisi düzeltildikten sonra son 3 kontrol aynı SQL davranışıyla ayrıca geçti. Yalnız SELECT yolu ret üretir; BEGIN öncesi boş transaction tek başına önceki ret durumunu üretmedi."
+}

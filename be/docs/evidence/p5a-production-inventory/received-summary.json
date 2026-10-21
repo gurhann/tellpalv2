@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "scope": "PRODUCTION_STORY_DATABASE_METADATA_ONLY",
+  "queryVersion": "p5a-manual-core-v1",
+  "snapshotAt": "2026-10-21T07:33:12.463319+00:00",
+  "readOnly": "off",
+  "isolation": "read committed",
+  "coreComplete": false,
+  "complete": false,
+  "storageVerified": false,
+  "executable": false,
+  "status": "LIMIT_OR_TRANSACTION_REJECTED",
+  "counts": {
+    "pages": 1425,
+    "assets": 6263,
+    "stories": 78,
+    "legacy_jobs": 102,
+    "localizations": 253,
+    "metadata_bytes": 2646333,
+    "page_localizations": 4654,
+    "required_reading_bindings": 5160
+  },
+  "supplemental": {
+    "reading_image_jobs": "NOT_DEPLOYED",
+    "reading_publications": "NOT_DEPLOYED",
+    "listing_cover_revisions": "NOT_DEPLOYED",
+    "reading_image_integrity": "NOT_DEPLOYED",
+    "reading_image_manifests": "NOT_DEPLOYED",
+    "reading_source_admissions": "NOT_DEPLOYED",
+    "story_page_media_manifests": "NOT_DEPLOYED",
+    "reading_image_source_captures": "NOT_DEPLOYED",
+    "reading_image_attempt_evidence": "NOT_DEPLOYED",
+    "reading_publication_availability": "NOT_DEPLOYED",
+    "story_page_media_manifest_entries": "NOT_DEPLOYED"
+  },
+  "inputSha256": "f1f911ed6faf7abc1fa9067a9528a2354d9a885f4f9dfe6a055d709e2406409e",
+  "inputBytes": 13131,
+  "validation": {
+    "jsonComplete": true,
+    "expectedTransactionMode": false,
+    "detailArraysPresent": false,
+    "acceptedAsCompleteInventory": false,
+    "agentConnectedToProduction": false
+  }
+}
