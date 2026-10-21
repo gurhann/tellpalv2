@@ -1,0 +1,5989 @@
+{
+  "schemaVersion": 1,
+  "scope": "P5C_LOCAL_LOSSLESS",
+  "status": "LOCAL_LOSSLESS_COMPLETE",
+  "privateArtifactsAvailable": false,
+  "privateArtifactAvailability": "MISSING_AFTER_MEASUREMENT_CAUSE_UNKNOWN",
+  "historicalMeasurementResultsPreserved": true,
+  "measuredAtUtc": "2026-10-21T11:13:54Z",
+  "runtime": {
+    "python": "3.14.6",
+    "pillow": "12.3.0",
+    "libwebp": "1.6.0",
+    "zlib": "1.3.1.zlib-ng",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "PNG": {
+      "compress_level": 9
+    },
+    "WEBP": {
+      "lossless": true,
+      "quality": 100,
+      "method": 6,
+      "exact": true
+    }
+  },
+  "limits": {
+    "sourceBytes": 67108864,
+    "pixels": 40000000,
+    "sourceProcessSeconds": 120,
+    "totalOutputBytes": 1073741824
+  },
+  "uniqueSources": 41,
+  "candidateCount": 82,
+  "roleBindings": 43,
+  "pilots": [
+    {
+      "pilotContentId": 18,
+      "languageCode": "tr",
+      "uniqueSources": 17,
+      "roleBindings": 18,
+      "sourceBytes": 6191423,
+      "formats": {
+        "PNG": {
+          "files": 17,
+          "bytes": 28533448,
+          "savedBytes": -22342025,
+          "savedPercent": -360.8544433161812,
+          "growingFiles": [
+            1950,
+            1952,
+            1954,
+            1956,
+            1958,
+            1960,
+            1962,
+            1964,
+            1966,
+            1968,
+            1970,
+            1972,
+            1974,
+            1976,
+            1978,
+            1980,
+            1982
+          ]
+        },
+        "WEBP": {
+          "files": 17,
+          "bytes": 19403554,
+          "savedBytes": -13212131,
+          "savedPercent": -213.39409373257166,
+          "growingFiles": [
+            1950,
+            1952,
+            1954,
+            1956,
+            1958,
+            1960,
+            1962,
+            1964,
+            1966,
+            1968,
+            1970,
+            1972,
+            1974,
+            1976,
+            1978,
+            1980,
+            1982
+          ]
+        }
+      }
+    },
+    {
+      "pilotContentId": 62,
+      "languageCode": "tr",
+      "uniqueSources": 24,
+      "roleBindings": 25,
+      "sourceBytes": 120305904,
+      "formats": {
+        "PNG": {
+          "files": 24,
+          "bytes": 91936919,
+          "savedBytes": 28368985,
+          "savedPercent": 23.580708890230362,
+          "growingFiles": []
+        },
+        "WEBP": {
+          "files": 24,
+          "bytes": 70606312,
+          "savedBytes": 49699592,
+          "savedPercent": 41.31101662309108,
+          "growingFiles": []
+        }
+      }
+    }
+  ],
+  "p2Result": "NOT_EVALUATED",
+  "productionAcceptance": false,
+  "deviceAcceptance": false,
+  "visualQualityAcceptance": false,
+  "networkUsed": false,
+  "resize": false,
+  "colorConversion": false,
+  "timingScope": "LOCAL_PILLOW_ONLY_NOT_MOBILE_PERFORMANCE",
+  "sourceBytes": 126497327,
+  "formats": {
+    "PNG": {
+      "files": 41,
+      "bytes": 120470367,
+      "savedBytes": 6026960,
+      "savedPercent": 4.764495932787572,
+      "growingFiles": 17
+    },
+    "WEBP": {
+      "files": 41,
+      "bytes": 90009866,
+      "savedBytes": 36487461,
+      "savedPercent": 28.84445218356274,
+      "growingFiles": 17
+    }
+  },
+  "allRgbComparisonsPassed": 82,
+  "allIccComparisonsPassed": 82,
+  "webpVp8lVerified": 41,
+  "roleTraceLocation": "PRIVATE_REPORT_ONLY",
+  "csvSha256": "9d7baf864996f46c283b90e35b7a9d582d748800865f3f2bd7a2148106c882c1",
+  "privateReportSha256": "8ca3840ace6c2c534de2d2e8c1754b75ca96f821f167ccc7afc3efa0343ebea2",
+  "privateProvenanceSha256": "8469fc5328426ddfadb8ff0622f42274d55ea7986e7a038bc3e82bfd6e2ca73f",
+  "gallerySha256": "aed5250400e7cf55cb1d48fc3194fbbd6daede00031feab744b655cccf19ed0a",
+  "code": [
+    {
+      "file": "tools/image-optimization/p5c_local_lossless_compare.py",
+      "sha256": "5526779951c36d9afa18d65299e2ca87d3de94905faf452dbbded75850c75854",
+      "modifiedAtUtc": "2026-10-21T11:11:31.012946+00:00",
+      "mtimeBeforeRun": true
+    },
+    {
+      "file": "tools/image-optimization/p5c_lossless_codec.py",
+      "sha256": "2ffa43b1805091f2273ea9e2556428c9c41e357b672e601e3c32da67e8e29959",
+      "modifiedAtUtc": "2026-10-21T11:08:58.699424+00:00",
+      "mtimeBeforeRun": true
+    },
+    {
+      "file": "tools/image-optimization/p5c_lossless_output.py",
+      "sha256": "cf20279029796d751d0703d80eb25672eaf98ae4fa6b72fe33b6f072eba8d5c8",
+      "modifiedAtUtc": "2026-10-21T11:09:37.134198+00:00",
+      "mtimeBeforeRun": true
+    }
+  ],
+  "codeHashCapture": "AFTER_RUN_MTIME_BEFORE_RUN_NO_RUNNER_CHANGES_DURING_EXECUTION",
+  "privateOutputBytes": 337331174,
+  "galleryStaticCheck": {
+    "images": 123,
+    "localReferencesOnly": true,
+    "allReferencesExist": true,
+    "sameImageDimensions": true
+  },
+  "visualReview": {
+    "method": "DIRECT_READ_ONLY_IMAGE_VIEWER",
+    "assets": [
+      1950,
+      1952,
+      8303,
+      8306
+    ],
+    "filesViewed": 12,
+    "textAndCompositionObserved": true,
+    "colorAcceptance": false,
+    "browserGalleryRenderVerified": false,
+    "limitation": "IAB file protokolünü reddetti. #62 WebP önizlemesinde ton farkı izlenimi var; görüntüleyicinin ICC davranışı doğrulanmadı."
+  },
+  "additionalKernelNetworkSandbox": false,
+  "preservation": {
+    "sources": [
+      {
+        "assetId": 1950,
+        "beforeSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+        "afterSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+        "equal": true
+      },
+      {
+        "assetId": 1952,
+        "beforeSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+        "afterSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+        "equal": true
+      },
+      {
+        "assetId": 1954,
+        "beforeSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+        "afterSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+        "equal": true
+      },
+      {
+        "assetId": 1956,
+        "beforeSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+        "afterSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+        "equal": true
+      },
+      {
+        "assetId": 1958,
+        "beforeSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+        "afterSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+        "equal": true
+      },
+      {
+        "assetId": 1960,
+        "beforeSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+        "afterSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+        "equal": true
+      },
+      {
+        "assetId": 1962,
+        "beforeSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+        "afterSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+        "equal": true
+      },
+      {
+        "assetId": 1964,
+        "beforeSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+        "afterSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+        "equal": true
+      },
+      {
+        "assetId": 1966,
+        "beforeSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+        "afterSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+        "equal": true
+      },
+      {
+        "assetId": 1968,
+        "beforeSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+        "afterSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+        "equal": true
+      },
+      {
+        "assetId": 1970,
+        "beforeSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+        "afterSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+        "equal": true
+      },
+      {
+        "assetId": 1972,
+        "beforeSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+        "afterSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+        "equal": true
+      },
+      {
+        "assetId": 1974,
+        "beforeSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+        "afterSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+        "equal": true
+      },
+      {
+        "assetId": 1976,
+        "beforeSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+        "afterSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+        "equal": true
+      },
+      {
+        "assetId": 1978,
+        "beforeSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+        "afterSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+        "equal": true
+      },
+      {
+        "assetId": 1980,
+        "beforeSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+        "afterSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+        "equal": true
+      },
+      {
+        "assetId": 1982,
+        "beforeSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+        "afterSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+        "equal": true
+      },
+      {
+        "assetId": 8303,
+        "beforeSha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255",
+        "afterSha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255",
+        "equal": true
+      },
+      {
+        "assetId": 8306,
+        "beforeSha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b",
+        "afterSha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b",
+        "equal": true
+      },
+      {
+        "assetId": 8308,
+        "beforeSha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296",
+        "afterSha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296",
+        "equal": true
+      },
+      {
+        "assetId": 8310,
+        "beforeSha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838",
+        "afterSha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838",
+        "equal": true
+      },
+      {
+        "assetId": 8312,
+        "beforeSha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8",
+        "afterSha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8",
+        "equal": true
+      },
+      {
+        "assetId": 8314,
+        "beforeSha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36",
+        "afterSha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36",
+        "equal": true
+      },
+      {
+        "assetId": 8316,
+        "beforeSha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b",
+        "afterSha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b",
+        "equal": true
+      },
+      {
+        "assetId": 8318,
+        "beforeSha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c",
+        "afterSha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c",
+        "equal": true
+      },
+      {
+        "assetId": 8320,
+        "beforeSha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab",
+        "afterSha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab",
+        "equal": true
+      },
+      {
+        "assetId": 8322,
+        "beforeSha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb",
+        "afterSha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb",
+        "equal": true
+      },
+      {
+        "assetId": 8324,
+        "beforeSha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c",
+        "afterSha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c",
+        "equal": true
+      },
+      {
+        "assetId": 8326,
+        "beforeSha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c",
+        "afterSha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c",
+        "equal": true
+      },
+      {
+        "assetId": 8328,
+        "beforeSha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed",
+        "afterSha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed",
+        "equal": true
+      },
+      {
+        "assetId": 8330,
+        "beforeSha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1",
+        "afterSha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1",
+        "equal": true
+      },
+      {
+        "assetId": 8332,
+        "beforeSha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e",
+        "afterSha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e",
+        "equal": true
+      },
+      {
+        "assetId": 8334,
+        "beforeSha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98",
+        "afterSha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98",
+        "equal": true
+      },
+      {
+        "assetId": 8336,
+        "beforeSha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025",
+        "afterSha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025",
+        "equal": true
+      },
+      {
+        "assetId": 8338,
+        "beforeSha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07",
+        "afterSha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07",
+        "equal": true
+      },
+      {
+        "assetId": 8340,
+        "beforeSha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909",
+        "afterSha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909",
+        "equal": true
+      },
+      {
+        "assetId": 8342,
+        "beforeSha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513",
+        "afterSha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513",
+        "equal": true
+      },
+      {
+        "assetId": 8344,
+        "beforeSha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c",
+        "afterSha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c",
+        "equal": true
+      },
+      {
+        "assetId": 8346,
+        "beforeSha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1",
+        "afterSha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1",
+        "equal": true
+      },
+      {
+        "assetId": 8348,
+        "beforeSha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50",
+        "afterSha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50",
+        "equal": true
+      },
+      {
+        "assetId": 8350,
+        "beforeSha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826",
+        "afterSha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826",
+        "equal": true
+      }
+    ],
+    "allSourcesUnchanged": true,
+    "inputHashesUnchanged": {
+      "csv": true,
+      "mapping": true
+    },
+    "previousEvidenceFiles": 272,
+    "previousEvidenceUnchanged": true,
+    "previousEvidenceBeforeManifestSha256": "063b31b64bec8b21dc7bd4ea665dc8c09e6e06ae31283892390e61b778069c97",
+    "previousEvidenceAfterManifestSha256": "063b31b64bec8b21dc7bd4ea665dc8c09e6e06ae31283892390e61b778069c97",
+    "p5bPrivateReportSha256": "af1fbb6ae55c3144b2d91615ca77b5b5cc53917fbf469461a075f488c1d4190b",
+    "p5bPrivateReportMatchesRecordedPin": true
+  },
+  "metadataComparison": {
+    "PNG": {
+      "icc": 41,
+      "exif": 41,
+      "xmp": 41
+    },
+    "WEBP": {
+      "icc": 41,
+      "exif": 0,
+      "xmp": 41
+    }
+  },
+  "sourceRecords": [
+    {
+      "assetId": 1950,
+      "pilotContentId": 18,
+      "sourceBytes": 361885,
+      "sourceSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "7baf1ad47fca56c5c7fb7f72ae9b316fbb7e50e4531f04e067a202d18dc8db8b",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "fae092d71675496098efa49e00772831cba6605815a313fd30e4bde47dbbf162"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 7458.441416994901,
+      "wallProcessMillis": 7540.986459003761,
+      "roleCount": 2,
+      "preflightWallProcessMillis": 116.09087500255555,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1725534,
+          "sha256": "b2501330f65c6eefc44e89aa40260ad3ffbee1b41e00c5b2b873ee462552c9b9",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "7baf1ad47fca56c5c7fb7f72ae9b316fbb7e50e4531f04e067a202d18dc8db8b",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 43.29999999026768,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "fae092d71675496098efa49e00772831cba6605815a313fd30e4bde47dbbf162"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 459.86845799779985,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1188342,
+          "sha256": "b8ad54ed29feed0c9c07f972e26d57513dd617a795a40e0f309bfdc7ea2498a0",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "7baf1ad47fca56c5c7fb7f72ae9b316fbb7e50e4531f04e067a202d18dc8db8b",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 36.712541012093425,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "fae092d71675496098efa49e00772831cba6605815a313fd30e4bde47dbbf162"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 6831.138790992554,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1952,
+      "pilotContentId": 18,
+      "sourceBytes": 288768,
+      "sourceSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "afe1592a10b17c0a38aeb84b6fd0b8e1da18b384803b0b46a3fc22ca42779ff8",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "c239999291fd46447034a8d08014632ef946e62bedae302c6b3d0b8422d0f150"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5142.404333993909,
+      "wallProcessMillis": 5225.605749990791,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 103.50599999947008,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1141855,
+          "sha256": "94714f3232ebf3e525b85c25a17c45adab8a0f10c32cf1e5e927e81ccfee5d43",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "afe1592a10b17c0a38aeb84b6fd0b8e1da18b384803b0b46a3fc22ca42779ff8",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 29.08466699591372,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "c239999291fd46447034a8d08014632ef946e62bedae302c6b3d0b8422d0f150"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 273.4287920029601,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 771374,
+          "sha256": "c1aaeaa5f2a00c880eab27e2f18b1a61562b40e66046347115c8aca711904281",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "afe1592a10b17c0a38aeb84b6fd0b8e1da18b384803b0b46a3fc22ca42779ff8",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 26.113083004020154,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "c239999291fd46447034a8d08014632ef946e62bedae302c6b3d0b8422d0f150"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 4736.908207996748,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1954,
+      "pilotContentId": 18,
+      "sourceBytes": 214723,
+      "sourceSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "c71fdbc336ea9a04cc2b43ce5963a561fb4ddf48a7a30a147b1289e240b306be",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "acc71c0f40ca56c7807fe52640a7d9a009b4e72750c0c357dc8138b86b641667"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5089.0732090047095,
+      "wallProcessMillis": 5167.1476670017,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 96.57383299781941,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 906366,
+          "sha256": "3a7a4c4405353e92a7950d376b318b9c941171ed2610d8c4a3303afe99d56e48",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c71fdbc336ea9a04cc2b43ce5963a561fb4ddf48a7a30a147b1289e240b306be",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 36.382833000971004,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "acc71c0f40ca56c7807fe52640a7d9a009b4e72750c0c357dc8138b86b641667"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 313.47037499654107,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 598166,
+          "sha256": "ae39136639c1cf33c64514e44fb7a01c525e5660968a964bdeeee7fcbb4d6239",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c71fdbc336ea9a04cc2b43ce5963a561fb4ddf48a7a30a147b1289e240b306be",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 27.833957996335812,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "acc71c0f40ca56c7807fe52640a7d9a009b4e72750c0c357dc8138b86b641667"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 4636.531541997101,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1956,
+      "pilotContentId": 18,
+      "sourceBytes": 256634,
+      "sourceSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "af33bdfc389574d1eccf825bacd81019e3950fe9943e6be22a5664ddbb1d9eb5",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "d201c470526d2f0ac3c24f6aece42a75cdc10ee52e4f8e7617d6ede49c58151b"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 4984.969083001488,
+      "wallProcessMillis": 5069.980957996449,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 96.76604199921712,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1093356,
+          "sha256": "50ad8cb18f1abe2fd09516618285bc5637d94dbf8b4d276480cf17455e292854",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "af33bdfc389574d1eccf825bacd81019e3950fe9943e6be22a5664ddbb1d9eb5",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 36.90387500682846,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "d201c470526d2f0ac3c24f6aece42a75cdc10ee52e4f8e7617d6ede49c58151b"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 285.0982079980895,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 657820,
+          "sha256": "c575e12b3057e73989417ab07d679119bf3c03babbda8475cc6024e222ac999c",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "af33bdfc389574d1eccf825bacd81019e3950fe9943e6be22a5664ddbb1d9eb5",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 25.883875001454726,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "d201c470526d2f0ac3c24f6aece42a75cdc10ee52e4f8e7617d6ede49c58151b"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 4559.568917000433,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1958,
+      "pilotContentId": 18,
+      "sourceBytes": 249503,
+      "sourceSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "2991b33c2e78ef6f0f21d2e7fd54cce3250ce0a4d0abb0d0a3a7ae7f21f426fa",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "19ad30fd20be784710937b0b3c8d5d5b683741d426a96cb8d6e3c20af873dd5e"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5505.672166007571,
+      "wallProcessMillis": 5583.850790993893,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 100.29604200099129,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1105256,
+          "sha256": "dbdcad21a1cf3e736228c63340c9291f31eb6a9fb4ce0ad1f124c8271aba4584",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "2991b33c2e78ef6f0f21d2e7fd54cce3250ce0a4d0abb0d0a3a7ae7f21f426fa",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 42.07870800746605,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "19ad30fd20be784710937b0b3c8d5d5b683741d426a96cb8d6e3c20af873dd5e"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 345.26916600589175,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 713578,
+          "sha256": "dc0ddf2c397ff8284ebd3691c4e8e362945f51ff6a61dc8fb3293f276a7bc548",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "2991b33c2e78ef6f0f21d2e7fd54cce3250ce0a4d0abb0d0a3a7ae7f21f426fa",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 30.285542001365684,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "19ad30fd20be784710937b0b3c8d5d5b683741d426a96cb8d6e3c20af873dd5e"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5017.535624996526,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1960,
+      "pilotContentId": 18,
+      "sourceBytes": 482003,
+      "sourceSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "e23db4730ec36799d12aa935dd4a4db19d922452f1d73bf6350bdfd41ea265f0",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "80948302e7a7b889d71e4f2f9502effe0c13b59033c33e46875a167815deecaa"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 9494.922666010098,
+      "wallProcessMillis": 9580.19483400858,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 104.35983398929238,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2465978,
+          "sha256": "801c05dc8a63dd688dce4efc02c27280825672b8ce8ab774749d03f1486fcd55",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "e23db4730ec36799d12aa935dd4a4db19d922452f1d73bf6350bdfd41ea265f0",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 49.59437499928754,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "80948302e7a7b889d71e4f2f9502effe0c13b59033c33e46875a167815deecaa"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 600.92845899635,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1735040,
+          "sha256": "811882bf7455582ab2efe3f6045eca53bab8aef00cd1290e22ab992a19a4d5a4",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "e23db4730ec36799d12aa935dd4a4db19d922452f1d73bf6350bdfd41ea265f0",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 47.41758300224319,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "80948302e7a7b889d71e4f2f9502effe0c13b59033c33e46875a167815deecaa"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 8713.821292010834,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1962,
+      "pilotContentId": 18,
+      "sourceBytes": 353873,
+      "sourceSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "085b46920a911148cb04d9a985f1840c42980a79951ee1612026456d07b67938",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 878,
+            "sha256": "5cc25da2280e10aa4b3b57dcc394142fb781af7b1096a7cd55ff2e13f580db98"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5936.954792006873,
+      "wallProcessMillis": 6023.902833010652,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 99.60512501129415,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1349701,
+          "sha256": "b34b7795ac95ea70ceacf9bc9892fd7bc21bdb71030ab870db1d1769ec29f6d9",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "085b46920a911148cb04d9a985f1840c42980a79951ee1612026456d07b67938",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 32.19070899649523,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 878,
+              "sha256": "5cc25da2280e10aa4b3b57dcc394142fb781af7b1096a7cd55ff2e13f580db98"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 308.1919590040343,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 781748,
+          "sha256": "6d6627f081ae4c5cb60e54e5f7958d93b5bc614abcbee6ddc622fc1d2f443ea0",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "085b46920a911148cb04d9a985f1840c42980a79951ee1612026456d07b67938",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 28.870665992144495,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 878,
+              "sha256": "5cc25da2280e10aa4b3b57dcc394142fb781af7b1096a7cd55ff2e13f580db98"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5491.648750001332,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1964,
+      "pilotContentId": 18,
+      "sourceBytes": 406040,
+      "sourceSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "d606b9defab4989255a8cb9218aee5d41a088fd58122b0fe8a3ebfd560d4cd9a",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "04c677d94b9ee8523bb2c0fbc2160fb83a792fc335cdbfc96ad83b1bf54cd31f"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 7965.190666000126,
+      "wallProcessMillis": 8052.428084003623,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 103.95424999296665,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1836819,
+          "sha256": "e99064a19268b678a55c54edeb334175e6f5aa14b6706c38fa9d6c444bc63e0f",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "d606b9defab4989255a8cb9218aee5d41a088fd58122b0fe8a3ebfd560d4cd9a",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 44.22437500033993,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "04c677d94b9ee8523bb2c0fbc2160fb83a792fc335cdbfc96ad83b1bf54cd31f"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 487.63212500489317,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1217046,
+          "sha256": "b0b0a7cf05f1e208ac15f962072ed10abac1f6e8420c0109187ea6cb88694645",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "d606b9defab4989255a8cb9218aee5d41a088fd58122b0fe8a3ebfd560d4cd9a",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 37.374084000475705,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "04c677d94b9ee8523bb2c0fbc2160fb83a792fc335cdbfc96ad83b1bf54cd31f"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 7315.983459004201,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1966,
+      "pilotContentId": 18,
+      "sourceBytes": 333699,
+      "sourceSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "8a113e8a71ba94cfca9457f1a62ed30d89071ceb3c8310dfb23afc2f45da1f79",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "9ea790c8747f4cf59addc6d876c193338c2a1857ca11578cb97e4707ac3af669"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 6419.030416000169,
+      "wallProcessMillis": 6505.37537499622,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 99.85395800322294,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1536544,
+          "sha256": "47bdbdd0cccbb3a7d7655e3167aa31a8be79e9d2e8f276269e00925e27411781",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "8a113e8a71ba94cfca9457f1a62ed30d89071ceb3c8310dfb23afc2f45da1f79",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 41.736375002074055,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "9ea790c8747f4cf59addc6d876c193338c2a1857ca11578cb97e4707ac3af669"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 415.4072079982143,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 990222,
+          "sha256": "641189e28b5c00dcb4b7895a67b0940f1e78e4b9cdb303ce2c8d740a63908fd1",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "8a113e8a71ba94cfca9457f1a62ed30d89071ceb3c8310dfb23afc2f45da1f79",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 33.42266599065624,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "9ea790c8747f4cf59addc6d876c193338c2a1857ca11578cb97e4707ac3af669"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5848.734541999875,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1968,
+      "pilotContentId": 18,
+      "sourceBytes": 258580,
+      "sourceSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "1a1b8dc731b142a50551920a239c1bbd705a39626c84fd31329f9823bf35c4a9",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "1554623131a788638fed884f0efc007bdf0e5ae641229781a5f8fa4173a4c6cb"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5431.375457992544,
+      "wallProcessMillis": 5509.619375006878,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 95.95062499283813,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1109030,
+          "sha256": "eb615eb48359734ccf124358c191f12901287d2e06c8f4375a774a55c0461904",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "1a1b8dc731b142a50551920a239c1bbd705a39626c84fd31329f9823bf35c4a9",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 30.18204099498689,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "1554623131a788638fed884f0efc007bdf0e5ae641229781a5f8fa4173a4c6cb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 272.44441700167954,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 699390,
+          "sha256": "4004bafaccb0d685e4c81b06fe5a1c2cbd52a4ac9f2efa2ad96d34a88d61efb8",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "1a1b8dc731b142a50551920a239c1bbd705a39626c84fd31329f9823bf35c4a9",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 28.680415998678654,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "1554623131a788638fed884f0efc007bdf0e5ae641229781a5f8fa4173a4c6cb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5024.603832993307,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1970,
+      "pilotContentId": 18,
+      "sourceBytes": 309746,
+      "sourceSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "0273caa582e01363833a818c6299c50d8338baa25f8e563e2d5d394326679688",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "b997b97e1cb2d26b7494aca36e1738eafc60029393363a80b317018618bd2771"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5524.855541996658,
+      "wallProcessMillis": 5608.053208998172,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 99.0514579898445,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1279683,
+          "sha256": "8235677ec254602c2168afb5971429a8676fbf9b0de45290346c0185cd3e4f6b",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "0273caa582e01363833a818c6299c50d8338baa25f8e563e2d5d394326679688",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 32.795666993479244,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "b997b97e1cb2d26b7494aca36e1738eafc60029393363a80b317018618bd2771"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 296.5745830006199,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 897830,
+          "sha256": "e228dd961755f2ef6da148598648134c4b03b78b244b42c2f79292912f421b8c",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "0273caa582e01363833a818c6299c50d8338baa25f8e563e2d5d394326679688",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 32.20820899878163,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "b997b97e1cb2d26b7494aca36e1738eafc60029393363a80b317018618bd2771"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5086.675583006581,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1972,
+      "pilotContentId": 18,
+      "sourceBytes": 490555,
+      "sourceSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "cb6d998ceda134d3da5527e00cbc555391646e597c5fd3d1189a0edd86912ac0",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "22523dd33bf1d359c38e3c49b9e39b2e7a1d119f075068ed1f1da9f1045f5163"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 11106.282833992736,
+      "wallProcessMillis": 11192.20075001067,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 102.55774999677669,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2472368,
+          "sha256": "628b2670247ebc03f986f558f8cda570836916b95a8d2e5d4d7e08ba0f0255e8",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "cb6d998ceda134d3da5527e00cbc555391646e597c5fd3d1189a0edd86912ac0",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 49.88908299128525,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "22523dd33bf1d359c38e3c49b9e39b2e7a1d119f075068ed1f1da9f1045f5163"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 582.7144170034444,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1793908,
+          "sha256": "2109a42846b679087ead7db91cd801803c7d70619fedc6ae018ea2390b76c422",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "cb6d998ceda134d3da5527e00cbc555391646e597c5fd3d1189a0edd86912ac0",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 49.89233298692852,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "22523dd33bf1d359c38e3c49b9e39b2e7a1d119f075068ed1f1da9f1045f5163"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 10316.399833012838,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1974,
+      "pilotContentId": 18,
+      "sourceBytes": 337335,
+      "sourceSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "f7e44d8a62d4568d12c600189a96c5fe1c5423ed5f32dfb632eeb65b433dec14",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "cb47cbdd0f6a5b62ed250c2154e49175cc815648e6e61156cfdf0b3b08a8b793"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 5621.645207997062,
+      "wallProcessMillis": 5724.541292001959,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 100.22716599632986,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1375396,
+          "sha256": "00931064a4b7e6e4773ccbe88385c040fd02f1d336838c687cda4a4da1c06b4c",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "f7e44d8a62d4568d12c600189a96c5fe1c5423ed5f32dfb632eeb65b433dec14",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 34.98620798927732,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "cb47cbdd0f6a5b62ed250c2154e49175cc815648e6e61156cfdf0b3b08a8b793"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 320.48129200120457,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 935778,
+          "sha256": "fedca03e9d9134a4f91dfba1a401cba84c233c850b8cbccf3a894d60a6a16001",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "f7e44d8a62d4568d12c600189a96c5fe1c5423ed5f32dfb632eeb65b433dec14",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 30.71500000078231,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "cb47cbdd0f6a5b62ed250c2154e49175cc815648e6e61156cfdf0b3b08a8b793"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 5137.953917001141,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1976,
+      "pilotContentId": 18,
+      "sourceBytes": 556757,
+      "sourceSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "dabe1b25c42febd820230696853803c331b6e0d5767b79361d15725f596449e2",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "e27824f090b38263aa9ab8d57e28af6a3bdae5229e16550d1d8365dcd5e303d1"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 12800.842959011788,
+      "wallProcessMillis": 12882.933082990348,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 104.72233399923425,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2924406,
+          "sha256": "3ba23898e0f43af1083df14108370b5d110776171e80e5bbefa57b016828d141",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "dabe1b25c42febd820230696853803c331b6e0d5767b79361d15725f596449e2",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 52.71120899124071,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "e27824f090b38263aa9ab8d57e28af6a3bdae5229e16550d1d8365dcd5e303d1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 565.238249997492,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2223456,
+          "sha256": "34847493f35d4c9b4c2dbc5ca337e9e78984bcde19350e5154f7507894191db8",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "dabe1b25c42febd820230696853803c331b6e0d5767b79361d15725f596449e2",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 51.914875002694316,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "e27824f090b38263aa9ab8d57e28af6a3bdae5229e16550d1d8365dcd5e303d1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12021.54241700191,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1978,
+      "pilotContentId": 18,
+      "sourceBytes": 346582,
+      "sourceSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "7366fea37e5bfda9cb4c56a8bb0230271ea0511a54d54aa9cf6fadd8cbb0aecc",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "9f153b386207d6b5277e9b379a9cba995122c6982b8cb5d6495fa32580107dfc"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 6928.3938339940505,
+      "wallProcessMillis": 7030.005624998012,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 100.41975000058301,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 1604384,
+          "sha256": "17183b4541e5f0a5c5c59a40646c5ba0cf22fafaffa9625b9dcd6f1f87b65247",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "7366fea37e5bfda9cb4c56a8bb0230271ea0511a54d54aa9cf6fadd8cbb0aecc",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 40.03083398856688,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "9f153b386207d6b5277e9b379a9cba995122c6982b8cb5d6495fa32580107dfc"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 474.061458997312,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 970158,
+          "sha256": "8dce45002378d9a9c39c58a2a6e87705145f1730b394347944b005a67cbb8f18",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "7366fea37e5bfda9cb4c56a8bb0230271ea0511a54d54aa9cf6fadd8cbb0aecc",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 35.16762499930337,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "9f153b386207d6b5277e9b379a9cba995122c6982b8cb5d6495fa32580107dfc"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 6286.532207988785,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1980,
+      "pilotContentId": 18,
+      "sourceBytes": 460634,
+      "sourceSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "c41b2cccb8662a89ab656dbf7d0411169d7580f048f609cdfa7e3aa58d68acee",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "0e464b4262260195a9222da3f1344b8e28a56bbef6ae0ca6ff7b4f5518eac5bb"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 9327.518499994767,
+      "wallProcessMillis": 9409.554708006908,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 104.05791699304245,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2212693,
+          "sha256": "bed9c80a656f08177ed9957dce20d0322699d16b5bb60af6220754e91cb6b7fd",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c41b2cccb8662a89ab656dbf7d0411169d7580f048f609cdfa7e3aa58d68acee",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 46.99566699855495,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "0e464b4262260195a9222da3f1344b8e28a56bbef6ae0ca6ff7b4f5518eac5bb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 457.9495409998344,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1519030,
+          "sha256": "1a6a194454fa85747ea84a1f1972ce6d706df4e358564d69be1ba06252012424",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c41b2cccb8662a89ab656dbf7d0411169d7580f048f609cdfa7e3aa58d68acee",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 39.11720900214277,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "0e464b4262260195a9222da3f1344b8e28a56bbef6ae0ca6ff7b4f5518eac5bb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 8694.142499996815,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 1982,
+      "pilotContentId": 18,
+      "sourceBytes": 484106,
+      "sourceSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+      "source": {
+        "format": "JPEG",
+        "mode": "RGB",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "3600ae70b7cb75586e7de2e076aef2602b0976a84bca2cde53e56a655b21d27e",
+        "frames": 1,
+        "alphaRemoved": false,
+        "allAlpha255": false,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": false,
+            "bytes": 0,
+            "sha256": null
+          },
+          "exif": {
+            "present": true,
+            "bytes": 22,
+            "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 864,
+            "sha256": "d3099f32279ba862f8a2f1628111425a6a09e9cd53249da5321d7b22209f9541"
+          }
+        },
+        "colorInterpretation": "UNSPECIFIED"
+      },
+      "sourceProcessMillis": 9863.520375001826,
+      "wallProcessMillis": 9948.982208006782,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 103.1542920100037,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2394079,
+          "sha256": "10beb68dbbf22c229afe9a2b2075e783451080f75352fad9f3ac1534025a137f",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3600ae70b7cb75586e7de2e076aef2602b0976a84bca2cde53e56a655b21d27e",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 49.88716699881479,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 22,
+              "sha256": "91e97c4f4d8186aed0c92e51adcffb088742c86b1b9e0439e4fb83305a5ea3f9"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "d3099f32279ba862f8a2f1628111425a6a09e9cd53249da5321d7b22209f9541"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 534.1109580040211,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1710668,
+          "sha256": "e0a7f64bab96ede698920c41cbd288a68a175d6a6d6c8c02417b62f6ec39fa18",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3600ae70b7cb75586e7de2e076aef2602b0976a84bca2cde53e56a655b21d27e",
+          "webpChunks": [
+            "VP8X",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 50.07395800203085,
+          "metadata": {
+            "icc": {
+              "present": false,
+              "bytes": 0,
+              "sha256": null
+            },
+            "exif": {
+              "present": true,
+              "bytes": 16,
+              "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 864,
+              "sha256": "d3099f32279ba862f8a2f1628111425a6a09e9cd53249da5321d7b22209f9541"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 9132.536292003351,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8303,
+      "pilotContentId": 62,
+      "sourceBytes": 4102023,
+      "sourceSha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "8f9ce6de504a8b785b5fdca111b2cc0fcbadc47b817366d5258c06f08b63d918",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 850,
+            "sha256": "9ac48317b6d33b46b36294c309b064ccfa75846c62526bc6bc14a439295c7ce1"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 12463.582167009008,
+      "wallProcessMillis": 12546.210166998208,
+      "roleCount": 2,
+      "preflightWallProcessMillis": 164.33566699561197,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3079408,
+          "sha256": "a5fda77395ffb13b81119201806fcdf5ea0143535f639ea0dffe42265c63ed2f",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "8f9ce6de504a8b785b5fdca111b2cc0fcbadc47b817366d5258c06f08b63d918",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 51.702374999877065,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 850,
+              "sha256": "9ac48317b6d33b46b36294c309b064ccfa75846c62526bc6bc14a439295c7ce1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1092.7103330031969,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2247538,
+          "sha256": "4ab536956fd8c56b4a10568c9861db60a33decaf04469cb850337eaf27a8d3bb",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "8f9ce6de504a8b785b5fdca111b2cc0fcbadc47b817366d5258c06f08b63d918",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 62.03641599859111,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 850,
+              "sha256": "9ac48317b6d33b46b36294c309b064ccfa75846c62526bc6bc14a439295c7ce1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 11089.644874999067,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8306,
+      "pilotContentId": 62,
+      "sourceBytes": 6067947,
+      "sourceSha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "3742093b29eeb889ea92d056b2c4307ce2266d6df8afb2c4866aad50964a566b",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "c1a6041c0b8e711a26e09560ae01ed0715b65913c5e2f07209d90eec21dbe940"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 17314.379374991404,
+      "wallProcessMillis": 17420.5367090035,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 184.53270899772178,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4620381,
+          "sha256": "b6f61dd3496ab8b52f58f3bf2fd30c5011b9d743c71be71b2037b9536587911b",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3742093b29eeb889ea92d056b2c4307ce2266d6df8afb2c4866aad50964a566b",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 60.276541000348516,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "c1a6041c0b8e711a26e09560ae01ed0715b65913c5e2f07209d90eec21dbe940"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1082.8466249949997,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3652182,
+          "sha256": "9a6914bc7a27704ca38fda8d51b87850453a53fb21da09dc847583f4db2cf25a",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3742093b29eeb889ea92d056b2c4307ce2266d6df8afb2c4866aad50964a566b",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 84.9954580044141,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "c1a6041c0b8e711a26e09560ae01ed0715b65913c5e2f07209d90eec21dbe940"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 15869.299583995598,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8308,
+      "pilotContentId": 62,
+      "sourceBytes": 5954956,
+      "sourceSha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "03fe00684cd39f26b8487b4a385e130560a4d755ec939bb09bdf8095bd7ac0f1",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "6727d4299b2f3a0d6826edddf6a57413f7bf1c135e903819cee5ff02c25d332b"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 18208.996499990462,
+      "wallProcessMillis": 18312.33095799689,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 182.83116599195637,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4664915,
+          "sha256": "3e45e9855f46800ede14b257c1f018ff4764bfe43bbace61538dbe389a2931e6",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "03fe00684cd39f26b8487b4a385e130560a4d755ec939bb09bdf8095bd7ac0f1",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 59.75062499055639,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "6727d4299b2f3a0d6826edddf6a57413f7bf1c135e903819cee5ff02c25d332b"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1062.5072090042522,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3508232,
+          "sha256": "2b1dfdddaa8201576682c33df10fea8082b1f15f461164d28d2229a08951a37f",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "03fe00684cd39f26b8487b4a385e130560a4d755ec939bb09bdf8095bd7ac0f1",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 75.18020800489467,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "6727d4299b2f3a0d6826edddf6a57413f7bf1c135e903819cee5ff02c25d332b"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 16783.511250003357,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8310,
+      "pilotContentId": 62,
+      "sourceBytes": 4691713,
+      "sourceSha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "3f1f15f894fc42edceaf2894045d0cdddf73c6a80988039de75b8fb17a861254",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "cfa1b11f5b48625136cec9d8a3c8dd04f4e592fc0f24ec7ee5e2922657e04be1"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14994.400709008914,
+      "wallProcessMillis": 15095.885583999916,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 165.38354099611752,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3579503,
+          "sha256": "7a610ab7463103559b357d44cb8d724c9f42df8c29f35576b47b2617fc4419e3",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3f1f15f894fc42edceaf2894045d0cdddf73c6a80988039de75b8fb17a861254",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 55.5117500043707,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "cfa1b11f5b48625136cec9d8a3c8dd04f4e592fc0f24ec7ee5e2922657e04be1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 940.7360000041081,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2727004,
+          "sha256": "c397067e9a45cfbe87b914b9b5823cebd0918ea185b2d1dc8d86ad48087673a7",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3f1f15f894fc42edceaf2894045d0cdddf73c6a80988039de75b8fb17a861254",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 66.90558299305849,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "cfa1b11f5b48625136cec9d8a3c8dd04f4e592fc0f24ec7ee5e2922657e04be1"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13718.905667003128,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8312,
+      "pilotContentId": 62,
+      "sourceBytes": 5199334,
+      "sourceSha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "9adde7ce596a316904359375f86fb766ee8699169aa57eeb146bc4520e003f98",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "270a50571e2a3f5cdea4d0f9cf49179997b4478b67d0f1c893b648423ccf1fa8"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 15823.397749991273,
+      "wallProcessMillis": 15926.585374996648,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 175.29100000683684,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3954349,
+          "sha256": "ed6c55f86407948a47e9acec7e51f2c35ad236e402013641984a1790dae4ab72",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "9adde7ce596a316904359375f86fb766ee8699169aa57eeb146bc4520e003f98",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 56.149834010284394,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "270a50571e2a3f5cdea4d0f9cf49179997b4478b67d0f1c893b648423ccf1fa8"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1029.4794169894885,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3065182,
+          "sha256": "ad123f34e5027098bed01307f33be6c4fb120b7d279ea67bf20033125a671afe",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "9adde7ce596a316904359375f86fb766ee8699169aa57eeb146bc4520e003f98",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 69.81141699361615,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "270a50571e2a3f5cdea4d0f9cf49179997b4478b67d0f1c893b648423ccf1fa8"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 14425.554500005092,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8314,
+      "pilotContentId": 62,
+      "sourceBytes": 4286739,
+      "sourceSha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "3b1e0d48c38063243f3b4d419af52af069f29f3061372d695ed5695db3636638",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "6c7f7024fb2a797631dcad55b14f8eb38f1c74318cb2ca837447bb058f3dbe73"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 13855.613249994349,
+      "wallProcessMillis": 13956.211750002694,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 164.1289169929223,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3257909,
+          "sha256": "8e7fe69f7474bc04325ace9ac2f6e9b03a5da1e55db8cc54eaf9b8c69de44a4a",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3b1e0d48c38063243f3b4d419af52af069f29f3061372d695ed5695db3636638",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 66.20637499145232,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "6c7f7024fb2a797631dcad55b14f8eb38f1c74318cb2ca837447bb058f3dbe73"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 890.5512499914039,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2447188,
+          "sha256": "6d75006fc5ab9101b6e05bf2b47bc8d9be75a506b3cad533592f4ff4f69149b3",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3b1e0d48c38063243f3b4d419af52af069f29f3061372d695ed5695db3636638",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 62.65824999718461,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "6c7f7024fb2a797631dcad55b14f8eb38f1c74318cb2ca837447bb058f3dbe73"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12647.046040990972,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8316,
+      "pilotContentId": 62,
+      "sourceBytes": 4898269,
+      "sourceSha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "09ffb290747e65e3b6c706876019a0e45fa6c9cd33a5d56e62e263574ab22e42",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "e4364bdd133b25202883402d1b604c17f7bc3ee2dd5d9c982fee00f4df13aca6"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14430.44620800356,
+      "wallProcessMillis": 14532.066042011138,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 168.4791250008857,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3680000,
+          "sha256": "53888ac66d982a719ccd84371ad28a4eadf8fb05fe395311987bd1bb41e08a01",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "09ffb290747e65e3b6c706876019a0e45fa6c9cd33a5d56e62e263574ab22e42",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 53.9287090068683,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "e4364bdd133b25202883402d1b604c17f7bc3ee2dd5d9c982fee00f4df13aca6"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 967.8196250024484,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2922008,
+          "sha256": "4b19d060e8f53d2b1739a86f44e0c1d7ef0fb43d41d702fe287a55b0f4ee71b9",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "09ffb290747e65e3b6c706876019a0e45fa6c9cd33a5d56e62e263574ab22e42",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 76.65070799703244,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "e4364bdd133b25202883402d1b604c17f7bc3ee2dd5d9c982fee00f4df13aca6"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13110.301291002543,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8318,
+      "pilotContentId": 62,
+      "sourceBytes": 5376429,
+      "sourceSha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "99f019825b8586c226a577df2ab79f2f9de1ff4331c1f19226bd9de126c146c7",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "ef55e4887ccc07fe5d397ddfd50c4e75f157c3ed2f8ff2689b7109def3e99b98"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14839.241166991997,
+      "wallProcessMillis": 14947.408666994306,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 183.3521669905167,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4241341,
+          "sha256": "87adaa899114c24f7311236ea7e46122f067eb3c31cca42227d3171d359fb167",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "99f019825b8586c226a577df2ab79f2f9de1ff4331c1f19226bd9de126c146c7",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 58.928124999511056,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "ef55e4887ccc07fe5d397ddfd50c4e75f157c3ed2f8ff2689b7109def3e99b98"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 802.9649579984834,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3225218,
+          "sha256": "6f64b33ccbe197780627d3cd9b89b07970b229252ce7e81cc813804f3edf1cc4",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "99f019825b8586c226a577df2ab79f2f9de1ff4331c1f19226bd9de126c146c7",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 75.2744579949649,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "ef55e4887ccc07fe5d397ddfd50c4e75f157c3ed2f8ff2689b7109def3e99b98"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13629.97454199649,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8320,
+      "pilotContentId": 62,
+      "sourceBytes": 5377951,
+      "sourceSha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "c185a2582783a10ccd8f9bc8d8d8352eae3af8275595d481fbbe5b6c825c9162",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "18642b3becaffef3312ebfd2daec7fa2f16244d40d54d43ae3123fd7c6a5546a"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 13357.750375012984,
+      "wallProcessMillis": 13461.13549999427,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 179.4515420042444,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4104682,
+          "sha256": "ef1c8ec8d48c330e51a9b9998ff2d432e3441b823f64094b1da844aaa36787db",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c185a2582783a10ccd8f9bc8d8d8352eae3af8275595d481fbbe5b6c825c9162",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 58.2923329930054,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "18642b3becaffef3312ebfd2daec7fa2f16244d40d54d43ae3123fd7c6a5546a"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 960.1449169858824,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3229462,
+          "sha256": "7753b45d033779babb53879a6270a2352e1b97c31415d981cac5a7d40358d788",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "c185a2582783a10ccd8f9bc8d8d8352eae3af8275595d481fbbe5b6c825c9162",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 69.81999998970423,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "18642b3becaffef3312ebfd2daec7fa2f16244d40d54d43ae3123fd7c6a5546a"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12102.036333002616,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8322,
+      "pilotContentId": 62,
+      "sourceBytes": 5951995,
+      "sourceSha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "3922ff11d1e40a8ce76bc8ed8a3f1c4773f6e73080483079bac1fccf03ab9d1e",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 842,
+            "sha256": "effb79e1b3e59771561abc030afe33599793e761b0752a6fdf816cad7307c44d"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 18820.977834009682,
+      "wallProcessMillis": 18924.186916992767,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 179.7804579982767,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4541482,
+          "sha256": "a35e208022f4bd52c368d314de6cbe99f25cff058210597ee2dd7470b26a547a",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3922ff11d1e40a8ce76bc8ed8a3f1c4773f6e73080483079bac1fccf03ab9d1e",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 63.01241699839011,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "effb79e1b3e59771561abc030afe33599793e761b0752a6fdf816cad7307c44d"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1010.9391669975594,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3629490,
+          "sha256": "e15c319a3e9a86e546e6e9c1db3ab7f7700800c9dd450672edbe028355975cb0",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "3922ff11d1e40a8ce76bc8ed8a3f1c4773f6e73080483079bac1fccf03ab9d1e",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 79.25291699939407,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 842,
+              "sha256": "effb79e1b3e59771561abc030afe33599793e761b0752a6fdf816cad7307c44d"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 17493.75004200556,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8324,
+      "pilotContentId": 62,
+      "sourceBytes": 4356674,
+      "sourceSha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "cace7d09ca06a8e9903617ffb7846c3c3f0b0c51c226660ce2602898ed31d860",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "7e03405d5122d4dd70b25341f185245d0f91436eb80f6abc17ba9df7fb997c1c"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 12209.16283299448,
+      "wallProcessMillis": 12313.34304100892,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 202.37929199356586,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3186266,
+          "sha256": "8a9d0a55986d708ac7835fcfbb6804200eb81f9552b3be914e26491f1c19e2a3",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "cace7d09ca06a8e9903617ffb7846c3c3f0b0c51c226660ce2602898ed31d860",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 53.08629099454265,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "7e03405d5122d4dd70b25341f185245d0f91436eb80f6abc17ba9df7fb997c1c"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1019.9742919940036,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2520516,
+          "sha256": "8eb5d1d4c20290304588b0f8f29a35047d0bfbdff7bbb49440eb19eba4835ea6",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "cace7d09ca06a8e9903617ffb7846c3c3f0b0c51c226660ce2602898ed31d860",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 65.58091599436011,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "7e03405d5122d4dd70b25341f185245d0f91436eb80f6abc17ba9df7fb997c1c"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 10850.122040996212,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8326,
+      "pilotContentId": 62,
+      "sourceBytes": 5064991,
+      "sourceSha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "210d061e206bc5bf5a00d090cf81477aa818bd1e574d72ad7354e80ef03566fc",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "e10d0007d333823947651f5fef9fe7dc7bce8a9746f9e72725a97835a0d9bae0"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14114.69879100332,
+      "wallProcessMillis": 14217.481957995915,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 193.78920800227206,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3806084,
+          "sha256": "2b6b60557db7355f59c6b75bb392fd0a5b5763eae558cec5ce36d9b468809f14",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "210d061e206bc5bf5a00d090cf81477aa818bd1e574d72ad7354e80ef03566fc",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 56.97829100245144,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "e10d0007d333823947651f5fef9fe7dc7bce8a9746f9e72725a97835a0d9bae0"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1035.0060409982689,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2962204,
+          "sha256": "7298325dbcf36272e0d8140a962ef95c572abf36366d5035c3cd381d7cee3e40",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "210d061e206bc5bf5a00d090cf81477aa818bd1e574d72ad7354e80ef03566fc",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 77.95766700292006,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "e10d0007d333823947651f5fef9fe7dc7bce8a9746f9e72725a97835a0d9bae0"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12686.179375014035,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8328,
+      "pilotContentId": 62,
+      "sourceBytes": 4642041,
+      "sourceSha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "bc7866e6893b86f218c278fcfd1306ca65b1bdfe661bb57a7e2dc80be2f5075b",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "0fff97fbe35dc040572cd449af9880ea56263e04dbf3d92f22babc81d6e4b909"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 15074.666916989372,
+      "wallProcessMillis": 15196.899415997905,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 195.70687499071937,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3549207,
+          "sha256": "9e060ef9712e86d09fce0d5a57f3b4592630cb083e9bcd769e235ee8afa48959",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "bc7866e6893b86f218c278fcfd1306ca65b1bdfe661bb57a7e2dc80be2f5075b",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 58.59645800956059,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "0fff97fbe35dc040572cd449af9880ea56263e04dbf3d92f22babc81d6e4b909"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 931.3436249940423,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2652386,
+          "sha256": "8876041334ede777efaa8fcbb0a7284a75fbe2c52c57d30a8fc2990cd82d2543",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "bc7866e6893b86f218c278fcfd1306ca65b1bdfe661bb57a7e2dc80be2f5075b",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 68.7593329930678,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "0fff97fbe35dc040572cd449af9880ea56263e04dbf3d92f22babc81d6e4b909"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13586.565000005066,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8330,
+      "pilotContentId": 62,
+      "sourceBytes": 4595048,
+      "sourceSha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "6cafd916f538486088761231c9ef1de0ab08c117aeb4e87e28ee70772d2c00af",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "2f29803fe4a403c3916a47e4c4aa082d64207ba5bd14bb4ac109c08ec72b06ef"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14090.392124999198,
+      "wallProcessMillis": 14201.480958989123,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 214.61854099470656,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3533358,
+          "sha256": "e533b68b0d26692ead794ee971af8e00ef2f61c442138e5a282ab1e85b19343a",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "6cafd916f538486088761231c9ef1de0ab08c117aeb4e87e28ee70772d2c00af",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 56.54574999061879,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "2f29803fe4a403c3916a47e4c4aa082d64207ba5bd14bb4ac109c08ec72b06ef"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 901.1497920000693,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2620334,
+          "sha256": "ff48747e642d11a89fabe6fcafc9a40791f5d603886c03c3ace4be4f3cfd24a5",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "6cafd916f538486088761231c9ef1de0ab08c117aeb4e87e28ee70772d2c00af",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 65.07537500874605,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "2f29803fe4a403c3916a47e4c4aa082d64207ba5bd14bb4ac109c08ec72b06ef"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12863.539792000665,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8332,
+      "pilotContentId": 62,
+      "sourceBytes": 4769273,
+      "sourceSha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "b128d181202adf35b7d31584d3725c39af02581f5532acf0cb094b0ee159491c",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "935ec29d17f26d84e7c0d8bfc94a57d15d4e36e2561458c5801b144baecf9b5c"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14392.216291991645,
+      "wallProcessMillis": 14502.505750002456,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 182.1641249989625,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3633392,
+          "sha256": "b23619817e3e1992082c4666c0995389040b201a4252d33acf1e2d6b7dd75509",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "b128d181202adf35b7d31584d3725c39af02581f5532acf0cb094b0ee159491c",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 53.19595900073182,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "935ec29d17f26d84e7c0d8bfc94a57d15d4e36e2561458c5801b144baecf9b5c"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 884.3072500021663,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2748312,
+          "sha256": "b265869f0092f13f58f4b08f1540baef3e3b5127ff310dfdb8174ca1329c56e5",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "b128d181202adf35b7d31584d3725c39af02581f5532acf0cb094b0ee159491c",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 66.16504200792406,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "935ec29d17f26d84e7c0d8bfc94a57d15d4e36e2561458c5801b144baecf9b5c"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13216.746584002976,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8334,
+      "pilotContentId": 62,
+      "sourceBytes": 6327116,
+      "sourceSha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "1980d0aa196522a3339afcf83a968b9e6cb6999c4a3b03a8d2e9a644d34f7525",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "3090fc2e892b9e87aa6347494a16eb83597cc7d7941042d2800c743b2c6b4e00"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14852.861166989896,
+      "wallProcessMillis": 14953.328250005143,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 183.31483298970852,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4999993,
+          "sha256": "8e396c10060a8d054f743fdcd18d7ac07267ee26edd1aed9f043ddd671e6f377",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "1980d0aa196522a3339afcf83a968b9e6cb6999c4a3b03a8d2e9a644d34f7525",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 59.768749997601844,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "3090fc2e892b9e87aa6347494a16eb83597cc7d7941042d2800c743b2c6b4e00"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1204.911875000107,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3743118,
+          "sha256": "342e2865d09df103619993d95b0cb913444a53969d58e340246194f85fa86fd3",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "1980d0aa196522a3339afcf83a968b9e6cb6999c4a3b03a8d2e9a644d34f7525",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 96.83779200713616,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "3090fc2e892b9e87aa6347494a16eb83597cc7d7941042d2800c743b2c6b4e00"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13313.1391670031,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8336,
+      "pilotContentId": 62,
+      "sourceBytes": 4717906,
+      "sourceSha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "93b128a9f1b9c83390c83f2d2986129fe178c70fc645e4e7b3d1b21762e47e66",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "59d0ca23f90a5f86f8510db32c2ef389b886592d5396f68f2618491bdc005d27"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 16324.099707999267,
+      "wallProcessMillis": 16420.742291986244,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 182.8600419976283,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3462116,
+          "sha256": "71588904f1d177a6a85b17a643ab929e0498107b0ef546c8c6c2e68eac4eee57",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "93b128a9f1b9c83390c83f2d2986129fe178c70fc645e4e7b3d1b21762e47e66",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 52.00754100224003,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "59d0ca23f90a5f86f8510db32c2ef389b886592d5396f68f2618491bdc005d27"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1249.9779999925522,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2676736,
+          "sha256": "2b44546f0a73e35c79ac836ce0a824531e816000d0b70b810dc35bdd5e7d280b",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "93b128a9f1b9c83390c83f2d2986129fe178c70fc645e4e7b3d1b21762e47e66",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 65.67183400329668,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "59d0ca23f90a5f86f8510db32c2ef389b886592d5396f68f2618491bdc005d27"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 14772.441166991484,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8338,
+      "pilotContentId": 62,
+      "sourceBytes": 4567871,
+      "sourceSha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "4e93452a172e79c03320c0e97d674d06fc8bd48cf11ff9f9078ddeebaf1ac4e1",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "c6a7666fb776e9f007ffd4845187bef4a84621119f92393deae4f0c53f81e758"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14731.950917004724,
+      "wallProcessMillis": 14834.88799999759,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 187.24762499914505,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3501092,
+          "sha256": "58ba5c0aa55767400b321978d204e24f93a9bb36fb7fc21c68f1c10543a1f747",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "4e93452a172e79c03320c0e97d674d06fc8bd48cf11ff9f9078ddeebaf1ac4e1",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 53.4386670042295,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "c6a7666fb776e9f007ffd4845187bef4a84621119f92393deae4f0c53f81e758"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 902.1346669906052,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2605734,
+          "sha256": "a617407cc23f7abc5fd8b07b4533dafb6e6b277ed710a4eb3184000efd8c3c53",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "4e93452a172e79c03320c0e97d674d06fc8bd48cf11ff9f9078ddeebaf1ac4e1",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 65.9881659958046,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "c6a7666fb776e9f007ffd4845187bef4a84621119f92393deae4f0c53f81e758"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 13529.961708001792,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8340,
+      "pilotContentId": 62,
+      "sourceBytes": 5638085,
+      "sourceSha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "a59d6e8794ac99fa364f0cb3beee6d4fd77acb8df06f02e6c07b2e286f78cf9d",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "94cf76a9392fb78e8f9468208337a02154272bc1c66c5ad4baf0e694d85294e2"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 17040.337916987482,
+      "wallProcessMillis": 17140.59024999733,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 191.01012501050718,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4364787,
+          "sha256": "6179a58ffbc86a3615ec1b8aca5db753475f0eceb0ae650ec57915fd26360636",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "a59d6e8794ac99fa364f0cb3beee6d4fd77acb8df06f02e6c07b2e286f78cf9d",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 56.889375002356246,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "94cf76a9392fb78e8f9468208337a02154272bc1c66c5ad4baf0e694d85294e2"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 1018.2029999996303,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3335896,
+          "sha256": "17c204204ba14b117a135f75981d5cc99853352a24b37e0f06c6c96edb4e89a6",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "a59d6e8794ac99fa364f0cb3beee6d4fd77acb8df06f02e6c07b2e286f78cf9d",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 70.70379200740717,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "94cf76a9392fb78e8f9468208337a02154272bc1c66c5ad4baf0e694d85294e2"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 15701.21558298706,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8342,
+      "pilotContentId": 62,
+      "sourceBytes": 4821029,
+      "sourceSha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "ddf08be107cc975d93ec22005d14be3ea09649191e49976cbce24bdfb766ca7e",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "bb61cb836b5ff71e933436e685fb5bd6e9036d6208a2d2e776d9da9e0ba5af1e"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 11173.52754100284,
+      "wallProcessMillis": 11276.348833998782,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 188.2937910122564,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3696053,
+          "sha256": "2d6903830f8e855fa6e3066b32176210e569616873f8de821d50ad439301b43e",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "ddf08be107cc975d93ec22005d14be3ea09649191e49976cbce24bdfb766ca7e",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 55.27341700508259,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "bb61cb836b5ff71e933436e685fb5bd6e9036d6208a2d2e776d9da9e0ba5af1e"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 880.0374580023345,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2884362,
+          "sha256": "432363670ad5e7f341cb7bee1b17f484b4ce1ee65a744e761667168d0fe30f00",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "ddf08be107cc975d93ec22005d14be3ea09649191e49976cbce24bdfb766ca7e",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 68.77233300474472,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "bb61cb836b5ff71e933436e685fb5bd6e9036d6208a2d2e776d9da9e0ba5af1e"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 9989.14112499915,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8344,
+      "pilotContentId": 62,
+      "sourceBytes": 4897522,
+      "sourceSha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "4986e6b3b2595a5ada024c562a66c20da5f35809d60913dca3187de49c2bf589",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "ac5b40d1266ffca22c094ef84a3908d0da338c5e2d16556a2d1140f85907ab25"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 12876.73333400744,
+      "wallProcessMillis": 12961.63691599213,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 186.1123749986291,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 3706213,
+          "sha256": "596918585e2a58dd5c98e6485a2adf32fed5c9a18e02feff19b195b3f0001a66",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "4986e6b3b2595a5ada024c562a66c20da5f35809d60913dca3187de49c2bf589",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 55.98683400603477,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "ac5b40d1266ffca22c094ef84a3908d0da338c5e2d16556a2d1140f85907ab25"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 983.83474998991,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 2924486,
+          "sha256": "492c874b89d0be53413b9d58ec716f39f495308ac023b2d0e2634c5e4de81b1a",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "4986e6b3b2595a5ada024c562a66c20da5f35809d60913dca3187de49c2bf589",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 71.53749999997672,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "ac5b40d1266ffca22c094ef84a3908d0da338c5e2d16556a2d1140f85907ab25"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 11515.504375012824,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8346,
+      "pilotContentId": 62,
+      "sourceBytes": 3110028,
+      "sourceSha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "ff84bc69ca866e50d0b53e24c1674429fc31c372277cc481f92e43c58b8986ca",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "0219cbdcf4f4dfa2d4c0fcd959c47f1e7a57a03b11a655ed61304ff2586e932f"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 9457.26370900229,
+      "wallProcessMillis": 9557.137333002174,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 170.64116601250134,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 2366387,
+          "sha256": "cf0408340abba641d5f116b2d9da97a4480fea6f4e1d0ffc3116695b4f0e6936",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "ff84bc69ca866e50d0b53e24c1674429fc31c372277cc481f92e43c58b8986ca",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 47.68745900946669,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "0219cbdcf4f4dfa2d4c0fcd959c47f1e7a57a03b11a655ed61304ff2586e932f"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 621.1112500022864,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 1734806,
+          "sha256": "3fea4c52741dd0827194958c4335f25e97e55262f8be16b71f59ee7832240c55",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "ff84bc69ca866e50d0b53e24c1674429fc31c372277cc481f92e43c58b8986ca",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 54.90425000607502,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "0219cbdcf4f4dfa2d4c0fcd959c47f1e7a57a03b11a655ed61304ff2586e932f"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 8549.711708008545,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8348,
+      "pilotContentId": 62,
+      "sourceBytes": 5662334,
+      "sourceSha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "39e4d7055e61e971aae5de78b50ec58450b3103c8fa0b04a3a3edb54a9cf405a",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "6acea6008c9795b62f274c1c5b1a33038c70cf5a67624ed2caeb257e749e4cc8"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 14009.730332996696,
+      "wallProcessMillis": 14093.16362500249,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 194.98829101212323,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4396746,
+          "sha256": "29052b3e1187fb0c9b56d43064cfc5a28ac5895d06827405fd05b017739ddf8f",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "39e4d7055e61e971aae5de78b50ec58450b3103c8fa0b04a3a3edb54a9cf405a",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 59.487582999281585,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "6acea6008c9795b62f274c1c5b1a33038c70cf5a67624ed2caeb257e749e4cc8"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 921.3850420055678,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3436684,
+          "sha256": "7af3d15ae4c8663ee43304cd1380782cd3d1f7630b81b90881e5d9a66ae60f65",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "39e4d7055e61e971aae5de78b50ec58450b3103c8fa0b04a3a3edb54a9cf405a",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 75.10195800568908,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "6acea6008c9795b62f274c1c5b1a33038c70cf5a67624ed2caeb257e749e4cc8"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 12696.041666000383,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    },
+    {
+      "assetId": 8350,
+      "pilotContentId": 62,
+      "sourceBytes": 5228630,
+      "sourceSha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826",
+      "source": {
+        "format": "PNG",
+        "mode": "RGBA",
+        "dimensions": [
+          1712,
+          2778
+        ],
+        "rgbBytes": 14267808,
+        "rgbSha256": "88b4a3e101b0cd3d8fc756d4b12716b6a26509b256f837ed6795d7365c475411",
+        "frames": 1,
+        "alphaRemoved": true,
+        "allAlpha255": true,
+        "orientation": null,
+        "metadata": {
+          "icc": {
+            "present": true,
+            "bytes": 536,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "exif": {
+            "present": true,
+            "bytes": 126,
+            "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+          },
+          "xmp": {
+            "present": true,
+            "bytes": 844,
+            "sha256": "6be40a032f33e60f3a84f14654bdd4754375640bffa0dc47af483ab23ddc6acb"
+          }
+        },
+        "colorInterpretation": "ICC_PRESERVED"
+      },
+      "sourceProcessMillis": 12595.71483299078,
+      "wallProcessMillis": 12697.095791998436,
+      "roleCount": 1,
+      "preflightWallProcessMillis": 187.25950000225566,
+      "candidates": {
+        "PNG": {
+          "format": "PNG",
+          "bytes": 4011255,
+          "sha256": "82b2d7b1ded5670fe6f44d8a99fbb972fbad1ac82b58de2af4dec6670006976e",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "88b4a3e101b0cd3d8fc756d4b12716b6a26509b256f837ed6795d7365c475411",
+          "webpChunks": null,
+          "decodeOpenLoadMillis": 59.17162500554696,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 126,
+              "sha256": "ac4377726fbcd346855bd64179f1627bfb592d1631586f8866b6db7b2fdc4f6e"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "6be40a032f33e60f3a84f14654bdd4754375640bffa0dc47af483ab23ddc6acb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": true,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 980.5895830068039,
+          "settings": {
+            "compress_level": 9
+          }
+        },
+        "WEBP": {
+          "format": "WEBP",
+          "bytes": 3107234,
+          "sha256": "142207dacf8d412f1da5f8457291ec80b102256ab643a5a1fa78164a9dd9fc34",
+          "dimensions": [
+            1712,
+            2778
+          ],
+          "allRgbBytesEqual": true,
+          "allIccBytesEqual": true,
+          "rgbBytesCompared": 14267808,
+          "rgbSha256": "88b4a3e101b0cd3d8fc756d4b12716b6a26509b256f837ed6795d7365c475411",
+          "webpChunks": [
+            "VP8X",
+            "ICCP",
+            "VP8L",
+            "EXIF",
+            "XMP "
+          ],
+          "decodeOpenLoadMillis": 74.52641599229537,
+          "metadata": {
+            "icc": {
+              "present": true,
+              "bytes": 536,
+              "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+            },
+            "exif": {
+              "present": true,
+              "bytes": 120,
+              "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+            },
+            "xmp": {
+              "present": true,
+              "bytes": 844,
+              "sha256": "6be40a032f33e60f3a84f14654bdd4754375640bffa0dc47af483ab23ddc6acb"
+            }
+          },
+          "metadataEqual": {
+            "icc": true,
+            "exif": false,
+            "xmp": true
+          },
+          "encodeRgbToMemoryMillis": 11241.241124997032,
+          "settings": {
+            "lossless": true,
+            "quality": 100,
+            "method": 6,
+            "exact": true
+          }
+        }
+      }
+    }
+  ]
+}
