@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "tests": 26,
+  "suites": [
+    {
+      "name": "com.tellpal.v2.asset.reading.ReadingPreservationTest",
+      "tests": "11",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.957"
+    },
+    {
+      "name": "com.tellpal.v2.asset.reading.ReadingProcessOwnershipTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.643"
+    },
+    {
+      "name": "com.tellpal.v2.asset.reading.ReadingNativeTestToolsTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.259"
+    },
+    {
+      "name": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.512"
+    }
+  ],
+  "sourceRestoredAfterMutant": true,
+  "sourceSha256": "9af3177547ce77d560740df882e1374d68c5f5b8ec65064fe90fd1158fb0a508",
+  "restoredClassBytecodeMemberLoopPresent": true,
+  "parentOnlyMutantFilterAbsent": true,
+  "finalFullVerify": true
+}

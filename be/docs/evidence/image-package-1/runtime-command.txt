@@ -1,0 +1,10 @@
+Yerel paketli doğrulamanın komut biçimi (gerçek image/JAR SHA sonuçta kaydedilir):
+
+java -Xmx256m -XX:MaxDirectMemorySize=32m \
+  -Dloader.path=/probe -Dloader.main=PackagedPreservationProbe \
+  -cp /app/app.jar org.springframework.boot.loader.launch.PropertiesLauncher /output
+
+Docker sınırları: --network=none --read-only --cpus=1 --memory=1g
+--memory-swap=1g --pids-limit=128 --tmpfs /tmp:rw,size=128m.
+JAR/probe salt okunur test image’ında paketlidir. Çıktı yalnız bu koşunun
+yeni Docker volume’üne yazılıp özel host dizinine kopyalanır; volume/container silinir.

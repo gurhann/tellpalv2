@@ -1,0 +1,8 @@
+{
+  "launcher": "/usr/bin/cc",
+  "launcherSha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2",
+  "resolvedCompiler": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+  "resolvedCompilerSha256": "ee029330bf58ab6e481385f4237cc54602eaa8b81526242e5c5ab5b76e8c5a7e",
+  "version": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "flags": "-std=c11 -O2 -Wall -Wextra -Werror -DSOURCE_SHA256=source_sha"
+}

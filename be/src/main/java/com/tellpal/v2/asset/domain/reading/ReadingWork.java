@@ -38,7 +38,7 @@ public record ReadingWork(Snapshot snapshot, List<Source> sources, Map<Role, Pro
                     || output.width()>profile.limits().width() || output.height()>profile.limits().height()
                     || !rendition(source,profile).equals(output.renditionKey()) || output.provider()!=source.provider()
                     || (!profile.limits().allowGrowth() && output.stored().bytes()>=source.retained().bytes())
-                    || !output.stored().mime().equals("image/png") || !output.sha256().matches("[0-9a-f]{64}"))
+                    || !output.stored().mime().equals(com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation.outputMime(source.retained().mime(), profile.limits())) || !output.sha256().matches("[0-9a-f]{64}"))
                 throw new IllegalArgumentException("OUTPUT_OBLIGATION_MISMATCH");
             try { requireGeometry(source,output,profile.limits()); }
             catch(IllegalArgumentException mismatch) { throw new IllegalArgumentException("OUTPUT_GEOMETRY_MISMATCH",mismatch); }
@@ -53,6 +53,12 @@ public record ReadingWork(Snapshot snapshot, List<Source> sources, Map<Role, Pro
 
     /** Independently derives the exact floor-fit dimensions from the captured original; source shortage cannot upscale. */
     public static void requireGeometry(Source source,Output output,TestProfile profile) {
+        if (profile.formatPolicy() == FormatPolicy.PRESERVE_JPEG_OR_LOSSLESS_WEBP) {
+            if (source.width() > profile.width() || source.height() > profile.height()
+                    || output.width() != source.width() || output.height() != source.height())
+                throw new IllegalArgumentException("PRESERVATION_GEOMETRY_MISMATCH");
+            return;
+        }
         double factor=Math.min((double)profile.width()/source.width(),(double)profile.height()/source.height());
         if(source.width()<profile.width() || source.height()<profile.height()
                 || output.width()!=Math.max(1,(int)Math.floor(source.width()*factor))

@@ -97,6 +97,22 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
     void edit(long source,String title) {
         management.updateLocalization(new UpdateContentLocalizationCommand(id,TR,title,"Editorial description",null,source,null,5,LocalizationStatus.PUBLISHED,ProcessingStatus.COMPLETED,Instant.now()));
     }
+    @Test void preservationPolicyAdoptsNewWebpAndFailedCandidateKeepsPreviousLive() throws Exception {
+        com.tellpal.v2.asset.reading.ReadingNativeTestTools.require();
+        var old=ReadingFixtures.profile();
+        var p=new TestProfile(100,100,old.maxSourceBytes(),old.maxOutputBytes(),old.maxPixels(),old.parentMemoryBytes(),old.heapMiB(),old.directMiB(),old.processMiB(),old.diskBytes(),old.sourceMillis(),old.revisionMillis(),1,1,true,"P3 local preservation growth evidence",FormatPolicy.PRESERVE_JPEG_OR_LOSSLESS_WEBP);
+        config.setProfiles(Map.of(Role.READING_COVER,p,Role.READING_DETAIL,p,Role.READING_PAGE,p));
+        publish();complete();String retained=live();
+        var manifest=new ObjectMapper().readValue(preparation.find(job()).manifest(),ReadingWork.Manifest.class);
+        assertThat(manifest.outputs()).allSatisfy(o->assertThat(o.stored().mime()).isEqualTo("image/webp"));
+        long replacement=admissions.admit(original("preservation-replacement",82),p).assetId();edit(replacement,"New preservation desired");
+        publication.reconcile(id,"tr");
+        var broken=new com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageProcess() {
+            @Override public byte[] convert(byte[] original,TestProfile profile) throws java.io.IOException { throw new java.io.IOException("controlled preservation failure"); }
+        };
+        new ReadingImageWorker(preparation,jobs,disk.storage(),Clock.systemUTC(),broken).run(job());publication.reconcile(id,"tr");
+        assertThat(live()).isEqualTo(retained);assertThat(publication.status(id,"tr").state()).isEqualTo("FAILED");
+    }
     @Test void publishCommitsIntentThenActualStoredBytesAreAutomaticallyAdoptedAndDuplicatesAreIdempotent() throws Exception {
         publish();assertThat(live()).isNull();long generation=publication.status(id,"tr").generation();publish();assertThat(publication.status(id,"tr").generation()).isEqualTo(generation);
         complete();String revision=live();publish();publication.reconcile(id,"tr");assertThat(live()).isEqualTo(revision);

@@ -46,6 +46,20 @@ sh -c 'echo "$FIREBASE_SERVICE_ACCOUNT_JSON_B64" | base64 -d > /tmp/firebase-ser
 
 `be/Dockerfile` intentionally uses `CMD`, not `ENTRYPOINT`, so Railway can apply that start command.
 
+Paket 1 image'ı aynı `eclipse-temurin:25-jre` üzerinde resmi libwebp 1.6.0
+`cwebp` ve `webpmux` araçlarını içerir. `be/tools/install-reading-webp.sh`, Linux
+arm64/amd64 arşivlerini sabit SHA-256 ile doğrular. Araç yolu image içinde
+`TELLPAL_READING_WEBP_TOOL_DIRECTORY=/opt/tellpal-webp/bin` olarak verilir;
+child JVM'e açık aktarılır. `imageio-webp:3.15.3` bağımsız ham decoder olarak
+JAR'a dahildir. Koruma politikasının POSIX guardian’ı `be/tools/install-reading-supervisor.sh`
+ile aynı platformda derlenir; gcc/libc geliştirme paketleri yalnız tools stage’indedir.
+Final JRE’ye yalnız `/opt/tellpal-supervisor/bin/reading-process-supervisor` taşınır;
+`TELLPAL_READING_SUPERVISOR_DIRECTORY=/opt/tellpal-supervisor/bin` verilir. Kaynak/binary
+SHA, derleyici sürümü ve flag’leri profil kimliğine dahildir. Legacy PNG fit bu dizinleri
+kullanmaz. Guardian ayrı süreç grubunun çıkışını bekler; Linux subreaper orphan süreçleri
+toplar. Bu paketleme üretim hazırlama profilini açmaz; local/test gate
+ve üretim ret kuralı korunur. Bu değişiklikte deploy yapılmaz.
+
 CMS production runs with:
 
 - `VITE_API_BASE_URL` pointing to the public backend domain.

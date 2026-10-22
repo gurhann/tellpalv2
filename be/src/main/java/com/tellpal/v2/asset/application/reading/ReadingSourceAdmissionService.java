@@ -53,6 +53,7 @@ public class ReadingSourceAdmissionService implements ReadingSourceAdmissionApi 
             byte[] bytes = storage.read(asset.getProvider(), original, profile.maxSourceBytes(), deadline.remainingMillis(profile.sourceMillis()));
             var decoded = ReadingImageInspector.decode(bytes, profile);
             if (!original.mime().equals(decoded.mime())) throw new IllegalArgumentException("SOURCE_STORAGE_MIME_MISMATCH");
+            if (com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation.enabled(profile) && decoded.mime().equals("image/webp")) throw new IllegalArgumentException("SOURCE_PNG_OR_JPEG_REQUIRED");
             UUID id = UUID.randomUUID();
             String path = prefix+"/reading/admitted/"+id;
             store.plan(id, selectedAssetId, path, asset.getProvider());
@@ -61,6 +62,7 @@ public class ReadingSourceAdmissionService implements ReadingSourceAdmissionApi 
             var verified = ReadingImageInspector.decode(persisted, profile);
             String sha = ReadingIdentity.sha(bytes);
             if (!ReadingIdentity.sha(persisted).equals(sha) || !verified.mime().equals(decoded.mime())) throw new IllegalStateException("ADMISSION_VERIFICATION_FAILED");
+            if (com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation.enabled(profile) && !java.util.Arrays.equals(bytes, persisted)) throw new IllegalStateException("ADMISSION_BYTE_MISMATCH");
             deadline.check();
             return store.complete(id, asset.getProvider(), stored, sha, verified.image().getWidth(), verified.image().getHeight());
         } catch (java.io.IOException e) {

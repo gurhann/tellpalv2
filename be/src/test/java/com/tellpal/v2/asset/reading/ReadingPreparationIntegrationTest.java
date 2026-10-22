@@ -44,6 +44,49 @@ class ReadingPreparationIntegrationTest extends PostgresIntegrationTestBase {
         service=new ReadingImagePreparationService(assets,disk.storage(),jobs,env,properties,true, org.mockito.Mockito.mock(com.tellpal.v2.asset.application.reading.ReadingSourceAdmissionService.class));
         worker=new ReadingImageWorker(service,jobs,disk.storage(),Clock.systemUTC());
     }
+    @Test void preservationPolicyCompletesMixedJpegWebpAndSourceBoundStoredReread() throws Exception {
+        ReadingPreservationTest.tools();
+        byte[] jpeg=ReadingFixtures.quadrants("JPEG");
+        Files.write(disk.file("original/cover"),jpeg);
+        disk.objects.put("original/cover",new VersionedStorageObject("original/cover",UUID.randomUUID().toString(),"image/jpeg",jpeg.length));
+        var p=ReadingPreservationTest.profile(); var profiles=Map.of(Role.READING_COVER,p,Role.READING_DETAIL,p,Role.READING_PAGE,p);
+        var scheduled=service.prepare(ReadingFixtures.snapshot(),profiles);worker.run(scheduled.jobId());
+        var ready=service.find(scheduled.jobId());assertThat(ready.state()).withFailMessage("%s",ready.diagnostic()).isEqualTo(State.COMPLETED);
+        var manifest=new ObjectMapper().readValue(ready.manifest(),Manifest.class);
+        assertThat(manifest.outputs()).extracting(o->o.stored().mime()).containsExactly("image/jpeg","image/jpeg","image/webp");
+        assertThat(manifest.outputs()).extracting(Output::width).containsExactly(80,80,80);
+        for(var output:manifest.outputs()) assertThat(output.stored().path()).endsWith(output.stored().mime().equals("image/jpeg")?".jpg":".webp");
+        assertThat(disk.storage().read(StorageProvider.FIREBASE_STORAGE,manifest.outputs().getFirst().stored(),p.maxOutputBytes())).isEqualTo(jpeg);
+        assertThat(service.prepare(ReadingFixtures.snapshot(),profiles)).isEqualTo(ready);
+    }
+    @Test void jpegCopyEqualityNeedsExplicitGrowthEvidenceAndRetryKeepsAtomicManifest() throws Exception {
+        ReadingPreservationTest.tools();
+        byte[] jpeg=ReadingFixtures.quadrants("JPEG");
+        for(String path:List.of("original/cover","original/page")) {
+            Files.write(disk.file(path),jpeg);disk.objects.put(path,new VersionedStorageObject(path,UUID.randomUUID().toString(),"image/jpeg",jpeg.length));
+        }
+        var p=ReadingPreservationTest.profile();
+        var denied=new TestProfile(p.width(),p.height(),p.maxSourceBytes(),p.maxOutputBytes(),p.maxPixels(),p.parentMemoryBytes(),p.heapMiB(),p.directMiB(),p.processMiB(),p.diskBytes(),p.sourceMillis(),p.revisionMillis(),1,1,false,"",p.formatPolicy());
+        var failed=service.prepare(ReadingFixtures.snapshot(),Map.of(Role.READING_COVER,denied,Role.READING_DETAIL,denied,Role.READING_PAGE,denied));worker.run(failed.jobId());
+        assertThat(service.find(failed.jobId()).state()).isEqualTo(State.FAILED);
+        assertThat(service.find(failed.jobId()).diagnostic()).contains("OUTPUT_GROWTH_NOT_ADMITTED");
+        assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isZero();
+        var allowed=service.prepare(ReadingFixtures.snapshot(),Map.of(Role.READING_COVER,p,Role.READING_DETAIL,p,Role.READING_PAGE,p));worker.run(allowed.jobId());
+        assertThat(service.find(allowed.jobId()).state()).isEqualTo(State.COMPLETED);
+    }
+    @Test void missingBinaryAfterCaptureRejectsBeforeConversion() throws Exception {
+        ReadingPreservationTest.tools();var p=ReadingPreservationTest.profile();
+        var job=service.prepare(ReadingFixtures.snapshot(),Map.of(Role.READING_COVER,p,Role.READING_DETAIL,p,Role.READING_PAGE,p));
+        String previous=System.getProperty(com.tellpal.v2.asset.infrastructure.media.reading.ReadingWebpTools.PROPERTY);
+        try {
+            System.setProperty(com.tellpal.v2.asset.infrastructure.media.reading.ReadingWebpTools.PROPERTY,directory.resolve("missing").toString());
+            worker.run(job.jobId());
+        } finally {
+            if(previous==null) System.clearProperty(com.tellpal.v2.asset.infrastructure.media.reading.ReadingWebpTools.PROPERTY);else System.setProperty(com.tellpal.v2.asset.infrastructure.media.reading.ReadingWebpTools.PROPERTY,previous);
+        }
+        assertThat(service.find(job.jobId()).state()).isEqualTo(State.FAILED);
+        assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isZero();
+    }
     @Test void completeStoredRoleSetDeduplicatesAndReverifiesIntegrity() throws Exception {
         var prepared=service.prepare(ReadingFixtures.snapshot(),ReadingFixtures.profiles());worker.run(prepared.jobId());
         var ready=service.find(prepared.jobId());assertThat(ready.state()).withFailMessage("%s",ready.diagnostic()).isEqualTo(State.COMPLETED);

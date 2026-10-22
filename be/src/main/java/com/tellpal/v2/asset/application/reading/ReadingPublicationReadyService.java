@@ -99,7 +99,8 @@ public class ReadingPublicationReadyService implements ReadingPublicationReadyAp
                 var profile = work.profiles().get(source.binding().role()).limits();
                 var bytes = storage.read(source.provider(), admissions.object(authority), profile.maxSourceBytes(), deadline.remainingMillis(profile.sourceMillis()));
                 deadline.check();
-                ReadingImageInspector.decode(bytes, profile);
+                var decoded = ReadingImageInspector.decode(bytes, profile);
+                if (!decoded.mime().equals(admissions.object(authority).mime()) || !decoded.mime().equals(source.retained().mime())) throw new IllegalStateException("SOURCE_STORAGE_MIME_MISMATCH");
                 deadline.check();
                 if (!ReadingIdentity.sha(bytes).equals(source.sha256())) throw new IllegalStateException("ADMITTED_SOURCE_INTEGRITY_FAILED");
             }

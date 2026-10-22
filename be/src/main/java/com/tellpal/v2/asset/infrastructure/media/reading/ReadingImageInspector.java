@@ -15,6 +15,7 @@ public final class ReadingImageInspector {
     public static Decoded decode(byte[] bytes, TestProfile profile) throws IOException {
         if (bytes.length == 0 || bytes.length > Math.max(profile.maxSourceBytes(), profile.maxOutputBytes()))
             throw new IOException("ENCODED_BYTE_LIMIT");
+        if (ReadingPreservation.enabled(profile)) return ReadingPreservation.decode(bytes, profile);
         String mime = bytes.length >= 8 && bytes[0] == (byte)137 ? png(bytes,profile) : jpeg(bytes);
         ImageIO.setUseCache(false);
         try (var stream = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {

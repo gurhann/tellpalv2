@@ -1,0 +1,179 @@
+{
+  "status": "PASS",
+  "findings": [
+    {
+      "id": "R1",
+      "case": "Ayrı OS oturum/grup sahipliği ve gerçek exit",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingProcessOwnershipTest.teardownConcurrentSpawnsCannotEscapeOwnedSessionOrReleaseCapacityEarly",
+        "com.tellpal.v2.asset.reading.ReadingProcessOwnershipTest.abruptWorkerDeathCannotOrphanNativeBetweenSamples"
+      ]
+    },
+    {
+      "id": "R2",
+      "case": "XMP orientation ve DTD/XXE/ağ reddi",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.xmpOrientationNamespaceAliasesAttributesElementsAndExternalEntitiesAreRefused"
+      ]
+    },
+    {
+      "id": "R3",
+      "case": "Kare olmayan pHYs reddi",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.squarePhysicalDensityIsAcceptedAndNonsquarePixelAspectIsRefused"
+      ]
+    },
+    {
+      "id": "R4",
+      "case": "CI native araç zorunluluğu",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingNativeTestToolsTest.requiredMarkerWithoutToolsFailsRatherThanSkipping"
+      ]
+    },
+    {
+      "id": "R5",
+      "case": "Ayrı alt OS süreç tahsisiyle aggregate RSS ve mutant reddi",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.deadlineAndTotalNativeRssDiskLogLimitsObserveEntireProcessTreeExit"
+      ]
+    }
+  ],
+  "fullVerify": {
+    "surefire": {
+      "tests": 587,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 26
+    },
+    "failsafe": {
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    "executedWithoutSkip": 595
+  },
+  "linuxFaults": [
+    {
+      "allExited": true,
+      "mode": "late",
+      "expectedFailure": "CHILD_TIMEOUT",
+      "unrelatedProcessAlive": true,
+      "maxObservedRssKiB": {
+        "129": 6280,
+        "131": 6280,
+        "133": 6280,
+        "135": 6280,
+        "137": 6280,
+        "139": 6276,
+        "141": 6280,
+        "143": 6284,
+        "145": 6280,
+        "147": 6280,
+        "149": 6268,
+        "151": 6280,
+        "153": 6280,
+        "155": 6276,
+        "92": 1560,
+        "157": 6280,
+        "93": 84556,
+        "159": 6280,
+        "161": 6280,
+        "163": 6280,
+        "165": 8316,
+        "167": 6260,
+        "169": 6280,
+        "107": 6264,
+        "109": 6280,
+        "111": 6280,
+        "113": 6284,
+        "115": 6272,
+        "117": 6280,
+        "119": 6280,
+        "121": 6260,
+        "123": 6280,
+        "125": 6280,
+        "127": 6280
+      },
+      "ownedPids": [
+        93,
+        107,
+        109,
+        111,
+        113,
+        115,
+        117,
+        119,
+        121,
+        123,
+        125,
+        127,
+        129,
+        131,
+        133,
+        135,
+        137,
+        139,
+        141,
+        143,
+        145,
+        147,
+        149,
+        151,
+        153,
+        155,
+        157,
+        159,
+        161,
+        163,
+        165,
+        167,
+        169
+      ]
+    },
+    {
+      "allExited": true,
+      "mode": "abrupt",
+      "expectedFailure": "CHILD_REJECTED",
+      "unrelatedProcessAlive": true,
+      "maxObservedRssKiB": {
+        "187": 6280,
+        "172": 1560,
+        "173": 78356
+      },
+      "ownedPids": [
+        173,
+        187
+      ]
+    },
+    {
+      "allExited": true,
+      "mode": "rss",
+      "expectedFailure": "PROCESS_RSS_LIMIT",
+      "unrelatedProcessAlive": true,
+      "maxObservedRssKiB": {
+        "205": 133008,
+        "190": 1560,
+        "191": 77880
+      },
+      "ownedPids": [
+        191,
+        205
+      ]
+    }
+  ],
+  "ciWorkflowValidation": "ci-native-check-result.json",
+  "remoteCiExecuted": false,
+  "identities": "review-final-identities.json",
+  "corpusNewEncoding": false,
+  "knownLimits": [
+    "SDK-only mutlak in-flight storage deadline açığı sürer.",
+    "AMD64 emülasyonun önceki runtime timeout’u yeterli sayılmadı; bu yamada AMD64 çalıştırılmadı.",
+    "Fiziksel cihaz ve üretim kapasite kabulü yapılmadı; üretim gate’i kapalıdır."
+  ]
+}

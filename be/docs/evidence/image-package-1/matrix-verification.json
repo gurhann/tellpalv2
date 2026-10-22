@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "rows": [
+    {
+      "case": "JPEG/WebP tam ham eşlik",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.realChildCreatesNewWebpAndCopiesJpegWithExactRawProof",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.preservationPolicyCompletesMixedJpegWebpAndSourceBoundStoredReread"
+      ]
+    },
+    {
+      "case": "Eski profil, JSON, config ve dönüşüm öncesi drift",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.legacyConstructorAndMissingOrNullJsonPolicyKeepPngFit",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.oldPngEncoderIdentityGetsDistinctWorkAndIsRejectedBeforeConversion",
+        "com.tellpal.v2.support.P3LocalCmsSetupTest.explicitOverlayBindsExactSyntheticProfilesAndNormalLocalStartupStaysDisabled"
+      ]
+    },
+    {
+      "case": "MIME/SHA/RGB/ICC/XMP/TIFF, alpha, animasyon, orientation ve trailing reddi",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingImageProcessTest.persistedWrongMimeShaDimensionsAndEncodedLimitCannotVerify",
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.storedRereadBindsSourceEvenIfCandidateShaAndDimensionsAreValid",
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.transparentAlphaAnimationOrientationUnknownIccAndTrailingAreRejected",
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.xmpAndNormalizedTiffMustSurviveByteForByte",
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.webpPayloadTrailingDataAndPixelMutationCannotPass"
+      ]
+    },
+    {
+      "case": "Byte/metadata/piksel/bellek/süre/RSS/disk/log ve eski LIVE",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.preservationSourcePixelAndMetadataAllocationsAreBounded",
+        "com.tellpal.v2.asset.reading.ReadingImageProcessTest.realChildPreservesEveryRgbPixelAndCompressesAgainstUncompressedControl",
+        "com.tellpal.v2.asset.reading.ReadingImageProcessTest.parentHeapAdmissionRejectsUnboundedReservationBeforeChildLaunch",
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.deadlineAndTotalNativeRssDiskLogLimitsObserveEntireProcessTreeExit",
+        "com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest.preservationPolicyAdoptsNewWebpAndFailedCandidateKeepsPreviousLive"
+      ]
+    },
+    {
+      "case": "Kayıp/bozuk araç, partial upload, retry, stale attempt ve atomik manifest",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreservationTest.missingOrChangedToolsFailClosedAndLegacyNeedsNoTools",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.missingBinaryAfterCaptureRejectsBeforeConversion",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.restartAfterPartialObjectsReverifiesAndCompletesWithoutPartialReady",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.explicitRetryAndLateTerminalCallbacksRemainFenced",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.manifestAndCompletionRollbackTogetherOnDatabaseFailure"
+      ]
+    },
+    {
+      "case": "Üretim gate reddi ve eşit/büyük çıktı kanıtı",
+      "status": "PASS",
+      "executedTests": [
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.sourceByteLanguageChangesAndInvalidOrProductionInputsFailClosed",
+        "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest.jpegCopyEqualityNeedsExplicitGrowthEvidenceAndRetryKeepsAtomicManifest"
+      ]
+    }
+  ],
+  "corpusEncoding": "corpus-tests.xml",
+  "finalClassReread": "annotation-reread-tests.xml"
+}

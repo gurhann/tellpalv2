@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "platform": "linux/arm64",
+  "installerSha256": "0247eaa5e7f7971f61929cca33ad7edd70ab6395c53bff66a086e31f58921375",
+  "archive": {
+    "platform": "linux-aarch64",
+    "url": "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.6.0-linux-aarch64.tar.gz",
+    "sha256": "69f5eebe203e0f3942fe37986209a1725741be19c152950a4283b376c95ec798",
+    "bytes": 10137282
+  },
+  "verifiedNativeTools": {
+    "cwebp": {
+      "sha256": "c1cbc3d46a3beb3883359dc9b112d7f5d08ed213a6a5d954f958b6c8baee7fc8",
+      "version": "1.6.0\nlibsharpyuv: 0.4.2"
+    },
+    "webpmux": {
+      "sha256": "4af97a7422a8753164b8bd77b1b74613ed1e9fb603becde41d1aeea3a9332b4c",
+      "version": "1.6.0"
+    }
+  },
+  "productionActivation": false
+}

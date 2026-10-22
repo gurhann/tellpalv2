@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "imageId": "sha256:cf86a31f388659917c6e83e6e13b9c1e4cde4cd442fbd5ad8dffab543280e687",
+  "architecture": "arm64",
+  "jarSha256": "097eb36d1292169eb358ca31119e15184fffbb1be77eace23e9879592214c15a",
+  "probeSourceSha256": "ea8a03f3003be53c27d80c7b9f5df3c1da0222f04954438bd4c5f5765012c88a",
+  "networkMode": "none",
+  "readonlyRootfs": true,
+  "memoryBytes": 1073741824,
+  "memorySwapBytes": 1073741824,
+  "pidsLimit": 128,
+  "nanoCpus": 1000000000,
+  "containerExitCode": 0,
+  "oomKilled": false,
+  "faultModes": [
+    "late",
+    "abrupt",
+    "rss"
+  ],
+  "containerRemoved": true,
+  "volumeRemoved": true
+}

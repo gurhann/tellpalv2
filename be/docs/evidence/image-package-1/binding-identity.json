@@ -1,0 +1,14 @@
+{
+  "onlyChangedJarPayload": [
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/api/ReadingImagePreparationApi$TestProfile.class",
+      "beforeSha256": "65a4d0dc016c3d9a66c8681d45d0dd1e04744486bcabe0d0ee82afea19b10404",
+      "afterSha256": "fceb16398c3060eb3256bc359ce9af126deea339638435ca4892cb2a8bb73a3b"
+    }
+  ],
+  "allOtherClassAndJarPayloadsUnchanged": true,
+  "beforeJarSha256": "02fe97875022f0197c97bf26ced1b2ff251ef916fc582e76e5bd8d9293305f98",
+  "afterJarSha256": "32b7352f23cc55d12728f644fd2f6066a42a2ad61c8902246426b64664346336",
+  "testProfileInstructionsAndSignaturesUnchanged": true,
+  "change": "Yalnız ConstructorBinding annotation metadata’sı; codec/process/worker/native ayarları aynı kaldı"
+}

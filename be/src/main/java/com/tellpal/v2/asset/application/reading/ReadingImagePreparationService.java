@@ -12,6 +12,7 @@ import com.tellpal.v2.asset.domain.reading.*;
 import com.tellpal.v2.asset.domain.reading.ReadingWork.*;
 import com.tellpal.v2.asset.infrastructure.storage.*;
 import com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector;
+import com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation;
 
 /** Captures immutable byte proof only; P3 must independently compare content bindings/current generation. */
 @Service
@@ -90,7 +91,8 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
         var decoded=ReadingImageInspector.decode(bytes,profile);
         deadline.check();
         if(!original.mime().equals(decoded.mime())) throw new IOException("SOURCE_STORAGE_MIME_MISMATCH");
-        if(decoded.image().getWidth()<profile.width() || decoded.image().getHeight()<profile.height()) throw new IOException("SOURCE_SHORTAGE_NO_UPSCALE");
+        if (ReadingPreservation.enabled(profile) && decoded.mime().equals("image/webp")) throw new IOException("SOURCE_PNG_OR_JPEG_REQUIRED");
+        if(!ReadingPreservation.enabled(profile) && (decoded.image().getWidth()<profile.width() || decoded.image().getHeight()<profile.height())) throw new IOException("SOURCE_SHORTAGE_NO_UPSCALE");
         String sha=ReadingIdentity.sha(bytes);
         if(authority!=null && !sha.equals(authority.get("sha256"))) throw new IllegalStateException("ADMITTED_SOURCE_INTEGRITY_FAILED");
         String path=prefix+"/reading/sources/"+sha;
@@ -127,7 +129,7 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
             for(int i=0;i<manifest.outputs().size();i++) {
                 Output output=manifest.outputs().get(i);var profile=work.profiles().get(output.binding().role()).limits();
                 verifyGeometry(work.sources().get(i),output,profile);
-                verifyOutput(storage,output,profile,deadline);
+                verifyOutput(storage,work.sources().get(i),output,profile,deadline);
             }
             deadline.check();
             jobs.integrity(result.revision(),true,"Fresh pinned stored-object verification");
@@ -153,8 +155,21 @@ public class ReadingImagePreparationService implements ReadingImagePreparationAp
         byte[] persisted=storage.read(output.provider(),output.stored(),profile.maxOutputBytes(),deadline.remainingMillis(profile.sourceMillis()));
         deadline.check();
         var image=ReadingImageInspector.decode(persisted,profile);
-        if(output.width()>profile.width() || output.height()>profile.height() || !output.stored().mime().equals("image/png") || !image.mime().equals("image/png") || !ReadingIdentity.sha(persisted).equals(output.sha256())
+        if(output.width()>profile.width() || output.height()>profile.height() || !output.stored().mime().equals(image.mime()) || (!ReadingPreservation.enabled(profile) && !image.mime().equals("image/png")) || !ReadingIdentity.sha(persisted).equals(output.sha256())
                 || image.image().getWidth()!=output.width() || image.image().getHeight()!=output.height()) throw new IOException("PERSISTED_OUTPUT_VERIFICATION_FAILED");
+        deadline.check();
+    }
+    /** Stored çıktı yeni ve bağımsız source read ile tam koruma sözleşmesinden geçer. */
+    public static void verifyOutput(ReadingObjectStorage storage, Source source, Output output, TestProfile profile, ReadingDeadline deadline) throws IOException {
+        verifyOutput(storage, output, profile, deadline);
+        if (!ReadingPreservation.enabled(profile)) return;
+        byte[] original = storage.read(source.provider(), source.retained(), profile.maxSourceBytes(), deadline.remainingMillis(profile.sourceMillis()));
+        if (!ReadingIdentity.sha(original).equals(source.sha256()) || !ReadingPreservation.mime(original).equals(source.retained().mime()))
+            throw new IOException("RETAINED_SOURCE_INTEGRITY_FAILED");
+        byte[] persisted = storage.read(output.provider(), output.stored(), profile.maxOutputBytes(), deadline.remainingMillis(profile.sourceMillis()));
+        if (!ReadingIdentity.sha(persisted).equals(output.sha256()) || !ReadingPreservation.mime(persisted).equals(output.stored().mime()))
+            throw new IOException("PERSISTED_OUTPUT_VERIFICATION_FAILED");
+        ReadingPreservation.verify(original, persisted, profile);
         deadline.check();
     }
     public String prefix() { return prefix; }

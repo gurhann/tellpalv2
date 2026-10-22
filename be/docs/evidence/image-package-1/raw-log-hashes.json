@@ -1,0 +1,167 @@
+{
+  "locationPointer": "/private/tmp/tellpal-package1-run-path",
+  "relativeDirectory": "logs",
+  "note": "Ham loglar özel run dizininde saklanır; Git artifact’i değildir.",
+  "files": [
+    {
+      "name": "annotation-reread.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "binding-fix-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "corpus-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-codec-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "focused-tests.log",
+      "bytes": 39417,
+      "sha256": "c1440253b92dbf3d541dfd29ce46eeb3babaf1dc120539c712a12913c045dd35"
+    },
+    {
+      "name": "linux-amd64-build.log",
+      "bytes": 22717,
+      "sha256": "27b2682cd9c088fc97e6ac59e398002819eaf1db635d169fe698051b9f03ebce"
+    },
+    {
+      "name": "linux-amd64-probe.log",
+      "bytes": 708,
+      "sha256": "3c83ef5201a8f686beb8ebefb3ed9bb68167cdd81fdf09d189c406b5c18c0602"
+    },
+    {
+      "name": "linux-amd64-tools-final.log",
+      "bytes": 2487,
+      "sha256": "85d2be08227a998da52f08b55f9c3ac4c659bd3a83f9d52eaa5fcb0bfab854ee"
+    },
+    {
+      "name": "linux-arm64-before-binding-runtime.log",
+      "bytes": 11138,
+      "sha256": "6dc2df351ed8ecc37b56cce9ff2a4e89794d36c6b2f962d6776b2adb263f897f"
+    },
+    {
+      "name": "linux-tool-build.log",
+      "bytes": 17124,
+      "sha256": "a4781788eab36035e2433a4487970c3b5cba3b33727924dc7e92a434e963c17c"
+    },
+    {
+      "name": "package1-annotation-reread.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-binding-fix-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-final-arm64-image-build.log",
+      "bytes": 2125,
+      "sha256": "5ba3a413d5bf9b9d742e70abd419ff14312962e8204af20379b90230e3a73470"
+    },
+    {
+      "name": "package1-final-arm64-tools-build.log",
+      "bytes": 16957,
+      "sha256": "6debfc5906f19d6e398dce2d5f870259be252d5620a2fc7f3bb7d597edb966e2"
+    },
+    {
+      "name": "package1-final-corpus-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-final-linux-runtime.log",
+      "bytes": 11138,
+      "sha256": "3b2a6040a6acf7c0d975ecdf650f5a4fa8b201291b1482041ce25a29c80df2c3"
+    },
+    {
+      "name": "package1-full-verify-after-binding.log",
+      "bytes": 823396,
+      "sha256": "0cc1cc0d32d067d511e0b5a9fdafef07da44677c56baf3b617b3ab1c1ef242cb"
+    },
+    {
+      "name": "package1-full-verify.log",
+      "bytes": 795797,
+      "sha256": "3883d99d7157afa3c4ce574caa871d8e2e83f0a92d499c7a5321ae037a55a404"
+    },
+    {
+      "name": "package1-review-arm64-image-build.log",
+      "bytes": 2327,
+      "sha256": "40d0290903154073ede555f7719a1ba4e3c47eaa2366807c0f832a5de116db67"
+    },
+    {
+      "name": "package1-review-arm64-tools-build.log",
+      "bytes": 32022,
+      "sha256": "c069f9ebc4685ffb0a5e651d29bd7d72feb343a35c7b591ecd6896804b88fe0c"
+    },
+    {
+      "name": "package1-review-correct-loop-tests.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-review-final-full-verify.log",
+      "bytes": 822720,
+      "sha256": "8f224663735afaa52c3969cda3c5af51420e3363231ab54fad787212e184767f"
+    },
+    {
+      "name": "package1-review-final-linux-runtime.log",
+      "bytes": 13213,
+      "sha256": "c18a587aa57ab10ac429746c41c20a175757365e0ce8eb6497ab90a4e030a7fd"
+    },
+    {
+      "name": "package1-review-final-reread.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-review-final-targeted.log",
+      "bytes": 39643,
+      "sha256": "3750e9d58bd266f6b90f7fa8d53d11aed064eb6ca9b7865f231effb3fac7934b"
+    },
+    {
+      "name": "package1-review-full-verify.log",
+      "bytes": 17731,
+      "sha256": "7e636edbd300121df492c2aa757263d9a3f90e443231d851c3f47c0d791e77ce"
+    },
+    {
+      "name": "package1-review-linux-build-identities.txt",
+      "bytes": 580,
+      "sha256": "755f1ad9c28c1a177a07497d5f8d81bdfa706b060599a52ca85b49ba4bce1578"
+    },
+    {
+      "name": "package1-review-parent-rss-mutant.log",
+      "bytes": 20562,
+      "sha256": "ced0c1cef6b5a475239ecda573c79103748c6783513372a1bc1b0c685a471477"
+    },
+    {
+      "name": "package1-review-reread.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package1-review-targeted.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "tellpal-package1-amd64-probe.log",
+      "bytes": 708,
+      "sha256": "3c83ef5201a8f686beb8ebefb3ed9bb68167cdd81fdf09d189c406b5c18c0602"
+    },
+    {
+      "name": "tellpal-package1-runtime-build-amd64-final.log",
+      "bytes": 2487,
+      "sha256": "85d2be08227a998da52f08b55f9c3ac4c659bd3a83f9d52eaa5fcb0bfab854ee"
+    }
+  ]
+}

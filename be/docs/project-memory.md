@@ -21,6 +21,20 @@ Active backend defaults; follow the read order and shared rules in root `AGENTS.
 
 - [`ADR-0022`](adr/ADR-0022-reading-image-preparation-engine.md): approved bounded P2 engine/test-profile scope. Exact-language STORY/READING cover/detail/ordered pages use captured byte/profile identities, version-pinned immutable storage and atomic attempt-fenced manifest/job completion. Narrow supported opaque RGB8 sRGB PNG/JPEG inputs, direct-original PNG output and explicit growth admission; unsupported normalization/source shortage fails. Production admission remains closed. Internal READY grants no LIVE/access; P3 owns current-generation orchestration/adoption. Retain scalar page provenance/orphan evidence without deletion. Child-process/resource, PostgreSQL and packaged-runtime verification are tracked separately; the approved bounded engine acceptance is complete; production qualification remains pending. Existing listing/experiment/publication consumers remain unchanged.
 
+  Paket 1: açık `PRESERVE_JPEG_OR_LOSSLESS_WEBP` yerel/test politikası kaynak boyutunu korur;
+  JPEG byte-copy, PNG’den yeni lossless WebP üretir. Eski constructor ve eksik/null JSON `PNG_FIT`
+  kalır. Opak RGBA255 kaynakları kabul edilir; şeffaf piksel reddedilir. Pinli P3 ICC/profilsiz
+  RGB8, tam ham RGB+ICC/XMP/normalize TIFF, bağımsız kaynak bağlı stored reread ve tam VP8L
+  tüketimi zorunludur. Profil JVM/class/decoder JAR ve iki resmi libwebp 1.6.0 binary kimliğini
+  taşır. Eşit/büyük çıktı için açık growth kanıtı gerekir. Java+native descendant RSS/disk/log,
+  deadline ve gerçek exit denetimi korunur. Koruma politikası ayrı setsid grubu ve guardian
+  kullanır; ani worker ölümü/geç native başlangıcı ancestry’den bağımsız temizlenir. Guardian
+  kaynak/binary SHA, derleyici/flag kimliği profile girer; legacy PNG native araç gerektirmez.
+  XMP TIFF orientation ve kare olmayan pHYs aspect reddedilir. Backend CI pinli native
+  kurulum ve zorunlu test marker’ı kullanır. Linux araç paketlemesi üretim profilini açmaz;
+  SDK-only storage mutlak deadline açığı ve üretim/fiziksel cihaz kapıları sürer.
+  [Paket 1 kanıtı](evidence/image-package-1/README.md).
+
   PNG sıkıştırma düzeltmesi: ImageIO PNG `compressionQuality=1.0` sıkıştırmayı kapatır; yerel/test adayı `0.0` ile en güçlü DEFLATE sıkıştırmasını seçer. Descriptor ve gerçek child tek ayarı paylaşır; yeni fingerprint/rendition kimliği oluşur ve eski `PENDING` descriptor dönüşümden önce drift nedeniyle reddedilir. Tam RGB eşitliği ile gerçek byte kazancı ayrı kanıtlanır; [kanıt kaydı](evidence/png-lossless-compression/README.md) ölçülen sonuçları tutar. Geometri, kaynak/süreç sınırları, üretim/fiziksel kalite ve açık growth kabul kapıları korunur; eski manifest/LIVE değiştirilmez.
 
   Reading storage clones use the SDK built-in non-idempotent no-retry handler for both classifications to prevent inner media resumptions; legacy options stay unchanged. New profile fingerprints bind that policy and adapter/SDK-handler implementation identity. Socket inactivity settings and between-call checks are not an absolute in-flight duration guarantee; slow-trickle/authentication qualification remains open. The human superseded the proposed storage-child architecture with the SDK-only correction. The [storage probe](reading-image-storage-probe.md) retains the original failure and separates local SDK evidence, diagnostic watchdog containment and the separately authorized [2026-10-16 live storage proof](evidence/p2-storage-probe/live-gcs-2026-10-16.md). Only the synthetic create/conflict/pinned-decode cases passed; this is not integrated production preparation or a timeout qualification. No production/P3 admission follows.

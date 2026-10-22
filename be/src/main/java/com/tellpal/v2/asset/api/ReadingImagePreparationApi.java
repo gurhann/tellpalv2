@@ -50,12 +50,24 @@ public interface ReadingImagePreparationApi {
                 throw new IllegalArgumentException("Invalid localized role binding");
         }
     }
+    /** Eski PNG fit ile boyut ve ham örnekleri koruyan yeni format politikasını ayırır. */
+    enum FormatPolicy { PNG_FIT, PRESERVE_JPEG_OR_LOSSLESS_WEBP }
+
     /** Explicit synthetic/local admission. No production profile or production admission exists in P2. */
     record TestProfile(int width, int height, long maxSourceBytes, long maxOutputBytes, long maxPixels,
             long parentMemoryBytes, int heapMiB, int directMiB, int processMiB, long diskBytes,
             long sourceMillis, long revisionMillis, int concurrency, int encoderThreads,
-            boolean allowGrowth, String growthEvidence) {
-        public TestProfile {
+            boolean allowGrowth, String growthEvidence, FormatPolicy formatPolicy) {
+        /** Eski 16 alanlı çağrılar PNG fit politikasını korur. */
+        public TestProfile(int width, int height, long maxSourceBytes, long maxOutputBytes, long maxPixels,
+                long parentMemoryBytes, int heapMiB, int directMiB, int processMiB, long diskBytes,
+                long sourceMillis, long revisionMillis, int concurrency, int encoderThreads,
+                boolean allowGrowth, String growthEvidence) {
+            this(width, height, maxSourceBytes, maxOutputBytes, maxPixels, parentMemoryBytes, heapMiB, directMiB, processMiB,
+                    diskBytes, sourceMillis, revisionMillis, concurrency, encoderThreads, allowGrowth, growthEvidence, FormatPolicy.PNG_FIT);
+        }
+        @org.springframework.boot.context.properties.bind.ConstructorBinding public TestProfile {
+            if (formatPolicy == null) formatPolicy = FormatPolicy.PNG_FIT;
             if (width <= 0 || height <= 0 || maxSourceBytes <= 0 || maxSourceBytes > Integer.MAX_VALUE - 8L
                     || maxOutputBytes <= 0 || maxOutputBytes > Integer.MAX_VALUE - 8L || maxPixels <= 0
                     || parentMemoryBytes <= 0 || heapMiB < 32 || directMiB < 1 || processMiB < heapMiB + directMiB

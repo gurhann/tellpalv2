@@ -22,11 +22,16 @@ public final class ReadingImageChild {
         }
     }
     public static void main(String[] args) throws Exception {
+        if (args.length != 4) throw new IOException("CHILD_ARGUMENTS_REQUIRED");
         var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
         var profile = mapper.readValue(Files.readString(Path.of(args[2])), TestProfile.class);
         var actual=com.tellpal.v2.asset.domain.reading.ReadingProfiles.capture(com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role.READING_PAGE,profile);
         if(args.length!=4 || !actual.fingerprint().equals(args[3])) throw new IOException("CHILD_ENCODER_RUNTIME_IDENTITY_MISMATCH");
         if (Files.size(Path.of(args[0])) > profile.maxSourceBytes()) throw new IOException("SOURCE_BYTE_LIMIT");
+        if (ReadingPreservation.enabled(profile)) {
+            ReadingPreservationEncoder.encode(Path.of(args[0]), Path.of(args[1]), profile);
+            return;
+        }
         var source = ReadingImageInspector.decode(Files.readAllBytes(Path.of(args[0])),profile).image();
         if(source.getWidth()<profile.width() || source.getHeight()<profile.height()) throw new IOException("SOURCE_SHORTAGE_NO_UPSCALE");
         double factor=Math.min((double)profile.width()/source.getWidth(),(double)profile.height()/source.getHeight());

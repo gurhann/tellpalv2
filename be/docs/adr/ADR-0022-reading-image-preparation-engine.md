@@ -26,6 +26,54 @@ The human selected three bounded P2 decisions: implement the engine with explici
 - Configure the reading-only SDK clone with the SDK default non-idempotent no-retry handler for both operation classifications, preserving the original legacy client. `maxAttempts=1` alone does not prevent inner HTTP media resumptions. Include the policy, adapter/handler implementation identity and honest timeout semantics in new profile fingerprints. Socket read timeouts are inactivity limits; between-call monotonic checks cannot preempt a continuously progressing blocking read. Absolute in-flight duration, including slow trickles/authentication, remains an explicit production-qualification gap. No new storage process/IPC architecture is admitted by this SDK-only correction.
 - Preserve originals, retained revisions and isolated orphan ownership. Add no public/test delivery endpoint, signed URL, HTTP cache policy, session right, renewal/retention interval or cleanup job. No cloud production mutation, deployment, backfill or deletion is authorized.
 
+## Paket 1: Açık JPEG/WebP koruma politikası (2026-10-22)
+
+Onaylı [Paket 1 spec’i](../../../_bmad-output/implementation-artifacts/spec-image-package-1-preparation.md),
+yerel/test ana P2/P3 motoruna `PRESERVE_JPEG_OR_LOSSLESS_WEBP` politikasını ekler.
+Eski 16 alanlı `TestProfile` ve eksik/null JSON politika alanı `PNG_FIT` olarak kalır.
+Koruma modunda width/height üst sınırdır; kaynak boyutları değişmez. JPEG aynı
+byte’larla kopyalanır; PNG’den yeni kayıpsız WebP üretilir. Hazır P5c/P5g adayları
+encode girdisi değildir.
+
+Kaynak yalnız opak RGB8 veya bütün alpha örnekleri 255 olan RGBA8 PNG ve baseline
+RGB8 JPEG olabilir. Alpha kanalının varlığı tek başına ret değildir; tek bir şeffaf
+piksel ret üretir. Yalnız profilsiz RGB veya SHA’sı pinli 536 byte P3 ICC kabul edilir.
+ICC/XMP ve taşıma öneki ayrılmış TIFF korunur; orientation, animasyon, desteklenmeyen
+metadata/container semantiği ve trailing byte reddedilir. Renk dönüşümü, resize,
+matte ve orientation düzeltmesi yapılmaz.
+
+Native encoder resmi libwebp 1.6.0 `cwebp`/`webpmux` araçlarıdır. Ham RGB’den
+profilsiz canonical PNG yazılır; `-lossless -exact -q 100 -m 6 -metadata none`
+ve tek thread kullanılır. ICC/EXIF/XMP byte’ları webpmux ile eklenir. Bağımsız
+TwelveMonkeys 3.15.3 raw destination decoder tam RGB/metadata ve VP8L payload
+sonunun tam tüketimini doğrular. Stored reread yeniden pinli kaynağı okur;
+çıktının kendi SHA/MIME/geometrisi yanında kaynak eşliği de zorunludur.
+
+Profil gerçek motor class’larını, decoder JAR’larını, JVM binary’lerini, iki resmi
+native binary SHA/sürümünü ve bütün ayarları içerir. Yeni kimlik eski pending işi
+dönüşümden önce reddeder. Eşit veya büyüyen JPEG/WebP de mevcut `allowGrowth` ve
+dolu evidence kuralına tabidir. Java child ve gözlenen native descendant RSS
+toplamı, deadline, disk/log sınırı ve gerçek süreç ağacı kill/exit denetimi korunur.
+RSS örneklemesi sürekli peak ölçümü değildir.
+
+Koruma politikası yerel kaynak kodundan derlenen POSIX guardian kullanır. Worker
+`setsid` ile işe ait süreç grubundadır; guardian worker PID’sini grup durana kadar
+reap etmez. Lifeline kapanışı veya ani worker ölümü yalnız bu gruba SIGSTOP/SIGKILL
+uygular. Linux subreaper bütün orphan çocukları `waitpid` ile toplar; macOS kernel
+grubunda çalışabilir süreç kalmadığı doğrulanır. Guardian gerçek çıkmadan kapasite
+ve dizin bırakılmaz. Kaynak/binary SHA, derleyici sürümü ve derleme flag’leri profile
+girer. Legacy `PNG_FIT` tek Java child kullanır; native araç/guardian dizini gerekmez.
+XMP’de TIFF namespace’indeki orientation attribute/element biçimleri de reddedilir;
+XML DTD/dış entity/ağ erişimi kapalıdır. PNG pHYs yatay/dikey yoğunluğu eşit olmalıdır.
+Backend CI aynı job’da pinli araçları kurar; zorunlu native marker eksik araçta skip
+üretmek yerine testi düşürür. Yerel opt-in corpus ve eski deney gate’leri korunur.
+
+Linux arm64/amd64 resmi arşivleri SHA-pinli kurulum betiğiyle aynı deployment JRE’sine
+paketlenir. Bu yalnız paketlemedir; üretim profili kapalı kalır. SDK-only storage
+akışının mutlak in-flight deadline açığı devam eder. Yeni storage mimarisi, canlı
+Firebase/DB erişimi, deploy, P4b5 ve normal mobil/CMS tüketicisi bu kapsamda yoktur.
+Gerçek doğrulama sonuçları [Paket 1 kanıtında](../evidence/image-package-1/README.md) tutulur.
+
 ## Consequences
 
 The engine can be tested with actual local objects, Java encoders and PostgreSQL races while production admission stays closed. Repeated identical work can reuse only independently verified immutable output; a larger PNG requires explicit profile growth admission and evidence. A failed candidate leaves historical verified media intact but grants no visibility to the first publication.

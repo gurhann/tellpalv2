@@ -6,16 +6,14 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 class P5gGateTest {
-    @Test void closedPropertyFailsBeforeCodecResolution() {
+    @Test void closedPropertyRemainsClosedWithPackagedCodec() throws Exception {
         String previous = System.getProperty("p5g.local.enabled");
         try {
             System.clearProperty("p5g.local.enabled");
             assertEquals("P5G_PROFILE_CLOSED", assertThrows(IOException.class, P5gProfile::enabled).getMessage());
-            if (previous == null) {
-                assertThrows(ClassNotFoundException.class, () -> Class.forName(P5gProfile.SPI));
-                System.setProperty("p5g.local.enabled", "true");
-                assertEquals("P5G_CODEC_MISSING", assertThrows(IOException.class, P5gProfile::enabled).getMessage());
-            }
+            assertNotNull(Class.forName(P5gProfile.SPI));
+            System.setProperty("p5g.local.enabled", "true");
+            assertDoesNotThrow(P5gProfile::enabled);
         } finally {
             if (previous == null) System.clearProperty("p5g.local.enabled");
             else System.setProperty("p5g.local.enabled", previous);

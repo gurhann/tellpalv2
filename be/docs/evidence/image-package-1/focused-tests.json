@@ -1,0 +1,50 @@
+[
+  {
+    "name": "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest",
+    "tests": "18",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "45.671"
+  },
+  {
+    "name": "com.tellpal.v2.asset.reading.p5g.P5gGateTest",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.098"
+  },
+  {
+    "name": "com.tellpal.v2.asset.reading.ReadingPreservationTest",
+    "tests": "6",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "4.187"
+  },
+  {
+    "name": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.59"
+  },
+  {
+    "name": "com.tellpal.v2.asset.reading.ReadingPreparationGuardsIntegrationTest",
+    "tests": "10",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "18.782"
+  },
+  {
+    "name": "com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest",
+    "tests": "22",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "59.331"
+  }
+]

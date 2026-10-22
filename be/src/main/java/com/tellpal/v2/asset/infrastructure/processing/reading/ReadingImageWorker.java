@@ -50,17 +50,23 @@ public class ReadingImageWorker {
                     if(!ReadingProfiles.capture(source.binding().role(),profile.limits()).equals(profile)) throw new IllegalStateException("ENCODER_RUNTIME_PROFILE_CHANGED");
                     byte[] original=storage.read(source.provider(),source.retained(),profile.limits().maxSourceBytes(),deadline.remainingMillis(profile.limits().sourceMillis()));
                     if(!ReadingIdentity.sha(original).equals(source.sha256())) throw new IllegalStateException("RETAINED_SOURCE_SHA_MISMATCH");
+                    var sourceDecoded = ReadingImageInspector.decode(original, profile.limits());
+                    if (!sourceDecoded.mime().equals(source.retained().mime())) throw new IllegalStateException("SOURCE_STORAGE_MIME_MISMATCH");
                     byte[] bytes=process.convert(original,profile.limits(),deadline);
                     if(!profile.limits().allowGrowth() && bytes.length>=original.length) throw new IllegalStateException("OUTPUT_GROWTH_NOT_ADMITTED");
                     var decoded=ReadingImageInspector.decode(bytes,profile.limits());
+                    ReadingPreservation.verify(original, bytes, profile.limits());
+                    String mime = ReadingPreservation.outputMime(source.retained().mime(), profile.limits());
+                    if (!decoded.mime().equals(mime)) throw new IllegalStateException("OUTPUT_POLICY_MIME_MISMATCH");
+                    String extension = mime.equals("image/png") ? ".png" : mime.equals("image/jpeg") ? ".jpg" : ".webp";
                     String key=ReadingImagePreparationService.rendition(source,profile);
-                    String outputPath=admission.prefix()+"/reading/renditions/"+key+".png";
+                    String outputPath=admission.prefix()+"/reading/renditions/"+key+extension;
                     jobs.evidence(token,"PLANNED_OBJECT",outputPath);
-                    var stored=storage.create(source.provider(),outputPath,"image/png",bytes,profile.limits().maxOutputBytes(),deadline.remainingMillis(profile.limits().sourceMillis()));
+                    var stored=storage.create(source.provider(),outputPath,mime,bytes,profile.limits().maxOutputBytes(),deadline.remainingMillis(profile.limits().sourceMillis()));
                     jobs.evidence(token,"RETAINED_OBJECT",stored.path()+"@"+stored.version());
                     var output=new Output(source.binding(),source.sha256(),profile.fingerprint(),key,source.provider(),stored,ReadingIdentity.sha(bytes),decoded.image().getWidth(),decoded.image().getHeight());
                     ReadingImagePreparationService.verifyGeometry(source,output,profile.limits());
-                    ReadingImagePreparationService.verifyOutput(storage,output,profile.limits(),deadline);
+                    ReadingImagePreparationService.verifyOutput(storage,source,output,profile.limits(),deadline);
                     outputs.add(output);
                 }
                 deadline.check();

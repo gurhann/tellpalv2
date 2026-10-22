@@ -1,0 +1,17 @@
+{
+  "platform": "linux/amd64",
+  "host_vm": "linux/arm64",
+  "environment": "local emulation",
+  "tools_installation": "PASS",
+  "runtime_qualification": "NOT_QUALIFIED",
+  "reason": "CHILD_TIMEOUT",
+  "sourceMillis": 20000,
+  "network": "none",
+  "readOnlyRoot": true,
+  "testedJarSha256": "02fe97875022f0197c97bf26ced1b2ff251ef916fc582e76e5bd8d9293305f98",
+  "containerExited": true,
+  "oomKilled": false,
+  "containerRemoved": true,
+  "temporaryVolumeRemoved": true,
+  "production_access": false
+}

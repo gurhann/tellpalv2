@@ -1,0 +1,8 @@
+{
+  "status": "MUTANT_REJECTED",
+  "mutation": "Yalnız guardian ve doğrudan Java worker RSS ölçüldü; worker altındaki OS süreçleri toplamdan çıkarıldı.",
+  "test": "deadlineAndTotalNativeRssDiskLogLimitsObserveEntireProcessTreeExit",
+  "expectedFailure": "PROCESS_RSS_LIMIT yerine CHILD_TIMEOUT",
+  "mavenExitCode": 1,
+  "restoredSourceSha256": "9af3177547ce77d560740df882e1374d68c5f5b8ec65064fe90fd1158fb0a508"
+}

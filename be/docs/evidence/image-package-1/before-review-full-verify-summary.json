@@ -1,0 +1,1053 @@
+{
+  "surefire": {
+    "totals": {
+      "tests": 581,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 25
+    },
+    "suites": [
+      {
+        "name": "com.tellpal.v2.user.application.LibraryHomeTestQueryServiceTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.001"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "9",
+        "time": "0.001"
+      },
+      {
+        "name": "com.tellpal.v2.category.migration.CategoryTypeMigrationIntegrationTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.209"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.FreeAccessAdminIntegrationTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.143"
+      },
+      {
+        "name": "com.tellpal.v2.category.LibraryHomeIntegrationTest",
+        "tests": "10",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.958"
+      },
+      {
+        "name": "com.tellpal.v2.purchase.web.webhook.RevenueCatWebhookIntegrationTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.899"
+      },
+      {
+        "name": "com.tellpal.v2.user.migration.FirebaseMigrationIntegrationTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.838"
+      },
+      {
+        "name": "com.tellpal.v2.event.web.mobile.EventMobileIntegrationTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.732"
+      },
+      {
+        "name": "com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherPropertyTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.021"
+      },
+      {
+        "name": "com.tellpal.v2.admin.infrastructure.security.AdminRefreshTokenHasherTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.001"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4LocalComparisonLedgerTest",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.446"
+      },
+      {
+        "name": "com.tellpal.v2.event.application.EventTrackingServicePropertyTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.016"
+      },
+      {
+        "name": "com.tellpal.v2.admin.web.admin.AdminAuthIntegrationTest",
+        "tests": "7",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.915"
+      },
+      {
+        "name": "com.tellpal.v2.asset.web.admin.AssetProcessingAdminIntegrationTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.857"
+      },
+      {
+        "name": "com.tellpal.v2.content.migration.ContributorRoleMigrationIntegrationTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.031"
+      },
+      {
+        "name": "com.tellpal.v2.content.domain.ContributorTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.002"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.ReadingPreparationIntegrationTest",
+        "tests": "18",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "45.874"
+      },
+      {
+        "name": "com.tellpal.v2.content.ContentPublicationServiceIntegrationTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.987"
+      },
+      {
+        "name": "com.tellpal.v2.asset.StoryDetailHeroQueryServiceTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.245"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.storage.ReadingStorageLiveProbeTest",
+        "tests": "7",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.249"
+      },
+      {
+        "name": "com.tellpal.v2.admin.infrastructure.security.AdminJwtServiceTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.002"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ListingCoverAdminSourceIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.838"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ContentPublicationAdminIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.94"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.reading.Package1CorpusTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "1",
+        "time": "0.0"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.reading.Package1CorpusRereadTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "1",
+        "time": "0.0"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaManualRetryTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.775"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaSetupTest",
+        "tests": "10",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.33"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.RegisteringAssetProcessingJobExecutorTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.211"
+      },
+      {
+        "name": "com.tellpal.v2.content.migration.ContentCoverOwnershipMigrationIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.103"
+      },
+      {
+        "name": "com.tellpal.v2.category.web.admin.CategoryAdminControllerTest",
+        "tests": "17",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.354"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.LibraryStoryDetailTestControllerTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.009"
+      },
+      {
+        "name": "com.tellpal.v2.content.domain.ContentTest",
+        "tests": "20",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.005"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ContentAdminIntegrationTest",
+        "tests": "21",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "5.359"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4ApprovedWindowLedgerTest",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.358"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.LibraryHomeProfileContextTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.216"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.storage.AssetStorageObjectPathBuilderTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.002"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.PageImageRenditionProcessorTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.003"
+      },
+      {
+        "name": "com.tellpal.v2.content.migration.InstrumentCatalogMigrationIntegrationTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.695"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.p5g.P5gGateTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.11"
+      },
+      {
+        "name": "com.tellpal.v2.asset.AssetProcessingTargetTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.002"
+      },
+      {
+        "name": "com.tellpal.v2.content.ContentManagementIntegrationTest",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.994"
+      },
+      {
+        "name": "com.tellpal.v2.category.domain.CategoryDisplayOrderPropertyTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.054"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4ConsumerQaLedgerTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.122"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.FreeAccessAdminControllerTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.197"
+      },
+      {
+        "name": "com.tellpal.v2.content.publication.ReadingPublicationAdminIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.965"
+      },
+      {
+        "name": "com.tellpal.v2.support.P3LocalCmsSeedIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "4.26"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.ReadingPreservationTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "7.722"
+      },
+      {
+        "name": "com.tellpal.v2.ApplicationModulesTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.706"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ContributorAdminIntegrationTest",
+        "tests": "25",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "6.188"
+      },
+      {
+        "name": "com.tellpal.v2.admin.infrastructure.security.AdminPasswordHasherTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.211"
+      },
+      {
+        "name": "com.tellpal.v2.purchase.application.PurchaseAttributionServicePropertyTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.011"
+      },
+      {
+        "name": "com.tellpal.v2.user.domain.AppUserPrimaryProfilePropertyTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.011"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4ConsumerQaCompositionTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.134"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ContentAdminControllerTest",
+        "tests": "21",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.52"
+      },
+      {
+        "name": "com.tellpal.v2.content.publication.ReadingPublicationSchedulerIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "4.764"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.storage.ReadingStorageTransportTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.915"
+      },
+      {
+        "name": "com.tellpal.v2.content.migration.LullabyPlaybackMigrationIntegrationTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "3.144"
+      },
+      {
+        "name": "com.tellpal.v2.content.StoryDetailMetadataQueryServiceTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.122"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaCompositionTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.261"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4ExistingComparisonLedgerTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.291"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.p5g.P5gCorpusTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "1",
+        "time": "0.0"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4LocalComparisonCompositionTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.116"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.admin.ContributorAdminControllerTest",
+        "tests": "21",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.259"
+      },
+      {
+        "name": "com.tellpal.v2.content.domain.StoryPublicationReadinessPolicyTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.0"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.P5fLocalCompatibilityProbeTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.004"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.ListingCoverProcessingExecutorTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.42"
+      },
+      {
+        "name": "com.tellpal.v2.category.CategoryManagementIntegrationTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.889"
+      },
+      {
+        "name": "com.tellpal.v2.content.reading.ReadingImageSourceSnapshotTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.218"
+      },
+      {
+        "name": "com.tellpal.v2.TellPalApplicationSmokeTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.914"
+      },
+      {
+        "name": "com.tellpal.v2.event.web.mobile.EventMobileControllerTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.254"
+      },
+      {
+        "name": "com.tellpal.v2.admin.application.AdminAuthenticationServiceTest",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.299"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+        "tests": "12",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "5.921"
+      },
+      {
+        "name": "com.tellpal.v2.asset.web.admin.AssetAdminIntegrationTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.902"
+      },
+      {
+        "name": "com.tellpal.v2.asset.web.admin.AssetAdminControllerTest",
+        "tests": "14",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.694"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest",
+        "tests": "13",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "13",
+        "time": "0.006"
+      },
+      {
+        "name": "com.tellpal.v2.asset.AssetProcessingIntegrationTest",
+        "tests": "18",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.507"
+      },
+      {
+        "name": "com.tellpal.v2.content.domain.StoryPageCountPropertyTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.007"
+      },
+      {
+        "name": "com.tellpal.v2.asset.application.AssetProcessingFollowupSnapshotTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.09"
+      },
+      {
+        "name": "com.tellpal.v2.asset.AssetRegistryIntegrationTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.918"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.UserProfileMobileIntegrationTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.102"
+      },
+      {
+        "name": "com.tellpal.v2.category.LibraryStoryDetailIntegrationTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.04"
+      },
+      {
+        "name": "com.tellpal.v2.category.application.AdminCategoryCurationQueryServiceTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.15"
+      },
+      {
+        "name": "com.tellpal.v2.content.migration.CanonicalAudioStoryTypeRemovalMigrationIntegrationTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.989"
+      },
+      {
+        "name": "com.tellpal.v2.content.infrastructure.persistence.JdbcContentRegistryReadRepositoryIntegrationTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.726"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.LibraryHomeTestControllerTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.009"
+      },
+      {
+        "name": "com.tellpal.v2.category.web.admin.CategoryAdminIntegrationTest",
+        "tests": "13",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "4.158"
+      },
+      {
+        "name": "com.tellpal.v2.asset.reading.ReadingPreparationGuardsIntegrationTest",
+        "tests": "10",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "18.724"
+      },
+      {
+        "name": "com.tellpal.v2.admin.infrastructure.security.InMemoryAdminAuthenticationAttemptGuardTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.001"
+      },
+      {
+        "name": "com.tellpal.v2.content.web.mobile.PublicDeliveryIntegrationTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.21"
+      },
+      {
+        "name": "com.tellpal.v2.category.migration.LibraryHomeOptInMigrationIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.301"
+      },
+      {
+        "name": "com.tellpal.v2.shared.LanguageSeedIntegrationTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.636"
+      },
+      {
+        "name": "com.tellpal.v2.content.publication.ReadingPublicationIntegrationTest",
+        "tests": "22",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "58.556"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.TestStoryPageMediaControllerTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.065"
+      },
+      {
+        "name": "com.tellpal.v2.content.application.StoryPageTextlessIllustrationExportServiceTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.009"
+      },
+      {
+        "name": "com.tellpal.v2.admin.application.AdminRoleManagementServiceTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.109"
+      },
+      {
+        "name": "com.tellpal.v2.category.web.admin.CategoryHomeAdminIntegrationTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.136"
+      },
+      {
+        "name": "com.tellpal.v2.support.P3LocalCmsSetupTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.026"
+      },
+      {
+        "name": "com.tellpal.v2.content.ContentFreeAccessServiceIntegrationTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.637"
+      },
+      {
+        "name": "com.tellpal.v2.admin.web.admin.AdminAuthControllerTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.231"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.ProfileMobileControllerTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.199"
+      },
+      {
+        "name": "com.tellpal.v2.asset.infrastructure.media.ListingCoverRenditionProcessorTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.121"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaScopeTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.156"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4ConsumerQaSetupTest",
+        "tests": "12",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.304"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaManualTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.278"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaLedgerTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.16"
+      }
+    ]
+  },
+  "failsafe": {
+    "totals": {
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    "suites": [
+      {
+        "name": "com.tellpal.v2.support.P4LocalComparisonFixtureIT",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "5.776"
+      },
+      {
+        "name": "com.tellpal.v2.user.web.mobile.ReadingImageComparisonTestControllerIT",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "4.676"
+      },
+      {
+        "name": "com.tellpal.v2.content.application.publication.ReadingImageComparisonServiceIT",
+        "tests": "20",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "104.927"
+      },
+      {
+        "name": "com.tellpal.v2.ApplicationModulesDocumentationIT",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.649"
+      },
+      {
+        "name": "com.tellpal.v2.support.P4b5ConsumerQaIT",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "2",
+        "time": "0.009"
+      },
+      {
+        "name": "com.tellpal.v2.asset.application.reading.ReadingImageDeliveryServiceIT",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.07"
+      }
+    ]
+  },
+  "status": "PASS",
+  "skipped": [
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.trailingBytesInsideVp8lAreRefusedDespiteValidRiffAndChunkLengths",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.exifPrefixOnlyIsNormalizedAndEveryOrientationIsRefused",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.mimeAndTruncationAndTrailingAreRefused",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.p3SentinelPreservesAllRawSamplesAndDefaultReadChangesThem",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.rgbIccXmpAndTiffMismatchesAreDistinctFailures",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.pixelEncodedAndMetadataLimitsAreRefused",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.actualTransparentRasterIsRefused",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.currentP2StillRejectsP3PngAndWebp",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest.lossyAnimationAlphaVersionAndCorruptHeaderAreRefusedBeforeDecode",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.infrastructure.media.reading.Package1CorpusTest.all41SourcesProduce17ExactCopiesAnd24NewWebpWithIndependentStoredProof",
+      "reason": "System property [package1.corpus.report] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.infrastructure.media.reading.Package1CorpusRereadTest.finalClassesIndependentlyRereadAll41AndOnlyConstructorAnnotationIdentityChanged",
+      "reason": "System property [package1.reread.corpus] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gCorpusTest.all41PinnedFilesPassIndependentChildRereadAndFullPreservation",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.nativeRssIsPositiveAndUnavailablePidDoesNotInventMemory",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.interruptWaitsForExitAndCapacityIsSingleJob",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.realChildRejectsCorrectPinsWithDifferentRgbOrMetadata",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.realNonzeroAndMissingResponseCannotSucceed",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.realTimeoutKillsChildAndWaitsForExit",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.failureAfterCreateHasDiagnosticAndNoCorpusSuccess",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.reportPinAndOutputCollisionFailClosed",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.correctCopyIsImmutableAndRereadRejectsChangedOrMissingOutputAndWrongPin",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.effectiveBudgetsCannotExceedProfile",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.actualNetworkIsDeniedAndLogsAreCapped",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.changedProtectionPinOrMembershipCannotCreateOutput",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.changedProtectionAfterStartPreventsSuccessManifest",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "surefire",
+      "test": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest.realRssLimitKillsChildAndWaitsForExit",
+      "reason": "System property [p5g.local.enabled] does not exist"
+    },
+    {
+      "stage": "failsafe",
+      "test": "com.tellpal.v2.support.P4b5ConsumerQaIT.postContextCloseDatabaseReservationCannotBecomeSuccessfulOutcome",
+      "reason": "İzole nihai JDBC seçilmedi"
+    },
+    {
+      "stage": "failsafe",
+      "test": "com.tellpal.v2.support.P4b5ConsumerQaIT.realV37QuotaSurvivesNewBudgetInstanceAndFailedStorageIo",
+      "reason": "İzole sentetik JDBC seçilmedi"
+    }
+  ],
+  "excludedPriorRunReports": [
+    "com.tellpal.v2.content.web.mobile.TestStoryPageMediaControllerTest",
+    "com.tellpal.v2.support.P4b5ConsumerQaIT"
+  ],
+  "executedWithoutSkip": 590
+}

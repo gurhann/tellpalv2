@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "original41Encoding": {
+    "artifact": "corpus-result.json",
+    "sources": 41,
+    "jpegCopies": 17,
+    "newWebp": 24,
+    "profileFingerprint": "ff7bf7735eb0f0aeb130346db5ec656ec7a5f1f174ba42531fd9934ca728e5a5",
+    "jarSha256": "02fe97875022f0197c97bf26ced1b2ff251ef916fc582e76e5bd8d9293305f98"
+  },
+  "finalIndependent41Reread": {
+    "artifact": "review-patch-reread-result.json",
+    "sources": 41,
+    "profileFingerprint": "a31bcd21d7b40435132157fc121244cc17753b2942e28fc40220bed6476afa02",
+    "newEncoding": false,
+    "originalEncodingFingerprintPreserved": true
+  },
+  "finalLinuxArm64Jar": {
+    "artifact": "linux-arm64-runtime.json",
+    "jarSha256": "097eb36d1292169eb358ca31119e15184fffbb1be77eace23e9879592214c15a",
+    "profileFingerprint": "945eac6e13f0febfb0853595e0778930bc845cbc187e67b066c6f8fd42c8aefc",
+    "receipt": "review-linux-runtime-receipt.json",
+    "legacyPngFitVerified": true,
+    "faultModes": [
+      "late",
+      "abrupt",
+      "rss"
+    ]
+  },
+  "bindingAnnotationHistory": "binding-identity.json",
+  "encodingAndRawCoreClassesUnchanged": {
+    "ReadingPreservationEncoder": "0277c4796a2680a9e7b05f0e4f6d670a9a85173970c8fd3bda080e2d6d997c6a",
+    "ReadingPreservationRawDecoder": "79681074b62310abb6dfd5e7a496e8319b9d8d2e8811a5e9a85e46605230d7f0",
+    "ReadingPreservation": "672ae5915c084077f685cf97a3fccea9e82f2254009ff95c80e59c408b1246eb",
+    "ReadingPreservationContainers": "999c6cb3e2ca8de07c855fc8ffadeb9437070a07607c82808de351bf5873cef9"
+  },
+  "guardian": {
+    "sourceSha256": "b30cb810e9e7f16d1830b1de00f9d8d52d94a14fb299d733a267664fe8c60643",
+    "compileFlags": "-std=c11 -O2 -Wall -Wextra -Werror",
+    "hostCompiler": {
+      "launcher": "/usr/bin/cc",
+      "launcherSha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2",
+      "resolvedCompiler": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+      "resolvedCompilerSha256": "ee029330bf58ab6e481385f4237cc54602eaa8b81526242e5c5ab5b76e8c5a7e",
+      "version": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+      "flags": "-std=c11 -O2 -Wall -Wextra -Werror -DSOURCE_SHA256=source_sha"
+    },
+    "hostBinarySha256": "bb0aea2265d92b95f75890888a0b8c4e3d2e58417fd38962935d3d0cd075bc24",
+    "linuxCompilerVersion": "cc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "linuxCompilerPath": "/usr/bin/aarch64-linux-gnu-gcc-15",
+    "linuxBuildBinaryHashes": {
+      "/usr/bin/aarch64-linux-gnu-gcc-15": "5b06a5b85cab901e2af3e8f351a6d4e8e6a93af24797bd8c01e5391ac6b4e63b",
+      "/opt/tellpal-supervisor/bin/reading-process-supervisor": "8e07d3295d2ba35c5df65d26a0cd4e399008f5d9a1a999a82b79baff372e6a30",
+      "/opt/tellpal-webp/bin/cwebp": "c1cbc3d46a3beb3883359dc9b112d7f5d08ed213a6a5d954f958b6c8baee7fc8",
+      "/opt/tellpal-webp/bin/webpmux": "4af97a7422a8753164b8bd77b1b74613ed1e9fb603becde41d1aeea3a9332b4c",
+      "/lib/aarch64-linux-gnu/libc.so.6": "7b17086ce95b15145e6c2c5f8146395f80e2df1af2636fbf78e90c546a70df06"
+    },
+    "linuxRuntimeGuardian": {
+      "binarySha256": "8e07d3295d2ba35c5df65d26a0cd4e399008f5d9a1a999a82b79baff372e6a30",
+      "compileFlags": "-std=c11 -O2 -Wall -Wextra -Werror",
+      "linuxReap": "PR_SET_CHILD_SUBREAPER_WAITPID_ALL",
+      "macosExit": "KERN_PROC_PGRP_NO_NONZOMBIE_MEMBERS",
+      "ownership": "SETSID_GROUP_GUARDIAN_STDIN_LIFELINE_WORKER_PID_HELD_UNTIL_GROUP_EXIT",
+      "sourceSha256": "b30cb810e9e7f16d1830b1de00f9d8d52d94a14fb299d733a267664fe8c60643",
+      "teardown": {
+        "emptyConfirmations": 2,
+        "monitorMillis": 10,
+        "signals": "SIGSTOP_THEN_SIGKILL_OWNED_GROUP"
+      },
+      "version": "tellpal-reading-supervisor-v1 b30cb810e9e7f16d1830b1de00f9d8d52d94a14fb299d733a267664fe8c60643 compiler=15.2.0"
+    }
+  },
+  "mutationRestoration": {
+    "status": "MUTANT_REJECTED",
+    "mutation": "Yalnız guardian ve doğrudan Java worker RSS ölçüldü; worker altındaki OS süreçleri toplamdan çıkarıldı.",
+    "test": "deadlineAndTotalNativeRssDiskLogLimitsObserveEntireProcessTreeExit",
+    "expectedFailure": "PROCESS_RSS_LIMIT yerine CHILD_TIMEOUT",
+    "mavenExitCode": 1,
+    "restoredSourceSha256": "9af3177547ce77d560740df882e1374d68c5f5b8ec65064fe90fd1158fb0a508"
+  },
+  "restoredClassBytecodeVerified": true
+}

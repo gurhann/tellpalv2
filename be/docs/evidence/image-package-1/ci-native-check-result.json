@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "workflow": ".github/workflows/backend-verify.yml",
+  "workflowSha256": "1e5c353e2e2d56e50cefd5355f011313d78c7e31dade6458909879310f4a2282",
+  "sameJobSetupIndex": 4,
+  "verifyIndex": 5,
+  "yamlParsed": true,
+  "bashSyntaxValid": true,
+  "installerSyntaxValid": true,
+  "requiredMarker": "TELLPAL_READING_NATIVE_TESTS_REQUIRED=true",
+  "missingToolsUnitTest": "requiredMarkerWithoutToolsFailsRatherThanSkipping",
+  "remoteCiExecuted": false,
+  "scope": "Yalnız native setup ve environment eklendi; mevcut trigger/job/secret değişmedi."
+}

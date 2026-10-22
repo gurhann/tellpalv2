@@ -12,6 +12,7 @@ import com.tellpal.v2.asset.application.reading.ReadingPreparationCapacity;
 
 /** Holds one shared local reservation until actual child exit, including timeout/interrupt paths. */
 public class ReadingImageProcess {
+    public static final long LOG_BYTES = 1_048_576;
     public static final int RSS_EXIT_CONFIRMATION_MILLIS=20;
     private static final Semaphore CAPACITY=new Semaphore(1,true);
     private volatile long lastPid;
@@ -24,6 +25,7 @@ public class ReadingImageProcess {
     }
     public byte[] convert(byte[] original, TestProfile profile) throws IOException {
         ReadingPreparationCapacity.requireParentMemory(profile);
+        if (original.length == 0 || original.length > profile.maxSourceBytes()) throw new IOException("SOURCE_BYTE_LIMIT");
         ReadingDeadline revision=REVISION_BUDGET.get();
         long operationMillis=revision==null?profile.sourceMillis():revision.remainingMillis(profile.sourceMillis());
         long deadline=System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(operationMillis);
@@ -31,14 +33,16 @@ public class ReadingImageProcess {
         Path directory=null; Process child=null;
         try {
             directory=Files.createTempDirectory("tellpal-reading-");
-            Path input=directory.resolve("original"),output=directory.resolve("output.png"),settings=directory.resolve("profile.json"),log=directory.resolve("child.log");
+            Path input=directory.resolve("original"),output=directory.resolve("output"),settings=directory.resolve("profile.json"),log=directory.resolve("child.log");
             Files.write(input,original); Files.writeString(settings,new ObjectMapper().writeValueAsString(profile));
             child=start(input,output,settings,log,profile); lastPid=child.pid();
             while(!child.waitFor(20,TimeUnit.MILLISECONDS)) {
+                if (logSize(directory) > LOG_BYTES) throw new IOException("CHILD_LOG_LIMIT");
                 if(System.nanoTime()>deadline) throw new IOException("CHILD_TIMEOUT");
                 if(diskSize(directory)>profile.diskBytes()) throw new IOException("TEMP_DISK_LIMIT");
-                if(residentMemoryKiB(child)>profile.processMiB()*1024L) throw new IOException("PROCESS_RSS_LIMIT");
+                if(treeResidentMemoryKiB(child)>profile.processMiB()*1024L) throw new IOException("PROCESS_RSS_LIMIT");
             }
+            if (logSize(directory) > LOG_BYTES) throw new IOException("CHILD_LOG_LIMIT");
             if(System.nanoTime()>deadline) throw new IOException("CHILD_TIMEOUT");
             if(child.exitValue()!=0) throw new IOException("CHILD_REJECTED:"+boundedLog(log));
             if(diskSize(directory)>profile.diskBytes()) throw new IOException("TEMP_DISK_LIMIT");
@@ -47,7 +51,8 @@ public class ReadingImageProcess {
             return Files.readAllBytes(output);
         } catch(InterruptedException e) { Thread.currentThread().interrupt(); throw new IOException("CHILD_INTERRUPTED",e); }
         finally {
-            if(child!=null) terminateAndAwait(child);
+            if(child instanceof ReadingProcessSupervisor.OwnedProcess owned) owned.finish();
+            else if(child!=null) terminateAndAwait(child);
             if(directory!=null) {
                 try(var files=Files.walk(directory)) { for(Path file:files.sorted(Comparator.reverseOrder()).toList()) Files.deleteIfExists(file); }
                 finally { CAPACITY.release(); }
@@ -59,7 +64,16 @@ public class ReadingImageProcess {
                 "-Xmx"+p.heapMiB()+"m","-XX:MaxDirectMemorySize="+p.directMiB()+"m","-XX:MaxMetaspaceSize=64m",
                 "-XX:ReservedCodeCacheSize=32m","-Xss512k","-XX:+UseSerialGC","-XX:ActiveProcessorCount=1","-Djava.awt.headless=true",
                 "-Dloader.main="+ReadingImageChild.class.getName(),"-cp",System.getProperty("java.class.path"),childMain(),input.toString(),output.toString(),settings.toString(),com.tellpal.v2.asset.domain.reading.ReadingProfiles.capture(com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role.READING_PAGE,p).fingerprint()));
+        if (ReadingPreservation.enabled(p)) {
+            command.add(1, "-D" + ReadingProcessSupervisor.PROPERTY + "=" + ReadingProcessSupervisor.binary().getParent());
+            command.add(1, "-D" + ReadingWebpTools.PROPERTY + "=" + ReadingWebpTools.directory());
+            return startOwned(command, log);
+        }
         return new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(log.toFile()).start();
+    }
+    /** Test komutları da gerçek guardian/session sahipliğinden geçer. */
+    protected final Process startOwned(List<String> command, Path log) throws IOException {
+        return ReadingProcessSupervisor.start(command, log, log.resolveSibling("group.members"));
     }
     private static String childMain() throws IOException {
         String classpath=System.getProperty("java.class.path");
@@ -72,7 +86,40 @@ public class ReadingImageProcess {
         return ReadingImageChild.class.getName();
     }
     private static long diskSize(Path directory) throws IOException {
-        try(var files=Files.list(directory)) { long total=0; for(Path file:files.toList()) total=Math.addExact(total,Files.size(file)); return total; }
+        try(var files=Files.list(directory)) {
+            long total=0;
+            for(Path file:files.toList()) {
+                try { total=Math.addExact(total,Files.size(file)); }
+                catch(NoSuchFileException replacedSnapshot) { /* Guardian snapshot rename tahsis bütçesini büyütmez. */ }
+            }
+            return total;
+        }
+    }
+    private static long logSize(Path directory) throws IOException {
+        long size = 0;
+        for (String name : List.of("child.log", "native.log")) {
+            Path path = directory.resolve(name); if (Files.exists(path)) size = Math.addExact(size, Files.size(path));
+        }
+        return size;
+    }
+    private long treeResidentMemoryKiB(Process child) throws IOException, InterruptedException {
+        long total = residentMemoryKiB(child);
+        if (child instanceof ReadingProcessSupervisor.OwnedProcess owned) {
+            for (long pid : owned.members()) {
+                try { total = Math.addExact(total, probeRssKiB(pid)); }
+                catch (IOException failure) {
+                    // Guardian yalnız çalışabilir grup üyelerini yayımlar; exit yarışı RSS üretmez.
+                    if (owned.isAlive() && owned.members().contains(pid) && ProcessHandle.of(pid).map(ProcessHandle::isAlive).orElse(false)) {
+                        if (System.getProperty("os.name").equals("Linux") && Files.exists(Path.of("/proc", Long.toString(pid), "stat"))) {
+                            String stat = Files.readString(Path.of("/proc", Long.toString(pid), "stat"));
+                            if (stat.substring(stat.lastIndexOf(')') + 2).startsWith("Z")) continue;
+                        }
+                        throw failure;
+                    }
+                }
+            }
+        }
+        return total;
     }
     private static String boundedLog(Path log) throws IOException {
         try(var stream=Files.newInputStream(log)) { return new String(stream.readNBytes(2048),java.nio.charset.StandardCharsets.UTF_8); }

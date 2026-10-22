@@ -1,0 +1,19 @@
+{
+  "preExisting": {
+    "checked": 88,
+    "changed": []
+  },
+  "originals": {
+    "checked": 41,
+    "changed": []
+  },
+  "p5c": {
+    "checked": 124,
+    "changed": []
+  },
+  "p5fEvidence": {
+    "checked": 7,
+    "changed": []
+  },
+  "frozenBlockSha256": "1dd8d666e5143c9aefee3f1c06b54f0ec5b6d570a4919265bb1373a957bbad5d"
+}

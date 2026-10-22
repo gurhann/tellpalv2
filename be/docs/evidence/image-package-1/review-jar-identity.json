@@ -1,0 +1,55 @@
+{
+  "beforeReviewJarSha256": "32b7352f23cc55d12728f644fd2f6066a42a2ad61c8902246426b64664346336",
+  "finalJarSha256": "097eb36d1292169eb358ca31119e15184fffbb1be77eace23e9879592214c15a",
+  "probeJarByteIdenticalToFinalVerify": true,
+  "changedJarPayloads": [
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/domain/reading/ReadingProfiles.class",
+      "beforeSha256": "41c63b0f2b4aa69fdc70044a062078dca492f97355a7857cda5a03ea8c62d895",
+      "afterSha256": "07270a0420032051909bd3c6b523b6709be3c538169f767253a96dae39d6afe1"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingImageProcess.class",
+      "beforeSha256": "4a1584e8c18f3437abdf8951f01c3321105f8f684afc5903672bffffcc2fa4f6",
+      "afterSha256": "5da29cfa49eaa7219a6391f0d6c7059da897840c7377e830b436f0bdd9603d47"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingPreservationMetadata$1.class",
+      "beforeSha256": null,
+      "afterSha256": "33f2ed12cd8fa2afbbebf32cc11006d55217bb6a287b441c78bec958dd44e239"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingPreservationMetadata.class",
+      "beforeSha256": "c2d70b847493ccc8bd994ab5be9d5ecdc5e2825b5fecf9d088afeb054357594c",
+      "afterSha256": "2d44aa64cdff7369362831ede1138d11bcf563b6be4dedfc2441e17d199151fa"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingPreservationPng.class",
+      "beforeSha256": "ba72fab52b73429af82b240127c2cd509b9341f06a56149a3fe12557a0ef76f7",
+      "afterSha256": "2603b4c7a9bc8bacfab0ef6f862033bbfdc3078f71a836ab70e007ddfb9133ac"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingProcessSupervisor$OwnedProcess.class",
+      "beforeSha256": null,
+      "afterSha256": "52146d19fef9a0a1a0252253d2a69bcc0f92a44e49a952a32ee3dd9b609fddd9"
+    },
+    {
+      "entry": "BOOT-INF/classes/com/tellpal/v2/asset/infrastructure/media/reading/ReadingProcessSupervisor.class",
+      "beforeSha256": null,
+      "afterSha256": "18c2836b1a049a7dca896126b83278e69d903777e4d2008b290be44712bf7b4c"
+    },
+    {
+      "entry": "META-INF/spring-modulith/application-modules.json",
+      "beforeSha256": "b2da24428f4399375b6928ff640be1a11ce1cbb5c90757a76399dce5eafac3da",
+      "afterSha256": "7bae63e97b81f7ae1e0a530584eb15aac533f4ea61321d89268f72354f652b60"
+    }
+  ],
+  "encodingAndRawCoreUnchanged": {
+    "ReadingPreservationEncoder": "0277c4796a2680a9e7b05f0e4f6d670a9a85173970c8fd3bda080e2d6d997c6a",
+    "ReadingPreservationRawDecoder": "79681074b62310abb6dfd5e7a496e8319b9d8d2e8811a5e9a85e46605230d7f0",
+    "ReadingPreservation": "672ae5915c084077f685cf97a3fccea9e82f2254009ff95c80e59c408b1246eb",
+    "ReadingPreservationContainers": "999c6cb3e2ca8de07c855fc8ffadeb9437070a07607c82808de351bf5873cef9"
+  },
+  "sourceRestoredSha256": "9af3177547ce77d560740df882e1374d68c5f5b8ec65064fe90fd1158fb0a508",
+  "restoredClassBytecodeVerified": true
+}

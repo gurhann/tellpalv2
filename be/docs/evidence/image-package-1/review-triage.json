@@ -1,0 +1,74 @@
+{
+  "status": "resolved",
+  "spec": "_bmad-output/implementation-artifacts/spec-image-package-1-preparation.md",
+  "allReviewLayersCollectedBeforeTriage": true,
+  "intentGap": false,
+  "badSpec": false,
+  "rationale": "Donmuş sınırlar yeterli: kaynak semantiği, süreç ağacı sonlandırma ve çalışan doğrulama zaten isteniyor. Bulgular mevcut uygulamanın dar kusurlarıdır; yeni ürün niyeti veya storage mimarisi gerekmez.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "sources": [
+        "blind-hunter",
+        "edge-case-hunter"
+      ],
+      "category": "patch",
+      "finding": "Teardown sırasında başlayan veya Java aniden ölünce yeniden ebeveynlenen native süreç sahiplikten kaçabiliyor.",
+      "requiredFix": "İşe ait sağlam süreç grubu/session sahipliği ve iki yarış için gerçek exit testleri.",
+      "resolution": "PASS",
+      "evidence": "review-patches-result.json"
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "sources": [
+        "edge-case-hunter"
+      ],
+      "category": "patch",
+      "finding": "XMP orientation semantiği TIFF etiketi olmadan kabul edilebiliyor.",
+      "requiredFix": "Namespace bağımsız güvenli metadata kontrolü ve attribute/element ret testleri.",
+      "resolution": "PASS",
+      "evidence": "review-patches-result.json"
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "sources": [
+        "edge-case-hunter"
+      ],
+      "category": "patch",
+      "finding": "PNG pHYs içindeki kare olmayan piksel oranı WebP çıktıda korunmuyor.",
+      "requiredFix": "Kare olmayan oranı açıkça reddet; eşit oran kabulünü koru.",
+      "resolution": "PASS",
+      "evidence": "review-patches-result.json"
+    },
+    {
+      "id": "R4",
+      "severity": "medium",
+      "sources": [
+        "verification-gap"
+      ],
+      "category": "patch",
+      "finding": "Normal CI gerçek codec/P2/P3 testlerini araç yokluğunda atlayabiliyor.",
+      "requiredFix": "Pinli installer, açık araç yolu ve eksik araçta CI failure.",
+      "resolution": "PASS",
+      "evidence": "review-patches-result.json"
+    },
+    {
+      "id": "R5",
+      "severity": "medium",
+      "sources": [
+        "verification-gap"
+      ],
+      "category": "patch",
+      "finding": "RSS testi yalnız Java belleğini yükselttiği için descendant toplama regresyonunu yakalamıyor.",
+      "requiredFix": "Java limit altında, alt süreç tahsisiyle toplam RSS ret ve iki gerçek exit testi.",
+      "resolution": "PASS",
+      "evidence": "review-patches-result.json"
+    }
+  ],
+  "verification": "review-patches-result.json",
+  "finalIdentities": "review-final-identities.json",
+  "focusedSupervisorReview": "Eyleme geçirilebilir bulgu yok; C SHA b30cb810e9e7f16d1830b1de00f9d8d52d94a14fb299d733a267664fe8c60643."
+}

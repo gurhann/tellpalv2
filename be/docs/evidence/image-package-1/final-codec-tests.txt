@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.tellpal.v2.asset.reading.ReadingPreservationTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.957 s -- in com.tellpal.v2.asset.reading.ReadingPreservationTest
