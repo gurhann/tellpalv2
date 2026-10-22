@@ -1,0 +1,4522 @@
+{
+  "scope": "P5F_PHYSICAL_IPHONE_LOCAL_PILOT",
+  "status": "SEALED_VERIFIED",
+  "device": {
+    "model": "iPhone 12",
+    "osVersion": "26.7",
+    "physical": true
+  },
+  "buildRunId": "p5f-iphone-ff2ed531f5d3",
+  "collectionId": "collection-e6b43012",
+  "runNonce": "19154370444946ceb4d7710f3b0f1ab5",
+  "executableSha256": "17b701972764f8c538a64d00e06361a196666e5eb805c2f224f25467059ea421",
+  "packageId": "com.tellpal.tellpalMobilePoc.imageexperiment.release",
+  "bundleBytes": 43417766,
+  "summaryFileSha256": "39cfd6e843beeb2874e794c6cc33d4675621790a4e127e5ea349f96ca9374f15",
+  "sessionSha256": "cad24f86f113a8daeca1c69c8af8239ae0207fa7e6f12e40c1bfdcbd189af53b",
+  "events": 159,
+  "measuredTrials": 144,
+  "warmups": 12,
+  "sessionMicros": 158892242,
+  "trialsPerCase": 12,
+  "order": "six_permutations_twice_alternating_image_order",
+  "conditions": {
+    "network": "unsatisfied",
+    "thermal": "nominal",
+    "lowPower": false,
+    "allCleanup": true
+  },
+  "maximumTrialMicros": 1023876,
+  "maximumSamplingGapMicros": 11305,
+  "maximumSampledProcessBytes": 204408640,
+  "summary": {
+    "cases": {
+      "1950-original": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 749.5,
+            "min": 305,
+            "max": 817
+          },
+          "decodeMicros": {
+            "median": 67209.0,
+            "min": 49807,
+            "max": 68697
+          },
+          "firstDrawMicros": {
+            "median": 8905.5,
+            "min": 4149,
+            "max": 10572
+          },
+          "decodeDrawMicros": {
+            "median": 75951.5,
+            "min": 58883,
+            "max": 78407
+          },
+          "rasterMicros": {
+            "median": 226.0,
+            "min": 165,
+            "max": 244
+          },
+          "buildMicros": {
+            "median": 232.0,
+            "min": 163,
+            "max": 256
+          },
+          "sampledMaxBytes": {
+            "median": 152200992.0,
+            "min": 151176960,
+            "max": 153175808
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 742,
+            "decodeMicros": 67176,
+            "firstDrawMicros": 10105,
+            "decodeDrawMicros": 77281,
+            "rasterMicros": 234,
+            "buildMicros": 251,
+            "sampledMaxBytes": 152372992,
+            "maxGapMicros": 10951
+          },
+          {
+            "round": 1,
+            "readMicros": 805,
+            "decodeMicros": 67152,
+            "firstDrawMicros": 10572,
+            "decodeDrawMicros": 77724,
+            "rasterMicros": 234,
+            "buildMicros": 222,
+            "sampledMaxBytes": 151439104,
+            "maxGapMicros": 11068
+          },
+          {
+            "round": 2,
+            "readMicros": 748,
+            "decodeMicros": 67088,
+            "firstDrawMicros": 9217,
+            "decodeDrawMicros": 76305,
+            "rasterMicros": 220,
+            "buildMicros": 216,
+            "sampledMaxBytes": 151488320,
+            "maxGapMicros": 10904
+          },
+          {
+            "round": 3,
+            "readMicros": 817,
+            "decodeMicros": 66819,
+            "firstDrawMicros": 5872,
+            "decodeDrawMicros": 72691,
+            "rasterMicros": 234,
+            "buildMicros": 247,
+            "sampledMaxBytes": 152143680,
+            "maxGapMicros": 11090
+          },
+          {
+            "round": 4,
+            "readMicros": 773,
+            "decodeMicros": 66714,
+            "firstDrawMicros": 6764,
+            "decodeDrawMicros": 73478,
+            "rasterMicros": 228,
+            "buildMicros": 231,
+            "sampledMaxBytes": 151176960,
+            "maxGapMicros": 11157
+          },
+          {
+            "round": 5,
+            "readMicros": 784,
+            "decodeMicros": 67893,
+            "firstDrawMicros": 10514,
+            "decodeDrawMicros": 78407,
+            "rasterMicros": 222,
+            "buildMicros": 232,
+            "sampledMaxBytes": 152258304,
+            "maxGapMicros": 10878
+          },
+          {
+            "round": 6,
+            "readMicros": 745,
+            "decodeMicros": 68697,
+            "firstDrawMicros": 4149,
+            "decodeDrawMicros": 72846,
+            "rasterMicros": 226,
+            "buildMicros": 232,
+            "sampledMaxBytes": 152717120,
+            "maxGapMicros": 11059
+          },
+          {
+            "round": 7,
+            "readMicros": 305,
+            "decodeMicros": 49807,
+            "firstDrawMicros": 9076,
+            "decodeDrawMicros": 58883,
+            "rasterMicros": 165,
+            "buildMicros": 163,
+            "sampledMaxBytes": 153175808,
+            "maxGapMicros": 11113
+          },
+          {
+            "round": 8,
+            "readMicros": 793,
+            "decodeMicros": 67452,
+            "firstDrawMicros": 8735,
+            "decodeDrawMicros": 76187,
+            "rasterMicros": 244,
+            "buildMicros": 234,
+            "sampledMaxBytes": 151324416,
+            "maxGapMicros": 11059
+          },
+          {
+            "round": 9,
+            "readMicros": 729,
+            "decodeMicros": 67646,
+            "firstDrawMicros": 8070,
+            "decodeDrawMicros": 75716,
+            "rasterMicros": 220,
+            "buildMicros": 256,
+            "sampledMaxBytes": 152340224,
+            "maxGapMicros": 11143
+          },
+          {
+            "round": 10,
+            "readMicros": 751,
+            "decodeMicros": 67242,
+            "firstDrawMicros": 6270,
+            "decodeDrawMicros": 73512,
+            "rasterMicros": 226,
+            "buildMicros": 211,
+            "sampledMaxBytes": 151389888,
+            "maxGapMicros": 11117
+          },
+          {
+            "round": 11,
+            "readMicros": 736,
+            "decodeMicros": 67989,
+            "firstDrawMicros": 9171,
+            "decodeDrawMicros": 77160,
+            "rasterMicros": 224,
+            "buildMicros": 254,
+            "sampledMaxBytes": 152356544,
+            "maxGapMicros": 10864
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            63,
+            -57,
+            69,
+            -44,
+            11,
+            -39,
+            -440,
+            488,
+            -64,
+            22,
+            -15
+          ],
+          "decodeMicros": [
+            -24,
+            -64,
+            -269,
+            -105,
+            1179,
+            804,
+            -18890,
+            17645,
+            194,
+            -404,
+            747
+          ],
+          "firstDrawMicros": [
+            467,
+            -1355,
+            -3345,
+            892,
+            3750,
+            -6365,
+            4927,
+            -341,
+            -665,
+            -1800,
+            2901
+          ],
+          "decodeDrawMicros": [
+            443,
+            -1419,
+            -3614,
+            787,
+            4929,
+            -5561,
+            -13963,
+            17304,
+            -471,
+            -2204,
+            3648
+          ],
+          "rasterMicros": [
+            0,
+            -14,
+            14,
+            -6,
+            -6,
+            4,
+            -61,
+            79,
+            -24,
+            6,
+            -2
+          ],
+          "buildMicros": [
+            -29,
+            -6,
+            31,
+            -16,
+            1,
+            0,
+            -69,
+            71,
+            22,
+            -45,
+            43
+          ],
+          "sampledMaxBytes": [
+            -933888,
+            49216,
+            655360,
+            -966720,
+            1081344,
+            458816,
+            458688,
+            -1851392,
+            1015808,
+            -950336,
+            966656
+          ]
+        }
+      },
+      "1950-PNG": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 876.0,
+            "min": 684,
+            "max": 1550
+          },
+          "decodeMicros": {
+            "median": 82029.5,
+            "min": 80222,
+            "max": 83401
+          },
+          "firstDrawMicros": {
+            "median": 9065.5,
+            "min": 5688,
+            "max": 14201
+          },
+          "decodeDrawMicros": {
+            "median": 90552.0,
+            "min": 88328,
+            "max": 95308
+          },
+          "rasterMicros": {
+            "median": 221.0,
+            "min": 166,
+            "max": 235
+          },
+          "buildMicros": {
+            "median": 221.5,
+            "min": 177,
+            "max": 246
+          },
+          "sampledMaxBytes": {
+            "median": 151996224.0,
+            "min": 151439104,
+            "max": 153143040
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 912,
+            "decodeMicros": 80727,
+            "firstDrawMicros": 9250,
+            "decodeDrawMicros": 89977,
+            "rasterMicros": 235,
+            "buildMicros": 239,
+            "sampledMaxBytes": 151570176,
+            "maxGapMicros": 11153
+          },
+          {
+            "round": 1,
+            "readMicros": 925,
+            "decodeMicros": 81723,
+            "firstDrawMicros": 8637,
+            "decodeDrawMicros": 90360,
+            "rasterMicros": 234,
+            "buildMicros": 229,
+            "sampledMaxBytes": 152651584,
+            "maxGapMicros": 11154
+          },
+          {
+            "round": 2,
+            "readMicros": 684,
+            "decodeMicros": 82272,
+            "firstDrawMicros": 6645,
+            "decodeDrawMicros": 88917,
+            "rasterMicros": 166,
+            "buildMicros": 200,
+            "sampledMaxBytes": 153143040,
+            "maxGapMicros": 11169
+          },
+          {
+            "round": 3,
+            "readMicros": 909,
+            "decodeMicros": 81107,
+            "firstDrawMicros": 14201,
+            "decodeDrawMicros": 95308,
+            "rasterMicros": 167,
+            "buildMicros": 194,
+            "sampledMaxBytes": 151439104,
+            "maxGapMicros": 11128
+          },
+          {
+            "round": 4,
+            "readMicros": 871,
+            "decodeMicros": 83401,
+            "firstDrawMicros": 7014,
+            "decodeDrawMicros": 90415,
+            "rasterMicros": 223,
+            "buildMicros": 226,
+            "sampledMaxBytes": 151963456,
+            "maxGapMicros": 11305
+          },
+          {
+            "round": 5,
+            "readMicros": 881,
+            "decodeMicros": 82689,
+            "firstDrawMicros": 12050,
+            "decodeDrawMicros": 94739,
+            "rasterMicros": 226,
+            "buildMicros": 235,
+            "sampledMaxBytes": 152028992,
+            "maxGapMicros": 11080
+          },
+          {
+            "round": 6,
+            "readMicros": 1437,
+            "decodeMicros": 82640,
+            "firstDrawMicros": 5688,
+            "decodeDrawMicros": 88328,
+            "rasterMicros": 219,
+            "buildMicros": 210,
+            "sampledMaxBytes": 151521024,
+            "maxGapMicros": 11109
+          },
+          {
+            "round": 7,
+            "readMicros": 737,
+            "decodeMicros": 81817,
+            "firstDrawMicros": 8881,
+            "decodeDrawMicros": 90698,
+            "rasterMicros": 171,
+            "buildMicros": 217,
+            "sampledMaxBytes": 152487744,
+            "maxGapMicros": 11144
+          },
+          {
+            "round": 8,
+            "readMicros": 687,
+            "decodeMicros": 82242,
+            "firstDrawMicros": 10070,
+            "decodeDrawMicros": 92312,
+            "rasterMicros": 231,
+            "buildMicros": 226,
+            "sampledMaxBytes": 152946432,
+            "maxGapMicros": 11067
+          },
+          {
+            "round": 9,
+            "readMicros": 691,
+            "decodeMicros": 80564,
+            "firstDrawMicros": 9496,
+            "decodeDrawMicros": 90060,
+            "rasterMicros": 169,
+            "buildMicros": 192,
+            "sampledMaxBytes": 151652032,
+            "maxGapMicros": 11095
+          },
+          {
+            "round": 10,
+            "readMicros": 1550,
+            "decodeMicros": 82430,
+            "firstDrawMicros": 8259,
+            "decodeDrawMicros": 90689,
+            "rasterMicros": 225,
+            "buildMicros": 246,
+            "sampledMaxBytes": 151897856,
+            "maxGapMicros": 11168
+          },
+          {
+            "round": 11,
+            "readMicros": 793,
+            "decodeMicros": 80222,
+            "firstDrawMicros": 12241,
+            "decodeDrawMicros": 92463,
+            "rasterMicros": 172,
+            "buildMicros": 177,
+            "sampledMaxBytes": 152159936,
+            "maxGapMicros": 11104
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            13,
+            -241,
+            225,
+            -38,
+            10,
+            556,
+            -700,
+            -50,
+            4,
+            859,
+            -757
+          ],
+          "decodeMicros": [
+            996,
+            549,
+            -1165,
+            2294,
+            -712,
+            -49,
+            -823,
+            425,
+            -1678,
+            1866,
+            -2208
+          ],
+          "firstDrawMicros": [
+            -613,
+            -1992,
+            7556,
+            -7187,
+            5036,
+            -6362,
+            3193,
+            1189,
+            -574,
+            -1237,
+            3982
+          ],
+          "decodeDrawMicros": [
+            383,
+            -1443,
+            6391,
+            -4893,
+            4324,
+            -6411,
+            2370,
+            1614,
+            -2252,
+            629,
+            1774
+          ],
+          "rasterMicros": [
+            -1,
+            -68,
+            1,
+            56,
+            3,
+            -7,
+            -48,
+            60,
+            -62,
+            56,
+            -53
+          ],
+          "buildMicros": [
+            -10,
+            -29,
+            -6,
+            32,
+            9,
+            -25,
+            7,
+            9,
+            -34,
+            54,
+            -69
+          ],
+          "sampledMaxBytes": [
+            1081408,
+            491456,
+            -1703936,
+            524352,
+            65536,
+            -507968,
+            966720,
+            458688,
+            -1294400,
+            245824,
+            262080
+          ]
+        }
+      },
+      "1950-WEBP": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 815.0,
+            "min": 675,
+            "max": 899
+          },
+          "decodeMicros": {
+            "median": 82602.5,
+            "min": 81681,
+            "max": 84212
+          },
+          "firstDrawMicros": {
+            "median": 9216.0,
+            "min": 5633,
+            "max": 12300
+          },
+          "decodeDrawMicros": {
+            "median": 92188.0,
+            "min": 88241,
+            "max": 95006
+          },
+          "rasterMicros": {
+            "median": 139.5,
+            "min": 124,
+            "max": 148
+          },
+          "buildMicros": {
+            "median": 192.5,
+            "min": 138,
+            "max": 207
+          },
+          "sampledMaxBytes": {
+            "median": 152110880.0,
+            "min": 151553856,
+            "max": 153061056
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 836,
+            "decodeMicros": 84212,
+            "firstDrawMicros": 5758,
+            "decodeDrawMicros": 89970,
+            "rasterMicros": 148,
+            "buildMicros": 199,
+            "sampledMaxBytes": 152045376,
+            "maxGapMicros": 10960
+          },
+          {
+            "round": 1,
+            "readMicros": 826,
+            "decodeMicros": 82620,
+            "firstDrawMicros": 12183,
+            "decodeDrawMicros": 94803,
+            "rasterMicros": 147,
+            "buildMicros": 193,
+            "sampledMaxBytes": 152160000,
+            "maxGapMicros": 11135
+          },
+          {
+            "round": 2,
+            "readMicros": 821,
+            "decodeMicros": 81959,
+            "firstDrawMicros": 6717,
+            "decodeDrawMicros": 88676,
+            "rasterMicros": 141,
+            "buildMicros": 143,
+            "sampledMaxBytes": 152225472,
+            "maxGapMicros": 11178
+          },
+          {
+            "round": 3,
+            "readMicros": 899,
+            "decodeMicros": 82706,
+            "firstDrawMicros": 12300,
+            "decodeDrawMicros": 95006,
+            "rasterMicros": 130,
+            "buildMicros": 207,
+            "sampledMaxBytes": 151947072,
+            "maxGapMicros": 11123
+          },
+          {
+            "round": 4,
+            "readMicros": 675,
+            "decodeMicros": 81681,
+            "firstDrawMicros": 12050,
+            "decodeDrawMicros": 93731,
+            "rasterMicros": 141,
+            "buildMicros": 182,
+            "sampledMaxBytes": 152880896,
+            "maxGapMicros": 10970
+          },
+          {
+            "round": 5,
+            "readMicros": 821,
+            "decodeMicros": 82214,
+            "firstDrawMicros": 10578,
+            "decodeDrawMicros": 92792,
+            "rasterMicros": 133,
+            "buildMicros": 140,
+            "sampledMaxBytes": 151553856,
+            "maxGapMicros": 10994
+          },
+          {
+            "round": 6,
+            "readMicros": 809,
+            "decodeMicros": 82608,
+            "firstDrawMicros": 5633,
+            "decodeDrawMicros": 88241,
+            "rasterMicros": 124,
+            "buildMicros": 204,
+            "sampledMaxBytes": 152143616,
+            "maxGapMicros": 11085
+          },
+          {
+            "round": 7,
+            "readMicros": 708,
+            "decodeMicros": 81971,
+            "firstDrawMicros": 11538,
+            "decodeDrawMicros": 93509,
+            "rasterMicros": 147,
+            "buildMicros": 197,
+            "sampledMaxBytes": 151750400,
+            "maxGapMicros": 11034
+          },
+          {
+            "round": 8,
+            "readMicros": 805,
+            "decodeMicros": 82887,
+            "firstDrawMicros": 8697,
+            "decodeDrawMicros": 91584,
+            "rasterMicros": 142,
+            "buildMicros": 147,
+            "sampledMaxBytes": 152094528,
+            "maxGapMicros": 11009
+          },
+          {
+            "round": 9,
+            "readMicros": 696,
+            "decodeMicros": 83386,
+            "firstDrawMicros": 9735,
+            "decodeDrawMicros": 93121,
+            "rasterMicros": 138,
+            "buildMicros": 194,
+            "sampledMaxBytes": 152127232,
+            "maxGapMicros": 10968
+          },
+          {
+            "round": 10,
+            "readMicros": 695,
+            "decodeMicros": 82444,
+            "firstDrawMicros": 8044,
+            "decodeDrawMicros": 90488,
+            "rasterMicros": 133,
+            "buildMicros": 192,
+            "sampledMaxBytes": 153061056,
+            "maxGapMicros": 11154
+          },
+          {
+            "round": 11,
+            "readMicros": 864,
+            "decodeMicros": 82597,
+            "firstDrawMicros": 7741,
+            "decodeDrawMicros": 90338,
+            "rasterMicros": 138,
+            "buildMicros": 138,
+            "sampledMaxBytes": 151701248,
+            "maxGapMicros": 11157
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            -10,
+            -5,
+            78,
+            -224,
+            146,
+            -12,
+            -101,
+            97,
+            -109,
+            -1,
+            169
+          ],
+          "decodeMicros": [
+            -1592,
+            -661,
+            747,
+            -1025,
+            533,
+            394,
+            -637,
+            916,
+            499,
+            -942,
+            153
+          ],
+          "firstDrawMicros": [
+            6425,
+            -5466,
+            5583,
+            -250,
+            -1472,
+            -4945,
+            5905,
+            -2841,
+            1038,
+            -1691,
+            -303
+          ],
+          "decodeDrawMicros": [
+            4833,
+            -6127,
+            6330,
+            -1275,
+            -939,
+            -4551,
+            5268,
+            -1925,
+            1537,
+            -2633,
+            -150
+          ],
+          "rasterMicros": [
+            -1,
+            -6,
+            -11,
+            11,
+            -8,
+            -9,
+            23,
+            -5,
+            -4,
+            -5,
+            5
+          ],
+          "buildMicros": [
+            -6,
+            -50,
+            64,
+            -25,
+            -42,
+            64,
+            -7,
+            -50,
+            47,
+            -2,
+            -54
+          ],
+          "sampledMaxBytes": [
+            114624,
+            65472,
+            -278400,
+            933824,
+            -1327040,
+            589760,
+            -393216,
+            344128,
+            32704,
+            933824,
+            -1359808
+          ]
+        }
+      },
+      "1952-original": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 726.0,
+            "min": 480,
+            "max": 827
+          },
+          "decodeMicros": {
+            "median": 66114.0,
+            "min": 65530,
+            "max": 66489
+          },
+          "firstDrawMicros": {
+            "median": 9062.5,
+            "min": 4324,
+            "max": 12741
+          },
+          "decodeDrawMicros": {
+            "median": 75091.0,
+            "min": 69854,
+            "max": 78715
+          },
+          "rasterMicros": {
+            "median": 235.0,
+            "min": 180,
+            "max": 277
+          },
+          "buildMicros": {
+            "median": 239.5,
+            "min": 208,
+            "max": 251
+          },
+          "sampledMaxBytes": {
+            "median": 152766176.0,
+            "min": 151881536,
+            "max": 153241344
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 480,
+            "decodeMicros": 66278,
+            "firstDrawMicros": 8056,
+            "decodeDrawMicros": 74334,
+            "rasterMicros": 232,
+            "buildMicros": 246,
+            "sampledMaxBytes": 152274752,
+            "maxGapMicros": 11128
+          },
+          {
+            "round": 1,
+            "readMicros": 785,
+            "decodeMicros": 65747,
+            "firstDrawMicros": 7792,
+            "decodeDrawMicros": 73539,
+            "rasterMicros": 241,
+            "buildMicros": 246,
+            "sampledMaxBytes": 151881536,
+            "maxGapMicros": 11190
+          },
+          {
+            "round": 2,
+            "readMicros": 708,
+            "decodeMicros": 65794,
+            "firstDrawMicros": 6618,
+            "decodeDrawMicros": 72412,
+            "rasterMicros": 219,
+            "buildMicros": 251,
+            "sampledMaxBytes": 152897280,
+            "maxGapMicros": 11160
+          },
+          {
+            "round": 3,
+            "readMicros": 756,
+            "decodeMicros": 65793,
+            "firstDrawMicros": 7988,
+            "decodeDrawMicros": 73781,
+            "rasterMicros": 180,
+            "buildMicros": 213,
+            "sampledMaxBytes": 152815360,
+            "maxGapMicros": 11161
+          },
+          {
+            "round": 4,
+            "readMicros": 701,
+            "decodeMicros": 66311,
+            "firstDrawMicros": 11945,
+            "decodeDrawMicros": 78256,
+            "rasterMicros": 270,
+            "buildMicros": 213,
+            "sampledMaxBytes": 153241344,
+            "maxGapMicros": 11079
+          },
+          {
+            "round": 5,
+            "readMicros": 754,
+            "decodeMicros": 65974,
+            "firstDrawMicros": 12741,
+            "decodeDrawMicros": 78715,
+            "rasterMicros": 244,
+            "buildMicros": 231,
+            "sampledMaxBytes": 152684288,
+            "maxGapMicros": 11085
+          },
+          {
+            "round": 6,
+            "readMicros": 734,
+            "decodeMicros": 66489,
+            "firstDrawMicros": 10186,
+            "decodeDrawMicros": 76675,
+            "rasterMicros": 234,
+            "buildMicros": 239,
+            "sampledMaxBytes": 152585984,
+            "maxGapMicros": 11069
+          },
+          {
+            "round": 7,
+            "readMicros": 827,
+            "decodeMicros": 65530,
+            "firstDrawMicros": 4324,
+            "decodeDrawMicros": 69854,
+            "rasterMicros": 243,
+            "buildMicros": 250,
+            "sampledMaxBytes": 152160064,
+            "maxGapMicros": 10818
+          },
+          {
+            "round": 8,
+            "readMicros": 793,
+            "decodeMicros": 66254,
+            "firstDrawMicros": 11851,
+            "decodeDrawMicros": 78105,
+            "rasterMicros": 225,
+            "buildMicros": 247,
+            "sampledMaxBytes": 152749824,
+            "maxGapMicros": 10920
+          },
+          {
+            "round": 9,
+            "readMicros": 718,
+            "decodeMicros": 66262,
+            "firstDrawMicros": 9506,
+            "decodeDrawMicros": 75768,
+            "rasterMicros": 277,
+            "buildMicros": 208,
+            "sampledMaxBytes": 152995520,
+            "maxGapMicros": 10964
+          },
+          {
+            "round": 10,
+            "readMicros": 714,
+            "decodeMicros": 66392,
+            "firstDrawMicros": 9882,
+            "decodeDrawMicros": 76274,
+            "rasterMicros": 190,
+            "buildMicros": 228,
+            "sampledMaxBytes": 153044672,
+            "maxGapMicros": 10857
+          },
+          {
+            "round": 11,
+            "readMicros": 715,
+            "decodeMicros": 65795,
+            "firstDrawMicros": 8619,
+            "decodeDrawMicros": 74414,
+            "rasterMicros": 236,
+            "buildMicros": 240,
+            "sampledMaxBytes": 152782528,
+            "maxGapMicros": 11081
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            305,
+            -77,
+            48,
+            -55,
+            53,
+            -20,
+            93,
+            -34,
+            -75,
+            -4,
+            1
+          ],
+          "decodeMicros": [
+            -531,
+            47,
+            -1,
+            518,
+            -337,
+            515,
+            -959,
+            724,
+            8,
+            130,
+            -597
+          ],
+          "firstDrawMicros": [
+            -264,
+            -1174,
+            1370,
+            3957,
+            796,
+            -2555,
+            -5862,
+            7527,
+            -2345,
+            376,
+            -1263
+          ],
+          "decodeDrawMicros": [
+            -795,
+            -1127,
+            1369,
+            4475,
+            459,
+            -2040,
+            -6821,
+            8251,
+            -2337,
+            506,
+            -1860
+          ],
+          "rasterMicros": [
+            9,
+            -22,
+            -39,
+            90,
+            -26,
+            -10,
+            9,
+            -18,
+            52,
+            -87,
+            46
+          ],
+          "buildMicros": [
+            0,
+            5,
+            -38,
+            0,
+            18,
+            8,
+            11,
+            -3,
+            -39,
+            20,
+            12
+          ],
+          "sampledMaxBytes": [
+            -393216,
+            1015744,
+            -81920,
+            425984,
+            -557056,
+            -98304,
+            -425920,
+            589760,
+            245696,
+            49152,
+            -262144
+          ]
+        }
+      },
+      "1952-PNG": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 817.0,
+            "min": 742,
+            "max": 861
+          },
+          "decodeMicros": {
+            "median": 60585.5,
+            "min": 60062,
+            "max": 62368
+          },
+          "firstDrawMicros": {
+            "median": 12855.0,
+            "min": 8467,
+            "max": 16947
+          },
+          "decodeDrawMicros": {
+            "median": 73711.5,
+            "min": 70267,
+            "max": 77530
+          },
+          "rasterMicros": {
+            "median": 256.0,
+            "min": 244,
+            "max": 301
+          },
+          "buildMicros": {
+            "median": 230.0,
+            "min": 200,
+            "max": 296
+          },
+          "sampledMaxBytes": {
+            "median": 152831744.0,
+            "min": 151848704,
+            "max": 161744704
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 834,
+            "decodeMicros": 62080,
+            "firstDrawMicros": 9301,
+            "decodeDrawMicros": 71381,
+            "rasterMicros": 287,
+            "buildMicros": 235,
+            "sampledMaxBytes": 152979200,
+            "maxGapMicros": 11122
+          },
+          {
+            "round": 1,
+            "readMicros": 848,
+            "decodeMicros": 60184,
+            "firstDrawMicros": 14210,
+            "decodeDrawMicros": 74394,
+            "rasterMicros": 264,
+            "buildMicros": 206,
+            "sampledMaxBytes": 153093888,
+            "maxGapMicros": 10950
+          },
+          {
+            "round": 2,
+            "readMicros": 826,
+            "decodeMicros": 62368,
+            "firstDrawMicros": 13441,
+            "decodeDrawMicros": 75809,
+            "rasterMicros": 253,
+            "buildMicros": 204,
+            "sampledMaxBytes": 152667904,
+            "maxGapMicros": 11089
+          },
+          {
+            "round": 3,
+            "readMicros": 859,
+            "decodeMicros": 60287,
+            "firstDrawMicros": 12122,
+            "decodeDrawMicros": 72409,
+            "rasterMicros": 281,
+            "buildMicros": 200,
+            "sampledMaxBytes": 161744704,
+            "maxGapMicros": 10946
+          },
+          {
+            "round": 4,
+            "readMicros": 774,
+            "decodeMicros": 60137,
+            "firstDrawMicros": 10916,
+            "decodeDrawMicros": 71053,
+            "rasterMicros": 257,
+            "buildMicros": 201,
+            "sampledMaxBytes": 151848704,
+            "maxGapMicros": 11081
+          },
+          {
+            "round": 5,
+            "readMicros": 799,
+            "decodeMicros": 60760,
+            "firstDrawMicros": 12269,
+            "decodeDrawMicros": 73029,
+            "rasterMicros": 301,
+            "buildMicros": 225,
+            "sampledMaxBytes": 152504128,
+            "maxGapMicros": 10968
+          },
+          {
+            "round": 6,
+            "readMicros": 807,
+            "decodeMicros": 60588,
+            "firstDrawMicros": 15759,
+            "decodeDrawMicros": 76347,
+            "rasterMicros": 252,
+            "buildMicros": 237,
+            "sampledMaxBytes": 152684288,
+            "maxGapMicros": 10895
+          },
+          {
+            "round": 7,
+            "readMicros": 808,
+            "decodeMicros": 60890,
+            "firstDrawMicros": 12045,
+            "decodeDrawMicros": 72935,
+            "rasterMicros": 255,
+            "buildMicros": 242,
+            "sampledMaxBytes": 153339648,
+            "maxGapMicros": 11006
+          },
+          {
+            "round": 8,
+            "readMicros": 861,
+            "decodeMicros": 60426,
+            "firstDrawMicros": 16072,
+            "decodeDrawMicros": 76498,
+            "rasterMicros": 244,
+            "buildMicros": 249,
+            "sampledMaxBytes": 152291136,
+            "maxGapMicros": 10983
+          },
+          {
+            "round": 9,
+            "readMicros": 742,
+            "decodeMicros": 61800,
+            "firstDrawMicros": 8467,
+            "decodeDrawMicros": 70267,
+            "rasterMicros": 274,
+            "buildMicros": 220,
+            "sampledMaxBytes": 159450880,
+            "maxGapMicros": 11085
+          },
+          {
+            "round": 10,
+            "readMicros": 783,
+            "decodeMicros": 60583,
+            "firstDrawMicros": 16947,
+            "decodeDrawMicros": 77530,
+            "rasterMicros": 245,
+            "buildMicros": 261,
+            "sampledMaxBytes": 153257664,
+            "maxGapMicros": 11146
+          },
+          {
+            "round": 11,
+            "readMicros": 834,
+            "decodeMicros": 60062,
+            "firstDrawMicros": 15536,
+            "decodeDrawMicros": 75598,
+            "rasterMicros": 250,
+            "buildMicros": 296,
+            "sampledMaxBytes": 152602368,
+            "maxGapMicros": 11049
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            14,
+            -22,
+            33,
+            -85,
+            25,
+            8,
+            1,
+            53,
+            -119,
+            41,
+            51
+          ],
+          "decodeMicros": [
+            -1896,
+            2184,
+            -2081,
+            -150,
+            623,
+            -172,
+            302,
+            -464,
+            1374,
+            -1217,
+            -521
+          ],
+          "firstDrawMicros": [
+            4909,
+            -769,
+            -1319,
+            -1206,
+            1353,
+            3490,
+            -3714,
+            4027,
+            -7605,
+            8480,
+            -1411
+          ],
+          "decodeDrawMicros": [
+            3013,
+            1415,
+            -3400,
+            -1356,
+            1976,
+            3318,
+            -3412,
+            3563,
+            -6231,
+            7263,
+            -1932
+          ],
+          "rasterMicros": [
+            -23,
+            -11,
+            28,
+            -24,
+            44,
+            -49,
+            3,
+            -11,
+            30,
+            -29,
+            5
+          ],
+          "buildMicros": [
+            -29,
+            -2,
+            -4,
+            1,
+            24,
+            12,
+            5,
+            7,
+            -29,
+            41,
+            35
+          ],
+          "sampledMaxBytes": [
+            114688,
+            -425984,
+            9076800,
+            -9896000,
+            655424,
+            180160,
+            655360,
+            -1048512,
+            7159744,
+            -6193216,
+            -655296
+          ]
+        }
+      },
+      "1952-WEBP": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 802.0,
+            "min": 691,
+            "max": 846
+          },
+          "decodeMicros": {
+            "median": 70002.0,
+            "min": 68323,
+            "max": 70803
+          },
+          "firstDrawMicros": {
+            "median": 5936.5,
+            "min": 3222,
+            "max": 8414
+          },
+          "decodeDrawMicros": {
+            "median": 75116.0,
+            "min": 72802,
+            "max": 79096
+          },
+          "rasterMicros": {
+            "median": 226.5,
+            "min": 140,
+            "max": 296
+          },
+          "buildMicros": {
+            "median": 242.0,
+            "min": 128,
+            "max": 265
+          },
+          "sampledMaxBytes": {
+            "median": 152217312.0,
+            "min": 151275264,
+            "max": 162514752
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 846,
+            "decodeMicros": 69921,
+            "firstDrawMicros": 3222,
+            "decodeDrawMicros": 73143,
+            "rasterMicros": 266,
+            "buildMicros": 238,
+            "sampledMaxBytes": 151324416,
+            "maxGapMicros": 11119
+          },
+          {
+            "round": 1,
+            "readMicros": 801,
+            "decodeMicros": 70506,
+            "firstDrawMicros": 6878,
+            "decodeDrawMicros": 77384,
+            "rasterMicros": 232,
+            "buildMicros": 207,
+            "sampledMaxBytes": 152356608,
+            "maxGapMicros": 11092
+          },
+          {
+            "round": 2,
+            "readMicros": 818,
+            "decodeMicros": 68732,
+            "firstDrawMicros": 4305,
+            "decodeDrawMicros": 73037,
+            "rasterMicros": 140,
+            "buildMicros": 128,
+            "sampledMaxBytes": 151750464,
+            "maxGapMicros": 11166
+          },
+          {
+            "round": 3,
+            "readMicros": 795,
+            "decodeMicros": 70275,
+            "firstDrawMicros": 8414,
+            "decodeDrawMicros": 78689,
+            "rasterMicros": 241,
+            "buildMicros": 246,
+            "sampledMaxBytes": 152078016,
+            "maxGapMicros": 11143
+          },
+          {
+            "round": 4,
+            "readMicros": 833,
+            "decodeMicros": 70404,
+            "firstDrawMicros": 7802,
+            "decodeDrawMicros": 78206,
+            "rasterMicros": 213,
+            "buildMicros": 260,
+            "sampledMaxBytes": 152176384,
+            "maxGapMicros": 11171
+          },
+          {
+            "round": 5,
+            "readMicros": 803,
+            "decodeMicros": 70083,
+            "firstDrawMicros": 3256,
+            "decodeDrawMicros": 73339,
+            "rasterMicros": 296,
+            "buildMicros": 250,
+            "sampledMaxBytes": 162236288,
+            "maxGapMicros": 10992
+          },
+          {
+            "round": 6,
+            "readMicros": 740,
+            "decodeMicros": 69835,
+            "firstDrawMicros": 6763,
+            "decodeDrawMicros": 76598,
+            "rasterMicros": 243,
+            "buildMicros": 227,
+            "sampledMaxBytes": 151275264,
+            "maxGapMicros": 10880
+          },
+          {
+            "round": 7,
+            "readMicros": 824,
+            "decodeMicros": 68323,
+            "firstDrawMicros": 5110,
+            "decodeDrawMicros": 73433,
+            "rasterMicros": 148,
+            "buildMicros": 183,
+            "sampledMaxBytes": 152618752,
+            "maxGapMicros": 11157
+          },
+          {
+            "round": 8,
+            "readMicros": 808,
+            "decodeMicros": 68587,
+            "firstDrawMicros": 4215,
+            "decodeDrawMicros": 72802,
+            "rasterMicros": 144,
+            "buildMicros": 128,
+            "sampledMaxBytes": 151324416,
+            "maxGapMicros": 10774
+          },
+          {
+            "round": 9,
+            "readMicros": 691,
+            "decodeMicros": 69682,
+            "firstDrawMicros": 8179,
+            "decodeDrawMicros": 77861,
+            "rasterMicros": 237,
+            "buildMicros": 250,
+            "sampledMaxBytes": 152258240,
+            "maxGapMicros": 11091
+          },
+          {
+            "round": 10,
+            "readMicros": 760,
+            "decodeMicros": 70114,
+            "firstDrawMicros": 3520,
+            "decodeDrawMicros": 73634,
+            "rasterMicros": 208,
+            "buildMicros": 265,
+            "sampledMaxBytes": 152323840,
+            "maxGapMicros": 11149
+          },
+          {
+            "round": 11,
+            "readMicros": 774,
+            "decodeMicros": 70803,
+            "firstDrawMicros": 8293,
+            "decodeDrawMicros": 79096,
+            "rasterMicros": 221,
+            "buildMicros": 246,
+            "sampledMaxBytes": 162514752,
+            "maxGapMicros": 11109
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            -45,
+            17,
+            -23,
+            38,
+            -30,
+            -63,
+            84,
+            -16,
+            -117,
+            69,
+            14
+          ],
+          "decodeMicros": [
+            585,
+            -1774,
+            1543,
+            129,
+            -321,
+            -248,
+            -1512,
+            264,
+            1095,
+            432,
+            689
+          ],
+          "firstDrawMicros": [
+            3656,
+            -2573,
+            4109,
+            -612,
+            -4546,
+            3507,
+            -1653,
+            -895,
+            3964,
+            -4659,
+            4773
+          ],
+          "decodeDrawMicros": [
+            4241,
+            -4347,
+            5652,
+            -483,
+            -4867,
+            3259,
+            -3165,
+            -631,
+            5059,
+            -4227,
+            5462
+          ],
+          "rasterMicros": [
+            -34,
+            -92,
+            101,
+            -28,
+            83,
+            -53,
+            -95,
+            -4,
+            93,
+            -29,
+            13
+          ],
+          "buildMicros": [
+            -31,
+            -79,
+            118,
+            14,
+            -10,
+            -23,
+            -44,
+            -55,
+            122,
+            15,
+            -19
+          ],
+          "sampledMaxBytes": [
+            1032192,
+            -606144,
+            327552,
+            98368,
+            10059904,
+            -10961024,
+            1343488,
+            -1294336,
+            933824,
+            65600,
+            10190912
+          ]
+        }
+      },
+      "8303-original": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1758.0,
+            "min": 1603,
+            "max": 1868
+          },
+          "decodeMicros": {
+            "median": 147170.0,
+            "min": 145824,
+            "max": 152840
+          },
+          "firstDrawMicros": {
+            "median": 10158.5,
+            "min": 1842,
+            "max": 15068
+          },
+          "decodeDrawMicros": {
+            "median": 157331.5,
+            "min": 154094,
+            "max": 161547
+          },
+          "rasterMicros": {
+            "median": 134.0,
+            "min": 124,
+            "max": 292
+          },
+          "buildMicros": {
+            "median": 166.0,
+            "min": 119,
+            "max": 218
+          },
+          "sampledMaxBytes": {
+            "median": 197519168.0,
+            "min": 196806464,
+            "max": 202016576
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1787,
+            "decodeMicros": 150563,
+            "firstDrawMicros": 6580,
+            "decodeDrawMicros": 157143,
+            "rasterMicros": 134,
+            "buildMicros": 159,
+            "sampledMaxBytes": 197478208,
+            "maxGapMicros": 11166
+          },
+          {
+            "round": 1,
+            "readMicros": 1868,
+            "decodeMicros": 146527,
+            "firstDrawMicros": 10477,
+            "decodeDrawMicros": 157004,
+            "rasterMicros": 131,
+            "buildMicros": 121,
+            "sampledMaxBytes": 197936960,
+            "maxGapMicros": 11139
+          },
+          {
+            "round": 2,
+            "readMicros": 1747,
+            "decodeMicros": 147630,
+            "firstDrawMicros": 10817,
+            "decodeDrawMicros": 158447,
+            "rasterMicros": 129,
+            "buildMicros": 173,
+            "sampledMaxBytes": 198035264,
+            "maxGapMicros": 11073
+          },
+          {
+            "round": 3,
+            "readMicros": 1754,
+            "decodeMicros": 146770,
+            "firstDrawMicros": 10838,
+            "decodeDrawMicros": 157608,
+            "rasterMicros": 134,
+            "buildMicros": 119,
+            "sampledMaxBytes": 196806464,
+            "maxGapMicros": 11156
+          },
+          {
+            "round": 4,
+            "readMicros": 1762,
+            "decodeMicros": 147148,
+            "firstDrawMicros": 12972,
+            "decodeDrawMicros": 160120,
+            "rasterMicros": 139,
+            "buildMicros": 179,
+            "sampledMaxBytes": 197756736,
+            "maxGapMicros": 11114
+          },
+          {
+            "round": 5,
+            "readMicros": 1729,
+            "decodeMicros": 146479,
+            "firstDrawMicros": 15068,
+            "decodeDrawMicros": 161547,
+            "rasterMicros": 129,
+            "buildMicros": 154,
+            "sampledMaxBytes": 196855616,
+            "maxGapMicros": 10917
+          },
+          {
+            "round": 6,
+            "readMicros": 1603,
+            "decodeMicros": 145824,
+            "firstDrawMicros": 9840,
+            "decodeDrawMicros": 155664,
+            "rasterMicros": 136,
+            "buildMicros": 127,
+            "sampledMaxBytes": 197134144,
+            "maxGapMicros": 11152
+          },
+          {
+            "round": 7,
+            "readMicros": 1795,
+            "decodeMicros": 147096,
+            "firstDrawMicros": 6998,
+            "decodeDrawMicros": 154094,
+            "rasterMicros": 124,
+            "buildMicros": 218,
+            "sampledMaxBytes": 197560128,
+            "maxGapMicros": 11094
+          },
+          {
+            "round": 8,
+            "readMicros": 1846,
+            "decodeMicros": 149397,
+            "firstDrawMicros": 8123,
+            "decodeDrawMicros": 157520,
+            "rasterMicros": 128,
+            "buildMicros": 124,
+            "sampledMaxBytes": 202016576,
+            "maxGapMicros": 11096
+          },
+          {
+            "round": 9,
+            "readMicros": 1740,
+            "decodeMicros": 152840,
+            "firstDrawMicros": 1842,
+            "decodeDrawMicros": 154682,
+            "rasterMicros": 292,
+            "buildMicros": 206,
+            "sampledMaxBytes": 197363520,
+            "maxGapMicros": 11223
+          },
+          {
+            "round": 10,
+            "readMicros": 1720,
+            "decodeMicros": 147818,
+            "firstDrawMicros": 8989,
+            "decodeDrawMicros": 156807,
+            "rasterMicros": 138,
+            "buildMicros": 187,
+            "sampledMaxBytes": 198068032,
+            "maxGapMicros": 11200
+          },
+          {
+            "round": 11,
+            "readMicros": 1830,
+            "decodeMicros": 147192,
+            "firstDrawMicros": 13583,
+            "decodeDrawMicros": 160775,
+            "rasterMicros": 152,
+            "buildMicros": 209,
+            "sampledMaxBytes": 197068608,
+            "maxGapMicros": 11122
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            81,
+            -121,
+            7,
+            8,
+            -33,
+            -126,
+            192,
+            51,
+            -106,
+            -20,
+            110
+          ],
+          "decodeMicros": [
+            -4036,
+            1103,
+            -860,
+            378,
+            -669,
+            -655,
+            1272,
+            2301,
+            3443,
+            -5022,
+            -626
+          ],
+          "firstDrawMicros": [
+            3897,
+            340,
+            21,
+            2134,
+            2096,
+            -5228,
+            -2842,
+            1125,
+            -6281,
+            7147,
+            4594
+          ],
+          "decodeDrawMicros": [
+            -139,
+            1443,
+            -839,
+            2512,
+            1427,
+            -5883,
+            -1570,
+            3426,
+            -2838,
+            2125,
+            3968
+          ],
+          "rasterMicros": [
+            -3,
+            -2,
+            5,
+            5,
+            -10,
+            7,
+            -12,
+            4,
+            164,
+            -154,
+            14
+          ],
+          "buildMicros": [
+            -38,
+            52,
+            -54,
+            60,
+            -25,
+            -27,
+            91,
+            -94,
+            82,
+            -19,
+            22
+          ],
+          "sampledMaxBytes": [
+            458752,
+            98304,
+            -1228800,
+            950272,
+            -901120,
+            278528,
+            425984,
+            4456448,
+            -4653056,
+            704512,
+            -999424
+          ]
+        }
+      },
+      "8303-PNG": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1665.5,
+            "min": 1592,
+            "max": 1815
+          },
+          "decodeMicros": {
+            "median": 137953.0,
+            "min": 137178,
+            "max": 139084
+          },
+          "firstDrawMicros": {
+            "median": 5210.0,
+            "min": 1033,
+            "max": 15388
+          },
+          "decodeDrawMicros": {
+            "median": 143592.5,
+            "min": 138419,
+            "max": 153853
+          },
+          "rasterMicros": {
+            "median": 133.5,
+            "min": 127,
+            "max": 240
+          },
+          "buildMicros": {
+            "median": 169.5,
+            "min": 135,
+            "max": 228
+          },
+          "sampledMaxBytes": {
+            "median": 159090432.0,
+            "min": 151897856,
+            "max": 163612416
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1592,
+            "decodeMicros": 137386,
+            "firstDrawMicros": 1033,
+            "decodeDrawMicros": 138419,
+            "rasterMicros": 168,
+            "buildMicros": 166,
+            "sampledMaxBytes": 163268352,
+            "maxGapMicros": 11157
+          },
+          {
+            "round": 1,
+            "readMicros": 1721,
+            "decodeMicros": 139084,
+            "firstDrawMicros": 3860,
+            "decodeDrawMicros": 142944,
+            "rasterMicros": 131,
+            "buildMicros": 173,
+            "sampledMaxBytes": 154732288,
+            "maxGapMicros": 11006
+          },
+          {
+            "round": 2,
+            "readMicros": 1708,
+            "decodeMicros": 137903,
+            "firstDrawMicros": 1656,
+            "decodeDrawMicros": 139559,
+            "rasterMicros": 168,
+            "buildMicros": 154,
+            "sampledMaxBytes": 151996160,
+            "maxGapMicros": 11097
+          },
+          {
+            "round": 3,
+            "readMicros": 1702,
+            "decodeMicros": 138465,
+            "firstDrawMicros": 15388,
+            "decodeDrawMicros": 153853,
+            "rasterMicros": 133,
+            "buildMicros": 197,
+            "sampledMaxBytes": 163448576,
+            "maxGapMicros": 11169
+          },
+          {
+            "round": 4,
+            "readMicros": 1815,
+            "decodeMicros": 137687,
+            "firstDrawMicros": 7145,
+            "decodeDrawMicros": 144832,
+            "rasterMicros": 130,
+            "buildMicros": 198,
+            "sampledMaxBytes": 163612416,
+            "maxGapMicros": 11109
+          },
+          {
+            "round": 5,
+            "readMicros": 1669,
+            "decodeMicros": 137178,
+            "firstDrawMicros": 7063,
+            "decodeDrawMicros": 144241,
+            "rasterMicros": 133,
+            "buildMicros": 212,
+            "sampledMaxBytes": 152913664,
+            "maxGapMicros": 11178
+          },
+          {
+            "round": 6,
+            "readMicros": 1613,
+            "decodeMicros": 137643,
+            "firstDrawMicros": 1719,
+            "decodeDrawMicros": 139362,
+            "rasterMicros": 186,
+            "buildMicros": 146,
+            "sampledMaxBytes": 163022592,
+            "maxGapMicros": 11086
+          },
+          {
+            "round": 7,
+            "readMicros": 1621,
+            "decodeMicros": 138713,
+            "firstDrawMicros": 14942,
+            "decodeDrawMicros": 153655,
+            "rasterMicros": 144,
+            "buildMicros": 228,
+            "sampledMaxBytes": 151897856,
+            "maxGapMicros": 11017
+          },
+          {
+            "round": 8,
+            "readMicros": 1688,
+            "decodeMicros": 138610,
+            "firstDrawMicros": 3807,
+            "decodeDrawMicros": 142417,
+            "rasterMicros": 128,
+            "buildMicros": 135,
+            "sampledMaxBytes": 155158272,
+            "maxGapMicros": 10958
+          },
+          {
+            "round": 9,
+            "readMicros": 1662,
+            "decodeMicros": 137620,
+            "firstDrawMicros": 12159,
+            "decodeDrawMicros": 149779,
+            "rasterMicros": 127,
+            "buildMicros": 164,
+            "sampledMaxBytes": 163301120,
+            "maxGapMicros": 11159
+          },
+          {
+            "round": 10,
+            "readMicros": 1650,
+            "decodeMicros": 138003,
+            "firstDrawMicros": 1746,
+            "decodeDrawMicros": 139749,
+            "rasterMicros": 240,
+            "buildMicros": 162,
+            "sampledMaxBytes": 163546880,
+            "maxGapMicros": 11086
+          },
+          {
+            "round": 11,
+            "readMicros": 1616,
+            "decodeMicros": 138266,
+            "firstDrawMicros": 6560,
+            "decodeDrawMicros": 144826,
+            "rasterMicros": 134,
+            "buildMicros": 201,
+            "sampledMaxBytes": 152733440,
+            "maxGapMicros": 11133
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            129,
+            -13,
+            -6,
+            113,
+            -146,
+            -56,
+            8,
+            67,
+            -26,
+            -12,
+            -34
+          ],
+          "decodeMicros": [
+            1698,
+            -1181,
+            562,
+            -778,
+            -509,
+            465,
+            1070,
+            -103,
+            -990,
+            383,
+            263
+          ],
+          "firstDrawMicros": [
+            2827,
+            -2204,
+            13732,
+            -8243,
+            -82,
+            -5344,
+            13223,
+            -11135,
+            8352,
+            -10413,
+            4814
+          ],
+          "decodeDrawMicros": [
+            4525,
+            -3385,
+            14294,
+            -9021,
+            -591,
+            -4879,
+            14293,
+            -11238,
+            7362,
+            -10030,
+            5077
+          ],
+          "rasterMicros": [
+            -37,
+            37,
+            -35,
+            -3,
+            3,
+            53,
+            -42,
+            -16,
+            -1,
+            113,
+            -106
+          ],
+          "buildMicros": [
+            7,
+            -19,
+            43,
+            1,
+            14,
+            -66,
+            82,
+            -93,
+            29,
+            -2,
+            39
+          ],
+          "sampledMaxBytes": [
+            -8536064,
+            -2736128,
+            11452416,
+            163840,
+            -10698752,
+            10108928,
+            -11124736,
+            3260416,
+            8142848,
+            245760,
+            -10813440
+          ]
+        }
+      },
+      "8303-WEBP": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1606.0,
+            "min": 1399,
+            "max": 1930
+          },
+          "decodeMicros": {
+            "median": 158582.5,
+            "min": 156960,
+            "max": 159606
+          },
+          "firstDrawMicros": {
+            "median": 13497.5,
+            "min": 1998,
+            "max": 17485
+          },
+          "decodeDrawMicros": {
+            "median": 171982.0,
+            "min": 159093,
+            "max": 177022
+          },
+          "rasterMicros": {
+            "median": 133.5,
+            "min": 116,
+            "max": 187
+          },
+          "buildMicros": {
+            "median": 187.0,
+            "min": 121,
+            "max": 228
+          },
+          "sampledMaxBytes": {
+            "median": 163219296.0,
+            "min": 162072384,
+            "max": 163612416
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1676,
+            "decodeMicros": 158561,
+            "firstDrawMicros": 11065,
+            "decodeDrawMicros": 169626,
+            "rasterMicros": 123,
+            "buildMicros": 186,
+            "sampledMaxBytes": 163284736,
+            "maxGapMicros": 10979
+          },
+          {
+            "round": 1,
+            "readMicros": 1601,
+            "decodeMicros": 159141,
+            "firstDrawMicros": 15556,
+            "decodeDrawMicros": 174697,
+            "rasterMicros": 130,
+            "buildMicros": 193,
+            "sampledMaxBytes": 163153728,
+            "maxGapMicros": 11050
+          },
+          {
+            "round": 2,
+            "readMicros": 1678,
+            "decodeMicros": 159537,
+            "firstDrawMicros": 17485,
+            "decodeDrawMicros": 177022,
+            "rasterMicros": 120,
+            "buildMicros": 192,
+            "sampledMaxBytes": 162793280,
+            "maxGapMicros": 11166
+          },
+          {
+            "round": 3,
+            "readMicros": 1592,
+            "decodeMicros": 157743,
+            "firstDrawMicros": 13014,
+            "decodeDrawMicros": 170757,
+            "rasterMicros": 127,
+            "buildMicros": 121,
+            "sampledMaxBytes": 163399424,
+            "maxGapMicros": 11173
+          },
+          {
+            "round": 4,
+            "readMicros": 1791,
+            "decodeMicros": 159252,
+            "firstDrawMicros": 13981,
+            "decodeDrawMicros": 173233,
+            "rasterMicros": 127,
+            "buildMicros": 188,
+            "sampledMaxBytes": 162072384,
+            "maxGapMicros": 11103
+          },
+          {
+            "round": 5,
+            "readMicros": 1583,
+            "decodeMicros": 156960,
+            "firstDrawMicros": 2133,
+            "decodeDrawMicros": 159093,
+            "rasterMicros": 160,
+            "buildMicros": 193,
+            "sampledMaxBytes": 163366720,
+            "maxGapMicros": 10909
+          },
+          {
+            "round": 6,
+            "readMicros": 1601,
+            "decodeMicros": 158604,
+            "firstDrawMicros": 14603,
+            "decodeDrawMicros": 173207,
+            "rasterMicros": 150,
+            "buildMicros": 198,
+            "sampledMaxBytes": 163612416,
+            "maxGapMicros": 11167
+          },
+          {
+            "round": 7,
+            "readMicros": 1708,
+            "decodeMicros": 158542,
+            "firstDrawMicros": 11118,
+            "decodeDrawMicros": 169660,
+            "rasterMicros": 137,
+            "buildMicros": 228,
+            "sampledMaxBytes": 163268416,
+            "maxGapMicros": 11172
+          },
+          {
+            "round": 8,
+            "readMicros": 1399,
+            "decodeMicros": 159606,
+            "firstDrawMicros": 15827,
+            "decodeDrawMicros": 175433,
+            "rasterMicros": 171,
+            "buildMicros": 140,
+            "sampledMaxBytes": 163170176,
+            "maxGapMicros": 10866
+          },
+          {
+            "round": 9,
+            "readMicros": 1611,
+            "decodeMicros": 157510,
+            "firstDrawMicros": 12109,
+            "decodeDrawMicros": 169619,
+            "rasterMicros": 116,
+            "buildMicros": 165,
+            "sampledMaxBytes": 163481408,
+            "maxGapMicros": 11174
+          },
+          {
+            "round": 10,
+            "readMicros": 1930,
+            "decodeMicros": 157497,
+            "firstDrawMicros": 1998,
+            "decodeDrawMicros": 159495,
+            "rasterMicros": 173,
+            "buildMicros": 148,
+            "sampledMaxBytes": 162826112,
+            "maxGapMicros": 11057
+          },
+          {
+            "round": 11,
+            "readMicros": 1570,
+            "decodeMicros": 159172,
+            "firstDrawMicros": 15946,
+            "decodeDrawMicros": 175118,
+            "rasterMicros": 187,
+            "buildMicros": 135,
+            "sampledMaxBytes": 162809664,
+            "maxGapMicros": 11179
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            -75,
+            77,
+            -86,
+            199,
+            -208,
+            18,
+            107,
+            -309,
+            212,
+            319,
+            -360
+          ],
+          "decodeMicros": [
+            580,
+            396,
+            -1794,
+            1509,
+            -2292,
+            1644,
+            -62,
+            1064,
+            -2096,
+            -13,
+            1675
+          ],
+          "firstDrawMicros": [
+            4491,
+            1929,
+            -4471,
+            967,
+            -11848,
+            12470,
+            -3485,
+            4709,
+            -3718,
+            -10111,
+            13948
+          ],
+          "decodeDrawMicros": [
+            5071,
+            2325,
+            -6265,
+            2476,
+            -14140,
+            14114,
+            -3547,
+            5773,
+            -5814,
+            -10124,
+            15623
+          ],
+          "rasterMicros": [
+            7,
+            -10,
+            7,
+            0,
+            33,
+            -10,
+            -13,
+            34,
+            -55,
+            57,
+            14
+          ],
+          "buildMicros": [
+            7,
+            -1,
+            -71,
+            67,
+            5,
+            5,
+            30,
+            -88,
+            25,
+            -17,
+            -13
+          ],
+          "sampledMaxBytes": [
+            -131008,
+            -360448,
+            606144,
+            -1327040,
+            1294336,
+            245696,
+            -344000,
+            -98240,
+            311232,
+            -655296,
+            -16448
+          ]
+        }
+      },
+      "8306-original": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1930.0,
+            "min": 1254,
+            "max": 1998
+          },
+          "decodeMicros": {
+            "median": 159818.5,
+            "min": 158039,
+            "max": 162843
+          },
+          "firstDrawMicros": {
+            "median": 12771.0,
+            "min": 8834,
+            "max": 16795
+          },
+          "decodeDrawMicros": {
+            "median": 172836.0,
+            "min": 168924,
+            "max": 176584
+          },
+          "rasterMicros": {
+            "median": 131.5,
+            "min": 124,
+            "max": 182
+          },
+          "buildMicros": {
+            "median": 177.0,
+            "min": 126,
+            "max": 208
+          },
+          "sampledMaxBytes": {
+            "median": 197429024.0,
+            "min": 196937536,
+            "max": 204408640
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1937,
+            "decodeMicros": 158039,
+            "firstDrawMicros": 16795,
+            "decodeDrawMicros": 174834,
+            "rasterMicros": 182,
+            "buildMicros": 159,
+            "sampledMaxBytes": 197035840,
+            "maxGapMicros": 11182
+          },
+          {
+            "round": 1,
+            "readMicros": 1923,
+            "decodeMicros": 159331,
+            "firstDrawMicros": 12980,
+            "decodeDrawMicros": 172311,
+            "rasterMicros": 129,
+            "buildMicros": 203,
+            "sampledMaxBytes": 204408640,
+            "maxGapMicros": 11166
+          },
+          {
+            "round": 2,
+            "readMicros": 1254,
+            "decodeMicros": 161538,
+            "firstDrawMicros": 14486,
+            "decodeDrawMicros": 176024,
+            "rasterMicros": 132,
+            "buildMicros": 177,
+            "sampledMaxBytes": 196953920,
+            "maxGapMicros": 10979
+          },
+          {
+            "round": 3,
+            "readMicros": 1965,
+            "decodeMicros": 160090,
+            "firstDrawMicros": 8834,
+            "decodeDrawMicros": 168924,
+            "rasterMicros": 138,
+            "buildMicros": 171,
+            "sampledMaxBytes": 197855040,
+            "maxGapMicros": 11096
+          },
+          {
+            "round": 4,
+            "readMicros": 1919,
+            "decodeMicros": 161228,
+            "firstDrawMicros": 11447,
+            "decodeDrawMicros": 172675,
+            "rasterMicros": 131,
+            "buildMicros": 168,
+            "sampledMaxBytes": 197314368,
+            "maxGapMicros": 11121
+          },
+          {
+            "round": 5,
+            "readMicros": 1791,
+            "decodeMicros": 158684,
+            "firstDrawMicros": 12562,
+            "decodeDrawMicros": 171246,
+            "rasterMicros": 134,
+            "buildMicros": 177,
+            "sampledMaxBytes": 197429056,
+            "maxGapMicros": 11152
+          },
+          {
+            "round": 6,
+            "readMicros": 1962,
+            "decodeMicros": 160543,
+            "firstDrawMicros": 12454,
+            "decodeDrawMicros": 172997,
+            "rasterMicros": 129,
+            "buildMicros": 126,
+            "sampledMaxBytes": 196937536,
+            "maxGapMicros": 11201
+          },
+          {
+            "round": 7,
+            "readMicros": 1971,
+            "decodeMicros": 160409,
+            "firstDrawMicros": 12061,
+            "decodeDrawMicros": 172470,
+            "rasterMicros": 146,
+            "buildMicros": 205,
+            "sampledMaxBytes": 198248256,
+            "maxGapMicros": 11132
+          },
+          {
+            "round": 8,
+            "readMicros": 1256,
+            "decodeMicros": 162843,
+            "firstDrawMicros": 13741,
+            "decodeDrawMicros": 176584,
+            "rasterMicros": 144,
+            "buildMicros": 195,
+            "sampledMaxBytes": 197428992,
+            "maxGapMicros": 11092
+          },
+          {
+            "round": 9,
+            "readMicros": 1957,
+            "decodeMicros": 159547,
+            "firstDrawMicros": 9675,
+            "decodeDrawMicros": 169222,
+            "rasterMicros": 131,
+            "buildMicros": 203,
+            "sampledMaxBytes": 203736832,
+            "maxGapMicros": 11097
+          },
+          {
+            "round": 10,
+            "readMicros": 1998,
+            "decodeMicros": 159317,
+            "firstDrawMicros": 16732,
+            "decodeDrawMicros": 176049,
+            "rasterMicros": 129,
+            "buildMicros": 167,
+            "sampledMaxBytes": 203278080,
+            "maxGapMicros": 11173
+          },
+          {
+            "round": 11,
+            "readMicros": 1776,
+            "decodeMicros": 159285,
+            "firstDrawMicros": 15834,
+            "decodeDrawMicros": 175119,
+            "rasterMicros": 124,
+            "buildMicros": 208,
+            "sampledMaxBytes": 197216000,
+            "maxGapMicros": 11208
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            -14,
+            -669,
+            711,
+            -46,
+            -128,
+            171,
+            9,
+            -715,
+            701,
+            41,
+            -222
+          ],
+          "decodeMicros": [
+            1292,
+            2207,
+            -1448,
+            1138,
+            -2544,
+            1859,
+            -134,
+            2434,
+            -3296,
+            -230,
+            -32
+          ],
+          "firstDrawMicros": [
+            -3815,
+            1506,
+            -5652,
+            2613,
+            1115,
+            -108,
+            -393,
+            1680,
+            -4066,
+            7057,
+            -898
+          ],
+          "decodeDrawMicros": [
+            -2523,
+            3713,
+            -7100,
+            3751,
+            -1429,
+            1751,
+            -527,
+            4114,
+            -7362,
+            6827,
+            -930
+          ],
+          "rasterMicros": [
+            -53,
+            3,
+            6,
+            -7,
+            3,
+            -5,
+            17,
+            -2,
+            -13,
+            -2,
+            -5
+          ],
+          "buildMicros": [
+            44,
+            -26,
+            -6,
+            -3,
+            9,
+            -51,
+            79,
+            -10,
+            8,
+            -36,
+            41
+          ],
+          "sampledMaxBytes": [
+            7372800,
+            -7454720,
+            901120,
+            -540672,
+            114688,
+            -491520,
+            1310720,
+            -819264,
+            6307840,
+            -458752,
+            -6062080
+          ]
+        }
+      },
+      "8306-PNG": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1797.0,
+            "min": 1445,
+            "max": 1903
+          },
+          "decodeMicros": {
+            "median": 147875.0,
+            "min": 147029,
+            "max": 150758
+          },
+          "firstDrawMicros": {
+            "median": 9049.5,
+            "min": 3753,
+            "max": 12584
+          },
+          "decodeDrawMicros": {
+            "median": 157445.0,
+            "min": 151394,
+            "max": 161108
+          },
+          "rasterMicros": {
+            "median": 132.5,
+            "min": 127,
+            "max": 175
+          },
+          "buildMicros": {
+            "median": 193.0,
+            "min": 112,
+            "max": 208
+          },
+          "sampledMaxBytes": {
+            "median": 152618752.0,
+            "min": 151373568,
+            "max": 164660992
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1587,
+            "decodeMicros": 147193,
+            "firstDrawMicros": 8653,
+            "decodeDrawMicros": 155846,
+            "rasterMicros": 128,
+            "buildMicros": 206,
+            "sampledMaxBytes": 164202240,
+            "maxGapMicros": 11086
+          },
+          {
+            "round": 1,
+            "readMicros": 1806,
+            "decodeMicros": 147790,
+            "firstDrawMicros": 12584,
+            "decodeDrawMicros": 160374,
+            "rasterMicros": 132,
+            "buildMicros": 208,
+            "sampledMaxBytes": 152323840,
+            "maxGapMicros": 10926
+          },
+          {
+            "round": 2,
+            "readMicros": 1856,
+            "decodeMicros": 147745,
+            "firstDrawMicros": 11862,
+            "decodeDrawMicros": 159607,
+            "rasterMicros": 132,
+            "buildMicros": 195,
+            "sampledMaxBytes": 151373568,
+            "maxGapMicros": 11030
+          },
+          {
+            "round": 3,
+            "readMicros": 1788,
+            "decodeMicros": 147960,
+            "firstDrawMicros": 11614,
+            "decodeDrawMicros": 159574,
+            "rasterMicros": 130,
+            "buildMicros": 191,
+            "sampledMaxBytes": 153061120,
+            "maxGapMicros": 10715
+          },
+          {
+            "round": 4,
+            "readMicros": 1861,
+            "decodeMicros": 147155,
+            "firstDrawMicros": 5105,
+            "decodeDrawMicros": 152260,
+            "rasterMicros": 133,
+            "buildMicros": 170,
+            "sampledMaxBytes": 164660992,
+            "maxGapMicros": 11162
+          },
+          {
+            "round": 5,
+            "readMicros": 1842,
+            "decodeMicros": 148088,
+            "firstDrawMicros": 4817,
+            "decodeDrawMicros": 152905,
+            "rasterMicros": 139,
+            "buildMicros": 208,
+            "sampledMaxBytes": 151865088,
+            "maxGapMicros": 11096
+          },
+          {
+            "round": 6,
+            "readMicros": 1604,
+            "decodeMicros": 148161,
+            "firstDrawMicros": 7799,
+            "decodeDrawMicros": 155960,
+            "rasterMicros": 127,
+            "buildMicros": 112,
+            "sampledMaxBytes": 164087552,
+            "maxGapMicros": 10948
+          },
+          {
+            "round": 7,
+            "readMicros": 1640,
+            "decodeMicros": 150758,
+            "firstDrawMicros": 7657,
+            "decodeDrawMicros": 158415,
+            "rasterMicros": 135,
+            "buildMicros": 186,
+            "sampledMaxBytes": 151734016,
+            "maxGapMicros": 11180
+          },
+          {
+            "round": 8,
+            "readMicros": 1445,
+            "decodeMicros": 149180,
+            "firstDrawMicros": 11928,
+            "decodeDrawMicros": 161108,
+            "rasterMicros": 175,
+            "buildMicros": 124,
+            "sampledMaxBytes": 151832320,
+            "maxGapMicros": 11103
+          },
+          {
+            "round": 9,
+            "readMicros": 1903,
+            "decodeMicros": 147641,
+            "firstDrawMicros": 3753,
+            "decodeDrawMicros": 151394,
+            "rasterMicros": 135,
+            "buildMicros": 175,
+            "sampledMaxBytes": 152913664,
+            "maxGapMicros": 11095
+          },
+          {
+            "round": 10,
+            "readMicros": 1665,
+            "decodeMicros": 148233,
+            "firstDrawMicros": 12249,
+            "decodeDrawMicros": 160482,
+            "rasterMicros": 146,
+            "buildMicros": 203,
+            "sampledMaxBytes": 164546304,
+            "maxGapMicros": 11111
+          },
+          {
+            "round": 11,
+            "readMicros": 1829,
+            "decodeMicros": 147029,
+            "firstDrawMicros": 9446,
+            "decodeDrawMicros": 156475,
+            "rasterMicros": 129,
+            "buildMicros": 199,
+            "sampledMaxBytes": 151668480,
+            "maxGapMicros": 11160
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            219,
+            50,
+            -68,
+            73,
+            -19,
+            -238,
+            36,
+            -195,
+            458,
+            -238,
+            164
+          ],
+          "decodeMicros": [
+            597,
+            -45,
+            215,
+            -805,
+            933,
+            73,
+            2597,
+            -1578,
+            -1539,
+            592,
+            -1204
+          ],
+          "firstDrawMicros": [
+            3931,
+            -722,
+            -248,
+            -6509,
+            -288,
+            2982,
+            -142,
+            4271,
+            -8175,
+            8496,
+            -2803
+          ],
+          "decodeDrawMicros": [
+            4528,
+            -767,
+            -33,
+            -7314,
+            645,
+            3055,
+            2455,
+            2693,
+            -9714,
+            9088,
+            -4007
+          ],
+          "rasterMicros": [
+            4,
+            0,
+            -2,
+            3,
+            6,
+            -12,
+            8,
+            40,
+            -40,
+            11,
+            -17
+          ],
+          "buildMicros": [
+            2,
+            -13,
+            -4,
+            -21,
+            38,
+            -96,
+            74,
+            -62,
+            51,
+            28,
+            -4
+          ],
+          "sampledMaxBytes": [
+            -11878400,
+            -950272,
+            1687552,
+            11599872,
+            -12795904,
+            12222464,
+            -12353536,
+            98304,
+            1081344,
+            11632640,
+            -12877824
+          ]
+        }
+      },
+      "8306-WEBP": {
+        "samples": 12,
+        "metrics": {
+          "readMicros": {
+            "median": 1701.0,
+            "min": 1467,
+            "max": 1750
+          },
+          "decodeMicros": {
+            "median": 181335.0,
+            "min": 180004,
+            "max": 183876
+          },
+          "firstDrawMicros": {
+            "median": 8549.5,
+            "min": 1673,
+            "max": 12278
+          },
+          "decodeDrawMicros": {
+            "median": 189576.5,
+            "min": 182902,
+            "max": 193445
+          },
+          "rasterMicros": {
+            "median": 126.5,
+            "min": 110,
+            "max": 201
+          },
+          "buildMicros": {
+            "median": 161.5,
+            "min": 112,
+            "max": 202
+          },
+          "sampledMaxBytes": {
+            "median": 164497216.0,
+            "min": 162514752,
+            "max": 167462784
+          }
+        },
+        "rounds": [
+          {
+            "round": 0,
+            "readMicros": 1702,
+            "decodeMicros": 180527,
+            "firstDrawMicros": 7433,
+            "decodeDrawMicros": 187960,
+            "rasterMicros": 148,
+            "buildMicros": 112,
+            "sampledMaxBytes": 163317632,
+            "maxGapMicros": 11166
+          },
+          {
+            "round": 1,
+            "readMicros": 1634,
+            "decodeMicros": 183876,
+            "firstDrawMicros": 8881,
+            "decodeDrawMicros": 192757,
+            "rasterMicros": 127,
+            "buildMicros": 127,
+            "sampledMaxBytes": 165808000,
+            "maxGapMicros": 11002
+          },
+          {
+            "round": 2,
+            "readMicros": 1680,
+            "decodeMicros": 181581,
+            "firstDrawMicros": 8769,
+            "decodeDrawMicros": 190350,
+            "rasterMicros": 121,
+            "buildMicros": 193,
+            "sampledMaxBytes": 164480896,
+            "maxGapMicros": 11164
+          },
+          {
+            "round": 3,
+            "readMicros": 1711,
+            "decodeMicros": 181441,
+            "firstDrawMicros": 6560,
+            "decodeDrawMicros": 188001,
+            "rasterMicros": 122,
+            "buildMicros": 202,
+            "sampledMaxBytes": 162514752,
+            "maxGapMicros": 11160
+          },
+          {
+            "round": 4,
+            "readMicros": 1700,
+            "decodeMicros": 180004,
+            "firstDrawMicros": 9605,
+            "decodeDrawMicros": 189609,
+            "rasterMicros": 201,
+            "buildMicros": 161,
+            "sampledMaxBytes": 162826048,
+            "maxGapMicros": 11089
+          },
+          {
+            "round": 5,
+            "readMicros": 1688,
+            "decodeMicros": 181229,
+            "firstDrawMicros": 1673,
+            "decodeDrawMicros": 182902,
+            "rasterMicros": 188,
+            "buildMicros": 156,
+            "sampledMaxBytes": 163104576,
+            "maxGapMicros": 11155
+          },
+          {
+            "round": 6,
+            "readMicros": 1707,
+            "decodeMicros": 181828,
+            "firstDrawMicros": 8901,
+            "decodeDrawMicros": 190729,
+            "rasterMicros": 121,
+            "buildMicros": 145,
+            "sampledMaxBytes": 167167872,
+            "maxGapMicros": 11164
+          },
+          {
+            "round": 7,
+            "readMicros": 1726,
+            "decodeMicros": 181213,
+            "firstDrawMicros": 8331,
+            "decodeDrawMicros": 189544,
+            "rasterMicros": 134,
+            "buildMicros": 162,
+            "sampledMaxBytes": 164513536,
+            "maxGapMicros": 11093
+          },
+          {
+            "round": 8,
+            "readMicros": 1467,
+            "decodeMicros": 182013,
+            "firstDrawMicros": 4251,
+            "decodeDrawMicros": 186264,
+            "rasterMicros": 140,
+            "buildMicros": 163,
+            "sampledMaxBytes": 167200640,
+            "maxGapMicros": 11114
+          },
+          {
+            "round": 9,
+            "readMicros": 1750,
+            "decodeMicros": 180104,
+            "firstDrawMicros": 6512,
+            "decodeDrawMicros": 186616,
+            "rasterMicros": 126,
+            "buildMicros": 191,
+            "sampledMaxBytes": 163137408,
+            "maxGapMicros": 10857
+          },
+          {
+            "round": 10,
+            "readMicros": 1700,
+            "decodeMicros": 181571,
+            "firstDrawMicros": 8768,
+            "decodeDrawMicros": 190339,
+            "rasterMicros": 120,
+            "buildMicros": 187,
+            "sampledMaxBytes": 166791040,
+            "maxGapMicros": 11178
+          },
+          {
+            "round": 11,
+            "readMicros": 1723,
+            "decodeMicros": 181167,
+            "firstDrawMicros": 12278,
+            "decodeDrawMicros": 193445,
+            "rasterMicros": 110,
+            "buildMicros": 116,
+            "sampledMaxBytes": 167462784,
+            "maxGapMicros": 11224
+          }
+        ],
+        "roundDeltas": {
+          "readMicros": [
+            -68,
+            46,
+            31,
+            -11,
+            -12,
+            19,
+            19,
+            -259,
+            283,
+            -50,
+            23
+          ],
+          "decodeMicros": [
+            3349,
+            -2295,
+            -140,
+            -1437,
+            1225,
+            599,
+            -615,
+            800,
+            -1909,
+            1467,
+            -404
+          ],
+          "firstDrawMicros": [
+            1448,
+            -112,
+            -2209,
+            3045,
+            -7932,
+            7228,
+            -570,
+            -4080,
+            2261,
+            2256,
+            3510
+          ],
+          "decodeDrawMicros": [
+            4797,
+            -2407,
+            -2349,
+            1608,
+            -6707,
+            7827,
+            -1185,
+            -3280,
+            352,
+            3723,
+            3106
+          ],
+          "rasterMicros": [
+            -21,
+            -6,
+            1,
+            79,
+            -13,
+            -67,
+            13,
+            6,
+            -14,
+            -6,
+            -10
+          ],
+          "buildMicros": [
+            15,
+            66,
+            9,
+            -41,
+            -5,
+            -11,
+            17,
+            1,
+            28,
+            -4,
+            -71
+          ],
+          "sampledMaxBytes": [
+            2490368,
+            -1327104,
+            -1966144,
+            311296,
+            278528,
+            4063296,
+            -2654336,
+            2687104,
+            -4063232,
+            3653632,
+            671744
+          ]
+        }
+      }
+    },
+    "pairedRoundDeltas": {
+      "1950": {
+        "PNG": [
+          {
+            "round": 0,
+            "originalOrdinal": 12,
+            "candidateOrdinal": 13,
+            "readMicros": 170,
+            "decodeMicros": 13551,
+            "firstDrawMicros": -855,
+            "decodeDrawMicros": 12696,
+            "rasterMicros": 1,
+            "buildMicros": -12,
+            "sampledMaxBytes": -802816
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 33,
+            "candidateOrdinal": 35,
+            "readMicros": 120,
+            "decodeMicros": 14571,
+            "firstDrawMicros": -1935,
+            "decodeDrawMicros": 12636,
+            "rasterMicros": 0,
+            "buildMicros": 7,
+            "sampledMaxBytes": 1212480
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 37,
+            "candidateOrdinal": 36,
+            "readMicros": -64,
+            "decodeMicros": 15184,
+            "firstDrawMicros": -2572,
+            "decodeDrawMicros": 12612,
+            "rasterMicros": -54,
+            "buildMicros": -16,
+            "sampledMaxBytes": 1654720
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 59,
+            "candidateOrdinal": 57,
+            "readMicros": 92,
+            "decodeMicros": 14288,
+            "firstDrawMicros": 8329,
+            "decodeDrawMicros": 22617,
+            "rasterMicros": -67,
+            "buildMicros": -53,
+            "sampledMaxBytes": -704576
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 61,
+            "candidateOrdinal": 62,
+            "readMicros": 98,
+            "decodeMicros": 16687,
+            "firstDrawMicros": 250,
+            "decodeDrawMicros": 16937,
+            "rasterMicros": -5,
+            "buildMicros": -5,
+            "sampledMaxBytes": 786496
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 83,
+            "candidateOrdinal": 82,
+            "readMicros": 97,
+            "decodeMicros": 14796,
+            "firstDrawMicros": 1536,
+            "decodeDrawMicros": 16332,
+            "rasterMicros": 4,
+            "buildMicros": 3,
+            "sampledMaxBytes": -229312
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 84,
+            "candidateOrdinal": 85,
+            "readMicros": 692,
+            "decodeMicros": 13943,
+            "firstDrawMicros": 1539,
+            "decodeDrawMicros": 15482,
+            "rasterMicros": -7,
+            "buildMicros": -22,
+            "sampledMaxBytes": -1196096
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 105,
+            "candidateOrdinal": 107,
+            "readMicros": 432,
+            "decodeMicros": 32010,
+            "firstDrawMicros": -195,
+            "decodeDrawMicros": 31815,
+            "rasterMicros": 6,
+            "buildMicros": 54,
+            "sampledMaxBytes": -688064
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 109,
+            "candidateOrdinal": 108,
+            "readMicros": -106,
+            "decodeMicros": 14790,
+            "firstDrawMicros": 1335,
+            "decodeDrawMicros": 16125,
+            "rasterMicros": -13,
+            "buildMicros": -8,
+            "sampledMaxBytes": 1622016
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 131,
+            "candidateOrdinal": 129,
+            "readMicros": -38,
+            "decodeMicros": 12918,
+            "firstDrawMicros": 1426,
+            "decodeDrawMicros": 14344,
+            "rasterMicros": -51,
+            "buildMicros": -64,
+            "sampledMaxBytes": -688192
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 133,
+            "candidateOrdinal": 134,
+            "readMicros": 799,
+            "decodeMicros": 15188,
+            "firstDrawMicros": 1989,
+            "decodeDrawMicros": 17177,
+            "rasterMicros": -1,
+            "buildMicros": 35,
+            "sampledMaxBytes": 507968
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 155,
+            "candidateOrdinal": 154,
+            "readMicros": 57,
+            "decodeMicros": 12233,
+            "firstDrawMicros": 3070,
+            "decodeDrawMicros": 15303,
+            "rasterMicros": -52,
+            "buildMicros": -77,
+            "sampledMaxBytes": -196608
+          }
+        ],
+        "WEBP": [
+          {
+            "round": 0,
+            "originalOrdinal": 12,
+            "candidateOrdinal": 14,
+            "readMicros": 94,
+            "decodeMicros": 17036,
+            "firstDrawMicros": -4347,
+            "decodeDrawMicros": 12689,
+            "rasterMicros": -86,
+            "buildMicros": -52,
+            "sampledMaxBytes": -327616
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 33,
+            "candidateOrdinal": 34,
+            "readMicros": 21,
+            "decodeMicros": 15468,
+            "firstDrawMicros": 1611,
+            "decodeDrawMicros": 17079,
+            "rasterMicros": -87,
+            "buildMicros": -29,
+            "sampledMaxBytes": 720896
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 37,
+            "candidateOrdinal": 38,
+            "readMicros": 73,
+            "decodeMicros": 14871,
+            "firstDrawMicros": -2500,
+            "decodeDrawMicros": 12371,
+            "rasterMicros": -79,
+            "buildMicros": -73,
+            "sampledMaxBytes": 737152
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 59,
+            "candidateOrdinal": 58,
+            "readMicros": 82,
+            "decodeMicros": 15887,
+            "firstDrawMicros": 6428,
+            "decodeDrawMicros": 22315,
+            "rasterMicros": -104,
+            "buildMicros": -40,
+            "sampledMaxBytes": -196608
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 61,
+            "candidateOrdinal": 60,
+            "readMicros": -98,
+            "decodeMicros": 14967,
+            "firstDrawMicros": 5286,
+            "decodeDrawMicros": 20253,
+            "rasterMicros": -87,
+            "buildMicros": -49,
+            "sampledMaxBytes": 1703936
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 83,
+            "candidateOrdinal": 81,
+            "readMicros": 37,
+            "decodeMicros": 14321,
+            "firstDrawMicros": 64,
+            "decodeDrawMicros": 14385,
+            "rasterMicros": -89,
+            "buildMicros": -92,
+            "sampledMaxBytes": -704448
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 84,
+            "candidateOrdinal": 86,
+            "readMicros": 64,
+            "decodeMicros": 13911,
+            "firstDrawMicros": 1484,
+            "decodeDrawMicros": 15395,
+            "rasterMicros": -102,
+            "buildMicros": -28,
+            "sampledMaxBytes": -573504
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 105,
+            "candidateOrdinal": 106,
+            "readMicros": 403,
+            "decodeMicros": 32164,
+            "firstDrawMicros": 2462,
+            "decodeDrawMicros": 34626,
+            "rasterMicros": -18,
+            "buildMicros": 34,
+            "sampledMaxBytes": -1425408
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 109,
+            "candidateOrdinal": 110,
+            "readMicros": 12,
+            "decodeMicros": 15435,
+            "firstDrawMicros": -38,
+            "decodeDrawMicros": 15397,
+            "rasterMicros": -102,
+            "buildMicros": -87,
+            "sampledMaxBytes": 770112
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 131,
+            "candidateOrdinal": 130,
+            "readMicros": -33,
+            "decodeMicros": 15740,
+            "firstDrawMicros": 1665,
+            "decodeDrawMicros": 17405,
+            "rasterMicros": -82,
+            "buildMicros": -62,
+            "sampledMaxBytes": -212992
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 133,
+            "candidateOrdinal": 132,
+            "readMicros": -56,
+            "decodeMicros": 15202,
+            "firstDrawMicros": 1774,
+            "decodeDrawMicros": 16976,
+            "rasterMicros": -93,
+            "buildMicros": -19,
+            "sampledMaxBytes": 1671168
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 155,
+            "candidateOrdinal": 153,
+            "readMicros": 128,
+            "decodeMicros": 14608,
+            "firstDrawMicros": -1430,
+            "decodeDrawMicros": 13178,
+            "rasterMicros": -86,
+            "buildMicros": -116,
+            "sampledMaxBytes": -655296
+          }
+        ]
+      },
+      "1952": {
+        "PNG": [
+          {
+            "round": 0,
+            "originalOrdinal": 15,
+            "candidateOrdinal": 16,
+            "readMicros": 354,
+            "decodeMicros": -4198,
+            "firstDrawMicros": 1245,
+            "decodeDrawMicros": -2953,
+            "rasterMicros": 55,
+            "buildMicros": -11,
+            "sampledMaxBytes": 704448
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 30,
+            "candidateOrdinal": 32,
+            "readMicros": 63,
+            "decodeMicros": -5563,
+            "firstDrawMicros": 6418,
+            "decodeDrawMicros": 855,
+            "rasterMicros": 23,
+            "buildMicros": -40,
+            "sampledMaxBytes": 1212352
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 40,
+            "candidateOrdinal": 39,
+            "readMicros": 118,
+            "decodeMicros": -3426,
+            "firstDrawMicros": 6823,
+            "decodeDrawMicros": 3397,
+            "rasterMicros": 34,
+            "buildMicros": -47,
+            "sampledMaxBytes": -229376
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 56,
+            "candidateOrdinal": 54,
+            "readMicros": 103,
+            "decodeMicros": -5506,
+            "firstDrawMicros": 4134,
+            "decodeDrawMicros": -1372,
+            "rasterMicros": 101,
+            "buildMicros": -13,
+            "sampledMaxBytes": 8929344
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 64,
+            "candidateOrdinal": 65,
+            "readMicros": 73,
+            "decodeMicros": -6174,
+            "firstDrawMicros": -1029,
+            "decodeDrawMicros": -7203,
+            "rasterMicros": -13,
+            "buildMicros": -12,
+            "sampledMaxBytes": -1392640
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 80,
+            "candidateOrdinal": 79,
+            "readMicros": 45,
+            "decodeMicros": -5214,
+            "firstDrawMicros": -472,
+            "decodeDrawMicros": -5686,
+            "rasterMicros": 57,
+            "buildMicros": -6,
+            "sampledMaxBytes": -180160
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 87,
+            "candidateOrdinal": 88,
+            "readMicros": 73,
+            "decodeMicros": -5901,
+            "firstDrawMicros": 5573,
+            "decodeDrawMicros": -328,
+            "rasterMicros": 18,
+            "buildMicros": -2,
+            "sampledMaxBytes": 98304
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 102,
+            "candidateOrdinal": 104,
+            "readMicros": -19,
+            "decodeMicros": -4640,
+            "firstDrawMicros": 7721,
+            "decodeDrawMicros": 3081,
+            "rasterMicros": 12,
+            "buildMicros": -8,
+            "sampledMaxBytes": 1179584
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 112,
+            "candidateOrdinal": 111,
+            "readMicros": 68,
+            "decodeMicros": -5828,
+            "firstDrawMicros": 4221,
+            "decodeDrawMicros": -1607,
+            "rasterMicros": 19,
+            "buildMicros": 2,
+            "sampledMaxBytes": -458688
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 128,
+            "candidateOrdinal": 126,
+            "readMicros": 24,
+            "decodeMicros": -4462,
+            "firstDrawMicros": -1039,
+            "decodeDrawMicros": -5501,
+            "rasterMicros": -3,
+            "buildMicros": 12,
+            "sampledMaxBytes": 6455360
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 136,
+            "candidateOrdinal": 137,
+            "readMicros": 69,
+            "decodeMicros": -5809,
+            "firstDrawMicros": 7065,
+            "decodeDrawMicros": 1256,
+            "rasterMicros": 55,
+            "buildMicros": 33,
+            "sampledMaxBytes": 212992
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 152,
+            "candidateOrdinal": 151,
+            "readMicros": 119,
+            "decodeMicros": -5733,
+            "firstDrawMicros": 6917,
+            "decodeDrawMicros": 1184,
+            "rasterMicros": 14,
+            "buildMicros": 56,
+            "sampledMaxBytes": -180160
+          }
+        ],
+        "WEBP": [
+          {
+            "round": 0,
+            "originalOrdinal": 15,
+            "candidateOrdinal": 17,
+            "readMicros": 366,
+            "decodeMicros": 3643,
+            "firstDrawMicros": -4834,
+            "decodeDrawMicros": -1191,
+            "rasterMicros": 34,
+            "buildMicros": -8,
+            "sampledMaxBytes": -950336
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 30,
+            "candidateOrdinal": 31,
+            "readMicros": 16,
+            "decodeMicros": 4759,
+            "firstDrawMicros": -914,
+            "decodeDrawMicros": 3845,
+            "rasterMicros": -9,
+            "buildMicros": -39,
+            "sampledMaxBytes": 475072
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 40,
+            "candidateOrdinal": 41,
+            "readMicros": 110,
+            "decodeMicros": 2938,
+            "firstDrawMicros": -2313,
+            "decodeDrawMicros": 625,
+            "rasterMicros": -79,
+            "buildMicros": -123,
+            "sampledMaxBytes": -1146816
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 56,
+            "candidateOrdinal": 55,
+            "readMicros": 39,
+            "decodeMicros": 4482,
+            "firstDrawMicros": 426,
+            "decodeDrawMicros": 4908,
+            "rasterMicros": 61,
+            "buildMicros": 33,
+            "sampledMaxBytes": -737344
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 64,
+            "candidateOrdinal": 63,
+            "readMicros": 132,
+            "decodeMicros": 4093,
+            "firstDrawMicros": -4143,
+            "decodeDrawMicros": -50,
+            "rasterMicros": -57,
+            "buildMicros": 47,
+            "sampledMaxBytes": -1064960
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 80,
+            "candidateOrdinal": 78,
+            "readMicros": 49,
+            "decodeMicros": 4109,
+            "firstDrawMicros": -9485,
+            "decodeDrawMicros": -5376,
+            "rasterMicros": 52,
+            "buildMicros": 19,
+            "sampledMaxBytes": 9552000
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 87,
+            "candidateOrdinal": 89,
+            "readMicros": 6,
+            "decodeMicros": 3346,
+            "firstDrawMicros": -3423,
+            "decodeDrawMicros": -77,
+            "rasterMicros": 9,
+            "buildMicros": -12,
+            "sampledMaxBytes": -1310720
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 102,
+            "candidateOrdinal": 103,
+            "readMicros": -3,
+            "decodeMicros": 2793,
+            "firstDrawMicros": 786,
+            "decodeDrawMicros": 3579,
+            "rasterMicros": -95,
+            "buildMicros": -67,
+            "sampledMaxBytes": 458688
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 112,
+            "candidateOrdinal": 113,
+            "readMicros": 15,
+            "decodeMicros": 2333,
+            "firstDrawMicros": -7636,
+            "decodeDrawMicros": -5303,
+            "rasterMicros": -81,
+            "buildMicros": -119,
+            "sampledMaxBytes": -1425408
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 128,
+            "candidateOrdinal": 127,
+            "readMicros": -27,
+            "decodeMicros": 3420,
+            "firstDrawMicros": -1327,
+            "decodeDrawMicros": 2093,
+            "rasterMicros": -40,
+            "buildMicros": 42,
+            "sampledMaxBytes": -737280
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 136,
+            "candidateOrdinal": 135,
+            "readMicros": 46,
+            "decodeMicros": 3722,
+            "firstDrawMicros": -6362,
+            "decodeDrawMicros": -2640,
+            "rasterMicros": 18,
+            "buildMicros": 37,
+            "sampledMaxBytes": -720832
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 152,
+            "candidateOrdinal": 150,
+            "readMicros": 59,
+            "decodeMicros": 5008,
+            "firstDrawMicros": -326,
+            "decodeDrawMicros": 4682,
+            "rasterMicros": -15,
+            "buildMicros": 6,
+            "sampledMaxBytes": 9732224
+          }
+        ]
+      },
+      "8303": {
+        "PNG": [
+          {
+            "round": 0,
+            "originalOrdinal": 18,
+            "candidateOrdinal": 19,
+            "readMicros": -195,
+            "decodeMicros": -13177,
+            "firstDrawMicros": -5547,
+            "decodeDrawMicros": -18724,
+            "rasterMicros": 34,
+            "buildMicros": 7,
+            "sampledMaxBytes": -34209856
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 27,
+            "candidateOrdinal": 29,
+            "readMicros": -147,
+            "decodeMicros": -7443,
+            "firstDrawMicros": -6617,
+            "decodeDrawMicros": -14060,
+            "rasterMicros": 0,
+            "buildMicros": 52,
+            "sampledMaxBytes": -43204672
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 43,
+            "candidateOrdinal": 42,
+            "readMicros": -39,
+            "decodeMicros": -9727,
+            "firstDrawMicros": -9161,
+            "decodeDrawMicros": -18888,
+            "rasterMicros": 39,
+            "buildMicros": -19,
+            "sampledMaxBytes": -46039104
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 53,
+            "candidateOrdinal": 51,
+            "readMicros": -52,
+            "decodeMicros": -8305,
+            "firstDrawMicros": 4550,
+            "decodeDrawMicros": -3755,
+            "rasterMicros": -1,
+            "buildMicros": 78,
+            "sampledMaxBytes": -33357888
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 67,
+            "candidateOrdinal": 68,
+            "readMicros": 53,
+            "decodeMicros": -9461,
+            "firstDrawMicros": -5827,
+            "decodeDrawMicros": -15288,
+            "rasterMicros": -9,
+            "buildMicros": 19,
+            "sampledMaxBytes": -34144320
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 77,
+            "candidateOrdinal": 76,
+            "readMicros": -60,
+            "decodeMicros": -9301,
+            "firstDrawMicros": -8005,
+            "decodeDrawMicros": -17306,
+            "rasterMicros": 4,
+            "buildMicros": 58,
+            "sampledMaxBytes": -43941952
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 90,
+            "candidateOrdinal": 91,
+            "readMicros": 10,
+            "decodeMicros": -8181,
+            "firstDrawMicros": -8121,
+            "decodeDrawMicros": -16302,
+            "rasterMicros": 50,
+            "buildMicros": 19,
+            "sampledMaxBytes": -34111552
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 99,
+            "candidateOrdinal": 101,
+            "readMicros": -174,
+            "decodeMicros": -8383,
+            "firstDrawMicros": 7944,
+            "decodeDrawMicros": -439,
+            "rasterMicros": 20,
+            "buildMicros": 10,
+            "sampledMaxBytes": -45662272
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 115,
+            "candidateOrdinal": 114,
+            "readMicros": -158,
+            "decodeMicros": -10787,
+            "firstDrawMicros": -4316,
+            "decodeDrawMicros": -15103,
+            "rasterMicros": 0,
+            "buildMicros": 11,
+            "sampledMaxBytes": -46858304
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 125,
+            "candidateOrdinal": 123,
+            "readMicros": -78,
+            "decodeMicros": -15220,
+            "firstDrawMicros": 10317,
+            "decodeDrawMicros": -4903,
+            "rasterMicros": -165,
+            "buildMicros": -42,
+            "sampledMaxBytes": -34062400
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 139,
+            "candidateOrdinal": 140,
+            "readMicros": -70,
+            "decodeMicros": -9815,
+            "firstDrawMicros": -7243,
+            "decodeDrawMicros": -17058,
+            "rasterMicros": 102,
+            "buildMicros": -25,
+            "sampledMaxBytes": -34521152
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 149,
+            "candidateOrdinal": 148,
+            "readMicros": -214,
+            "decodeMicros": -8926,
+            "firstDrawMicros": -7023,
+            "decodeDrawMicros": -15949,
+            "rasterMicros": -18,
+            "buildMicros": -8,
+            "sampledMaxBytes": -44335168
+          }
+        ],
+        "WEBP": [
+          {
+            "round": 0,
+            "originalOrdinal": 18,
+            "candidateOrdinal": 20,
+            "readMicros": -111,
+            "decodeMicros": 7998,
+            "firstDrawMicros": 4485,
+            "decodeDrawMicros": 12483,
+            "rasterMicros": -11,
+            "buildMicros": 27,
+            "sampledMaxBytes": -34193472
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 27,
+            "candidateOrdinal": 28,
+            "readMicros": -267,
+            "decodeMicros": 12614,
+            "firstDrawMicros": 5079,
+            "decodeDrawMicros": 17693,
+            "rasterMicros": -1,
+            "buildMicros": 72,
+            "sampledMaxBytes": -34783232
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 43,
+            "candidateOrdinal": 44,
+            "readMicros": -69,
+            "decodeMicros": 11907,
+            "firstDrawMicros": 6668,
+            "decodeDrawMicros": 18575,
+            "rasterMicros": -9,
+            "buildMicros": 19,
+            "sampledMaxBytes": -35241984
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 53,
+            "candidateOrdinal": 52,
+            "readMicros": -162,
+            "decodeMicros": 10973,
+            "firstDrawMicros": 2176,
+            "decodeDrawMicros": 13149,
+            "rasterMicros": -7,
+            "buildMicros": 2,
+            "sampledMaxBytes": -33407040
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 67,
+            "candidateOrdinal": 66,
+            "readMicros": 29,
+            "decodeMicros": 12104,
+            "firstDrawMicros": 1009,
+            "decodeDrawMicros": 13113,
+            "rasterMicros": -12,
+            "buildMicros": 9,
+            "sampledMaxBytes": -35684352
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 77,
+            "candidateOrdinal": 75,
+            "readMicros": -146,
+            "decodeMicros": 10481,
+            "firstDrawMicros": -12935,
+            "decodeDrawMicros": -2454,
+            "rasterMicros": 31,
+            "buildMicros": 39,
+            "sampledMaxBytes": -33488896
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 90,
+            "candidateOrdinal": 92,
+            "readMicros": -2,
+            "decodeMicros": 12780,
+            "firstDrawMicros": 4763,
+            "decodeDrawMicros": 17543,
+            "rasterMicros": 14,
+            "buildMicros": 71,
+            "sampledMaxBytes": -33521728
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 99,
+            "candidateOrdinal": 100,
+            "readMicros": -87,
+            "decodeMicros": 11446,
+            "firstDrawMicros": 4120,
+            "decodeDrawMicros": 15566,
+            "rasterMicros": 13,
+            "buildMicros": 10,
+            "sampledMaxBytes": -34291712
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 115,
+            "candidateOrdinal": 116,
+            "readMicros": -447,
+            "decodeMicros": 10209,
+            "firstDrawMicros": 7704,
+            "decodeDrawMicros": 17913,
+            "rasterMicros": 43,
+            "buildMicros": 16,
+            "sampledMaxBytes": -38846400
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 125,
+            "candidateOrdinal": 124,
+            "readMicros": -129,
+            "decodeMicros": 4670,
+            "firstDrawMicros": 10267,
+            "decodeDrawMicros": 14937,
+            "rasterMicros": -176,
+            "buildMicros": -41,
+            "sampledMaxBytes": -33882112
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 139,
+            "candidateOrdinal": 138,
+            "readMicros": 210,
+            "decodeMicros": 9679,
+            "firstDrawMicros": -6991,
+            "decodeDrawMicros": 2688,
+            "rasterMicros": 35,
+            "buildMicros": -39,
+            "sampledMaxBytes": -35241920
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 149,
+            "candidateOrdinal": 147,
+            "readMicros": -260,
+            "decodeMicros": 11980,
+            "firstDrawMicros": 2363,
+            "decodeDrawMicros": 14343,
+            "rasterMicros": 35,
+            "buildMicros": -74,
+            "sampledMaxBytes": -34258944
+          }
+        ]
+      },
+      "8306": {
+        "PNG": [
+          {
+            "round": 0,
+            "originalOrdinal": 21,
+            "candidateOrdinal": 22,
+            "readMicros": -350,
+            "decodeMicros": -10846,
+            "firstDrawMicros": -8142,
+            "decodeDrawMicros": -18988,
+            "rasterMicros": -54,
+            "buildMicros": 47,
+            "sampledMaxBytes": -32833600
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 24,
+            "candidateOrdinal": 26,
+            "readMicros": -117,
+            "decodeMicros": -11541,
+            "firstDrawMicros": -396,
+            "decodeDrawMicros": -11937,
+            "rasterMicros": 3,
+            "buildMicros": 5,
+            "sampledMaxBytes": -52084800
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 46,
+            "candidateOrdinal": 45,
+            "readMicros": 602,
+            "decodeMicros": -13793,
+            "firstDrawMicros": -2624,
+            "decodeDrawMicros": -16417,
+            "rasterMicros": 0,
+            "buildMicros": 18,
+            "sampledMaxBytes": -45580352
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 50,
+            "candidateOrdinal": 48,
+            "readMicros": -177,
+            "decodeMicros": -12130,
+            "firstDrawMicros": 2780,
+            "decodeDrawMicros": -9350,
+            "rasterMicros": -8,
+            "buildMicros": 20,
+            "sampledMaxBytes": -44793920
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 70,
+            "candidateOrdinal": 71,
+            "readMicros": -58,
+            "decodeMicros": -14073,
+            "firstDrawMicros": -6342,
+            "decodeDrawMicros": -20415,
+            "rasterMicros": 2,
+            "buildMicros": 2,
+            "sampledMaxBytes": -32653376
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 74,
+            "candidateOrdinal": 73,
+            "readMicros": 51,
+            "decodeMicros": -10596,
+            "firstDrawMicros": -7745,
+            "decodeDrawMicros": -18341,
+            "rasterMicros": 5,
+            "buildMicros": 31,
+            "sampledMaxBytes": -45563968
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 93,
+            "candidateOrdinal": 94,
+            "readMicros": -358,
+            "decodeMicros": -12382,
+            "firstDrawMicros": -4655,
+            "decodeDrawMicros": -17037,
+            "rasterMicros": -2,
+            "buildMicros": -14,
+            "sampledMaxBytes": -32849984
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 96,
+            "candidateOrdinal": 98,
+            "readMicros": -331,
+            "decodeMicros": -9651,
+            "firstDrawMicros": -4404,
+            "decodeDrawMicros": -14055,
+            "rasterMicros": -11,
+            "buildMicros": -19,
+            "sampledMaxBytes": -46514240
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 118,
+            "candidateOrdinal": 117,
+            "readMicros": 189,
+            "decodeMicros": -13663,
+            "firstDrawMicros": -1813,
+            "decodeDrawMicros": -15476,
+            "rasterMicros": 31,
+            "buildMicros": -71,
+            "sampledMaxBytes": -45596672
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 122,
+            "candidateOrdinal": 120,
+            "readMicros": -54,
+            "decodeMicros": -11906,
+            "firstDrawMicros": -5922,
+            "decodeDrawMicros": -17828,
+            "rasterMicros": 4,
+            "buildMicros": -28,
+            "sampledMaxBytes": -50823168
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 142,
+            "candidateOrdinal": 143,
+            "readMicros": -333,
+            "decodeMicros": -11084,
+            "firstDrawMicros": -4483,
+            "decodeDrawMicros": -15567,
+            "rasterMicros": 17,
+            "buildMicros": 36,
+            "sampledMaxBytes": -38731776
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 146,
+            "candidateOrdinal": 145,
+            "readMicros": 53,
+            "decodeMicros": -12256,
+            "firstDrawMicros": -6388,
+            "decodeDrawMicros": -18644,
+            "rasterMicros": 5,
+            "buildMicros": -9,
+            "sampledMaxBytes": -45547520
+          }
+        ],
+        "WEBP": [
+          {
+            "round": 0,
+            "originalOrdinal": 21,
+            "candidateOrdinal": 23,
+            "readMicros": -235,
+            "decodeMicros": 22488,
+            "firstDrawMicros": -9362,
+            "decodeDrawMicros": 13126,
+            "rasterMicros": -34,
+            "buildMicros": -47,
+            "sampledMaxBytes": -33718208
+          },
+          {
+            "round": 1,
+            "originalOrdinal": 24,
+            "candidateOrdinal": 25,
+            "readMicros": -289,
+            "decodeMicros": 24545,
+            "firstDrawMicros": -4099,
+            "decodeDrawMicros": 20446,
+            "rasterMicros": -2,
+            "buildMicros": -76,
+            "sampledMaxBytes": -38600640
+          },
+          {
+            "round": 2,
+            "originalOrdinal": 46,
+            "candidateOrdinal": 47,
+            "readMicros": 426,
+            "decodeMicros": 20043,
+            "firstDrawMicros": -5717,
+            "decodeDrawMicros": 14326,
+            "rasterMicros": -11,
+            "buildMicros": 16,
+            "sampledMaxBytes": -32473024
+          },
+          {
+            "round": 3,
+            "originalOrdinal": 50,
+            "candidateOrdinal": 49,
+            "readMicros": -254,
+            "decodeMicros": 21351,
+            "firstDrawMicros": -2274,
+            "decodeDrawMicros": 19077,
+            "rasterMicros": -16,
+            "buildMicros": 31,
+            "sampledMaxBytes": -35340288
+          },
+          {
+            "round": 4,
+            "originalOrdinal": 70,
+            "candidateOrdinal": 69,
+            "readMicros": -219,
+            "decodeMicros": 18776,
+            "firstDrawMicros": -1842,
+            "decodeDrawMicros": 16934,
+            "rasterMicros": 70,
+            "buildMicros": -7,
+            "sampledMaxBytes": -34488320
+          },
+          {
+            "round": 5,
+            "originalOrdinal": 74,
+            "candidateOrdinal": 72,
+            "readMicros": -103,
+            "decodeMicros": 22545,
+            "firstDrawMicros": -10889,
+            "decodeDrawMicros": 11656,
+            "rasterMicros": 54,
+            "buildMicros": -21,
+            "sampledMaxBytes": -34324480
+          },
+          {
+            "round": 6,
+            "originalOrdinal": 93,
+            "candidateOrdinal": 95,
+            "readMicros": -255,
+            "decodeMicros": 21285,
+            "firstDrawMicros": -3553,
+            "decodeDrawMicros": 17732,
+            "rasterMicros": -8,
+            "buildMicros": 19,
+            "sampledMaxBytes": -29769664
+          },
+          {
+            "round": 7,
+            "originalOrdinal": 96,
+            "candidateOrdinal": 97,
+            "readMicros": -245,
+            "decodeMicros": 20804,
+            "firstDrawMicros": -3730,
+            "decodeDrawMicros": 17074,
+            "rasterMicros": -12,
+            "buildMicros": -43,
+            "sampledMaxBytes": -33734720
+          },
+          {
+            "round": 8,
+            "originalOrdinal": 118,
+            "candidateOrdinal": 119,
+            "readMicros": 211,
+            "decodeMicros": 19170,
+            "firstDrawMicros": -9490,
+            "decodeDrawMicros": 9680,
+            "rasterMicros": -4,
+            "buildMicros": -32,
+            "sampledMaxBytes": -30228352
+          },
+          {
+            "round": 9,
+            "originalOrdinal": 122,
+            "candidateOrdinal": 121,
+            "readMicros": -207,
+            "decodeMicros": 20557,
+            "firstDrawMicros": -3163,
+            "decodeDrawMicros": 17394,
+            "rasterMicros": -5,
+            "buildMicros": -12,
+            "sampledMaxBytes": -40599424
+          },
+          {
+            "round": 10,
+            "originalOrdinal": 142,
+            "candidateOrdinal": 141,
+            "readMicros": -298,
+            "decodeMicros": 22254,
+            "firstDrawMicros": -7964,
+            "decodeDrawMicros": 14290,
+            "rasterMicros": -9,
+            "buildMicros": 20,
+            "sampledMaxBytes": -36487040
+          },
+          {
+            "round": 11,
+            "originalOrdinal": 146,
+            "candidateOrdinal": 144,
+            "readMicros": -53,
+            "decodeMicros": 21882,
+            "firstDrawMicros": -3556,
+            "decodeDrawMicros": 18326,
+            "rasterMicros": -14,
+            "buildMicros": -92,
+            "sampledMaxBytes": -29753216
+          }
+        ]
+      }
+    },
+    "pofudukLocalPilot": {
+      "8303": {
+        "decodeDrawWithin20Percent": true,
+        "memoryDeltaBytes": -34299872.0,
+        "memoryWithinPilotBudget": true
+      },
+      "8306": {
+        "decodeDrawWithin20Percent": true,
+        "memoryDeltaBytes": -32931808.0,
+        "memoryWithinPilotBudget": true
+      }
+    },
+    "budgetScope": "LOCAL_PILOT_ONLY"
+  },
+  "comparisons": {
+    "1950": {
+      "webpDecodeIncreasePercent": 22.9039265574551,
+      "webpDecodeDrawIncreasePercent": 21.37745798305497,
+      "webpSampledProcessMedianDeltaBytes": -90112.0
+    },
+    "1952": {
+      "webpDecodeIncreasePercent": 5.880751429349296,
+      "webpDecodeDrawIncreasePercent": 0.03329293790201859,
+      "webpSampledProcessMedianDeltaBytes": -548864.0
+    },
+    "8303": {
+      "webpDecodeIncreasePercent": 7.754637494054495,
+      "webpDecodeDrawIncreasePercent": 9.311866981500838,
+      "webpSampledProcessMedianDeltaBytes": -34299872.0
+    },
+    "8306": {
+      "webpDecodeIncreasePercent": 13.463084686691463,
+      "webpDecodeDrawIncreasePercent": 9.685771482792926,
+      "webpSampledProcessMedianDeltaBytes": -32931808.0
+    }
+  },
+  "backup": {
+    "verified": true,
+    "files": 73,
+    "bytes": 8218019,
+    "inventorySha256": "ce4ba25619f7567830d9d01ba25ae2c51c3fa08169c6b1a73ea0292e047a27e6",
+    "oldExecutableRestoreGuaranteed": false
+  },
+  "preservation": {
+    "unchanged": true,
+    "repositoryFiles": 3495,
+    "p5cFiles": 13,
+    "oldQaFiles": 1106,
+    "repositorySha256": "14bb5eda034d2e96b15376faca9c20897e843d6e5b31172331b6aaa396ec0502",
+    "oldQaSha256": "d74d8de057617f5041e3c16e9c819e046143f7a7ca02b326ad6240c9842dbd44"
+  },
+  "additionalPreservation": {
+    "originalFiles": 41,
+    "originalFilesUnchanged": true,
+    "preExistingWorkingFiles": 88,
+    "preExistingWorkingFilesUnchanged": true,
+    "p5cPinnedFilesIncludingReport": 124
+  },
+  "localFormatDecision": {
+    "18": "KEEP_ORIGINAL_JPEG",
+    "62": "LOSSLESS_WEBP_LOCAL_CANDIDATE",
+    "62Fallback": "LOSSLESS_PNG"
+  },
+  "productionAdmission": "NOT_ADMITTED",
+  "transition": "HOLD",
+  "limitations": [
+    "WARM_LOCAL_ASSET_ONLY",
+    "FOUR_SAMPLED_IMAGES_ONLY",
+    "FIRST_FRAMEWORK_DRAW_NOT_PANEL_PRESENTATION",
+    "DECODE_DRAW_IS_SUM_OF_SEPARATE_INTERVALS",
+    "SAMPLED_PROCESS_FOOTPRINT_NOT_GPU_OR_TRUE_PEAK",
+    "PRODUCTION_JAVA_IMAGE_NOT_RUN",
+    "ANDROID_PHYSICAL_PERFORMANCE_NOT_RUN",
+    "P3_PANEL_QUALITY_NOT_RUN"
+  ],
+  "verification": {
+    "p5fPythonTests": 24,
+    "p5ePythonTests": 15,
+    "flutterTests": 27,
+    "optInRouterTests": 1,
+    "dartAnalyze": "CLEAN",
+    "swiftHostTypecheck": "PASS",
+    "javaUnitTests": 4,
+    "javaCliNegativeCases": 3
+  },
+  "postMeasurementReview": {
+    "patchedFindings": 7,
+    "reviewPatchInstalledOnPhone": false,
+    "physicalRerun": false,
+    "physicalArtifactEvidenceUnchanged": true,
+    "revalidationStatus": "SEALED_VERIFIED",
+    "validatorSha256": "411c32f238e910f15f15ff6f01385c8f26116908742075e3cf0c83214b139274",
+    "revalidationNoteSha256": "8401e31c25a68b9e4ff43eed93f057a7488236024ce6a730817f45e616652637",
+    "guardChanges": [
+      "LATE_SEAL_RESPONSE_RECHECK",
+      "ONE_INSTALLATION_BOUNDARY_PER_NONCE",
+      "TRIAL_SUBDURATION_CONSISTENCY",
+      "PINNED_BASELINE_DIRECTORY_REQUIRED"
+    ],
+    "additionalTests": [
+      "PILOT_BUDGET_BOUNDARIES",
+      "REAL_NATIVE_SAMPLER_THERMAL_AND_LOW_POWER_INTERRUPTION_WITH_HOST_STUBS",
+      "REAL_SCREEN_PAINT_TO_CUBIT_BOUNDARY"
+    ]
+  }
+}

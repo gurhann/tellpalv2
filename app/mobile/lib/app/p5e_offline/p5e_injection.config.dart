@@ -12,11 +12,14 @@
 
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
-import 'package:tellpal_mobile_poc/app/p5e_offline/p5e_router.dart' as _i907;
 import 'package:tellpal_mobile_poc/features/reading_images/p5d_offline/domain/p5d_repository.dart'
     as _i667;
 import 'package:tellpal_mobile_poc/features/reading_images/p5e_offline/presentation/p5e_cubit.dart'
     as _i373;
+import 'package:tellpal_mobile_poc/features/reading_images/p5f_performance/domain/p5f_repository.dart'
+    as _i526;
+import 'package:tellpal_mobile_poc/features/reading_images/p5f_performance/presentation/p5f_cubit.dart'
+    as _i681;
 import 'package:tellpal_mobile_poc/p5e_offline_bindings/p5e_module.dart'
     as _i166;
 
@@ -34,12 +37,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => p5eModule.repository,
       registerFor: {_p5eOffline},
     );
-    gh.lazySingleton<_i907.P5eRouter>(
-      () => p5eModule.router,
+    gh.lazySingleton<_i526.P5fRepository>(
+      () => p5eModule.performanceRepository,
       registerFor: {_p5eOffline},
     );
     gh.factory<_i373.P5eCubit>(
       () => p5eModule.cubit(gh<_i667.P5dRepository>()),
+      registerFor: {_p5eOffline},
+    );
+    gh.factory<_i681.P5fCubit>(
+      () => p5eModule.performanceCubit(gh<_i526.P5fRepository>()),
       registerFor: {_p5eOffline},
     );
     return this;

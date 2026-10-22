@@ -9,6 +9,8 @@ final class AppDelegate: FlutterAppDelegate {
     private var network = "unknown"
     private var sequence = 0
     private var session: P5eSession!
+    private var performance: P5fPerformance?
+    private var performanceChannel: FlutterMethodChannel?
     private var nonce: String = ""
     private var availableDiskBytes: Int64 = -1
 
@@ -30,6 +32,16 @@ final class AppDelegate: FlutterAppDelegate {
         appWindow.rootViewController = controller
         window = appWindow
         appWindow.makeKeyAndVisible()
+        if Bundle.main.object(forInfoDictionaryKey: "P5fEnabled") as? String == "true" {
+            do { performance = try P5fPerformance(documents: documents, nonce: nonce) }
+            catch { return false }
+            performance?.permitted = { [weak self] in
+                self?.network == "unsatisfied" && UIApplication.shared.applicationState == .active
+            }
+            performanceChannel = FlutterMethodChannel(name: "tellpal.p5f.performance", binaryMessenger: controller.binaryMessenger)
+            performanceChannel?.setMethodCallHandler { [weak self] call, result in self?.performance?.handle(call, result: result) }
+            performance?.didInvalidate = { [weak self] reason in self?.performanceChannel?.invokeMethod("invalidated", arguments: reason) }
+        }
         channel = FlutterMethodChannel(name: "tellpal.p5e.offline", binaryMessenger: controller.binaryMessenger)
         channel?.setMethodCallHandler { [weak self] call, result in
             self?.handle(call, result)
@@ -43,8 +55,9 @@ final class AppDelegate: FlutterAppDelegate {
                 case .requiresConnection: self.network = "requiresConnection"
                 @unknown default: self.network = "unknown"
                 }
+                if self.network != "unsatisfied" { self.performance?.invalidate("network_interrupted") }
                 self.sequence += 1
-                do { try self.session.append(["event": "network", "network": self.network, "sequence": self.sequence]) }
+                do { if self.performance == nil { try self.session.append(["event": "network", "network": self.network, "sequence": self.sequence]) } }
                 catch { self.network = "unknown" }
                 self.channel?.invokeMethod("networkChanged", arguments: self.network)
             }
@@ -78,7 +91,8 @@ final class AppDelegate: FlutterAppDelegate {
     }
 
     override func applicationWillResignActive(_ application: UIApplication) {
-        do { try session.append(["event": "lifecycle", "active": false, "network": network]) }
+        performance?.invalidate("background_interrupted")
+        do { if performance == nil { try session.append(["event": "lifecycle", "active": false, "network": network]) } }
         catch {
             network = "unknown"
             channel?.invokeMethod("networkChanged", arguments: "unknown")

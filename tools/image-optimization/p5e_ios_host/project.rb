@@ -2,7 +2,7 @@
 require 'xcodeproj'
 project = Xcodeproj::Project.new('P5eOffline.xcodeproj')
 target = project.new_target(:application, 'P5eOffline', :ios, '15.0')
-target.add_file_references(['AppDelegate.swift', 'P5eSession.swift'].map { |name| project.main_group.new_file(name) })
+target.add_file_references(['AppDelegate.swift', 'P5eSession.swift', 'P5fPerformance.swift', 'P5fLifetime.swift', 'P5fIdleLease.swift'].map { |name| project.main_group.new_file(name) })
 config = project.main_group.new_file('P5e.xcconfig')
 target.build_configurations.each do |item|
   item.base_configuration_reference = config

@@ -43,8 +43,10 @@ Future<void> main() async {
       ),
     ),
   );
-  await cubit.initialize();
-  await control.refresh();
+  if (!const bool.fromEnvironment('TELLPAL_P5F_PERFORMANCE')) {
+    await cubit.initialize();
+    await control.refresh();
+  }
 }
 
 /// Native başlangıç hatası veya uyuşmazlığı karşılaştırmayı kapalı tutar.

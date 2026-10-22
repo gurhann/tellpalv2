@@ -17,4 +17,5 @@
 <key>CADisableMinimumFrameDurationOnPhone</key><true/>
 <key>UIApplicationSupportsIndirectInputEvents</key><true/>
 <key>P5eRunNonce</key><string>$(P5E_RUN_NONCE)</string>
+<key>P5fEnabled</key><string>$(P5F_ENABLED)</string>
 </dict></plist>

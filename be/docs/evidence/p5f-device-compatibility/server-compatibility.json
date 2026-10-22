@@ -1,0 +1,1207 @@
+{
+  "scope": "P5F_LOCAL_INSPECTOR_COMPATIBILITY",
+  "status": "CHECK_COMPLETE",
+  "productionAdmission": "NOT_ADMITTED",
+  "productionImageExecution": "NOT_RUN",
+  "p5cReportSha256": "960d9945c87598bea04144a493d118a16df8e29f7ce85745c87e8d08ceefa000",
+  "manifestSha256": "b9319b653b087cd8b961ba93c17122e214d6fad590b5cec42c59b043eee31858",
+  "filesChecked": 123,
+  "acceptedFiles": 0,
+  "rejectedFiles": 123,
+  "rows": [
+    {
+      "assetId": 1950,
+      "variant": "original",
+      "file": "source-1950.jpg",
+      "bytes": 361885,
+      "sha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1950,
+      "variant": "PNG",
+      "file": "1950.png",
+      "bytes": 1725534,
+      "sha256": "b2501330f65c6eefc44e89aa40260ad3ffbee1b41e00c5b2b873ee462552c9b9",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1950,
+      "variant": "WEBP",
+      "file": "1950.webp",
+      "bytes": 1188342,
+      "sha256": "b8ad54ed29feed0c9c07f972e26d57513dd617a795a40e0f309bfdc7ea2498a0",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1952,
+      "variant": "original",
+      "file": "source-1952.jpg",
+      "bytes": 288768,
+      "sha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1952,
+      "variant": "PNG",
+      "file": "1952.png",
+      "bytes": 1141855,
+      "sha256": "94714f3232ebf3e525b85c25a17c45adab8a0f10c32cf1e5e927e81ccfee5d43",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1952,
+      "variant": "WEBP",
+      "file": "1952.webp",
+      "bytes": 771374,
+      "sha256": "c1aaeaa5f2a00c880eab27e2f18b1a61562b40e66046347115c8aca711904281",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1954,
+      "variant": "original",
+      "file": "source-1954.jpg",
+      "bytes": 214723,
+      "sha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1954,
+      "variant": "PNG",
+      "file": "1954.png",
+      "bytes": 906366,
+      "sha256": "3a7a4c4405353e92a7950d376b318b9c941171ed2610d8c4a3303afe99d56e48",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1954,
+      "variant": "WEBP",
+      "file": "1954.webp",
+      "bytes": 598166,
+      "sha256": "ae39136639c1cf33c64514e44fb7a01c525e5660968a964bdeeee7fcbb4d6239",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1956,
+      "variant": "original",
+      "file": "source-1956.jpg",
+      "bytes": 256634,
+      "sha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1956,
+      "variant": "PNG",
+      "file": "1956.png",
+      "bytes": 1093356,
+      "sha256": "50ad8cb18f1abe2fd09516618285bc5637d94dbf8b4d276480cf17455e292854",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1956,
+      "variant": "WEBP",
+      "file": "1956.webp",
+      "bytes": 657820,
+      "sha256": "c575e12b3057e73989417ab07d679119bf3c03babbda8475cc6024e222ac999c",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1958,
+      "variant": "original",
+      "file": "source-1958.jpg",
+      "bytes": 249503,
+      "sha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1958,
+      "variant": "PNG",
+      "file": "1958.png",
+      "bytes": 1105256,
+      "sha256": "dbdcad21a1cf3e736228c63340c9291f31eb6a9fb4ce0ad1f124c8271aba4584",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1958,
+      "variant": "WEBP",
+      "file": "1958.webp",
+      "bytes": 713578,
+      "sha256": "dc0ddf2c397ff8284ebd3691c4e8e362945f51ff6a61dc8fb3293f276a7bc548",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1960,
+      "variant": "original",
+      "file": "source-1960.jpg",
+      "bytes": 482003,
+      "sha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1960,
+      "variant": "PNG",
+      "file": "1960.png",
+      "bytes": 2465978,
+      "sha256": "801c05dc8a63dd688dce4efc02c27280825672b8ce8ab774749d03f1486fcd55",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1960,
+      "variant": "WEBP",
+      "file": "1960.webp",
+      "bytes": 1735040,
+      "sha256": "811882bf7455582ab2efe3f6045eca53bab8aef00cd1290e22ab992a19a4d5a4",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1962,
+      "variant": "original",
+      "file": "source-1962.jpg",
+      "bytes": 353873,
+      "sha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1962,
+      "variant": "PNG",
+      "file": "1962.png",
+      "bytes": 1349701,
+      "sha256": "b34b7795ac95ea70ceacf9bc9892fd7bc21bdb71030ab870db1d1769ec29f6d9",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1962,
+      "variant": "WEBP",
+      "file": "1962.webp",
+      "bytes": 781748,
+      "sha256": "6d6627f081ae4c5cb60e54e5f7958d93b5bc614abcbee6ddc622fc1d2f443ea0",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1964,
+      "variant": "original",
+      "file": "source-1964.jpg",
+      "bytes": 406040,
+      "sha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1964,
+      "variant": "PNG",
+      "file": "1964.png",
+      "bytes": 1836819,
+      "sha256": "e99064a19268b678a55c54edeb334175e6f5aa14b6706c38fa9d6c444bc63e0f",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1964,
+      "variant": "WEBP",
+      "file": "1964.webp",
+      "bytes": 1217046,
+      "sha256": "b0b0a7cf05f1e208ac15f962072ed10abac1f6e8420c0109187ea6cb88694645",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1966,
+      "variant": "original",
+      "file": "source-1966.jpg",
+      "bytes": 333699,
+      "sha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1966,
+      "variant": "PNG",
+      "file": "1966.png",
+      "bytes": 1536544,
+      "sha256": "47bdbdd0cccbb3a7d7655e3167aa31a8be79e9d2e8f276269e00925e27411781",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1966,
+      "variant": "WEBP",
+      "file": "1966.webp",
+      "bytes": 990222,
+      "sha256": "641189e28b5c00dcb4b7895a67b0940f1e78e4b9cdb303ce2c8d740a63908fd1",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1968,
+      "variant": "original",
+      "file": "source-1968.jpg",
+      "bytes": 258580,
+      "sha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1968,
+      "variant": "PNG",
+      "file": "1968.png",
+      "bytes": 1109030,
+      "sha256": "eb615eb48359734ccf124358c191f12901287d2e06c8f4375a774a55c0461904",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1968,
+      "variant": "WEBP",
+      "file": "1968.webp",
+      "bytes": 699390,
+      "sha256": "4004bafaccb0d685e4c81b06fe5a1c2cbd52a4ac9f2efa2ad96d34a88d61efb8",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1970,
+      "variant": "original",
+      "file": "source-1970.jpg",
+      "bytes": 309746,
+      "sha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1970,
+      "variant": "PNG",
+      "file": "1970.png",
+      "bytes": 1279683,
+      "sha256": "8235677ec254602c2168afb5971429a8676fbf9b0de45290346c0185cd3e4f6b",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1970,
+      "variant": "WEBP",
+      "file": "1970.webp",
+      "bytes": 897830,
+      "sha256": "e228dd961755f2ef6da148598648134c4b03b78b244b42c2f79292912f421b8c",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1972,
+      "variant": "original",
+      "file": "source-1972.jpg",
+      "bytes": 490555,
+      "sha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1972,
+      "variant": "PNG",
+      "file": "1972.png",
+      "bytes": 2472368,
+      "sha256": "628b2670247ebc03f986f558f8cda570836916b95a8d2e5d4d7e08ba0f0255e8",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1972,
+      "variant": "WEBP",
+      "file": "1972.webp",
+      "bytes": 1793908,
+      "sha256": "2109a42846b679087ead7db91cd801803c7d70619fedc6ae018ea2390b76c422",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1974,
+      "variant": "original",
+      "file": "source-1974.jpg",
+      "bytes": 337335,
+      "sha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1974,
+      "variant": "PNG",
+      "file": "1974.png",
+      "bytes": 1375396,
+      "sha256": "00931064a4b7e6e4773ccbe88385c040fd02f1d336838c687cda4a4da1c06b4c",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1974,
+      "variant": "WEBP",
+      "file": "1974.webp",
+      "bytes": 935778,
+      "sha256": "fedca03e9d9134a4f91dfba1a401cba84c233c850b8cbccf3a894d60a6a16001",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1976,
+      "variant": "original",
+      "file": "source-1976.jpg",
+      "bytes": 556757,
+      "sha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1976,
+      "variant": "PNG",
+      "file": "1976.png",
+      "bytes": 2924406,
+      "sha256": "3ba23898e0f43af1083df14108370b5d110776171e80e5bbefa57b016828d141",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1976,
+      "variant": "WEBP",
+      "file": "1976.webp",
+      "bytes": 2223456,
+      "sha256": "34847493f35d4c9b4c2dbc5ca337e9e78984bcde19350e5154f7507894191db8",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1978,
+      "variant": "original",
+      "file": "source-1978.jpg",
+      "bytes": 346582,
+      "sha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1978,
+      "variant": "PNG",
+      "file": "1978.png",
+      "bytes": 1604384,
+      "sha256": "17183b4541e5f0a5c5c59a40646c5ba0cf22fafaffa9625b9dcd6f1f87b65247",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1978,
+      "variant": "WEBP",
+      "file": "1978.webp",
+      "bytes": 970158,
+      "sha256": "8dce45002378d9a9c39c58a2a6e87705145f1730b394347944b005a67cbb8f18",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1980,
+      "variant": "original",
+      "file": "source-1980.jpg",
+      "bytes": 460634,
+      "sha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1980,
+      "variant": "PNG",
+      "file": "1980.png",
+      "bytes": 2212693,
+      "sha256": "bed9c80a656f08177ed9957dce20d0322699d16b5bb60af6220754e91cb6b7fd",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1980,
+      "variant": "WEBP",
+      "file": "1980.webp",
+      "bytes": 1519030,
+      "sha256": "1a6a194454fa85747ea84a1f1972ce6d706df4e358564d69be1ba06252012424",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1982,
+      "variant": "original",
+      "file": "source-1982.jpg",
+      "bytes": 484106,
+      "sha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+      "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1982,
+      "variant": "PNG",
+      "file": "1982.png",
+      "bytes": 2394079,
+      "sha256": "10beb68dbbf22c229afe9a2b2075e783451080f75352fad9f3ac1534025a137f",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iTXt",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 1982,
+      "variant": "WEBP",
+      "file": "1982.webp",
+      "bytes": 1710668,
+      "sha256": "e0a7f64bab96ede698920c41cbd288a68a175d6a6d6c8c02417b62f6ec39fa18",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8303,
+      "variant": "original",
+      "file": "source-8303.png",
+      "bytes": 4102023,
+      "sha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8303,
+      "variant": "PNG",
+      "file": "8303.png",
+      "bytes": 3079408,
+      "sha256": "a5fda77395ffb13b81119201806fcdf5ea0143535f639ea0dffe42265c63ed2f",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8303,
+      "variant": "WEBP",
+      "file": "8303.webp",
+      "bytes": 2247538,
+      "sha256": "4ab536956fd8c56b4a10568c9861db60a33decaf04469cb850337eaf27a8d3bb",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8306,
+      "variant": "original",
+      "file": "source-8306.png",
+      "bytes": 6067947,
+      "sha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8306,
+      "variant": "PNG",
+      "file": "8306.png",
+      "bytes": 4620381,
+      "sha256": "b6f61dd3496ab8b52f58f3bf2fd30c5011b9d743c71be71b2037b9536587911b",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8306,
+      "variant": "WEBP",
+      "file": "8306.webp",
+      "bytes": 3652182,
+      "sha256": "9a6914bc7a27704ca38fda8d51b87850453a53fb21da09dc847583f4db2cf25a",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8308,
+      "variant": "original",
+      "file": "source-8308.png",
+      "bytes": 5954956,
+      "sha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8308,
+      "variant": "PNG",
+      "file": "8308.png",
+      "bytes": 4664915,
+      "sha256": "3e45e9855f46800ede14b257c1f018ff4764bfe43bbace61538dbe389a2931e6",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8308,
+      "variant": "WEBP",
+      "file": "8308.webp",
+      "bytes": 3508232,
+      "sha256": "2b1dfdddaa8201576682c33df10fea8082b1f15f461164d28d2229a08951a37f",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8310,
+      "variant": "original",
+      "file": "source-8310.png",
+      "bytes": 4691713,
+      "sha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8310,
+      "variant": "PNG",
+      "file": "8310.png",
+      "bytes": 3579503,
+      "sha256": "7a610ab7463103559b357d44cb8d724c9f42df8c29f35576b47b2617fc4419e3",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8310,
+      "variant": "WEBP",
+      "file": "8310.webp",
+      "bytes": 2727004,
+      "sha256": "c397067e9a45cfbe87b914b9b5823cebd0918ea185b2d1dc8d86ad48087673a7",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8312,
+      "variant": "original",
+      "file": "source-8312.png",
+      "bytes": 5199334,
+      "sha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8312,
+      "variant": "PNG",
+      "file": "8312.png",
+      "bytes": 3954349,
+      "sha256": "ed6c55f86407948a47e9acec7e51f2c35ad236e402013641984a1790dae4ab72",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8312,
+      "variant": "WEBP",
+      "file": "8312.webp",
+      "bytes": 3065182,
+      "sha256": "ad123f34e5027098bed01307f33be6c4fb120b7d279ea67bf20033125a671afe",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8314,
+      "variant": "original",
+      "file": "source-8314.png",
+      "bytes": 4286739,
+      "sha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8314,
+      "variant": "PNG",
+      "file": "8314.png",
+      "bytes": 3257909,
+      "sha256": "8e7fe69f7474bc04325ace9ac2f6e9b03a5da1e55db8cc54eaf9b8c69de44a4a",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8314,
+      "variant": "WEBP",
+      "file": "8314.webp",
+      "bytes": 2447188,
+      "sha256": "6d75006fc5ab9101b6e05bf2b47bc8d9be75a506b3cad533592f4ff4f69149b3",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8316,
+      "variant": "original",
+      "file": "source-8316.png",
+      "bytes": 4898269,
+      "sha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8316,
+      "variant": "PNG",
+      "file": "8316.png",
+      "bytes": 3680000,
+      "sha256": "53888ac66d982a719ccd84371ad28a4eadf8fb05fe395311987bd1bb41e08a01",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8316,
+      "variant": "WEBP",
+      "file": "8316.webp",
+      "bytes": 2922008,
+      "sha256": "4b19d060e8f53d2b1739a86f44e0c1d7ef0fb43d41d702fe287a55b0f4ee71b9",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8318,
+      "variant": "original",
+      "file": "source-8318.png",
+      "bytes": 5376429,
+      "sha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8318,
+      "variant": "PNG",
+      "file": "8318.png",
+      "bytes": 4241341,
+      "sha256": "87adaa899114c24f7311236ea7e46122f067eb3c31cca42227d3171d359fb167",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8318,
+      "variant": "WEBP",
+      "file": "8318.webp",
+      "bytes": 3225218,
+      "sha256": "6f64b33ccbe197780627d3cd9b89b07970b229252ce7e81cc813804f3edf1cc4",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8320,
+      "variant": "original",
+      "file": "source-8320.png",
+      "bytes": 5377951,
+      "sha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8320,
+      "variant": "PNG",
+      "file": "8320.png",
+      "bytes": 4104682,
+      "sha256": "ef1c8ec8d48c330e51a9b9998ff2d432e3441b823f64094b1da844aaa36787db",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8320,
+      "variant": "WEBP",
+      "file": "8320.webp",
+      "bytes": 3229462,
+      "sha256": "7753b45d033779babb53879a6270a2352e1b97c31415d981cac5a7d40358d788",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8322,
+      "variant": "original",
+      "file": "source-8322.png",
+      "bytes": 5951995,
+      "sha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8322,
+      "variant": "PNG",
+      "file": "8322.png",
+      "bytes": 4541482,
+      "sha256": "a35e208022f4bd52c368d314de6cbe99f25cff058210597ee2dd7470b26a547a",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8322,
+      "variant": "WEBP",
+      "file": "8322.webp",
+      "bytes": 3629490,
+      "sha256": "e15c319a3e9a86e546e6e9c1db3ab7f7700800c9dd450672edbe028355975cb0",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8324,
+      "variant": "original",
+      "file": "source-8324.png",
+      "bytes": 4356674,
+      "sha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8324,
+      "variant": "PNG",
+      "file": "8324.png",
+      "bytes": 3186266,
+      "sha256": "8a9d0a55986d708ac7835fcfbb6804200eb81f9552b3be914e26491f1c19e2a3",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8324,
+      "variant": "WEBP",
+      "file": "8324.webp",
+      "bytes": 2520516,
+      "sha256": "8eb5d1d4c20290304588b0f8f29a35047d0bfbdff7bbb49440eb19eba4835ea6",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8326,
+      "variant": "original",
+      "file": "source-8326.png",
+      "bytes": 5064991,
+      "sha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8326,
+      "variant": "PNG",
+      "file": "8326.png",
+      "bytes": 3806084,
+      "sha256": "2b6b60557db7355f59c6b75bb392fd0a5b5763eae558cec5ce36d9b468809f14",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8326,
+      "variant": "WEBP",
+      "file": "8326.webp",
+      "bytes": 2962204,
+      "sha256": "7298325dbcf36272e0d8140a962ef95c572abf36366d5035c3cd381d7cee3e40",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8328,
+      "variant": "original",
+      "file": "source-8328.png",
+      "bytes": 4642041,
+      "sha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8328,
+      "variant": "PNG",
+      "file": "8328.png",
+      "bytes": 3549207,
+      "sha256": "9e060ef9712e86d09fce0d5a57f3b4592630cb083e9bcd769e235ee8afa48959",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8328,
+      "variant": "WEBP",
+      "file": "8328.webp",
+      "bytes": 2652386,
+      "sha256": "8876041334ede777efaa8fcbb0a7284a75fbe2c52c57d30a8fc2990cd82d2543",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8330,
+      "variant": "original",
+      "file": "source-8330.png",
+      "bytes": 4595048,
+      "sha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8330,
+      "variant": "PNG",
+      "file": "8330.png",
+      "bytes": 3533358,
+      "sha256": "e533b68b0d26692ead794ee971af8e00ef2f61c442138e5a282ab1e85b19343a",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8330,
+      "variant": "WEBP",
+      "file": "8330.webp",
+      "bytes": 2620334,
+      "sha256": "ff48747e642d11a89fabe6fcafc9a40791f5d603886c03c3ace4be4f3cfd24a5",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8332,
+      "variant": "original",
+      "file": "source-8332.png",
+      "bytes": 4769273,
+      "sha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8332,
+      "variant": "PNG",
+      "file": "8332.png",
+      "bytes": 3633392,
+      "sha256": "b23619817e3e1992082c4666c0995389040b201a4252d33acf1e2d6b7dd75509",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8332,
+      "variant": "WEBP",
+      "file": "8332.webp",
+      "bytes": 2748312,
+      "sha256": "b265869f0092f13f58f4b08f1540baef3e3b5127ff310dfdb8174ca1329c56e5",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8334,
+      "variant": "original",
+      "file": "source-8334.png",
+      "bytes": 6327116,
+      "sha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8334,
+      "variant": "PNG",
+      "file": "8334.png",
+      "bytes": 4999993,
+      "sha256": "8e396c10060a8d054f743fdcd18d7ac07267ee26edd1aed9f043ddd671e6f377",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8334,
+      "variant": "WEBP",
+      "file": "8334.webp",
+      "bytes": 3743118,
+      "sha256": "342e2865d09df103619993d95b0cb913444a53969d58e340246194f85fa86fd3",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8336,
+      "variant": "original",
+      "file": "source-8336.png",
+      "bytes": 4717906,
+      "sha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8336,
+      "variant": "PNG",
+      "file": "8336.png",
+      "bytes": 3462116,
+      "sha256": "71588904f1d177a6a85b17a643ab929e0498107b0ef546c8c6c2e68eac4eee57",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8336,
+      "variant": "WEBP",
+      "file": "8336.webp",
+      "bytes": 2676736,
+      "sha256": "2b44546f0a73e35c79ac836ce0a824531e816000d0b70b810dc35bdd5e7d280b",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8338,
+      "variant": "original",
+      "file": "source-8338.png",
+      "bytes": 4567871,
+      "sha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8338,
+      "variant": "PNG",
+      "file": "8338.png",
+      "bytes": 3501092,
+      "sha256": "58ba5c0aa55767400b321978d204e24f93a9bb36fb7fc21c68f1c10543a1f747",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8338,
+      "variant": "WEBP",
+      "file": "8338.webp",
+      "bytes": 2605734,
+      "sha256": "a617407cc23f7abc5fd8b07b4533dafb6e6b277ed710a4eb3184000efd8c3c53",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8340,
+      "variant": "original",
+      "file": "source-8340.png",
+      "bytes": 5638085,
+      "sha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8340,
+      "variant": "PNG",
+      "file": "8340.png",
+      "bytes": 4364787,
+      "sha256": "6179a58ffbc86a3615ec1b8aca5db753475f0eceb0ae650ec57915fd26360636",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8340,
+      "variant": "WEBP",
+      "file": "8340.webp",
+      "bytes": 3335896,
+      "sha256": "17c204204ba14b117a135f75981d5cc99853352a24b37e0f06c6c96edb4e89a6",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8342,
+      "variant": "original",
+      "file": "source-8342.png",
+      "bytes": 4821029,
+      "sha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8342,
+      "variant": "PNG",
+      "file": "8342.png",
+      "bytes": 3696053,
+      "sha256": "2d6903830f8e855fa6e3066b32176210e569616873f8de821d50ad439301b43e",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8342,
+      "variant": "WEBP",
+      "file": "8342.webp",
+      "bytes": 2884362,
+      "sha256": "432363670ad5e7f341cb7bee1b17f484b4ce1ee65a744e761667168d0fe30f00",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8344,
+      "variant": "original",
+      "file": "source-8344.png",
+      "bytes": 4897522,
+      "sha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8344,
+      "variant": "PNG",
+      "file": "8344.png",
+      "bytes": 3706213,
+      "sha256": "596918585e2a58dd5c98e6485a2adf32fed5c9a18e02feff19b195b3f0001a66",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8344,
+      "variant": "WEBP",
+      "file": "8344.webp",
+      "bytes": 2924486,
+      "sha256": "492c874b89d0be53413b9d58ec716f39f495308ac023b2d0e2634c5e4de81b1a",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8346,
+      "variant": "original",
+      "file": "source-8346.png",
+      "bytes": 3110028,
+      "sha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8346,
+      "variant": "PNG",
+      "file": "8346.png",
+      "bytes": 2366387,
+      "sha256": "cf0408340abba641d5f116b2d9da97a4480fea6f4e1d0ffc3116695b4f0e6936",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8346,
+      "variant": "WEBP",
+      "file": "8346.webp",
+      "bytes": 1734806,
+      "sha256": "3fea4c52741dd0827194958c4335f25e97e55262f8be16b71f59ee7832240c55",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8348,
+      "variant": "original",
+      "file": "source-8348.png",
+      "bytes": 5662334,
+      "sha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8348,
+      "variant": "PNG",
+      "file": "8348.png",
+      "bytes": 4396746,
+      "sha256": "29052b3e1187fb0c9b56d43064cfc5a28ac5895d06827405fd05b017739ddf8f",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8348,
+      "variant": "WEBP",
+      "file": "8348.webp",
+      "bytes": 3436684,
+      "sha256": "7af3d15ae4c8663ee43304cd1380782cd3d1f7630b81b90881e5d9a66ae60f65",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8350,
+      "variant": "original",
+      "file": "source-8350.png",
+      "bytes": 5228630,
+      "sha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826",
+      "diagnostic": "PNG_UNSUPPORTED_HEADER",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8350,
+      "variant": "PNG",
+      "file": "8350.png",
+      "bytes": 4011255,
+      "sha256": "82b2d7b1ded5670fe6f44d8a99fbb972fbad1ac82b58de2af4dec6670006976e",
+      "diagnostic": "PNG_UNSUPPORTED_CHUNK:iCCP",
+      "status": "REJECTED"
+    },
+    {
+      "assetId": 8350,
+      "variant": "WEBP",
+      "file": "8350.webp",
+      "bytes": 3107234,
+      "sha256": "142207dacf8d412f1da5f8457291ec80b102256ab643a5a1fa78164a9dd9fc34",
+      "diagnostic": "PNG_OR_JPEG_REQUIRED",
+      "status": "REJECTED"
+    }
+  ],
+  "localTestProfile": {
+    "width": 1712,
+    "height": 2778,
+    "maxSourceBytes": 16777216,
+    "maxOutputBytes": 16777216,
+    "maxPixels": 5000000,
+    "parentMemoryBytes": 536870912,
+    "heapMiB": 256,
+    "directMiB": 32,
+    "processMiB": 320,
+    "diskBytes": 33554432,
+    "sourceMillis": 10000,
+    "revisionMillis": 60000,
+    "concurrency": 1,
+    "encoderThreads": 1,
+    "allowGrowth": false,
+    "growthEvidence": "LOCAL_COMPATIBILITY_ONLY_NO_OUTPUT"
+  },
+  "sourceSha256": {
+    "be/src/main/java/com/tellpal/v2/asset/api/ReadingImagePreparationApi.java": "546be2e63f2b68a450db0b9bcd09fc263c40fc44e50fbf85500ca58fc280d41f",
+    "be/src/main/java/com/tellpal/v2/asset/infrastructure/media/reading/ReadingImageInspector.java": "f5f1fec184d71baa7580d217cf91cd2a1c0c31579352fb19edd41bca9bd7a64e",
+    "be/src/main/java/com/tellpal/v2/shared/domain/LanguageCode.java": "ee396128ac562162afc135e57240899a7227b07dd5beb1ddcc2ead053c2a1ea9",
+    "be/src/test/java/com/tellpal/v2/asset/reading/P5fLocalCompatibilityProbe.java": "3d2a300bd8239f6b9e661c09960ab6858584f3d796c177145da894d8ae64ba84"
+  },
+  "classSha256": {
+    "com.tellpal.v2.asset.api.ReadingImagePreparationApi$TestProfile": "ff15aea9c801b81a8231ac94a2194c2e216ed7a5bdde7165e9929278963662e7",
+    "com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector": "56f26baf3253021ba010a93d7c4ad116883dc53901999c9a92901539895561f8",
+    "com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector$Decoded": "6da7d41e3791fa71bf1f08075615cc0019fd8688ca823c64757b9af9033c537e",
+    "com.tellpal.v2.asset.reading.P5fLocalCompatibilityProbe": "0ad8a6ede7a76aaf2fd3be2c038e1356782f85ddf57345da9e51e973d9ff6664",
+    "com.tellpal.v2.shared.domain.LanguageCode": "5545e3312ee96560ec8d974528abc30fdc3512619fb79fe0a64d7aaf743a76c2"
+  },
+  "runtime": {
+    "java.runtime.version": "25-loom+1-11",
+    "java.vendor": "Oracle Corporation",
+    "java.vm.name": "OpenJDK 64-Bit Server VM",
+    "javaSha256": "d0a0ebcaa56f0c11399a5afbb813aa5746fd5b5410cedbd1b89b71b679c5ee62",
+    "modulesSha256": "d8bfa4354256af99064862dbab74b4f212c108ff5f3a24f1f87b2c5d07be28c4",
+    "os.arch": "aarch64",
+    "os.name": "Mac OS X",
+    "scope": "ISOLATED_HOST_JVM_NOT_PRODUCTION_IMAGE"
+  },
+  "imageIoReaders": {
+    "JPEG": [
+      "com.sun.imageio.plugins.jpeg.JPEGImageReader"
+    ],
+    "PNG": [
+      "com.sun.imageio.plugins.png.PNGImageReader"
+    ],
+    "WEBP": []
+  },
+  "verification": {
+    "rawReportSha256": "4603589ea7d2eebf506651c7ac491a6ba51ca5827b36ac4dec5fa333e120c3f1",
+    "mavenUnitTests": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "negativeCases": [
+      {
+        "case": "wrong-pin",
+        "rejected": true,
+        "noPartialSuccessReport": true
+      },
+      {
+        "case": "missing-file",
+        "rejected": true,
+        "noPartialSuccessReport": true
+      },
+      {
+        "case": "duplicate-file",
+        "rejected": true,
+        "noPartialSuccessReport": true
+      }
+    ],
+    "jsonLibrarySha256": {
+      "jackson-annotations-2.20.jar": "959a2ffb2d591436f51f183c6a521fc89347912f711bf0cae008cdf045d95319",
+      "jackson-core-2.20.2.jar": "61b85a41bbc333e6db3b7724d5a9ff5011ec5f9eb1cee41e622420bc6e0e4131",
+      "jackson-databind-2.20.2.jar": "119573fc6ceb25b26bb032bb5888e7fd8a4e933987968a388253a017dacb5e54"
+    },
+    "selectedLocalFiles": 41,
+    "selectedLocalFilesAccepted": 0
+  },
+  "executionLimits": [
+    "Yalnız gerçek inspector çağrıldı; preparation child/process veya uygulama başlatılmadı.",
+    "Kaynaklar dönüştürülmedi; çıktı biçimi üretilmedi.",
+    "Host JVM kanıtıdır; production imajı Docker servisi kapalı olduğu için çalıştırılmadı."
+  ]
+}
