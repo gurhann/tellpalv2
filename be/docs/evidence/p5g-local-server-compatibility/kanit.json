@@ -1,0 +1,3042 @@
+{
+  "scope": "P5G_LOCAL_SERVER_CODEC_COMPATIBILITY",
+  "status": "LOCAL_COMPATIBILITY_COMPLETE",
+  "productionAdmission": "NOT_ADMITTED",
+  "productionJreContainer": "NOT_RUN",
+  "physicalColorApproval": "NOT_RUN",
+  "fullBackendDatabaseSuite": "NOT_RUN",
+  "p2P3Acceptance": "UNCHANGED",
+  "baselineCommit": "847fa87e4ff6438bc1cd47094833b5a0bb7bc8b0",
+  "runId": "p5g-native-final-b5ffde1cbee9",
+  "privateManifestSha256": "77d22d23baaac59db9dad1cb5e86714a86351a287fcde2fec07fc5b21b300ef5",
+  "profileCorpusManifestSha256": "0afa349d737da429fcb7c417c72bd501139c79684814d0d9f93dfb39e9870fb8",
+  "baselineSha256": "947ec258d42d51db6f0b47d3b5b869875fff1d4437e33f51e6f5d83e3a010626",
+  "p5cReportSha256": "960d9945c87598bea04144a493d118a16df8e29f7ce85745c87e8d08ceefa000",
+  "filesVerified": 41,
+  "jpegByteCopies": 17,
+  "losslessWebpByteCopies": 24,
+  "mediaBytes": 76797735,
+  "rgbBytesComparedPerFile": 14267808,
+  "parentAndChildNetworkDenied": true,
+  "preservation": {
+    "afterSha256": "677615a4fd57a79267706572b7325c2ec7dbc5ab8b500252b9ddcbd8fe83827a",
+    "beforeEqualsAfter": true,
+    "beforeSha256": "677615a4fd57a79267706572b7325c2ec7dbc5ab8b500252b9ddcbd8fe83827a",
+    "originals": 41,
+    "p5c": 124,
+    "p5fEvidence": 7,
+    "preExisting": 88
+  },
+  "independentPreservationRecheck": {
+    "preExisting": {
+      "count": 88,
+      "unchanged": true
+    },
+    "originals": {
+      "count": 41,
+      "unchanged": true
+    },
+    "p5c": {
+      "count": 124,
+      "unchanged": true
+    },
+    "p5fEvidence": {
+      "count": 7,
+      "unchanged": true
+    }
+  },
+  "identityPathSanitization": "JAR_KEYS_RELATIVE_TO_MAVEN_REPOSITORY; FINGERPRINTS_REFERENCE_UNMODIFIED_PRIVATE_MANIFEST",
+  "identity": {
+    "classSha256": {
+      "com.tellpal.v2.asset.api.ReadingImagePreparationApi$TestProfile": "8131193b49d44ab45abda1b670068466383c6f3867125ce43cff2fe74484a773",
+      "com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector": "69bfd41f3c87d680152343c060b8831a0ba46cfd6f9acc9d3493c35d11b3830f",
+      "com.tellpal.v2.asset.infrastructure.media.reading.ReadingImageInspector$Decoded": "7a823994e7f6cc1e386da949dad787ed48e0bd11dfd8f037c3fc74c8715d6ae0",
+      "com.tellpal.v2.asset.reading.p5g.P5gChild": "2098ca92042ca13a75e90632e0d5c66dc843283943905ba3a49d1ae5ab0bb623",
+      "com.tellpal.v2.asset.reading.p5g.P5gContainers": "cc0bb5d9d18a3709b60f455754f44a6d73e0ca629832a7b013754c0b8c0a9329",
+      "com.tellpal.v2.asset.reading.p5g.P5gCorpus": "cecd6070c69ebc339997b99fcc2a096f040e017767bf43303ba250a8b7bd7b70",
+      "com.tellpal.v2.asset.reading.p5g.P5gCorpus$Item": "58ebdb64077700596d39aa5fa10e28f1f41df2cadb81930941aba1b1e43e305d",
+      "com.tellpal.v2.asset.reading.p5g.P5gExistingAdmission": "aa30823c23b7d594b2e3c7b245ab505849495e05b50b4b61c227b56681ee18b6",
+      "com.tellpal.v2.asset.reading.p5g.P5gIdentity": "6f7a8da53c5c58015383f6a255afa456eba2c93ba2d4f36e9206ce660788d23a",
+      "com.tellpal.v2.asset.reading.p5g.P5gMetadata": "ad9def310352d923dcc47c40fd458074a47fe7330f960aec72d420a297f9165d",
+      "com.tellpal.v2.asset.reading.p5g.P5gPng": "f4da28b09456b6891ecd0f25bef75a12d56355624e3e39e5b9d5430e65a8d1ed",
+      "com.tellpal.v2.asset.reading.p5g.P5gProfile": "a259054dc9142638f3d08f84512d97b9929c024ea0456473620cff78ad7e5e36",
+      "com.tellpal.v2.asset.reading.p5g.P5gRawDecoder": "a5c35cbcb0257b735c381ec14af5a2fd09c1e9fda8bf8ad1021a884efde8c82d",
+      "com.tellpal.v2.asset.reading.p5g.P5gRawDecoder$Decoded": "fecd5137485c4cd5bf5d53d524b8535bfaad2c6da9b844f6f7c6166ca79fba6c",
+      "com.tellpal.v2.asset.reading.p5g.P5gRss": "878933669b14264959d6fd223b6b8c5b9c01da7ba026aa5a6d849999cc096e88",
+      "com.tellpal.v2.asset.reading.p5g.P5gRunner": "65f684df98d5573ed4e5a4e97017d937db82ececbcd39954ea69f41d7d1d185f",
+      "com.tellpal.v2.asset.reading.p5g.P5gRunner$Verifier": "74b2a95c1bd37590bdd16732513715475c66042d9439a0181938c19f4c47d0e7",
+      "com.tellpal.v2.asset.reading.p5g.P5gSupervisor": "f1b60f49309d993dc8de0975c948e1a0937ef6b9048987ad31a00948fba15726",
+      "com.tellpal.v2.asset.reading.p5g.P5gSupervisor$LogBudget": "205f3cb3d1bd4848d12d8d10ebeaafabe501246c8ca6f828a36dc31ccb85adcb",
+      "com.tellpal.v2.asset.reading.p5g.P5gSupervisor$Result": "8caab85e6d5bccac44be7e5d73018ededb5aef3f47fa85ab3a702386667ebad6",
+      "com.tellpal.v2.asset.reading.p5g.P5gWebp": "773398d7a2624c306c52ba8958dfb9274e037d2bb9abfce03a7f416c68009d4c",
+      "com.twelvemonkeys.imageio.plugins.webp.LSBBitReader": "530b4b837bf6ab5baf306187b1d0ed08cd0ac607567e94b09d3b33e66fbc3764",
+      "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader": "bc4c6a1f0be28750836ddc58cd883ea310e3dd045d85fd4f2d46a249c71fe90b",
+      "com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi": "fc2a2f9e4e234913eccead04b2f52b5d94d7a20542a61500bbfa69838374d308",
+      "com.twelvemonkeys.imageio.plugins.webp.lossless.VP8LDecoder": "b196e49c4b12c03f23c0d96f0fb515609d8f4355c0c092be8f480f0507ce5550"
+    },
+    "jarSha256": {
+      "ch/qos/logback/logback-classic/1.5.32/logback-classic-1.5.32.jar": "2d4cf592db78be2de4d6140434c2fec170dcb16a09e8c8b7b207dbf5e31b848a",
+      "ch/qos/logback/logback-core/1.5.32/logback-core-1.5.32.jar": "6a904d5778d0e361a9692f9cbe68b1b0620ae0f3eda2ec2ed09102755bf036c4",
+      "com/fasterxml/classmate/1.7.3/classmate-1.7.3.jar": "75fbda45456f123fb6e2028a6189442d8d0730b357adce4c0a6d7e789f70669b",
+      "com/fasterxml/jackson/core/jackson-annotations/2.20/jackson-annotations-2.20.jar": "959a2ffb2d591436f51f183c6a521fc89347912f711bf0cae008cdf045d95319",
+      "com/fasterxml/jackson/core/jackson-core/2.20.2/jackson-core-2.20.2.jar": "61b85a41bbc333e6db3b7724d5a9ff5011ec5f9eb1cee41e622420bc6e0e4131",
+      "com/fasterxml/jackson/core/jackson-databind/2.20.2/jackson-databind-2.20.2.jar": "119573fc6ceb25b26bb032bb5888e7fd8a4e933987968a388253a017dacb5e54",
+      "com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.20.2/jackson-dataformat-yaml-2.20.2.jar": "a62b5caa09de0b97e432d00c759b8b241791244bea0e82d64b146b6b490f779f",
+      "com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.20.2/jackson-datatype-jsr310-2.20.2.jar": "ff595a3cf009a25670c92d2f6939e3ffed4cdb37cba0d04f619e7ed43ce8ba1b",
+      "com/github/docker-java/docker-java-api/3.7.0/docker-java-api-3.7.0.jar": "4c157ca47f8f14a28055ff7b3232940f226fcb6d415ba21f96a8cd1c2b7707c9",
+      "com/github/docker-java/docker-java-transport-zerodep/3.7.0/docker-java-transport-zerodep-3.7.0.jar": "61cd38171e175f884c3512d3e98e3e6004d314198861c84e8f837b30acd15026",
+      "com/github/docker-java/docker-java-transport/3.7.0/docker-java-transport-3.7.0.jar": "303ec4bf06b7c3c659e24d337b644d561d78139cfba3c7ab5011545a6d11e5ea",
+      "com/google/android/annotations/4.1.1.4/annotations-4.1.1.4.jar": "ba734e1e84c09d615af6a09d33034b4f0442f8772dec120efb376d86a565ae15",
+      "com/google/api-client/google-api-client-gson/2.7.2/google-api-client-gson-2.7.2.jar": "4c40ee75f94340c494cb2f1171508436ee77132a87812269c7e35accaee9588b",
+      "com/google/api-client/google-api-client/2.7.2/google-api-client-2.7.2.jar": "63b754b7c4a92347c4992c42d295812f8d2ed6b9e8743edba4a8c98b92e9ca9b",
+      "com/google/api/api-common/2.53.0/api-common-2.53.0.jar": "f7073fb389c2aa329981ee65241db7947e8744c988e6c4d975f18bf2748b935a",
+      "com/google/api/gax-grpc/2.70.3/gax-grpc-2.70.3.jar": "1f027225676d446833171e4fc02b6ca0f2e65176f62a461193ef76e97bcb2801",
+      "com/google/api/gax-httpjson/2.70.3/gax-httpjson-2.70.3.jar": "0e33a6610b790295be702a9fe233128157df8781ad2c5b6d45bd49ae632dfac6",
+      "com/google/api/gax/2.70.3/gax-2.70.3.jar": "76869377394375e882d10c05e4be88aaad6037f56a3f7e207c908cd5ea5b6cc5",
+      "com/google/api/grpc/gapic-google-cloud-storage-v2/2.58.1/gapic-google-cloud-storage-v2-2.58.1.jar": "6d8e38d267a5435a0dd36decbb52431635a0fa380186c0d1450e591e6adae84b",
+      "com/google/api/grpc/grpc-google-cloud-storage-v2/2.58.1/grpc-google-cloud-storage-v2-2.58.1.jar": "64f5d11f91af5a59054354cee94f4871dae3d2900e95bf94e41c1460a34600e6",
+      "com/google/api/grpc/proto-google-cloud-firestore-v1/3.32.2/proto-google-cloud-firestore-v1-3.32.2.jar": "63a52e1801567807385ea720623b53200c01f402b619c58aa815f37c67c1f08c",
+      "com/google/api/grpc/proto-google-cloud-monitoring-v3/3.52.0/proto-google-cloud-monitoring-v3-3.52.0.jar": "8238b3216aa59ffeed9a157833d7fcc844a7dc9f101b23d728f1cdec6c5c3ba2",
+      "com/google/api/grpc/proto-google-cloud-storage-v2/2.58.1/proto-google-cloud-storage-v2-2.58.1.jar": "45bbd67fdfcde182e7d9a3d3f645e80ddc0e219e1fc2143fd4d5b6128d0c1d49",
+      "com/google/api/grpc/proto-google-common-protos/2.61.3/proto-google-common-protos-2.61.3.jar": "339d6b154560f8a5ebbcc0c3502cc3ce8d14d1bccd54a5f727a5453de7f61055",
+      "com/google/api/grpc/proto-google-iam-v1/1.56.3/proto-google-iam-v1-1.56.3.jar": "3001617215ae39951cc266156986a33557c4761f6c79b0d2d6fa45f20b465997",
+      "com/google/apis/google-api-services-storage/v1-rev20250925-2.0.0/google-api-services-storage-v1-rev20250925-2.0.0.jar": "876b33be54a62960161e2ce7998ab780270b48299dd192f5c57622ef0cad1008",
+      "com/google/auth/google-auth-library-credentials/1.39.1/google-auth-library-credentials-1.39.1.jar": "5a99b5c6ef9775e2e8e41c124159a527b2fab43614cd86f6d021f8ab8f0dbc54",
+      "com/google/auth/google-auth-library-oauth2-http/1.37.1/google-auth-library-oauth2-http-1.37.1.jar": "bbb0425a2f95fdb3012785b6e5d20a75026a0b1596b9f5a6a40539f513c12da0",
+      "com/google/auto/value/auto-value-annotations/1.11.0/auto-value-annotations-1.11.0.jar": "5a055ce4255333b3346e1a8703da5bf8ff049532286fdcd31712d624abe111dd",
+      "com/google/cloud/google-cloud-core-grpc/2.60.3/google-cloud-core-grpc-2.60.3.jar": "2424375a0afaf8414a9997e55b7a2294c37a1926e90f81a4d9462955a2edc85a",
+      "com/google/cloud/google-cloud-core-http/2.60.3/google-cloud-core-http-2.60.3.jar": "b670745d1fd110166d25cce31f8820420475ed5ed1cc489a2c623ed3bab996aa",
+      "com/google/cloud/google-cloud-core/2.60.3/google-cloud-core-2.60.3.jar": "7a3836f7bb722b8778a63553304c5010883c99b864f309acb8dd60e80f64b21e",
+      "com/google/cloud/google-cloud-firestore/3.32.2/google-cloud-firestore-3.32.2.jar": "230c2318cfbccdbf1a3ad36dc03a9d6732236e308dac29b26aad7242e57c14f1",
+      "com/google/cloud/google-cloud-monitoring/3.52.0/google-cloud-monitoring-3.52.0.jar": "9727aa7d94d8dd036bffccf9abc5d18970b1e5e9827896f9907f7450ed10f5e6",
+      "com/google/cloud/google-cloud-storage/2.58.1/google-cloud-storage-2.58.1.jar": "5e93726c9dd4d303641ae798c10f0c3000a7f06d5ed007e058ca72e85110dc7f",
+      "com/google/cloud/opentelemetry/detector-resources-support/0.33.0/detector-resources-support-0.33.0.jar": "94b0def27754083ceaa67b56a4d483d294e9f17066493df3ef7e81ec5c3bb2c0",
+      "com/google/cloud/opentelemetry/exporter-metrics/0.33.0/exporter-metrics-0.33.0.jar": "7a9ab87683a97357a95389ff3cec9684785648076f9b158d44da3becb93bb036",
+      "com/google/cloud/opentelemetry/shared-resourcemapping/0.33.0/shared-resourcemapping-0.33.0.jar": "eea9a3e11db783626cc15dd1835c1ed09f53b70a1fca8c58bf723ce813e9f843",
+      "com/google/cloud/proto-google-cloud-firestore-bundle-v1/3.32.2/proto-google-cloud-firestore-bundle-v1-3.32.2.jar": "8a898983b9cb9fe55ce66aa374e0e8a43b1322e3ae8e333c47fbb95f74956c8c",
+      "com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7",
+      "com/google/code/gson/gson/2.13.2/gson-2.13.2.jar": "dd0ce1b55a3ed2080cb70f9c655850cda86c206862310009dcb5e5c95265a5e0",
+      "com/google/errorprone/error_prone_annotations/2.38.0/error_prone_annotations-2.38.0.jar": "6661d5335090a5fc61dd869d2095bc6c1e2156e3aa47a6e4ababdf64c99a7889",
+      "com/google/firebase/firebase-admin/9.7.0/firebase-admin-9.7.0.jar": "e26f9baa123130a1ae978aa30a7091c498d9401305b9acb0a9fd0372aaa8a992",
+      "com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064",
+      "com/google/guava/guava/33.4.0-jre/guava-33.4.0-jre.jar": "b918c98a7e44dbe94ebd9fe3e40cddaadb5a93e6a78eb6008b42df237241e538",
+      "com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+      "com/google/http-client/google-http-client-apache-v2/1.47.1/google-http-client-apache-v2-1.47.1.jar": "e6a8be28ce3b8dd4296ac05770d9e532727272f2666a4a3d25639cc8e11157d5",
+      "com/google/http-client/google-http-client-appengine/1.47.1/google-http-client-appengine-1.47.1.jar": "33300e8ca0c8ce1d36bd775e414a3dc883aa2aa6de604ad2c3d85e18a3e805ac",
+      "com/google/http-client/google-http-client-gson/1.47.1/google-http-client-gson-1.47.1.jar": "64ac2b1313dca6b6fc9bd14128ab186528fe992b094f5371fa7f828eed8903bd",
+      "com/google/http-client/google-http-client-jackson2/1.47.1/google-http-client-jackson2-1.47.1.jar": "4e7ea8229221369b3a777e9ec1a7e1595e02fa1490f09772d1f9e29333c6d2ac",
+      "com/google/http-client/google-http-client/1.47.1/google-http-client-1.47.1.jar": "22447fde9f2e33e27a23a25953b1c622ead6c055c761fde6ca50573c9473457a",
+      "com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar": "88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64",
+      "com/google/oauth-client/google-oauth-client/1.39.0/google-oauth-client-1.39.0.jar": "27fc61ee2d526e33d31350b5ea383091c0879345e261f9b2e6fcc97a20c86f88",
+      "com/google/protobuf/protobuf-java-util/3.25.8/protobuf-java-util-3.25.8.jar": "e7196eaefc3f81afa1571821635c7aefe2933f4be4a9df9e601fb59214b50269",
+      "com/google/protobuf/protobuf-java/3.25.8/protobuf-java-3.25.8.jar": "72bdb32eb38cafb7dcd288262c29a34d57cba2e19101af9685155ba8c0a56008",
+      "com/google/re2j/re2j/1.8/re2j-1.8.jar": "7b52c72156dd7f98b3237a5b35c1d34fba381b21048c89208913ad80a45dfbd7",
+      "com/jayway/jsonpath/json-path/2.10.0/json-path-2.10.0.jar": "890daa95dd3892d34d9fabc27cd5153656e6f369358625c88f4dc7b79cbd6c5a",
+      "com/nimbusds/nimbus-jose-jwt/10.4/nimbus-jose-jwt-10.4.jar": "6f13f3480ddc53d820d276f582f54843cff1daf5c6e35e534947e9de7723b46b",
+      "com/structurizr/structurizr-core/5.0.3/structurizr-core-5.0.3.jar": "4c5035574797af60b93c1ba9005c2bfe53114dc287a475479bd98eb3e1331a62",
+      "com/structurizr/structurizr-export/5.0.3/structurizr-export-5.0.3.jar": "32075f8fb083ea37ef77b7bf44558948ffdd26fa7cea5009dc37e11d290aebad",
+      "com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar": "7fd6792361f4dd00f8c56af4a20cecc0066deea4a8f3dec38348af23fc2296ee",
+      "com/tngtech/archunit/archunit/1.4.1/archunit-1.4.1.jar": "6a92458c544308e42ca534cfcbdb6f1947ea4a9ca8717e087cd671d31f2d9b0c",
+      "com/twelvemonkeys/common/common-image/3.15.3/common-image-3.15.3.jar": "702f6edcbc91046c8a41c15d3a35e19aa3196536507169654370e3467e48c481",
+      "com/twelvemonkeys/common/common-io/3.15.3/common-io-3.15.3.jar": "f5a164b4868ccef6baee5139d99b1b299fcc8f809dec882435b9a8fd61d473d3",
+      "com/twelvemonkeys/common/common-lang/3.15.3/common-lang-3.15.3.jar": "24454ab8b23d8aaf54bb3a54e2187fdb5d96561905157852bdf75dddb730f426",
+      "com/twelvemonkeys/imageio/imageio-core/3.15.3/imageio-core-3.15.3.jar": "14d96b09384c48484b376127a0338f66875e94a67c99a3e94440a724bf1e0f09",
+      "com/twelvemonkeys/imageio/imageio-metadata/3.15.3/imageio-metadata-3.15.3.jar": "24cdb4d24b3711026a220fc1c20557c82933662967803faada7c021d7caf6ff5",
+      "com/twelvemonkeys/imageio/imageio-webp/3.15.3/imageio-webp-3.15.3.jar": "70d8fe5daddcdebfc3f548014bc8bb00dfee10d082c303e77c0fd5b177cf50b2",
+      "com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar": "dfb7bae2f404cfe0b72b4d23944698cb716b7665171812a0a4d0f5926c0fac79",
+      "com/zaxxer/HikariCP/7.0.2/HikariCP-7.0.2.jar": "f1e612fa27345be3107a85431e8a8aeb205c15364ab2f2d411e40a9d7bb08095",
+      "commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar": "5c3881e4f556855e9c532927ee0c9dfde94cc66760d5805c031a59887070af5f",
+      "commons-io/commons-io/2.20.0/commons-io-2.20.0.jar": "df90bba0fe3cb586b7f164e78fe8f8f4da3f2dd5c27fa645f888100ccc25dd72",
+      "commons-logging/commons-logging/1.3.5/commons-logging-1.3.5.jar": "6d7a744e4027649fbb50895df9497d109f98c766a637062fe8d2eabbb3140ba4",
+      "io/grpc/grpc-alts/1.71.0/grpc-alts-1.71.0.jar": "c0671401abc87cf6bd6cdb58a0bacf29aff0eb720d4d0f32373c128208cbe8fd",
+      "io/grpc/grpc-api/1.71.0/grpc-api-1.71.0.jar": "49771bad244de122f05780c12f3e74ba9a301be125d0941a85e649212f4a8a01",
+      "io/grpc/grpc-auth/1.71.0/grpc-auth-1.71.0.jar": "1968885f6034075fcc49ef66ae6cd24d7ee6a44243779b1582dd715a3e84f1c4",
+      "io/grpc/grpc-context/1.71.0/grpc-context-1.71.0.jar": "dd0484ac5d0baf7ee810331504dc6202c7b426bc88dce24100e77f576904dd52",
+      "io/grpc/grpc-core/1.71.0/grpc-core-1.71.0.jar": "03099494c60cb9fea5802ebba8d767e44697062ec05e5207b5ae897e09bd38e9",
+      "io/grpc/grpc-googleapis/1.71.0/grpc-googleapis-1.71.0.jar": "44277ccc6c9d3bc9cd3f1e17689c83168a72b132c00f56f93a7d6e1b9984ee5d",
+      "io/grpc/grpc-grpclb/1.71.0/grpc-grpclb-1.71.0.jar": "57867a44967669ea2a024ec97f3c497a9cdc7c73d06cee0f0e19185ef88a38fe",
+      "io/grpc/grpc-inprocess/1.71.0/grpc-inprocess-1.71.0.jar": "86c7de6e38cd3ea40b3720a037f58069c65f1a5d291aea370261eeebfe0557af",
+      "io/grpc/grpc-netty-shaded/1.71.0/grpc-netty-shaded-1.71.0.jar": "ee375e534c0d63bd1e9256765610319b9ce9b399588ec408dcf1c7ea7c3f25ef",
+      "io/grpc/grpc-opentelemetry/1.71.0/grpc-opentelemetry-1.71.0.jar": "057ef101e3034f795cdcef55f6a957affcced186327ed860e6fca7a9218c1c15",
+      "io/grpc/grpc-protobuf-lite/1.71.0/grpc-protobuf-lite-1.71.0.jar": "ffad977400b49649fa2d5404abaadfca66c7e5956974f192411e8946a12e5f53",
+      "io/grpc/grpc-protobuf/1.71.0/grpc-protobuf-1.71.0.jar": "7eba0625fba8e176c0fc1b80610fc2c52c036d95805ffdd3f6985a51c968de94",
+      "io/grpc/grpc-rls/1.71.0/grpc-rls-1.71.0.jar": "024823d353e28d870aff18c889e92caf3ff553f30b1714425eb21f2061f38876",
+      "io/grpc/grpc-services/1.71.0/grpc-services-1.71.0.jar": "e966ba062b6793083ab163c38103d4fcbc71ed9f91db4bd81b30fcb975a0a845",
+      "io/grpc/grpc-stub/1.71.0/grpc-stub-1.71.0.jar": "51912e612b28db65eec0332a8be494b3c54d347ecd2c5f6a7fdd2cb994fab360",
+      "io/grpc/grpc-util/1.71.0/grpc-util-1.71.0.jar": "32a9197c541bb072dc2f728e235347c3c0f7cf8062abf3de58c50b4fc70f31b1",
+      "io/grpc/grpc-xds/1.71.0/grpc-xds-1.71.0.jar": "b570b80809531410f965cc04e29466da1c338da434db5fcaa29b822d40fe80b5",
+      "io/micrometer/micrometer-commons/1.16.3/micrometer-commons-1.16.3.jar": "982f081cd1c1d64feaebdf415de2ba9dfef1ca882b1b86a308528e78e5bdc531",
+      "io/micrometer/micrometer-core/1.16.3/micrometer-core-1.16.3.jar": "ae9227c948a39b005be1c4a46c5fe1222b556c639b20229d4fe65a8c9d32bced",
+      "io/micrometer/micrometer-jakarta9/1.16.3/micrometer-jakarta9-1.16.3.jar": "538a125971487556c54ab27d1665a6521069486d0a80245630374825ad4f384c",
+      "io/micrometer/micrometer-observation/1.16.3/micrometer-observation-1.16.3.jar": "2d883ddfc8d3685b0ed3288b1a6fda8019cb7766d17efc1475c73594b011c76e",
+      "io/netty/netty-buffer/4.2.10.Final/netty-buffer-4.2.10.Final.jar": "a430cfedce93c171a56a86d1d27c8d829db4793f1c59c381c65e84e5bcd5bcaa",
+      "io/netty/netty-codec-base/4.2.10.Final/netty-codec-base-4.2.10.Final.jar": "2a420ee609c1c4ad750609b6d7e2ee9f26a0431a8bbd7f48afb8ac576f1c40b9",
+      "io/netty/netty-codec-compression/4.2.10.Final/netty-codec-compression-4.2.10.Final.jar": "6ed70c21d6b4eb237dfab29214dfc029e1e85e9804751cb94924fa04f36c04cd",
+      "io/netty/netty-codec-http/4.2.10.Final/netty-codec-http-4.2.10.Final.jar": "faf833d3f557921264328c933ffeb055e9885e0d258a021355aa88a62181b540",
+      "io/netty/netty-common/4.2.10.Final/netty-common-4.2.10.Final.jar": "ad7ff0989d76be928069176754deec42c6a0e3305013df21814b4ac46b1ace9a",
+      "io/netty/netty-handler/4.2.10.Final/netty-handler-4.2.10.Final.jar": "769fecbfbca5756c52a442da35563218ced4d6cc179da2a8e782aae6ce8a187b",
+      "io/netty/netty-resolver/4.2.10.Final/netty-resolver-4.2.10.Final.jar": "14dfad791466ab2cc87316841c1c976af140bdb8c6ed5f84725e1225a1e0bbe6",
+      "io/netty/netty-transport-native-unix-common/4.2.10.Final/netty-transport-native-unix-common-4.2.10.Final.jar": "6bea060f5ffe953acab6c922236d284ca8f1e8c6a59d8a13eaba053fa280a88f",
+      "io/netty/netty-transport/4.2.10.Final/netty-transport-4.2.10.Final.jar": "aaff8b2958eea0e94d3e5521d795e65ea91faf58fa1152e45584b36348a81abd",
+      "io/opencensus/opencensus-api/0.31.1/opencensus-api-0.31.1.jar": "f1474d47f4b6b001558ad27b952e35eda5cc7146788877fc52938c6eba24b382",
+      "io/opencensus/opencensus-contrib-http-util/0.31.1/opencensus-contrib-http-util-0.31.1.jar": "3ea995b55a4068be22989b70cc29a4d788c2d328d1d50613a7a9afd13fdd2d0a",
+      "io/opentelemetry/contrib/opentelemetry-gcp-resources/1.37.0-alpha/opentelemetry-gcp-resources-1.37.0-alpha.jar": "f7b6baddfbbe57f0e3e1e3cc08eb68bb61c29ef6c17898ce7ce35b1f3029d3e6",
+      "io/opentelemetry/instrumentation/opentelemetry-grpc-1.6/2.1.0-alpha/opentelemetry-grpc-1.6-2.1.0-alpha.jar": "7c033f0c8c8c8159c396b21922460ecfb7a5f004258f8fcdc4ce9979261e1ac9",
+      "io/opentelemetry/instrumentation/opentelemetry-instrumentation-api-incubator/2.1.0-alpha/opentelemetry-instrumentation-api-incubator-2.1.0-alpha.jar": "4eae68272790153fabbfdc08741e7f3909af43adeb6ea4a30dd8a53d3bac4cd7",
+      "io/opentelemetry/instrumentation/opentelemetry-instrumentation-api/2.1.0/opentelemetry-instrumentation-api-2.1.0.jar": "4f6ac1247c7372c103c23ef2594413418a496b114e13ef237031255a2d3ce361",
+      "io/opentelemetry/opentelemetry-api/1.55.0/opentelemetry-api-1.55.0.jar": "387b4bf98631fc2ede9470879a8ff28dd8c5cb2d3dcf5b6ef77f5ee2bdb7b4f1",
+      "io/opentelemetry/opentelemetry-common/1.55.0/opentelemetry-common-1.55.0.jar": "fca14bb87309d1193347d179b91c63045fa05a856f1fbeec6ef61c4a7f81b227",
+      "io/opentelemetry/opentelemetry-context/1.55.0/opentelemetry-context-1.55.0.jar": "f34a4718b70446ec462703ced5cc2c9ad4c9b7c69dcb41d0f032ba51c625a3dd",
+      "io/opentelemetry/opentelemetry-extension-incubator/1.35.0-alpha/opentelemetry-extension-incubator-1.35.0-alpha.jar": "5ca38a9ecdf2c93183069dae1d7d76ec12e9cf4feb3c2209d04566e82fc4df3c",
+      "io/opentelemetry/opentelemetry-sdk-common/1.55.0/opentelemetry-sdk-common-1.55.0.jar": "e28bb83d0ae5a760ba95952daf820180ee7defb0c5783c9d21f9c00ada80020e",
+      "io/opentelemetry/opentelemetry-sdk-extension-autoconfigure-spi/1.55.0/opentelemetry-sdk-extension-autoconfigure-spi-1.55.0.jar": "3ee1f647238bb77df7b7bde47bc87a35a7807b3c5bb389ca81b0ba16c77824ff",
+      "io/opentelemetry/opentelemetry-sdk-logs/1.55.0/opentelemetry-sdk-logs-1.55.0.jar": "d917bb833899057c7cbdbcc30290e816071b90e52c965693aaad4cc1b32ecc11",
+      "io/opentelemetry/opentelemetry-sdk-metrics/1.55.0/opentelemetry-sdk-metrics-1.55.0.jar": "6219d69c3abdd6113bee35df94826f48e84b742041f5124b5857a2b801f74573",
+      "io/opentelemetry/opentelemetry-sdk-trace/1.55.0/opentelemetry-sdk-trace-1.55.0.jar": "e593660b9fad8bfdb5e981ccd392aa030f788d577c55f8bac3b6c4c6dae509bb",
+      "io/opentelemetry/opentelemetry-sdk/1.55.0/opentelemetry-sdk-1.55.0.jar": "d63231ea6fd33e0457c776a9aa8ae7ba778379b03119228ec56a5c8c16f9480e",
+      "io/opentelemetry/semconv/opentelemetry-semconv/1.29.0-alpha/opentelemetry-semconv-1.29.0-alpha.jar": "a95f1aed7e3f64353ec625c6def72a0caaf06b6c53970f578fdd513dafd995fd",
+      "io/perfmark/perfmark-api/0.27.0/perfmark-api-0.27.0.jar": "c7b478503ec524e55df19b424d46d27c8a68aeb801664fadd4f069b71f52d0f6",
+      "io/swagger/core/v3/swagger-annotations-jakarta/2.2.43/swagger-annotations-jakarta-2.2.43.jar": "c45a39314d0d3d273c90515fa51daebd6327fb034d9bde9bb4f73f1f5a9687ce",
+      "io/swagger/core/v3/swagger-core-jakarta/2.2.43/swagger-core-jakarta-2.2.43.jar": "7919c677ad4df57a543c6e0531817435d78865cdffd691be08b85be52f4e422d",
+      "io/swagger/core/v3/swagger-models-jakarta/2.2.43/swagger-models-jakarta-2.2.43.jar": "1cd638383e1b553030a0fd863010500f4de6d97ad5b3757108098df73f0c7e86",
+      "jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar": "c9db52100ce6c8aac95cc39075f95720d2e561b11f8051b81c121ad4effd7004",
+      "jakarta/annotation/jakarta.annotation-api/3.0.0/jakarta.annotation-api-3.0.0.jar": "b01f55552284cfb149411e64eabca75e942d26d2e1786b32914250e4330afaa2",
+      "jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar": "f7dc98062fccf14126abb751b64fab12c312566e8cbdc8483598bffcea93af7c",
+      "jakarta/persistence/jakarta.persistence-api/3.2.0/jakarta.persistence-api-3.2.0.jar": "be8a26b0e75c84c1b7600f759256fbc68d60333d89ec0ce3f784fc3ffa09aa8c",
+      "jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar": "50c0a7c760c13ae6c042acf182b28f0047413db95b4636fb8879bcffab5ba875",
+      "jakarta/validation/jakarta.validation-api/3.1.1/jakarta.validation-api-3.1.1.jar": "63ce00156388c365f3ac1be71fcfaf114682fc0c452020b5df6e7ec236e142ab",
+      "jakarta/xml/bind/jakarta.xml.bind-api/4.0.4/jakarta.xml.bind-api-4.0.4.jar": "c507ca69a8c6dd11bf4afeec9e0d412c4fa3933fffb0a84680ea5727e8472124",
+      "javax/annotation/javax.annotation-api/1.3.2/javax.annotation-api-1.3.2.jar": "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b",
+      "net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar": "5b17113e66e77ca6f8af07ff367c216df964a980f0e9f11e3b1aa793253aa64f",
+      "net/bytebuddy/byte-buddy/1.17.8/byte-buddy-1.17.8.jar": "2b5ddc8c1f4234bdb7cb45338a8e10a13e0e3ca473e91d5d821d681127ea8ba1",
+      "net/java/dev/jna/jna/5.18.1/jna-5.18.1.jar": "260c4b1e22b1db9e110ee441c4f13ce115f841fa48c41d78750986214b395557",
+      "net/jqwik/jqwik-api/1.9.3/jqwik-api-1.9.3.jar": "4bce7e80beb6d9d7092a799fa8a509d76cc31dbb20c938a9952965c15d1dd9b2",
+      "net/jqwik/jqwik-engine/1.9.3/jqwik-engine-1.9.3.jar": "b85592ee78e30239ccfdca7a134f918ee94ebec51ad29a313fc9a676d97b3ede",
+      "net/jqwik/jqwik-time/1.9.3/jqwik-time-1.9.3.jar": "9fd09021d8f03d44990457bf3095cf0aaf34d2785d1108ff22590286c233b3e5",
+      "net/jqwik/jqwik-web/1.9.3/jqwik-web-1.9.3.jar": "6aee9d583c1ff9efe319b2fa0bc9d75fc616de6d1f240ddbd2af9eabda483dbe",
+      "net/jqwik/jqwik/1.9.3/jqwik-1.9.3.jar": "562931e1667308180056a8ce85791f71ab8c37ca8efc2006a163ba5d650e5f73",
+      "net/minidev/accessors-smart/2.6.0/accessors-smart-2.6.0.jar": "222c9f547bb20a99fc486403a398352d1306fb671b38abd7ecab6401df170e61",
+      "net/minidev/json-smart/2.6.0/json-smart-2.6.0.jar": "1ae4b561458afb540be8ec5c6dbb4f2e715a319a7ae64854998aaf924770d61b",
+      "org/antlr/antlr4-runtime/4.13.2/antlr4-runtime-4.13.2.jar": "dd3e8a13a2d669bf84fb8d834de35ce4875f27157698d206241ec8488aadcaf7",
+      "org/apache/commons/commons-compress/1.28.0/commons-compress-1.28.0.jar": "e1522945218456f3649a39bc4afd70ce4bd466221519dba7d378f2141a4642ca",
+      "org/apache/commons/commons-lang3/3.19.0/commons-lang3-3.19.0.jar": "32733ab4bc90b45b63eb72677d886961003fd4ed113e07b1028f9877cb2ac735",
+      "org/apache/httpcomponents/client5/httpclient5/5.5.2/httpclient5-5.5.2.jar": "5aec3f3447ec816e593e380b59fbe3e42083318af6b215bc177386f7742f6146",
+      "org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar": "479a8aa5e6f99030a2a446a68d1f62320698932746f811fc656a1ea06b94184d",
+      "org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar": "8fb4528d3e970aca440523a1bd698a389fa710ecfea4c5c6096698b86d1669ce",
+      "org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6",
+      "org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f",
+      "org/apache/logging/log4j/log4j-api/2.25.3/log4j-api-2.25.3.jar": "e886682920fa0fb9d6eb6395dcb4de088443f8646c89c5e5846e168e327f406f",
+      "org/apache/logging/log4j/log4j-to-slf4j/2.25.3/log4j-to-slf4j-2.25.3.jar": "90a09280390c54a28ac1514ded7c5293f3fe62f4448bf371b4e2415272e67a3d",
+      "org/apache/tomcat/embed/tomcat-embed-core/11.0.18/tomcat-embed-core-11.0.18.jar": "b9bd0dd346fdade192cb7868418efa7aa20b12f1fddd5ab28cdef183ac6b5743",
+      "org/apache/tomcat/embed/tomcat-embed-el/11.0.18/tomcat-embed-el-11.0.18.jar": "1a4dfb19fb0a3849efe45bef0b278115538cfe66fa0bcf272a5723406f6636b6",
+      "org/apache/tomcat/embed/tomcat-embed-websocket/11.0.18/tomcat-embed-websocket-11.0.18.jar": "80ab34578ab411e75e81c45c4816dabf1eb95e49948ab04385165fe5e960a551",
+      "org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar": "b509448ac506d607319f182537f0b35d71007582ec741832a1f111e5b5b70b38",
+      "org/aspectj/aspectjweaver/1.9.25.1/aspectjweaver-1.9.25.1.jar": "4fe86fdc18faea571f29129c70eaad5d121363504a06d7907be88f6c60ba3116",
+      "org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar": "c4a445426c3c2861666863b842cc4ec7bbb1c4226fefd370b6d2fe83d6c4ff0f",
+      "org/awaitility/awaitility/4.3.0/awaitility-4.3.0.jar": "ee58568ea5945dcf988551501655183dc184e23e45a8e013fdfd9036194e6f7b",
+      "org/checkerframework/checker-qual/3.52.0/checker-qual-3.52.0.jar": "0b5bb1a4bdc4e4b1217482fe598efcaab4e1fba7b37f9412639178fc8116fc05",
+      "org/codehaus/mojo/animal-sniffer-annotations/1.24/animal-sniffer-annotations-1.24.jar": "c720e6e5bcbe6b2f48ded75a47bccdb763eede79d14330102e0d352e3d89ed92",
+      "org/conscrypt/conscrypt-openjdk-uber/2.5.2/conscrypt-openjdk-uber-2.5.2.jar": "eaf537d98e033d0f0451cd1b8cc74e02d7b55ec882da63c88060d806ba89c348",
+      "org/eclipse/angus/angus-activation/2.0.3/angus-activation-2.0.3.jar": "a6bd35c538cf90fff941ad6258c40c08fca0b5c9c3f536c657114f27ce0527a7",
+      "org/flywaydb/flyway-core/11.14.1/flyway-core-11.14.1.jar": "45148edbcb55016418ff1ef7ecca3331b55f5216b3af4bd2db40063904db3715",
+      "org/flywaydb/flyway-database-postgresql/11.14.1/flyway-database-postgresql-11.14.1.jar": "d7142273706f225e6890ff971f0c8ccc4e7fe253ab6ab9f20556b155c68bca8a",
+      "org/glassfish/jaxb/jaxb-core/4.0.6/jaxb-core-4.0.6.jar": "ebbd274207b4860d0dc6e2d44d6dbdb5945cede01222d2e50661d45f5d46c0f7",
+      "org/glassfish/jaxb/jaxb-runtime/4.0.6/jaxb-runtime-4.0.6.jar": "1c0d57f8c25f9605d5a2f7ad0a87581893776ac85b00b101b2651258edaa9118",
+      "org/glassfish/jaxb/txw2/4.0.6/txw2-4.0.6.jar": "fcc749785412ef3806fde1ce70f93ef5a0065dcc47fe449bc871db0795cb11af",
+      "org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar": "5d66b6a4a680755cb6ed7cb104fa7835ef644667586ff0737adeb977c39ecdbc",
+      "org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar": "22d1d4316c4ec13a68b559e98c8256d69071593731da96136640f864fa14fad8",
+      "org/hibernate/models/hibernate-models/1.0.1/hibernate-models-1.0.1.jar": "bdb42c4979001742ebc098f3b206dd1057dc93be55c50a31c3f027d3eed06412",
+      "org/hibernate/orm/hibernate-core/7.2.4.Final/hibernate-core-7.2.4.Final.jar": "58beed0125835312cc479c246a4e44ee10e165d13f4db3263cdfab21ffe6dae7",
+      "org/hibernate/validator/hibernate-validator/9.0.1.Final/hibernate-validator-9.0.1.Final.jar": "25f40118fa4c50f8522d090d25d52d5a38953b0ccd1250835f052e7bd3164ce0",
+      "org/jboss/logging/jboss-logging/3.6.2.Final/jboss-logging-3.6.2.Final.jar": "f423e07bffce73bf2b6cc872f30981c06fe9cfd5a86a0b4f5fbdd11cfe0148e0",
+      "org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar": "195fb0da046d55bb042e91543484cf1da68b02bb7afbfe031f229e45ac84b3f2",
+      "org/jmolecules/jmolecules-events/2.0.1/jmolecules-events-2.0.1.jar": "2dd20f02039c825de38c381d76a0f5cc912b9ab85f9fb6dabf7b10c1c3c9e983",
+      "org/jmolecules/jstereotype/2.0.1/jstereotype-2.0.1.jar": "8ee2277ede551ba969c381b2f90fb697a0fad610d1d1d2e432947c9bdcf19e7e",
+      "org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab",
+      "org/junit/jupiter/junit-jupiter-api/6.0.3/junit-jupiter-api-6.0.3.jar": "d655d7e6f0c7ae07f10a2f3bbaaebb6d30e9b26204a068ad9e9b3950aa28792c",
+      "org/junit/jupiter/junit-jupiter-engine/6.0.3/junit-jupiter-engine-6.0.3.jar": "1e2fab61ad27ea08fc7c70dd9677cf8c6d1ae5434d42dcfdd633b12c7e7c04d0",
+      "org/junit/jupiter/junit-jupiter-params/6.0.3/junit-jupiter-params-6.0.3.jar": "cf2947e2302b9f8c8a059259a277881c1cadae8fbc2514c16a925cfeb7beb2e5",
+      "org/junit/jupiter/junit-jupiter/6.0.3/junit-jupiter-6.0.3.jar": "784b65815f479a0c99a9d3a573b142e2a525efb6025d97f751b19e72f90aeda3",
+      "org/junit/platform/junit-platform-commons/6.0.3/junit-platform-commons-6.0.3.jar": "39f262d09c3d52719fe0b77f080e90a3695e285d779a41b232e17963ae5da200",
+      "org/junit/platform/junit-platform-engine/6.0.3/junit-platform-engine-6.0.3.jar": "491e9e4f745f161b8a8e4186a1a7c6a450ea12c70930c9aedae427215301d947",
+      "org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar": "a32a9ffa06b2f4e01c5360f8f9df7bc5d9454a5d373cd8f361347fa5a57165ec",
+      "org/mockito/mockito-core/5.20.0/mockito-core-5.20.0.jar": "d1a96d252128d3a4247cfd8a2e76412efa3cc103977be17933c942117a24f374",
+      "org/mockito/mockito-junit-jupiter/5.20.0/mockito-junit-jupiter-5.20.0.jar": "fd6c703c2b00b914f3adbc27b18077a708f3d6992f19242c444e737c6cce024e",
+      "org/objenesis/objenesis/3.3/objenesis-3.3.jar": "02dfd0b0439a5591e35b708ed2f5474eb0948f53abf74637e959b8e4ef69bfeb",
+      "org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar": "48e2df636cab6563ced64dcdff8abb2355627cb236ef0bf37598682ddf742f1b",
+      "org/ow2/asm/asm/9.7.1/asm-9.7.1.jar": "8cadd43ac5eb6d09de05faecca38b917a040bb9139c7edeb4cc81c740b713281",
+      "org/postgresql/postgresql/42.7.10/postgresql-42.7.10.jar": "cab1cd67cfa25c25de4348e532298028288a877ba01c77d1619fe45416193387",
+      "org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar": "31cef12ddec979d1f86d7cf708c41a17da523d05c685fd6642e9d0b2addb7240",
+      "org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar": "719095c07d4203961320da593441d8b3b643c18eb1d81aa98ea933bb7eb351ba",
+      "org/slf4j/jul-to-slf4j/2.0.17/jul-to-slf4j-2.0.17.jar": "a7afcd23b9cfd1475e55c94f943b808c5922035e7e2c2a5c65a487a4106bc538",
+      "org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
+      "org/springdoc/springdoc-openapi-starter-common/3.0.2/springdoc-openapi-starter-common-3.0.2.jar": "3810f8b3f1dfb3fec1b37028b9e0620182bfafa2995f0aabc2b8bda5ed80c132",
+      "org/springdoc/springdoc-openapi-starter-webmvc-api/3.0.2/springdoc-openapi-starter-webmvc-api-3.0.2.jar": "1ded576f60a5292c276dc3d1707cf9c24513dcc19f74ed8628ec0677e034209f",
+      "org/springdoc/springdoc-openapi-starter-webmvc-ui/3.0.2/springdoc-openapi-starter-webmvc-ui-3.0.2.jar": "59c678e4313f440ff173ce703db43d2f761a8159f6b7285604bd63e20a868169",
+      "org/springframework/boot/spring-boot-actuator-autoconfigure/4.0.3/spring-boot-actuator-autoconfigure-4.0.3.jar": "6d3f792c6da3758ccea676211393a4f86d6e9fa170dff3dbf241599d0fabd2ea",
+      "org/springframework/boot/spring-boot-actuator/4.0.3/spring-boot-actuator-4.0.3.jar": "e5fcda69729df4cd8b52a50b76dcfbdf75f4fe31f94938ac26d47411e57e4f8d",
+      "org/springframework/boot/spring-boot-autoconfigure/4.0.3/spring-boot-autoconfigure-4.0.3.jar": "0d191ce7e4ddfbc4ee5398dccf540e0d0552cfb62dea7735e01a395b85f30e28",
+      "org/springframework/boot/spring-boot-data-commons/4.0.3/spring-boot-data-commons-4.0.3.jar": "35149fdc28bfd82e5d95988c285129b59d4c57bc58b8893b10db31bae93fd8ee",
+      "org/springframework/boot/spring-boot-data-jpa/4.0.3/spring-boot-data-jpa-4.0.3.jar": "faa22c96807767ab69d7a90efa907159365fb13f9429bf9add756336c5a3deca",
+      "org/springframework/boot/spring-boot-flyway/4.0.3/spring-boot-flyway-4.0.3.jar": "dfb88d3e828341d584279ce00758c2e84f5b577751d2fa656c226cee34464286",
+      "org/springframework/boot/spring-boot-health/4.0.3/spring-boot-health-4.0.3.jar": "a4797e6fc18ba1c3386d207dfec76ced05a78206380076fd0ffeece3b8fc522c",
+      "org/springframework/boot/spring-boot-hibernate/4.0.3/spring-boot-hibernate-4.0.3.jar": "36e796e4e48a5435034e761c75afeb1c3d57658fc1d0d9cff1f5fe631d8d455e",
+      "org/springframework/boot/spring-boot-http-converter/4.0.3/spring-boot-http-converter-4.0.3.jar": "a9f3a01605b5432a20a5bb0a959c5ca3097fd1852e494d5ac685800a81846fed",
+      "org/springframework/boot/spring-boot-jackson/4.0.3/spring-boot-jackson-4.0.3.jar": "6f3dfd0cd29c3a142abe892e5d03f94be5bf7d2a3986650f30a9b5b9415af8ca",
+      "org/springframework/boot/spring-boot-jdbc/4.0.3/spring-boot-jdbc-4.0.3.jar": "5761a601a21e56699eacd996328f318d33eebc58c55c94faf82ffa2a094f58df",
+      "org/springframework/boot/spring-boot-jpa/4.0.3/spring-boot-jpa-4.0.3.jar": "f33bbcd4342939eb72a859da962071987f1d28b5ce5fe0a82c29682ccebd3df2",
+      "org/springframework/boot/spring-boot-micrometer-metrics/4.0.3/spring-boot-micrometer-metrics-4.0.3.jar": "de26013c6e2327e77937b1cb71de07f204048d8d16e3184f241b513339c7a2d6",
+      "org/springframework/boot/spring-boot-micrometer-observation/4.0.3/spring-boot-micrometer-observation-4.0.3.jar": "5874547f2b23d2ee32efc0c44ca3d291c103d4c72fe8741d746b7ed199e2bd86",
+      "org/springframework/boot/spring-boot-persistence/4.0.3/spring-boot-persistence-4.0.3.jar": "2b88543e4475ea18ec3903439fd150fbfe28192903852d078c653233e58c2a57",
+      "org/springframework/boot/spring-boot-resttestclient/4.0.3/spring-boot-resttestclient-4.0.3.jar": "c3c695af8b4c12048584d6bac41d00ad6c8e08d54a6b82fd08bf41db9d8b9763",
+      "org/springframework/boot/spring-boot-security/4.0.3/spring-boot-security-4.0.3.jar": "eb06e0f9365d92d5362f4a4327afa986029458fff203c776e1d45fdac2a66e9f",
+      "org/springframework/boot/spring-boot-servlet/4.0.3/spring-boot-servlet-4.0.3.jar": "c4fb781672cf0a472f3d5a5b550c41b06ac1be437160760748aa0763e387af69",
+      "org/springframework/boot/spring-boot-sql/4.0.3/spring-boot-sql-4.0.3.jar": "78a46656f34b3e6d44b3696ab2684f89563befe2f02c1a4d45fe25c5740489ce",
+      "org/springframework/boot/spring-boot-starter-actuator/4.0.3/spring-boot-starter-actuator-4.0.3.jar": "a4f727e57f62c3cc093c1c78b8261c1090276b52467732a0133c2dc9279c02a0",
+      "org/springframework/boot/spring-boot-starter-data-jpa/4.0.3/spring-boot-starter-data-jpa-4.0.3.jar": "543f10d67b8a30c968d3a8f7caaf9daee4c311a4162eacf4a08d303ad376bef8",
+      "org/springframework/boot/spring-boot-starter-flyway/4.0.3/spring-boot-starter-flyway-4.0.3.jar": "088a08d91894cbf4aa53b4af81db3f33c6d50cab5882080e3b562dc9ab70e6db",
+      "org/springframework/boot/spring-boot-starter-jackson-test/4.0.3/spring-boot-starter-jackson-test-4.0.3.jar": "69b366a8e8135858723b1c64ac1ee8b40ea8bece1db338ce6ddccda43ef0fb4e",
+      "org/springframework/boot/spring-boot-starter-jackson/4.0.3/spring-boot-starter-jackson-4.0.3.jar": "860cc58754c2cbe68a2df145d664f45334a2195a6b5748cf491df782696eb77c",
+      "org/springframework/boot/spring-boot-starter-jdbc/4.0.3/spring-boot-starter-jdbc-4.0.3.jar": "871b44275fba7254397a7d801f9ce4d7bba6150eb5f59266dddf52a31b65e318",
+      "org/springframework/boot/spring-boot-starter-logging/4.0.3/spring-boot-starter-logging-4.0.3.jar": "563ddf46921a94bf4f95e44ed54a760c14f4e866713ea579402b246b63adda02",
+      "org/springframework/boot/spring-boot-starter-micrometer-metrics/4.0.3/spring-boot-starter-micrometer-metrics-4.0.3.jar": "1ba79bdf8d165d3e57e5280f73f92d5a9b06e254988ef191e25822c82ee6013c",
+      "org/springframework/boot/spring-boot-starter-security/4.0.3/spring-boot-starter-security-4.0.3.jar": "2b0724fcdfa0d660551fd4d4f288cc9a96390574d2c786c031575076a4d93350",
+      "org/springframework/boot/spring-boot-starter-test/4.0.3/spring-boot-starter-test-4.0.3.jar": "1800833ba171fd35fb9ab0244ee571f7f3189e707fa0864ce9c753af6743fcde",
+      "org/springframework/boot/spring-boot-starter-tomcat-runtime/4.0.3/spring-boot-starter-tomcat-runtime-4.0.3.jar": "45563249ec5e9b12dba74161b8cded24859d816688df591ad519ab3819927e80",
+      "org/springframework/boot/spring-boot-starter-tomcat/4.0.3/spring-boot-starter-tomcat-4.0.3.jar": "2ce99a97c53274a2d959cfed8355a97c099a1a13034df978bf3d275bc6028665",
+      "org/springframework/boot/spring-boot-starter-validation/4.0.3/spring-boot-starter-validation-4.0.3.jar": "aaa11afe2e41a779ee98d0120772ca64766255afdbddfca785ecf4500c68aee1",
+      "org/springframework/boot/spring-boot-starter-web/4.0.3/spring-boot-starter-web-4.0.3.jar": "3195dbde1fae85dab884092b986ced952f60205f00d1a7a5013bef1c109ed5ef",
+      "org/springframework/boot/spring-boot-starter-webmvc-test/4.0.3/spring-boot-starter-webmvc-test-4.0.3.jar": "0cc85adb39bbf02c3e2f56caf0a4277b7a3822215daccc5ee120eb34addf4d18",
+      "org/springframework/boot/spring-boot-starter-webmvc/4.0.3/spring-boot-starter-webmvc-4.0.3.jar": "d420b24e9b5ce4b15818eef9f802bcd449292b55c381bec942ac90bd94ae69c7",
+      "org/springframework/boot/spring-boot-starter/4.0.3/spring-boot-starter-4.0.3.jar": "b8ab36a15183a17428fee3e4f62a64da99413198e4324e4ac708cc7669cfbc52",
+      "org/springframework/boot/spring-boot-test-autoconfigure/4.0.3/spring-boot-test-autoconfigure-4.0.3.jar": "5bf5f5c39d66cd9e09b8e08e768c3a197b6c08426525442f50913c4adea57317",
+      "org/springframework/boot/spring-boot-test/4.0.3/spring-boot-test-4.0.3.jar": "a5105ef100aae2f347288c17e879471d3e1f3fc43726f8888ded6bd960faef66",
+      "org/springframework/boot/spring-boot-tomcat/4.0.3/spring-boot-tomcat-4.0.3.jar": "c55820f21ecb9f4ad4c98a242a4e3b129382acbcd5fb6ccd9e6dac43810dc29c",
+      "org/springframework/boot/spring-boot-transaction/4.0.3/spring-boot-transaction-4.0.3.jar": "14337f8e8f03760a73a1185bc078fd63431489d508dc4ccc07313243a544de8e",
+      "org/springframework/boot/spring-boot-validation/4.0.3/spring-boot-validation-4.0.3.jar": "ea301bb438328c4d14a9ff4b16403e79f907ed1e8ea810ec645b47c972988038",
+      "org/springframework/boot/spring-boot-web-server/4.0.3/spring-boot-web-server-4.0.3.jar": "ec086c66112d255a028988c125f5a7ef31547b7f594b111a920b86f4c62b45cf",
+      "org/springframework/boot/spring-boot-webmvc-test/4.0.3/spring-boot-webmvc-test-4.0.3.jar": "43b7e452310090f7c5da988f636a249a3e3235463b9cb6d74540e474a54a6b09",
+      "org/springframework/boot/spring-boot-webmvc/4.0.3/spring-boot-webmvc-4.0.3.jar": "1d9c97bcc3406750acc3c0a4ccd5ace9e22e0bd3f33e67c7325014116865130d",
+      "org/springframework/boot/spring-boot/4.0.3/spring-boot-4.0.3.jar": "a1cafa61ab660f42286e5c690da5fb51b20b3cd8bc08a5f1cf7cb07db1d3e2a1",
+      "org/springframework/data/spring-data-commons/4.0.3/spring-data-commons-4.0.3.jar": "0cfd061f08e5ffade2e595d3afbb05a2422b58932115e34328ceb3c6d899abbe",
+      "org/springframework/data/spring-data-jpa/4.0.3/spring-data-jpa-4.0.3.jar": "715b39d32df847780692181f3930631e238306ae9d56aab6bc07438d1e5bed0d",
+      "org/springframework/modulith/spring-modulith-api/2.0.3/spring-modulith-api-2.0.3.jar": "9b71c465943238c8729dc46d063c98c5a3b1d8cb1cbf93e38603f07183717200",
+      "org/springframework/modulith/spring-modulith-apt/2.0.3/spring-modulith-apt-2.0.3.jar": "83b266e21643ebfb73f139808b58e8295bb7a5933d2d7e5eb9a2fa2bab75df6a",
+      "org/springframework/modulith/spring-modulith-core/2.0.3/spring-modulith-core-2.0.3.jar": "da4ea3ac0356968ada4136977e826d70f8cde19873990a8d69db0f162b56c628",
+      "org/springframework/modulith/spring-modulith-docs/2.0.3/spring-modulith-docs-2.0.3.jar": "4bb07adebf0231057011833fc57baaf41d9e826e9a65b93cbe7ccdb981ea643a",
+      "org/springframework/modulith/spring-modulith-moments/2.0.3/spring-modulith-moments-2.0.3.jar": "41f49825502a79990e84f1c113c3826d3aa201704fad452eed0b51d7c6063020",
+      "org/springframework/modulith/spring-modulith-starter-core/2.0.3/spring-modulith-starter-core-2.0.3.jar": "fe3c1259145d93c32440a70c6bb6a8579e47b3fdc4f0c88381cd5f1d8cd7b6ed",
+      "org/springframework/modulith/spring-modulith-starter-test/2.0.3/spring-modulith-starter-test-2.0.3.jar": "dc6e3ae9c62c8377316f91736f2c9c67b5259df9dbb98949ae5d27cb721fbe55",
+      "org/springframework/modulith/spring-modulith-test/2.0.3/spring-modulith-test-2.0.3.jar": "cc3d2255c21d3a8d2fd726d32bb428d8b8e1da8ab7a8f9240afb05c9f47682d9",
+      "org/springframework/security/spring-security-config/7.0.3/spring-security-config-7.0.3.jar": "82010148e845aaa346b1423bb037d34444de90b51660a35387ec271a45692295",
+      "org/springframework/security/spring-security-core/7.0.3/spring-security-core-7.0.3.jar": "4bd588eecbe728cf4d1f5920248ff9e193ad88a00c6e315423ab73e52b43a3a9",
+      "org/springframework/security/spring-security-crypto/7.0.3/spring-security-crypto-7.0.3.jar": "129e5d33c75279d40f170101f72ce0e99174bc50079615ebfccd08f26f91b00c",
+      "org/springframework/security/spring-security-oauth2-core/7.0.3/spring-security-oauth2-core-7.0.3.jar": "9f88d6fa4fdab63177560b40a33bf5ccd2d2b8e5d47195759c0aadca9f73806a",
+      "org/springframework/security/spring-security-oauth2-jose/7.0.3/spring-security-oauth2-jose-7.0.3.jar": "fe8f1e81181d0f4314393e7ec510aa897fbc2e2305a106db8f854cd0e4830782",
+      "org/springframework/security/spring-security-oauth2-resource-server/7.0.3/spring-security-oauth2-resource-server-7.0.3.jar": "6bf012e11232b47f87dcacb17b11c693a8817bcdf36a0e9541f8db6f1b46dab7",
+      "org/springframework/security/spring-security-web/7.0.3/spring-security-web-7.0.3.jar": "76fadd577d0a3cf2af6986503b5349c651c017936591323ef761673b027400f2",
+      "org/springframework/spring-aop/7.0.5/spring-aop-7.0.5.jar": "eca1a435da971e0b26557135eac556d1b6b86db7a1a5eca51d61f024bbdd60db",
+      "org/springframework/spring-aspects/7.0.5/spring-aspects-7.0.5.jar": "e54afec10d29715b9e0734f0c64a32f950af592351fb09c2b6d0a3beb6f07c31",
+      "org/springframework/spring-beans/7.0.5/spring-beans-7.0.5.jar": "6179d615d24354ddb7bfa45af86e6947853fde62e26c2198539ebdea0ff3920b",
+      "org/springframework/spring-context/7.0.5/spring-context-7.0.5.jar": "40cd97a508401b791dd6dd0f5f0a4154d5650ed7a52058bf3dcc1c3df55c32a4",
+      "org/springframework/spring-core/7.0.5/spring-core-7.0.5.jar": "768c7a3333dda332028b20ad925c2fdd3c89efad7a1daab65eb2beb762e3bc3e",
+      "org/springframework/spring-expression/7.0.5/spring-expression-7.0.5.jar": "783e6495c2e4cd450b74df2c45c2f868e44e21ef82f93abd9160ecec420e911c",
+      "org/springframework/spring-jdbc/7.0.5/spring-jdbc-7.0.5.jar": "64d1d53a5003adcd91c39678e0d21a73f29a1010463b0bf933dd4d77d3657e25",
+      "org/springframework/spring-orm/7.0.5/spring-orm-7.0.5.jar": "23612b81fefb5045ca0ce6c9001aab9cda0d707fdd4eba03a80199a2f7664e16",
+      "org/springframework/spring-test/7.0.5/spring-test-7.0.5.jar": "235eed315b44c92b544f39db02716745e96ab5f454a1807a7a8614deee63e749",
+      "org/springframework/spring-tx/7.0.5/spring-tx-7.0.5.jar": "acfda4072d4b6b5e68425899522e9a197b1dafa05bac2735b36c9fd33a34de0a",
+      "org/springframework/spring-web/7.0.5/spring-web-7.0.5.jar": "727900bdbb458ff2395801bd47d183dc7524a6f9a2fcbcdf59a2e04f9ac78df3",
+      "org/springframework/spring-webmvc/7.0.5/spring-webmvc-7.0.5.jar": "6ac46fa400ab17bd900e9de3d4c5b24b41c08885b216c6f222f5fdf7b9c4798d",
+      "org/testcontainers/testcontainers-database-commons/2.0.2/testcontainers-database-commons-2.0.2.jar": "26be93d044944aa7b477e6703e288a4f13969ce5dfe5846a934ef90df5f49b2e",
+      "org/testcontainers/testcontainers-jdbc/2.0.2/testcontainers-jdbc-2.0.2.jar": "ced11162432df13c4404c5840ada4c2031319c98a073ab320cde1faadd35259d",
+      "org/testcontainers/testcontainers-junit-jupiter/2.0.2/testcontainers-junit-jupiter-2.0.2.jar": "2331e2c779d5231e9d37d8ade726237b242bde0b974e1b82e75f274b03012ec7",
+      "org/testcontainers/testcontainers-postgresql/2.0.2/testcontainers-postgresql-2.0.2.jar": "abdeb82d36e934fa54b52460a35b0fefff98e075e30db7fece4abfd97c70538c",
+      "org/testcontainers/testcontainers/2.0.2/testcontainers-2.0.2.jar": "edd5740fd67f1a1edd7dae4b08eef333c81cbe84a9d437f14ecdb9b82bc04688",
+      "org/threeten/threetenbp/1.7.0/threetenbp-1.7.0.jar": "857917d2319a4e92dc1c5e3aeb75a0dac84445ed315e7ac3d82bb8d2b298977f",
+      "org/webjars/swagger-ui/5.32.0/swagger-ui-5.32.0.jar": "c542227b75e703ffdc460254728799ed578b4e045bc7284de457aa1e48eca423",
+      "org/webjars/webjars-locator-lite/1.1.3/webjars-locator-lite-1.1.3.jar": "7b67c4e69437a9c32b9c901bfaa056c7e2f1db62401757f02387c1f014bd00c4",
+      "org/xmlunit/xmlunit-core/2.10.4/xmlunit-core-2.10.4.jar": "208e0cee82aedd9183937e4b9ae44b83884179f724a706bef5795477acfcca91",
+      "org/yaml/snakeyaml/2.5/snakeyaml-2.5.jar": "e6682acf1ace77508ef13649cbf4f8d09d2cf5457bdb61d25ffb6ac0233d78dd",
+      "tools/jackson/core/jackson-core/3.0.4/jackson-core-3.0.4.jar": "e07428df3c608f90a39f030d14755cea514b944e8148b2f95c9521e082c6959b",
+      "tools/jackson/core/jackson-databind/3.0.4/jackson-databind-3.0.4.jar": "bd2159939b413651415bb9c4e08f14aac75748008af9bb95855918a3bd92474d"
+    },
+    "runtime": {
+      "java.runtime.version": "25.0.2",
+      "java.vendor": "Homebrew",
+      "java.vm.name": "OpenJDK 64-Bit Server VM",
+      "javaSha256": "370ef109f74f859afc8cfe0300b2da782d60698160b8a48f19731d6d2e3012ea",
+      "macSystemVersionSha256": "bd61e19dd67dd97ce9a27c79a2148d42cc9685a71c6f17ff27d62b819f39f983",
+      "modulesSha256": "4118f24a4a80fbb6ba3f04e49697bbea705b2b18fe93ff9894f74afa622d9271",
+      "os.arch": "aarch64",
+      "os.name": "Mac OS X",
+      "os.version": "27.0.1",
+      "sandboxSha256": "58839ef01b4eef8aac0d2aa8f9d1c074ae45aafe3533965b030672450064acc8"
+    },
+    "settings": {
+      "activeProcessorCount": 1,
+      "concurrency": 1,
+      "decoder": "imageio-webp:3.15.3/rawImageType/logical-rgb-bands",
+      "directMemoryMiB": 32,
+      "encodedLimit": 16777216,
+      "encoding": "NONE_BYTE_COPY",
+      "exif": "STRIP_EXIF_PREFIX_ONLY",
+      "heapMiB": 256,
+      "height": 2778,
+      "metadataLimit": 65536,
+      "network": "SANDBOX_DENY_NETWORK",
+      "outputLimit": 268435456,
+      "pixelLimit": 5000000,
+      "reread": "INDEPENDENT_SUPERVISED_CHILD",
+      "responseAndLogLimit": 1048576,
+      "rssCounter": "MACOS_PROC_PID_RUSAGE_V0_RESIDENT_SIZE",
+      "rssCounterAbi": "96_BYTES_RSS_UINT64_OFFSET_64",
+      "rssLimit": 536870912,
+      "scope": "P5G_LOCAL_ONLY_NO_P2_P3_ADMISSION",
+      "timeoutMillis": 30000,
+      "webpConsumption": "SAME_CODEC_VP8L_CEIL_CONSUMED_BITS",
+      "width": 1712
+    }
+  },
+  "existingP2Diagnostics": {
+    "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION": 17,
+    "PNG_OR_JPEG_REQUIRED": 24
+  },
+  "rows": [
+    {
+      "assetId": 1950,
+      "bytes": 361885,
+      "file": "1950.jpg",
+      "fingerprint": "799fcff411ee98b3045cdd73c1b8092f9684e3924a2995661bdd9575f4d25769",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13740,
+        "exit": 0,
+        "peakRssBytes": 165019648,
+        "elapsedMillis": 450,
+        "stdoutSha256": "61269960af8b4a3c931b7f71daae2bb8deb873ffa75ba15fbfcce6c1aa2bb538",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13750,
+        "exit": 0,
+        "peakRssBytes": 166920192,
+        "elapsedMillis": 415,
+        "stdoutSha256": "61269960af8b4a3c931b7f71daae2bb8deb873ffa75ba15fbfcce6c1aa2bb538",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "fae092d71675496098efa49e00772831cba6605815a313fd30e4bde47dbbf162"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "7baf1ad47fca56c5c7fb7f72ae9b316fbb7e50e4531f04e067a202d18dc8db8b",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+        "status": "VERIFIED"
+      },
+      "sha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513",
+      "sourceSha256": "783004c2b69f2f7f16ce6527668385882f95b9a0329f912f06950bec6ff19513"
+    },
+    {
+      "assetId": 1952,
+      "bytes": 288768,
+      "file": "1952.jpg",
+      "fingerprint": "84bf531ad0c39136ddd8ca578c18f7956f637e728bd721c9587df8c3561be0e3",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13751,
+        "exit": 0,
+        "peakRssBytes": 165609472,
+        "elapsedMillis": 374,
+        "stdoutSha256": "09fe3a64d2576f89d555565cf791b2232cb1f6d3e4cc0118cd5ffdc816f79816",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13752,
+        "exit": 0,
+        "peakRssBytes": 167329792,
+        "elapsedMillis": 369,
+        "stdoutSha256": "09fe3a64d2576f89d555565cf791b2232cb1f6d3e4cc0118cd5ffdc816f79816",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "c239999291fd46447034a8d08014632ef946e62bedae302c6b3d0b8422d0f150"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "afe1592a10b17c0a38aeb84b6fd0b8e1da18b384803b0b46a3fc22ca42779ff8",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+        "status": "VERIFIED"
+      },
+      "sha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b",
+      "sourceSha256": "643e5180d376040f392ac3af2c63e2c7cf2017eb53cb13636d24c1dc4041b96b"
+    },
+    {
+      "assetId": 1954,
+      "bytes": 214723,
+      "file": "1954.jpg",
+      "fingerprint": "3273a14a0c75194b84678f5de14b920969e37207799c03d1ef6a5060b92244eb",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13753,
+        "exit": 0,
+        "peakRssBytes": 164708352,
+        "elapsedMillis": 359,
+        "stdoutSha256": "e50ed472318e02ad898c32d9d46e15f4ecf67951c3822b1eafd86a7b54eb4142",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13754,
+        "exit": 0,
+        "peakRssBytes": 165822464,
+        "elapsedMillis": 359,
+        "stdoutSha256": "e50ed472318e02ad898c32d9d46e15f4ecf67951c3822b1eafd86a7b54eb4142",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "acc71c0f40ca56c7807fe52640a7d9a009b4e72750c0c357dc8138b86b641667"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "c71fdbc336ea9a04cc2b43ce5963a561fb4ddf48a7a30a147b1289e240b306be",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+        "status": "VERIFIED"
+      },
+      "sha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b",
+      "sourceSha256": "fb44228d31266c39cfbe1f99fff8955c938deca0e3dc098a424efb9bc83c171b"
+    },
+    {
+      "assetId": 1956,
+      "bytes": 256634,
+      "file": "1956.jpg",
+      "fingerprint": "865ffa43544555334ffc1923b5b0cb6bd3a47f648d137abd32651cafa69d6a5d",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13755,
+        "exit": 0,
+        "peakRssBytes": 163512320,
+        "elapsedMillis": 377,
+        "stdoutSha256": "fa3666da12882cf8842653d1015a56e0a39c7bd2922278837322febaf7c82c95",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13823,
+        "exit": 0,
+        "peakRssBytes": 162955264,
+        "elapsedMillis": 385,
+        "stdoutSha256": "fa3666da12882cf8842653d1015a56e0a39c7bd2922278837322febaf7c82c95",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "d201c470526d2f0ac3c24f6aece42a75cdc10ee52e4f8e7617d6ede49c58151b"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "af33bdfc389574d1eccf825bacd81019e3950fe9943e6be22a5664ddbb1d9eb5",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+        "status": "VERIFIED"
+      },
+      "sha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6",
+      "sourceSha256": "675afb6efe5ba0682dbb0b0c1f4c9108ae11e1c112f5490342dc70c3a52a95f6"
+    },
+    {
+      "assetId": 1958,
+      "bytes": 249503,
+      "file": "1958.jpg",
+      "fingerprint": "f8cc2de79b56d8da08795afc78c4b4a0c593f1001336646831a9a7bc1cf64709",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13864,
+        "exit": 0,
+        "peakRssBytes": 163659776,
+        "elapsedMillis": 370,
+        "stdoutSha256": "48313a0811fd7fbe947d775f219750e7f79638245513ea114fb40798cc163561",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13865,
+        "exit": 0,
+        "peakRssBytes": 167215104,
+        "elapsedMillis": 370,
+        "stdoutSha256": "48313a0811fd7fbe947d775f219750e7f79638245513ea114fb40798cc163561",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "19ad30fd20be784710937b0b3c8d5d5b683741d426a96cb8d6e3c20af873dd5e"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "2991b33c2e78ef6f0f21d2e7fd54cce3250ce0a4d0abb0d0a3a7ae7f21f426fa",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+        "status": "VERIFIED"
+      },
+      "sha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9",
+      "sourceSha256": "02bc38d5a26749c8180f438412031276fc80dd94e9a7d735ec9df63c371a46e9"
+    },
+    {
+      "assetId": 1960,
+      "bytes": 482003,
+      "file": "1960.jpg",
+      "fingerprint": "dfd4a9f580bb377e76d36019f7c9ca7605c86abaa2bc677b3356092ddc136489",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13868,
+        "exit": 0,
+        "peakRssBytes": 169082880,
+        "elapsedMillis": 426,
+        "stdoutSha256": "afbe89ed980056fa94a7c730ae9904c9598c20e27aa0720f506dfbb9b1bf5826",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13869,
+        "exit": 0,
+        "peakRssBytes": 168411136,
+        "elapsedMillis": 394,
+        "stdoutSha256": "afbe89ed980056fa94a7c730ae9904c9598c20e27aa0720f506dfbb9b1bf5826",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "80948302e7a7b889d71e4f2f9502effe0c13b59033c33e46875a167815deecaa"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "e23db4730ec36799d12aa935dd4a4db19d922452f1d73bf6350bdfd41ea265f0",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+        "status": "VERIFIED"
+      },
+      "sha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c",
+      "sourceSha256": "3b5b9ec321f2c730e41a3965ad4f4389151d6c5afe58573c2311a33891eb1c9c"
+    },
+    {
+      "assetId": 1962,
+      "bytes": 353873,
+      "file": "1962.jpg",
+      "fingerprint": "68d2e76513f486c5ae5d1525ffb2c554ec71cf985bfbc2a5b2bcad4b2f16e9a2",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13879,
+        "exit": 0,
+        "peakRssBytes": 166559744,
+        "elapsedMillis": 437,
+        "stdoutSha256": "3e77dc47c1aff9f99c4ed2636e337a62e553dfc072d3f8529724db824e5a921f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13880,
+        "exit": 0,
+        "peakRssBytes": 164970496,
+        "elapsedMillis": 389,
+        "stdoutSha256": "3e77dc47c1aff9f99c4ed2636e337a62e553dfc072d3f8529724db824e5a921f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 878,
+            "present": true,
+            "sha256": "5cc25da2280e10aa4b3b57dcc394142fb781af7b1096a7cd55ff2e13f580db98"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "085b46920a911148cb04d9a985f1840c42980a79951ee1612026456d07b67938",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+        "status": "VERIFIED"
+      },
+      "sha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860",
+      "sourceSha256": "5ed89878f49aa9a8f9ae02a0459e2287c2b5d0af2048bd56a203e33935fd7860"
+    },
+    {
+      "assetId": 1964,
+      "bytes": 406040,
+      "file": "1964.jpg",
+      "fingerprint": "ba97044bc80bf476a5a942a9f72d66d5f75cc3f9884fd6a4a46c302c00334694",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13881,
+        "exit": 0,
+        "peakRssBytes": 167624704,
+        "elapsedMillis": 378,
+        "stdoutSha256": "fe04c913144ad3e742591d87013641915dd4fdab4091f29d8b1e23d14b080224",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13882,
+        "exit": 0,
+        "peakRssBytes": 168198144,
+        "elapsedMillis": 383,
+        "stdoutSha256": "fe04c913144ad3e742591d87013641915dd4fdab4091f29d8b1e23d14b080224",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "04c677d94b9ee8523bb2c0fbc2160fb83a792fc335cdbfc96ad83b1bf54cd31f"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "d606b9defab4989255a8cb9218aee5d41a088fd58122b0fe8a3ebfd560d4cd9a",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+        "status": "VERIFIED"
+      },
+      "sha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431",
+      "sourceSha256": "3323afa9289c7551ee5b3040b563c529d5127889bb3bc67cb39658a5d3cd5431"
+    },
+    {
+      "assetId": 1966,
+      "bytes": 333699,
+      "file": "1966.jpg",
+      "fingerprint": "7791604f521686ec7d6d8a34b02048f5e54fa8ccc6479c560a5d485ef6c68bea",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13883,
+        "exit": 0,
+        "peakRssBytes": 166461440,
+        "elapsedMillis": 372,
+        "stdoutSha256": "dbb8e4454f3e60ab4d53c2fab6402775fcc4380c56386f6eb1d7a451276fef11",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13884,
+        "exit": 0,
+        "peakRssBytes": 165707776,
+        "elapsedMillis": 367,
+        "stdoutSha256": "dbb8e4454f3e60ab4d53c2fab6402775fcc4380c56386f6eb1d7a451276fef11",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "9ea790c8747f4cf59addc6d876c193338c2a1857ca11578cb97e4707ac3af669"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "8a113e8a71ba94cfca9457f1a62ed30d89071ceb3c8310dfb23afc2f45da1f79",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+        "status": "VERIFIED"
+      },
+      "sha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e",
+      "sourceSha256": "aa9e57ffc8519f4762246551970ab0c7e5677d050ea69b4e758e465f4fec2f7e"
+    },
+    {
+      "assetId": 1968,
+      "bytes": 258580,
+      "file": "1968.jpg",
+      "fingerprint": "dc513723987c7e11144089f361856c2c41f436fe570e10d64eb0e084a257699a",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13885,
+        "exit": 0,
+        "peakRssBytes": 167624704,
+        "elapsedMillis": 367,
+        "stdoutSha256": "5ff8fc1a4a77d55c5c7345253950105e33ce0e2df28d65b463570af6eac7d73d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13886,
+        "exit": 0,
+        "peakRssBytes": 163004416,
+        "elapsedMillis": 361,
+        "stdoutSha256": "5ff8fc1a4a77d55c5c7345253950105e33ce0e2df28d65b463570af6eac7d73d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "1554623131a788638fed884f0efc007bdf0e5ae641229781a5f8fa4173a4c6cb"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "1a1b8dc731b142a50551920a239c1bbd705a39626c84fd31329f9823bf35c4a9",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+        "status": "VERIFIED"
+      },
+      "sha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92",
+      "sourceSha256": "afbce94e4be71cebbdf1581b734633d350b8d3aa137cbed1123ec95f20d8ad92"
+    },
+    {
+      "assetId": 1970,
+      "bytes": 309746,
+      "file": "1970.jpg",
+      "fingerprint": "565cbe869ed000b9d1f5d0496b3ee5f10012ea190f4a10503718a7c4b4ec7da0",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13888,
+        "exit": 0,
+        "peakRssBytes": 165494784,
+        "elapsedMillis": 414,
+        "stdoutSha256": "177352c490633bd6f37472c891337d5d7f3f1ebe32b15b9d89a3de612c6dede4",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13889,
+        "exit": 0,
+        "peakRssBytes": 166674432,
+        "elapsedMillis": 386,
+        "stdoutSha256": "177352c490633bd6f37472c891337d5d7f3f1ebe32b15b9d89a3de612c6dede4",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "b997b97e1cb2d26b7494aca36e1738eafc60029393363a80b317018618bd2771"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "0273caa582e01363833a818c6299c50d8338baa25f8e563e2d5d394326679688",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+        "status": "VERIFIED"
+      },
+      "sha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1",
+      "sourceSha256": "c554ab0460855635540c5a94abfdcb88dc7e32cf39d4b6a7e16864a1f7c5e3b1"
+    },
+    {
+      "assetId": 1972,
+      "bytes": 490555,
+      "file": "1972.jpg",
+      "fingerprint": "77ae6ec3485ecab7f1b1fd9eef16de8e4cf7dfaae0940ee3371bb87cb1315906",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13890,
+        "exit": 0,
+        "peakRssBytes": 165117952,
+        "elapsedMillis": 429,
+        "stdoutSha256": "a18cb2571605f3daac0d4b5ca7cf7b533428a92785b7af7ce4705d5818b30acb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13900,
+        "exit": 0,
+        "peakRssBytes": 165871616,
+        "elapsedMillis": 385,
+        "stdoutSha256": "a18cb2571605f3daac0d4b5ca7cf7b533428a92785b7af7ce4705d5818b30acb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "22523dd33bf1d359c38e3c49b9e39b2e7a1d119f075068ed1f1da9f1045f5163"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "cb6d998ceda134d3da5527e00cbc555391646e597c5fd3d1189a0edd86912ac0",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+        "status": "VERIFIED"
+      },
+      "sha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77",
+      "sourceSha256": "d98c0a77ddc64a3493718835829d3342331f41819e2794c40782a04fd4c39e77"
+    },
+    {
+      "assetId": 1974,
+      "bytes": 337335,
+      "file": "1974.jpg",
+      "fingerprint": "4564ff3eda886518c3884f9927d1de17e37dbf13dbb9350973a542099f246d7a",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13901,
+        "exit": 0,
+        "peakRssBytes": 165150720,
+        "elapsedMillis": 375,
+        "stdoutSha256": "7cd9104dcd1304a0aa6ca06558e1a949d2c18491b04388916fc7e54fc143cead",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13902,
+        "exit": 0,
+        "peakRssBytes": 166985728,
+        "elapsedMillis": 381,
+        "stdoutSha256": "7cd9104dcd1304a0aa6ca06558e1a949d2c18491b04388916fc7e54fc143cead",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "cb47cbdd0f6a5b62ed250c2154e49175cc815648e6e61156cfdf0b3b08a8b793"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "f7e44d8a62d4568d12c600189a96c5fe1c5423ed5f32dfb632eeb65b433dec14",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+        "status": "VERIFIED"
+      },
+      "sha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16",
+      "sourceSha256": "5b9884378c2a462ff6dac7fe20f2602bca8c0431f494208cd53e6cd658491b16"
+    },
+    {
+      "assetId": 1976,
+      "bytes": 556757,
+      "file": "1976.jpg",
+      "fingerprint": "80d2c2c817c2ff97ab524b1df63f6dee70fa95a6b5ad74ea256b3078f612c27c",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13903,
+        "exit": 0,
+        "peakRssBytes": 168001536,
+        "elapsedMillis": 386,
+        "stdoutSha256": "e412f30996fd4d7efbf13a196ea42f0e67e38ae7add08d38f5e54715f275fcee",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13904,
+        "exit": 0,
+        "peakRssBytes": 165003264,
+        "elapsedMillis": 390,
+        "stdoutSha256": "e412f30996fd4d7efbf13a196ea42f0e67e38ae7add08d38f5e54715f275fcee",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "e27824f090b38263aa9ab8d57e28af6a3bdae5229e16550d1d8365dcd5e303d1"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "dabe1b25c42febd820230696853803c331b6e0d5767b79361d15725f596449e2",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+        "status": "VERIFIED"
+      },
+      "sha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3",
+      "sourceSha256": "5f362f4d29f375ffff7b79dc1dfab41ff5715f905cefdab5ecbbcbd78eeb1ca3"
+    },
+    {
+      "assetId": 1978,
+      "bytes": 346582,
+      "file": "1978.jpg",
+      "fingerprint": "b2a851111860ae0605a17a06f20fbfa53205ef13b3d61e0a701787e1bd9494fe",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13905,
+        "exit": 0,
+        "peakRssBytes": 166313984,
+        "elapsedMillis": 378,
+        "stdoutSha256": "45f57a6120455cbabc2ccc8243915e0b1341e99c40ec131575c9af30ed5a222f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13906,
+        "exit": 0,
+        "peakRssBytes": 164495360,
+        "elapsedMillis": 385,
+        "stdoutSha256": "45f57a6120455cbabc2ccc8243915e0b1341e99c40ec131575c9af30ed5a222f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "9f153b386207d6b5277e9b379a9cba995122c6982b8cb5d6495fa32580107dfc"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "7366fea37e5bfda9cb4c56a8bb0230271ea0511a54d54aa9cf6fadd8cbb0aecc",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+        "status": "VERIFIED"
+      },
+      "sha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8",
+      "sourceSha256": "1354c774d49825b41363bcc88ccecc93aa6676ab71972e62db5b665ae13a5da8"
+    },
+    {
+      "assetId": 1980,
+      "bytes": 460634,
+      "file": "1980.jpg",
+      "fingerprint": "3d8ef01cf7b019f5e7580136c94007b13783484d13078c7b17467985743802a4",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13907,
+        "exit": 0,
+        "peakRssBytes": 165347328,
+        "elapsedMillis": 383,
+        "stdoutSha256": "e5b027e93b0af3773a58f1013a4caf842e36ff0ffabfb4dcb7f448e2092233f2",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 13909,
+        "exit": 0,
+        "peakRssBytes": 167460864,
+        "elapsedMillis": 420,
+        "stdoutSha256": "e5b027e93b0af3773a58f1013a4caf842e36ff0ffabfb4dcb7f448e2092233f2",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "0e464b4262260195a9222da3f1344b8e28a56bbef6ae0ca6ff7b4f5518eac5bb"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "c41b2cccb8662a89ab656dbf7d0411169d7580f048f609cdfa7e3aa58d68acee",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+        "status": "VERIFIED"
+      },
+      "sha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825",
+      "sourceSha256": "dbe19d0614d88cc651c4f2ccfb022f2a4c6cb3dbc0f188653076e2b268b12825"
+    },
+    {
+      "assetId": 1982,
+      "bytes": 484106,
+      "file": "1982.jpg",
+      "fingerprint": "c296711b8692bc207213b8d9a3627f9d10fa98ae3d07d6be887f4d56396c317d",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 13910,
+        "exit": 0,
+        "peakRssBytes": 165003264,
+        "elapsedMillis": 412,
+        "stdoutSha256": "0ed6c7cbbc9cd254d94ba0dbc34d28ade671df3197107eb484ac27d48cdab1ff",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/jpeg",
+      "rereadProcess": {
+        "pid": 14010,
+        "exit": 0,
+        "peakRssBytes": 164937728,
+        "elapsedMillis": 415,
+        "stdoutSha256": "0ed6c7cbbc9cd254d94ba0dbc34d28ade671df3197107eb484ac27d48cdab1ff",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "candidateSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "JPEG_UNSUPPORTED_METADATA_OR_ORIENTATION",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 0,
+            "present": false
+          },
+          "normalizedTiff": {
+            "bytes": 16,
+            "present": true,
+            "sha256": "b44eca9fba2125c9c0ad0ff4b24870a4134db745600e8365953a15ea9ae0d9df"
+          },
+          "xmp": {
+            "bytes": 864,
+            "present": true,
+            "sha256": "d3099f32279ba862f8a2f1628111425a6a09e9cd53249da5321d7b22209f9541"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "3600ae70b7cb75586e7de2e076aef2602b0976a84bca2cde53e56a655b21d27e",
+        "sourceReader": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+        "sourceSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+        "status": "VERIFIED"
+      },
+      "sha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9",
+      "sourceSha256": "4f49a1761cd73e6a41baf04d4deb5d8ac5ce4288ef6099eec7d54b48e488fcb9"
+    },
+    {
+      "assetId": 8303,
+      "bytes": 2247538,
+      "file": "8303.webp",
+      "fingerprint": "dd243cb87da0fc763fee387a2b55dbefbfe59b787cdd7b6448515f8fb8cd88f7",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14027,
+        "exit": 0,
+        "peakRssBytes": 221036544,
+        "elapsedMillis": 1226,
+        "stdoutSha256": "cc84aff9c505e31c2e691e3613ad57673c27195a31428ec12343e6d188453dd6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14028,
+        "exit": 0,
+        "peakRssBytes": 220381184,
+        "elapsedMillis": 1237,
+        "stdoutSha256": "cc84aff9c505e31c2e691e3613ad57673c27195a31428ec12343e6d188453dd6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "4ab536956fd8c56b4a10568c9861db60a33decaf04469cb850337eaf27a8d3bb",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 850,
+            "present": true,
+            "sha256": "9ac48317b6d33b46b36294c309b064ccfa75846c62526bc6bc14a439295c7ce1"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "8f9ce6de504a8b785b5fdca111b2cc0fcbadc47b817366d5258c06f08b63d918",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255",
+        "status": "VERIFIED"
+      },
+      "sha256": "4ab536956fd8c56b4a10568c9861db60a33decaf04469cb850337eaf27a8d3bb",
+      "sourceSha256": "1f72332515a993deb7739f26d1e39003b982e439c38cec696b13a3084f494255"
+    },
+    {
+      "assetId": 8306,
+      "bytes": 3652182,
+      "file": "8306.webp",
+      "fingerprint": "df0e38779e1132639e01fbcbf58d09a2f76a6b34c55aed273e108dbf88cda705",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14030,
+        "exit": 0,
+        "peakRssBytes": 230834176,
+        "elapsedMillis": 1370,
+        "stdoutSha256": "ac68943036a24183f5c86071553b8f4c470002e825333892dd1159804c8a645f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14041,
+        "exit": 0,
+        "peakRssBytes": 229785600,
+        "elapsedMillis": 1453,
+        "stdoutSha256": "ac68943036a24183f5c86071553b8f4c470002e825333892dd1159804c8a645f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "9a6914bc7a27704ca38fda8d51b87850453a53fb21da09dc847583f4db2cf25a",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "c1a6041c0b8e711a26e09560ae01ed0715b65913c5e2f07209d90eec21dbe940"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "3742093b29eeb889ea92d056b2c4307ce2266d6df8afb2c4866aad50964a566b",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b",
+        "status": "VERIFIED"
+      },
+      "sha256": "9a6914bc7a27704ca38fda8d51b87850453a53fb21da09dc847583f4db2cf25a",
+      "sourceSha256": "d7958cc567109ae845b1e2dc682fb7213fa3cdff91e7bacb757a0afabe99d74b"
+    },
+    {
+      "assetId": 8308,
+      "bytes": 3508232,
+      "file": "8308.webp",
+      "fingerprint": "1ecde532be89fc2467add624fc3b2c730998af0ea48e9d5782c3aaec600f61db",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14042,
+        "exit": 0,
+        "peakRssBytes": 230440960,
+        "elapsedMillis": 1307,
+        "stdoutSha256": "36de45e753b13bc27dedd17dcb935fa135119a2b5b442e274aca6b55242c4179",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14044,
+        "exit": 0,
+        "peakRssBytes": 230178816,
+        "elapsedMillis": 1335,
+        "stdoutSha256": "36de45e753b13bc27dedd17dcb935fa135119a2b5b442e274aca6b55242c4179",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "2b1dfdddaa8201576682c33df10fea8082b1f15f461164d28d2229a08951a37f",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "6727d4299b2f3a0d6826edddf6a57413f7bf1c135e903819cee5ff02c25d332b"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "03fe00684cd39f26b8487b4a385e130560a4d755ec939bb09bdf8095bd7ac0f1",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296",
+        "status": "VERIFIED"
+      },
+      "sha256": "2b1dfdddaa8201576682c33df10fea8082b1f15f461164d28d2229a08951a37f",
+      "sourceSha256": "45149c75162ea83bb28787282913eb03f320dd20fe865d0613c917d75f41b296"
+    },
+    {
+      "assetId": 8310,
+      "bytes": 2727004,
+      "file": "8310.webp",
+      "fingerprint": "8572ce662077e20591e10a200c615d7b9c383ed77a8b681e8ab07b466c21cb3b",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14054,
+        "exit": 0,
+        "peakRssBytes": 225181696,
+        "elapsedMillis": 1326,
+        "stdoutSha256": "115320d9d96e04f03b2416328bd50fd1cb78d9352e5997f6cf2e8d183101e893",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14055,
+        "exit": 0,
+        "peakRssBytes": 227901440,
+        "elapsedMillis": 1364,
+        "stdoutSha256": "115320d9d96e04f03b2416328bd50fd1cb78d9352e5997f6cf2e8d183101e893",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "c397067e9a45cfbe87b914b9b5823cebd0918ea185b2d1dc8d86ad48087673a7",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "cfa1b11f5b48625136cec9d8a3c8dd04f4e592fc0f24ec7ee5e2922657e04be1"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "3f1f15f894fc42edceaf2894045d0cdddf73c6a80988039de75b8fb17a861254",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838",
+        "status": "VERIFIED"
+      },
+      "sha256": "c397067e9a45cfbe87b914b9b5823cebd0918ea185b2d1dc8d86ad48087673a7",
+      "sourceSha256": "85fc38ce357dc6ae625b54379b568d67a9becb66579831d624acf9b80248a838"
+    },
+    {
+      "assetId": 8312,
+      "bytes": 3065182,
+      "file": "8312.webp",
+      "fingerprint": "d0ed0ed671ed7f03e66ef832ff49299380a4c8a52ef300c970d2be5d0007ff91",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14163,
+        "exit": 0,
+        "peakRssBytes": 229064704,
+        "elapsedMillis": 1309,
+        "stdoutSha256": "24c8e072337b4ef3b126b51a4a7d9d3af34c2ba7b3b9cc7acb2626d786f88f85",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14173,
+        "exit": 0,
+        "peakRssBytes": 230064128,
+        "elapsedMillis": 1276,
+        "stdoutSha256": "24c8e072337b4ef3b126b51a4a7d9d3af34c2ba7b3b9cc7acb2626d786f88f85",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "ad123f34e5027098bed01307f33be6c4fb120b7d279ea67bf20033125a671afe",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "270a50571e2a3f5cdea4d0f9cf49179997b4478b67d0f1c893b648423ccf1fa8"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "9adde7ce596a316904359375f86fb766ee8699169aa57eeb146bc4520e003f98",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8",
+        "status": "VERIFIED"
+      },
+      "sha256": "ad123f34e5027098bed01307f33be6c4fb120b7d279ea67bf20033125a671afe",
+      "sourceSha256": "533979eb700b990e54c4800d843c2ad2e1074a2e60acb2b528de2e7cde213bd8"
+    },
+    {
+      "assetId": 8314,
+      "bytes": 2447188,
+      "file": "8314.webp",
+      "fingerprint": "dd10aa13a65ddf8a0c22c3da022a8e82c494b178354e2f258ba0ca2e55f13449",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14174,
+        "exit": 0,
+        "peakRssBytes": 224018432,
+        "elapsedMillis": 1267,
+        "stdoutSha256": "a973ae49d1711cc49b03f16dc51d08cbf91c3f896b08fcbc6979b4421571ec88",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14176,
+        "exit": 0,
+        "peakRssBytes": 222019584,
+        "elapsedMillis": 1306,
+        "stdoutSha256": "a973ae49d1711cc49b03f16dc51d08cbf91c3f896b08fcbc6979b4421571ec88",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "6d75006fc5ab9101b6e05bf2b47bc8d9be75a506b3cad533592f4ff4f69149b3",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "6c7f7024fb2a797631dcad55b14f8eb38f1c74318cb2ca837447bb058f3dbe73"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "3b1e0d48c38063243f3b4d419af52af069f29f3061372d695ed5695db3636638",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36",
+        "status": "VERIFIED"
+      },
+      "sha256": "6d75006fc5ab9101b6e05bf2b47bc8d9be75a506b3cad533592f4ff4f69149b3",
+      "sourceSha256": "29dc398579bb018854abe78f983d223fac08a63f58d1317f4632a126ee79ba36"
+    },
+    {
+      "assetId": 8316,
+      "bytes": 2922008,
+      "file": "8316.webp",
+      "fingerprint": "34eb339db192ef531d6f10eedeceb21220c770097dd92f8124ac0f2bfa7de647",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14178,
+        "exit": 0,
+        "peakRssBytes": 229703680,
+        "elapsedMillis": 1312,
+        "stdoutSha256": "f9cccab7c04b2ec4dd5e469634ac394e8bda5c2b8352e12b9aed583ed7ca21a5",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14188,
+        "exit": 0,
+        "peakRssBytes": 226623488,
+        "elapsedMillis": 1298,
+        "stdoutSha256": "f9cccab7c04b2ec4dd5e469634ac394e8bda5c2b8352e12b9aed583ed7ca21a5",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "4b19d060e8f53d2b1739a86f44e0c1d7ef0fb43d41d702fe287a55b0f4ee71b9",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "e4364bdd133b25202883402d1b604c17f7bc3ee2dd5d9c982fee00f4df13aca6"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "09ffb290747e65e3b6c706876019a0e45fa6c9cd33a5d56e62e263574ab22e42",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b",
+        "status": "VERIFIED"
+      },
+      "sha256": "4b19d060e8f53d2b1739a86f44e0c1d7ef0fb43d41d702fe287a55b0f4ee71b9",
+      "sourceSha256": "dad6414ae8bc3bdce7660587e5023c0317da7b5401879df852362fba02107d4b"
+    },
+    {
+      "assetId": 8318,
+      "bytes": 3225218,
+      "file": "8318.webp",
+      "fingerprint": "cd0e0bf5670d4bb8b9ba217cc058aac9a46a687def36ecbf7e62d72fc599302d",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14189,
+        "exit": 0,
+        "peakRssBytes": 227213312,
+        "elapsedMillis": 1286,
+        "stdoutSha256": "08a382093d492cff565d5877d1d630347847d5b7b15d5e3a411336446bc981ec",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14192,
+        "exit": 0,
+        "peakRssBytes": 226082816,
+        "elapsedMillis": 1306,
+        "stdoutSha256": "08a382093d492cff565d5877d1d630347847d5b7b15d5e3a411336446bc981ec",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "6f64b33ccbe197780627d3cd9b89b07970b229252ce7e81cc813804f3edf1cc4",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "ef55e4887ccc07fe5d397ddfd50c4e75f157c3ed2f8ff2689b7109def3e99b98"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "99f019825b8586c226a577df2ab79f2f9de1ff4331c1f19226bd9de126c146c7",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c",
+        "status": "VERIFIED"
+      },
+      "sha256": "6f64b33ccbe197780627d3cd9b89b07970b229252ce7e81cc813804f3edf1cc4",
+      "sourceSha256": "dc8346ee377a5ffe6f967423c96a43e4e03a3a5a32a4dcf298e7a9bbb559de3c"
+    },
+    {
+      "assetId": 8320,
+      "bytes": 3229462,
+      "file": "8320.webp",
+      "fingerprint": "cce5b13373e7276bc01ad5229f2780c0192a41cdd47cd21b71a5704a7253c018",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14307,
+        "exit": 0,
+        "peakRssBytes": 226197504,
+        "elapsedMillis": 1382,
+        "stdoutSha256": "8334923be60a5efb2469b1c60672cf3b7cb9846fdd995ef7b76ffb6d56ab752e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14308,
+        "exit": 0,
+        "peakRssBytes": 228769792,
+        "elapsedMillis": 1303,
+        "stdoutSha256": "8334923be60a5efb2469b1c60672cf3b7cb9846fdd995ef7b76ffb6d56ab752e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "7753b45d033779babb53879a6270a2352e1b97c31415d981cac5a7d40358d788",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "18642b3becaffef3312ebfd2daec7fa2f16244d40d54d43ae3123fd7c6a5546a"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "c185a2582783a10ccd8f9bc8d8d8352eae3af8275595d481fbbe5b6c825c9162",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab",
+        "status": "VERIFIED"
+      },
+      "sha256": "7753b45d033779babb53879a6270a2352e1b97c31415d981cac5a7d40358d788",
+      "sourceSha256": "c52e922fcefa2b7a3a582230ce02b89f28d2acedd0817d9aa1831b5cbc82ceab"
+    },
+    {
+      "assetId": 8322,
+      "bytes": 3629490,
+      "file": "8322.webp",
+      "fingerprint": "e44844691fe2d2690a42a19f134bb17d4a9c1bf8f1fba237962211a70e4e92a1",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14310,
+        "exit": 0,
+        "peakRssBytes": 234045440,
+        "elapsedMillis": 1402,
+        "stdoutSha256": "b5d15ec390442d1f14554b324331d86d7621d710a0a3f7beecaa55e54e285019",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14320,
+        "exit": 0,
+        "peakRssBytes": 233996288,
+        "elapsedMillis": 1394,
+        "stdoutSha256": "b5d15ec390442d1f14554b324331d86d7621d710a0a3f7beecaa55e54e285019",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "e15c319a3e9a86e546e6e9c1db3ab7f7700800c9dd450672edbe028355975cb0",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 842,
+            "present": true,
+            "sha256": "effb79e1b3e59771561abc030afe33599793e761b0752a6fdf816cad7307c44d"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "3922ff11d1e40a8ce76bc8ed8a3f1c4773f6e73080483079bac1fccf03ab9d1e",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb",
+        "status": "VERIFIED"
+      },
+      "sha256": "e15c319a3e9a86e546e6e9c1db3ab7f7700800c9dd450672edbe028355975cb0",
+      "sourceSha256": "b57f5c5ed358c2ef2e448aadcd4dd418a56671feff3b350a3099b15699d4fcbb"
+    },
+    {
+      "assetId": 8324,
+      "bytes": 2520516,
+      "file": "8324.webp",
+      "fingerprint": "cbbe12a67b767f8b1c5b7e5b0dd46348d61cf2ff0d39b5ff2d36224c0e33fc8a",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14322,
+        "exit": 0,
+        "peakRssBytes": 220217344,
+        "elapsedMillis": 1186,
+        "stdoutSha256": "96e2da95d607e986ccaaceeb17eb4c784013fc1deb8fe0b1c4b5ca9902bff4a7",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14324,
+        "exit": 0,
+        "peakRssBytes": 221528064,
+        "elapsedMillis": 1246,
+        "stdoutSha256": "96e2da95d607e986ccaaceeb17eb4c784013fc1deb8fe0b1c4b5ca9902bff4a7",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "8eb5d1d4c20290304588b0f8f29a35047d0bfbdff7bbb49440eb19eba4835ea6",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "7e03405d5122d4dd70b25341f185245d0f91436eb80f6abc17ba9df7fb997c1c"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "cace7d09ca06a8e9903617ffb7846c3c3f0b0c51c226660ce2602898ed31d860",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c",
+        "status": "VERIFIED"
+      },
+      "sha256": "8eb5d1d4c20290304588b0f8f29a35047d0bfbdff7bbb49440eb19eba4835ea6",
+      "sourceSha256": "781999d5fb5cfe479786653b78640206104a91c80e6f54759e7665457a88562c"
+    },
+    {
+      "assetId": 8326,
+      "bytes": 2962204,
+      "file": "8326.webp",
+      "fingerprint": "801307c0408b5599763f39f27cc11cf5c616213906b810453916faaaae518bb6",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14334,
+        "exit": 0,
+        "peakRssBytes": 228835328,
+        "elapsedMillis": 1316,
+        "stdoutSha256": "be8a660a1e3ee6493c942dd0b896e3fb091d9c3125980d56c36829a36e75ad46",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14441,
+        "exit": 0,
+        "peakRssBytes": 227966976,
+        "elapsedMillis": 1252,
+        "stdoutSha256": "be8a660a1e3ee6493c942dd0b896e3fb091d9c3125980d56c36829a36e75ad46",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "7298325dbcf36272e0d8140a962ef95c572abf36366d5035c3cd381d7cee3e40",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "e10d0007d333823947651f5fef9fe7dc7bce8a9746f9e72725a97835a0d9bae0"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "210d061e206bc5bf5a00d090cf81477aa818bd1e574d72ad7354e80ef03566fc",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c",
+        "status": "VERIFIED"
+      },
+      "sha256": "7298325dbcf36272e0d8140a962ef95c572abf36366d5035c3cd381d7cee3e40",
+      "sourceSha256": "678132a37e6c6384633629e4144013844eac82c0bb1ed2e5ccdc85c3c4e26f6c"
+    },
+    {
+      "assetId": 8328,
+      "bytes": 2652386,
+      "file": "8328.webp",
+      "fingerprint": "aedfa5f197ef325b92c4c2b7b4b50889eb97c91e5419ae336e3c137b4478a3cd",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14443,
+        "exit": 0,
+        "peakRssBytes": 226312192,
+        "elapsedMillis": 1319,
+        "stdoutSha256": "ea4945b85b5bbc7ce0660ee8f63a8e9a30f39030daa26dfd18c707a0b122997c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14453,
+        "exit": 0,
+        "peakRssBytes": 225755136,
+        "elapsedMillis": 1303,
+        "stdoutSha256": "ea4945b85b5bbc7ce0660ee8f63a8e9a30f39030daa26dfd18c707a0b122997c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "8876041334ede777efaa8fcbb0a7284a75fbe2c52c57d30a8fc2990cd82d2543",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "0fff97fbe35dc040572cd449af9880ea56263e04dbf3d92f22babc81d6e4b909"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "bc7866e6893b86f218c278fcfd1306ca65b1bdfe661bb57a7e2dc80be2f5075b",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed",
+        "status": "VERIFIED"
+      },
+      "sha256": "8876041334ede777efaa8fcbb0a7284a75fbe2c52c57d30a8fc2990cd82d2543",
+      "sourceSha256": "be135a8d0aeb5ac25d084df00868c8b46b63c24810c3173a1f1e554475c651ed"
+    },
+    {
+      "assetId": 8330,
+      "bytes": 2620334,
+      "file": "8330.webp",
+      "fingerprint": "2a288d6fc459179a3ddf10a255991d642ae06b790eccc655a66522ce1f4d974c",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14454,
+        "exit": 0,
+        "peakRssBytes": 219791360,
+        "elapsedMillis": 1311,
+        "stdoutSha256": "f6958eafd28035efa3c6c65a254930888bba7c05a1c1adda93bf84347b21cbb3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14456,
+        "exit": 0,
+        "peakRssBytes": 220233728,
+        "elapsedMillis": 1309,
+        "stdoutSha256": "f6958eafd28035efa3c6c65a254930888bba7c05a1c1adda93bf84347b21cbb3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "ff48747e642d11a89fabe6fcafc9a40791f5d603886c03c3ace4be4f3cfd24a5",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "2f29803fe4a403c3916a47e4c4aa082d64207ba5bd14bb4ac109c08ec72b06ef"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "6cafd916f538486088761231c9ef1de0ab08c117aeb4e87e28ee70772d2c00af",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1",
+        "status": "VERIFIED"
+      },
+      "sha256": "ff48747e642d11a89fabe6fcafc9a40791f5d603886c03c3ace4be4f3cfd24a5",
+      "sourceSha256": "14a698187aa45e040ee1da60e98d0ec639b840139667e2b6ffb7ec178c49eda1"
+    },
+    {
+      "assetId": 8332,
+      "bytes": 2748312,
+      "file": "8332.webp",
+      "fingerprint": "7f4310db14ba1bc13edc401c5b49a346fd4e6afb4431f8e92fe2a17178d845f4",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14466,
+        "exit": 0,
+        "peakRssBytes": 227377152,
+        "elapsedMillis": 1352,
+        "stdoutSha256": "dec06171d9aeb23b45f32cc3bd5011c7e37e5672a72d6e47b561eefbf1b2646e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14468,
+        "exit": 0,
+        "peakRssBytes": 225116160,
+        "elapsedMillis": 1364,
+        "stdoutSha256": "dec06171d9aeb23b45f32cc3bd5011c7e37e5672a72d6e47b561eefbf1b2646e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "b265869f0092f13f58f4b08f1540baef3e3b5127ff310dfdb8174ca1329c56e5",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "935ec29d17f26d84e7c0d8bfc94a57d15d4e36e2561458c5801b144baecf9b5c"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "b128d181202adf35b7d31584d3725c39af02581f5532acf0cb094b0ee159491c",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e",
+        "status": "VERIFIED"
+      },
+      "sha256": "b265869f0092f13f58f4b08f1540baef3e3b5127ff310dfdb8174ca1329c56e5",
+      "sourceSha256": "7dc97af4b9ba1a33f51743b1fc9f1250834560d644db42c161b0f30d17b1531e"
+    },
+    {
+      "assetId": 8334,
+      "bytes": 3743118,
+      "file": "8334.webp",
+      "fingerprint": "d7cd20737502567048c73bf6f26cc11ea0cc6ef318c9e7758c3aa3a0b2f9f0cb",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14470,
+        "exit": 0,
+        "peakRssBytes": 235192320,
+        "elapsedMillis": 1454,
+        "stdoutSha256": "b53329bac0ba39c5cef77e2d3e15321a5be24f16a5ea048c7d34bee2c4204ad5",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14586,
+        "exit": 0,
+        "peakRssBytes": 231964672,
+        "elapsedMillis": 1418,
+        "stdoutSha256": "b53329bac0ba39c5cef77e2d3e15321a5be24f16a5ea048c7d34bee2c4204ad5",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "342e2865d09df103619993d95b0cb913444a53969d58e340246194f85fa86fd3",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "3090fc2e892b9e87aa6347494a16eb83597cc7d7941042d2800c743b2c6b4e00"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "1980d0aa196522a3339afcf83a968b9e6cb6999c4a3b03a8d2e9a644d34f7525",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98",
+        "status": "VERIFIED"
+      },
+      "sha256": "342e2865d09df103619993d95b0cb913444a53969d58e340246194f85fa86fd3",
+      "sourceSha256": "3d43cb3656c1b52216fff78e290f975fa055d221858f8dd857af3e433d782c98"
+    },
+    {
+      "assetId": 8336,
+      "bytes": 2676736,
+      "file": "8336.webp",
+      "fingerprint": "bb91683588a4caa16373610abe074038ba7df480008107f07fd2345e727cc9b4",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14587,
+        "exit": 0,
+        "peakRssBytes": 226967552,
+        "elapsedMillis": 1258,
+        "stdoutSha256": "6540e72c88be5e36b4823f852b13631661f1e6d3931efb2f2d335551e8f68c6d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14589,
+        "exit": 0,
+        "peakRssBytes": 225738752,
+        "elapsedMillis": 1234,
+        "stdoutSha256": "6540e72c88be5e36b4823f852b13631661f1e6d3931efb2f2d335551e8f68c6d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "2b44546f0a73e35c79ac836ce0a824531e816000d0b70b810dc35bdd5e7d280b",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "59d0ca23f90a5f86f8510db32c2ef389b886592d5396f68f2618491bdc005d27"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "93b128a9f1b9c83390c83f2d2986129fe178c70fc645e4e7b3d1b21762e47e66",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025",
+        "status": "VERIFIED"
+      },
+      "sha256": "2b44546f0a73e35c79ac836ce0a824531e816000d0b70b810dc35bdd5e7d280b",
+      "sourceSha256": "d31de3490e8111297eb0b52581d3430a984872cfe488c5faa16a437ce23b4025"
+    },
+    {
+      "assetId": 8338,
+      "bytes": 2605734,
+      "file": "8338.webp",
+      "fingerprint": "c8e916c6c7f11d1f29176a9c3ebb2201b257c5b6f546e3494a3ea74a1de66d0e",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14590,
+        "exit": 0,
+        "peakRssBytes": 223248384,
+        "elapsedMillis": 1300,
+        "stdoutSha256": "4d232ede30cf8fd330c3bbe94d343d46afaa84a69ac47a06037283f3c71da28f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14600,
+        "exit": 0,
+        "peakRssBytes": 220741632,
+        "elapsedMillis": 1347,
+        "stdoutSha256": "4d232ede30cf8fd330c3bbe94d343d46afaa84a69ac47a06037283f3c71da28f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "a617407cc23f7abc5fd8b07b4533dafb6e6b277ed710a4eb3184000efd8c3c53",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "c6a7666fb776e9f007ffd4845187bef4a84621119f92393deae4f0c53f81e758"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "4e93452a172e79c03320c0e97d674d06fc8bd48cf11ff9f9078ddeebaf1ac4e1",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07",
+        "status": "VERIFIED"
+      },
+      "sha256": "a617407cc23f7abc5fd8b07b4533dafb6e6b277ed710a4eb3184000efd8c3c53",
+      "sourceSha256": "c9a14b33a6968c403a04c5ff9ad641c9f044f69f7121c0299e11eba77f8cdf07"
+    },
+    {
+      "assetId": 8340,
+      "bytes": 3335896,
+      "file": "8340.webp",
+      "fingerprint": "b4a67cb4c7a886ca4ecd36fde7d99748b0cd3bbb91cea22e4985ceb3259f2323",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14602,
+        "exit": 0,
+        "peakRssBytes": 233160704,
+        "elapsedMillis": 1394,
+        "stdoutSha256": "248463375919ae739a5f1602df3c1ab17b4bccd5c0f2737d274b3645716b0b83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14603,
+        "exit": 0,
+        "peakRssBytes": 233570304,
+        "elapsedMillis": 1361,
+        "stdoutSha256": "248463375919ae739a5f1602df3c1ab17b4bccd5c0f2737d274b3645716b0b83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "17c204204ba14b117a135f75981d5cc99853352a24b37e0f06c6c96edb4e89a6",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "94cf76a9392fb78e8f9468208337a02154272bc1c66c5ad4baf0e694d85294e2"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "a59d6e8794ac99fa364f0cb3beee6d4fd77acb8df06f02e6c07b2e286f78cf9d",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909",
+        "status": "VERIFIED"
+      },
+      "sha256": "17c204204ba14b117a135f75981d5cc99853352a24b37e0f06c6c96edb4e89a6",
+      "sourceSha256": "3f4bd6f4cb127f93124802861e48ba03a278c04f8a1698665cd133ef1b6a4909"
+    },
+    {
+      "assetId": 8342,
+      "bytes": 2884362,
+      "file": "8342.webp",
+      "fingerprint": "e12ad4486f3a3cd1ce42336bd25d1c0f2d721bcd3e8769ab547011c43b2d7019",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14720,
+        "exit": 0,
+        "peakRssBytes": 223002624,
+        "elapsedMillis": 1292,
+        "stdoutSha256": "8f13ac98d98dfc5e5e9968785e8e5deb951e49768f0c47f1dc06a8214377749b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14722,
+        "exit": 0,
+        "peakRssBytes": 223395840,
+        "elapsedMillis": 1310,
+        "stdoutSha256": "8f13ac98d98dfc5e5e9968785e8e5deb951e49768f0c47f1dc06a8214377749b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "432363670ad5e7f341cb7bee1b17f484b4ce1ee65a744e761667168d0fe30f00",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "bb61cb836b5ff71e933436e685fb5bd6e9036d6208a2d2e776d9da9e0ba5af1e"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "ddf08be107cc975d93ec22005d14be3ea09649191e49976cbce24bdfb766ca7e",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513",
+        "status": "VERIFIED"
+      },
+      "sha256": "432363670ad5e7f341cb7bee1b17f484b4ce1ee65a744e761667168d0fe30f00",
+      "sourceSha256": "3f9119e2f3757a6c02a18d1cd7bc9bf2f6ffd17458c52de0d0f9ec6b09078513"
+    },
+    {
+      "assetId": 8344,
+      "bytes": 2924486,
+      "file": "8344.webp",
+      "fingerprint": "dbc786ac891d39434d8b2ef7f3dbc6544c45a0affe07b0c31f5d883ed7bb9729",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14723,
+        "exit": 0,
+        "peakRssBytes": 222576640,
+        "elapsedMillis": 1338,
+        "stdoutSha256": "be02de47520bc3484893f937fc578b78007fd542531262e38fa1f8c872923d1c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14733,
+        "exit": 0,
+        "peakRssBytes": 226738176,
+        "elapsedMillis": 1360,
+        "stdoutSha256": "be02de47520bc3484893f937fc578b78007fd542531262e38fa1f8c872923d1c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "492c874b89d0be53413b9d58ec716f39f495308ac023b2d0e2634c5e4de81b1a",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "ac5b40d1266ffca22c094ef84a3908d0da338c5e2d16556a2d1140f85907ab25"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "4986e6b3b2595a5ada024c562a66c20da5f35809d60913dca3187de49c2bf589",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c",
+        "status": "VERIFIED"
+      },
+      "sha256": "492c874b89d0be53413b9d58ec716f39f495308ac023b2d0e2634c5e4de81b1a",
+      "sourceSha256": "2352ff7be22b0cd0acfd75b9212b992366394a2a005ec9d69bf3c471a712d08c"
+    },
+    {
+      "assetId": 8346,
+      "bytes": 1734806,
+      "file": "8346.webp",
+      "fingerprint": "e5f1edfe15185047d2af02c736b5f33112d12ce2b92f4cb6d4a205272d9b4438",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14735,
+        "exit": 0,
+        "peakRssBytes": 236093440,
+        "elapsedMillis": 1252,
+        "stdoutSha256": "995b6c6c27d2c88a6cfbf43c9cc40c401aeef09ae6eb89317926832b5166f836",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14736,
+        "exit": 0,
+        "peakRssBytes": 236568576,
+        "elapsedMillis": 1185,
+        "stdoutSha256": "995b6c6c27d2c88a6cfbf43c9cc40c401aeef09ae6eb89317926832b5166f836",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "3fea4c52741dd0827194958c4335f25e97e55262f8be16b71f59ee7832240c55",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "0219cbdcf4f4dfa2d4c0fcd959c47f1e7a57a03b11a655ed61304ff2586e932f"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "ff84bc69ca866e50d0b53e24c1674429fc31c372277cc481f92e43c58b8986ca",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1",
+        "status": "VERIFIED"
+      },
+      "sha256": "3fea4c52741dd0827194958c4335f25e97e55262f8be16b71f59ee7832240c55",
+      "sourceSha256": "e2e08697d71fe8bb290da47e49d283021d63848e8625033c46dbb66a7a5282e1"
+    },
+    {
+      "assetId": 8348,
+      "bytes": 3436684,
+      "file": "8348.webp",
+      "fingerprint": "a3c541cdfc0ebd4208feb6458140bea60bf5443b77361f5b47dce88f25fe3111",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14746,
+        "exit": 0,
+        "peakRssBytes": 230408192,
+        "elapsedMillis": 1384,
+        "stdoutSha256": "cbbc0003695fb880bcad4a5711a8a6cccce83e62a9427dceb6a6fb32ff028aab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14749,
+        "exit": 0,
+        "peakRssBytes": 232833024,
+        "elapsedMillis": 1394,
+        "stdoutSha256": "cbbc0003695fb880bcad4a5711a8a6cccce83e62a9427dceb6a6fb32ff028aab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "7af3d15ae4c8663ee43304cd1380782cd3d1f7630b81b90881e5d9a66ae60f65",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "6acea6008c9795b62f274c1c5b1a33038c70cf5a67624ed2caeb257e749e4cc8"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "39e4d7055e61e971aae5de78b50ec58450b3103c8fa0b04a3a3edb54a9cf405a",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50",
+        "status": "VERIFIED"
+      },
+      "sha256": "7af3d15ae4c8663ee43304cd1380782cd3d1f7630b81b90881e5d9a66ae60f65",
+      "sourceSha256": "ba014295f3c995f27e21517dd5b5ed2c033f7c95a0bc69594b26dfae0ced7e50"
+    },
+    {
+      "assetId": 8350,
+      "bytes": 3107234,
+      "file": "8350.webp",
+      "fingerprint": "3954f7affd46ccaea4e1d07941752709aba02f5f2aff17ce48d8c202b0a0ff17",
+      "fullRawRgbAndMetadataEquality": true,
+      "inputProcess": {
+        "pid": 14856,
+        "exit": 0,
+        "peakRssBytes": 228065280,
+        "elapsedMillis": 1284,
+        "stdoutSha256": "543ac2d55bdfe951499bc30566e3ae4cd0df1ea8598a717668e77116b66a9b00",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mime": "image/webp",
+      "rereadProcess": {
+        "pid": 14867,
+        "exit": 0,
+        "peakRssBytes": 229572608,
+        "elapsedMillis": 1316,
+        "stdoutSha256": "543ac2d55bdfe951499bc30566e3ae4cd0df1ea8598a717668e77116b66a9b00",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rereadProof": {
+        "candidateReader": "com.twelvemonkeys.imageio.plugins.webp.WebPImageReader",
+        "candidateSha256": "142207dacf8d412f1da5f8457291ec80b102256ab643a5a1fa78164a9dd9fc34",
+        "effectiveRuntime": {
+          "activeProcessors": 1,
+          "directMemoryMiB": 32,
+          "maxHeapBytes": 259522560
+        },
+        "existingP2Admission": {
+          "diagnostic": "PNG_OR_JPEG_REQUIRED",
+          "status": "REJECTED"
+        },
+        "metadata": {
+          "icc": {
+            "bytes": 536,
+            "present": true,
+            "sha256": "20789fdbea9835251a4f0796c8bf45cbd964896044886540da21ffc7457af0ab"
+          },
+          "normalizedTiff": {
+            "bytes": 120,
+            "present": true,
+            "sha256": "29652d0c3991946be73ea69a92f01bb7bbffac72df3181e4ae02a15644c75c65"
+          },
+          "xmp": {
+            "bytes": 844,
+            "present": true,
+            "sha256": "6be40a032f33e60f3a84f14654bdd4754375640bffa0dc47af483ab23ddc6acb"
+          }
+        },
+        "rgbBytesCompared": 14267808,
+        "rgbSha256": "88b4a3e101b0cd3d8fc756d4b12716b6a26509b256f837ed6795d7365c475411",
+        "sourceReader": "com.sun.imageio.plugins.png.PNGImageReader",
+        "sourceSha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826",
+        "status": "VERIFIED"
+      },
+      "sha256": "142207dacf8d412f1da5f8457291ec80b102256ab643a5a1fa78164a9dd9fc34",
+      "sourceSha256": "a8ebc9e038fb1ff0a082cf1182b6956ef4c72d2cbae1005f079d45e3431b8826"
+    }
+  ],
+  "tests": {
+    "profile": {
+      "suites": [
+        {
+          "class": "com.tellpal.v2.asset.reading.p5g.P5gCodecTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7bfa1a7d01cbed7eeaf66c36a0d1b9a22ba8f2d6db5b26c202a3b07f7c873e43",
+          "testMethods": [
+            "trailingBytesInsideVp8lAreRefusedDespiteValidRiffAndChunkLengths",
+            "exifPrefixOnlyIsNormalizedAndEveryOrientationIsRefused",
+            "mimeAndTruncationAndTrailingAreRefused",
+            "p3SentinelPreservesAllRawSamplesAndDefaultReadChangesThem",
+            "rgbIccXmpAndTiffMismatchesAreDistinctFailures",
+            "pixelEncodedAndMetadataLimitsAreRefused",
+            "actualTransparentRasterIsRefused",
+            "currentP2StillRejectsP3PngAndWebp",
+            "lossyAnimationAlphaVersionAndCorruptHeaderAreRefusedBeforeDecode"
+          ]
+        },
+        {
+          "class": "com.tellpal.v2.asset.reading.p5g.P5gCorpusTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "bb22681bd9b5535fd9408036cc3cb0290c55c5223ea03ff8023c5fc2d0eb2782",
+          "testMethods": [
+            "all41PinnedFilesPassIndependentChildRereadAndFullPreservation"
+          ]
+        },
+        {
+          "class": "com.tellpal.v2.asset.reading.p5g.P5gGateTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "589da400da373426c54d862f08efcd0e9a695a9ac147b95d9e1d33f74948f153",
+          "testMethods": [
+            "closedPropertyFailsBeforeCodecResolution",
+            "allLocalSettingsAreBoundedAndDoNotAdmitProduction",
+            "exactOperationalBoundariesRejectOnlyAboveLimit"
+          ]
+        },
+        {
+          "class": "com.tellpal.v2.asset.reading.p5g.P5gProcessTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "eb420e762e711f408b278dd7fb49e7d3ce1837a5455d1128499d143948263b85",
+          "testMethods": [
+            "nativeRssIsPositiveAndUnavailablePidDoesNotInventMemory",
+            "interruptWaitsForExitAndCapacityIsSingleJob",
+            "realChildRejectsCorrectPinsWithDifferentRgbOrMetadata",
+            "realNonzeroAndMissingResponseCannotSucceed",
+            "realTimeoutKillsChildAndWaitsForExit",
+            "failureAfterCreateHasDiagnosticAndNoCorpusSuccess",
+            "reportPinAndOutputCollisionFailClosed",
+            "correctCopyIsImmutableAndRereadRejectsChangedOrMissingOutputAndWrongPin",
+            "effectiveBudgetsCannotExceedProfile",
+            "actualNetworkIsDeniedAndLogsAreCapped",
+            "changedProtectionPinOrMembershipCannotCreateOutput",
+            "changedProtectionAfterStartPreventsSuccessManifest",
+            "realRssLimitKillsChildAndWaitsForExit"
+          ]
+        }
+      ],
+      "count": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "normalProfileRegression": {
+      "suites": [
+        {
+          "class": "com.tellpal.v2.asset.reading.P5fLocalCompatibilityProbeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "f04d9fe7c7ee87baea4a4906cf0d4025ef800fb07457ab3ff3e7033c379bd29c",
+          "testMethods": [
+            "realInspectorRejectsWebpBeforeAnyProviderAdmission",
+            "wrongHashAndLengthStopBeforeInspector",
+            "localTestProfileCoversRealImageWithoutClaimingProductionAdmission",
+            "realInspectorAcceptsSupportedOpaqueRgbPng"
+          ]
+        },
+        {
+          "class": "com.tellpal.v2.asset.reading.ReadingImageProcessTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1ea21ffda7e0e0a2365c7bfc1a222194b480b1138472c5472129fdd0fad93872",
+          "testMethods": [
+            "persistedWrongMimeShaDimensionsAndEncodedLimitCannotVerify",
+            "parentHeapAdmissionRejectsUnboundedReservationBeforeChildLaunch",
+            "storageRejectsWrongVersionMissingTruncatedAndTransactionIo",
+            "validCrcAnimationColorAndOversizedMetadataAreExplicitlyRejected",
+            "canonicalFramingAndRoleSpecificProfileIdentity"
+          ]
+        },
+        {
+          "class": "com.tellpal.v2.asset.reading.p5g.P5gGateTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "6a0d6b133716b8007e41b388b1a7f5f37d7fc27c91524cbf9baa1856a0d5c74a",
+          "testMethods": [
+            "closedPropertyFailsBeforeCodecResolution",
+            "allLocalSettingsAreBoundedAndDoNotAdmitProduction",
+            "exactOperationalBoundariesRejectOnlyAboveLimit"
+          ]
+        }
+      ],
+      "count": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "processSummary": {
+    "children": 82,
+    "sampledMaxRssBytes": 236568576,
+    "maxChildElapsedMillis": 1454,
+    "rssIsSampledNotTruePeak": true
+  },
+  "cliExecution": {
+    "exit": 0,
+    "elapsedSeconds": 79.29792145799729,
+    "parentAndChildNetworkDenied": true,
+    "manifest": true
+  },
+  "privateArtifactsSha256": {
+    "review-final-cli-command.private.json": "7b3934760fa60ebf87d40d75cd0a432f71c9f79b0d656fe08a97f454059f904e",
+    "review-final-cli-run.private.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "review-final-profile-command.private.json": "7f6a0035b3d24c62bc307a4384537b05e72b8c9088d4485f750403b2a9bf154c",
+    "review-final-profile-tests.private.log": "0eb8ea5bfa228df2570e166cb3723f0ed53fa113b644161c4dc14a12e70063c1",
+    "review-final-regression-command.private.json": "f7e771401e1d4f671e5925df2520327c94b53b8df0f6f0703544b818842a97cf",
+    "review-final-regression-tests.private.log": "04c1ce02282b370dac2b155c55075bc880406cb901c34c4c45bc967cbe622a68"
+  },
+  "review": {
+    "layers": 3,
+    "actionableFindings": 5,
+    "patchedFindings": 5,
+    "unresolvedFindings": 0
+  }
+}
