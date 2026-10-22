@@ -1,0 +1,100 @@
+{
+  "allLaunchedBeforeTriage": true,
+  "layers": [
+    "blind",
+    "edge",
+    "verification"
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "category": "patch",
+      "area": "Cubit load/cleanup",
+      "problem": "Anında suspend/close sırasında _work ile dinamik _cleanup birbirini bekleyebilir.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "R2",
+      "severity": "high",
+      "category": "patch",
+      "area": "Widget lifecycle",
+      "problem": "Arka plandaki slot/DPR değişimi yeni admission başlatabilir.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "R3",
+      "severity": "high",
+      "category": "patch",
+      "area": "Cubit status ownership",
+      "problem": "Bekleyen status gerçek settlement öncesinde permit bırakılabilir.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "R4",
+      "severity": "medium",
+      "category": "patch",
+      "area": "Cubit settlement recovery",
+      "problem": "Try dışı cleanup/settlement hatası sonraki retry/close'u zehirleyebilir.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "R5",
+      "severity": "medium",
+      "category": "patch",
+      "area": "App-scope permit transition",
+      "problem": "Eski route cleanup sırasında yeni route anında kapasite hatasına düşer.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "R6",
+      "severity": "high",
+      "category": "patch",
+      "area": "Rendition delegate ownership",
+      "problem": "Dış header timeout sonrası delegate byte future gerçek tamamlanmadan sahiplik bırakılabilir.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "V1",
+      "severity": "medium",
+      "category": "patch",
+      "area": "Status refusal verification",
+      "problem": "Yüklü widget'ta status reddi cleanup testi eksik.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "V2",
+      "severity": "medium",
+      "category": "patch",
+      "area": "Normal app root verification",
+      "problem": "Gerçek opt-in LibraryApp wiring henüz testte çalışmıyor.",
+      "resolution": "Onaylı Paket 3 gerçek backend→normal LibraryApp/detail kabulünde kapatılacak; bağımsız fake root testi çoğaltılmayacak.",
+      "status": "PACKAGE3_REQUIRED"
+    },
+    {
+      "id": "V3",
+      "severity": "medium",
+      "category": "patch",
+      "area": "JPEG exact-copy invariant",
+      "problem": "Geçerli digest altında source SHA/byte eşitliği ret testi eksik.",
+      "status": "PATCHED_AND_TESTED"
+    },
+    {
+      "id": "V4",
+      "severity": "high",
+      "category": "patch",
+      "area": "Real HttpClient cancellation",
+      "problem": "Header/body stall için gerçek timeout/external cancellation dalı testi eksik.",
+      "status": "PATCHED_AND_TESTED"
+    }
+  ],
+  "patchImplementer": "/root/package2_implementation",
+  "stage": "patching",
+  "status": "P2_PATCHES_PASS_V2_PACKAGE3",
+  "specFrozenChanged": false,
+  "loopbackRequired": false,
+  "reason": "Bulgular açık niyet içindeki yerel uygulama ve doğrulama hatalarıdır; yeni ürün veya mimari kararı gerekmez.",
+  "rootPatchReread": "Captured cleanup, foreground guard, pending status/delegate ve süreli permit kodu bağımsız okundu.",
+  "finalTargetedPassed": 36,
+  "analyze": "PASS"
+}

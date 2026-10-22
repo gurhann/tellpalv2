@@ -148,7 +148,7 @@ Her modül mümkün olduğunca şu iç yapıyı izler:
 | `content` | İçerik yaşam döngüsü, yerelleştirmeler, story sayfaları, contributor bağları, ninni playback/enstrüman seçimleri, ücretsiz erişim kuralı | `contents`, `content_localizations`, `story_pages`, `story_page_localizations`, `contributors`, `content_contributors`, `content_free_access`, `lullaby_playbacks`, `instrument_catalogs`, `instrument_catalog_localizations`, `lullaby_instruments` | `shared`, `asset.api`, `category.api` |
 | `category` | Kategori yaşam döngüsü ve dil bazlı kürasyon | `categories`, `category_localizations`, `category_contents` | `shared`, `content.api`, `asset.api` |
 | `asset` | Medya asset kaydı, Firebase Storage referansları, işleme/paketleme pipeline'ı | `media_assets`, `asset_processing` benzeri işlem kayıtları | `shared`, `content.api` |
-| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api`, `category.api`, yalnız local/test P4a2 için `content.api` (ADR-0024) |
+| `user` | Mobil kullanıcı ve profil yönetimi, Firebase UID eşlemesi | `app_users`, `user_profiles` | `shared`, `asset.api`, `category.api`, yalnız local/test QA ve normal görsel tüketicisi için `content.api` (ADR-0024) |
 | `event` | İçerik ve uygulama event ingest, idempotency, batch sync | `content_events`, `app_events` | `shared`, `user.api`, `content.api` |
 | `purchase` | Ürün kataloğu, RevenueCat event ingest, attribution snapshot | `subscription_products`, `purchase_events`, `purchase_context_snapshots`, lookup tabloları | `shared`, `user.api`, `event.api`, `content.api` |
 
@@ -632,3 +632,28 @@ Normal ekranların metadata, provider, ses, prefetch ve cache sahipliği korunur
 Yeni backend modül bağımlılığı veya üretim erişimi açılmaz. Retained LIVE güncel teslimat kimliğidir;
 bekleyen desired onun yerine geçmez. [P4a4 kapsamı](_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md)
 yerel kod/test dilimidir; gerçek #94 auth/storage/cihaz çalışması ve genel tüketici geçişi ayrı kalır.
+
+### Normal local/test okuma görsel tüketicisi: Paket 2 (ADR-0024)
+
+Ayrı `/api/library/reading-images` facade'ı, `user → content::api → asset::api` yönünde
+varsayılan kapalı normal geliştirme teslimatı sağlar. Açık sayısal run/bütçe/lease ayarları ve
+local/test profili zorunludur; prod/production reddedilir. Revoke kontrollü Firebase bearer ve mevcut
+Library allowlist, aktif exact-language ücretsiz STORY ve retained LIVE erişim kesitiyle birleşir.
+Subscriber fixture ve metadata tam medya yetkisi değildir. QA'nın sabit içerik/dil/sayfa/PNG kısıtları
+bu yola taşınmaz; QA davranışı korunur.
+
+Normal byte yolu yalnız doğrulanmış JPEG/PNG/WebP rendition sunar. Hesap, generation, revision,
+manifest digest, job ve rol/sayfa/rendition her isteği bağlar. Storage ve son bearer denetimi etrafında
+DB erişimi tekrar doğrulanır. Ortak tek HTTP permit'i, bounded Tomcat writer, no-store ve kaynak
+sınırları korunur. Yeni source fallback, URL/projection/digest protokolü veya üretim girişi açılmaz.
+
+Mobil normal tüketici, ayrı typed repository/use case/Cubit ve `CachedNetworkImage` ile çalışır.
+`LibraryImageCache` lifecycle'ı bellek dosyası ve tam bellek metadata repository'siyle kurulur.
+Fresh admission cache/provider'dan önce gelir. App-scope tek sahip metadata/transfer/promotion/
+decode/provider/frame/cache cleanup bitene kadar kapasiteyi tutar. Lease/account/status/route/
+background çizimi kaldırır; retry aynı anchor için fresh admission ister. Detail bağlantısı
+feature bağımsız core capability ile açık opt-in'dir; bağımsız sayfa aynı bileşeni kullanır.
+
+[ADR-0024](be/docs/adr/ADR-0024-reading-image-comparison.md) ve
+[Paket 2 kanıtı](be/docs/evidence/image-package-2/README.md), bu sentetik local/test dilimini
+production/Firebase/cihaz yeterliliğinden ve Paket 3'ün tek backend–mobil kabulünden ayırır.

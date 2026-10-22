@@ -6,6 +6,7 @@ import '../features/library/presentation/cubit/library_cubit.dart';
 import '../core/diagnostics/library_diagnostics.dart';
 import 'package:flutter/foundation.dart';
 import 'library_configuration.dart';
+import 'reading_image_consumer_configuration.dart';
 import 'router.dart';
 import 'injection.dart';
 import '../features/story_detail/presentation/cubit/story_detail_cubit.dart';
@@ -14,9 +15,17 @@ import '../features/library/domain/entity/library_catalog.dart';
 /// Debugger/integration-test injection only. Tokens never enter UI, a file or compile-time defines.
 class LibraryDevHarness {
   static final _configuration = Completer<LibraryConfiguration>();
-  static void install(LibraryConfiguration configuration) {
+  static ReadingImageConsumerConfiguration? _readingImages;
+  static ReadingImageConsumerConfiguration? get readingImages => _readingImages;
+  static void install(
+    LibraryConfiguration configuration, {
+    ReadingImageConsumerConfiguration? readingImages,
+  }) {
     if (kReleaseMode) throw StateError('Development entry is unavailable');
-    if (!_configuration.isCompleted) _configuration.complete(configuration);
+    if (!_configuration.isCompleted) {
+      _readingImages = readingImages;
+      _configuration.complete(configuration);
+    }
   }
 
   static final scaleNotifier = ValueNotifier<double?>(null);

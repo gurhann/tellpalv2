@@ -90,7 +90,12 @@ final class ValidateReadingImageManifest {
         return ReadingImageManifestFailure.profileMismatch;
       }
       if (!_validRaster(rendition.raster) ||
-          rendition.raster.mime != 'image/png') {
+          rendition.raster.mime !=
+              (profile.formatPolicy == 'PNG_FIT'
+                  ? 'image/png'
+                  : entry.source.raster.mime == 'image/jpeg'
+                  ? 'image/jpeg'
+                  : 'image/webp')) {
         return ReadingImageManifestFailure.invalidMetadata;
       }
       final source = entry.source.raster;
@@ -102,7 +107,19 @@ final class ValidateReadingImageManifest {
               rendition.raster.byteSize >= source.byteSize)) {
         return ReadingImageManifestFailure.renditionMismatch;
       }
-      if (!_floorFit(source, rendition.raster, profile)) {
+      if (profile.formatPolicy == 'PRESERVE_JPEG_OR_LOSSLESS_WEBP' &&
+          (!{'image/png', 'image/jpeg'}.contains(source.mime) ||
+              (source.mime == 'image/jpeg' &&
+                  (source.sha256 != rendition.raster.sha256 ||
+                      source.byteSize != rendition.raster.byteSize)))) {
+        return ReadingImageManifestFailure.renditionMismatch;
+      }
+      if (!(profile.formatPolicy == 'PNG_FIT'
+          ? _floorFit(source, rendition.raster, profile)
+          : source.width == rendition.raster.width &&
+                source.height == rendition.raster.height &&
+                source.width <= profile.width &&
+                source.height <= profile.height)) {
         return ReadingImageManifestFailure.geometryMismatch;
       }
     }
@@ -162,7 +179,13 @@ final class ValidateReadingImageManifest {
       _hash(raster.sha256);
 
   bool _validProfile(ReadingImageProfile profile) =>
-      _hash(profile.fingerprint) && profile.width > 0 && profile.height > 0;
+      _hash(profile.fingerprint) &&
+      profile.width > 0 &&
+      profile.height > 0 &&
+      {
+        'PNG_FIT',
+        'PRESERVE_JPEG_OR_LOSSLESS_WEBP',
+      }.contains(profile.formatPolicy);
 
   bool _hash(String value) => RegExp(r'^[0-9a-f]{64}$').hasMatch(value);
 

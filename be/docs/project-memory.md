@@ -142,3 +142,18 @@ Follow root `AGENTS.md` for pre-deploy checks and environment-driven configurati
 - [ADR-0024](adr/ADR-0024-reading-image-comparison.md): yalnız P4a2 local/test girişinde `user → content::api → asset::api` yönü açılır. Gerçek revoke kontrollü bearer ve kanonik QA UID, sunucuda seçilmiş ücretsiz Türkçe iki sayfalı kopyanın retained LIVE'ını doğrular. TR71 kapsam dışıdır. Pinned byte/SHA/MIME/header/tam decode sonrası final DB kontrolü gerekir. `private,no-store`, HTTP body boyunca tek teslimat, restart ile sıfırlanmayan V37 mantıksal auth kontrolü ve storage payload okuması işlem/byte rezervasyonları uygulanır.
 - ADR-0018'in dar QA istisnası: bellek owned raster/codec ve klonlamayan `CustomPainter`/`paintImage`; disk/global ImageCache/precache yoktur. Normal tüketici cache kuralı değişmez. Sayısal run/profil/bütçe yoksa yalnız ağsız geometri modu açılır. Gerçek fixture/bulut çalışması ve fiziksel cihaz kabulü [ayrı kanıttır](evidence/p4-reading-images/verification.md).
 - P4a4: ayrı opt-in QA detail/reader, normal ekranlardan çıkarılan saf `core/presentation` frame’lerini ve mevcut reading-images Cubit/selector/raster hattını kullanır. `app/` parent tek anchor ve seri iş sahibi; child route yalnız ID taşır. Güncel olmayan route seçim/paint yapamaz. Rol/page bağı admitted manifestten gelir; shortage original fallback üretmez. QA ses alanı açıkça kapalıdır; sahte kategori/metadata/grant eklenmez. Normal Library, ses, cache ve prefetch sahipliği korunur. [Onaylı kapsam](../../_bmad-output/implementation-artifacts/spec-p4a4-qa-consumer-delivery.md), gerçek #94 çalışması veya genel tüketici geçişi değildir. Retained LIVE ile yeni desired ayrıdır; eski çalışma pencereleri yeniden kullanılamaz. ADR-0018/0024 istisnası yalnız bu QA sunumunu kapsar.
+
+## Normal local/test okuma görsel tüketicisi
+
+- [ADR-0024 Paket 2](adr/ADR-0024-reading-image-comparison.md): ayrı ve varsayılan kapalı
+  `/api/library/reading-images` girişi gerçek revoke kontrollü bearer + Library allowlist + exact-language
+  ücretsiz, uygun retained LIVE ister. Hesap ve tam LIVE/seçim kimliği byte/status'a bağlanır.
+  JPEG/PNG/WebP rendition-only teslimat aynı pinned doğrulama, bounded writer ve `private,no-store`
+  sınırlarını kullanır; QA canonical PNG sözleşmesi korunur.
+- Normal Flutter consumer feature-first repository/use case/Cubit ve `CachedNetworkImage` kullanır.
+  Fresh admission warm cache/provider'dan önce gelir. Aynı cache lifecycle'ı yalnız `MemoryFileSystem`
+  ve tam bellek metadata adapter'ı ile kurulur. App-scope tek permit metadata, decode, provider/frame,
+  promotion ve gerçek cleanup bitene kadar tutulur. Lease/status/account/route/background çizimi
+  kaldırır; retry fresh admission ister. Detail opt-in core capability'dir; normal root QA bağımlılığı almaz.
+  [Kabul ve sınırlar](evidence/image-package-2/README.md) yalnız sentetik yerel/test kanıtıdır;
+  production/Firebase/cihaz, Story 1.2 insan kabulü ve Story 1.3/Paket 3 kapıları sürer.

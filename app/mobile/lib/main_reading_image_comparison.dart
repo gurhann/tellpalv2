@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'app/injection.dart';
+import 'app/reading_image_comparison_injection.dart';
 import 'app/reading_image_comparison_app.dart';
 import 'app/reading_image_comparison_configuration.dart';
 

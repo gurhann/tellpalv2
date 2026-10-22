@@ -16,7 +16,7 @@ paketinde tamamlayıp Mobil Epic 1 / Story 1.3’e dönelim. Gerçek okuyucu
 entegrasyonunu ve yayın kabulünü ilgili mobil story’lerin içinde bitirelim.**
 
 Bu plan 2026-10-22 tarihinde kullanıcı tarafından kabul edildi. Paket 1 yerel geliştirme
-kabulünü tamamladı; Paket 2 hazırlanıyor. Paketlerin kabul durumu gerçek sonuçlarla güncellenecek. Planın
+kabulünü tamamladı; Paket 2 de yerel geliştirme kabulünü tamamladı. Paketlerin kabul durumu gerçek sonuçlarla güncellenecek. Planın
 kabulü, canlıya yazma veya dağıtım izni değildir; mobil story durumları değişmedi.
 
 ## 1. Neden plan değişiyor?
@@ -256,11 +256,13 @@ dağıtım onayı verilmedi. Mobil story durumları değişmedi.
 | Paket | Durum | Kalan iş |
 |---|---|---|
 | 1 — Görsel hazırlama | Geliştirme kabulü tamam: 41 dosya, son Linux ARM64 JAR ve 595 çalışan test geçti; beş inceleme bulgusu kapandı | Üretim yeterlilik sınırları aşağıdaki sahipli işlerde korunur |
-| 2 — Ortak mobil görsel katmanı | Kod haritası ve dar sözleşme hazırlandı; uygulama sırada | Normal görsel sözleşmesi ve mevcut detail tüketicisine bağlantı |
+| 2 — Ortak mobil görsel katmanı | Geliştirme kabulü tamam: 603 backend, 654 tam Flutter ve son yamalarla 36 hedefli test geçti | Gerçek normal uygulama root bağlantısı Paket 3 birlikte çalışma kabulünde doğrulanacak |
 | 3 — Tek kabul ve epic'e dönüş | Başlamadı | Backend–mobil birlikte doğrulama ve Story 1.3'e devir |
 
 Paket 1'in sonuçları [tek kanıt kaydında](../../be/docs/evidence/image-package-1/README.md)
-tutulur. Bu durum tablosu üretim etkinleştirmesi veya canlı geçiş onayı değildir.
+tutulur. Paket 2'nin [uygulama sözleşmesi](../implementation-artifacts/spec-image-package-2-consumer.md)
+onaylı kapsamın kod haritasını ve kabul ölçütlerini içerir. Bu durum tablosu üretim
+etkinleştirmesi veya canlı geçiş onayı değildir.
 
 ## 10. Dayanaklar ve değişiklik kontrolü
 

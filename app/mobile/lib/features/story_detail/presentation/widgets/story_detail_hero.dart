@@ -8,6 +8,7 @@ import '../../../../app/library_configuration.dart';
 import '../../../../core/network/story_detail_image_cache.dart';
 import '../../../../core/network/library_image_cache.dart';
 import '../../../../core/theme/library_theme.dart';
+import '../../../../core/presentation/reading_artwork_capability.dart';
 import '../../domain/entity/story_detail.dart';
 import '../cubit/story_detail_cubit.dart';
 import '../cubit/story_detail_state.dart';
@@ -85,6 +86,26 @@ class _StoryDetailHeroState extends State<StoryDetailHero> {
   Widget build(BuildContext context) {
     final state = widget.state, detail = state.detail!, hero = detail.hero;
     final strings = widget.strings;
+    final capability = ReadingArtworkCapability.maybeOf(context);
+    if (capability != null) {
+      return capability.builder(
+        context,
+        ReadingArtworkRequest(
+          contentId: detail.contentId,
+          language: detail.contentLanguage,
+          fit: widget.fit,
+          visible: state.visible,
+          attempt: state.heroAttempt,
+          retryLabel: strings.retryArtwork,
+          onLoaded: () {
+            if (context.mounted) {
+              context.read<StoryDetailCubit>().artworkLoaded(state.heroAttempt);
+            }
+          },
+          onError: () {},
+        ),
+      );
+    }
     if (!state.visible) return const ColoredBox(color: AppColors.placeholder);
     if (hero == null || state.heroStatus == StoryHeroStatus.error) {
       return ColoredBox(

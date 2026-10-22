@@ -9,7 +9,7 @@ part 'reading_image_comparison_router.gr.dart';
 @AutoRouterConfig(
   replaceInRouteName: 'Screen,Route',
   generateForDir: [
-    'lib/features/reading_images',
+    'lib/features/reading_images/presentation',
     'lib/app/reading_image_consumer_qa',
   ],
 )

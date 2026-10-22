@@ -27,6 +27,81 @@ class LibraryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ReadingImagePageScreen]
+class ReadingImagePageRoute extends PageRouteInfo<ReadingImagePageRouteArgs> {
+  ReadingImagePageRoute({
+    Key? key,
+    required int contentId,
+    required String language,
+    required int pageNumber,
+    List<PageRouteInfo>? children,
+  }) : super(
+         ReadingImagePageRoute.name,
+         args: ReadingImagePageRouteArgs(
+           key: key,
+           contentId: contentId,
+           language: language,
+           pageNumber: pageNumber,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'ReadingImagePageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ReadingImagePageRouteArgs>();
+      return ReadingImagePageScreen(
+        key: args.key,
+        contentId: args.contentId,
+        language: args.language,
+        pageNumber: args.pageNumber,
+      );
+    },
+  );
+}
+
+class ReadingImagePageRouteArgs {
+  const ReadingImagePageRouteArgs({
+    this.key,
+    required this.contentId,
+    required this.language,
+    required this.pageNumber,
+  });
+
+  final Key? key;
+
+  final int contentId;
+
+  final String language;
+
+  final int pageNumber;
+
+  @override
+  String toString() {
+    return 'ReadingImagePageRouteArgs{key: $key, contentId: $contentId, language: $language, pageNumber: $pageNumber}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ReadingImagePageRouteArgs) return false;
+    return key == other.key &&
+        contentId == other.contentId &&
+        language == other.language &&
+        pageNumber == other.pageNumber;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      contentId.hashCode ^
+      language.hashCode ^
+      pageNumber.hashCode;
+}
+
+/// generated route for
 /// [StoryDetailScreen]
 class StoryDetailRoute extends PageRouteInfo<StoryDetailRouteArgs> {
   StoryDetailRoute({

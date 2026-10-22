@@ -37,7 +37,10 @@ Future<void> runLibrary({bool installErrorHandlers = true}) async {
     ),
   );
   final configuration = await LibraryDevHarness.waitForConfiguration();
-  configureLibraryDependencies(configuration);
+  configureLibraryDependencies(
+    configuration,
+    readingImages: LibraryDevHarness.readingImages,
+  );
   PaintingBinding.instance.imageCache.maximumSize = 48;
   PaintingBinding.instance.imageCache.maximumSizeBytes = 32 * 1024 * 1024;
   final diagnostics = libraryGetIt<LibraryDiagnostics>();

@@ -1,0 +1,240 @@
+{
+  "scope": "Paket 2 normal local/test tuketici; Paket 3 tek backend-mobil kabulu ayri",
+  "status": "PASS_LOCAL_CHECKS",
+  "baselineCommit": "85757698cda700429aa363b8680f58a76969534b",
+  "backend": {
+    "command": "bash mvnw verify",
+    "build": "SUCCESS",
+    "surefire": {
+      "tests": 590,
+      "passed": 564,
+      "skipped": 26,
+      "failures": 0,
+      "errors": 0
+    },
+    "failsafe": {
+      "tests": 41,
+      "passed": 39,
+      "skipped": 2,
+      "failures": 0,
+      "errors": 0
+    },
+    "newTests": [
+      {
+        "class": "com.tellpal.v2.user.web.mobile.ReadingImageConsumerTest",
+        "test": "disabledOrStubOrUnrevokedAuthNeverOpensStorage",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.user.web.mobile.ReadingImageConsumerTest",
+        "test": "consumerGateRequiresExplicitLocalTestBudgetsAndRejectsProduction",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.user.web.mobile.ReadingImageConsumerTest",
+        "test": "accountIsServerDerivedAndRevocationIsCheckedAfterStorage",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.content.application.publication.ReadingImageConsumerIT",
+        "test": "ordinaryBytesRecheckFreeAfterIoAndNeverAdmitStaleIdentityOrCorruption",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.content.application.publication.ReadingImageConsumerIT",
+        "test": "realHttpDeliversOnlyVerifiedJpegOrWebpForThreePagesAndRejectsClosedAccess(String)[1]",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.content.application.publication.ReadingImageConsumerIT",
+        "test": "realHttpDeliversOnlyVerifiedJpegOrWebpForThreePagesAndRejectsClosedAccess(String)[2]",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.user.web.mobile.ReadingImageConsumerHttpIT",
+        "test": "sourceAndRangeAreRejectedBeforeServiceAndOpenApiHasTypedMimeContracts",
+        "status": "PASS"
+      },
+      {
+        "class": "com.tellpal.v2.user.web.mobile.ReadingImageConsumerHttpIT",
+        "test": "slowSocketHoldsSharedPermitAndDeadlineReleasesPayloadBeforeAnotherTransfer",
+        "status": "PASS"
+      }
+    ],
+    "skippedScope": "P5g/corpus ve canli QA gibi eski, bu paket disindaki acik calisma kapilari; yeni consumer testlerinin hicbiri atlanmadi.",
+    "finalCompile": "PASS; son Turkce OpenAPI/hata metni duzeltmesi sonrasi",
+    "reportCountingNote": "Sayılar tam verify loguna aittir. Surefire dizinindeki üç eski hedefli XML raporu bu koşunun toplamına eklenmedi. İnceleme yamasında backend değişmedi; verify tekrarlanmadı."
+  },
+  "flutter": {
+    "full": {
+      "command": "flutter test --concurrency=2",
+      "passed": 654,
+      "failed": 0,
+      "scopeNote": "654 testlik tam koşu inceleme yamalarından öncedir; son fark 36 hedefli test ve temiz analyzer ile doğrulandı."
+    },
+    "finalTargeted": {
+      "passed": 36,
+      "failed": 0,
+      "includesFinalDecodeWidthAndNoDiskDelta": true,
+      "includesReviewPatch": true,
+      "command": "flutter test --concurrency=1 test/reading_images/reading_image_consumer_test.dart test/reading_images/reading_image_consumer_transport_test.dart"
+    },
+    "analyze": "No issues found",
+    "codegen": "PASS"
+  },
+  "protection": {
+    "preExisting": {
+      "checked": 88,
+      "changed": 0
+    },
+    "originals": {
+      "checked": 41,
+      "changed": 0
+    },
+    "p5c": {
+      "checked": 124,
+      "changed": 0
+    },
+    "p5fEvidence": {
+      "checked": 7,
+      "changed": 0
+    },
+    "package1Evidence": {
+      "checked": 38,
+      "changed": 0
+    }
+  },
+  "rawLogsExternal": true,
+  "rawLogReceipts": {
+    "backend-verify": {
+      "file": "backend-verify.log",
+      "bytes": 850665,
+      "sha256": "0c086468fc5df03e7ec19f77c64f94badeebc41b2ae9970db0d4fb64ed756901"
+    },
+    "backend-focused": {
+      "file": "backend-focused.log",
+      "bytes": 29709,
+      "sha256": "ac219e418e3470d4247ed6277f0d75643a27c50273f670cffd00c306b365d723"
+    },
+    "backend-legacy-compatibility": {
+      "file": "backend-legacy-compatibility.log",
+      "bytes": 11085,
+      "sha256": "e834b9f4503665fda7b1a7214c4488f740f0f16cf4a3166ee1d454dbb6433f38"
+    },
+    "backend-final-compile": {
+      "file": "backend-final-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "flutter-full": {
+      "file": "flutter-full.log",
+      "bytes": 384238,
+      "sha256": "ee24327b1cb7563f87195bd7e3d5b6f06428d1dbfd1a18476f76f8ce97dfc30f"
+    },
+    "flutter-focused-final": {
+      "file": "flutter-focused-final.log",
+      "bytes": 4082,
+      "sha256": "1cf02a7d3de84afa6880cb887bd3f15447dd5c2352fb5daa63204abaf693b04f"
+    },
+    "flutter-analyze-final": {
+      "file": "flutter-analyze-final.log",
+      "bytes": 96,
+      "sha256": "e5cf4086ebdd213418f8a0ddbd365bdf76711718b1aad0da28df384d742aab2c"
+    },
+    "flutter-codegen": {
+      "file": "flutter-codegen.log",
+      "bytes": 1769,
+      "sha256": "adcd1321e94f599234316a68c8d62030f3bbc6e029e3ed1148673b81d1b76054"
+    },
+    "flutter-review-targeted": {
+      "file": "flutter-review-targeted.log",
+      "bytes": 7182,
+      "sha256": "1ee9456adb24abe6e91b178ffb8c532df99e667478027c9c6ccc7561989ac0eb"
+    },
+    "flutter-review-analyze": {
+      "file": "flutter-review-analyze.log",
+      "bytes": 96,
+      "sha256": "45428a9689986c71eef3559da6df1bd4c3cc1df3d81dcafff631cfd829333844"
+    }
+  },
+  "boundaries": {
+    "realFirebase": false,
+    "cloudRun": false,
+    "production": false,
+    "deployment": false,
+    "physicalDeviceAcceptance": false,
+    "story12HumanAcceptance": false,
+    "story13Complete": false,
+    "package3SingleBackendWidgetAcceptance": false,
+    "sdkAbsoluteStorageDeadline": "OPEN",
+    "amd64Qualification": "OPEN"
+  },
+  "compatibilityRepair": "Legacy PNG_FIT formatPolicy wire alani yine omit edilir; eski retained-ready fixture ve kanitlari degistirilmedi.",
+  "reviewPatch": {
+    "R1": {
+      "status": "PASS",
+      "tests": [
+        "load sonrası aynı tur suspend/retry döngüye girmez",
+        "load sonrası aynı tur close döngüye girmez"
+      ]
+    },
+    "R2": {
+      "status": "PASS",
+      "tests": [
+        "background resize/DPR admission read decode başlatmaz"
+      ]
+    },
+    "R3": {
+      "status": "PASS",
+      "tests": [
+        "bekleyen status close ve sonraki owner admission için gerçek settlement tutar"
+      ]
+    },
+    "R4": {
+      "status": "PASS",
+      "tests": [
+        "settlement hatası sonraki retry/close Future zincirini zehirlemez",
+        "önceki retirement hatası permit tutar; retry gerçek cleanup sonrası ilerler"
+      ]
+    },
+    "R5": {
+      "status": "PASS",
+      "tests": [
+        "app scope permit native decode ve cache cleanup bitene kadar kalır",
+        "ikinci owner bekleme iptali ve requestWait tavanı erken permit açmaz"
+      ]
+    },
+    "R6": {
+      "status": "PASS",
+      "tests": [
+        "dış transfer timeout yavaş bytes delegate sahipliğini gerçek bitişe kadar tutar"
+      ]
+    },
+    "V1": {
+      "status": "PASS",
+      "tests": [
+        "loaded widget periyodik status reddinde provider ve permit temizlenir"
+      ]
+    },
+    "V3": {
+      "status": "PASS",
+      "tests": [
+        "preserve JPEG sha256 eşitliği geçerli canonical digest olsa da zorunludur",
+        "preserve JPEG byteSize eşitliği geçerli canonical digest olsa da zorunludur"
+      ]
+    },
+    "V4": {
+      "status": "PASS",
+      "tests": [
+        "gerçek HTTP açık header requestWait ile kesilir ve yeni istek çalışır",
+        "gerçek HTTP açık header external cancellation ile kesilir ve yeni istek çalışır",
+        "gerçek HTTP açık body requestWait ile kesilir ve yeni istek çalışır",
+        "gerçek HTTP açık body external cancellation ile kesilir ve yeni istek çalışır"
+      ]
+    },
+    "V2": {
+      "status": "PACKAGE_3_REQUIRED",
+      "note": "Tek gerçek backend → configureLibraryDependencies(...readingImages:) → LibraryApp/detail route kabulü Paket 3 kapsamında açıktır; P2 elle kurulan capability testi bu kanıtın yerine geçmez."
+    }
+  }
+}

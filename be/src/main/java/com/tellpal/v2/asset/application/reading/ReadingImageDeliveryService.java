@@ -28,7 +28,7 @@ public class ReadingImageDeliveryService implements ReadingImageDeliveryApi {
         var manifest = manifest(proof, work);
         var profiles = new EnumMap<com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role, List<Profile>>(com.tellpal.v2.asset.api.ReadingImagePreparationApi.Role.class);
         work.profiles().forEach((role, profile) -> profiles.put(role, List.of(new Profile(profile.fingerprint(),
-                profile.limits().width(), profile.limits().height(), profile.limits().allowGrowth()))));
+                profile.limits().width(), profile.limits().height(), profile.limits().allowGrowth(), profile.limits().formatPolicy()))));
         var entries = new ArrayList<Entry>();
         for (int i = 0; i < work.sources().size(); i++) {
             var source = work.sources().get(i); var output = manifest.outputs().get(i);
@@ -39,6 +39,14 @@ public class ReadingImageDeliveryService implements ReadingImageDeliveryApi {
     }
     @Override
     public byte[] read(ReadingPublicationReadyApi.Proof proof, Selection selection, Limits limits) {
+        return readPinned(proof, selection, limits, false);
+    }
+    @Override
+    public byte[] readRendition(ReadingPublicationReadyApi.Proof proof, Selection selection, Limits limits) {
+        if (selection.canonicalSource()) throw new IllegalArgumentException("SOURCE_DELIVERY_FORBIDDEN");
+        return readPinned(proof, selection, limits, true);
+    }
+    private byte[] readPinned(ReadingPublicationReadyApi.Proof proof, Selection selection, Limits limits, boolean consumer) {
         ReadingPreparationCapacity.requireNoTransaction();
         var work = jobs.work(proof.jobId());
         var manifest = manifest(proof, work);
@@ -56,7 +64,7 @@ public class ReadingImageDeliveryService implements ReadingImageDeliveryApi {
         String sha = selection.canonicalSource() ? source.sha256() : output.sha256();
         if (object.bytes() > limits.maxEncodedBytes() || (long) width * height > limits.maxPixels())
             throw new IllegalStateException("DELIVERY_RESOURCE_LIMIT");
-        if (!"image/png".equals(object.mime())) throw new IllegalArgumentException("CANONICAL_PNG_REQUIRED");
+        if ((!consumer && !"image/png".equals(object.mime())) || (consumer && !Set.of("image/png", "image/jpeg", "image/webp").contains(object.mime()))) throw new IllegalArgumentException("CANONICAL_PNG_REQUIRED");
         var deadline = ReadingDeadline.start(limits.deadlineMillis());
         boolean completeRead=false;
         try (var capacity = ReadingPreparationCapacity.acquire()) {

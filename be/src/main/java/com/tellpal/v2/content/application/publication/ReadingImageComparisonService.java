@@ -54,22 +54,13 @@ public class ReadingImageComparisonService implements ReadingImageComparisonApi 
         });
     }
     private Captured proof(long id, String language, Identity expected) {
-        requireScope(id,language);
-        guard.lock(id);
-        var content=contents.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "QA kopyası bulunamadı"));
-        if (!content.isActive() || content.getType()!=ContentType.STORY
-                || content.findLocalization(LanguageCode.from(language)).filter(l -> l.getStatus()==LocalizationStatus.PUBLISHED).isEmpty()
-                || !free.isContentFree(id, LanguageCode.from(language), null))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ücretsiz editoryal erişim kapalı");
-        var row=publications.row(id, language).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "LIVE bulunamadı"));
-        if (!Boolean.TRUE.equals(row.get("requested")) || !Boolean.TRUE.equals(row.get("live_eligible")) || row.get("live_proof_json")==null)
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "LIVE uygun değil");
-        var proof=publications.decode((String) row.get("live_proof_json"), ReadingPublicationReadyApi.Proof.class);
-        if (proof.snapshot().bindings().size()!=4) throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tam iki sayfalı QA kopyası gerekli");
-        var identity=new Identity(id, language, ((Number) row.get("live_generation")).longValue(), proof.revision(), proof.manifestDigest(), proof.jobId());
-        if ((expected!=null && !identity.equals(expected)) || !ready.retainedEligible(proof))
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "LIVE kimliği değişti veya medya geri çekildi");
-        return new Captured(identity, proof);
+        requireScope(id, language);
+        var captured = new ReadingImageRetainedAccess(guard, contents, free, publications, ready).capture(id, language);
+        if (captured.proof().snapshot().bindings().size()!=4)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Tam iki sayfalı QA kopyası gerekli");
+        if (expected!=null && !expected.equals(captured.identity()))
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"LIVE kimliği değişti");
+        return new Captured(captured.identity(),captured.proof());
     }
     private record Captured(Identity identity, ReadingPublicationReadyApi.Proof proof) { }
 }

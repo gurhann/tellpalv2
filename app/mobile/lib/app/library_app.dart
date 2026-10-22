@@ -4,6 +4,9 @@ import '../core/theme/library_theme.dart';
 import 'injection.dart';
 import 'router.dart';
 import 'library_dev_harness.dart';
+import 'reading_image_consumer_configuration.dart';
+import '../core/presentation/reading_artwork_capability.dart';
+import '../features/reading_images/consumer/presentation/reading_image_consumer_widget.dart';
 
 class LibraryApp extends StatelessWidget {
   const LibraryApp({super.key});
@@ -20,9 +23,21 @@ class LibraryApp extends StatelessWidget {
               ? MediaQuery.textScalerOf(context)
               : TextScaler.linear(scale),
         ),
-        child: child!,
+        child: libraryGetIt.isRegistered<ReadingImageConsumerConfiguration>()
+            ? ReadingArtworkCapability(
+                builder: (_, request) => ReadingImageConsumerWidget(
+                  key: ValueKey(
+                    '${request.contentId}:${request.language}:${request.attempt}',
+                  ),
+                  request: request,
+                ),
+                child: child!,
+              )
+            : child!,
       ),
     ),
-    routerConfig: libraryGetIt<LibraryRouter>().config(navigatorObservers: () => [AutoRouteObserver()]),
+    routerConfig: libraryGetIt<LibraryRouter>().config(
+      navigatorObservers: () => [AutoRouteObserver()],
+    ),
   );
 }

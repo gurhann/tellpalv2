@@ -55,3 +55,36 @@ varsayılan kalır; normal Library rotasına yeni bağ eklenmez.
 Bu yerel uygulama gerçek #94 auth/storage veya cihaz çalışması açmaz. Eski çalışma pencereleri ve
 sayaçları yeni yetki değildir. Yeni üretim, genel tüketici geçişi, üretim profili, P4b ve fiziksel
 Android/iPhone kabulü açık kalır. Yerel optimize PNG/WebP dosyaları P3/LIVE sayılmaz.
+
+## Paket 2: Normal geliştirme tüketicisi (2026-10-22)
+
+[Onaylı Paket 2 spec](../../../_bmad-output/implementation-artifacts/spec-image-package-2-consumer.md),
+aynı `user → content::api → asset::api` yönünü ayrı normal local/test tüketicisine açar.
+`/api/library/reading-images/{manifest,status,bytes}` varsayılan kapalıdır. Açık çalışma kimliği,
+encoded/piksel/tepe bellek/süre/toplam işlem-byte ve lease sınırları gerekir; prod/production reddedilir.
+Revoke kontrollü Firebase bearer, mevcut Library allowlist ve aktif exact-language ücretsiz STORY'nin
+uygun retained LIVE kanıtı birlikte doğrulanır. Subscriber fixture veya detail metadata tam medya hakkı vermez.
+
+- QA'nın tek içerik/Türkçe/iki sayfa/canonical PNG kısıtları normal yola taşınmaz. Ortak kısa
+  retained erişim kesiti paylaşılır. Normal byte isteği hesap/generation/revision/digest/job/rol/sayfa/
+  rendition ile bağlıdır; kaynak kolu yoktur. Storage öncesi/sonrası ve son bearer kontrolünden sonra
+  erişim tekrar sınanır. MIME descriptor ve gerçek byte doğrulamasından gelir; JPEG/PNG/WebP desteklenir.
+  Aynı bounded Tomcat writer, tek teslimat permit'i ve `private,no-store` filtresi kullanılır.
+- Mobil normal yol ayrı typed DTO/repository/use case/Cubit kullanır. Policy eksik/null ise eski
+  `PNG_FIT`; yeni policy kaynak boyutunu koruyan PNG→WebP veya byte-eş JPEG'dir. Unknown policy,
+  hatalı digest/geometry/growth ve yetersiz slot×DPR reddedilir. Yeni digest protokolü eklenmez.
+- Normal renderer `CachedNetworkImage` kullanır. `LibraryImageCache` lifecycle'ı, tam bellek metadata
+  repository'si ve `MemoryFileSystem` ile çalışır. Fresh admission, warm dosya ve provider'dan önce gelir.
+  Cache kimliği hesap/dil/LIVE/revision/digest/job/rol/sayfa/rendition/SHA içerir; token/URL içermez.
+  App-scope tek permit, metadata/transfer/promotion/decode/provider/frame/cache cleanup gerçekten bitene
+  kadar tutulur. İptal erken kapasite açmaz. Lease/status/account/route/background çizimi kaldırır;
+  manuel retry aynı anchor için fresh admission ister. Status lease'i uzatmaz.
+- `LibraryDevHarness.install(..., readingImages: ...)` açık opt-in'dir. Normal detail yalnız
+  feature bağımsız core capability üzerinden bağlanır; varsayılan davranış korunur. Bağımsız sayfa
+  aynı bileşeni kullanır. Normal root QA config/repository/Cubit toplamadan kendi DI modülünü üretir.
+
+Bu karar yalnız yerel/test tüketici dilimidir. [Paket 2 kabul kaydı](../evidence/image-package-2/README.md)
+sentetik verifier/PostgreSQL/disk ve Flutter engine kanıtını ayırır. Gerçek Firebase/bulut çalışması,
+production profil/erişim/session/cache-retention yeterliliği, fiziksel Android/iPhone kabulü ve SDK'nın
+mutlak storage deadline açığı kapanmaz. Story 1.2 insan kabulü ve Story 1.3 tamamlanmış sayılmaz;
+Paket 3'ün tek backend–mobil kabulü ve epic'e devri ayrıdır.

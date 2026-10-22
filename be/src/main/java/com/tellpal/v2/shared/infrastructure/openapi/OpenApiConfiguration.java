@@ -80,7 +80,8 @@ public class OpenApiConfiguration {
                         "/api/profiles/**",
                         "/api/events",
                         "/api/events/**",
-                        "/api/test/reading-image-comparison/**")
+                        "/api/test/reading-image-comparison/**",
+                        "/api/library/reading-images/**")
                 .build();
     }
 

@@ -11,6 +11,7 @@
 * `c.t.v.c.api.ContentLookupApi`, `c.t.v.c.api.ContentLocalizationLookupApi`, `c.t.v.c.api.LocalizedContentIdentityLookupApi` (via `c.t.v.c.application.ContentLookupService`)
 * `c.t.v.c.api.ReadingImageSourceSnapshotApi` (via `c.t.v.c.application.ReadingImageSourceSnapshotService`)
 * `c.t.v.c.api.ReadingImageComparisonApi` (via `c.t.v.c.application.publication.ReadingImageComparisonService`)
+* `c.t.v.c.api.ReadingImageConsumerApi` (via `c.t.v.c.application.publication.ReadingImageConsumerService`)
 * `c.t.v.c.api.ReadingPublicationApi` (via `c.t.v.c.application.publication.ReadingPublicationService`)
 * `c.t.v.c.api.ContentPreviewQueryApi` (via `c.t.v.c.application.query.ContentPreviewQueryService`)
 * `c.t.v.c.api.PublicContentQueryApi` (via `c.t.v.c.application.query.PublicContentQueryService`)

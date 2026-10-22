@@ -691,6 +691,16 @@ class LibraryImageCache extends CacheManager with ImageCacheManager {
     }
   }
 
+  /// Yeni attempt başlamadan eski transfer, promotion ve metadata sahipliğini bekler.
+  Future<void> settleOwnedWork() async {
+    await Future.wait(
+      _operations.map((operation) => operation.finished).toList(),
+    );
+    await Future.wait(_promotions.values.toList());
+    await Future.wait(_storage.toList());
+    await _repository.whenIdle();
+  }
+
   Future<void> rememberValidated(
     String immutableKey,
     String transferKey, {

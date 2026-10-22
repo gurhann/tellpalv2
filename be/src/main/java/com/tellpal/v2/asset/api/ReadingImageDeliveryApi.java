@@ -10,6 +10,11 @@ public interface ReadingImageDeliveryApi {
     void reserveControl(Limits limits);
     Descriptor descriptor(ReadingPublicationReadyApi.Proof proof);
     byte[] read(ReadingPublicationReadyApi.Proof proof, Selection selection, Limits limits);
+    /** Kaynak kolunu kapatır; yalnız descriptor ile bağlı rendition teslim eder. */
+    default byte[] readRendition(ReadingPublicationReadyApi.Proof proof, Selection selection, Limits limits) {
+        if (selection.canonicalSource()) throw new IllegalArgumentException("SOURCE_DELIVERY_FORBIDDEN");
+        return read(proof, selection, limits);
+    }
     record Limits(long maxEncodedBytes, long maxPixels, long maxMemoryBytes, long deadlineMillis, String runId, long maxTotalOperations, long maxTotalBytes) {
         public Limits {
             if (runId==null || !runId.matches("[A-Za-z0-9_-]{1,120}") || maxTotalOperations<=0 || maxTotalBytes<=0 || maxEncodedBytes <= 0 || maxEncodedBytes > Integer.MAX_VALUE - 8L || maxPixels <= 0
@@ -29,7 +34,17 @@ public interface ReadingImageDeliveryApi {
     record Entry(Source source, List<Rendition> renditions) {
         public Entry { renditions=List.copyOf(renditions); }
     }
-    record Profile(String fingerprint, int width, int height, boolean allowGrowth) { }
+    record Profile(String fingerprint, int width, int height, boolean allowGrowth,
+            @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+            ReadingImagePreparationApi.FormatPolicy formatPolicy) {
+        /** Null eski PNG_FIT wire biçimini korur; yeni politika açıkça taşınır. */
+        public Profile {
+            if (formatPolicy==ReadingImagePreparationApi.FormatPolicy.PNG_FIT) formatPolicy=null;
+        }
+        public Profile(String fingerprint, int width, int height, boolean allowGrowth) {
+            this(fingerprint, width, height, allowGrowth, ReadingImagePreparationApi.FormatPolicy.PNG_FIT);
+        }
+    }
     record Descriptor(List<Entry> images, Map<Role, List<Profile>> profiles) {
         public Descriptor {
             images=List.copyOf(images);

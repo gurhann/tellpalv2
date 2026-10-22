@@ -96,14 +96,22 @@ final class ReadingImageProfile extends Equatable {
     required this.width,
     required this.height,
     required this.allowGrowth,
+    this.formatPolicy = 'PNG_FIT',
   });
 
   final String fingerprint;
   final int width, height;
   final bool allowGrowth;
+  final String formatPolicy;
 
   @override
-  List<Object?> get props => [fingerprint, width, height, allowGrowth];
+  List<Object?> get props => [
+    fingerprint,
+    width,
+    height,
+    allowGrowth,
+    formatPolicy,
+  ];
 }
 
 final class ReadingImageRendition extends Equatable {

@@ -6,7 +6,11 @@ import 'reading_image_comparison_injection.config.dart';
 final comparisonGetIt = GetIt.asNewInstance();
 @InjectableInit(
   initializerName: 'initReadingComparison',
-  generateForDir: ['lib/features/reading_images'],
+  generateForDir: [
+    'lib/features/reading_images/data',
+    'lib/features/reading_images/domain',
+    'lib/features/reading_images/presentation',
+  ],
   ignoreUnregisteredTypes: [ReadingImageComparisonConfiguration],
 )
 GetIt _initializeReadingComparison(GetIt container) =>

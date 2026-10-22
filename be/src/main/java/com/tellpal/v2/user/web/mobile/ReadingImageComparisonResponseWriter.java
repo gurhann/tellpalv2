@@ -26,23 +26,30 @@ public class ReadingImageComparisonResponseWriter {
         if(!request.isAsyncSupported() || !(request.getAttribute(ReadingImageComparisonTomcatConfiguration.ABORT) instanceof Runnable))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Bounded Tomcat response yeteneği gerekli");
     }
-    public Lease acquire() {
+    public Lease acquire() { return acquire(deadlineMillis); }
+    public Lease acquire(long deadlineMillis) {
         if(deadlineMillis<=0 || deadlineMillis>Integer.MAX_VALUE) throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Açık response süresi gerekli");
         if(!capacity.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Teslimat kapasitesi dolu");
-        return new Lease();
+        return new Lease(deadlineMillis);
     }
     public int activeTransfers(){return 1-capacity.availablePermits();}
     public long heldPayloadBytes(){return heldBytes;}
     public final class Lease implements AutoCloseable {
         private final long started=System.nanoTime();
+        private final long deadlineMillis;
+        private Lease(long deadlineMillis) { this.deadlineMillis=deadlineMillis; }
         private final AtomicBoolean closed=new AtomicBoolean();
         long remainingMillis(){return deadlineMillis-java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-started);}
         @Override public void close(){if(closed.compareAndSet(false,true)){heldBytes=0;capacity.release();}}
     }
     public void write(HttpServletRequest request,HttpServletResponse response,byte[] bytes,Lease lease) throws IOException {
+        write(request,response,bytes,lease,"image/png");
+    }
+    public void write(HttpServletRequest request,HttpServletResponse response,byte[] bytes,Lease lease,String mime) throws IOException {
+        if (!java.util.Set.of("image/png","image/jpeg","image/webp").contains(mime)) throw new IllegalArgumentException("UNSUPPORTED_READING_MIME");
         long remaining=lease.remainingMillis();
         if(remaining<=0) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Response süresi doldu");
-        response.setContentType("image/png");response.setContentLength(bytes.length);
+        response.setContentType(mime);response.setContentLength(bytes.length);
         response.setHeader("Cache-Control","private,no-store");response.setHeader("Connection","close");
         Object capability=request.getAttribute(ReadingImageComparisonTomcatConfiguration.ABORT);
         if(!(capability instanceof Runnable abort))throw new IllegalStateException("BOUNDED_RESPONSE_CONTAINER_REQUIRED");
