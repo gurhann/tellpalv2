@@ -1,0 +1,488 @@
+{
+  "status": "PASS_LOCAL_DEVELOPMENT_ACCEPTANCE",
+  "recordedAt": "2026-10-22T21:09:19.627083+00:00",
+  "baselineCommit": "5b69a1a0e43167371d12bfae1ef1968c91d683d0",
+  "runId": "package3-15b817fa-a1b3-4305-842a-116654164efe",
+  "finalAttempt": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe",
+  "scope": "Yalnız yerel/test görsel altyapısı geliştirme kabulü ve Story 1.3 devri",
+  "boundary": {
+    "real": [
+      "PostgreSQL 15.19/Flyway",
+      "Spring normal bean kompozisyonu",
+      "source admission/hazırlama/bağımsız reread/atomik READY/güncel LIVE",
+      "embedded Tomcat localhost HTTP",
+      "generated Flutter DI/LibraryApp/detail route/page route",
+      "normal repository/manifest/transport/CachedNetworkImage/bellek cache/engine decode"
+    ],
+    "synthetic": [
+      "Disk-backed firebaseAssetStorageClient leaf; yeni 800x600 JPEG/PNG fixture",
+      "FirebaseTokenVerifier; synthetic-consumer UID"
+    ],
+    "credential": "Rastgele; yalnız bellek ve child environment; kaynak/ham log Git dışında",
+    "uploadBoundary": "Yeni kaynaklar yerel DiskStorage.createImmutable ve gerçek MediaAsset kaydıyla başlatılır; admin upload UI/Firebase doğrulanmaz"
+  },
+  "backend": {
+    "command": "bash mvnw -q -Dtest=ReadingImageLibraryLoopbackIT -Dtellpal.package3.acceptance=true test",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 24.412,
+    "childLimitSeconds": 180,
+    "descendantExitVerified": true,
+    "cleanupWaitTotalSeconds": 5,
+    "cleanupScope": "Yalnız Flutter CLI child ve polling sırasında gözlenen descendant ProcessHandle değerleri",
+    "generalProcessTreeLateSpawnOrWorkerDeathGuarantee": false,
+    "releaseIoFailureMechanism": "try/finally; cleanup hataları toplanır, kalan kill/await/assert adımları çalışır",
+    "releaseIoFaultInjected": false
+  },
+  "flutter": {
+    "command": "flutter test --no-pub --concurrency=1 --reporter=expanded test/reading_images/reading_image_library_loopback_test.dart",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "timeoutSeconds": 150,
+    "normalGeneratedDi": true,
+    "normalLibraryAppCapability": true,
+    "analyze": "No issues found!; exit 0; attempt-07/flutter-analyze.log"
+  },
+  "sourceProof": [
+    {
+      "sourceFormat": "JPEG",
+      "sourceBytes": 10795,
+      "sourceSha256": "8a5346bcd63d877e7ed4a936c1cb4941b61a259f8fa049502cf2ede10ac7c896",
+      "state": "LIVE"
+    },
+    {
+      "sourceFormat": "PNG",
+      "sourceBytes": 3803,
+      "sourceSha256": "b62b629fff8c52ea24889ddd33fd2903333e2918aeee5e6e95f55019e1a3d62d",
+      "state": "LIVE"
+    }
+  ],
+  "renders": [
+    {
+      "sourceFormat": "JPEG",
+      "role": "READING_DETAIL",
+      "contentId": 1,
+      "mime": "image/jpeg",
+      "sha256": "8a5346bcd63d877e7ed4a936c1cb4941b61a259f8fa049502cf2ede10ac7c896",
+      "byteSize": 10795,
+      "renditionKey": "9d7f49c712bf2be67de9692859f196d3488a30c5420a8833b3cdc732b49e66dd",
+      "identity": {
+        "accountScope": "synthetic-consumer",
+        "contentId": "1",
+        "language": "tr",
+        "liveGeneration": "1",
+        "revision": "e00ef0ec5616edd0374a72aebc0c3852292ff93ecfbf4c07e47c122f5b0e98bf",
+        "manifestDigest": "00306555d50eab84c96371c72caec5eb28bc6a39b48b2c8e765173a8efea6ffc",
+        "jobId": "8c60134b-f86f-4a84-9445-8f79b5b9e0a0"
+      },
+      "httpAndMagicMimeValidated": true,
+      "decodeWidth": 594,
+      "decodeHeight": 446,
+      "cachedNetworkImage": true
+    },
+    {
+      "sourceFormat": "JPEG",
+      "role": "READING_PAGE",
+      "contentId": 1,
+      "mime": "image/jpeg",
+      "sha256": "8a5346bcd63d877e7ed4a936c1cb4941b61a259f8fa049502cf2ede10ac7c896",
+      "byteSize": 10795,
+      "renditionKey": "05045189c4fd3859a6d88508fadd4191cd8e658bc330a973fac8b8582fbbc631",
+      "identity": {
+        "accountScope": "synthetic-consumer",
+        "contentId": "1",
+        "language": "tr",
+        "liveGeneration": "1",
+        "revision": "e00ef0ec5616edd0374a72aebc0c3852292ff93ecfbf4c07e47c122f5b0e98bf",
+        "manifestDigest": "00306555d50eab84c96371c72caec5eb28bc6a39b48b2c8e765173a8efea6ffc",
+        "jobId": "8c60134b-f86f-4a84-9445-8f79b5b9e0a0"
+      },
+      "httpAndMagicMimeValidated": true,
+      "decodeWidth": 400,
+      "decodeHeight": 300,
+      "cachedNetworkImage": true
+    },
+    {
+      "sourceFormat": "PNG",
+      "role": "READING_DETAIL",
+      "contentId": 2,
+      "mime": "image/webp",
+      "sha256": "002379eb69b586a5104c9b886801762fe7f0d71ea5a097b82aba851af77c0157",
+      "byteSize": 112,
+      "renditionKey": "a4ddbf2eadcd0ad86108f29dd4c73b9cf81e86cc9dbefe43daa7d01e8bc88d5a",
+      "identity": {
+        "accountScope": "synthetic-consumer",
+        "contentId": "2",
+        "language": "tr",
+        "liveGeneration": "1",
+        "revision": "af50c003e8ff55eb56259066bc4346cf184bdcc30d1703e69711930819ea6e22",
+        "manifestDigest": "54c715a837e8276a70e88690a98414b3a87002147e29ca92b292c0a56c3193c7",
+        "jobId": "21f44a60-8155-456a-a376-c472520d0c63"
+      },
+      "httpAndMagicMimeValidated": true,
+      "decodeWidth": 594,
+      "decodeHeight": 446,
+      "cachedNetworkImage": true
+    },
+    {
+      "sourceFormat": "PNG",
+      "role": "READING_PAGE",
+      "contentId": 2,
+      "mime": "image/webp",
+      "sha256": "002379eb69b586a5104c9b886801762fe7f0d71ea5a097b82aba851af77c0157",
+      "byteSize": 112,
+      "renditionKey": "251d8de5439dbb0168800b3adb6caa49a974f5ee55bc1a93b5e01e7389aad91c",
+      "identity": {
+        "accountScope": "synthetic-consumer",
+        "contentId": "2",
+        "language": "tr",
+        "liveGeneration": "1",
+        "revision": "af50c003e8ff55eb56259066bc4346cf184bdcc30d1703e69711930819ea6e22",
+        "manifestDigest": "54c715a837e8276a70e88690a98414b3a87002147e29ca92b292c0a56c3193c7",
+        "jobId": "21f44a60-8155-456a-a376-c472520d0c63"
+      },
+      "httpAndMagicMimeValidated": true,
+      "decodeWidth": 400,
+      "decodeHeight": 300,
+      "cachedNetworkImage": true
+    }
+  ],
+  "delayedDeparture": {
+    "realStorageDelayObserved": true,
+    "scope": "client_transport_cache_provider_cleanup",
+    "serverStorageReleasedAfterClientCleanup": true,
+    "serverWaitingAtClientCleanup": true,
+    "serverDelay": {
+      "timedOut": false,
+      "clientCleanupObserved": true,
+      "outcome": "RELEASED",
+      "runId": "package3-15b817fa-a1b3-4305-842a-116654164efe"
+    },
+    "ownerDuringTransfer": 1,
+    "paintRemoved": true,
+    "released": true,
+    "closed": true,
+    "clientCleanupReceipt": {
+      "runId": "package3-15b817fa-a1b3-4305-842a-116654164efe",
+      "activeOwners": 0,
+      "closed": true,
+      "serverWaitingObserved": true
+    }
+  },
+  "limits": {
+    "backendConsumer": {
+      "encodedBytes": 1000000,
+      "pixels": 500000,
+      "memoryBytes": 16000000,
+      "deadlineMillis": 10000,
+      "leaseMillis": 30000,
+      "totalOperations": 100,
+      "totalBytes": 10000000
+    },
+    "preparation": {
+      "width": 800,
+      "height": 600,
+      "sourceBytes": 1000000,
+      "outputBytes": 1000000,
+      "pixels": 500000,
+      "parentMemoryBytes": 64000000,
+      "heapMiB": 128,
+      "directMiB": 16,
+      "processMiB": 512,
+      "diskBytes": 3000000,
+      "sourceMillis": 10000,
+      "revisionMillis": 60000,
+      "threads": 1,
+      "concurrency": 1,
+      "allowGrowth": true,
+      "growthEvidence": "Paket 3 sentetik yerel kabul; uretim profili degildir",
+      "formatPolicy": "PRESERVE_JPEG_OR_LOSSLESS_WEBP"
+    },
+    "flutter": {
+      "maxEncodedBytes": 1000000,
+      "maxCacheBytes": 4000000,
+      "maxSourcePixels": 500000,
+      "maxDecodePixels": 500000,
+      "requestWaitSeconds": 10,
+      "statusEverySeconds": 20,
+      "maxLeaseSeconds": 30,
+      "viewWidth": 400,
+      "viewHeight": 800,
+      "dpr": 1
+    },
+    "storageDelaySeconds": 8
+  },
+  "configuration": {
+    "fakeClient": true,
+    "prefix": "test",
+    "testEngine": true,
+    "legacyProcessingPoller": false,
+    "readingPollDelayMillis": 3600000,
+    "publicationPollDelayMillis": 3600000,
+    "stubTokens": false,
+    "checkRevoked": true,
+    "allowlist": [
+      "synthetic-consumer"
+    ],
+    "consumerEnabled": true,
+    "serverAddress": "127.0.0.1",
+    "port": "random",
+    "environmentKeys": [
+      "DOCKER_HOST",
+      "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE",
+      "TELLPAL_READING_NATIVE_TESTS_REQUIRED",
+      "TELLPAL_READING_WEBP_TOOL_DIRECTORY",
+      "TELLPAL_READING_SUPERVISOR_DIRECTORY",
+      "TELLPAL_PACKAGE3_FLUTTER",
+      "TELLPAL_PACKAGE3_RUN"
+    ],
+    "defaultGate": "closed",
+    "requiredSelectionMissingFlutterOrNative": "FAIL"
+  },
+  "k3Mapping": {
+    "K3.1": [
+      "../image-package-1/corpus-result.json",
+      "../image-package-1/review-patch-reread-result.json",
+      "sourceProof"
+    ],
+    "K3.2": [
+      "../image-package-1/matrix-verification.json",
+      "backend"
+    ],
+    "K3.3": [
+      "../image-package-2/verification.json",
+      "backend",
+      "flutter"
+    ],
+    "K3.4": [
+      "renders",
+      "delayedDeparture"
+    ],
+    "K3.5": [
+      "README.md",
+      "../../../../_bmad-output/planning-artifacts/epics-mobile.md",
+      "../../../../_bmad-output/planning-artifacts/sprint-change-proposal-2026-10-22.md"
+    ]
+  },
+  "reusedEvidence": {
+    "package1": "../image-package-1/README.md",
+    "package2": "../image-package-2/verification.json",
+    "backendPreviouslyPassed": 603,
+    "flutterPreviouslyFull": 654,
+    "flutterPreviouslyFinalTargeted": 36,
+    "rerun": false,
+    "oldFingerprintsRelabeled": false,
+    "package2V2": "Bu yeni normal root kabulüyle kapandı; P2 kanıtı değiştirilmedi"
+  },
+  "attempts": [
+    {
+      "attempt": "attempt-01",
+      "status": "FAIL_ENVIRONMENT",
+      "reason": "Sandbox Docker soketine erişimi engelledi"
+    },
+    {
+      "attempt": "attempt-02",
+      "status": "FAIL_ENVIRONMENT",
+      "reason": "P1 native supervisor environment anahtarı verilmemişti"
+    },
+    {
+      "attempt": "attempt-03",
+      "status": "FAIL_TEST_FIXTURE",
+      "reason": "Fingerprint için growth evidence ASCII olmalıydı"
+    },
+    {
+      "attempt": "attempt-04",
+      "status": "FAIL_TEST_TIMEOUT",
+      "reason": "Test harness runAsync içinde sanal cache settlement bekledi; 150 saniye timeout"
+    },
+    {
+      "attempt": "attempt-05",
+      "status": "FAIL_TEST_ASSERTION",
+      "reason": "Gerçek owner release sonrası Cubit close mikro görevi ayrıca beklenmedi"
+    },
+    {
+      "attempt": "attempt-06",
+      "status": "PASS_BEFORE_REVIEW_PATCH",
+      "reason": "İnceleme öncesi PASS; son üç harness düzeltmesini içermez, tarihsel korunur"
+    },
+    {
+      "attempt": "attempt-07",
+      "status": "PASS",
+      "reason": "Üç son harness düzeltmesiyle tek kabul/analyze geçti; Maven 1 + iç Flutter 1, sıfır failure/error/skip"
+    }
+  ],
+  "protection": {
+    "preExisting": {
+      "checked": 88,
+      "changed": 0
+    },
+    "originals": {
+      "checked": 41,
+      "changed": 0
+    },
+    "p5c": {
+      "checked": 124,
+      "changed": 0
+    },
+    "p5fEvidence": {
+      "checked": 7,
+      "changed": 0
+    },
+    "package1Evidence": {
+      "checked": 38,
+      "changed": 0
+    },
+    "package2Evidence": {
+      "checked": 3,
+      "changed": 0
+    }
+  },
+  "testSourceSha256": {
+    "be/src/test/java/com/tellpal/v2/content/application/publication/ReadingImageLibraryLoopbackIT.java": "7ebee97c59b65c124bae82dda4c0f019bd7b45df4fcf1fa7dafb261230080b7b",
+    "app/mobile/test/reading_images/reading_image_library_loopback_test.dart": "d8ffe64b52350dd488736a117698efd3a9ed359f2e5c70b3374637159ae33795"
+  },
+  "rawEvidenceExternal": true,
+  "receipts": [
+    {
+      "file": "attempt-01/backend-loopback.log",
+      "bytes": 26372,
+      "sha256": "cb57d1b81a68d5a6bba3915cc1994f6e7af9f900e8042ddc3efa0564add91ded"
+    },
+    {
+      "file": "attempt-02/backend-loopback.log",
+      "bytes": 17699,
+      "sha256": "c4915d591f26791b2decb3e2347795d6952798258cfac8faf44f061d2c3b834f"
+    },
+    {
+      "file": "attempt-03/backend-loopback.log",
+      "bytes": 19121,
+      "sha256": "4441d5b709a931db5b9f93f025af9c778e46a5f29dd15a93545f4f333f796054"
+    },
+    {
+      "file": "attempt-04/backend-loopback.log",
+      "bytes": 17300,
+      "sha256": "2ba263dd7cdeeb618e4142042bbd47c35e9d5535069c45953edd9b4b41cd3ce7"
+    },
+    {
+      "file": "attempt-04/flutter-loopback.log",
+      "bytes": 494,
+      "sha256": "e8721bde7c57289ce59933aaab1ea40fe5ea95e94759e20de86941fab4486374"
+    },
+    {
+      "file": "attempt-05/backend-loopback.log",
+      "bytes": 17299,
+      "sha256": "92df524b3d8d03da3ceeab583f98463cb9749dafd010678fd5da26b5ff798ecc"
+    },
+    {
+      "file": "attempt-05/flutter-loopback.log",
+      "bytes": 2179,
+      "sha256": "d0c3dbe91817835cd31b366e27ae0f5f0b6f58a69da349467e3be47c2b9abc9b"
+    },
+    {
+      "file": "attempt-06/backend-loopback.log",
+      "bytes": 15603,
+      "sha256": "25ca050eef94d35b672122bd4a531d6a50e19d92b36066c3833dafdd2274e0ae"
+    },
+    {
+      "file": "attempt-06/flutter-loopback.log",
+      "bytes": 866,
+      "sha256": "a4215fcb080921340e60ccde332e01dfaccd9c1f3a4d18b879e1551ab3ff282d"
+    },
+    {
+      "file": "attempt-06/backend-tests.xml",
+      "bytes": 83556,
+      "sha256": "d16cf7a670a7f698a160f052f5ef9ad9c0db00e317da9876cde8170ab1cf8250"
+    },
+    {
+      "file": "attempt-06/expected.json",
+      "bytes": 1818,
+      "sha256": "215e08eaeac9513470ab7d03c74b4120745146f4c1faebf5f762e56f6b530eaf"
+    },
+    {
+      "file": "attempt-06/flutter-result.json",
+      "bytes": 3819,
+      "sha256": "ae8a18b6b986b1c5439518a9e4cea13d256539aa28ecf68f23ff6676a21bd8c2"
+    },
+    {
+      "file": "flutter-analyze-final.log",
+      "bytes": 96,
+      "sha256": "d417cc93d04843751dcfb3c9e4df639ee9527e00619b12b10b3ef8293dfa8841"
+    },
+    {
+      "file": "attempt-07/backend-loopback.log",
+      "bytes": 15602,
+      "sha256": "3d935cbc2f9d057a6a943047c2340e4269d84491a090868ba7cd65111aa87444"
+    },
+    {
+      "file": "attempt-07/flutter-analyze.log",
+      "bytes": 96,
+      "sha256": "4cf7acda3f4fa7e6f68d70fc85357881206a5add7238619d7e6c5bbf78e8b848"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/flutter-loopback.log",
+      "bytes": 866,
+      "sha256": "a4215fcb080921340e60ccde332e01dfaccd9c1f3a4d18b879e1551ab3ff282d"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/backend-tests.xml",
+      "bytes": 83555,
+      "sha256": "7d286404a2bf252c265cbad89e69daf2c19c5695232c6fc2f11f6f09783cc56b"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/expected.json",
+      "bytes": 1818,
+      "sha256": "56aa794873e89536b86f378a9b236bfc6c44077e9edb3ab357e468c88dd07e67"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/flutter-result.json",
+      "bytes": 4043,
+      "sha256": "bc3abbfd3969f63e9e12e85ea30e7a2f494ded52c9fb0bd3fa1213a91f452f09"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/client-cleanup.json",
+      "bytes": 117,
+      "sha256": "0603cbcb646a1a5b2d7eb7e1d692aa376e57ad3fff13a4eaf34ace3d6793b006"
+    },
+    {
+      "file": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe/delay-finished.json",
+      "bytes": 124,
+      "sha256": "ae8ff99888855f62e9d3e3a92c55c6bbdc64c7796883ab9ac793bcd47f15b62c"
+    }
+  ],
+  "handoff": {
+    "story11": "done",
+    "story12": "review; insan kabulü açık",
+    "story13": "backlog; uygulanmış sayılmaz",
+    "protectedStartAndFirstPageAudio": "Story 1.3 + backend EXT-MEDIA tüketici dilimi",
+    "pageTransitions": "Story 1.4",
+    "mediaLifecycleRenewalSessions": "Story 1.7/1.11/1.12",
+    "productionProfilesSdkAbsoluteStorageDeadlineAmd64": "Backend/operasyon; üretim öncesi açık",
+    "physicalDevices": "Release kabulü; açık",
+    "productionActivationPilotArchive": "Backend/CMS/operasyon; ayrı canlı onayı ve kontrollü geçiş"
+  },
+  "excluded": {
+    "realFirebase": false,
+    "production": false,
+    "deploy": false,
+    "push": false,
+    "newCodecOr41SourceRun": false,
+    "newPhoneMeasurement": false,
+    "fullReaderAudioSessionPaywall": false,
+    "archiveOptimizedClaim": false
+  },
+  "freshArtifactDirectory": {
+    "strategy": "Caller kökü altında RUN için CREATE_DIRECTORY; varsa reddedilir",
+    "callerRootMayContainBackendLog": true,
+    "historicalArtifactsOverwritten": false
+  },
+  "reviewPatch": {
+    "staleRunMarkerResult": "Yeni RUN diziniyle fail-closed; eski artifact yazılmadı",
+    "controlledDelay": "Client owner0+closed anında server waiting gözlendi; normal release ve timedOut=false iki tarafta assert edildi",
+    "cleanup": "Release I/O try/finally ile zorunlu cleanup adımlarından ayrıldı; her hata sonraki adımları atlatmadan toplanır",
+    "scope": "Yeni ürün/mimari/framework/test paketi yok; aynı tek kabul yeniden çalıştı"
+  }
+}

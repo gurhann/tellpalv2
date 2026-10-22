@@ -16,7 +16,7 @@ paketinde tamamlayıp Mobil Epic 1 / Story 1.3’e dönelim. Gerçek okuyucu
 entegrasyonunu ve yayın kabulünü ilgili mobil story’lerin içinde bitirelim.**
 
 Bu plan 2026-10-22 tarihinde kullanıcı tarafından kabul edildi. Paket 1 yerel geliştirme
-kabulünü tamamladı; Paket 2 de yerel geliştirme kabulünü tamamladı. Paketlerin kabul durumu gerçek sonuçlarla güncellenecek. Planın
+kabulünü tamamladı; Paket 2 ve Paket 3 de yerel geliştirme kabulünü tamamladı. [Tek kapanış kaydı](../../be/docs/evidence/image-infrastructure-acceptance/README.md) gerçek sonucu ve mobil devri tutar. Planın
 kabulü, canlıya yazma veya dağıtım izni değildir; mobil story durumları değişmedi.
 
 ## 1. Neden plan değişiyor?
@@ -167,11 +167,11 @@ Bu liste plan anında yapılmış sayılmaz; uygulama sonunda doldurulacak.
 - [x] Gerçek yeni görsel üretimi çalışıyor; yalnız hazır aday kopyası yok.
 - [x] Kabul edilmiş JPEG/PNG/WebP, renk/metadata ve geometri davranışı gerçek hatta aynı.
 - [x] Çıktı bütünlüğü, atomik yayın, eski sürümün korunması ve gerekli iptal/kaynak sınırları geçiyor.
-- [ ] Paketli hedef runtime yerelde doğrulanmış; normal tüketiciye gereken görsel sözleşmesi hazır.
-- [ ] Ortak mobil bileşen hazır; mevcut Library/detail davranışı bozulmamış.
-- [ ] Kritik açıklar kapanmış; üretime özgü kalanlar sahipli ve görünür.
-- [ ] Story 1.2 insan devri sonuçlanmış veya açık durumu doğru kaydedilmiş.
-- [ ] Story 1.3’ün görsel bağımlılıkları somut; üretim onayı varsayılmamış.
+- [x] Paketli hedef runtime yerelde doğrulanmış; normal tüketiciye gereken görsel sözleşmesi hazır.
+- [x] Ortak mobil bileşen hazır; mevcut Library/detail davranışı bozulmamış.
+- [x] Yerel geliştirme kabulünün kritik açıkları kapanmış; üretime özgü kalanlar sahipli ve görünür.
+- [x] Story 1.2 insan devri sonuçlanmış veya açık durumu doğru kaydedilmiş.
+- [x] Story 1.3’ün görsel bağımlılıkları somut; üretim onayı varsayılmamış.
 
 Sonra **Mobil Epic 1 → Story 1.3: Seçilen hikâyenin ilk sayfasını başlat**
 işine geçilir. İlk sayfa görseli/anlatımı, Ses tercihi, loading/retry ve ayrılma
@@ -256,8 +256,22 @@ dağıtım onayı verilmedi. Mobil story durumları değişmedi.
 | Paket | Durum | Kalan iş |
 |---|---|---|
 | 1 — Görsel hazırlama | Geliştirme kabulü tamam: 41 dosya, son Linux ARM64 JAR ve 595 çalışan test geçti; beş inceleme bulgusu kapandı | Üretim yeterlilik sınırları aşağıdaki sahipli işlerde korunur |
-| 2 — Ortak mobil görsel katmanı | Geliştirme kabulü tamam: 603 backend, 654 tam Flutter ve son yamalarla 36 hedefli test geçti | Gerçek normal uygulama root bağlantısı Paket 3 birlikte çalışma kabulünde doğrulanacak |
-| 3 — Tek kabul ve epic'e dönüş | Başlamadı | Backend–mobil birlikte doğrulama ve Story 1.3'e devir |
+| 2 — Ortak mobil görsel katmanı | Geliştirme kabulü tamam: 603 backend, 654 tam Flutter ve son yamalarla 36 hedefli test geçti | V2 normal root açığı Paket 3 kabulünde kapandı; Paket 2 kanıtı değiştirilmedi |
+| 3 — Tek kabul ve epic'e dönüş | Geliştirme kabulü tamam: gerçek Spring→normal LibraryApp/detail ve sayfa; Maven 1 + iç Flutter 1, sıfır failure/error/skip; analyzer temiz | Story 1.3 backlog'da; audio/start ve üretim işleri sahipli devredildi |
+
+**2026-10-23 devir:** [Paket 3 tek sonuç ve K3.1–K3.5 eşlemesi](../../be/docs/evidence/image-infrastructure-acceptance/README.md)
+Paket 1/Paket 2'yi tekrar çalıştırmadan kullanır. Yeni JPEG ve PNG yerel kaynaklar gerçek
+hazırlama→LIVE→normal HTTP→detail/sayfa engine decode yolundan geçti. Gecikmeli ayrılma
+istemci transport/cache/provider cleanup'ını ve permit bırakılmasını kanıtlar. Eski ana
+uygulama planı ve mobil tracker yazılmadı. 1.1 `done`, 1.2 `review`, 1.3 `backlog` kaldı;
+Story 1.2 insan kabulü açık, Story 1.3 uygulanmış değildir.
+
+Story 1.3'e `/api/library/reading-images/{manifest,status,bytes}`, typed repository/use case/
+Cubit ve normal widget ile çalışan root opt-in devredilir. Mobil Story 1.3 + backend
+EXT-MEDIA sahipleri protected-start/ilk sayfa audio sözleşmesini ve anlatım tercihini
+uygulamadan önce tamamlar. Bölüm 7'deki üretim sahiplikleri sürer; backend/operasyon SDK
+mutlak storage deadline ve AMD64 yeterliliğini, release sahipleri gerçek cihaz kabulünü
+üretime çıkmadan kapatır. Bütün arşiv optimize edilmiş sayılmaz.
 
 Paket 1'in sonuçları [tek kanıt kaydında](../../be/docs/evidence/image-package-1/README.md)
 tutulur. Paket 2'nin [uygulama sözleşmesi](../implementation-artifacts/spec-image-package-2-consumer.md)

@@ -781,6 +781,29 @@ So that I can decide whether to start reading it.
 
 ### Story 1.3: Start reading the selected story
 
+**Görsel altyapısı devri — 2026-10-23:** [Tek geliştirme kabulü](../../be/docs/evidence/image-infrastructure-acceptance/README.md)
+geçti. Gerçek yerel Spring → normal generated DI / `LibraryApp` detail ve bağımsız
+sayfa rotasında JPEG/WebP, byte/SHA/MIME, seçilen rendition, engine decode ve
+gecikmeli ayrılma cleanup'ı doğrulandı. Bu kayıt Paket 2 incelemesinin V2 açığını
+kapatır; 1.3'ün ürün başlangıcını veya sesini uygulamaz. Tracker korunur:
+1.1 `done`, 1.2 `review`, 1.3 `backlog`; 1.2 insan kabulü açık kalır.
+
+Story 1.3 görsel girdileri: `/api/library/reading-images/{manifest,status,bytes}`
+yerel/test sözleşmesi; `ReadingImageConsumerRepository`, `LoadReadingImage`,
+`ReadingImageConsumerCubit` ve `ReadingImageConsumerWidget`; bağımsız
+`ReadingImagePageRoute`. Root opt-in, `configureLibraryDependencies(..., readingImages:)`
+ile kurulur. [Çalışan fixture ve sınırlar](../../be/docs/evidence/image-infrastructure-acceptance/summary.json)
+gerçek endpoint/kimlik eşlemesini verir; genel reader veya medya session'ı değildir.
+
+**Açık sözleşme/sahiplik:** Mobil Story 1.3 ve backend EXT-MEDIA tüketici dilimi,
+uygulamadan önce protected-start, exact-language/revision ile bağlı ilk sayfa audio,
+anlatım tercihi, erişim ret/yenileme ve loading/retry/ayrılma davranışını somutlaştırır.
+Görsel metadata veya ücretsiz yerel fixture tam medya başlangıç hakkı değildir.
+Story 1.4 sayfa geçişlerini; 1.7/1.11/1.12 medya yaşam döngüsü/yenileme/uzun oturumu;
+backend/operasyon üretim profili, SDK mutlak storage deadline ve AMD64 yeterliliğini;
+release sahipleri fiziksel cihaz kabulünü; backend/CMS/operasyon ayrı onaylı yeni yayın
+etkinleştirmesi ve ardından kontrollü arşiv geçişini tamamlar.
+
 **Delivery status:** Scope approved; integration prerequisites pending; acceptance evidence absent. See **Prerequisites** and [status definitions](#planning-status-definitions).
 
 As a reader,
@@ -4518,6 +4541,10 @@ The approved detail contract is implemented under the existing module edges and 
 
 
 ### Post-Story 1.2 planning follow-up — image optimization
+
+**2026-10-23 geliştirme kapanışı:** [Tek kabul ve Story 1.3 devri](../../be/docs/evidence/image-infrastructure-acceptance/README.md)
+tamamlandı. Aşağıdaki ilk araştırma kaydı tarihseldir. Üretim etkinleştirmesi, audio/start,
+cihaz ve kontrollü arşiv geçişi sahipli açık işlerdir; yeni bağımsız görsel araştırma fazı açılmaz.
 
 The human requested that cover and content images be optimized when content is published, rather than serving raw uploaded images. Planning started on2026-10-08: [draft contract and implementation phases](../specs/spec-publish-time-image-optimization/SPEC.md) record current pipeline gaps, profile experiments, publication/readiness gates and controlled transition. [Original follow-up](post-story-1-2-image-optimization.md) preserves the requested scope. The human selected new-publication enforcement first and existing content through a separate controlled transition. The [first bounded JPEG experiment](../specs/spec-publish-time-image-optimization/p0-small-jpeg-findings.md) records 63 local output pairs and small-source size regressions. Full representative/native evaluation, numeric profiles and readiness details remain open; this experiment and the iOS native screenshot-envelope exception do not change production publication/delivery behavior.
 

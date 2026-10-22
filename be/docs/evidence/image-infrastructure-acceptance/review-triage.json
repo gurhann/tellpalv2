@@ -1,0 +1,71 @@
+{
+  "status": "PASS_LOCAL_DEVELOPMENT_REVIEW",
+  "language": "tr",
+  "layers": {
+    "blind": "Eyleme dönük bulgu yok",
+    "verification": "Doğrulama boşluğu bulunmadı",
+    "edge": "Üç test-harness yaması uygulandı"
+  },
+  "patches": [
+    {
+      "id": "R1",
+      "result": "Her koşu yeni CREATE_DIRECTORY RUN alt dizini; geçmiş marker/result korunur"
+    },
+    {
+      "id": "R2",
+      "result": "Client owner0/closed sırasında server beklemesi gözlendi; sonra RELEASED, timedOut=false, clientCleanupObserved=true"
+    },
+    {
+      "id": "R4",
+      "result": "Release yazımı hatasından bağımsız zorunlu kill/await/assert; kök kod okuması, IO fault injection yapılmadı"
+    }
+  ],
+  "finalAttempt": "attempt-07/package3-15b817fa-a1b3-4305-842a-116654164efe",
+  "verification": {
+    "maven": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "flutter": {
+      "tests": 1,
+      "passed": 1
+    },
+    "analyze": "PASS"
+  },
+  "independentRootAudit": {
+    "receiptsMatched": 21,
+    "testSourceShasMatched": 2,
+    "xmlAndFlutterLogRead": true,
+    "protection": {
+      "preExisting": {
+        "checked": 88,
+        "changed": 0
+      },
+      "originals": {
+        "checked": 41,
+        "changed": 0
+      },
+      "p5c": {
+        "checked": 124,
+        "changed": 0
+      },
+      "p5fEvidence": {
+        "checked": 7,
+        "changed": 0
+      },
+      "package1Evidence": {
+        "checked": 38,
+        "changed": 0
+      },
+      "package2Evidence": {
+        "checked": 3,
+        "changed": 0
+      }
+    },
+    "frozenSha256": "2d50f0c7c514f4fa25b9bd49b099d5ce10fa420a76883e29948227ff6750a3b7"
+  },
+  "processScope": "Yalnız CLI child ve gözlenen descendant handle; genel late-spawn/ani worker ölümü garantisi P1 guardian kanıtında kalır",
+  "package2V2": "Gerçek normal LibraryApp/detail root kabulüyle kapandı"
+}
