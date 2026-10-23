@@ -1,0 +1,18 @@
+{
+  "apkBuilt": false,
+  "approvalReviewRejectionNumber": 3,
+  "approvedPriorPayloadBytes": 8552293,
+  "approvedPriorPayloadSha256": "99831cdb3caa427c4034c3b70329cd3a7082c6c5a1d2cfc7f2f5f436706d8400",
+  "copyExecuted": false,
+  "deltaBytes": 144,
+  "deltaEvidence": "copy-payload-delta-99831cdb-to-8c3ed7a5-2026-10-20.json",
+  "fileCount": 1166,
+  "newPrivateRootExists": false,
+  "proposedPayloadBytes": 8552437,
+  "proposedPayloadSha256": "8c3ed7a5dcef734bed9abc19481150a7f3d31f98b34ffd2bc6097c37fca28580",
+  "realClaims": 0,
+  "reason": "Bu işlem özel kaynak kodu 1.166 dosya olarak MAC_EK’e aktarır; kullanıcı yalnızca 8.552.293 byte’lık önceki payload’ı onayladı, planlanan 8.552.437 byte’lık değiştirilmiş payload için açık kullanıcı onayı yoktur.",
+  "sourceModifiedAfterFinalAudit": false,
+  "status": "REJECTED_NO_COPY",
+  "workaroundAttempted": false
+}

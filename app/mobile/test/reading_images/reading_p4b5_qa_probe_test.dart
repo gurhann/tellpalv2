@@ -71,6 +71,28 @@ class _PhaseCubit extends ReadingImageComparisonCubit {
 }
 
 void main() {
+  testWidgets(
+    'Yeni manual retry overflow terminali seçili gerçek probe kimliğini korur',
+    (tester) async {
+      var failed = 0;
+      final probe = ReadingConsumerQaProbe(
+        expectedScope: ConsumerQaExpectedScope.p4b5ManualRetry,
+        onOverflow: () => failed++,
+      );
+      for (var i = 0; i < 129; i++) {
+        probe.record({'kind': 'synthetic', 'ordinal': i});
+      }
+      final sample = probe.snapshot();
+      expect(sample['ok'], false);
+      expect(
+        sample['measurementId'],
+        ConsumerQaExpectedScope.p4b5ManualRetry.measurementId,
+      );
+      expect(failed, 1);
+      await probe.stop();
+    },
+  );
+
   TestWidgetsFlutterBinding.ensureInitialized();
   test(
     'yeni scope APK sabitinden seçilir; eski parser varsayılanı korunur',
@@ -199,6 +221,7 @@ void main() {
     ConsumerQaExpectedScope.p4b5,
     ConsumerQaExpectedScope.p4b5Retry,
     ConsumerQaExpectedScope.p4b5Manual,
+    ConsumerQaExpectedScope.p4b5ManualRetry,
   ]) {
     testWidgets(
       '${selected.measurementId} gerçek loopback ve dört native paint ham JSON phase kabulüne gider',
@@ -331,7 +354,9 @@ void main() {
                 ? 'P4B5_RESOURCE_JSON'
                 : identical(selected, ConsumerQaExpectedScope.p4b5Retry)
                 ? 'P4B5_RETRY_RESOURCE_JSON'
-                : 'P4B5_MANUAL_RESOURCE_JSON'}:${jsonEncode({'chain': 'loopback-native', 'records': records})}',
+                : identical(selected, ConsumerQaExpectedScope.p4b5Manual)
+                ? 'P4B5_MANUAL_RESOURCE_JSON'
+                : 'P4B5_MANUAL_RETRY_RESOURCE_JSON'}:${jsonEncode({'measurementId': selected.measurementId, 'proposalSha256': selected.proposalSha256, 'budgetRunId': consumerQaRunId, 'chain': 'loopback-native', 'records': records})}',
           );
         } finally {
           await probe.stop();

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "scope": "local-lossless-mobile-r1",
+  "observedAtUtc": "2026-10-18T06:45:25.083187+00:00",
+  "aggregateStatus": "FAIL",
+  "physicalMeasurement": "NOT_RUN",
+  "launch": {
+    "status": "FAIL",
+    "reason": "DRIVER_FAILED",
+    "toolStatus": "timeout",
+    "elapsedMillis": 600052,
+    "launchReceiptSha256": "d6cd83bf9139e2f59ee8b4446d5e6ad4fb7c82b38c59f5f951b888e76e361c11",
+    "toolReceiptSha256": "8de3dbdcbc91b2e4e3069f65377ad16946375286a012722ef6fbd98f6ecb9eeb",
+    "lastObservedStage": "DART_VM_SERVICE_DISCOVERY_TIMEOUT",
+    "failureCauseConfirmed": false
+  },
+  "plannedSamplesPerFormatPerAsset": 1,
+  "acceptedSamplesPerFormatPerAsset": 0,
+  "measuredRuntimeSamples": 0,
+  "plannedCases": 6,
+  "acceptedCases": 0,
+  "screenshots": 0,
+  "legacyReportFieldExplanation": "verification.json içindeki samplesPerFormatPerAsset=1 planlanan protokoldür; kabul edilen veya ölçülen örnek sayısı değildir. Bu immutable raporun gerçek runtime örnek sayısı sıfırdır.",
+  "runtimeChecks": {
+    "nativeDecode": "NOT_RUN",
+    "fullRgbEquality": "NOT_RUN",
+    "paint": "NOT_RUN",
+    "physicalPixelGrid": "NOT_RUN",
+    "dartOwnedHandleStop": "NOT_RUN",
+    "instantaneousRss": "NOT_RUN"
+  },
+  "renderer": "unobserved",
+  "httpTransferMeasured": false,
+  "realOsBackgroundTested": false,
+  "humanQualityAccepted": false,
+  "fullWidthReaderAccepted": false,
+  "productionGate": "OPEN",
+  "p0Gate": "OPEN",
+  "p4bGate": "OPEN",
+  "build": {
+    "status": "PASS",
+    "mode": "profile",
+    "offlineBuild": true,
+    "sourceSha256": "853c60e5680d69d765e4a7d7b5712ac23034f24844b2d34d429d371c02b1fe20",
+    "artifactSha256": "7284d5515aa6d119ec1d46691c065ffe4644b3dd715ca5cf97878fb2cddd4f84",
+    "buildReceiptSha256": "ef1fe39abd5eab8c89a43ae154696ccc8ac1334999bb3645d69e1a06bbb990ee"
+  },
+  "codeVerification": {
+    "flutterReadingImagesTests": {
+      "status": "PASS",
+      "testCount": 97,
+      "reusedWithIdenticalMobileSource": true
+    },
+    "targetedFlutterAnalyze": "PASS",
+    "pythonRunnerTestsBeforeFrozenAttempt": {
+      "status": "PASS",
+      "testCount": 23
+    },
+    "archivedFlutterReceiptSha256": {
+      "report-flutter-tests.json": "2a95c7e7353519da8fe118edf1c81369ceaf166b733053b47f27d61d0afdf676",
+      "report-flutter-analyze.json": "0252d201f492586b77c31ae0bf535c5461240559ddfaf424b729829d992e5721"
+    }
+  },
+  "environment": {
+    "preRunExactDeviceUnlocked": true,
+    "lockCheckSha256": "d7bdf5ec4d871d26f64828bb66488b4381fc6b2d41c810410328a4279c715be4",
+    "macOrIphonePermissionOrErrorDialogReportedVisible": false,
+    "userObservationSha256": "589e96121244bb47b86e10ddafe3ceb138ab31232ac1c96fb7562c3fb4ea55da",
+    "timeoutCauseConfirmed": false
+  },
+  "cleanup": {
+    "status": "PASS",
+    "result": "NO_MATCHING_PROCESS",
+    "matchingSelectedQaProcesses": 0,
+    "stopSent": false,
+    "dartOwnedHandleStopVerified": false,
+    "receiptSha256": "56cd8c3a934f8fa70c92baed8fa185b087fe2b1f4392d206b3b354b692c46847"
+  },
+  "preservation": {
+    "unchanged": true,
+    "fileCount": 232,
+    "sha256": "ab1975c2068e01eb521c8c9480277c98a6d37690e63b397ff216733f27d7e26d",
+    "signingOutputFileCount": 2248,
+    "signingOutputSha256": "e887238394ad3f9c6ad02928bc7304a91d97c7271adc5892b77ab1512f152037"
+  },
+  "priorAttemptPreservation": {
+    "unchanged": true,
+    "privateTreeEntries": 2135,
+    "privateTreeSha256": "9eb311dead00bf51089e21b8a3844f7023a96e63dfe3b70a34ea3c739485782b",
+    "canonicalPublicSha256": {
+      "verification.json": "79e7ef9e9baf19ee35e65e6b33f6af26024b04d158378099408ed57381b21f89",
+      "verification.md": "7fc58151ba8a884a818f595c8e35222e0156b16c4cf0384bc61c542da460c45c"
+    }
+  },
+  "memlogUnchanged": true,
+  "mainReportSha256": {
+    "verification.json": "716eef17209c732f2bc100978e2e5dc27b535c75a5afbdbeecb5b7d462c28d53",
+    "verification.md": "16c7f864f6e152e61df99577d1a68c002ed7d7fbf9989cdeb763d590975d89bc"
+  },
+  "limitations": "Generic Local Network açıklaması izin reddi kanıtı değildir. VM discovery timeout nedeni belirlenmedi. Native süreç yokluğu Dart kaynak bırakma ölçümünün yerine geçmez. Yeni iPhone denemesi yapılmadı."
+}

@@ -195,8 +195,8 @@ public final class P4b5ConsumerQaSetup {
         require(runSha.equals(input.path("runBindingSha256").asText()),"REVIEWED_RUN_CHANGED");
         var run=JSON.readTree(runBytes);selected.validate(run);
         var source=boundReceipt(selected,root,run,"sourceBinding","source-binding");
-        String sourceDirectory=selected==P4b5ConsumerQaScope.P4B5_MANUAL?source.path("sourceDirectory").asText():"source";
-        require((selected!=P4b5ConsumerQaScope.P4B5_MANUAL || sourceDirectory.matches("source-[0-9]{4}")) && repo.equals(root.resolve(sourceDirectory)),"PRIVATE_SOURCE_ROOT_REQUIRED");
+        String sourceDirectory=selected.manual()?source.path("sourceDirectory").asText():"source";
+        require((!selected.manual() || sourceDirectory.matches("source-[0-9]{4}")) && repo.equals(root.resolve(sourceDirectory)),"PRIVATE_SOURCE_ROOT_REQUIRED");
         var classpath=boundReceipt(selected,root,run,"classpathBinding","classpath-binding");
         var selectedBuild=boundReceipt(selected,root,run,"selectedBuild","selected-build");
         require(input.path("sourceBindingFile").equals(run.path("sourceBindingFile"))
@@ -212,7 +212,7 @@ public final class P4b5ConsumerQaSetup {
         var build=JSON.readTree(privateBytes(buildRoot.resolve("build.private.json"),65536));selected.validate(build);
         require(build.path("sourceBindingSha256").equals(run.path("sourceBindingSha256"))
                 && build.path("entry").asText().equals(selected.entry)
-                && build.path("package").asText().equals(selected==P4b5ConsumerQaScope.P4B5_MANUAL?"com.tellpal.tellpal_mobile_poc.readingmanualqa":"com.tellpal.tellpal_mobile_poc.readingconsumerqa")
+                && build.path("package").asText().equals(selected.packageName())
                 && build.path("mode").asText().equals("debug")
                 && selectedBuild.path("apkSha256").equals(build.path("apkSha256"))
                 && ReadingIdentity.sha(Files.readAllBytes(buildRoot.resolve("consumer.apk"))).equals(build.path("apkSha256").asText()),"APPROVED_APK_CHANGED");
@@ -230,7 +230,7 @@ public final class P4b5ConsumerQaSetup {
             reviewers.add(review.path("reviewerId").textValue());
         }
         require(reviewers.size()==3,"INDEPENDENT_REVIEWERS_REQUIRED");
-        if(selected==P4b5ConsumerQaScope.P4B5_MANUAL)validateExecutionApproval(selected,root,runSha,selectedBuild.path("apkSha256").asText());
+        if(selected.manual())validateExecutionApproval(selected,root,runSha,selectedBuild.path("apkSha256").asText());
         if(selected!=P4b5ConsumerQaScope.P4B5) {
             var proof=boundReceipt(selected,root,run,"priorAttemptProof","prior-attempt-proof");
             selected.validatePriorFiles(Files.readAllBytes(repo.resolve(selected.proposal)),proof);
@@ -257,14 +257,16 @@ public final class P4b5ConsumerQaSetup {
         require(executable.isAbsolute() && executable.toRealPath().equals(binary),"PYTHON_EXECUTABLE_CHANGED");
         require(binary.isAbsolute() && binary.toRealPath().equals(binary) && Files.isRegularFile(binary)
                 && ReadingIdentity.sha(Files.readAllBytes(binary)).equals(python.path("pythonBinarySha256").asText()),"PYTHON_BINARY_CHANGED");
-        require(controller.equals(repo.resolve("tools/image-optimization/"+(selected==P4b5ConsumerQaScope.P4B5_MANUAL?"p4b5_manual_consumer_qa.py":"p4b5_consumer_qa.py"))) && controller.toRealPath().equals(controller)
+        require(controller.equals(repo.resolve("tools/image-optimization/"+(selected.manual()?"p4b5_manual_consumer_qa.py":"p4b5_consumer_qa.py"))) && controller.toRealPath().equals(controller)
                 && ReadingIdentity.sha(Files.readAllBytes(controller)).equals(python.path("controllerSha256").asText()),"PYTHON_CONTROLLER_CHANGED");
         var files=python.path("files");
-        if(selected==P4b5ConsumerQaScope.P4B5_MANUAL)require(files.has(controller.toString()) && files.has(repo.resolve("tools/mobile-test-account.json").toString()),"PYTHON_IMPORT_CLOSURE_REQUIRED");require(files.isObject() && files.size()>0,"PYTHON_IMPORT_CLOSURE_REQUIRED");
+        if(selected.manual())require(files.has(controller.toString()) && files.has(repo.resolve("tools/mobile-test-account.json").toString()),"PYTHON_IMPORT_CLOSURE_REQUIRED");require(files.isObject() && files.size()>0,"PYTHON_IMPORT_CLOSURE_REQUIRED");
         for(String file:List.of("p4b5_consumer_qa.py","p4b5_qa_scope.py","p4_consumer_qa.py","p4_resource_observation.py","p4_reading_comparison.py","native_test_login.py","native_entry_config.py"))
             require(files.has(controller.getParent().resolve(file).toString()),"PYTHON_IMPORT_CLOSURE_REQUIRED");
         var entries=files.fields();while(entries.hasNext()) {
             var entry=entries.next();Path file=Path.of(entry.getKey());
+            if(selected.manual() && Set.of("p4b5_manual_consumer_qa.py","p4b5_consumer_qa.py","p4b5_qa_scope.py","p4_consumer_qa.py","p4_resource_observation.py","p4_reading_comparison.py","native_test_login.py","native_entry_config.py").contains(file.getFileName().toString()))
+                require(file.equals(controller.getParent().resolve(file.getFileName())),"PYTHON_OWNED_IMPORT_OUTSIDE_SELECTED_SOURCE");
             require(file.isAbsolute() && file.toRealPath().equals(file) && Files.isRegularFile(file)
                     && ReadingIdentity.sha(Files.readAllBytes(file)).equals(entry.getValue().asText()),"PYTHON_IMPORT_CHANGED");
         }

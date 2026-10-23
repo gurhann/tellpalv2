@@ -3,6 +3,9 @@ title: 'P4b5 — DevTools ile gerçek QA detail/reader gözlemi'
 type: 'chore'
 created: '2026-10-20'
 status: 'in-progress'
+execution_status: 'closed_by_user'
+execution_closed: '2026-10-20'
+runtime_acceptance: 'not_verified'
 baseline_commit: 'b155a2aa060931c1e268c7b9c14314d23c7fd725'
 review_loop_iteration: 0
 context: ['{project-root}/AGENTS.md']
@@ -105,3 +108,8 @@ Bu ilk devirde yalnız hazırlık ve gerekirse onayın özel makbuzunu oluştur.
 2026-10-20: Onaylı tek arm, 16,886 saniyede `QA_PROCESS_COMMAND_CHANGED` ile terminal `FAILED_NO_RETRY` oldu. Bir kurulum ve ilk başlangıç tüketildi; backend/giriş/pencere/measurement ve QA medya aşamaları açılmadı. Yeni consumer DevTools bağlantısı ve baseline kabulü yoktur. İlk cleanup başarısız kaydı değişmedi. Aynı PID/başlangıç tick’i ve paket sonradan tekrar olumlu doğrulandı; yalnız sahipliği doğrulanan QA süreci mevcut adapter ile kapatıldı ve `/proc` yokluğu doğrulandı. Ek cleanup PASS, ilk sonucu değiştirmez.
 
 Dart logcat ayrıca `directories failed → failureMarker unavailable` gösterdi. Host cmdline reddi ile bu uygulama bulgusu arasında kesin nedensellik kurulmadı. Salt okunur alias tanısı aynı dizin kimliğini gösterdi; Dart’ın gerçek support/resolve sonucu olmadığı için kök neden açık kaldı. Kaynak/APK/binding değiştirilmedi; tekrar yapılmadı. [Sonuç raporu](../../be/docs/evidence/devtools-consumer/verification.md) başarısız deneme ve açık kabul sınırlarını kaydeder. Son iki görev tam kabul sağlamadı; status ve ölçüm görevi açık kalır. BMad step-03, dört paint/teslimat kabulü sağlanmış gibi kapatılmaz. Sonuç raporunun ayrı üç kanıt incelemesi yapılır; yalnız mevcut DevTools belgeleri için yerel commit hazırlanır. Eski pending kaynaklar ve `.memlog.md` commit kapsamına alınmaz.
+
+
+## Kullanıcı kararıyla yürütme kapanışı — 2026-10-20
+
+Kullanıcı ek başlangıç/ölçüm çalışmasını sürdürmemeye ve sonraki adıma geçmeye karar verdi. Bu spec’in yürütmesi kapatıldı; açık görevler teknik olarak tamamlanmadı. `status: in-progress` eksik teknik kabulü tarihsel olarak korur; `execution_status: closed_by_user` nedeniyle bu spec kendiliğinden sürdürülmez. Mevcut kapalı run, tüketim ve başarısızlık kayıtları değişmez. Yerel tanı onarımı kendi spec’inde tamamdır; gerçek başlangıç kök nedeni ve P4b/cihaz kabulü teknik borçtur. [Kapanış ve P5 devri](../../be/docs/evidence/image-optimization-handoff-2026-10-20.md) güncel çalışma yönünü kaydeder. Yeni kullanıcı talebi olmadan yeni APK/başlangıç/ölçüm planlanmaz veya çalıştırılmaz.

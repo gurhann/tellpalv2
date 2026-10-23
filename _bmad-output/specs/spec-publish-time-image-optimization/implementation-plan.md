@@ -111,3 +111,35 @@ Read-only production inventory and any production writes/deployment require thei
 | Migration | Dry-run correctness, small cohort, pointer atomicity, retained sessions, rollback and no source overwrite/deletion |
 
 Run relevant focused tests, real PostgreSQL integration/Flyway coverage, Modulith verification and backend `bash ./mvnw verify` for the eventual backend change. Run analyzer, appropriate Flutter tests and actual device checks for client changes; CMS production build and focused interaction/regression checks for any CMS change. Unit mocks or a successful build do not replace actual converter/storage/publication evidence. This planning/local-experiment run does not claim new application test results or production readiness.
+
+
+## 2026-10-20 — Kullanıcı kararı ve P5 hazırlığı
+
+Kullanıcı ek P4b5 QA başlangıç/ölçüm hattını kapatıp sonraki adıma geçmeyi istedi. [Kapanış kaydı](../../../be/docs/evidence/image-optimization-handoff-2026-10-20.md) ve deferred-work girdisi eksik kabulü korur. Bu karar P4b’nin veya yukarıdaki çıkış koşullarının tamamlandığı anlamına gelmez.
+
+Sonraki bağımsız çalışma P5a yerel envanter/dry-run hazırlığıdır: repo ve yerel fixture’larla dil/rol/kaynak/profil/legacy kanıtını ayır; eksik karar veya kanıtı engel olarak raporla. Üretim envanteri, DB/storage bağlantısı, gerçek üretim, backfill, pointer/erişim değişikliği, silme ve dağıtım açılmaz. P4b ölçüm/cihaz ve üretim profili/erişim kapıları gerçek geçişten önce açık kalır. Önceki başarısızlıklar, kayıtlar ve toplam tavanlar değişmez.
+
+## 2026-10-21 — P5a kapsamının yeniden düzenlenmesi
+
+Kullanıcı P5a'yı canlıdaki hikâyelerin hiçbir veriyi değiştirmeyen salt okunur envanteri olarak istedi. [Yeni P5a taslağı](../../implementation-artifacts/spec-p5a-production-readonly-inventory.md), önceki yerel örnek aracı önerisinin yerini alır. Kapsam; production PostgreSQL'de aynı ana ait salt okunur görünümden STORY/dil/rol/sayfa/asset metadata'sı ve mevcut manifest/job kanıtını toplamak, eksikleri yerel raporda göstermektir. Storage taraması/indirme, dönüştürme, backfill, pointer/erişim değişikliği, silme ve deploy kapsam dışıdır. Yerel kayıtlar yalnız test girdisi kalır; gerçek dosya varlığı/kalitesi ve geçiş uygunluğu envanterle kanıtlanmaz. Bu güncellemede canlı bağlantı açılmadı; uygulama planı taslaktır. P4b ve üretim kabul kapıları korunur.
+
+Kullanıcı sonraki yönlendirmesinde sorguyu kendi çalıştırıp ham sonucu paylaşmayı
+seçti. Otomatik bağlantı aracı yerine [manuel salt okunur SQL](../../../tools/image-optimization/p5a_manual_inventory.sql)
+hazırlandı; [yerel doğrulama](../../../be/docs/evidence/p5a-production-inventory/verification.md)
+11 kontrolü kaydeder. Ajan canlıya bağlanmadı. İlk sorgu çekirdek kayıtlarla şemayı
+getirir; gerçek şemaya göre ek manifest/reading sorgusu ve envanter analizi kullanıcı
+çıktısını bekler. P5a tamamlandı veya canlı envanter çıkarıldı sayılmaz.
+
+Kullanıcı daha sonra JSON yerine normal SELECT ve CSV istedi.
+[Güncel dört SELECT](../../../tools/image-optimization/p5a_csv_inventory.sql)
+hikâye/dil, sayfa/dil, referanslı medya ve legacy iş kayıtlarını ayrı satır/sütun
+sonuçları olarak döndürür. [CSV rehberi](../../../tools/image-optimization/P5A_CSV_INVENTORY.md)
+dosya adlarını tanımlar. Ayrı çıktılar tek atomik snapshot sayılmaz; salt SELECT
+ve metadata kapsamı korunur. Envanter analizi yeni CSV'leri bekler.
+
+Kullanıcı dört CSV'yi paylaştı; [P5a metadata raporu](../../../be/docs/evidence/p5a-production-inventory/findings.md)
+tamamlandı. Görünen kapsam 78 hikâye, 253 dil kaydı ve 4.654 yerelleştirilmiş
+sayfa bağıdır. #1/PT okuma kapağı eksik, 133 okuma kaynağı GIF MIME kaydı taşıyor
+ve 342 okuma kaynağında kayıtlı SHA yok. Okuma kaynaklarının benzersiz metadata
+byte toplamı 5.494.676.281'dir; storage/transfer/kalite ölçümü değildir. Canlı
+bağlantı veya değişiklik yapılmadı. Gerçek geçiş ve açık üretim/P4b kapıları kapanmadı.

@@ -1,0 +1,33 @@
+{
+  "approvedCopyBytesTotal": 8552293,
+  "approvedManifest": "copy-payload-audit-approved-99831cdb-2026-10-20.json",
+  "approvedManifestReconstructedFromExactReversePatchAndVerifiedByOriginalSha256": true,
+  "approvedManifestSha256": "99831cdb3caa427c4034c3b70329cd3a7082c6c5a1d2cfc7f2f5f436706d8400",
+  "changes": [
+    {
+      "approvedBytes": 44488,
+      "approvedFragment": "        if file and name in OWNED_MODULES:\n            path = Path(file)",
+      "approvedSha256": "c8b4be7258cc3247745bde5648c69d85643626d495512dac5016d93bdd9b2853",
+      "currentBytes": 44580,
+      "currentFragment": "        if name in OWNED_MODULES:\n            require(type(file) is str and bool(file), 'PYTHON_OWNED_IMPORT_OUTSIDE_SELECTED_SOURCE')\n            path = Path(file)",
+      "currentSha256": "ca281fac641cbff0a575b431be1e73954c9ef089b5235699623c2ba84682ed0a",
+      "deltaBytes": 92,
+      "path": "tools/image-optimization/p4b5_manual_consumer_qa.py"
+    },
+    {
+      "approvedBytes": 10682,
+      "approvedFragment": "(SimpleNamespace(__name__=module.__name__, __file__=str(stale)), both)]:",
+      "approvedSha256": "aaf18262fb591440c4da3757be3f4a34adee9390dd44a06d7cb24428b1e34326",
+      "currentBytes": 10734,
+      "currentFragment": "(SimpleNamespace(__name__=module.__name__, __file__=str(stale)), both), (SimpleNamespace(__name__=module.__name__), files)]:",
+      "currentSha256": "bc6ea1372ab3c638aed0a15874fadec2401b3be5c68659836824705db07c54b0",
+      "deltaBytes": 52,
+      "path": "tools/image-optimization/test_p4b5_manual_retry_qa.py"
+    }
+  ],
+  "deltaBytes": 144,
+  "newManifest": "copy-payload-audit-2026-10-20.json",
+  "newManifestSha256": "8c3ed7a5dcef734bed9abc19481150a7f3d31f98b34ffd2bc6097c37fca28580",
+  "originalOldManifestWasOverwritten": true,
+  "sourceFilesModifiedDuringThisAudit": false
+}

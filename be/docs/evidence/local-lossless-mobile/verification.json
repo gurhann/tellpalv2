@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "scope": "local-lossless-mobile-r1",
+  "observedAtUtc": "2026-10-17T23:01:47.747431+00:00",
+  "status": "NOT_RUN",
+  "reason": "DRIVER_FAILED",
+  "mode": "profile",
+  "bundleId": "com.tellpal.tellpalMobilePoc.imageexperiment.profile",
+  "fixtureEvidenceSha256": "16adae98244f6821cdb15f81dcca4a7640c2075cbeaa2cbecfc34786a1e78100",
+  "sourceSha256": "3a45a34b480ac7d4c8f145cc11cadbb6c8c7c1498f4217f7449ae072ef2f82b7",
+  "pubspecLockSha256": "9d95c6e29e64f84e6db57db60008b8c4eb5aa00c95f8f718955f1c0519c2f212",
+  "podLockSha256": "af63ebc41cc0d28c4fa2b9699f0546ef905cabee4e52d61bf1dda1a9b57e3a05",
+  "theoreticalRgbaBytes": 4386192,
+  "rssKind": "INSTANTANEOUS_PROCESS_RSS_NOT_PEAK_OR_GPU",
+  "rssLoadedScope": "after_rgb_readback_and_checksum_includes_validation_overhead",
+  "samplesPerFormatPerAsset": 1,
+  "rgbReadbackScope": "native_readback_alpha_scan_rgb_copy_and_sha_validation",
+  "renderer": "unobserved",
+  "httpTransferMeasured": false,
+  "realOsBackgroundTested": false,
+  "humanQualityAccepted": false,
+  "fullWidthReaderAccepted": false,
+  "productionGate": "OPEN",
+  "p0Gate": "OPEN",
+  "p4bGate": "OPEN",
+  "codeVerification": [
+    {
+      "kind": "flutter_reading_images",
+      "status": "PASS",
+      "passedTests": 97,
+      "receiptSha256": "2a95c7e7353519da8fe118edf1c81369ceaf166b733053b47f27d61d0afdf676",
+      "stdoutSha256": "3e76f4be61cab08d464d9106843a473b529d2d6a822fc16fd9fcae080109c4fd",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "flutter_targeted_analyze",
+      "status": "PASS",
+      "passedTests": null,
+      "receiptSha256": "0252d201f492586b77c31ae0bf535c5461240559ddfaf424b729829d992e5721",
+      "stdoutSha256": "71c941f88036b9c8dd9192213a4f764fceef3ca6d8199b173ab24a705752b9c0",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "python_local_lossless_mobile",
+      "status": "PASS",
+      "passedTests": 20,
+      "receiptSha256": "bae2375460e8caf3bd5d1c00237782b4a11b3d44b3cca4f7db9f987f3bd55274",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "b54d7fe16f15757a1937a003af25a835695283a2ef01ab307a62b5ee76fdc6ca"
+    }
+  ],
+  "preservation": {
+    "unchanged": true,
+    "fileCount": 232,
+    "sha256": "ab1975c2068e01eb521c8c9480277c98a6d37690e63b397ff216733f27d7e26d",
+    "signingOutputFileCount": 2248,
+    "signingOutputSha256": "e887238394ad3f9c6ad02928bc7304a91d97c7271adc5892b77ab1512f152037"
+  },
+  "statusScope": "PHYSICAL_MEASUREMENT",
+  "build": {
+    "status": "PASS",
+    "mode": "profile",
+    "sdk": "iphoneos",
+    "bundleId": "com.tellpal.tellpalMobilePoc.imageexperiment.profile",
+    "codesignVerified": true,
+    "offlineBuild": true,
+    "runtimeModeVerified": false,
+    "artifactSha256": "2faa415feb571cfc9344dbdf38c728279bfb1bf14c8a617f9e87da3f26b771de",
+    "receiptSha256": "6652c363f660a2e426ff0793761961d62e362f6ba3e1f8ec9e237fbb40bd81e8"
+  },
+  "launch": {
+    "status": "FAIL",
+    "reason": "DRIVER_FAILED",
+    "toolStatus": "timeout",
+    "elapsedMillis": 600025,
+    "traceBytes": 523,
+    "lastObservedStage": "Xcode debug automation startup",
+    "causeConfirmed": false,
+    "attemptSha256": "2b06ec4b903bcdd7a7b56cd6b8e7e8a5617c61cbd7c660bb630530ca3f42b5fa",
+    "receiptSha256": "cf89bad527972ae29e155cfd80092ac7b65612472d35cdc22ebf21e87deb09b9",
+    "toolReceiptSha256": "856fb8fdd3e84651a275b03a63543c1522fbd124afce1656c4ed34318a2cd10f"
+  },
+  "physicalMeasurement": {
+    "status": "NOT_RUN",
+    "completedRecordedCases": 0,
+    "recordedScreenshots": 0,
+    "runtimeNonceVerified": false,
+    "rgbVerification": "NOT_RUN",
+    "paintVerification": "NOT_RUN",
+    "stopOwnedResourceVerification": "NOT_RUN",
+    "rssSamples": "NOT_RUN"
+  },
+  "cases": [],
+  "screenshots": [],
+  "stopped": null,
+  "devicePreflight": {
+    "physicalDevice": true,
+    "model": "iPhone 12",
+    "osVersion": "26.7",
+    "evidenceSha256": "992817dce4dac510ca0f17cc637fcdddf2641c11f56320ddff4682814673f742"
+  },
+  "runNonceSha256": "2d97a8ff61a1e45ea5989f64c29cb664ffc9036ce1bbcb3fa11658190f783a6e",
+  "memlogSha256": "338cc79fa0194c80e533a1bfc01c0a3349959cf88a6dfd5177c9c8f3e9e1800c",
+  "environmentObservations": {
+    "source": "Koordinatörün ayrı salt okunur oturum gözlemleri",
+    "macUiInspection": "Mac kilitli olduğu için Xcode UI incelenemedi.",
+    "iphoneLockState": {
+      "passcodeRequired": true,
+      "unlockedSinceBoot": true
+    },
+    "timeoutCauseConfirmed": false
+  },
+  "warnings": [
+    "Flutter, Xcode otomasyonu için genel izin açıklaması verdi; açık permission-denied hatası yok.",
+    "iOS 26 kablosuz debugging yavaşlığı uyarısı verildi.",
+    "Xcode debugging başlangıcının beklenenden uzun sürdüğü bildirildi."
+  ],
+  "engineRevision": "3452d735bd38224ef2db85ca763d862d6326b17f",
+  "flutterVersion": "3.41.1"
+}

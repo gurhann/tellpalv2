@@ -8,6 +8,7 @@ import 'package:tellpal_mobile_poc/core/theme/library_theme.dart';
 import 'manual_consumer_qa/coordinator.dart';
 import 'manual_consumer_qa/injection.dart';
 import 'manual_consumer_qa/private_protocol.dart';
+import 'reading_consumer_qa_probe.dart';
 
 Future<void> main() async {
   await bootstrapManualConsumerQa();
@@ -15,11 +16,13 @@ Future<void> main() async {
 
 /// Main ve testler aynı DI, coordinator ve özel protokol başlangıcını kullanır.
 Future<ManualConsumerQaCoordinator?> bootstrapManualConsumerQa({
+  ConsumerQaExpectedScope scope = ConsumerQaExpectedScope.p4b5Manual,
   Future<Directory> Function()? resolveSupport,
   ManualQaPlatform platform = const ManualQaPlatform(),
   void Function(Widget)? mount,
   void Function(String)? diagnostic,
 }) async {
+  manualRequire(scope.manual);
   WidgetsFlutterBinding.ensureInitialized();
   final diagnostics = ManualQaDiagnostics(diagnostic);
   ManualConsumerQaCoordinator? coordinator;
@@ -42,6 +45,7 @@ Future<ManualConsumerQaCoordinator?> bootstrapManualConsumerQa({
       param1: ManualQaPrivateProtocol(
         support,
         platform: platform,
+        scope: scope,
         diagnostics: diagnostics,
       ),
     );

@@ -13,7 +13,7 @@ import time
 
 import p4b5_consumer_qa as prior
 import p4_consumer_qa as helpers
-from p4b5_qa_scope import P4B5, P4B5_RETRY, P4B5_MANUAL
+from p4b5_qa_scope import P4B5, P4B5_RETRY, P4B5_MANUAL, P4B5_MANUAL_RETRY, select_scope
 
 SCOPE = P4B5_MANUAL
 PACKAGE = 'com.tellpal.tellpal_mobile_poc.readingmanualqa'
@@ -23,30 +23,37 @@ IDENTITY_KEYS = ['measurementId', 'proposalSha256', 'budgetRunId', 'nonce', 'pid
 require = prior.require
 
 
-def expected_prior_proof(proposal):
-    return {**SCOPE.identity(), **{k: proposal[k] for k in ['previousAttemptsEvidence', 'historicalEvidence', 'priorConsumption']},
+def expected_prior_proof(proposal, selected=None):
+    selected = SCOPE if selected is None else selected
+    return {**selected.identity(), **{k: proposal[k] for k in ['previousAttemptsEvidence', 'historicalEvidence', 'priorConsumption']},
             'previousAttemptVerifiedByFileHashes': True, 'currentDatabaseQueried': False,
             'oldBackendLedgerExists': False, 'actualStagesExecuted': False}
 
 
-def validate_prior_proof(proposal_bytes, proof):
-    require(hashlib.sha256(proposal_bytes).hexdigest() == SCOPE.proposal_sha256, 'PRIOR_ATTEMPT_PROPOSAL_CHANGED')
+def validate_prior_proof(proposal_bytes, proof, selected=None):
+    selected = SCOPE if selected is None else selected
+    require(selected.manual, 'EXPLICIT_MANUAL_SCOPE_REQUIRED')
+    require(hashlib.sha256(proposal_bytes).hexdigest() == selected.proposal_sha256, 'PRIOR_ATTEMPT_PROPOSAL_CHANGED')
     proposal = json.loads(proposal_bytes)
-    require(prior.exact(proof, expected_prior_proof(proposal)), 'PRIOR_ATTEMPT_PROOF_CHANGED')
-    require(len(proposal['previousAttemptsEvidence']) == 2, 'BOTH_PRIOR_ATTEMPTS_REQUIRED')
+    require(prior.exact(proof, expected_prior_proof(proposal, selected)), 'PRIOR_ATTEMPT_PROOF_CHANGED')
+    history = [P4B5, P4B5_RETRY] + ([P4B5_MANUAL] if selected is P4B5_MANUAL_RETRY else [])
+    require(len(proposal['previousAttemptsEvidence']) == len(history), 'ALL_PRIOR_ATTEMPTS_REQUIRED')
     for index, previous in enumerate(proposal['previousAttemptsEvidence']):
-        selected = [P4B5, P4B5_RETRY][index]
-        require(previous['privateRoot'] == str(selected.private_root) and previous['measurementId'] == selected.measurement_id
-                and len(previous['files']) == [12, 6][index] and previous['terminalStatus'] == 'FAILED_NO_RETRY'
+        previous_scope = history[index]
+        require(previous['privateRoot'] == str(previous_scope.private_root) and previous['measurementId'] == previous_scope.measurement_id
+                and previous['proposalSha256'] == previous_scope.proposal_sha256
+                and len(previous['files']) == [12, 6, 32][index] and previous['terminalStatus'] == 'FAILED_NO_RETRY'
                 and previous['mediaRequestsConsumed'] == 0 and previous['additionalDeliveryOperations'] == 0
                 and previous['additionalDeliveryReservedBytes'] == 0, 'PRIOR_ATTEMPT_SCOPE_CHANGED')
         for name, sha in previous['files'].items():
             path = Path(name)
             require(not path.is_absolute() and '..' not in path.parts and str(path) == name, 'PRIOR_ATTEMPT_PATH_REFUSED')
-            require(hashlib.sha256(helpers.private_file(selected.private_root / path, 4194304, external=True)).hexdigest() == sha, 'PRIOR_ATTEMPT_FILE_CHANGED')
+            require(hashlib.sha256(helpers.private_file(previous_scope.private_root / path, 4194304, external=True)).hexdigest() == sha, 'PRIOR_ATTEMPT_FILE_CHANGED')
 
 
-def validate_receipts(raw_receipts, expected_owner=None, complete=True):
+def validate_receipts(raw_receipts, expected_owner=None, complete=True, selected=None):
+    selected = SCOPE if selected is None else selected
+    require(selected.manual, 'EXPLICIT_MANUAL_SCOPE_REQUIRED')
     """Hash zinciri ve gerçek PID/lifetime bağını saf olarak doğrular."""
     require(type(raw_receipts) is list and 0 < len(raw_receipts) <= 10, 'RECEIPT_COUNT')
     if complete:
@@ -60,12 +67,12 @@ def validate_receipts(raw_receipts, expected_owner=None, complete=True):
         value = json.loads(raw)
         require(type(value) is dict and set(value) == set(IDENTITY_KEYS + ['ordinal', 'phase', 'previousSha256', 'recordedAtEpochMillis', 'sample']), 'RECEIPT_FIELDS')
         identity = {k: value[k] for k in IDENTITY_KEYS}
-        require(all(identity.get(k) == v for k, v in SCOPE.identity().items())
+        require(all(identity.get(k) == v for k, v in selected.identity().items())
                 and type(identity['pid']) is int and identity['pid'] > 1
                 and type(identity['processStartTicks']) is str and re.fullmatch('[1-9][0-9]*', identity['processStartTicks'])
                 and type(identity['nonce']) is str and re.fullmatch('[a-f0-9]{64}', identity['nonce'])
                 and type(identity['lifetimeId']) is str and re.fullmatch('[a-f0-9]{32}', identity['lifetimeId'])
-                and identity['supportDirectory'] in ['/data/user/0/' + PACKAGE + '/files', '/data/data/' + PACKAGE + '/files'], 'RECEIPT_IDENTITY')
+                and identity['supportDirectory'] in ['/data/user/0/' + selected.package + '/files', '/data/data/' + selected.package + '/files'], 'RECEIPT_IDENTITY')
         owner = identity if owner is None else owner
         require(identity == owner and (expected_owner is None or identity == expected_owner), 'RECEIPT_OWNER_CHANGED')
         require(type(value['ordinal']) is int and value['ordinal'] == index + 1 and value['phase'] == prior.PHASES[index]
@@ -73,6 +80,8 @@ def validate_receipts(raw_receipts, expected_owner=None, complete=True):
         require(type(value['recordedAtEpochMillis']) is int and (last_time is None or value['recordedAtEpochMillis'] >= last_time), 'RECEIPT_CLOCK_ROLLBACK')
         last_time = value['recordedAtEpochMillis']
         sample = value['sample']
+        if selected is P4B5_MANUAL_RETRY:
+            require(type(sample) is dict and all(sample.get(k) == v for k, v in selected.identity().items()), 'RECEIPT_SAMPLE_SCOPE_CHANGED')
         require(type(sample) is dict and sample.get('resourceObservation', {}).get('lifetimeId') == owner['lifetimeId'], 'RECEIPT_LIFETIME')
         observed = sample.get('events')
         require(type(observed) is list and len(observed) <= 128 and observed[:len(events)] == events, 'EVENT_OVERFLOW_OR_REWRITE')
@@ -103,9 +112,9 @@ def remaining(deadline):
     return value
 
 
-def validate_captures(raw_acks, raw_receipts, pngs):
+def validate_captures(raw_acks, raw_receipts, pngs, selected=None):
     require(len(raw_acks) == len(pngs) == 4, 'FOUR_CAPTURE_ACKS_REQUIRED')
-    owner, _ = validate_receipts(raw_receipts)
+    owner, _ = validate_receipts(raw_receipts, selected=selected)
     total = sum(map(len, raw_receipts))
     for index, (raw, png) in enumerate(zip(raw_acks, pngs), 1):
         require(type(raw) is bytes and 0 < len(raw) <= 20480 and type(png) is bytes
@@ -119,9 +128,39 @@ def validate_captures(raw_acks, raw_receipts, pngs):
     require(total <= 12582912, 'RECEIPT_TOTAL_SIZE')
 
 
+OWNED_MODULES = frozenset(['p4b5_manual_consumer_qa', 'p4b5_consumer_qa', 'p4b5_qa_scope', 'p4_consumer_qa',
+                           'p4_resource_observation', 'p4_reading_comparison', 'native_test_login', 'native_entry_config'])
+
+
+def validate_owned_imports(controller, files, modules):
+    """Hash listesinde eski kopya bulunsa da seçili owned modül yolu değişemez."""
+    for name in files:
+        path = Path(name)
+        if path.stem in OWNED_MODULES and path.suffix == '.py':
+            require(path == controller.parent / path.name, 'PYTHON_OWNED_IMPORT_OUTSIDE_SELECTED_SOURCE')
+    for module in modules:
+        name, file = getattr(module, '__name__', ''), getattr(module, '__file__', None)
+        if name in OWNED_MODULES:
+            require(type(file) is str and bool(file), 'PYTHON_OWNED_IMPORT_OUTSIDE_SELECTED_SOURCE')
+            path = Path(file)
+            require(path.is_absolute() and path.resolve() == path and path == controller.parent / (name + '.py'), 'PYTHON_OWNED_IMPORT_OUTSIDE_SELECTED_SOURCE')
+            require(str(path) in files and prior.digest(path) == files[str(path)], 'PYTHON_RUNTIME_IMPORT_CHANGED')
+
+
+def validate_native_envelope(value, selected):
+    require(selected.manual and type(value) is dict
+            and set(value) == {'chain', 'records', *selected.identity()}
+            and all(value.get(k) == v for k, v in selected.identity().items())
+            and value['chain'] == 'loopback-native', 'NATIVE_ENVELOPE_SCOPE_CHANGED')
+    require(type(value['records']) is list and all(type(record.get('sample')) is dict
+            and all(record['sample'].get(k) == v for k, v in selected.identity().items())
+            for record in value['records']), 'NATIVE_SAMPLE_SCOPE_CHANGED')
+    return prior.validate_phase_resources(value['records'])
+
+
 def safe_android_diagnostics(android):
     operations = {'pidof', 'cmdline', 'stat', 'proc_list'}
-    codes = {'DEADLINE', 'READ_FAILED', 'INVALID_OUTPUT', 'EMPTY_DISCOVERY', 'COMMAND_CHANGED', 'START_CHANGED',
+    codes = {'DEADLINE', 'READ_FAILED', 'INVALID_OUTPUT', 'EMPTY_DISCOVERY', 'EMPTY_CMDLINE', 'INVALID_CMDLINE', 'COMMAND_CHANGED', 'START_CHANGED',
              'PID_DIFFERENT', 'DISCOVERY_CONFLICT', 'PROC_ABSENT', 'PROC_PRESENT'}
     try: snapshot = getattr(android, 'diagnostic_snapshot', lambda: [])()
     except Exception: return []
@@ -133,6 +172,12 @@ def safe_android_diagnostics(android):
 
 class ManualAndroid(helpers.Android):
     """Mevcut ADB üstüne yalnız sabit app-private stdin/dosya işlemleri ekler."""
+    def __init__(self, adb, serial, selected=None):
+        self.qa_scope = SCOPE if selected is None else selected
+        require(self.qa_scope.manual, 'EXPLICIT_MANUAL_SCOPE_REQUIRED')
+        self.package = self.qa_scope.package
+        super().__init__(adb, serial)
+
     def preflight(self, timeout=30):
         end = time.monotonic() + timeout
         checks = [(['get-state'], lambda v: v == 'device'),
@@ -145,9 +190,16 @@ class ManualAndroid(helpers.Android):
             remaining(end)
             require(validate(value), 'EMULATOR_PREFLIGHT_CHANGED')
 
+    def package_absent(self, timeout=15):
+        # pm path yok paket için 1 dönebilir; transport/izin hatası yokluk kanıtı değildir.
+        result = subprocess.run(self.args + ['shell', 'pm', 'path', self.package],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
+        require(result.returncode in [0, 1] and result.stderr == b'', 'QA_PACKAGE_QUERY_FAILED')
+        return result.stdout == b''
+
     def private_shell(self, script, data=None, timeout=3):
         # Shell v2 uzak exit kodunu taşır; tek komut argümanı iki shell sınırında da korunur.
-        command = shlex.join(['run-as', PACKAGE, 'sh', '-c', script])
+        command = shlex.join(['run-as', self.package, 'sh', '-c', script])
         return subprocess.run(self.args + ['shell', '-T', command], input=data,
                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=timeout)
 
@@ -200,7 +252,7 @@ class ManualAndroid(helpers.Android):
         return result
 
     def pid(self, timeout=15):
-        result = self._process_query(['shell', 'pidof', PACKAGE], 'pidof', timeout)
+        result = self._process_query(['shell', 'pidof', self.package], 'pidof', timeout)
         require(result.returncode in [0, 1], 'PID_QUERY_FAILED')
         try: value = result.stdout.decode('ascii').strip()
         except Exception:
@@ -217,7 +269,14 @@ class ManualAndroid(helpers.Android):
         end = time.monotonic() + timeout
         command = self._process_query(['shell', 'cat', f'/proc/{pid}/cmdline'], 'cmdline', remaining(end))
         require(command.returncode == 0, 'QA_PROCESS_READ_FAILED')
-        if command.stdout.split(b'\x00')[0] != PACKAGE.encode():
+        command_name = command.stdout.split(b'\x00')[0]
+        if not command_name:
+            self._diagnostic('cmdline', 'EMPTY_CMDLINE')
+            raise ValueError('QA_PROCESS_CMDLINE_EMPTY')
+        if not re.fullmatch(rb'[A-Za-z0-9_.:-]+', command_name):
+            self._diagnostic('cmdline', 'INVALID_CMDLINE')
+            raise ValueError('QA_PROCESS_CMDLINE_INVALID')
+        if command_name != self.package.encode():
             self._diagnostic('cmdline', 'COMMAND_CHANGED')
             raise ValueError('QA_PROCESS_COMMAND_CHANGED')
         stat = self._process_query(['shell', 'cat', f'/proc/{pid}/stat'], 'stat', remaining(end))
@@ -276,8 +335,8 @@ class ManualAndroid(helpers.Android):
         return 'alive'
 
     def private_root(self, timeout=3):
-        root = self.run('shell', '-T', shlex.join(['run-as', PACKAGE, 'pwd']), timeout=timeout).strip()
-        require(re.fullmatch(r'/data/(?:user/0|data)/' + re.escape(PACKAGE), root), 'APP_PRIVATE_ROOT_REQUIRED')
+        root = self.run('shell', '-T', shlex.join(['run-as', self.package, 'pwd']), timeout=timeout).strip()
+        require(re.fullmatch(r'/data/(?:user/0|data)/' + re.escape(self.package), root), 'APP_PRIVATE_ROOT_REQUIRED')
         return root
 
     def read_receipt(self, index, timeout=3):
@@ -325,14 +384,15 @@ class ManualAndroid(helpers.Android):
 
 
 class ManualController(prior.Controller):
-    def __init__(self, private=None, root=ROOT):
-        super().__init__(private=private, root=root, selected=SCOPE)
-        self.package = PACKAGE
+    def __init__(self, private=None, root=ROOT, selected=None):
+        selected = SCOPE if selected is None else selected
+        require(selected.manual, 'EXPLICIT_MANUAL_SCOPE_REQUIRED')
+        super().__init__(private=private, root=root, selected=selected)
 
     def execution_approval_gate(self, run_path):
         approval = self.receipt('receipts/execution-approval-01.private.json')
         build, _ = self.selected_build()
-        require(prior.exact(approval, {**SCOPE.identity(), 'decision': 'APPROVE_ONE_REAL_MANUAL_ATTEMPT',
+        require(prior.exact(approval, {**self.qa_scope.identity(), 'decision': 'APPROVE_ONE_REAL_MANUAL_ATTEMPT',
                 'runBindingSha256': prior.digest(run_path), 'apkSha256': build['apkSha256']}), 'SEPARATE_REAL_EXECUTION_APPROVAL_REQUIRED')
 
     def retry_bindings(self, run):
@@ -340,7 +400,7 @@ class ManualController(prior.Controller):
         require(re.fullmatch(r'prior-attempt-proof-[0-9]{4}\.private\.json', proof_name), 'NUMBERED_RECEIPT_REQUIRED')
         proof_path = self.private / 'receipts' / proof_name
         require(prior.digest(proof_path) == run.get('priorAttemptProofSha256'), 'REVIEWED_RECEIPT_CHANGED')
-        validate_prior_proof((self.root / SCOPE.proposal).read_bytes(), prior.private_json(proof_path))
+        validate_prior_proof((self.root / self.qa_scope.proposal).read_bytes(), prior.private_json(proof_path), self.qa_scope)
         python_name = run.get('pythonBindingFile', '')
         require(re.fullmatch(r'python-binding-[0-9]{4}\.private\.json', python_name), 'NUMBERED_RECEIPT_REQUIRED')
         path = self.private / 'receipts' / python_name
@@ -348,7 +408,7 @@ class ManualController(prior.Controller):
         binding = prior.private_json(path)
         executable, binary = Path(binding.get('pythonExecutable', '')), Path(binding.get('pythonBinary', ''))
         controller = self.copied_source() / 'tools/image-optimization/p4b5_manual_consumer_qa.py'
-        require(all(binding.get(k) == v for k, v in SCOPE.identity().items())
+        require(all(binding.get(k) == v for k, v in self.qa_scope.identity().items())
                 and executable == Path(sys.executable) and executable.resolve() == binary
                 and prior.digest(binary) == binding.get('pythonBinarySha256') and Path(__file__).resolve() == controller
                 and prior.digest(controller) == binding.get('controllerSha256'), 'PYTHON_RUNTIME_CHANGED')
@@ -360,15 +420,9 @@ class ManualController(prior.Controller):
         for name, sha in files.items():
             path = Path(name)
             require(path.is_absolute() and path.resolve() == path and prior.digest(path) == sha, 'PYTHON_IMPORT_CHANGED')
-        for module in list(sys.modules.values()):
-            file = getattr(module, '__file__', None)
-            name = getattr(module, '__name__', '')
-            if file and (name in ['p4b5_manual_consumer_qa', 'p4b5_consumer_qa', 'p4b5_qa_scope', 'p4_consumer_qa',
-                                 'p4_resource_observation', 'p4_reading_comparison', 'native_test_login', 'native_entry_config']):
-                path = Path(file).resolve()
-                require(str(path) in files and prior.digest(path) == files[str(path)], 'PYTHON_RUNTIME_IMPORT_CHANGED')
-        require(run.get('pythonCommandPrefix') == [str(executable), str(controller), '--scope', SCOPE.measurement_id,
-                '--proposal-sha256', SCOPE.proposal_sha256], 'PYTHON_COMMAND_PREFIX_CHANGED')
+        validate_owned_imports(controller, files, list(sys.modules.values()))
+        require(run.get('pythonCommandPrefix') == [str(executable), str(controller), '--scope', self.qa_scope.measurement_id,
+                '--proposal-sha256', self.qa_scope.proposal_sha256], 'PYTHON_COMMAND_PREFIX_CHANGED')
 
     def android_transport(self, android):
         require(android.args[1:] == ['-s', 'emulator-5554'], 'ADB_SERIAL_CHANGED')
@@ -379,36 +433,38 @@ class ManualController(prior.Controller):
     def bound_android(self):
         # İlk kurulum claim'i, sonraki CLI çağrılarının cleanup aracını da sabitler.
         claim = self.receipt('install.claim.private.json')
-        require(all(claim.get(k) == v for k, v in SCOPE.identity().items())
+        require(all(claim.get(k) == v for k, v in self.qa_scope.identity().items())
                 and re.fullmatch('[a-f0-9]{64}', claim.get('runBindingSha256', '')), 'ADB_CLAIM_SCOPE_CHANGED')
         executable = Path(claim.get('adbExecutable', ''))
         require(executable.is_absolute() and executable.resolve() == executable and executable.is_file()
                 and prior.digest(executable) == claim.get('adbSha256'), 'ADB_CLAIM_BINARY_CHANGED')
-        return ManualAndroid(executable, 'emulator-5554')
+        return ManualAndroid(executable, 'emulator-5554', self.qa_scope)
 
     def arm(self, android):
         self.gate()
         build, directory = self.selected_build()
         android.preflight()
         require(not android.pid(), 'EXISTING_QA_PROCESS_REFUSED')
+        if self.qa_scope is P4B5_MANUAL_RETRY:
+            require(android.package_absent(), 'QA_PACKAGE_ALREADY_INSTALLED')
         self.claim('install', self.android_transport(android))
         install_end = time.monotonic() + 120
-        android.run('install', '-r', str(directory / 'consumer.apk'), timeout=remaining(install_end))
+        android.run('install', *([] if self.qa_scope is P4B5_MANUAL_RETRY else ['-r']), str(directory / 'consumer.apk'), timeout=remaining(install_end))
         remaining(install_end)
         require(not android.pid(), 'QA_INITIAL_OWNERSHIP_CHANGED')
-        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', PACKAGE))
+        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', self.package))
         installed_sha = android.run('shell', 'sha256sum', installed).split()
         require(len(installed_sha) == 2 and installed_sha[0] == build['apkSha256'], 'INSTALLED_APK_DRIFT')
-        prior.write_json(self.private / 'android/installed-apk.private.json', {**SCOPE.identity(), 'apkSha256': installed_sha[0], 'verifiedBeforeFirstStart': True})
+        prior.write_json(self.private / 'android/installed-apk.private.json', {**self.qa_scope.identity(), 'apkSha256': installed_sha[0], 'verifiedBeforeFirstStart': True})
         self.claim('initial-start', {'apkSha256': build['apkSha256']})
         deadline = time.monotonic() + 30
-        android.run('shell', 'am', 'start', '-n', PACKAGE + '/' + helpers.ACTIVITY, timeout=remaining(deadline))
+        android.run('shell', 'am', 'start', '-n', self.package + '/' + helpers.ACTIVITY, timeout=remaining(deadline))
         remaining(deadline)
         while time.monotonic() < deadline:
             value = android.pid(timeout=min(3, deadline - time.monotonic()))
             if value:
                 owner = android.process_identity(int(value), timeout=min(3, deadline - time.monotonic()))
-                prior.write_json(self.private / 'android/owned-process.private.json', {**SCOPE.identity(), **owner})
+                prior.write_json(self.private / 'android/owned-process.private.json', {**self.qa_scope.identity(), **owner})
                 break
             time.sleep(.1)
         else:
@@ -419,11 +475,11 @@ class ManualController(prior.Controller):
             raw = android.read_receipt(0, timeout=remaining(deadline))
             remaining(deadline)
             if raw is not None:
-                identity, _ = validate_receipts([raw], complete=False)
+                identity, _ = validate_receipts([raw], complete=False, selected=self.qa_scope)
                 require(all(identity[k] == owner[k] for k in owner) and identity['supportDirectory'] == android.private_root(timeout=remaining(deadline)) + '/files', 'BASELINE_PID_OR_SUPPORT_CHANGED')
                 remaining(deadline)
                 prior.write_json(self.private / 'android/baseline.private.json', {'identity': identity,
-                        'rawSha256': hashlib.sha256(raw).hexdigest(), 'sample': json.loads(raw)['sample'], **SCOPE.identity()})
+                        'rawSha256': hashlib.sha256(raw).hexdigest(), 'sample': json.loads(raw)['sample'], **self.qa_scope.identity()})
                 return
             time.sleep(.1)
         raise ValueError('APP_BASELINE_DEADLINE')
@@ -436,10 +492,10 @@ class ManualController(prior.Controller):
         android.failure_marker(timeout=remaining(end)); remaining(end)
         raw = android.read_receipt(0, timeout=remaining(end)); remaining(end)
         require(raw is not None and hashlib.sha256(raw).hexdigest() == baseline['rawSha256'], 'BASELINE_DRIFT')
-        owner, _ = validate_receipts([raw], baseline['identity'], complete=False)
+        owner, _ = validate_receipts([raw], baseline['identity'], complete=False, selected=self.qa_scope)
         require(owner['supportDirectory'] == android.private_root(timeout=remaining(end)) + '/files', 'APP_SUPPORT_DIRECTORY_CHANGED')
         build, _ = self.selected_build()
-        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', PACKAGE, timeout=remaining(end)))
+        installed = helpers.installed_apk_path(android.run('shell', 'pm', 'path', self.package, timeout=remaining(end)))
         require(android.run('shell', 'sha256sum', installed, timeout=remaining(end)).split()[0] == build['apkSha256'], 'INSTALLED_APK_DRIFT')
         remaining(end)
         return owner
@@ -465,12 +521,12 @@ class ManualController(prior.Controller):
         rows = [line.split() for line in android.run('reverse', '--list', timeout=remaining(mono_end)).splitlines()]
         check()
         require(all(len(r) == 3 for r in rows) and not any(r[1] == 'tcp:' + str(port) for r in rows), 'REVERSE_PRESENT')
-        prior.write_json(self.private / 'android/reverse-intent.private.json', {**SCOPE.identity(), 'serial': 'emulator-5554',
+        prior.write_json(self.private / 'android/reverse-intent.private.json', {**self.qa_scope.identity(), 'serial': 'emulator-5554',
                 'devicePort': port, 'hostPort': port, 'baselineMappingAbsent': True})
         android.run('reverse', '--no-rebind', 'tcp:' + str(port), 'tcp:' + str(port), timeout=remaining(mono_end)); check()
         auth = prior.private_json(self.state / 'qa-sign-in.ready.json')
         token = helpers.private_file(Path(auth['tokenFile']), 8192, external=True).decode().strip()
-        configure = prior.runtime_configuration(ready, token, SCOPE)
+        configure = prior.runtime_configuration(ready, token, self.qa_scope)
         try:
             android.owner(owner, timeout=remaining(mono_end)); check()
             android.write_configuration({**owner, 'configure': configure}, timeout=remaining(mono_end)); check()
@@ -486,7 +542,7 @@ class ManualController(prior.Controller):
                 raw = android.read_receipt(index, timeout=remaining(mono_end)); check()
                 if raw is not None:
                     raws.append(raw)
-                    validate_receipts(raws, owner, complete=index == 9)
+                    validate_receipts(raws, owner, complete=index == 9, selected=self.qa_scope)
                     helpers.write_new(output / f'{index + 1:02d}-{phase}.private.json', raw)
                     if phase.startswith('paint'):
                         # Sonraki UI eylemi ACK'ye kadar kilitlidir.
@@ -504,12 +560,12 @@ class ManualController(prior.Controller):
                     break
                 time.sleep(min(.1, remaining(mono_end)))
         android.failure_marker(timeout=remaining(mono_end)); check()
-        _, records = validate_receipts(raws, owner)
-        validate_captures(acknowledgements, raws, pngs)
+        _, records = validate_receipts(raws, owner, selected=self.qa_scope)
+        validate_captures(acknowledgements, raws, pngs, self.qa_scope)
         require(all(ready['windowStartedAtEpochMillis'] <= json.loads(raw)['recordedAtEpochMillis'] < deadline for raw in raws[1:]), 'PHASE_OUTSIDE_WINDOW')
         result = prior.validate_samples(records, ready)
         self.gate(); check()
-        prior.write_json(output / 'accepted.private.json', {**SCOPE.identity(), **result,
+        prior.write_json(output / 'accepted.private.json', {**self.qa_scope.identity(), **result,
                 'captureSha256': [hashlib.sha256(raw).hexdigest() for raw in acknowledgements],
                 'rawSha256': {f'{index + 1:02d}-{phase}.private.json': hashlib.sha256(raw).hexdigest()
                     for index, (phase, raw) in enumerate(zip(prior.PHASES, raws))}})
@@ -518,17 +574,17 @@ class ManualController(prior.Controller):
         # İlk kayıt hata verse de yalnız aynı reservation/run ve exact argv sahibi alınır.
         reservation = self.receipt('backend-start.claim.private.json')
         run_path, run = self.latest_receipt('run-binding')
-        require(all(value.get(k) == v for value in [reservation, run] for k, v in SCOPE.identity().items())
+        require(all(value.get(k) == v for value in [reservation, run] for k, v in self.qa_scope.identity().items())
                 and reservation.get('runBindingSha256') == prior.digest(run_path), 'BACKEND_RESERVATION_BINDING_CHANGED')
         cp_path, classpath = self.latest_receipt('classpath-binding')
         require(run.get('classpathBindingFile') == cp_path.name and run.get('classpathBindingSha256') == prior.digest(cp_path)
-                and all(classpath.get(k) == v for k, v in SCOPE.identity().items()), 'BACKEND_CLASSPATH_BINDING_CHANGED')
+                and all(classpath.get(k) == v for k, v in self.qa_scope.identity().items()), 'BACKEND_CLASSPATH_BINDING_CHANGED')
         tools = self.receipt('receipts/operational-tools.private.json')
         java = (Path(tools['backendJavaHome']) / 'bin/java').resolve()
         require(str(java) == classpath.get('javaBinary') and prior.digest(java) == classpath.get('javaBinarySha256'), 'BACKEND_JAVA_BINDING_CHANGED')
         owner = self.backend_identity(pid)
         require(owner is not None and owner.get('exited') is not True, 'BACKEND_OWNER_NOT_PROVEN')
-        prior.write_json(self.state / 'launch.private.json', {**SCOPE.identity(), **owner})
+        prior.write_json(self.state / 'launch.private.json', {**self.qa_scope.identity(), **owner})
         return self.close_ready_backend() if (self.state / 'local-ready.json').exists() else self.cleanup_before_ready()
 
     def cleanup(self, android, for_success=False, backend_pid=None):
@@ -546,18 +602,18 @@ class ManualController(prior.Controller):
         if baseline_path.exists():
             def remove_configuration():
                 baseline = prior.private_json(baseline_path)
-                require(all(baseline.get(k) == v and baseline.get('identity', {}).get(k) == v for k, v in SCOPE.identity().items()), 'CLEANUP_BASELINE_SCOPE_CHANGED')
+                require(all(baseline.get(k) == v and baseline.get('identity', {}).get(k) == v for k, v in self.qa_scope.identity().items()), 'CLEANUP_BASELINE_SCOPE_CHANGED')
                 return device().remove_owned_configuration(baseline['identity']['nonce'])
             clean('configuration', remove_configuration)
         owned = self.private / 'android/owned-process.private.json'
         if owned.exists():
             def stop_owned():
                 owner = prior.private_json(owned)
-                require(all(owner.get(k) == v for k, v in SCOPE.identity().items()), 'CLEANUP_PROCESS_SCOPE_CHANGED')
+                require(all(owner.get(k) == v for k, v in self.qa_scope.identity().items()), 'CLEANUP_PROCESS_SCOPE_CHANGED')
                 # Ölüm başarılı temizliktir; PID değişimi başka süreci durduramaz.
                 if device().owned_process_state(owner) == 'absent':
                     return {'processExitConfirmed': True}
-                device().run('shell', 'am', 'force-stop', PACKAGE)
+                device().run('shell', 'am', 'force-stop', self.package)
                 require(device().owned_process_state(owner) == 'absent', 'QA_PROCESS_NOT_STOPPED')
                 return {'processExitConfirmed': True}
             clean('qaProcess', stop_owned)
@@ -572,11 +628,11 @@ class ManualController(prior.Controller):
             clean('backend', self.close_ready_backend)
         elif (self.state / 'launch.private.json').exists():
             clean('backend', self.cleanup_before_ready)
-        prior.write_json(self.private / 'cleanup.private.json', {**SCOPE.identity(), 'results': results,
+        prior.write_json(self.private / 'cleanup.private.json', {**self.qa_scope.identity(), 'results': results,
                 'ok': bool(results) and all(r['status'] == 'PASS' for r in results.values()),
                 'androidDiagnostics': safe_android_diagnostics(android)})
         if not for_success and not (self.private / 'terminal.private.json').exists():
-            prior.write_json(self.private / 'terminal.private.json', {**SCOPE.identity(), 'status': 'FAILED_NO_RETRY'})
+            prior.write_json(self.private / 'terminal.private.json', {**self.qa_scope.identity(), 'status': 'FAILED_NO_RETRY'})
         return results
 
 
@@ -591,11 +647,13 @@ def main(argv=None):
     parser.add_argument('--admin-credential', type=Path)
     parser.add_argument('--web-api-config', type=Path)
     args = parser.parse_args(argv)
-    if args.scope != SCOPE.measurement_id or args.proposal_sha256 != SCOPE.proposal_sha256:
+    try: selected = select_scope(args.scope)
+    except ValueError: selected = None
+    if selected is None or not selected.manual or args.scope != selected.measurement_id or args.proposal_sha256 != selected.proposal_sha256:
         print('REFUSED_EXPLICIT_MANUAL_SCOPE_REQUIRED'); return 2
     if args.stage is None:
         print('DRY_RUN_ZERO_IO_MANUAL_QA'); return 0
-    controller = ManualController()
+    controller = ManualController(selected=selected)
     android = None
     try:
         controller.failure_writable = any((controller.private / (name + '.claim.private.json')).is_file() for name in ['install', 'initial-start', 'backend-start', 'login', 'window', 'measurement'])
@@ -610,7 +668,7 @@ def main(argv=None):
             if android is not None:
                 require(Path(android.args[0]) == args.adb, 'ADB_CLAIM_ARGUMENT_CHANGED')
             else:
-                android = ManualAndroid(args.adb, 'emulator-5554')
+                android = ManualAndroid(args.adb, 'emulator-5554', selected)
         require(android is not None, 'ADB_REQUIRED')
         if args.stage == 'record-backend':
             controller.gate(); controller.record_backend_launch(args.pid); return 0
@@ -619,7 +677,7 @@ def main(argv=None):
             results = controller.cleanup(android, for_success=True)
             require(bool(results) and all(r['status'] == 'PASS' for r in results.values())
                     and results.get('backend', {}).get('result', {}).get('measurementSucceeded') is True, 'CLEANUP_OR_BACKEND_FAILED')
-            prior.write_json(controller.private / 'terminal.private.json', {**SCOPE.identity(),
+            prior.write_json(controller.private / 'terminal.private.json', {**selected.identity(),
                 'status': 'FOUR_UI_PAINTS_VERIFIED_EMULATOR_ONLY', 'acceptedSha256': prior.digest(controller.private / 'observations/accepted.private.json'),
                 'cleanupSha256': prior.digest(controller.private / 'cleanup.private.json'), 'physicalQualityAccepted': False})
         else:
@@ -632,10 +690,10 @@ def main(argv=None):
             if not (controller.private / 'cleanup.claim.private.json').exists():
                 try: controller.cleanup(android, backend_pid=args.pid if args.stage == 'record-backend' else None)
                 except Exception: pass
-            prior.numbered(controller.private / 'receipts', 'terminal-failure', {**SCOPE.identity(), 'stage': args.stage,
+            prior.numbered(controller.private / 'receipts', 'terminal-failure', {**selected.identity(), 'stage': args.stage,
                     'code': helpers.safe_code(error), 'status': 'FAILED_NO_RETRY', 'androidDiagnostics': safe_android_diagnostics(android)})
             if not (controller.private / 'terminal.private.json').exists():
-                prior.write_json(controller.private / 'terminal.private.json', {**SCOPE.identity(), 'status': 'FAILED_NO_RETRY', 'stage': args.stage})
+                prior.write_json(controller.private / 'terminal.private.json', {**selected.identity(), 'status': 'FAILED_NO_RETRY', 'stage': args.stage})
         print('REFUSED_MANUAL_QA_NO_RETRY_PRIVATE_EVIDENCE'); return 2
 
 

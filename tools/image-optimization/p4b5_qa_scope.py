@@ -10,6 +10,11 @@ class QaScope:
     proposal_sha256: str
     private_root: Path
     entry: str
+    package: str = 'com.tellpal.tellpal_mobile_poc.readingconsumerqa'
+
+    @property
+    def manual(self):
+        return self.measurement_id in (P4B5_MANUAL.measurement_id, P4B5_MANUAL_RETRY.measurement_id)
 
     def identity(self):
         return {'proposalSha256': self.proposal_sha256, 'measurementId': self.measurement_id,
@@ -34,8 +39,15 @@ P4B5_MANUAL = QaScope('p4b5-manual-afa6ba59-d0af-493b-b4c3-91b8024b94a4',
     'be/docs/evidence/p4b5-manual-consumer-measurement/bounded-run-proposal-2026-10-20.json',
     'f45fb1ac17bc8227af3fae5b284efd614409d590d57749fcff49e942a6e3ee92',
     Path('/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-consumer-measurement-20261020-be80ce1'),
-    'test_driver/reading_consumer_manual_entry.dart')
-SCOPES = (P4B5, P4B5_RETRY, P4B5_MANUAL)
+    'test_driver/reading_consumer_manual_entry.dart',
+    'com.tellpal.tellpal_mobile_poc.readingmanualqa')
+P4B5_MANUAL_RETRY = QaScope('p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f',
+    'be/docs/evidence/p4b5-manual-retry-measurement/bounded-run-proposal-2026-10-20.json',
+    'a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6',
+    Path('/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1'),
+    'test_driver/reading_consumer_manual_retry_entry.dart',
+    'com.tellpal.tellpal_mobile_poc.readingmanualretryqa')
+SCOPES = (P4B5, P4B5_RETRY, P4B5_MANUAL, P4B5_MANUAL_RETRY)
 
 
 def select_scope(value=None):

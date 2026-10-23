@@ -215,10 +215,16 @@ class P4b5AcceptanceTest(unittest.TestCase):
             controller = qa.Controller(root, root)
             qa.write_json(root / 'backend-start.claim.private.json', qa.scope())
             # Gerçek Java/backend/SDK çalıştırılmaz; argv yalnız sahiplik parser'ını sınar.
-            child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(15)',
+            settled = root / 'child-ready'
+            child = subprocess.Popen([sys.executable, '-c', 'import sys,time; from pathlib import Path; Path(sys.argv[1]).write_text("READY"); time.sleep(15)', str(settled),
                 'com.tellpal.v2.support.P4b5ConsumerQaSetup', '--execute', str(state)],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             try:
+                # macOS Python launcher exec'i bitmeden alınan argv hash'i kararlı değildir.
+                import time
+                end = time.monotonic() + 3
+                while not settled.exists() and time.monotonic() < end: time.sleep(.01)
+                self.assertTrue(settled.exists())
                 owner = controller.record_backend_launch(child.pid)
                 self.assertEqual(owner['pid'], child.pid)
                 qa.write_json(state / 'startup.claim.private.json', {**qa.scope(), 'pid': child.pid})

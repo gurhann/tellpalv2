@@ -35,7 +35,16 @@ enum ManualQaDiagnosticStage {
   failureMarker,
 }
 
-enum ManualQaDiagnosticCode { started, complete, failed, unavailable }
+enum ManualQaDiagnosticCode {
+  started,
+  complete,
+  failed,
+  unavailable,
+  supportTypeMismatch,
+  supportTypeReadFailed,
+  supportCanonicalMismatch,
+  supportResolveFailed,
+}
 
 /// Yalnız sabit aşama/kodlar logcat'e gider; hata metni ve yollar taşınmaz.
 class ManualQaDiagnostics {
@@ -75,9 +84,13 @@ class ManualQaPrivateProtocol {
   ManualQaPrivateProtocol(
     this.support, {
     this.platform = const ManualQaPlatform(),
+    this.scope = manualScope,
     ManualQaDiagnostics? diagnostics,
-  }) : diagnostics = diagnostics ?? ManualQaDiagnostics();
+  }) : diagnostics = diagnostics ?? ManualQaDiagnostics() {
+    manualRequire(scope.manual);
+  }
   final Directory support;
+  final ConsumerQaExpectedScope scope;
   final ManualQaPlatform platform;
   final ManualQaDiagnostics diagnostics;
   late final Directory root = Directory('${support.path}/manual-consumer-qa');
@@ -113,14 +126,44 @@ class ManualQaPrivateProtocol {
       ManualQaDiagnosticStage.directories,
       ManualQaDiagnosticCode.started,
     );
-    manualRequire(
-      await FileSystemEntity.type(support.path, followLinks: false) ==
-          FileSystemEntityType.directory,
-    );
+    final FileSystemEntityType supportType;
+    try {
+      supportType = await FileSystemEntity.type(
+        support.path,
+        followLinks: false,
+      );
+    } catch (_) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.directories,
+        ManualQaDiagnosticCode.supportTypeReadFailed,
+      );
+      rethrow;
+    }
+    if (supportType != FileSystemEntityType.directory) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.directories,
+        ManualQaDiagnosticCode.supportTypeMismatch,
+      );
+      manualRequire(false);
+    }
     // Canonical yol eşitliği symlink'li ara bileşenleri de reddeder.
-    manualRequire(
-      await support.resolveSymbolicLinks() == support.absolute.path,
-    );
+    final String canonicalSupport;
+    try {
+      canonicalSupport = await support.resolveSymbolicLinks();
+    } catch (_) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.directories,
+        ManualQaDiagnosticCode.supportResolveFailed,
+      );
+      rethrow;
+    }
+    if (canonicalSupport != support.absolute.path) {
+      diagnostics.emit(
+        ManualQaDiagnosticStage.directories,
+        ManualQaDiagnosticCode.supportCanonicalMismatch,
+      );
+      manualRequire(false);
+    }
     diagnostics.emit(
       ManualQaDiagnosticStage.permissions,
       ManualQaDiagnosticCode.started,
@@ -142,8 +185,8 @@ class ManualQaPrivateProtocol {
   }
 
   Map<String, Object?> identity() => {
-    'measurementId': manualScope.measurementId,
-    'proposalSha256': manualScope.proposalSha256,
+    'measurementId': scope.measurementId,
+    'proposalSha256': scope.proposalSha256,
     'budgetRunId': consumerQaRunId,
     'nonce': nonce,
     'pid': platform.processId,
@@ -200,7 +243,7 @@ class ManualQaPrivateProtocol {
     final configuration = value['configure'] as Map<String, dynamic>;
     final validated = parseConsumerQaConfiguration(
       configuration,
-      expectedScope: manualScope,
+      expectedScope: scope,
     );
     await validated.account!.credentials.close();
     return configuration;

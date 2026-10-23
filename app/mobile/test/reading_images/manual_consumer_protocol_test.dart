@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../test_driver/manual_consumer_qa/private_protocol.dart';
+import '../../test_driver/reading_consumer_qa_probe.dart';
 import 'reading_p4b5_qa_probe_test.dart' show p4b5Config;
 
 class SyntheticManualQaPlatform extends ManualQaPlatform {
@@ -42,7 +43,7 @@ Future<void> configure(
   );
   final input = {
     ...protocol.identity(),
-    'configure': p4b5Config(12345, manualScope),
+    'configure': p4b5Config(12345, protocol.scope),
   };
   if (field != null) input[field] = value;
   await writePrivate(File('${protocol.secrets.path}/configure.json'), input);
@@ -50,6 +51,42 @@ Future<void> configure(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  for (final selected in [
+    ConsumerQaExpectedScope.p4b5Manual,
+    ConsumerQaExpectedScope.p4b5ManualRetry,
+  ]) {
+    test(
+      '${selected.measurementId} diğer manual configure kimliğini reddeder',
+      () async {
+        final directory = await temporary();
+        try {
+          final protocol = ManualQaPrivateProtocol(
+            directory,
+            scope: selected,
+            platform: const SyntheticManualQaPlatform(),
+          );
+          await protocol.initialize();
+          final other = selected == ConsumerQaExpectedScope.p4b5Manual
+              ? ConsumerQaExpectedScope.p4b5ManualRetry
+              : ConsumerQaExpectedScope.p4b5Manual;
+          await writePrivate(
+            File('${protocol.secrets.path}/handoff.owner'),
+            protocol.nonce,
+          );
+          await writePrivate(File('${protocol.secrets.path}/configure.json'), {
+            ...protocol.identity(),
+            'configure': p4b5Config(12345, other),
+          });
+          await expectLater(protocol.consume(), throwsFormatException);
+          expect(protocol.consumed, true);
+          await protocol.cleanup();
+          expect(await protocol.secrets.list().toList(), isEmpty);
+        } finally {
+          await directory.delete(recursive: true);
+        }
+      },
+    );
+  }
   test(
     'Gerçek protokol 0771 filesDir iznini korur ve tek kayıt tüketir',
     () async {

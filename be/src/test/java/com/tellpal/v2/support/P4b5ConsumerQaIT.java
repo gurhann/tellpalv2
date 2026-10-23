@@ -21,7 +21,7 @@ class P4b5ConsumerQaIT {
         var source=new DriverManagerDataSource(url,System.getProperty("user.name"),"");var jdbc=new JdbcTemplate(source);
         jdbc.execute(Files.readString(Path.of("src/main/resources/db/migration/V37__add_reading_comparison_budget.sql")));
         jdbc.update("insert into reading_comparison_budgets(run_id,max_operations,max_bytes,operations,reserved_bytes) values(?,64,67108864,39,44742970)",P4b5ConsumerQaLedger.RUN);
-        assertThat(P4b5ConsumerQaScope.P4B5_MANUAL.identity().get("budgetRunId")).isEqualTo(P4b5ConsumerQaLedger.RUN);
+        assertThat(P4b5ConsumerQaScope.P4B5_MANUAL_RETRY.identity().get("budgetRunId")).isEqualTo(P4b5ConsumerQaLedger.RUN);
         var manager=new DataSourceTransactionManager(source);
         var limits=new Limits(8388608,4800000,134217728,45000,P4b5ConsumerQaLedger.RUN,64,67108864);
         new ReadingComparisonBudget(jdbc,manager).reserve(limits,3292721);
@@ -51,7 +51,7 @@ class P4b5ConsumerQaIT {
         jdbc.update("insert into reading_comparison_budgets(run_id,max_operations,max_bytes,operations,reserved_bytes) values(?,64,67108864,39,44742970)",P4b5ConsumerQaLedger.RUN);
         var budget=new ReadingComparisonBudget(jdbc,new DataSourceTransactionManager(source));
         var limits=new Limits(8388608,4800000,134217728,45000,P4b5ConsumerQaLedger.RUN,64,67108864);
-        var ledger=P4b5ConsumerQaLedgerTest.ledger(P4b5ConsumerQaScope.P4B5_MANUAL,directory.resolve("ledger.log"));
+        var ledger=P4b5ConsumerQaLedgerTest.ledger(P4b5ConsumerQaScope.P4B5_MANUAL_RETRY,directory.resolve("ledger.log"));
         ledger.importLoginReservation();ledger.openWindow(directory.resolve("window"));ledger.request("manifest",new Object[]{"synthetic",94L,"tr"});ledger.verify();
         for(int i=0;i<4;i++)P4b5ConsumerQaLedgerTest.media(ledger,i);
         for(int i=0;i<ledger.deliveryOperations();i++)budget.reserve(limits,i==0?ledger.reservedBytes():0);

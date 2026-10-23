@@ -1,0 +1,41 @@
+{
+  "baselineCommit": "3ec09d1e124080d9ffebf5ec4cd098cbd6a177b8",
+  "copyAndApkPendingApprovalReview": true,
+  "copyPayloadAuditSha256": "8c3ed7a5dcef734bed9abc19481150a7f3d31f98b34ffd2bc6097c37fca28580",
+  "measurementId": "p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f",
+  "protectedRepositoryFiles": {
+    "_bmad-output/party-mode/memories/installed/.memlog.md": "338cc79fa0194c80e533a1bfc01c0a3349959cf88a6dfd5177c9c8f3e9e1800c",
+    "app/mobile/lib/main_image_experiment.dart": "c56e1941ec45ab503a560d2590c6acc2220d2549224d971aa071580ba653ae17"
+  },
+  "taskSourceFiles": {
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test/reading_images/manual_consumer_bootstrap_test.dart": "61e7f7c960171ae9098c8c12739e56ba5a49dc1ba13a464e64a6db9fbc780b3c",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test/reading_images/manual_consumer_protocol_test.dart": "5ef9060664b87c58840505fe62f4d52709516ee2415916c600846d3505b029cc",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test/reading_images/manual_consumer_qa_test.dart": "60806ae3844c7679091116c3eb56dd70db23de284a0fa0bc3dbde1122e990980",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test/reading_images/manual_consumer_router_test.dart": "695f53aceb3d665be0749f4f49345fe4c58ccc1dda9ce8157cd13792371ba95a",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test/reading_images/reading_p4b5_qa_probe_test.dart": "ca10c758d0e1550b7b0dd7e94dcfcb68da51cf5e1a5bae9ff39693d9e02e08d6",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/manual_consumer_qa/coordinator.dart": "1ea30e7923d40d16ca79f6cbe8a37d4d09bcf62a91ffaded8cc4d01cbb38f717",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/manual_consumer_qa/coordinator.freezed.dart": "49044c581a2230b574dd6a7799e7717b12b0c99acc11707775cd75d28ca4dd2d",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/manual_consumer_qa/injection.config.dart": "93f682a652993483c967c675b772330b5b3aa4764e2f10edff43a4d8bf78a247",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/manual_consumer_qa/injection.dart": "e157fab2ab18671977f644d953b27f872df9280183907774b84e3d17db1b3ce8",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/manual_consumer_qa/private_protocol.dart": "ef5c83ce464dbbb50a3efbb3b2a09ca8fe55e52bd09c714cdc989dc231b1cb34",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/reading_consumer_manual_entry.dart": "c5888f8b36c44db758cad25ba27b12453d6069d8faf0b9ff6940d0bf37849ee9",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/reading_consumer_manual_retry_entry.dart": "72a4eecdbd79d0382871c03c9c043f2fbcd098f47dfd180a57c4c2fd56394ecf",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/reading_consumer_qa_entry.dart": "de8f0f76df8cb70de65c8fae9ff0bdc3f655cb941937c49a428e43f3a7335c88",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/app/mobile/test_driver/reading_consumer_qa_probe.dart": "2733b331687440d9b31086b2dbe4a6f2e8be4b7e5a686bbf233324231f1e480b",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaCompositionTest.java": "e3e3bc9601d31bca1168fae3774cd23cabfe086a0260b5e0065be367496e8d36",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaIT.java": "d9aaf9b601c9ac18948033ce52db7945f54de2c64d6b52e8ce6f59f9619480e0",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaLedger.java": "0287231d1881870f7b4b1f260a9f8e43ed1f178c315ef1cfef2ef53fab37f6e9",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaLedgerTest.java": "ba67d8ceb2914ff2b20237a295aa32975c4cb711a3ffac3da97a1f930b543e7c",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaManualRetryTest.java": "ab64b1253cbdcb566bcfd562851205e8d6092cf73bc9d39de5b14d84fc82b2c9",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaManualTest.java": "016d1e275cb24b5d3f8ff450f7fbb018e8c01058569e978c43767496bb3875f1",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaScope.java": "5127ee9a3a86faf2ef09abcc82543f15318f31a04e7ed957a5712a03cbfbea06",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaScopeTest.java": "da48f38521cb318e00c1bb48cd242faddc1e1416c93ab4202ce450fbe882f9a0",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaSetup.java": "88f766a75e1019a9059c5b0e2f79c4ca800936482fa84db15dbd5b1545080d2a",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaSetupTest.java": "0814bcc95e9d1a52571b681e85e11884962f6864ca96702a5b5ae82299fefd92",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/be/src/test/java/com/tellpal/v2/support/P4b5ConsumerQaStorage.java": "db165fb0ac246854d33cab8ac14ef3722cabcdb0955cca4baa5ff15dc5fd15df",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/tools/image-optimization/p4b5_consumer_qa.py": "964fc7119c5b47de7de16d4433c05f9218952a129692d573cc6f9da280418103",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/tools/image-optimization/p4b5_manual_consumer_qa.py": "ca281fac641cbff0a575b431be1e73954c9ef089b5235699623c2ba84682ed0a",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/tools/image-optimization/p4b5_qa_scope.py": "9324fa50cab1e5d1404b52b0b8848a87abd15dadfcf0c907761ee73991d9897b",
+    "/Users/gurhankucuk/Documents/GitHub/tellpalv2/tools/image-optimization/test_p4b5_manual_retry_qa.py": "bc6ea1372ab3c638aed0a15874fadec2401b3be5c68659836824705db07c54b0"
+  }
+}

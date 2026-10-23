@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "scope": "local-lossless-mobile-r1",
+  "observedAtUtc": "2026-10-18T07:00:50.461519+00:00",
+  "aggregateStatus": "FAIL",
+  "physicalMeasurement": "NOT_RUN",
+  "launch": {
+    "status": "FAIL",
+    "reason": "DRIVER_FAILED",
+    "toolStatus": "ok",
+    "elapsedMillis": 132826,
+    "intervention": "ROOT_AUTHORIZED_EARLY_STOP",
+    "interventionReason": "REQUESTED_WIRED_OBSERVED_LOCALNETWORK",
+    "signal": "SIGINT",
+    "timeout": false,
+    "exitZeroDoesNotProveDriverCompletion": true,
+    "launchReceiptSha256": "dc62e046f8bc4f0143b8639509d3e868c6973a3e1570f5f8fd1aaac26b4ab0ec",
+    "toolReceiptSha256": "ed3608e79b30915ecfc5853943dfcdcee08cdfe5f8ec3b4d4b18179bbf98db58",
+    "earlyStopRequestSha256": "cec64959a9a426b664f9bb7ef316dc082b21665ad9d31f6cab38ca5625e11050"
+  },
+  "requestedTransportType": "wired",
+  "runDeviceObservation": {
+    "physicalDevice": true,
+    "model": "iPhone 12",
+    "osVersion": "26.7",
+    "transportType": "localNetwork",
+    "evidenceSha256": "f6cdb05732136151c6bc272ca62bfba1bf9aedbc070ee9ad53004e1b461c56ca"
+  },
+  "earlierUsbPreflight": {
+    "transportType": "wired",
+    "appliesToThisRun": false,
+    "evidenceSha256": "b298d17ccba2634bff93a523ed9b2d2b6de27078a3455c019db1ee5faa569cab"
+  },
+  "plannedSamplesPerFormatPerAsset": 1,
+  "acceptedSamplesPerFormatPerAsset": 0,
+  "measuredRuntimeSamples": 0,
+  "plannedCases": 6,
+  "acceptedCases": 0,
+  "screenshots": 0,
+  "runtimeChecks": {
+    "nativeDecode": "NOT_RUN",
+    "fullRgbEquality": "NOT_RUN",
+    "paint": "NOT_RUN",
+    "physicalPixelGrid": "NOT_RUN",
+    "dartOwnedHandleStop": "NOT_RUN",
+    "instantaneousRss": "NOT_RUN"
+  },
+  "renderer": "unobserved",
+  "httpTransferMeasured": false,
+  "realOsBackgroundTested": false,
+  "humanQualityAccepted": false,
+  "fullWidthReaderAccepted": false,
+  "productionGate": "OPEN",
+  "p0Gate": "OPEN",
+  "p4bGate": "OPEN",
+  "build": {
+    "status": "PASS",
+    "mode": "profile",
+    "offlineBuild": true,
+    "sourceSha256": "3864dcafb40f6912bdfaf2070ef1693465efe27af585dba5a0f387a8d6ff8f44",
+    "artifactSha256": "fcbb4fefba32c791036f1f8772c7214a988065d3b5c7511aeea4814ec7f8f2d2",
+    "buildReceiptSha256": "7bae65b7b07904acf9453ffab22f2d333bc87dd28ff82b039ef5d931f00de978"
+  },
+  "codeVerification": {
+    "flutterReadingImagesTests": {
+      "status": "PASS",
+      "testCount": 97,
+      "relatedQaSourcesUnchanged": true
+    },
+    "targetedFlutterAnalyze": "PASS",
+    "pythonCoreTestsBeforeFrozenAttempt": {
+      "status": "PASS",
+      "testCount": 26
+    }
+  },
+  "cleanup": {
+    "hostOwnGroupRemaining": 0,
+    "additionalHostSignalSent": false,
+    "selectedQaProcessMatches": 0,
+    "nativeStopSent": false,
+    "dartOwnedHandleStopVerified": false,
+    "nativeReceiptSha256": "eb51b7d50e2969797eeccb6f38e3ffc32e380577799345acb4686574a9f24f72",
+    "hostReceiptSha256": "0b97b0b1c1ad9099552679ff1a00560124c9460a8fd3c3e55b99a7b2966eb416"
+  },
+  "preservation": {
+    "unchanged": true,
+    "fileCount": 232,
+    "sha256": "ab1975c2068e01eb521c8c9480277c98a6d37690e63b397ff216733f27d7e26d",
+    "signingOutputFileCount": 2248,
+    "signingOutputSha256": "e887238394ad3f9c6ad02928bc7304a91d97c7271adc5892b77ab1512f152037"
+  },
+  "previousEvidencePreservation": {
+    "unchanged": true,
+    "privateTreeEntryCounts": [
+      2135,
+      2143,
+      2
+    ],
+    "priorPublicFileCount": 8,
+    "priorPublicFileSha256": {
+      "verification.json": "79e7ef9e9baf19ee35e65e6b33f6af26024b04d158378099408ed57381b21f89",
+      "verification.md": "7fc58151ba8a884a818f595c8e35222e0156b16c4cf0384bc61c542da460c45c",
+      "attempts/20261018-iphone02-0c719c2a/attempt-context.json": "9a1708f3635d6a9ec0ce5b929f9a6ae2663f293debe5c0a8e56334b624f5dd10",
+      "attempts/20261018-iphone02-0c719c2a/attempt-context.md": "2cce7f25ca39f8e7fbfe5d52825411afe9b89bf5aa102a7f47c056e381907a64",
+      "attempts/20261018-iphone02-0c719c2a/verification.json": "716eef17209c732f2bc100978e2e5dc27b535c75a5afbdbeecb5b7d462c28d53",
+      "attempts/20261018-iphone02-0c719c2a/verification.md": "16c7f864f6e152e61df99577d1a68c002ed7d7fbf9989cdeb763d590975d89bc",
+      "attempts/20261018-emulator01-2f5cbb13/verification.json": "e252fe1edbd635a32b5f2b2b0cef9bc0830bacea7e9d1f73475345461fd5c58a",
+      "attempts/20261018-emulator01-2f5cbb13/verification.md": "ec6304b08f83a0a93491f502734e89d186b35cbaeff9ffcf068a8073cc5bd5ab"
+    },
+    "memlogUnchanged": true
+  },
+  "mainReportSha256": {
+    "verification.json": "9d666a718a9ed6f46af18b9cea2fa5369c4dcc3463f7c90a12ee78dea67ba49c",
+    "verification.md": "f18713d56c1bcdc169fd297a83a9e668a0b80c0cbebc18b15e055620a838c127"
+  },
+  "limitations": "USB ön kontrolü daha önce wired gösterdi. Bu çalışmanın kendi sorgusu localNetwork gösterdiği için USB kabulü kapalıdır. Erken stop root tarafından yetkilendirildi. Kesin bağlantı değişim nedeni belirlenmedi. Native süreç yokluğu Dart stop/handle ölçümü değildir."
+}

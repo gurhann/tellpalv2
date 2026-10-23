@@ -1,0 +1,105 @@
+{
+  "scope": "USER_PROVIDED_LOCAL_PILOT_SOURCE_OBSERVATIONS",
+  "status": "LOCAL_OBSERVATIONS_COMPLETE_COMPATIBILITY_REVIEW_REQUIRED",
+  "csvSha256": "9d7baf864996f46c283b90e35b7a9d582d748800865f3f2bd7a2148106c882c1",
+  "privateReportSha256": "af1fbb6ae55c3144b2d91615ca77b5b5cc53917fbf469461a075f488c1d4190b",
+  "observedSources": 41,
+  "roleBindings": 43,
+  "observedUniqueBytes": 126497327,
+  "matchingRecordedSha256": 41,
+  "matchingRecordedBytes": 41,
+  "matchingRecordedMime": 41,
+  "sourceContentsUnchanged": true,
+  "metadataCsvUnchanged": true,
+  "pillowVersions": [
+    "12.3.0"
+  ],
+  "pilots": [
+    {
+      "contentId": 18,
+      "languageCode": "tr",
+      "roleBindings": 18,
+      "uniqueSources": 17,
+      "observedBytes": 6191423,
+      "formats": {
+        "JPEG": 17
+      },
+      "modes": {
+        "RGB": 17
+      },
+      "dimensions": {
+        "1712x2778": 17
+      },
+      "frameCounts": {
+        "1": 17
+      },
+      "structureVerified": 17,
+      "fullDecode": 17,
+      "exifPresent": 17,
+      "iccPresent": 0,
+      "alphaChannel": 0,
+      "transparentPixels": 0,
+      "alphaExtrema": {
+        "None": 17
+      },
+      "orientationValues": {
+        "None": 17
+      },
+      "reviewSignals": {
+        "EXIF_PRESENT": 17
+      }
+    },
+    {
+      "contentId": 62,
+      "languageCode": "tr",
+      "roleBindings": 25,
+      "uniqueSources": 24,
+      "observedBytes": 120305904,
+      "formats": {
+        "PNG": 24
+      },
+      "modes": {
+        "RGBA": 24
+      },
+      "dimensions": {
+        "1712x2778": 24
+      },
+      "frameCounts": {
+        "1": 24
+      },
+      "structureVerified": 24,
+      "fullDecode": 24,
+      "exifPresent": 24,
+      "iccPresent": 24,
+      "alphaChannel": 24,
+      "transparentPixels": 0,
+      "alphaExtrema": {
+        "[255, 255]": 24
+      },
+      "orientationValues": {
+        "None": 24
+      },
+      "reviewSignals": {
+        "EXIF_PRESENT": 24,
+        "ICC_PRESENT": 24,
+        "ALPHA_CHANNEL_PRESENT": 24,
+        "NON_RGB_MODE": 24
+      }
+    }
+  ],
+  "p2Result": "NOT_EVALUATED",
+  "p5bCompletion": "NOT_ESTABLISHED",
+  "storageVerified": false,
+  "visualQualityEvaluated": false,
+  "productionAcceptance": false,
+  "sourceFilesModified": false,
+  "conversionPerformed": false,
+  "networkUsed": false,
+  "compatibilityAssessment": "STATIC_RULE_COMPARISON_ONLY",
+  "compatibilityNotes": [
+    "JPEG kaynaklarının tamamında EXIF gözlendi; mevcut P2 JPEG container kontrolü APP1 metadata kabul etmez.",
+    "PNG kaynaklarının tamamı RGBA; EXIF ve ICC gözlendi. Mevcut P2 PNG kontrolü RGB8 ve dar chunk listesi ister.",
+    "PNG alpha kanalı tüm dosyalarda tamamen opak; kanal kaldırılmadı. ICC çıkarma veya renk dönüşümü yapılmadı.",
+    "Bu gözlemler kaynak bozukluğu değildir. P2 doğrulayıcısı çalıştırılmadı; üretim kabulü verilmedi."
+  ]
+}

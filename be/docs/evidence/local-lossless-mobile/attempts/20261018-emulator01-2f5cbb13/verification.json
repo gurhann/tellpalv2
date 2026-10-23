@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "scope": "local-lossless-android-emulator-r1",
+  "observedAtUtc": "2026-10-18T06:51:39.072893+00:00",
+  "status": "FAIL",
+  "reason": "VERIFICATION_REJECTED",
+  "failureStage": "prepare",
+  "failureCode": "PRESERVED_SIGNING_OUTPUT_OUTSIDE_PRIVATE_TMP",
+  "environment": "android_emulator",
+  "physicalDevice": false,
+  "performanceAccepted": false,
+  "humanQualityAccepted": false,
+  "mode": "profile",
+  "package": "com.tellpal.tellpal_mobile_poc.locallossless.emulator.profile",
+  "fixtureEvidenceSha256": "16adae98244f6821cdb15f81dcca4a7640c2075cbeaa2cbecfc34786a1e78100",
+  "sourceSha256": "66ff1b8080ecf3376aab6c99d47806cd26ddc5294dafa39094f483605bbbe5c8",
+  "plannedSamplesPerFormatPerAsset": 1,
+  "acceptedSamplesPerFormatPerAsset": 0,
+  "acceptedCaseCount": 0,
+  "theoreticalRgbaBytes": 4386192,
+  "httpTransferMeasured": false,
+  "realOsBackgroundTest": "NOT_RUN",
+  "fullWidthReaderAccepted": false,
+  "productionGate": "OPEN",
+  "p0Gate": "OPEN",
+  "p4bGate": "OPEN",
+  "physicalAndroidAccepted": false,
+  "physicalIphoneAccepted": false,
+  "cases": [],
+  "screenshots": [],
+  "stopped": null,
+  "prepare": {
+    "status": "FAIL",
+    "receiptSha256": "d4cd253eb0e1672ab33b8c89d8e46b13b16731ea291f6db571d0973336cb00bf",
+    "diagnosticSha256": "f75da22e4ce1d597ee41eb732c455c900d90169c4d8926cde3aeaf323cad5a71"
+  },
+  "build": {
+    "status": "NOT_RUN"
+  },
+  "launch": {
+    "status": "NOT_RUN"
+  },
+  "emulatorMeasurement": {
+    "status": "NOT_RUN",
+    "completedRecordedCases": 0,
+    "recordedScreenshots": 0
+  },
+  "codeVerification": {
+    "python": {
+      "status": "PASS",
+      "passedTests": 54,
+      "receiptSha256": "a7e9e560c09aca82fa00fdecc6bd64ceaeaf6d371c78d880e8c4a88a206ec9b3"
+    },
+    "entryAnalyze": {
+      "status": "PASS",
+      "receiptSha256": "6f5b4a023d7357dc5c7c4d96d84d113484f5d3be6f648c7a0bd5d4b867436310"
+    }
+  }
+}

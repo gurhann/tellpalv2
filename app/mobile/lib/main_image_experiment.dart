@@ -4,9 +4,14 @@ import 'app/image_experiment_app.dart';
 import 'app/image_experiment_bootstrap.dart';
 import 'app/image_experiment_composition.dart';
 import 'app/image_experiment_configuration.dart';
+import 'app/local_lossless_qa.dart';
 import 'core/theme/library_theme.dart';
 
 Future<void> main() async {
+  if (localLosslessQaEnabled) {
+    await runLocalLosslessQa();
+    return;
+  }
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (_) {};
   ErrorWidget.builder = (_) => const ColoredBox(color: AppColors.placeholder);

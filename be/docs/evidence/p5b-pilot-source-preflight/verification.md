@@ -2,10 +2,11 @@
 
 2026-10-21. Baz commit: `c8071716fc6b22afb817c5dfdaf741d3b800e08e`.
 
-**Hazırlık aracı ve sentetik sınamalar tamamlandı. Gerçek pilot kaynak
-doğrulaması ve P5b kabulü tamamlanmadı.** Kullanıcının başlıklı güncel CSV'si,
-asset→dosya mapping'i ve orijinalleri henüz sağlanmadı. Bu kayıt gerçek kaynak
-özelliği, kalite veya canlı storage sürümü gözlemi içermez.
+**Hazırlık aracı, metadata karşılaştırması ve yerel kaynak incelemesi tamamlandı.
+P2/üretim kabulü ve canlı geçiş yapılmadı.** Araç tesliminde beklenen güncel CSV
+ve 41 orijinal alındı; aşağıdaki ayrı bölümlerde incelendi. Yerel dosya
+bütünlüğü doğrulandı. Metadata/alpha uyumluluğu değerlendirme bekliyor.
+Görsel kalite ve güncel canlı storage sürümü doğrulanmadı.
 
 ## Üretilen araçlar
 
@@ -147,3 +148,80 @@ görsel kalite veya üretim profili kabulü değildir. Canlı nesnenin sürümü
 güncel byte'ları yerel kopyadan doğrulanamaz. Dönüşüm, backfill, job, yayın,
 deploy, GIF veya eksik PT kapak düzeltmesi yapılmadı. Özel CSV, mapping,
 object_path, orijinal veya gerçek kaynak raporu repoya eklenmedi.
+
+## Kullanıcının güncel pilot CSV'sinin kabulü
+
+2026-10-21 tarihinde sağlanan başlıklı CSV, mevcut `parse_csv` ve
+`validate_inventory` ile bellekte incelendi. Ham dosya değiştirilmedi.
+Dosya 14.083 byte, 20 sütun ve 43 veri kaydı içeriyor. SHA-256:
+`9d7baf864996f46c283b90e35b7a9d582d748800865f3f2bd7a2148106c882c1`.
+Tek gözlem zamanı `2026-10-21T10:36:55.883938+00:00`
+(Türkiye saatiyle 13:36:55). SQL'in canlıda hangi transaction ayarıyla
+çalıştırıldığı bu CSV'den kanıtlanmaz; ajan canlıya bağlanmadı.
+
+| Pilot | Rol bağı | Benzersiz kaynak | Kayıtlı MIME | Kayıtlı byte |
+|---|---:|---:|---|---:|
+| #18/TR Kocaman Bir Sarılma | 18 | 17 | image/jpeg | 6.191.423 |
+| #62/TR Pofuduk Mısır Pops | 25 | 24 | image/png | 120.305.904 |
+| Toplam | 43 | 41 | 17 JPEG + 24 PNG | 126.497.327 |
+
+Metadata doğrulama hatası, eksik rol/medya bağı veya eksik kayıtlı SHA bulunmadı.
+Sayfa kümeleri sırasıyla 1–16 ve 1–23; kapak/detail kaynağı dosya toplamına
+yalnız bir kez katıldı. Pandas ile bağımsız sayımlar aynı sonuçları verdi.
+
+P5a'nın üç ham girdisinin hash'leri önceki kanıtla eşleştirildi. Pilotların
+rol→kaynak, sayfa ve çeviri kimlikleri ile provider/object_path/MIME/byte/SHA
+alanları karşılaştırıldı; değişiklik bulunmadı. Bu sonuç yalnız bu iki pilot
+ve karşılaştırılan metadata alanları içindir.
+
+Yol içermeyen sayısal kayıt: [received-metadata-analysis.json](received-metadata-analysis.json).
+Ham CSV ve object_path değerleri repoya alınmadı. Dosyaların kayıtlı SHA'sının
+dolu olması, gerçek dosyanın SHA eşleşmesi değildir. Henüz orijinal dosya
+sağlanmadığı için piksel/decode/EXIF/ICC/alpha ve gerçek byte doğrulaması
+çalıştırılmadı. P2 `NOT_EVALUATED`; P5b durumu `AWAITING_LOCAL_ORIGINALS`.
+
+## Kullanıcının gerçek yerel kaynaklarının incelenmesi
+
+Önceki bölüm CSV'nin alındığı andaki durumu kaydeder. Ardından kullanıcı iki
+pilotun görsellerinin bulunduğu klasörü sağladı. Klasörde #18/TR için kapak ve
+16 sayfa JPEG, #62/TR için kapak ve 23 sayfa PNG bulundu. Başka görsel yoktu.
+Dosyalar klasör, kapak adı ve sayfa numarasıyla 43 role/41 asset ID'ye eşlendi;
+bütün eşlemeler CSV'deki kayıtlı SHA ile doğrulandı. Kapak/detail aynı dosyaya
+bağlandı. Özel dosya eşlemesi ve tam çalışma raporu repo dışında tutuldu.
+
+Mevcut `p5b_local_source_preflight.py`, Python 3.12.14/Pillow 12.3.0 ortamında
+gerçek CSV ve bu eşlemeyle çalıştırıldı. Çıkış kodu `0`, sonuç
+`LOCAL_OBSERVATIONS_COMPLETE`; genel/kaynak hatası yok. Her 41 dosyanın
+hesaplanan SHA, byte ve gerçek MIME değeri CSV ile eşleşti. Toplam
+126.497.327 byte. İnceleme öncesi/sonrası SHA kontrolü bütün kaynakların ve
+CSV içeriğinin değişmediğini doğruladı. Hiçbir kaynak değiştirilmedi;
+dönüşüm veya canlı bağlantı yapılmadı.
+
+| Gözlem | #18/TR Kocaman Bir Sarılma | #62/TR Pofuduk Mısır Pops |
+|---|---|---|
+| Kaynak | 17 JPEG / RGB | 24 PNG / RGBA |
+| Boyut | Tümü 1712 × 2778 piksel | Tümü 1712 × 2778 piksel |
+| Kare | Tümü tek kare | Tümü tek kare |
+| Yapı kontrolü ve tam decode | 17/17 başarılı | 24/24 başarılı |
+| EXIF | 17 dosyada var | 24 dosyada var |
+| EXIF orientation etiketi | Gözlenmedi | Gözlenmedi |
+| ICC | Yok | 24 dosyada var |
+| Alpha kanalı | Yok | 24 dosyada var |
+| Gerçekten şeffaf piksel | Yok | Yok; alpha aralığı her dosyada [255, 255] |
+
+Bu bulgular kaynak bozukluğu değildir. Ancak mevcut
+`ReadingImageInspector` JPEG için EXIF taşıyan APP1 metadata'sını kabul etmez;
+PNG için RGB8 ve dar bir chunk listesi ister. Gözlenen RGBA/EXIF/ICC özellikleri
+bu dar sözleşmeyle doğrudan uyumlu değildir. Bu çıkarım kod kurallarıyla statik
+karşılaştırmadır; Java P2 doğrulayıcısı çalıştırılmadı ve `p2Result` hâlâ
+`NOT_EVALUATED`. ICC'nin semantik geçerliliği/renk doğruluğu değerlendirilmedi.
+
+Sıradaki karar, metadata/renk ve tamamen opak alpha kanalının hazırlık
+aşamasında nasıl ele alınacağıdır. Kabul kuralları gevşetilmedi, metadata
+silinmedi, alpha kaldırılmadı, dosya yeniden kaydedilmedi. Piksel ve dosya
+kontrolü; kalite, immutable admission, üretim izni veya güncel canlı nesne
+sürümü kanıtı değildir. P5b geçiş kabulü açık kalır.
+
+Özel yolları ve ham dosya eşlemesini içermeyen
+[yerel gözlem özeti](local-source-observations.json) kaydedildi. Güncel durum:
+`LOCAL_OBSERVATIONS_COMPLETE_COMPATIBILITY_REVIEW_REQUIRED`.

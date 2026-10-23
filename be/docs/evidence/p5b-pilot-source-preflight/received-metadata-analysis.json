@@ -1,0 +1,130 @@
+{
+  "scope": "USER_EXPORTED_PILOT_DATABASE_METADATA",
+  "source": {
+    "file": "Yalnz_metadata_okune_sürümü_kantlanmaz.csv",
+    "sha256": "9d7baf864996f46c283b90e35b7a9d582d748800865f3f2bd7a2148106c882c1",
+    "bytes": 14083,
+    "headerPresent": true,
+    "columns": 20,
+    "dataRows": 43
+  },
+  "observedAt": "2026-10-21T10:36:55.883938+00:00",
+  "validationErrors": [],
+  "pilots": [
+    {
+      "pilotContentId": 18,
+      "expectedP5a": {
+        "roleRows": 18,
+        "boundRoleLinks": 18,
+        "uniqueSources": 17,
+        "recordedUniqueBytes": 6191423
+      },
+      "observedCsv": {
+        "roleRows": 18,
+        "boundRoleLinks": 18,
+        "uniqueSources": 17,
+        "recordedUniqueBytes": 6191423
+      },
+      "deltaFromP5a": {
+        "roleRows": 0,
+        "boundRoleLinks": 0,
+        "uniqueSources": 0,
+        "recordedUniqueBytes": 0
+      }
+    },
+    {
+      "pilotContentId": 62,
+      "expectedP5a": {
+        "roleRows": 25,
+        "boundRoleLinks": 25,
+        "uniqueSources": 24,
+        "recordedUniqueBytes": 120305904
+      },
+      "observedCsv": {
+        "roleRows": 25,
+        "boundRoleLinks": 25,
+        "uniqueSources": 24,
+        "recordedUniqueBytes": 120305904
+      },
+      "deltaFromP5a": {
+        "roleRows": 0,
+        "boundRoleLinks": 0,
+        "uniqueSources": 0,
+        "recordedUniqueBytes": 0
+      }
+    }
+  ],
+  "overall": {
+    "pilotContentId": null,
+    "expectedP5a": {
+      "roleRows": 43,
+      "boundRoleLinks": 43,
+      "uniqueSources": 41,
+      "recordedUniqueBytes": 126497327
+    },
+    "observedCsv": {
+      "roleRows": 43,
+      "boundRoleLinks": 43,
+      "uniqueSources": 41,
+      "recordedUniqueBytes": 126497327
+    },
+    "deltaFromP5a": {
+      "roleRows": 0,
+      "boundRoleLinks": 0,
+      "uniqueSources": 0,
+      "recordedUniqueBytes": 0
+    }
+  },
+  "uniqueSourceMimeCounts": {
+    "image/jpeg": 17,
+    "image/png": 24
+  },
+  "missingRecordedSha": 0,
+  "comparisonToP5a": {
+    "baselineFiles": {
+      "hikayeler.csv": {
+        "sha256": "78c534607e602c645e59a4da57b936ba241b1daf68bba9e44ffb8bd5d437783b"
+      },
+      "sayfalar.csv": {
+        "sha256": "9399ca35e9eb32aa7f37a63e40879eaf63595fae9eff66f4e95d1bda9ab9ec4a"
+      },
+      "medya.csv": {
+        "sha256": "293b010d9a0899759f3f431f5755bb88087e1f87a3aa3d987dcb324ac029dfd2"
+      }
+    },
+    "changedRoleBindings": [],
+    "removedRoleBindings": [],
+    "changedSourceMetadata": [],
+    "comparisonFields": [
+      "source_asset_id",
+      "page_id",
+      "page_localization_id",
+      "localization_id",
+      "provider",
+      "object_path",
+      "mime_type",
+      "byte_size",
+      "checksum_sha256"
+    ]
+  },
+  "independentPandasControl": [
+    {
+      "pilotContentId": 18,
+      "roleRows": 18,
+      "uniqueSources": 17,
+      "recordedUniqueBytes": 6191423
+    },
+    {
+      "pilotContentId": 62,
+      "roleRows": 25,
+      "uniqueSources": 24,
+      "recordedUniqueBytes": 120305904
+    }
+  ],
+  "rawInputUnchanged": true,
+  "localOriginalFilesProvided": 0,
+  "fileBytesVerified": false,
+  "storageVerified": false,
+  "p2Result": "NOT_EVALUATED",
+  "p5bStatus": "AWAITING_LOCAL_ORIGINALS"
+}

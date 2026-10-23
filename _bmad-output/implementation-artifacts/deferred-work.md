@@ -87,3 +87,8 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-p3-reading-publication-orchestration.md`
   summary: Qualify the existing broader CMS visual suite on macOS without blanket baseline regeneration.
   evidence: The incidental 31-test P3 review invocation reported 15 passes and 16 failures: four missing Darwin category/contributor baselines (the baseline Git tree contains win32 only) and twelve 1–13-pixel registry/mockup differences on unchanged routes/shared layout code; raw log and images remain at /private/tmp/p3-review-visual.log and /private/tmp/p3-review-unrelated-visual-artifacts/. The required P3 content-detail checks passed separately.
+
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-p4b5-devtools-consumer-observation.md`
+  summary: P4b5 gerçek başlangıç kök nedenleri ve #94 detail/reader teslimat/yaşam döngüsü ölçümü kullanıcı kararıyla teknik borca alındı.
+  evidence: 2026-10-20 tarihinde kullanıcı ek deneme hattını kapatıp sonraki adıma geçmeyi istedi. Yerel tanı testleri geçti; son gerçek deneme FAILED_NO_RETRY, kesin host/support nedeni ve gerçek mobil kabul açık. Açık talep olmadan yeni başlangıç/ölçüm yok; eski kayıtlar, tüketim ve tavanlar korunur. P4b veya üretim kabulü tamamlanmış sayılmaz.

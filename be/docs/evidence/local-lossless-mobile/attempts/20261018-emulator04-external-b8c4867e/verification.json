@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "scope": "local-lossless-android-emulator-r1",
+  "observedAtUtc": "2026-10-18T08:03:55.177068+00:00",
+  "status": "PASS",
+  "reason": null,
+  "environment": "android_emulator",
+  "physicalDevice": false,
+  "performanceAccepted": false,
+  "humanQualityAccepted": false,
+  "mode": "profile",
+  "package": "com.tellpal.tellpal_mobile_poc.locallossless.emulator.profile",
+  "fixtureEvidenceSha256": "16adae98244f6821cdb15f81dcca4a7640c2075cbeaa2cbecfc34786a1e78100",
+  "theoreticalRgbaBytes": 4386192,
+  "plannedSamplesPerFormatPerAsset": 1,
+  "acceptedSamplesPerFormatPerAsset": 1,
+  "acceptedCaseCount": 6,
+  "renderer": "unobserved",
+  "rssKind": "INSTANTANEOUS_PROCESS_RSS_NOT_PEAK_OR_GPU",
+  "rssLoadedScope": "after_rgb_readback_and_checksum_includes_validation_overhead",
+  "rgbReadbackScope": "native_readback_alpha_scan_rgb_copy_and_sha_validation",
+  "httpTransferMeasured": false,
+  "realOsBackgroundTest": "NOT_RUN",
+  "fullWidthReaderAccepted": false,
+  "productionGate": "OPEN",
+  "p0Gate": "OPEN",
+  "p4bGate": "OPEN",
+  "physicalAndroidAccepted": false,
+  "physicalIphoneAccepted": false,
+  "cases": [
+    {
+      "caseId": "9778-png",
+      "assetId": 9778,
+      "format": "PNG",
+      "asset": "assets/local_lossless/9778.png",
+      "encodedBytes": 1765704,
+      "encodedSha256": "7744c016ca5a8df9700d0ec6e93ec40955e1afafcd810b527c7611deaefff7bd",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "e2326ced29ddab4e358ed8032bbb89e8a0cfcd19a7b1ca2b12d6454961082f0e",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 339,
+      "checksumMicros": 18672,
+      "decodeMicros": 82255,
+      "rgbReadbackMicros": 66879,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 191553536
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 205791232
+      }
+    },
+    {
+      "caseId": "9778-webp",
+      "assetId": 9778,
+      "format": "WEBP",
+      "asset": "assets/local_lossless/9778.webp",
+      "encodedBytes": 1017010,
+      "encodedSha256": "cef354623c5c66876965ad690ffc121ae299bfe1fc55f95217082f2ddd6dbc86",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "e2326ced29ddab4e358ed8032bbb89e8a0cfcd19a7b1ca2b12d6454961082f0e",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 336,
+      "checksumMicros": 9514,
+      "decodeMicros": 37495,
+      "rgbReadbackMicros": 39137,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 212066304
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 212692992
+      }
+    },
+    {
+      "caseId": "9816-png",
+      "assetId": 9816,
+      "format": "PNG",
+      "asset": "assets/local_lossless/9816.png",
+      "encodedBytes": 1658329,
+      "encodedSha256": "5b345614b0d89f9946eddb89996dc0d3c1bcc9162a16922c4efe11b40ed0392b",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "c5124e71d39360b4e01cf64723eb5fd19a204ee799c020a8e640afbb03c2c00d",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 319,
+      "checksumMicros": 15353,
+      "decodeMicros": 19987,
+      "rgbReadbackMicros": 42512,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 212004864
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 213037056
+      }
+    },
+    {
+      "caseId": "9816-webp",
+      "assetId": 9816,
+      "format": "WEBP",
+      "asset": "assets/local_lossless/9816.webp",
+      "encodedBytes": 993082,
+      "encodedSha256": "49d7d9a7a9b47a4bf91b4e2a39317b280889fa68becc88152adfd6a95c399d9d",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "c5124e71d39360b4e01cf64723eb5fd19a204ee799c020a8e640afbb03c2c00d",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 414,
+      "checksumMicros": 10322,
+      "decodeMicros": 44470,
+      "rgbReadbackMicros": 43875,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 211644416
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 212594688
+      }
+    },
+    {
+      "caseId": "9818-png",
+      "assetId": 9818,
+      "format": "PNG",
+      "asset": "assets/local_lossless/9818.png",
+      "encodedBytes": 1688375,
+      "encodedSha256": "54c331c1007c6552f5f590e3e315664d27c17c2e5efe3ec41927417d6697904b",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "0994cceae1759dd7be81b0e97a0aeaf8b0a6ea7e512fe13202974c285eae4491",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 285,
+      "checksumMicros": 16169,
+      "decodeMicros": 20260,
+      "rgbReadbackMicros": 47101,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 211906560
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 213270528
+      }
+    },
+    {
+      "caseId": "9818-webp",
+      "assetId": 9818,
+      "format": "WEBP",
+      "asset": "assets/local_lossless/9818.webp",
+      "encodedBytes": 1010290,
+      "encodedSha256": "7914fddd392f23819f8d5b6c68b8faa97ee6da80ad21e522981feb5ace296b49",
+      "decodedWidth": 822,
+      "decodedHeight": 1334,
+      "rgbBytes": 3289644,
+      "rgbSha256": "0994cceae1759dd7be81b0e97a0aeaf8b0a6ea7e512fe13202974c285eae4491",
+      "rgbMatchesPin": true,
+      "assetReadMicros": 249,
+      "checksumMicros": 9239,
+      "decodeMicros": 39408,
+      "rgbReadbackMicros": 38515,
+      "paintCompleted": true,
+      "widget": {
+        "logicalWidth": 411.0,
+        "logicalHeight": 667.0,
+        "dpr": 2.0,
+        "physicalWidth": 822.0,
+        "physicalHeight": 1334.0,
+        "logicalLeft": 0.0,
+        "logicalTop": 129.5,
+        "physicalLeft": 0.0,
+        "physicalTop": 259.0,
+        "pixelAligned": true,
+        "fit": "contain"
+      },
+      "rssBefore": {
+        "available": true,
+        "bytes": 212520960
+      },
+      "rssLoaded": {
+        "available": true,
+        "bytes": 213762048
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "caseId": "9778-png",
+      "path": "1-9778-png.png",
+      "sha256": "07a810d84b9055dc71ff881fc5f42d3d7c70e23da5bc9512f2235829e3645647"
+    },
+    {
+      "caseId": "9778-webp",
+      "path": "2-9778-webp.png",
+      "sha256": "3fcf0c53869f8bfc2d92021513a21d18731979fa350fbcf452c78de8926435b7"
+    },
+    {
+      "caseId": "9816-png",
+      "path": "3-9816-png.png",
+      "sha256": "8a4ea5c8d97d51a6876e6a381bbefbeab589a73cea2678cbf8ed58747ec33941"
+    },
+    {
+      "caseId": "9816-webp",
+      "path": "4-9816-webp.png",
+      "sha256": "2cdc3572db484f1bd29500430e42946ce432fcec0d40f66a757541c47536ae16"
+    },
+    {
+      "caseId": "9818-png",
+      "path": "5-9818-png.png",
+      "sha256": "e7f6dc0559957bef56a49f92190a33d8fba4766c5185fc4517ba83ab8714e345"
+    },
+    {
+      "caseId": "9818-webp",
+      "path": "6-9818-webp.png",
+      "sha256": "7f5ee1a93ad04ab72ed856f27b352a8f32ab3d9eb937ffdad59348f188c8cbfb"
+    }
+  ],
+  "stopped": {
+    "stopped": true,
+    "activeBuffers": 0,
+    "activeDescriptors": 0,
+    "activeCodecs": 0,
+    "activeImages": 0,
+    "rssStop": {
+      "available": true,
+      "bytes": 211910656
+    }
+  },
+  "sourceSha256": "5a646c791d18744e70691e7274eca0465a65250e56685cf6b2367b1d93269f3b",
+  "pubspecLockSha256": "9d95c6e29e64f84e6db57db60008b8c4eb5aa00c95f8f718955f1c0519c2f212",
+  "manifestSha256": "7087bc93983022fed3ad920cc9864fe0cbe090892251edf5a2fc1a155c2bdaa9",
+  "entrySha256": "30db941bcc27edf965a5cb6fcedaa7d23cea988672f13e2156a2b2929911ef86",
+  "initScriptSha256": "8cb4fac6806119e186e1013b3b31b353f2931ba2a45850bb84caaa27f2251eba",
+  "preservation": {
+    "unchanged": true,
+    "fileCount": 4345,
+    "sha256": "f44b1c3f4bba69471255c62c0c41e0805fd6c24ae654d738b3b5da2ee3e85bfb"
+  },
+  "artifactSha256": "dd94f247988b11454fc7f3412ea9a62ed73db8e3632a98a0f7599dcb97d3f714",
+  "buildReceiptSha256": "04d6b770df5544d3681b3901076077b7e8c979c3e986cf763b0b7d81a1a77d30",
+  "launchReceiptSha256": "9069b7f5f7d980f070cfb58c1fba6d44f06da469b4ce78216401e1905e88eddd",
+  "driverResultSha256": "9fe989f831b6eb753bcea37d4083d62d055f8641d1d9f13b2edfbd92ccee592f",
+  "runNonceSha256": "da6f4a56ee082874eb1f06caea8b25f66ed243ae03b3c5e2cf15682f1715ca1e",
+  "driverSha256": "fb91b103a52f39051d7e7b96c2201732e923128dd7d57fc7ceb3fc8e69f7e6f0",
+  "vmServiceUrlSha256": "b7e1cc445129ff353d3946f2b5034e9928ad6db2e2804ce9fad9b41102e70694",
+  "device": {
+    "physicalDevice": false,
+    "api": 36,
+    "abi": "arm64-v8a",
+    "launchEvidenceSha256": "5f9d546a44d666ff09a7a45f2aba602d9f519ef5e969f606fb43d1b75f686578",
+    "verifyEvidenceSha256": "5f9d546a44d666ff09a7a45f2aba602d9f519ef5e969f606fb43d1b75f686578"
+  },
+  "artifactIdentity": {
+    "package": "com.tellpal.tellpal_mobile_poc.locallossless.emulator.profile",
+    "launcher": "com.tellpal.tellpal_mobile_poc.MainActivity",
+    "abi": "arm64-v8a",
+    "mode": "profile",
+    "profileEngineSha256": "b0af70ca380765591ddb1aaf855cd10f737802b483ab983688de39a1d542b186",
+    "libappSha256": "85764c1e680ecb65c0e4122b7dad306b5e88d3e7572abc5947cfcc2aab599a37",
+    "packagedManifestSha256": "7087bc93983022fed3ad920cc9864fe0cbe090892251edf5a2fc1a155c2bdaa9"
+  },
+  "flutterVersion": "3.41.1",
+  "engineRevision": "3452d735bd38224ef2db85ca763d862d6326b17f"
+}

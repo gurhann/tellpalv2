@@ -30,7 +30,7 @@ class ManualConsumerQaCoordinator extends Cubit<ManualConsumerQaState>
     probe =
         suppliedProbe ??
         ReadingConsumerQaProbe(
-          expectedScope: manualScope,
+          expectedScope: protocol.scope,
           mount: mountApp,
           onOverflow: () => unawaited(fail()),
         );

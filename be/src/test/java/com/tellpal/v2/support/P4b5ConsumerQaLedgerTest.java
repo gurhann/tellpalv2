@@ -58,7 +58,7 @@ class P4b5ConsumerQaLedgerTest {
     static byte[] priorProof(P4b5ConsumerQaScope scope) throws Exception {
         var proposal=JSON.readTree(proposal(scope));
         var proof=JSON.valueToTree(scope.identity());
-        for(String key:List.of(scope==P4b5ConsumerQaScope.P4B5_MANUAL?"previousAttemptsEvidence":"previousAttemptEvidence","historicalEvidence","priorConsumption"))((ObjectNode)proof).set(key,proposal.path(key));
+        for(String key:List.of(scope.manual()?"previousAttemptsEvidence":"previousAttemptEvidence","historicalEvidence","priorConsumption"))((ObjectNode)proof).set(key,proposal.path(key));
         ((ObjectNode)proof).put("previousAttemptVerifiedByFileHashes",true).put("currentDatabaseQueried",false).put("oldBackendLedgerExists",false).put("actualStagesExecuted",false);
         return JSON.writeValueAsBytes(proof);
     }

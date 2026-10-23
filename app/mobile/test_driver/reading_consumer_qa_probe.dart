@@ -52,6 +52,14 @@ class ConsumerQaExpectedScope {
     12,
     'p4b5-manual-afa6ba59-d0af-493b-b4c3-91b8024b94a4',
   );
+  static const p4b5ManualRetry = ConsumerQaExpectedScope._(
+    'a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6',
+    120000,
+    12,
+    'p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f',
+  );
+  bool get manual =>
+      identical(this, p4b5Manual) || identical(this, p4b5ManualRetry);
   final String proposalSha256;
   final int windowMillis;
   final int maxStatusChecks;
@@ -305,7 +313,7 @@ class ReadingConsumerQaProbe extends BlocObserver {
   void record(Map<String, Object?> event) {
     if (_overflow) return;
     if (_events.length >= 128) {
-      if (expectedScope == ConsumerQaExpectedScope.p4b5Manual) {
+      if (expectedScope.manual) {
         _overflow = true;
         onOverflow?.call();
         unawaited(stop());
@@ -458,11 +466,14 @@ class ReadingConsumerQaProbe extends BlocObserver {
       'slot': slot,
       'events': List.of(_events),
       if (expectedScope.measurementId != null) ...{
+        'measurementId': expectedScope.measurementId,
+        'proposalSha256': expectedScope.proposalSha256,
+        'budgetRunId': consumerQaRunId,
         'observedLifecycle': WidgetsBinding.instance.lifecycleState?.name,
         'currentEpoch': _cubit?.state.epoch,
         'lastPaintedEpoch': _lastPaintedEpoch,
         'liveRasterAttached': liveRasterAttached,
-        if (expectedScope == ConsumerQaExpectedScope.p4b5Manual)
+        if (expectedScope.manual)
           'liveRasterReadyForPaint': liveRasterReadyForPaint,
       },
       ...ownedResources(),

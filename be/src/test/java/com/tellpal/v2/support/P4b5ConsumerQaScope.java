@@ -21,7 +21,12 @@ enum P4b5ConsumerQaScope {
             "f45fb1ac17bc8227af3fae5b284efd614409d590d57749fcff49e942a6e3ee92",
             "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-consumer-measurement-20261020-be80ce1",
             "be/docs/evidence/p4b5-manual-consumer-measurement/bounded-run-proposal-2026-10-20.json",
-            "test_driver/reading_consumer_manual_entry.dart");
+            "test_driver/reading_consumer_manual_entry.dart"),
+    P4B5_MANUAL_RETRY("p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f",
+            "a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6",
+            "/Volumes/MAC_EK/tellpal-qa-private/p4b5-manual-retry-measurement-20261020-3ec09d1",
+            "be/docs/evidence/p4b5-manual-retry-measurement/bounded-run-proposal-2026-10-20.json",
+            "test_driver/reading_consumer_manual_retry_entry.dart");
 
     final String measurementId,proposalSha256,proposal,entry;
     final Path privateRoot;
@@ -33,6 +38,12 @@ enum P4b5ConsumerQaScope {
         if(value==null)return P4B5;
         return Arrays.stream(values()).filter(scope->scope.measurementId.equals(value)).findFirst()
                 .orElseThrow(()->new IllegalStateException("UNKNOWN_QA_SCOPE"));
+    }
+    boolean manual() { return this==P4B5_MANUAL || this==P4B5_MANUAL_RETRY; }
+    String packageName() {
+        return this==P4B5_MANUAL_RETRY ? "com.tellpal.tellpal_mobile_poc.readingmanualretryqa"
+                : this==P4B5_MANUAL ? "com.tellpal.tellpal_mobile_poc.readingmanualqa"
+                : "com.tellpal.tellpal_mobile_poc.readingconsumerqa";
     }
     List<String> arguments(Path state) {
         return this==P4B5 ? List.of("--execute",state.toString()) : List.of("--scope",measurementId,"--execute",state.toString());
@@ -47,12 +58,12 @@ enum P4b5ConsumerQaScope {
     void validatePriorProof(byte[] proposalBytes,JsonNode proof) throws Exception {
         P4b5ConsumerQaLedger.require(this!=P4B5 && ReadingIdentity.sha(proposalBytes).equals(proposalSha256),"PRIOR_ATTEMPT_PROPOSAL_CHANGED");
         validate(proof);
-        if(this==P4B5_MANUAL) {
+        if(manual()) {
             var proposal=new ObjectMapper().readTree(proposalBytes);
             var expected=new ObjectMapper().valueToTree(identity());
             for(String key:List.of("previousAttemptsEvidence","historicalEvidence","priorConsumption"))((com.fasterxml.jackson.databind.node.ObjectNode)expected).set(key,proposal.path(key));
             ((com.fasterxml.jackson.databind.node.ObjectNode)expected).put("previousAttemptVerifiedByFileHashes",true).put("currentDatabaseQueried",false).put("oldBackendLedgerExists",false).put("actualStagesExecuted",false);
-            P4b5ConsumerQaLedger.require(proof.equals(expected) && proof.path("previousAttemptsEvidence").size()==2,"PRIOR_ATTEMPT_PROOF_CHANGED");
+            P4b5ConsumerQaLedger.require(proof.equals(expected) && proof.path("previousAttemptsEvidence").size()==(this==P4B5_MANUAL_RETRY?3:2),"PRIOR_ATTEMPT_PROOF_CHANGED");
             return;
         }
         var previous=new ObjectMapper().readTree(proposalBytes).path("previousAttemptEvidence");
@@ -66,11 +77,18 @@ enum P4b5ConsumerQaScope {
     }
     void validatePriorFiles(byte[] proposalBytes,JsonNode proof) throws Exception {
         validatePriorProof(proposalBytes,proof);
-        if(this==P4B5_MANUAL) {
+        if(manual()) {
             int index=0;
             for(var previous:proof.path("previousAttemptsEvidence")) {
-                var root=index++==0?P4B5.privateRoot:P4B5_RETRY.privateRoot;
-                P4b5ConsumerQaLedger.require(previous.path("privateRoot").asText().equals(root.toString()) && previous.path("files").size()==(index==1?12:6),"PRIOR_ATTEMPT_ROOT_CHANGED");
+                var previousScope=List.of(P4B5,P4B5_RETRY,P4B5_MANUAL).get(index);
+                var root=previousScope.privateRoot;
+                P4b5ConsumerQaLedger.require(previous.path("measurementId").asText().equals(previousScope.measurementId)
+                        && previous.path("proposalSha256").asText().equals(previousScope.proposalSha256)
+                        && previous.path("terminalStatus").asText().equals("FAILED_NO_RETRY")
+                        && previous.path("mediaRequestsConsumed").asInt(-1)==0
+                        && previous.path("additionalDeliveryOperations").asInt(-1)==0
+                        && previous.path("additionalDeliveryReservedBytes").asInt(-1)==0,"PRIOR_ATTEMPT_SCOPE_CHANGED");
+                P4b5ConsumerQaLedger.require(previous.path("privateRoot").asText().equals(root.toString()) && previous.path("files").size()==List.of(12,6,32).get(index++),"PRIOR_ATTEMPT_ROOT_CHANGED");
                 var files=previous.path("files").fields();
                 while(files.hasNext()) {
                     var file=files.next();Path path=Path.of(file.getKey());

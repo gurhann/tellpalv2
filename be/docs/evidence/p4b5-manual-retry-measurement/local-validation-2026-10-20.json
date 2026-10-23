@@ -1,0 +1,66 @@
+{
+  "apkCreated": false,
+  "automaticApprovalReviewRejections": 2,
+  "commitCreated": false,
+  "copyBytesTotal": 8552437,
+  "executionApprovalCreated": false,
+  "fileCount": 1166,
+  "logs": {
+    "analyzer": {
+      "path": "/private/tmp/p4b5-flutter-analyze.log",
+      "sha256": "5c4e3548fc33425998055b05a3f91a6bb70a77c3e77ceca79487fac1643d6c4f"
+    },
+    "flutter": {
+      "path": "/private/tmp/p4b5-flutter-tests.log",
+      "sha256": "f221020e9fde4fdbd167561596a854fed6fdd2189c00eb9fd55003aa38d9e577"
+    },
+    "java": {
+      "path": "/private/tmp/p4b5-java-tests.log",
+      "sha256": "3ab28e3127fb25c1af7972fa66d1187254a16ea45f28316d8132af0a3f03026c"
+    },
+    "python": {
+      "path": "/private/tmp/p4b5-python-tests.log",
+      "sha256": "978b7650ac56c9c49b71a8674b411052ad3b3c4eed398b73e4705824307e6553"
+    }
+  },
+  "macEkSourceCopyCreated": false,
+  "measurementId": "p4b5-manual-retry-af5cbc33-ee49-41ef-aa04-986cb3af292f",
+  "measurementWindows": 0,
+  "payloadAuditFile": "copy-payload-audit-2026-10-20.json",
+  "payloadAuditSha256": "8c3ed7a5dcef734bed9abc19481150a7f3d31f98b34ffd2bc6097c37fca28580",
+  "preRunReviewsCompleted": 0,
+  "proposalSha256": "a3aab71cd8ae4685888c6d7d8004332bfc5fd9ff6d7ef91decb34e44ecd65fc6",
+  "realQaBackendStarts": 0,
+  "realQaInitialStarts": 0,
+  "realQaInstallations": 0,
+  "realQaSignIns": 0,
+  "runBindingCreated": false,
+  "status": "LOCAL_GATES_PASS_COPY_APPROVAL_REVIEW_BLOCKED",
+  "validation": {
+    "actualHistoricalFiles": {
+      "chains": 3,
+      "files": 50,
+      "readOnlyHashValidationPassed": true
+    },
+    "analyzer": {
+      "issues": 0
+    },
+    "diffCheckPassed": true,
+    "flutter": {
+      "includesUnrelatedExistingLocalLosslessTests": true,
+      "skipped": 0,
+      "tests": 232
+    },
+    "java": {
+      "postgresVersion": 18,
+      "skipped": 0,
+      "syntheticPostgresIntegrationTests": 2,
+      "syntheticServerStopped": true,
+      "tests": 26
+    },
+    "python": {
+      "skipped": 0,
+      "tests": 78
+    }
+  }
+}

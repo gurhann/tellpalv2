@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 class P4b5ConsumerQaScopeTest {
     @TempDir Path directory;
     @Test void threeFixedScopesPreserveDefaultAndExactBackendArguments() throws Exception {
-        assertThat(P4b5ConsumerQaScope.values()).hasSize(3);
+        assertThat(P4b5ConsumerQaScope.values()).hasSize(4);
         assertThat(P4b5ConsumerQaScope.select(null)).isSameAs(P4b5ConsumerQaScope.P4B5);
         assertThatThrownBy(()->P4b5ConsumerQaScope.select("unknown")).hasMessage("UNKNOWN_QA_SCOPE");
         for(var scope:P4b5ConsumerQaScope.values()) {

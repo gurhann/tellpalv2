@@ -452,7 +452,7 @@ class ManualRealCliCleanupTest(unittest.TestCase):
                         patch.object(controller, 'owned_backend_alive', side_effect=alive), \
                         patch.object(qa.os, 'kill', side_effect=AssertionError('Gerçek sinyal yasak')):
                     self.assertEqual(qa.main(arguments), 2)
-                    adapter.assert_called_once_with(adb, 'emulator-5554')
+                    adapter.assert_called_once_with(adb, 'emulator-5554', qa.SCOPE)
                 self.assertEqual((root / 'install.claim.private.json').read_bytes(), install_claim)
                 cleanup = qa.prior.private_json(root / 'cleanup.private.json')
                 self.assertEqual(set(cleanup['results']), {'configuration', 'qaProcess', 'reverse', 'backend'})
@@ -804,3 +804,170 @@ class ManualProcessTransportTest(unittest.TestCase):
         with patch.object(qa.subprocess, 'run', side_effect=transport):
             for _ in range(12): android.owner({'pid': 123, 'processStartTicks': '456'})
         self.assertEqual(len(self.assert_private_diagnostics(android)), 8)
+
+
+
+def scoped_envelopes(selected, start):
+    """İki sabit kapsam için aynı sentetik faz zincirini kurar."""
+    values = [json.loads(raw) for raw in envelopes()]
+    previous, result = '0' * 64, []
+    for index, value in enumerate(values):
+        value.update(selected.identity(), supportDirectory='/data/user/0/' + selected.package + '/files',
+                     recordedAtEpochMillis=start + index if index else start - 2)
+        value['sample'].update(selected.identity())
+        value['previousSha256'] = previous
+        raw = json.dumps(value).encode()
+        result.append(raw);previous = hashlib.sha256(raw).hexdigest()
+    return result
+
+
+class _ScopedRunPhaseAndroid(_RunPhaseAndroid):
+    def write_configuration(self, value, timeout=3):
+        # Controller belleğini temizlemeden önce teslim edilen payload'ı sabitle.
+        self.configuration = copy.deepcopy(value)
+
+
+class ManualBothScopesRunTest(unittest.TestCase):
+    def test_real_run_preserves_selected_configuration_receipts_captures_and_window_boundaries(self):
+        import base64
+        from test_p4b5_consumer_qa import expected
+        start, deadline = 2000000000000, 2000000120000
+        for selected in [qa.P4B5_MANUAL, qa.P4B5_MANUAL_RETRY]:
+            for mode in ['valid', 'at-start', 'before-deadline', 'before-start', 'at-deadline', 'after-deadline']:
+                with self.subTest(scope=selected.measurement_id, mode=mode), tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory).resolve()
+                    for name in ['receipts', 'android', 'backend']: (root / name).mkdir(mode=0o700)
+                    controller = qa.ManualController(root, root, selected)
+                    ready = {**expected(), **selected.identity(), 'loopbackPort': 12345,
+                             'windowStartedAtEpochMillis': start, 'windowDeadlineEpochMillis': deadline}
+                    raws = scoped_envelopes(selected, start)
+                    stamp = {'at-start': (1, start), 'before-start': (1, start - 1),
+                             'before-deadline': (9, deadline - 1), 'at-deadline': (9, deadline),
+                             'after-deadline': (9, deadline + 1)}.get(mode)
+                    if stamp:
+                        index, value = stamp
+                        raws = mutate(raws, index, lambda item: item.update(recordedAtEpochMillis=value))
+                    android = _ScopedRunPhaseAndroid(raws)
+                    owner, _ = qa.validate_receipts([raws[0]], complete=False, selected=selected)
+                    claims = {'aud': 'tellpal-ee0dd', 'iss': 'https://securetoken.google.com/tellpal-ee0dd',
+                              'sub': qa.prior.UID, 'iat': start // 1000, 'exp': start // 1000 + 600}
+                    token = 'e30.' + base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip('=') + '.c2ln'
+                    token_file = root / 'synthetic-token';token_file.write_text(token);token_file.chmod(0o600)
+                    qa.prior.write_json(root / 'backend/qa-sign-in.ready.json', {'tokenFile': str(token_file)})
+                    # Gerçek run/configuration/receipt/ACK kapıları; yalnız dış kaynaklar sentetiktir.
+                    with patch.object(controller, 'gate'), patch.object(controller, 'ready', return_value=ready), \
+                            patch.object(controller, 'baseline_gate', return_value=owner), patch.object(controller, 'backend_alive'), \
+                            patch.object(qa.time, 'time', return_value=(start + 1000) / 1000), \
+                            patch.object(qa.prior, 'runtime_configuration', wraps=qa.prior.runtime_configuration) as configure:
+                        if mode in ['before-start', 'at-deadline', 'after-deadline']:
+                            with self.assertRaisesRegex(ValueError, '^PHASE_OUTSIDE_WINDOW$'): controller.run(android)
+                            self.assertFalse((root / 'observations/accepted.private.json').exists())
+                        else:
+                            controller.run(android)
+                            accepted = qa.prior.private_json(root / 'observations/accepted.private.json')
+                            for key, value in selected.identity().items(): self.assertEqual(accepted[key], value)
+                            self.assertEqual(accepted['phasesAccepted'], qa.prior.PHASES)
+                            self.assertEqual(accepted['mediaPayloadBytes'], 13170884)
+                            self.assertEqual(accepted['resourceReport']['bufferCreationAttemptsDelta'], '4')
+                            self.assertFalse(accepted['physicalQualityAccepted'])
+                            self.assertEqual(accepted['captureSha256'], [
+                                hashlib.sha256((root / f'observations/capture-{n:02d}.private.json').read_bytes()).hexdigest()
+                                for n in range(1, 5)])
+                            self.assertEqual(accepted['rawSha256'], {
+                                f'{n + 1:02d}-{phase}.private.json': hashlib.sha256(raw).hexdigest()
+                                for n, (phase, raw) in enumerate(zip(qa.prior.PHASES, raws))})
+                        configure.assert_called_once_with(ready, token, selected)
+                    self.assertEqual(android.configuration, {**owner, 'configure': {
+                        'action': 'configure', 'runId': selected.identity()['budgetRunId'],
+                        'measurementId': selected.measurement_id, 'proposalSha256': selected.proposal_sha256,
+                        'uid': qa.prior.UID, 'contentId': 94, 'port': 12345, 'token': token,
+                        'windowStartedAtEpochMillis': start, 'windowDeadlineEpochMillis': deadline}})
+                    self.assertEqual(qa.prior.private_json(root / 'measurement.claim.private.json'),
+                                     {**selected.identity(), 'state': 'RESERVED_NO_AUTOMATIC_RETRY'})
+                    for key, value in selected.identity().items():
+                        self.assertEqual(qa.prior.private_json(root / 'android/reverse-intent.private.json')[key], value)
+                    self.assertEqual(len(android.acknowledgements), 4)
+                    for n, phase in enumerate(qa.prior.PHASES):
+                        self.assertEqual((root / f'observations/{n + 1:02d}-{phase}.private.json').read_bytes(), raws[n])
+                    for n, ack in enumerate(android.acknowledgements, 1):
+                        self.assertEqual(ack, {**owner, 'phase': f'paint{n}',
+                            'epoch': json.loads(raws[n])['sample']['paintedEpoch'],
+                            'receiptSha256': hashlib.sha256(raws[n]).hexdigest(),
+                            'pngSha256': hashlib.sha256((root / f'observations/{n:02d}-paint.png').read_bytes()).hexdigest()})
+                    self.assertEqual(len(list((root / 'observations').glob('*.png'))), 4)
+                    self.assertEqual(len(list((root / 'observations').glob('*-*.private.json'))), 14)
+
+
+class ManualBothScopesCleanupTest(unittest.TestCase):
+    assert_private_diagnostics = ManualProcessTransportTest.assert_private_diagnostics
+
+    def transport(self, selected, mode):
+        import subprocess
+        calls, stopped = [], [False]
+        def run(arguments, **kwargs):
+            self.assertGreater(kwargs['timeout'], 0);self.assertLessEqual(kwargs['timeout'], 15)
+            command = arguments[3:];calls.append(command)
+            self.assertEqual(arguments[:3], ['/synthetic/adb', '-s', 'emulator-5554'])
+            if command == ['shell', 'pidof', selected.package]:
+                value = b'999' if mode == 'different-pid' else b'123' if mode in ['same-discovery', 'discovery-conflict'] and not stopped[0] else b''
+                return subprocess.CompletedProcess(arguments, 0 if value else 1, value, b'UNTRUSTED_TOKEN')
+            if command == ['shell', 'ls', '-1', '/proc']:
+                if mode == 'proc-denied' or (mode == 'after-unreadable' and stopped[0]):
+                    return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                present = mode not in ['absent', 'discovery-conflict'] and (not stopped[0] or mode in ['still-alive', 'after-unreadable', 'after-reused'])
+                return subprocess.CompletedProcess(arguments, 0, b'self\nstat\n' + (b'123\n' if present else b''), b'')
+            if command == ['shell', 'cat', '/proc/123/cmdline']:
+                if mode in ['cmdline-denied', 'absent']:
+                    return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                if mode == 'timeout': raise subprocess.TimeoutExpired(arguments, kwargs['timeout'], b'UNTRUSTED_TOKEN')
+                return subprocess.CompletedProcess(arguments, 0, b'FOREIGN_SECRET_COMMAND' if mode == 'foreign-command' else selected.package.encode() + b'\x00', b'')
+            if command == ['shell', 'cat', '/proc/123/stat']:
+                if mode == 'stat-denied': return subprocess.CompletedProcess(arguments, 1, b'', b'UNTRUSTED_TOKEN')
+                ticks = '999' if mode == 'different-ticks' or (mode == 'after-reused' and stopped[0]) else '456'
+                value = '123 (synthetic) ' + ' '.join(ticks if index == 19 else '0' for index in range(20))
+                return subprocess.CompletedProcess(arguments, 0, value.encode(), b'')
+            if command == ['shell', 'am', 'force-stop', selected.package]:
+                stopped[0] = True
+                return subprocess.CompletedProcess(arguments, 0, b'', b'')
+            raise AssertionError(command)
+        return run, calls
+
+    def test_real_cleanup_checks_proc_and_stops_only_selected_package_for_both_scopes(self):
+        expected_codes = {'different-pid': 'QA_OWNER_CHANGED', 'different-ticks': 'QA_OWNER_CHANGED',
+            'foreign-command': 'QA_PROCESS_COMMAND_CHANGED', 'proc-denied': 'QA_PROCESS_READ_FAILED',
+            'cmdline-denied': 'QA_PROCESS_READ_FAILED', 'stat-denied': 'QA_PROCESS_READ_FAILED',
+            'discovery-conflict': 'QA_PROCESS_STATE_UNCERTAIN', 'still-alive': 'QA_PROCESS_NOT_STOPPED',
+            'after-unreadable': 'QA_PROCESS_READ_FAILED', 'after-reused': 'QA_OWNER_CHANGED', 'timeout': 'ADB_DEADLINE'}
+        for selected in [qa.P4B5_MANUAL, qa.P4B5_MANUAL_RETRY]:
+            for mode in ['alive', 'same-discovery', 'absent', *expected_codes]:
+                with self.subTest(scope=selected.measurement_id, mode=mode), tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory).resolve();(root / 'android').mkdir()
+                    qa.prior.write_json(root / 'android/owned-process.private.json', {
+                        **selected.identity(), 'pid': 123, 'processStartTicks': '456'})
+                    controller = qa.ManualController(root, root, selected)
+                    android = qa.ManualAndroid(Path('/synthetic/adb'), 'emulator-5554', selected)
+                    transport, calls = self.transport(selected, mode)
+                    with patch.object(qa.subprocess, 'run', side_effect=transport): result = controller.cleanup(android)['qaProcess']
+                    stop_count = 1 if mode in ['alive', 'same-discovery', 'still-alive', 'after-unreadable', 'after-reused'] else 0
+                    self.assertEqual(calls.count(['shell', 'am', 'force-stop', selected.package]), stop_count)
+                    self.assertIn(['shell', 'pidof', selected.package], calls)
+                    self.assertTrue(all(call[-1] == selected.package for call in calls if call[:3] == ['shell', 'am', 'force-stop']))
+                    if mode in ['alive', 'same-discovery', 'absent']:
+                        self.assertEqual(result, {'status': 'PASS', 'result': {'processExitConfirmed': True}})
+                        self.assertIn(['shell', 'ls', '-1', '/proc'], calls)
+                        self.assertIn({'operation': 'proc_list', 'code': 'PROC_ABSENT'}, self.assert_private_diagnostics(android))
+                    else:
+                        self.assertEqual(result, {'status': 'FAILED', 'code': expected_codes[mode]})
+                        self.assertNotIn('processExitConfirmed', result)
+                    if stop_count:
+                        stop_index = calls.index(['shell', 'am', 'force-stop', selected.package])
+                        self.assertIn(['shell', 'cat', '/proc/123/cmdline'], calls[:stop_index])
+                        self.assertIn(['shell', 'cat', '/proc/123/stat'], calls[:stop_index])
+                        self.assertIn(['shell', 'ls', '-1', '/proc'], calls[stop_index + 1:])
+                    receipt = qa.prior.private_json(root / 'cleanup.private.json')
+                    self.assertEqual(receipt['androidDiagnostics'], self.assert_private_diagnostics(android))
+                    self.assertEqual(receipt['ok'], mode in ['alive', 'same-discovery', 'absent'])
+                    terminal = qa.prior.private_json(root / 'terminal.private.json')
+                    for key, value in selected.identity().items():
+                        self.assertEqual(receipt[key], value);self.assertEqual(terminal[key], value)
+                    self.assertEqual(terminal['status'], 'FAILED_NO_RETRY')

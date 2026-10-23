@@ -13,7 +13,7 @@ import sys
 import time
 from urllib.parse import urlsplit
 
-from p4b5_qa_scope import P4B5, P4B5_RETRY, P4B5_MANUAL, select_scope
+from p4b5_qa_scope import P4B5, P4B5_RETRY, P4B5_MANUAL, P4B5_MANUAL_RETRY, SCOPES, select_scope
 import p4_consumer_qa as helpers
 from p4_resource_observation import validate_resource_observations
 
@@ -87,6 +87,7 @@ class Vm(helpers.Vm):
     STAGES = frozenset(['arm', 'baseline-gate', 'measurement'])
 
     def _protocol(self, evidence, stage, deadline=None, owner_check=None, selected=P4B5):
+        require(not selected.manual, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
         self.qa_scope = selected
         require(stage in self.STAGES, 'VM_STAGE_REFUSED')
         self.evidence, self.stage, self.startup_deadline = Path(evidence), stage, deadline
@@ -395,9 +396,9 @@ def validate_python_binding(binding, selected, source, run, runtime=True):
 
 class Controller:
     def __init__(self, private=None, root=ROOT, selected=P4B5):
-        require(selected in (P4B5, P4B5_RETRY, P4B5_MANUAL), 'UNKNOWN_QA_SCOPE')
+        require(selected in (P4B5, P4B5_RETRY, P4B5_MANUAL, P4B5_MANUAL_RETRY), 'UNKNOWN_QA_SCOPE')
         self.qa_scope = selected
-        self.package = PACKAGE
+        self.package = selected.package
         private = (PRIVATE if selected is P4B5 else selected.private_root) if private is None else private
         self.private, self.root = private, root
         self.failure_writable = False
@@ -417,7 +418,7 @@ class Controller:
         return self.latest_receipt('source-binding')
 
     def copied_source(self):
-        if self.qa_scope is not P4B5_MANUAL:
+        if not self.qa_scope.manual:
             return self.private / 'source'
         _, binding = self.source_binding()
         name = binding.get('sourceDirectory', '')
@@ -434,7 +435,7 @@ class Controller:
         require(digest(self.root / self.qa_scope.proposal) == self.qa_scope.proposal_sha256, 'PROPOSAL_CHANGED')
         approval = self.receipt('receipts/human-approval-01.private.json')
         require(all(approval.get(k) == v for k, v in scope(self.qa_scope).items())
-                and ((approval.get('answer') == 'A' and approval.get('scope') == 'LOCAL_IMPLEMENTATION_ONLY') if self.qa_scope is P4B5_MANUAL else (approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla' or (self.qa_scope is P4B5_RETRY and approval.get('answer') == 'A' and approval.get('approvedOption') == 'A — Planı ve tek sınırlı denemeyi onayla'))), 'HUMAN_APPROVAL_REQUIRED')
+                and ((approval.get('answer') == 'A' and approval.get('scope') == 'LOCAL_IMPLEMENTATION_ONLY') if self.qa_scope.manual else (approval.get('answer') == 'A — Planı ve tek sınırlı denemeyi onayla' or (self.qa_scope is P4B5_RETRY and approval.get('answer') == 'A' and approval.get('approvedOption') == 'A — Planı ve tek sınırlı denemeyi onayla'))), 'HUMAN_APPROVAL_REQUIRED')
         binding_path, binding = self.source_binding()
         require(all(binding.get(k) == v for k, v in scope(self.qa_scope).items()), 'SOURCE_BINDING_SCOPE')
         require(type(binding.get('files')) is dict and bool(binding['files']), 'SOURCE_BINDINGS_REQUIRED')
@@ -456,7 +457,7 @@ class Controller:
                     and run.get('sourceBindingSha256') == digest(binding_path)
                     and run.get('selectedBuildSha256') == digest(selected_path)
                     and run.get('classpathBindingSha256') == digest(classpath_path), 'RUN_BINDING_DRIFT')
-            if self.qa_scope is P4B5_MANUAL:
+            if self.qa_scope.manual:
                 self.execution_approval_gate(run_path)
             if self.qa_scope is not P4B5:
                 require(all(value.get(k) == v for value in [selected, classpath] for k, v in scope(self.qa_scope).items()), 'REVIEWED_SCOPE_CHANGED')
@@ -618,7 +619,7 @@ class Controller:
         require(self.owned_backend_alive(self.backend_owner(ready), timeout=timeout), 'BACKEND_NOT_RUNNING')
 
     def arm(self, android):
-        require(self.qa_scope is not P4B5_MANUAL, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
+        require(not self.qa_scope.manual, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
         self.gate()
         build, directory = self.selected_build()
         android.preflight()
@@ -668,7 +669,7 @@ class Controller:
             vm.close()
 
     def baseline_gate(self, android):
-        require(self.qa_scope is not P4B5_MANUAL, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
+        require(not self.qa_scope.manual, 'MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL')
         connection = self.connection(android)
         original = self.receipt('android/baseline.private.json')
         require(all(original.get(k) == v for k, v in scope(self.qa_scope).items()), 'BASELINE_SCOPE')
@@ -930,7 +931,7 @@ def main(argv=None):
         print('REFUSED_UNKNOWN_QA_SCOPE'); return 2
     if args.stage is None:
         print('DRY_RUN_ZERO_FILE_CREDENTIAL_DEVICE_DB_NETWORK_IO_P4B5'); return 0
-    if selected is P4B5_MANUAL:
+    if selected.manual:
         print('REFUSED_MANUAL_ENTRY_REQUIRES_PRIVATE_PROTOCOL'); return 2
     controller = Controller(selected=selected)
     try:

@@ -4,7 +4,7 @@ type: 'chore'
 created: '2026-10-21'
 status: 'done'
 delivery_scope: 'local_preparation_tools'
-real_pilot_status: 'awaiting_user_inputs'
+real_pilot_status: 'local_observations_complete_compatibility_review_required'
 baseline_commit: 'c8071716fc6b22afb817c5dfdaf741d3b800e08e'
 review_loop_iteration: 0
 context: []
@@ -68,7 +68,7 @@ context: []
 
 ## Teslim durumu
 
-Onaylanan araç hazırlığı tamamlandı. Gerçek pilot kaynak doğrulaması ve P5b kabulü, kullanıcının güncel CSV ve orijinalleri gelene kadar açıktır. İnceleme bulguları düzeltildi; 22 yerel test iki Python/Pillow ortamında, 3 SQL testi geçici PostgreSQL 18.6 üzerinde geçti. Frozen kapsam değişmedi.
+Onaylanan araç hazırlığı tamamlandı. Güncel CSV ve 41 yerel kaynak alındı; SHA/byte/MIME eşleşmesi ve tam decode başarılı. EXIF/ICC ve opak alpha özellikleri mevcut dar P2 sözleşmesiyle uyumluluk değerlendirmesi gerektiriyor. P2/üretim kabulü verilmedi. İnceleme bulguları düzeltildi; 22 yerel test iki Python/Pillow ortamında, 3 SQL testi geçici PostgreSQL 18.6 üzerinde geçti. Frozen kapsam değişmedi.
 
 ## Önerilen inceleme sırası
 
