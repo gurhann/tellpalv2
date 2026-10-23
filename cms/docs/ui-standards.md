@@ -140,6 +140,18 @@ Detail and workspace routes must follow one shared composition contract.
   - keyboard focus, listbox semantics, and selected state must remain available while the results region scrolls
   - picker dialogs must not create horizontal overflow at `390`, `768`, `1280`, or `1440` widths
 
+### Okuma görsellerinin yayın hazırlığı
+
+- Normal upload/save ve tek Yayınla kullanılır; ayrı optimize/kabul/bağlama düğmesi eklenmez.
+- Mevcut yayın kartı bekleyen/hazırlanan/hatalı/hazır görselleri ve açık retry'ı gösterir. Editoryal PUBLISHED tek başına görsel hazır anlamına gelmez.
+- Hazır görseller kapak/sayfa seçimi olan kompakt dialog'da gösterilir. Yeni aday başarısızsa önceki hazır görsellerin gösterildiği açıkça yazılır.
+- Değişmemiş görsel alanı metin kaydında sunucudaki mevcut bağı korur. Kullanıcının değiştirdiği görsel seçimi uygulanır; refetch temiz alanları güncellerken dirty alanları korur. İçerik/sayfa/dil değişimi yeni form açar.
+- Önizleme retry'ı aynı dilin durumunu da yeniler. Yeni uygun LIVE açık dialog'da gösterilir; eski istek ve object URL temizlenir. İçerik/dil değişimi dialog'u kapatır.
+- Kaynak ve hazır dosya byte ölçüleri backend manifestinden gelir. JPEG byte-copy eşit boyutsa “değişmeden korundu / aynı boyut” yazılır; küçülme iddiası üretilmez.
+- Önizleme bearer ile rendition Blob indirir; MediaAsset content-token yolu kullanılmaz. Dil/LIVE/seçim değişiminde eski görüntü çizilmez; istek iptal edilir ve object URL bırakılır.
+- Ağ/decode hatası görünürdür ve açık yeniden deneme sunar. Dialog klavye ile açılıp kapanır.
+- LIVE yenilemesi yalnız temiz form alanlarının sunucu bağlarını günceller; dirty alanlar ve seçili dil korunur.
+
 ## 7. Accessibility and Interaction Rules
 
 - Visible labels are required for search and filter groups.

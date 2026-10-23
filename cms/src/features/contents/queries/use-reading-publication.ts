@@ -1,5 +1,9 @@
+import { useCallback, useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { contentAdminApi } from "@/features/contents/api/content-admin";
+import {
+  contentAdminApi,
+  type ReadingPublicationStatus,
+} from "@/features/contents/api/content-admin";
 import { queryKeys } from "@/lib/query-keys";
 
 export const readingPublicationPollInterval = (
@@ -7,7 +11,7 @@ export const readingPublicationPollInterval = (
   failed = false,
 ) => (!failed && (state === "PENDING" || state === "PREPARING") ? 2000 : false);
 
-/** Exact language feedback lives outside the detail cache so polling cannot reset editors. */
+/** Dil durumu ayrı cache'te tutulur; polling açık editörleri sıfırlamaz. */
 export function useReadingPublication(
   contentId: number,
   language: string,
@@ -27,6 +31,29 @@ export function useReadingPublication(
         query.state.status === "error",
       ),
   });
+  const lastLive = useRef<string | null>(null);
+  const live = query.data?.liveRevision;
+  const liveKey = live
+    ? `${query.data?.liveGeneration}:${live}:${query.data?.liveManifestDigest}`
+    : null;
+  useEffect(() => {
+    if (liveKey && lastLive.current !== liveKey) {
+      // Form reset'i yalnız temiz alanları yeniler; kullanıcının değişen seçimi korunur.
+      void client.invalidateQueries({
+        queryKey: queryKeys.contents.detail(contentId),
+      });
+    }
+    lastLive.current = liveKey;
+  }, [client, contentId, language, liveKey]);
+  const acceptStatus = useCallback(
+    (status: ReadingPublicationStatus) => {
+      client.setQueryData(
+        queryKeys.contents.readingPublication(contentId, language),
+        status,
+      );
+    },
+    [client, contentId, language],
+  );
   const retry = useMutation({
     retry: false,
     mutationFn: () =>
@@ -35,5 +62,5 @@ export function useReadingPublication(
       client.setQueryData(queryKey, status);
     },
   });
-  return { ...query, retry };
+  return { ...query, retry, acceptStatus };
 }

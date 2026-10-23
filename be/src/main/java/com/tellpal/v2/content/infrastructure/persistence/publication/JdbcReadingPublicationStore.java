@@ -46,15 +46,20 @@ public class JdbcReadingPublicationStore {
     }
 
     public void changed(Snapshot snapshot, boolean eligible, java.util.Map<?, ?> profiles) {
+        // Metin değişimi nesli yeniler; aynı görsel/profil işi yeni claim altında kullanılabilir.
+        var previous = row(snapshot.contentId(), snapshot.language());
+        boolean reuse = eligible && previous.isPresent() && Boolean.TRUE.equals(previous.get().get("requested"))
+                && json(snapshot).equals(previous.get().get("snapshot_json")) && json(profiles).equals(previous.get().get("profiles_json"));
         jdbc.update("""
                 update reading_publications
-                set generation=generation+1,explicit_retry=false,snapshot_json=?,profiles_json=?,effective_profile_identity=null,live_eligible=live_eligible
+                set generation=generation+1,explicit_retry=false,snapshot_json=?,profiles_json=?,
+                effective_profile_identity=case when ? then effective_profile_identity else null end,live_eligible=live_eligible
                 and ?,state=case when requested
                 and ? then 'PENDING' else 'WITHDRAWN' end,requested=requested
-                and ?,job_id=null,lease=null,lease_expires_at=null,diagnostic=null,updated_at=now()
+                and ?,job_id=case when ? then job_id else null end,lease=null,lease_expires_at=null,diagnostic=null,updated_at=now()
                 where content_id=?
                 and language_code=?
-                """, json(snapshot), json(profiles), eligible, eligible, eligible, snapshot.contentId(), snapshot.language());
+                """, json(snapshot), json(profiles), reuse, eligible, eligible, eligible, reuse, snapshot.contentId(), snapshot.language());
     }
 
     public void refreshProfiles(long id, String language, java.util.Map<?, ?> profiles, String effectiveIdentity) {
@@ -95,6 +100,16 @@ public class JdbcReadingPublicationStore {
                 && claim.lease().equals(row.get("lease"))
                 && ((java.sql.Timestamp) row.get("lease_expires_at")).getTime() == claim.leaseExpiresEpochMillis()
                 && ((java.sql.Timestamp) row.get("lease_expires_at")).toInstant().isAfter(java.time.Instant.now());
+    }
+
+    /** İç bağlama aynı nesil ve lease altında kalır; dış değişiklikleri yeniden doğrular. */
+    public ReadingPublication admitted(ReadingPublication claim, Snapshot snapshot) {
+        if (!owns(claim)) throw new IllegalStateException("PUBLICATION_OWNERSHIP_LOST");
+        fenceCommit(claim);
+        jdbc.update("update reading_publications set snapshot_json=?,updated_at=now() where content_id=? and language_code=?",
+                json(snapshot), claim.contentId(), claim.language());
+        return new ReadingPublication(claim.contentId(), claim.language(), claim.generation(), claim.lease(),
+                claim.leaseExpiresEpochMillis(), snapshot, claim.jobId(), claim.explicitRetry(), claim.effectiveProfileIdentity());
     }
 
     public void attach(ReadingPublication claim, UUID job) {

@@ -33,7 +33,11 @@ export const readingPublicationStatusSchema = z.object({
     .regex(/^[0-9a-f]{64}$/)
     .nullable(),
   liveGeneration: z.number().int().positive().nullable().optional(),
-  liveManifestDigest: z.string().regex(/^[0-9a-f]{64}$/).nullable().optional(),
+  liveManifestDigest: z
+    .string()
+    .regex(/^[0-9a-f]{64}$/)
+    .nullable()
+    .optional(),
   diagnostic: z
     .enum([
       "SOURCE_NOT_ADMITTED",
@@ -51,6 +55,38 @@ export const readingPublicationStatusSchema = z.object({
 export type ReadingPublicationStatus = z.infer<
   typeof readingPublicationStatusSchema
 >;
+
+export const readingPreviewManifestSchema = z.object({
+  identity: z.object({
+    contentId: z.number().int().positive(),
+    language: z.string(),
+    liveGeneration: z.number().int().positive(),
+    revision: z.string().regex(/^[0-9a-f]{64}$/),
+    manifestDigest: z.string().regex(/^[0-9a-f]{64}$/),
+    jobId: z.string().uuid(),
+  }),
+  images: z
+    .array(
+      z.object({
+        role: z.enum(["READING_COVER", "READING_DETAIL", "READING_PAGE"]),
+        pageNumber: z.number().int().nonnegative(),
+        renditionKey: z.string().min(1),
+        sourceMime: z.string(),
+        sourceBytes: z.number().int().positive(),
+        sourceWidth: z.number().int().positive(),
+        sourceHeight: z.number().int().positive(),
+        mime: z.enum(["image/jpeg", "image/png", "image/webp"]),
+        bytes: z.number().int().positive(),
+        width: z.number().int().positive(),
+        height: z.number().int().positive(),
+      }),
+    )
+    .min(3),
+});
+export type ReadingPreviewManifest = z.infer<
+  typeof readingPreviewManifestSchema
+>;
+export type ReadingPreviewImage = ReadingPreviewManifest["images"][number];
 
 export const contentTypeSchema = z.enum(contentTypeValues);
 export const contentLocalizationStatusSchema = z.enum(localizationStatusValues);
@@ -90,6 +126,7 @@ export type UpdateContentInput = {
 };
 
 export type UpsertContentLocalizationInput = {
+  preserveCoverBinding?: boolean;
   title: string;
   description?: string | null;
   bodyText?: string | null;
@@ -262,6 +299,32 @@ export const contentAdminApi = {
       `${basePath}/${contentId}/reading-publication?languageCode=${encodeURIComponent(language)}`,
       { responseSchema: readingPublicationStatusSchema, signal },
     );
+  },
+  getReadingPreview(contentId: number, language: string, signal?: AbortSignal) {
+    return apiClient.get(
+      `${basePath}/${contentId}/reading-publication/preview?languageCode=${encodeURIComponent(language)}`,
+      { responseSchema: readingPreviewManifestSchema, signal },
+    );
+  },
+  downloadReadingPreview(
+    identity: ReadingPreviewManifest["identity"],
+    image: ReadingPreviewImage,
+    signal?: AbortSignal,
+  ) {
+    const params = new URLSearchParams({
+      languageCode: identity.language,
+      liveGeneration: String(identity.liveGeneration),
+      revision: identity.revision,
+      manifestDigest: identity.manifestDigest,
+      jobId: identity.jobId,
+      role: image.role,
+      pageNumber: String(image.pageNumber),
+      renditionKey: image.renditionKey,
+    });
+    return apiClient.download({
+      path: `${basePath}/${identity.contentId}/reading-publication/preview/bytes?${params}`,
+      signal,
+    });
   },
   retryReadingPublication(contentId: number, language: string) {
     return apiClient.post(

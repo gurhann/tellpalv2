@@ -40,6 +40,7 @@ type StoryPageLocalizationFormProps = {
     bodyText: string | null;
     audioMediaId: number | null;
     illustrationMediaId: number;
+    preserveIllustrationBinding?: boolean;
   }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
@@ -230,6 +231,7 @@ export function StoryPageLocalizationForm({
   const hasIllustration = typeof illustrationMediaId === "number";
   const isReadyForPublish = hasBodyText && hasAudioAsset && hasIllustration;
   const isFormDirty = form.formState.isDirty;
+  const hasDirtyValues = Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     form.reset(
@@ -238,20 +240,18 @@ export function StoryPageLocalizationForm({
         : getStoryPageLocalizationFormDefaults(
             contentLocalization.languageCode,
           ),
+      { keepDirtyValues: true },
     );
-    onDirtyChange?.(contentLocalization.languageCode, false);
-  }, [
-    contentLocalization.languageCode,
-    existingLocalization,
-    form,
-    onDirtyChange,
-  ]);
+  }, [contentLocalization.languageCode, existingLocalization, form]);
 
   useEffect(() => {
     onDirtyChange?.(contentLocalization.languageCode, isFormDirty);
   }, [contentLocalization.languageCode, isFormDirty, onDirtyChange]);
 
   async function handleSubmit(values: StoryPageLocalizationFormValues) {
+    const sentValues = form.getValues();
+    const preserveIllustrationBinding =
+      mode === "update" && !form.getFieldState("illustrationMediaId").isDirty;
     form.clearErrors();
 
     if (values.illustrationMediaId === null) {
@@ -291,6 +291,7 @@ export function StoryPageLocalizationForm({
           bodyText: values.bodyText,
           audioMediaId: values.audioMediaId,
           illustrationMediaId,
+          ...(mode === "update" ? { preserveIllustrationBinding } : {}),
         }),
         {
           loading: mode === "create" ? copy.createLoading : copy.updateLoading,
@@ -298,13 +299,22 @@ export function StoryPageLocalizationForm({
         },
       );
 
+      const currentValues = form.getValues();
+      const editedDuringSave = (
+        Object.keys(sentValues) as (keyof StoryPageLocalizationFormValues)[]
+      ).filter((field) => !Object.is(currentValues[field], sentValues[field]));
       form.reset({
         languageCode: savedLocalization.languageCode,
         bodyText: savedLocalization.bodyText,
         audioMediaId: savedLocalization.audioMediaId,
         illustrationMediaId: savedLocalization.illustrationMediaId,
       });
-      onDirtyChange?.(savedLocalization.languageCode, false);
+      for (const field of editedDuringSave)
+        form.setValue(field, currentValues[field], { shouldDirty: true });
+      onDirtyChange?.(
+        savedLocalization.languageCode,
+        editedDuringSave.length > 0,
+      );
     } catch (error) {
       if (error instanceof ApiClientError) {
         if (error.problem.errorCode === "asset_media_type_mismatch") {
@@ -337,6 +347,7 @@ export function StoryPageLocalizationForm({
 
   return (
     <form
+      data-dirty={hasDirtyValues}
       className="grid gap-5"
       noValidate
       onSubmit={form.handleSubmit(handleSubmit)}

@@ -201,6 +201,7 @@ describe("useContentLocalizationActions", () => {
       await result.current.saveLocalization.mutateAsync({
         mode: "update",
         contentType: "STORY",
+        preserveCoverBinding: true,
         values: {
           languageCode: "en",
           title: "Evening Garden Updated",
@@ -223,6 +224,7 @@ describe("useContentLocalizationActions", () => {
         title: "Evening Garden Updated",
         description: "Updated English locale",
         coverMediaId: null,
+        preserveCoverBinding: true,
         durationMinutes: 8,
         status: "PUBLISHED",
         processingStatus: "COMPLETED",

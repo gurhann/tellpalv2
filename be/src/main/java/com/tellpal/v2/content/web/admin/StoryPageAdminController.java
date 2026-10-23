@@ -215,7 +215,9 @@ record UpsertStoryPageLocalizationRequest(
         Long audioMediaId,
         @NotNull(message = "illustrationMediaId is required")
         @Positive(message = "illustrationMediaId must be positive")
-        Long illustrationMediaId) {
+        Long illustrationMediaId,
+        @io.swagger.v3.oas.annotations.media.Schema(description = "True ise mevcut sayfanın güncel görsel bağı kilit altında korunur; illustrationMediaId uygulanmaz. Varsayılan false yeni seçimi uygular.")
+        Boolean preserveIllustrationBinding) {
 
     UpsertStoryPageLocalizationCommand toCommand(Long contentId, int pageNumber, String languageCode) {
         return new UpsertStoryPageLocalizationCommand(
@@ -224,6 +226,6 @@ record UpsertStoryPageLocalizationRequest(
                 LanguageCode.from(languageCode),
                 bodyText,
                 audioMediaId,
-                illustrationMediaId);
+                illustrationMediaId, Boolean.TRUE.equals(preserveIllustrationBinding));
     }
 }

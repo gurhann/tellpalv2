@@ -16,6 +16,7 @@ import type {
   ContentReadViewModel,
 } from "@/features/contents/model/content-view-model";
 import { useContentLocalizationActions } from "@/features/contents/mutations/use-content-localization-actions";
+import { ReadingPublicationPreview } from "./reading-publication-preview";
 import { useReadingPublication } from "@/features/contents/queries/use-reading-publication";
 import { useI18n } from "@/i18n/locale-provider";
 import { ApiClientError } from "@/lib/http/client";
@@ -216,26 +217,35 @@ function PublicationActionBody({
             </p>
             <p className="text-muted-foreground">
               {locale === "tr"
-                ? "Yerel/test okuma sözleşmesi; mobil dağıtım durumunu değiştirmez."
-                : "Local/test reading contract; ordinary mobile delivery is unchanged."}
+                ? "Yerel/test ortamında görseller otomatik hazırlanır. Orijinal dosyalar korunur."
+                : "Images are prepared automatically in local/test. Original files are preserved."}
             </p>
             {reading.data.liveRevision && reading.data.state !== "LIVE" ? (
               <p>
                 {locale === "tr"
-                  ? "Önceki doğrulanmış revizyon uygunluğunu koruyor."
-                  : "The previous verified revision remains eligible."}
+                  ? "Önceki hazır görseller kullanılmaya devam ediyor."
+                  : "The previous prepared images remain in use."}
               </p>
             ) : null}
             {reading.data.diagnostic ? (
               <p>
                 {reading.data.diagnostic === "SOURCE_NOT_ADMITTED"
                   ? locale === "tr"
-                    ? "Yeni kabul edilmiş değişmez görsel kimliklerini seçin ve yeniden deneyin."
-                    : "Select newly admitted immutable image IDs, then retry."
+                    ? "Kaynak görsel okunamadı. Görseli kontrol edip yeniden deneyin."
+                    : "The source image could not be read. Check the image and retry."
                   : locale === "tr"
                     ? "Güncel okuma görselleri doğrulanamadı. Kaynakları kontrol edip yeniden deneyin."
                     : "Current reading images could not be verified. Check the sources and retry."}
               </p>
+            ) : null}
+            {reading.data.liveRevision ? (
+              <ReadingPublicationPreview
+                key={`${content.summary.id}:${localization.languageCode}`}
+                contentId={content.summary.id}
+                language={localization.languageCode}
+                status={reading.data}
+                onStatusRefresh={reading.acceptStatus}
+              />
             ) : null}
             {reading.data.retryable ? (
               <Button
@@ -271,7 +281,9 @@ function PublicationActionBody({
                 !localization.isArchived &&
                 !(
                   reading?.data?.enabled &&
-                  ["NOT_REQUESTED", "WITHDRAWN", "FAILED"].includes(reading.data.state)
+                  ["NOT_REQUESTED", "WITHDRAWN", "FAILED"].includes(
+                    reading.data.state,
+                  )
                 ))
             }
           >
@@ -309,10 +321,7 @@ function readingStateLabel(state: string, turkish: boolean) {
     ],
     PENDING: ["Okuma hazırlığı bekliyor", "Reading preparation pending"],
     PREPARING: ["Okuma görselleri hazırlanıyor", "Preparing reading images"],
-    LIVE: [
-      "Doğrulanmış okuma revizyonu benimsendi",
-      "Verified reading revision adopted",
-    ],
+    LIVE: ["Okuma görselleri hazır", "Reading images ready"],
     FAILED: ["Okuma hazırlığı başarısız", "Reading preparation failed"],
     WITHDRAWN: [
       "Okuma uygunluğu geri çekildi",

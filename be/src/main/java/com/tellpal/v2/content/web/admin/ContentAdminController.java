@@ -382,16 +382,19 @@ record UpsertContentLocalizationRequest(
         LocalizationStatus status,
         ProcessingStatus processingStatus,
         java.time.Instant publishedAt,
-        @Valid StoryNarrationRequest narration) {
+        @Valid StoryNarrationRequest narration,
+        @Schema(description = "True ise update sırasında güncel sunucu kapak bağı kilit altında korunur; coverMediaId uygulanmaz. Varsayılan false seçilen görseli değiştirir.")
+        Boolean preserveCoverBinding) {
 
     UpsertContentLocalizationRequest(String title, String description, String bodyText, Long coverMediaId,
             Long audioMediaId, Integer durationMinutes, LocalizationStatus status,
             ProcessingStatus processingStatus, java.time.Instant publishedAt) {
         this(title, description, bodyText, coverMediaId, audioMediaId, durationMinutes, status,
-                processingStatus, publishedAt, null);
+                processingStatus, publishedAt, null, false);
     }
 
     CreateContentLocalizationCommand toCreateCommand(Long contentId, String languageCode) {
+        if (Boolean.TRUE.equals(preserveCoverBinding)) throw new IllegalArgumentException("Kapak bağı yalnız mevcut yerelleştirmede korunabilir");
         return new CreateContentLocalizationCommand(
                 contentId,
                 LanguageCode.from(languageCode),
@@ -420,7 +423,7 @@ record UpsertContentLocalizationRequest(
                 status,
                 processingStatus,
                 publishedAt,
-                narration == null ? null : narration.toCommand());
+                narration == null ? null : narration.toCommand(), Boolean.TRUE.equals(preserveCoverBinding));
     }
 }
 

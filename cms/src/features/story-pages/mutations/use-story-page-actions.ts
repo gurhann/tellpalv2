@@ -101,6 +101,7 @@ export function useStoryPageActions({
         bodyText?: string | null;
         audioMediaId?: number | null;
         illustrationMediaId: number;
+        preserveIllustrationBinding?: boolean;
       };
     }) =>
       storyPageAdminApi.upsertStoryPageLocalization(

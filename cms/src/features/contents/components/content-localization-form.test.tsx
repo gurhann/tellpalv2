@@ -1,4 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -103,6 +110,147 @@ beforeEach(() => {
 });
 
 describe("ContentLocalizationForm", () => {
+  it("preserves edits entered after a save was sent when its continuation completes late", async () => {
+    const localization = storyContentViewModel.localizations[0];
+    const initialValues = mapLocalizationToFormValues(localization);
+    let complete!: (value: unknown) => void;
+    const save = makeMutationState({
+      mutateAsync: vi.fn(
+        () =>
+          new Promise((done) => {
+            complete = done;
+          }),
+      ),
+    });
+    contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue(
+      {
+        saveLocalization: save,
+        publishLocalization: makeMutationState(),
+        archiveLocalization: makeMutationState(),
+      },
+    );
+    render(
+      <ContentLocalizationForm
+        content={storyContentViewModel}
+        mode="update"
+        localization={localization}
+        initialValues={initialValues}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("Title", { exact: true }), {
+      target: { value: "Submitted title" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save localization", exact: true }),
+    );
+    await waitFor(() => expect(save.mutateAsync).toHaveBeenCalled());
+    fireEvent.change(screen.getByLabelText("Title", { exact: true }), {
+      target: { value: "New unsaved title after request" },
+    });
+    await act(async () => {
+      complete({ ...localization, title: "Submitted title" });
+    });
+    await waitFor(() =>
+      expect(screen.getByLabelText("Title", { exact: true })).toHaveValue(
+        "New unsaved title after request",
+      ),
+    );
+    expect(
+      screen.getByLabelText("Title", { exact: true }).closest("form"),
+    ).toHaveAttribute("data-dirty", "true");
+  });
+  it("accepts server normalization when the submitted field was not edited again", async () => {
+    const localization = storyContentViewModel.localizations[0];
+    const save = makeMutationState({
+      mutateAsync: vi
+        .fn()
+        .mockResolvedValue({ ...localization, title: "Trimmed title" }),
+    });
+    contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue(
+      {
+        saveLocalization: save,
+        publishLocalization: makeMutationState(),
+        archiveLocalization: makeMutationState(),
+      },
+    );
+    render(
+      <ContentLocalizationForm
+        content={storyContentViewModel}
+        mode="update"
+        localization={localization}
+        initialValues={mapLocalizationToFormValues(localization)}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("Title", { exact: true }), {
+      target: { value: "  Trimmed title  " },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save localization", exact: true }),
+    );
+    await waitFor(() =>
+      expect(screen.getByLabelText("Title", { exact: true })).toHaveValue(
+        "Trimmed title",
+      ),
+    );
+    expect(
+      screen.getByLabelText("Title", { exact: true }).closest("form"),
+    ).toHaveAttribute("data-dirty", "false");
+  });
+  it.each([false, true])(
+    "refreshes adopted clean image bindings and preserves dirty fields (dirty cover: %s)",
+    async (dirtyCover) => {
+      const localization = storyContentViewModel.localizations[0];
+      const save = makeMutationState({
+        mutateAsync: vi.fn().mockResolvedValue(localization),
+      });
+      contentLocalizationActionsMock.useContentLocalizationActions.mockReturnValue({
+        saveLocalization: save,
+        publishLocalization: makeMutationState(),
+        archiveLocalization: makeMutationState(),
+      });
+      const initialValues = mapLocalizationToFormValues(localization);
+      const props = {
+        content: storyContentViewModel,
+        mode: "update" as const,
+        localization,
+        initialValues,
+      };
+      const { rerender } = render(<ContentLocalizationForm {...props} />);
+      fireEvent.change(screen.getByLabelText("Title", { exact: true }), {
+        target: { value: "Unsaved editorial title" },
+      });
+      const picker = within(
+        screen.getByTestId("content-localization-cover-asset"),
+      );
+      fireEvent.click(
+        picker.getByRole("button", { name: "Advanced", exact: true }),
+      );
+      if (dirtyCover)
+        fireEvent.change(picker.getByRole("spinbutton"), {
+          target: { value: "99" },
+        });
+      rerender(
+        <ContentLocalizationForm
+          {...props}
+          initialValues={{ ...initialValues, coverMediaId: 88 }}
+        />,
+      );
+      await waitFor(() =>
+        expect(picker.getByRole("spinbutton")).toHaveValue(
+          dirtyCover ? 99 : 88,
+        ),
+      );
+      expect(screen.getByLabelText("Title", { exact: true })).toHaveValue(
+        "Unsaved editorial title",
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Save localization", exact: true }));
+      await waitFor(() => expect(save.mutateAsync).toHaveBeenCalledWith(expect.objectContaining({
+        preserveCoverBinding: !dirtyCover,
+        values: expect.objectContaining({ coverMediaId: dirtyCover ? 99 : 88, title: "Unsaved editorial title" }),
+      })));
+    },
+  );
+
   it("requires narration audio and duration to be supplied together", () => {
     const result = createContentLocalizationSchema("STORY").safeParse({
       ...getCreateLocalizationFormDefaults("en"),
@@ -179,7 +327,9 @@ describe("ContentLocalizationForm", () => {
       screen.getByTestId("content-localization-audio-asset-dropzone"),
     ).toBeVisible();
     expect(screen.queryByLabelText(/manual asset id/i)).not.toBeInTheDocument();
-    expect(screen.queryByTestId("content-localization-cover-row")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("content-localization-cover-row"),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps lullaby locales limited to title and publication fields", () => {
@@ -198,8 +348,12 @@ describe("ContentLocalizationForm", () => {
     expect(screen.getByLabelText(/^status$/i)).toBeVisible();
     expect(screen.queryByText(/audio asset/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/cover asset/i)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/duration minutes/i)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/processing status/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText(/duration minutes/i),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText(/processing status/i),
+    ).not.toBeInTheDocument();
   });
 
   it("pairs cover media with a dedicated metadata sidebar", () => {

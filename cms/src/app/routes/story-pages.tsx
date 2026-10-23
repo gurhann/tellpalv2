@@ -137,6 +137,7 @@ type EditStoryPageDialogProps = {
     bodyText: string | null;
     audioMediaId: number | null;
     illustrationMediaId: number;
+    preserveIllustrationBinding?: boolean;
   }) => Promise<AdminStoryPageLocalizationResponse>;
 };
 
@@ -344,7 +345,7 @@ function EditStoryPageDialog({
 
                   return (
                     <StoryPageLocalizationForm
-                      key={`${storyPage.pageNumber}-${item.code}`}
+                      key={`${content.summary.id}-${storyPage.pageNumber}-${item.code}`}
                       contentLocalization={contentLocalization}
                       isPending={isPending}
                       storyPage={storyPage}
@@ -354,6 +355,7 @@ function EditStoryPageDialog({
                         bodyText,
                         audioMediaId,
                         illustrationMediaId,
+                        preserveIllustrationBinding,
                       }) =>
                         onUpsertLocalization({
                           pageNumber: storyPage.pageNumber,
@@ -361,6 +363,7 @@ function EditStoryPageDialog({
                           bodyText,
                           audioMediaId,
                           illustrationMediaId,
+                          preserveIllustrationBinding,
                         })
                       }
                     />
@@ -1250,6 +1253,7 @@ function StoryPagesWorkspace({
               bodyText: input.bodyText,
               audioMediaId: input.audioMediaId,
               illustrationMediaId: input.illustrationMediaId,
+              preserveIllustrationBinding: input.preserveIllustrationBinding,
             },
           })
         }

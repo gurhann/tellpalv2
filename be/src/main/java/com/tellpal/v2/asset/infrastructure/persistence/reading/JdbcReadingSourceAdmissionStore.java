@@ -47,6 +47,10 @@ public class JdbcReadingSourceAdmissionStore {
         });
     }
 
+    public Optional<Map<String, Object>> find(long assetId) {
+        return jdbc.queryForList("select * from reading_source_admissions where asset_id=?", assetId).stream().findFirst();
+    }
+
     public Map<String, Object> require(long assetId, boolean lock) {
         var rows = jdbc.queryForList("""
                 select * from reading_source_admissions

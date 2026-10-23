@@ -165,13 +165,22 @@ public final class ContentManagementCommands {
             LocalizationStatus status,
             ProcessingStatus processingStatus,
             Instant publishedAt,
-            StoryNarrationCommand narration) {
+            StoryNarrationCommand narration,
+            boolean preserveCoverBinding) {
 
         public UpdateContentLocalizationCommand(Long contentId, LanguageCode languageCode, String title,
                 String description, String bodyText, Long coverMediaId, Long audioMediaId, Integer durationMinutes,
                 LocalizationStatus status, ProcessingStatus processingStatus, Instant publishedAt) {
             this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId, durationMinutes,
-                    status, processingStatus, publishedAt, null);
+                    status, processingStatus, publishedAt, null, false);
+        }
+
+        /** Eski çağrı mevcut tam değiştirme davranışını korur. */
+        public UpdateContentLocalizationCommand(Long contentId, LanguageCode languageCode, String title,
+                String description, String bodyText, Long coverMediaId, Long audioMediaId, Integer durationMinutes,
+                LocalizationStatus status, ProcessingStatus processingStatus, Instant publishedAt, StoryNarrationCommand narration) {
+            this(contentId, languageCode, title, description, bodyText, coverMediaId, audioMediaId, durationMinutes,
+                    status, processingStatus, publishedAt, narration, false);
         }
 
         public UpdateContentLocalizationCommand {
@@ -248,16 +257,22 @@ public final class ContentManagementCommands {
             LanguageCode languageCode,
             String bodyText,
             Long audioMediaId,
-            Long illustrationMediaId) {
+            Long illustrationMediaId,
+            boolean preserveIllustrationBinding) {
+
+        public UpsertStoryPageLocalizationCommand(Long contentId, int pageNumber, LanguageCode languageCode,
+                String bodyText, Long audioMediaId, Long illustrationMediaId) {
+            this(contentId, pageNumber, languageCode, bodyText, audioMediaId, illustrationMediaId, false);
+        }
 
         public UpsertStoryPageLocalizationCommand {
             contentId = requirePositiveId(contentId, "Content ID must be positive");
             pageNumber = requirePositiveNumber(pageNumber, "Story page number must be positive");
             languageCode = requireLanguageCode(languageCode);
             audioMediaId = normalizePositiveId(audioMediaId, "Audio media ID must be positive");
-            illustrationMediaId = requirePositiveId(
-                    illustrationMediaId,
-                    "Illustration media ID must be positive");
+            illustrationMediaId = preserveIllustrationBinding
+                    ? normalizePositiveId(illustrationMediaId, "Illustration media ID must be positive")
+                    : requirePositiveId(illustrationMediaId, "Illustration media ID must be positive");
         }
     }
 

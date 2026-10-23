@@ -118,13 +118,17 @@ public class StoryPageManagementService {
         Content content = loadContent(command.contentId());
         loadContentLocalization(content, command.languageCode());
         StoryPage storyPage = loadStoryPage(content, command.pageNumber());
+        Long illustrationMediaId = command.preserveIllustrationBinding()
+                ? storyPage.findLocalization(command.languageCode())
+                    .orElseThrow(() -> new IllegalArgumentException("Korunacak mevcut sayfa görsel bağı bulunamadı")).getIllustrationMediaId()
+                : command.illustrationMediaId();
         assetReferenceValidator.requireAudioAsset(command.audioMediaId(), "audioMediaId");
-        assetReferenceValidator.requireRequiredImageAsset(command.illustrationMediaId(), "illustrationMediaId");
+        assetReferenceValidator.requireRequiredImageAsset(illustrationMediaId, "illustrationMediaId");
         StoryPageLocalization localization = storyPage.upsertLocalization(
                 command.languageCode(),
                 command.bodyText(),
                 command.audioMediaId(),
-                command.illustrationMediaId());
+                illustrationMediaId);
         if(readingPublication.enabled()) contentRepository.saveAndFlush(content);
         schedulePageMedia(content, command.languageCode());
         StoryPage persistedContent = contentRepository.save(content)

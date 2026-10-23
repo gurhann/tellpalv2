@@ -22,6 +22,7 @@ public class ReadingPublicationService implements ReadingPublicationApi {
     private final JdbcReadingPublicationStore store;
     private final ReadingImageSnapshotAssembler assembler;
     private final ReadingPublicationReadyApi ready;
+    private final ReadingSourceAdmissionApi admissions;
     private final TransactionTemplate tx;
     public ReadingPublicationService(
             ReadingPublicationProperties config,
@@ -30,6 +31,7 @@ public class ReadingPublicationService implements ReadingPublicationApi {
             JdbcReadingPublicationStore store,
             ReadingImageSnapshotAssembler assembler,
             ReadingPublicationReadyApi ready,
+            ReadingSourceAdmissionApi admissions,
             PlatformTransactionManager manager) {
         this.config = config;
         this.guard = guard;
@@ -37,6 +39,7 @@ public class ReadingPublicationService implements ReadingPublicationApi {
         this.store = store;
         this.assembler = assembler;
         this.ready = ready;
+        this.admissions = admissions;
         this.tx = new TransactionTemplate(manager);
     }
 
@@ -103,6 +106,42 @@ public class ReadingPublicationService implements ReadingPublicationApi {
         var token = claim.get();
         try {
             token.snapshot().requireComplete();
+            var selected = token;
+            var replacements = new LinkedHashMap<Long, Long>();
+            var accepted = new HashMap<Long, ReadingSourceAdmissionApi.Admission>();
+            for (var binding : token.snapshot().bindings()) {
+                long source = replacements.getOrDefault(binding.assetId(), binding.assetId());
+                var admission = admissions.admit(source, profiles.get(binding.role()));
+                replacements.put(binding.assetId(), admission.assetId());
+                accepted.put(admission.assetId(), admission);
+            }
+            String admissionIdentity = config.enabled() ? ready.effectiveProfileIdentity(config.profiles()) : null;
+            var admitted = tx.execute(s -> {
+                var content = locked(id);
+                if (!config.enabled() || !store.owns(selected)) return null;
+                if (!Objects.equals(selected.effectiveProfileIdentity(), admissionIdentity) || !config.profiles().equals(profiles) || !assembler.assemble(content, language).equals(selected.snapshot())
+                        || !eligibleNew(content, language)) return null;
+                if (!admissions.guard(List.copyOf(accepted.values()))) return null;
+                var localization = content.findLocalization(LanguageCode.from(language)).orElseThrow();
+                long cover = replacements.get(localization.getCoverMediaId());
+                localization.updateContent(localization.getTitle(), localization.getDescription(), localization.getBodyText(),
+                        cover, localization.getAudioMediaId(), localization.getDurationMinutes());
+                for (var page : content.getStoryPages()) {
+                    var localized = page.findLocalization(LanguageCode.from(language)).orElseThrow();
+                    localized.update(localized.getBodyText(), localized.getAudioMediaId(), replacements.get(localized.getIllustrationMediaId()));
+                }
+                return store.admitted(selected, assembler.assemble(content, language));
+            });
+            if (admitted == null) return;
+            reconcileAdmitted(admitted, profiles, id, language);
+        } catch (RuntimeException invalid) {
+            fail(token, diagnostic(invalid));
+        }
+    }
+
+    private void reconcileAdmitted(com.tellpal.v2.content.domain.publication.ReadingPublication token,
+            Map<Role, TestProfile> profiles, long id, String language) {
+        try {
             Preparation result;
             if (token.jobId() == null) result = ready.prepareAdmitted(token.snapshot(), profiles);
             else result = ready.state(token.jobId());

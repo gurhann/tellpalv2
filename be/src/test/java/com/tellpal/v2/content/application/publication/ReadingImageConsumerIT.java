@@ -78,7 +78,7 @@ class ReadingImageConsumerIT extends PostgresIntegrationTestBase {
         preparation=new ReadingImagePreparationService(assets,disk.storage(),jobs,env,props,true, admissions);
         ready=new ReadingPublicationReadyService(preparation,admissions,jobs,jdbc,manager,disk.storage());
         config.setEnabled(true);config.setProfiles(ReadingFixtures.profiles());
-        publication=new ReadingPublicationService(config,guard,contents,store,assembler,ready,manager);
+        publication=new ReadingPublicationService(config,guard,contents,store,assembler,ready,admissions,manager);
         publishing=new ContentPublicationService(contents,mock(AssetProcessingApi.class),publication,guard);
         worker=new ReadingImageWorker(preparation,jobs,disk.storage(),Clock.systemUTC());
         legacy=original("cover",80);cover=admissions.admit(legacy,ReadingFixtures.profile()).assetId();

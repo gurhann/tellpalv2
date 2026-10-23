@@ -20,6 +20,7 @@ export type UpdateStoryPageInput = {
 };
 
 export type UpsertStoryPageLocalizationInput = {
+  preserveIllustrationBinding?: boolean;
   bodyText?: string | null;
   audioMediaId?: number | null;
   illustrationMediaId: number;

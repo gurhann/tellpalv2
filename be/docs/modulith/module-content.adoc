@@ -22,6 +22,7 @@
 * `c.t.v.a.api.LibraryCoverPreparationApi` (in Asset)
 * `c.t.v.a.api.ReadingPublicationReadyApi` (in Asset)
 * `c.t.v.a.api.ReadingImageDeliveryApi` (in Asset)
+* `c.t.v.a.api.ReadingSourceAdmissionApi` (in Asset)
 * `c.t.v.a.api.LibraryCoverQueryApi` (in Asset)
 * `c.t.v.a.api.ContentAssetBundleApi` (in Asset)
 * `c.t.v.a.api.StoryDetailHeroQueryApi` (in Asset)

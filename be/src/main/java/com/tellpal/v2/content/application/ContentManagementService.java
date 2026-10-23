@@ -164,13 +164,15 @@ public class ContentManagementService {
         ContentLocalization existingLocalization = loadLocalization(content, command.languageCode());
         ProcessingStatus processingStatus = resolveLocalizationProcessingStatus(content, command.processingStatus());
         boolean narrationChanged = narrationChanged(existingLocalization, command.narration());
-        validateLocalizationAssets(command.coverMediaId(), command.audioMediaId());
+        Long coverMediaId = command.preserveCoverBinding()
+                ? existingLocalization.getCoverMediaId() : command.coverMediaId();
+        validateLocalizationAssets(coverMediaId, command.audioMediaId());
         ContentLocalization localization = content.upsertLocalization(
                 command.languageCode(),
                 command.title(),
                 command.description(),
                 command.bodyText(),
-                command.coverMediaId(),
+                coverMediaId,
                 command.audioMediaId(),
                 command.durationMinutes(),
                 command.status(),

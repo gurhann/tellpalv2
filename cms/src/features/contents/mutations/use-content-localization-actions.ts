@@ -19,6 +19,7 @@ type SaveLocalizationVariables = {
   mode: "create" | "update";
   values: ContentLocalizationFormValues;
   contentType: ContentType;
+  preserveCoverBinding?: boolean;
 };
 
 type PublishLocalizationVariables = {
@@ -156,8 +157,14 @@ export function useContentLocalizationActions(contentId: number) {
       mode,
       values,
       contentType,
+      preserveCoverBinding,
     }: SaveLocalizationVariables) => {
-      const payload = toLocalizationPayload(values, contentType);
+      const payload = {
+        ...toLocalizationPayload(values, contentType),
+        ...(mode === "update" && preserveCoverBinding
+          ? { preserveCoverBinding: true }
+          : {}),
+      };
 
       if (mode === "create") {
         return contentAdminApi.createLocalization(

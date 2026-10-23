@@ -261,6 +261,8 @@ export function ContentLocalizationForm({
     ),
     defaultValues: initialValues,
   });
+  // RHF, keepDirtyValues için dirtyFields'e render aboneliği ister.
+  const hasDirtyValues = Object.keys(form.formState.dirtyFields).length > 0;
   useEffect(() => {
     form.reset(initialValues, { keepDirtyValues: true });
   }, [form, initialValues]);
@@ -288,6 +290,8 @@ export function ContentLocalizationForm({
   );
 
   async function handleSubmit(values: ContentLocalizationFormValues) {
+    const sentValues = form.getValues();
+    const preserveCoverBinding = mode === "update" && !form.getFieldState("coverMediaId").isDirty;
     form.clearErrors();
     saveLocalization.reset();
 
@@ -297,6 +301,7 @@ export function ContentLocalizationForm({
           mode,
           values,
           contentType: content.summary.type,
+          ...(content.summary.supportsStoryPages && mode === "update" ? { preserveCoverBinding } : {}),
         }),
         {
           loading: mode === "create" ? copy.createLoading : copy.updateLoading,
@@ -308,7 +313,14 @@ export function ContentLocalizationForm({
         mapAdminContentLocalization(savedLocalization),
       );
 
+      const currentValues = form.getValues();
+      const editedDuringSave = (
+        Object.keys(sentValues) as (keyof ContentLocalizationFormValues)[]
+      ).filter((field) => !Object.is(currentValues[field], sentValues[field]));
       form.reset(nextValues);
+      for (const field of editedDuringSave) {
+        form.setValue(field, currentValues[field], { shouldDirty: true });
+      }
       onSuccess?.(savedLocalization);
     } catch (error) {
       if (error instanceof ApiClientError) {
@@ -336,6 +348,7 @@ export function ContentLocalizationForm({
 
   return (
     <form
+      data-dirty={hasDirtyValues}
       className="grid gap-5"
       noValidate
       onSubmit={form.handleSubmit(handleSubmit)}

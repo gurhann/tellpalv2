@@ -48,6 +48,85 @@ beforeEach(() => {
 });
 
 describe("StoryPageLocalizationForm", () => {
+  it.each([false, true])(
+    "preserves dirty text and only requests binding preservation for an unchanged illustration (%s)",
+    async (dirtyImage) => {
+      const contentLocalization = storyContentViewModel.localizations[0]!;
+      const saved = {
+        contentId: 1,
+        pageNumber: 1,
+        languageCode: "en",
+        bodyText: "Unsaved page text",
+        audioMediaId: 81,
+        illustrationMediaId: dirtyImage ? 99 : 88,
+      };
+      const onSave = vi.fn().mockResolvedValue(saved);
+      vi.mocked(assetAdminApi.getAsset).mockImplementation(async (assetId) => ({
+        assetId,
+        provider: "LOCAL_STUB",
+        objectPath: `/content/assets/${assetId}`,
+        mediaType: assetId === 81 ? "AUDIO" : "IMAGE",
+        kind: assetId === 81 ? "ORIGINAL_AUDIO" : "ILLUSTRATION",
+        mimeType: assetId === 81 ? "audio/mpeg" : "image/jpeg",
+        byteSize: null,
+        checksumSha256: null,
+        cachedDownloadUrl: null,
+        downloadUrlCachedAt: null,
+        downloadUrlExpiresAt: null,
+        createdAt: "2026-03-31T12:00:00Z",
+        updatedAt: "2026-03-31T12:00:00Z",
+      }));
+      const { rerender } = render(
+        <StoryPageLocalizationForm
+          contentLocalization={contentLocalization}
+          storyPage={firstStoryPageViewModel}
+          onSave={onSave}
+        />,
+      );
+      fireEvent.change(screen.getByLabelText(/body text/i), {
+        target: { value: "Unsaved page text" },
+      });
+      fireEvent.click(screen.getAllByRole("button", { name: /advanced/i })[0]!);
+      if (dirtyImage)
+        fireEvent.change(screen.getByLabelText(/illustration asset id/i), {
+          target: { value: "99" },
+        });
+      rerender(
+        <StoryPageLocalizationForm
+          contentLocalization={contentLocalization}
+          storyPage={{
+            ...firstStoryPageViewModel,
+            localizations: firstStoryPageViewModel.localizations.map((entry) =>
+              entry.languageCode === "en"
+                  ? { ...entry, illustrationAssetId: 88 }
+                : entry,
+            ),
+          }}
+          onSave={onSave}
+        />,
+      );
+      await waitFor(() =>
+        expect(screen.getByLabelText(/illustration asset id/i)).toHaveValue(
+          dirtyImage ? 99 : 88,
+        ),
+      );
+      expect(screen.getByLabelText(/body text/i)).toHaveValue(
+        "Unsaved page text",
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: /save page localization/i }),
+      );
+      await waitFor(() =>
+        expect(onSave).toHaveBeenCalledWith({
+          languageCode: "en",
+          bodyText: "Unsaved page text",
+          audioMediaId: 81,
+          illustrationMediaId: dirtyImage ? 99 : 88,
+          preserveIllustrationBinding: !dirtyImage,
+        }),
+      );
+    },
+  );
   it("normalizes empty body text to null when saving a page locale", async () => {
     const onSave = vi.fn().mockResolvedValue({
       contentId: 1,
@@ -99,6 +178,7 @@ describe("StoryPageLocalizationForm", () => {
         bodyText: null,
         audioMediaId: null,
         illustrationMediaId: 41,
+        preserveIllustrationBinding: true,
       });
     });
   });
@@ -175,6 +255,7 @@ describe("StoryPageLocalizationForm", () => {
         bodyText: "Bahce kapisinin ustundeki aya bak.",
         audioMediaId: 3,
         illustrationMediaId: 4,
+        preserveIllustrationBinding: false,
       });
     });
   });

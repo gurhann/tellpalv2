@@ -1,0 +1,74 @@
+{
+  "reviewDate": "2026-10-23",
+  "baselineCommit": "094d57e2bc5ef85e1abf88281669f9e0ae4de53c",
+  "layers": [
+    "blind-hunter",
+    "edge-case-hunter",
+    "verification-gap"
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "category": "patch",
+      "status": "resolved",
+      "summary": "Hazırlık sırasında metin kaydı güncel kabul edilmiş kapak/sayfa bağını eski ham ID ile geri çevirmemeli.",
+      "verification": [
+        "textSavesFromStaleEditorsPreserveAdmittedBindingsAndPendingJobWhileNewSelectionsApply",
+        "focused-preserve-binding-review: no actionable findings"
+      ]
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "category": "patch",
+      "status": "resolved",
+      "summary": "Önizleme yeniden denemesi eski durum kimliğinde takılmadan güncel uygun LIVE durumunu yenilemeli.",
+      "verification": [
+        "refreshes exact-language status on retry and accepts the new eligible LIVE",
+        "keeps the parent preview dialog open when retry adopts a newer LIVE and closes it on language change"
+      ]
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "category": "patch",
+      "status": "resolved",
+      "summary": "Admin byte okuması sırasında uygunluğun kapanması veya LIVE değişmesi için I/O sonrası kontrol regresyon testi eklenmeli.",
+      "verification": [
+        "previewRejectsEligibilityLostDuringPinnedOutputRead (archive, deactivate)"
+      ]
+    },
+    {
+      "id": "R4",
+      "severity": "medium",
+      "category": "patch",
+      "status": "resolved",
+      "summary": "Önizleme indirme isteğinin tüm gerekli kimlik/seçim alanlarını taşıması normal CMS testinde korunmalı.",
+      "verification": [
+        "reading-preview-download.test.ts: real transport/query/bearer/AbortSignal"
+      ]
+    },
+    {
+      "id": "R5",
+      "severity": "medium",
+      "category": "patch",
+      "status": "resolved",
+      "summary": "Aynı dil/içerikte farklı revision, liveGeneration ve manifestDigest yanıtları ayrı ayrı reddedilmeli ve test edilmeli.",
+      "verification": [
+        "reading-publication-preview.test.ts: same-language revision/liveGeneration/manifestDigest mismatch"
+      ]
+    }
+  ],
+  "scope": "Yalnız onaylı yerel CMS yayın akışındaki kusurlar ve gerekli regresyon testleri. Canlı, orijinal dosyalar ve önceki 88 çalışma dosyası korunur.",
+  "verificationSummary": {
+    "fullBackendExecuted": 616,
+    "fullBackendOptInSkipped": 29,
+    "postPatchBackendExecuted": 93,
+    "postPatchBackendSkipped": 0,
+    "cmsTests": 400,
+    "realCmsBrowser": 1,
+    "visualTests": 8,
+    "productionChanged": false
+  }
+}

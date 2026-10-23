@@ -44,6 +44,18 @@ public class ReadingSourceAdmissionService implements ReadingSourceAdmissionApi 
     public Admission admit(long selectedAssetId, ReadingImagePreparationApi.TestProfile profile) {
         requireEnabled();
         ReadingPreparationCapacity.requireNoTransaction();
+        var admitted = store.find(selectedAssetId);
+        if (admitted.isPresent()) {
+            var row = store.require(selectedAssetId, false);
+            ReadingPreparationCapacity.requireParentMemory(profile);
+            if (((Number) row.get("byte_size")).longValue() > profile.maxSourceBytes()
+                    || Math.multiplyExact(((Number) row.get("width")).longValue(), ((Number) row.get("height")).longValue()) > profile.maxPixels())
+                throw new IllegalArgumentException("ADMITTED_SOURCE_RESOURCE_LIMIT");
+            if (com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation.enabled(profile)
+                    && !Set.of("image/jpeg", "image/png").contains(row.get("mime_type")))
+                throw new IllegalArgumentException("SOURCE_PNG_OR_JPEG_REQUIRED");
+            return new Admission((UUID) row.get("id"), selectedAssetId, ((Number) row.get("epoch")).longValue());
+        }
         try(var capacity = ReadingPreparationCapacity.acquire()) {
             ReadingPreparationCapacity.requireParentMemory(profile);
             var deadline = ReadingDeadline.start(profile.revisionMillis());
@@ -64,10 +76,29 @@ public class ReadingSourceAdmissionService implements ReadingSourceAdmissionApi 
             if (!ReadingIdentity.sha(persisted).equals(sha) || !verified.mime().equals(decoded.mime())) throw new IllegalStateException("ADMISSION_VERIFICATION_FAILED");
             if (com.tellpal.v2.asset.infrastructure.media.reading.ReadingPreservation.enabled(profile) && !java.util.Arrays.equals(bytes, persisted)) throw new IllegalStateException("ADMISSION_BYTE_MISMATCH");
             deadline.check();
-            return store.complete(id, asset.getProvider(), stored, sha, verified.image().getWidth(), verified.image().getHeight());
+            try {
+                return store.complete(id, asset.getProvider(), stored, sha, verified.image().getWidth(), verified.image().getHeight());
+            } finally {
+                decoded.image().flush();
+                verified.image().flush();
+            }
         } catch (java.io.IOException e) {
             throw new IllegalStateException("ADMISSION_VERIFICATION_FAILED", e);
         }
+    }
+
+    @Override
+    public boolean guard(List<Admission> admissions) {
+        requireEnabled();
+        if (!org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive())
+            throw new IllegalStateException("ADMISSION_GUARD_TRANSACTION_REQUIRED");
+        for (var expected : admissions.stream().sorted(Comparator.comparingLong(Admission::assetId)).toList()) {
+            try {
+                var row = store.require(expected.assetId(), true);
+                if (!expected.id().equals(row.get("id")) || expected.epoch()!=((Number) row.get("epoch")).longValue()) return false;
+            } catch (com.tellpal.v2.asset.domain.reading.ReadingSourceNotAdmittedException withdrawn) { return false; }
+        }
+        return true;
     }
 
     @Override

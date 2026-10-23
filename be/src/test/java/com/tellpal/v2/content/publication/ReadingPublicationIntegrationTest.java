@@ -33,8 +33,10 @@ import com.tellpal.v2.content.infrastructure.persistence.publication.*;
 import com.tellpal.v2.shared.domain.LanguageCode;
 import com.tellpal.v2.support.PostgresIntegrationTestBase;
 
+@org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc(addFilters=false)
 @SpringBootTest(properties={"tellpal.content.reading-publication.poll-delay=3600000"})
 class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
+    @Autowired org.springframework.test.web.servlet.MockMvc mockMvc;
     @Autowired JdbcTemplate jdbc;
     @Autowired PlatformTransactionManager manager;
     @Autowired ReadingJobStore jobs;
@@ -73,7 +75,7 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
         preparation=new ReadingImagePreparationService(assets,disk.storage(),jobs,env,props,true, admissions);
         ready=new ReadingPublicationReadyService(preparation,admissions,jobs,jdbc,manager,disk.storage());
         config.setEnabled(true);config.setProfiles(ReadingFixtures.profiles());
-        publication=new ReadingPublicationService(config,guard,contents,store,assembler,ready,manager);
+        publication=new ReadingPublicationService(config,guard,contents,store,assembler,ready,admissions,manager);
         publishing=new ContentPublicationService(contents,mock(AssetProcessingApi.class),publication,guard);
         worker=new ReadingImageWorker(preparation,jobs,disk.storage(),Clock.systemUTC());
         legacy=original("cover",80);cover=admissions.admit(legacy,ReadingFixtures.profile()).assetId();
@@ -122,9 +124,11 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
         for(var output:manifest.outputs()) assertThat(javax.imageio.ImageIO.read(disk.file(output.stored().path()).toFile()).getWidth()).isEqualTo(output.width());
         assertThat(jdbc.queryForObject("select count(*) from reading_image_manifests",Integer.class)).isEqualTo(1);
     }
-    @Test void failedLegacyReplacementRetainsLiveAndExplicitRetryDoesNotSpin() {
-        publish();complete();String revision=live();long liveGeneration=publication.status(id,"tr").liveGeneration();edit(legacy,"Replacement");publication.reconcile(id,"tr");
-        var failed=publication.status(id,"tr");assertThat(failed.state()).isEqualTo("FAILED");assertThat(failed.diagnostic()).isEqualTo("SOURCE_NOT_ADMITTED");assertThat(failed.generation()).isGreaterThan(liveGeneration);assertThat(failed.liveGeneration()).isEqualTo(liveGeneration);assertThat(failed.liveManifestDigest()).matches("[0-9a-f]{64}");assertThat(live()).isEqualTo(revision);
+    @Test void failedUnsupportedReplacementRetainsLiveAndExplicitRetryDoesNotSpin() throws Exception {
+        publish();complete();String revision=live();long liveGeneration=publication.status(id,"tr").liveGeneration();
+        Files.write(disk.file(assets.findById(legacy).orElseThrow().getObjectPath()),new byte[]{1,2,3});
+        edit(legacy,"Replacement");publication.reconcile(id,"tr");
+        var failed=publication.status(id,"tr");assertThat(failed.state()).isEqualTo("FAILED");assertThat(failed.diagnostic()).isEqualTo("READING_PREPARATION_FAILED");assertThat(failed.generation()).isGreaterThan(liveGeneration);assertThat(failed.liveGeneration()).isEqualTo(liveGeneration);assertThat(failed.liveManifestDigest()).matches("[0-9a-f]{64}");assertThat(live()).isEqualTo(revision);
         publication.retry(id,"tr");assertThat(publication.status(id,"tr").state()).isEqualTo("PENDING");publication.reconcile(id,"tr");
         assertThat(publication.status(id,"tr").state()).isEqualTo("FAILED");assertThat(store.pending(config.profiles(), ready.effectiveProfileIdentity(config.profiles()))).isEmpty();
     }
@@ -157,7 +161,7 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
     }
     @Test void restartAfterSchedulingAndReadyRecoversAndConcurrentAdoptersCommitOneLive() throws Exception {
         publish();publication.reconcile(id,"tr");UUID scheduled=job();worker.run(scheduled);
-        var restarted=new ReadingPublicationService(config,guard,contents,store,assembler,ready,manager);
+        var restarted=new ReadingPublicationService(config,guard,contents,store,assembler,ready,admissions,manager);
         try(var executor=Executors.newFixedThreadPool(2)) {
             var gate=new CyclicBarrier(2);Callable<Void> task=()->{gate.await();restarted.reconcile(id,"tr");return null;};
             var a=executor.submit(task);var b=executor.submit(task);a.get();b.get();
@@ -300,7 +304,7 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
         publish();publication.reconcile(id,"tr");UUID prepared=job();worker.run(prepared);
         var paused=mock(ReadingPublicationReadyApi.class,org.mockito.AdditionalAnswers.delegatesTo(ready));
         doAnswer(invocation->{var proof=ready.verify(prepared,config.profiles());config.setEnabled(false);return proof;}).when(paused).verify(eq(prepared),anyMap());
-        new ReadingPublicationService(config,guard,contents,store,assembler,paused,manager).reconcile(id,"tr");
+        new ReadingPublicationService(config,guard,contents,store,assembler,paused,admissions,manager).reconcile(id,"tr");
         assertThat(publication.status(id,"tr").state()).isEqualTo("DISABLED");
         assertThat(jdbc.queryForObject("select live_proof_json from reading_publications where content_id=?",String.class,id)).isNull();
         config.setEnabled(true);jdbc.update("update reading_publications set lease_expires_at=now()-interval '1 second' where content_id=?",id);
@@ -362,12 +366,108 @@ class ReadingPublicationIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(store.pending(config.profiles(),ready.effectiveProfileIdentity(config.profiles()))).hasSize(1);
         var delayed=mock(ReadingPublicationReadyApi.class,org.mockito.AdditionalAnswers.delegatesTo(ready));
         doAnswer(invocation->{var prepared=ready.prepareAdmitted(work.snapshot(),config.profiles());return new Preparation(prepared.jobId(),prepared.revision(),State.PENDING,null,null,null);}).when(delayed).prepareAdmitted(any(),anyMap());
-        new ReadingPublicationService(config,guard,contents,store,assembler,delayed,manager).reconcile(id,"tr");
+        new ReadingPublicationService(config,guard,contents,store,assembler,delayed,admissions,manager).reconcile(id,"tr");
         var pending=publication.status(id,"tr");assertThat(pending.generation()).isGreaterThan(oldGeneration);
         assertThat(pending.liveGeneration()).isEqualTo(oldGeneration);assertThat(live()).isEqualTo(oldRevision);assertThat(job()).isNotEqualTo(obsolete);
         jdbc.update("update reading_publications set state='FAILED',job_id=? where content_id=?",obsolete,id);
         publication.retry(id,"tr");assertThat(job()).isNull();publication.reconcile(id,"tr");
         assertThat(job()).isEqualTo(current);assertThat(publication.status(id,"tr").state()).isEqualTo("LIVE");assertThat(live()).isEqualTo(work.revision());
     }
+    @Test void rawSourcesAreAdmittedOnceAndRestartReusesAcceptedBindingsWithoutStorageIO() throws Exception {
+        edit(legacy,"Raw upload");publish();
+        long before=jdbc.queryForObject("select count(*) from reading_source_admissions",Long.class);
+        publication.reconcile(id,"tr");long admitted=assemblerSnapshot().bindings().getFirst().assetId();
+        assertThat(admitted).isNotEqualTo(legacy);assertThat(assemblerSnapshot().bindings().get(1).assetId()).isEqualTo(admitted);
+        assertThat(jdbc.queryForObject("select count(*) from reading_source_admissions",Long.class)).isEqualTo(before+1);
+        var record=admissionStore.require(admitted,false);
+        var noIO=new ReadingObjectStorage(new AssetStorageClientRegistry(List.of(disk))) {
+            @Override public byte[] read(StorageProvider provider,VersionedStorageObject object,long limit,long millis) {throw new AssertionError("Admitted reuse must be DB-only");}
+        };
+        var env=new MockEnvironment();env.setActiveProfiles("test");
+        var restartedAdmission=new ReadingSourceAdmissionService(assets,noIO,admissionStore,new AssetStorageFirebaseProperties(true,"synthetic","synthetic","unused","test",null,null,null),env,true);
+        assertThat(restartedAdmission.admit(admitted,ReadingFixtures.profile()).id()).isEqualTo(record.get("id"));
+        worker.run(job());publication.reconcile(id,"tr");UUID prepared=job();
+        edit(admitted,"Only text changed");publication.reconcile(id,"tr");assertThat(job()).isEqualTo(prepared);
+        assertThat(jdbc.queryForObject("select count(*) from reading_source_admissions",Long.class)).isEqualTo(before+1);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings={"edit","archive","deactivate","profile"})
+    void admissionCannotOverwriteConcurrentSelectionOrEligibility(String change) throws Exception {
+        edit(legacy,"Raw selected");publish();long generation=publication.status(id,"tr").generation();
+        var raced=mock(ReadingSourceAdmissionApi.class,org.mockito.AdditionalAnswers.delegatesTo(admissions));
+        var once=new java.util.concurrent.atomic.AtomicBoolean();
+        doAnswer(call->{
+            var admitted=admissions.admit(call.getArgument(0),call.getArgument(1));
+            if(once.compareAndSet(false,true)) {
+                if(change.equals("edit"))edit(page,"Concurrent edit");
+                if(change.equals("archive"))tx.executeWithoutResult(t->publishing.archiveLocalization(new ArchiveContentLocalizationCommand(id,TR)));
+                if(change.equals("deactivate"))management.deleteContent(new DeleteContentCommand(id));
+                if(change.equals("profile")) {var p=ReadingFixtures.profile();var smaller=new TestProfile(20,15,p.maxSourceBytes(),p.maxOutputBytes(),p.maxPixels(),p.parentMemoryBytes(),p.heapMiB(),p.directMiB(),p.processMiB(),p.diskBytes(),p.sourceMillis(),p.revisionMillis(),1,1,true,p.growthEvidence());config.setProfiles(Map.of(Role.READING_COVER,smaller,Role.READING_DETAIL,smaller,Role.READING_PAGE,smaller));}
+            }
+            return admitted;
+        }).when(raced).admit(anyLong(),any());
+        new ReadingPublicationService(config,guard,contents,store,assembler,ready,raced,manager).reconcile(id,"tr");
+        assertThat(assemblerSnapshot().bindings().getFirst().assetId()).isEqualTo(change.equals("edit")?page:legacy);
+        assertThat(live()).isNull();assertThat(job()).isNull();
+        assertThat(jdbc.queryForObject("select count(*) from reading_source_admissions where selected_asset_id=?",Long.class,legacy)).isGreaterThanOrEqualTo(2);
+        if(!change.equals("profile"))assertThat(publication.status(id,"tr").generation()).isGreaterThan(generation);
+    }
+
+    @Test void eachRoleChecksAdmissionLimitsEvenWhenTheSameSourceIsShared() {
+        edit(legacy,"Raw shared");
+        long audio=tx.execute(t->assets.save(MediaAsset.register(StorageProvider.LOCAL_STUB,"/fixture/audio-"+UUID.randomUUID(),MediaKind.ORIGINAL_AUDIO)).getId());
+        pages.upsertStoryPageLocalization(new UpsertStoryPageLocalizationCommand(id,1,TR,"Page",audio,legacy));publish();
+        var p=ReadingFixtures.profile();var narrow=new TestProfile(20,15,p.maxSourceBytes(),p.maxOutputBytes(),100,p.parentMemoryBytes(),p.heapMiB(),p.directMiB(),p.processMiB(),p.diskBytes(),p.sourceMillis(),p.revisionMillis(),1,1,true,p.growthEvidence());
+        config.setProfiles(Map.of(Role.READING_COVER,p,Role.READING_DETAIL,narrow,Role.READING_PAGE,p));
+        publication.reconcile(id,"tr");assertThat(publication.status(id,"tr").state()).isEqualTo("FAILED");
+        assertThat(assemblerSnapshot().bindings()).allMatch(binding->binding.assetId()==legacy);assertThat(live()).isNull();
+    }
+
+    @Test void textSavesFromStaleEditorsPreserveAdmittedBindingsAndPendingJobWhileNewSelectionsApply() throws Exception {
+        long rawPage=original("raw-page",83);
+        long audio=tx.execute(t->assets.save(MediaAsset.register(StorageProvider.LOCAL_STUB,"/fixture/audio-"+UUID.randomUUID(),MediaKind.ORIGINAL_AUDIO)).getId());
+        jdbc.update("update content_localizations set cover_media_id=? where content_id=?",legacy,id);
+        jdbc.update("update story_page_localizations set illustration_media_id=?,audio_media_id=? where story_page_id in(select id from story_pages where content_id=?)",rawPage,audio,id);
+        publish();publication.reconcile(id,"tr");UUID pending=job();
+        long admittedCover=assemblerSnapshot().bindings().getFirst().assetId(),admittedPage=assemblerSnapshot().bindings().get(2).assetId();
+        assertThat(admittedCover).isNotEqualTo(legacy);assertThat(admittedPage).isNotEqualTo(rawPage);
+        assertThat(publication.status(id,"tr").state()).isEqualTo("PREPARING");
+        assertThat(jobs.find(pending).state()).isEqualTo(State.PENDING);
+        long admissionsBefore=jdbc.queryForObject("select count(*) from reading_source_admissions",Long.class);
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/admin/contents/"+id+"/localizations/tr")
+                .contentType("application/json").content("""
+                    {"title":"Changed while preparing","description":"Editorial description","coverMediaId":%d,
+                     "durationMinutes":5,"status":"PUBLISHED","processingStatus":"COMPLETED","publishedAt":"%s","preserveCoverBinding":true}
+                    """.formatted(legacy,Instant.now())))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.coverMediaId").value(admittedCover));
+        assertThat(job()).isEqualTo(pending);
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/admin/contents/"+id+"/story-pages/1/localizations/tr")
+                .contentType("application/json").content("""
+                    {"bodyText":"Changed page while preparing","audioMediaId":%d,"illustrationMediaId":%d,"preserveIllustrationBinding":true}
+                    """.formatted(audio,rawPage)))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.illustrationMediaId").value(admittedPage));
+        assertThat(job()).isEqualTo(pending);publication.reconcile(id,"tr");assertThat(job()).isEqualTo(pending);
+        assertThat(jdbc.queryForObject("select count(*) from reading_source_admissions",Long.class)).isEqualTo(admissionsBefore);
+        worker.run(pending);publication.reconcile(id,"tr");assertThat(live()).isNotNull();
+        long selected=original("explicit-selection",84);
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/admin/contents/"+id+"/localizations/tr")
+                .contentType("application/json").content("""
+                    {"title":"Selected new cover","description":"Editorial description","coverMediaId":%d,
+                     "durationMinutes":5,"status":"PUBLISHED","processingStatus":"COMPLETED","publishedAt":"%s"}
+                    """.formatted(selected,Instant.now())))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.coverMediaId").value(selected));
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/admin/contents/"+id+"/story-pages/1/localizations/tr")
+                .contentType("application/json").content("""
+                    {"bodyText":"Selected new page","audioMediaId":%d,"illustrationMediaId":%d,"preserveIllustrationBinding":false}
+                    """.formatted(audio,selected)))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.illustrationMediaId").value(selected));
+        assertThat(job()).isNull();
+    }
+
     Snapshot assemblerSnapshot() { return tx.execute(s->assembler.assemble(contents.findById(id).orElseThrow(),"tr")); }
 }

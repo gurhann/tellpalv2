@@ -77,7 +77,7 @@ class P4LocalComparisonFixtureIT extends PostgresIntegrationTestBase {
             var admissions=new ReadingSourceAdmissionService(assets,storage,admissionStore,properties,env,true);
             var preparation=new ReadingImagePreparationService(assets,storage,jobs,env,properties,true,admissions);
             var ready=new ReadingPublicationReadyService(preparation,admissions,jobs,jdbc,manager,storage);
-            var publication=new ReadingPublicationService(config,guard,contents,publications,assembler,ready,manager);
+            var publication=new ReadingPublicationService(config,guard,contents,publications,assembler,ready,admissions,manager);
             var fixture=P4LocalComparisonFixture.seed(context,ledger);
             P4LocalComparisonSetup.isolation(context,fixture.id);
             assertThat(jdbc.queryForObject("select count(*) from contents",Integer.class)).isEqualTo(2);

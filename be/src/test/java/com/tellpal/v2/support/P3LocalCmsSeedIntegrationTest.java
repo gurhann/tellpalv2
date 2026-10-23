@@ -87,7 +87,7 @@ class P3LocalCmsSeedIntegrationTest extends PostgresIntegrationTestBase {
             assertThat(media.findById(originalId)).isPresent();
             assertThat(java.nio.file.Files.readAllBytes(disk.file(path))).isEqualTo(originalBytes);
 
-            var publication = new ReadingPublicationService(config, guard, contentRepository, publicationsStore, assembler, ready, manager);
+            var publication = new ReadingPublicationService(config, guard, contentRepository, publicationsStore, assembler, ready, admissions, manager);
             var publishing = new ContentPublicationService(contentRepository, mock(AssetProcessingApi.class), publication, guard);
             var tx = new TransactionTemplate(manager);
             tx.executeWithoutResult(status -> publishing.publishLocalization(new PublishContentLocalizationCommand(contentId, LanguageCode.from("tr"), Instant.now())));

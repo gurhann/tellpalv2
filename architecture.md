@@ -597,20 +597,31 @@ writers lock the content aggregate before publication scope rows. Pure assembly 
 ordered snapshot inside that lock. Desired generation, dispatch lease and complete effective runtime/encoder identity of current explicit profiles
 fence automatic adoption; retained LIVE stores its own generation, revision and manifest proof.
 
-`asset::api` exposes explicit immutable source admission and a fresh outside-transaction verification
-operation followed by a DB-only proof guard. Admission conditionally copies pinned verified bytes to
-new backend-owned original IDs and preserves old originals; explicit content/page rebinding is required.
-Signed writes, upload tokens, registry registration and unconditional upload paths cannot target the
-reserved namespace. Source eligibility/availability epochs fence stale verification and adoption;
-immutable manifests and orphan evidence remain retained. Consistent lock order is content, scope,
-source admissions in asset-ID order, then availability. No asset-to-content dependency is introduced.
+`asset::api`, kaynak kabulünü, transaction dışında taze pinned doğrulamayı ve yalnız DB kullanan kanıt
+guard'ını sunar. Normal yerel/test CMS upload/save/Yayınla akışı kaynak kabulünü otomatik çağırır.
+Kabul, pinned doğrulanmış byte'ı yeni backend-owned orijinal ID'ye kopyalar; eski dosya korunur.
+Kabul edilmiş ID DB kanıtıyla ve tüm rol sınırlarıyla yeniden kullanılır. Content/scope/admission kilitleri
+altında aynı nesil/lease/dil/profil/kaynak snapshot'ı eşleşirse kapak/sayfa bağları ve claim snapshot'ı
+birlikte yenilenir. Dış değişiklik stale işi engeller; iç bağlama kendi lease'ini bozmaz. İmzalı yazı,
+upload token, registry ve koşulsuz upload yolları ayrılmış namespace'e yazamaz. Kaynak uygunluğu ve
+availability epoch'ları eski doğrulamayı engeller. Manifest ve orphan kanıtı korunur. Kilit sırası content,
+scope, asset-ID sıralı kaynak kabul kayıtları, ardından availability'dir. Yeni asset → content bağımlılığı yoktur.
 
-A failed candidate preserves the previous eligible LIVE independently of the newest page set. Archive
-and deactivation close eligibility, and a subsequent Publish needs a fresh adoption before opening the
-new intent. Manual editorial/processing flags cannot certify LIVE. The admin status/retry API and CMS
-feedback identify this local/test contract and preserve unsaved input/language. Existing ordinary,
-listing and tester delivery, protected access, sessions, cache/retention and P4 consumer migration remain
-unchanged. Production activation and cloud execution need separate authorization and qualification.
+CMS metin kaydında değiştirilmemiş görsel için açık `preserveCoverBinding` veya
+`preserveIllustrationBinding` gönderir. Sunucu content kilidi altında mevcut bağı korur; eski formdaki
+ham ID'yi geri yazmaz. İşaretin yokluğu/false eski seçme davranışını korur. Aynı görsel snapshot'ı ve
+profiller aynı işi yeniden kullanır; metin değişimi nesli yenileyerek eski claim'i engeller.
+
+Başarısız aday, önceki uygun LIVE'ı yeni sayfa kümesinden bağımsız korur. Arşiv/deaktivasyon uygunluğu
+kapatır; sonraki Yayınla taze benimseme gerektirir. Manuel editoryal/işleme bayrakları LIVE oluşturmaz.
+Admin önizlemesi yalnız aynı uygun retained LIVE'ın doğrulanmış rendition'larını açar. Manifest kaynak/çıktı
+MIME, byte ve pixel ölçülerini içerir; storage yolu, nesne generation bilgisi veya URL taşımaz.
+Byte/pixel/bellek/süre ve kalıcı toplam bütçeler açıkça ayarlanır. I/O öncesi/sonrası LIVE kimliği
+karşılaştırılır; `private,no-store`, rendition-only ve admin bearer sınırları korunur. CMS mevcut yayın
+kartı/dialog içinde durumu ve önceki görselleri gösterir. Blob istekleri iptal edilir, object URL bırakılır;
+LIVE yenilemesi dirty formu ve dil seçimini korur. Açık önizleme retry'ı aynı dil durumunu da yeniler;
+yeni uygun LIVE'a geçerken eski byte ve istek temizlenir. Mevcut normal tüketicinin ayrı ADR-0024 sınırları
+korunur. Production etkinleştirme ve bulut yürütmesi ayrı onay ve yeterlilik gerektirir.
 
 ### Kontrollü QA görsel karşılaştırması (ADR-0024)
 
