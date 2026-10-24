@@ -134,14 +134,18 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(home.read(id,"en").displayOrder()).isNull();
     }
     @Test void realBytePreparationAndLateCallbacksPreserveTheReplacementAndReadyManifest() throws Exception {
+        Instant startedAt = Instant.parse("2026-10-06T08:00:00.123456789Z");
+        org.mockito.Mockito.doReturn(startedAt).when(clock).instant();
         long id=story("covered","tr",true);long source=image("first",80,100);
         jdbc.update("update content_localizations set cover_media_id=? where content_id=?",source,id);
         var target=AssetProcessingTarget.localization(id,LanguageCode.TR);
         var scheduled=preparation.prepare(target,"covered",source);assertThat(scheduled.ready()).isFalse();
         var a=jobs.start(new StartAssetProcessingCommand(target,AssetProcessingKind.LISTING_COVER));
-        jdbc.update("update asset_processing set lease_expires_at=? where id=?",java.sql.Timestamp.from(Instant.now().minusSeconds(1)),a.processingId());
+        assertPersistedLease(a);
+        jdbc.update("update asset_processing set lease_expires_at=? where id=?",java.sql.Timestamp.from(startedAt.minusSeconds(1)),a.processingId());
         jobs.recoverExpiredLease(new RecoverExpiredAssetProcessingCommand(target,AssetProcessingKind.LISTING_COVER));
         var b=jobs.start(new StartAssetProcessingCommand(target,AssetProcessingKind.LISTING_COVER));
+        assertPersistedLease(b);
         assertThatThrownBy(()->jobs.complete(new CompleteAssetProcessingCommand(target,a.kind(),ListingCoverAttempt.captured(a)))).isInstanceOf(StaleListingCoverAttemptException.class);
         assertThatThrownBy(()->jobs.fail(new FailAssetProcessingCommand(target,a.kind(),"FAILED","Stale failure",ListingCoverAttempt.captured(a)))).isInstanceOf(StaleListingCoverAttemptException.class);
         executor.process(a); // Rejected publication returns without a catch failing B.
@@ -157,7 +161,10 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         executor.process(a);assertThat(covers.find(id,"tr",source).phone().assetId()).isEqualTo(ready.phone().assetId());
         long replacement=image("second",1000,1500);jdbc.update("update content_localizations set cover_media_id=? where content_id=?",replacement,id);
         assertThat(covers.find(id,"tr",replacement).phone()).isNull();
-        preparation.prepare(target,"covered",replacement);executor.process(jobs.start(new StartAssetProcessingCommand(target,a.kind())));
+        preparation.prepare(target,"covered",replacement);
+        var replacementWorker=jobs.start(new StartAssetProcessingCommand(target,a.kind()));
+        assertPersistedLease(replacementWorker);
+        executor.process(replacementWorker);
         var next=covers.find(id,"tr",replacement);assertThat(next.phone().assetId()).isNotEqualTo(ready.phone().assetId());
         assertThat(jdbc.queryForObject("select count(*) from listing_cover_revisions",Integer.class)).isEqualTo(2);
     }
@@ -294,6 +301,7 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(covers.find(id, "tr", originalSource).tablet().assetId()).isEqualTo(ready.tablet().assetId());
     }
     @Test void theSameSourceRequiresSeparateProfilePreparationAndPublishesOnlyTheCurrentProfile() throws Exception {
+        org.mockito.Mockito.doReturn(Instant.parse("2026-10-06T08:00:00.999999999Z")).when(clock).instant();
         long row = category("profiles", "Profile revisions");
         long id = story("same-source-profiles", "tr", true);
         long source = image("same-source-profiles", 1000, 1500);
@@ -303,7 +311,9 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         var target = AssetProcessingTarget.localization(id, LanguageCode.TR);
         String firstProfile = profile.version();
         preparation.prepare(target, "same-source-profiles", source);
-        executor.process(jobs.start(new StartAssetProcessingCommand(target, AssetProcessingKind.LISTING_COVER)));
+        var firstJob = jobs.start(new StartAssetProcessingCommand(target, AssetProcessingKind.LISTING_COVER));
+        assertPersistedLease(firstJob);
+        executor.process(firstJob);
         var first = covers.find(id, "tr", source);
         assertThat(first.phone()).isNotNull();
         assertThat(first.tablet()).isNotNull();
@@ -318,6 +328,7 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(scheduled.ready()).isFalse();
         assertThat(scheduled.operationId()).isNotNull();
         var secondJob = jobs.start(new StartAssetProcessingCommand(target, AssetProcessingKind.LISTING_COVER));
+        assertPersistedLease(secondJob);
         assertThat(secondJob.coverSourceAssetId()).isEqualTo(source);
         assertThat(secondJob.listingProfileVersion()).isEqualTo(secondProfile.version());
         executor.process(secondJob);
@@ -368,6 +379,9 @@ class LibraryHomeIntegrationTest extends PostgresIntegrationTestBase {
         assertThat(ready.tablet()).isNotNull();
         assertThat(jdbc.queryForObject("select source_asset_id from listing_cover_revisions", Long.class)).isEqualTo(source);
         assertThat(jdbc.queryForObject("select profile_version from listing_cover_revisions", String.class)).isEqualTo(originalProfile);
+    }
+    private void assertPersistedLease(AssetProcessingRecord worker) {
+        assertThat(worker.leaseExpiresAt()).isEqualTo(jobs.findByTarget(worker.target(), worker.kind()).orElseThrow().leaseExpiresAt());
     }
     private CategoryHomeConfigurationService.Configuration config(long id,Integer order,String audience,String language) {return new CategoryHomeConfigurationService.Configuration(id,order,audience,language);}
     private long category(String slug,String name) {

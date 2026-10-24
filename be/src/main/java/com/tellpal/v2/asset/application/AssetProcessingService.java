@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +102,8 @@ public class AssetProcessingService implements AssetProcessingApi {
     public AssetProcessingRecord start(StartAssetProcessingCommand command) {
         AssetProcessing assetProcessing = loadProcessing(command.target(), command.kind());
         ensureStartable(assetProcessing);
-        assetProcessing.start(Instant.now(clock), DEFAULT_LEASE_DURATION);
+        // PostgreSQL hassasiyetiyle aynı başlangıç, worker ve DB lease kimliğini eşit tutar.
+        assetProcessing.start(Instant.now(clock).truncatedTo(ChronoUnit.MICROS), DEFAULT_LEASE_DURATION);
         AssetProcessing saved = assetProcessingRepository.save(assetProcessing);
         publishStatusChanged(saved);
         return AssetProcessingMapper.toRecord(saved);

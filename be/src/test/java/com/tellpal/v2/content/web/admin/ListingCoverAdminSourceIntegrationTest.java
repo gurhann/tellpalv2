@@ -7,11 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.time.Clock;
+import java.time.Instant;
 import javax.imageio.ImageIO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import com.tellpal.v2.support.AdminApiIntegrationTestSupport;
 import com.tellpal.v2.asset.api.*;
 import com.tellpal.v2.asset.api.AssetProcessingCommands.*;
@@ -31,6 +34,7 @@ class ListingCoverAdminSourceIntegrationTest extends AdminApiIntegrationTestSupp
     @Autowired AssetProcessingJobExecutor executor;
     @Autowired LibraryHomeQueryApi library;
     @Autowired CategoryHomeConfigurationService home;
+    @MockitoSpyBean Clock clock;
 
     @BeforeEach void reset() {
         jdbcTemplate.execute("truncate admin_refresh_tokens,admin_user_roles,admin_users,categories,contents,media_assets restart identity cascade");
@@ -38,6 +42,7 @@ class ListingCoverAdminSourceIntegrationTest extends AdminApiIntegrationTestSupp
 
     @Test void authenticatedEnglishPreparationUsesItsCurrentLocalizedSourceAndPublishesEnglishCatalogCovers() throws Exception {
         String token = authenticateAdmin();
+        org.mockito.Mockito.doReturn(Instant.parse("2026-10-06T08:00:00.123456789Z")).when(clock).instant();
         long content = jdbcTemplate.queryForObject("insert into contents(type,external_key,is_active,age_range,page_count) values('STORY','localized-admin-cover',true,5,0) returning id", Long.class);
         long turkish = image("admin-tr", 80, 100);
         long oldEnglish = image("admin-en-old", 60, 90);
@@ -61,7 +66,9 @@ class ListingCoverAdminSourceIntegrationTest extends AdminApiIntegrationTestSupp
         assertThat(persisted.get("content_id")).isEqualTo(content);
         assertThat(persisted.get("language_code")).isEqualTo("en");
         assertThat(jobs.findByTarget(AssetProcessingTarget.localization(content,LanguageCode.TR),AssetProcessingKind.LISTING_COVER)).isEmpty();
-        executor.process(jobs.start(new StartAssetProcessingCommand(target, AssetProcessingKind.LISTING_COVER)));
+        var worker = jobs.start(new StartAssetProcessingCommand(target, AssetProcessingKind.LISTING_COVER));
+        assertThat(worker.leaseExpiresAt()).isEqualTo(jobs.findByTarget(target, worker.kind()).orElseThrow().leaseExpiresAt());
+        executor.process(worker);
         var item = library.query("en",LibraryHomeQueryApi.Audience.NON_SUBSCRIBER).rows().getFirst().items().getFirst();
         assertThat(item.contentId()).isEqualTo(content);
         assertThat(item.contentLanguage()).isEqualTo("en");
