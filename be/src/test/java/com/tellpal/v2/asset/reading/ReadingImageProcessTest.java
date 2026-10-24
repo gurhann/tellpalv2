@@ -161,16 +161,21 @@ class ReadingImageProcessTest {
                 }
             };
             if(normalExit) assertThat(process.convert(ReadingFixtures.image(80,60),ReadingFixtures.profile())).isNotEmpty();
-            else assertThatThrownBy(() -> process.convert(ReadingFixtures.image(80,60),ReadingFixtures.profile())).hasMessageContaining("RSS_PROBE_UNAVAILABLE");
+            else assertThatThrownBy(() -> process.convert(ReadingFixtures.image(80,60),ReadingFixtures.profile()))
+                    .hasMessageContaining("RSS_PROBE_UNAVAILABLE:ROOT_PROCESS:","simulated-/proc/")
+                    .hasCauseInstanceOf(NoSuchFileException.class);
             assertThat(childRef.get().isAlive()).isFalse();
         }
     }
     @Test void missingRssWithTransientAliveStateRequiresBoundedConfirmedExit() throws Exception {
+        for(boolean boundedConfirmation:List.of(true,false)) assertTransientRssExit(boundedConfirmation);
+    }
+    private void assertTransientRssExit(boolean boundedConfirmation) throws Exception {
         var reference=new java.util.concurrent.atomic.AtomicReference<ExitTransitionProcess>();
         var process=new ReadingImageProcess() {
             @Override protected Process start(Path input,Path output,Path settings,Path log,TestProfile profile) throws IOException {
                 Files.write(output,ReadingFixtures.image(40,30));
-                var child=new ExitTransitionProcess(new ProcessBuilder("/bin/sleep","0.15").redirectOutput(log.toFile()).start());
+                var child=new ExitTransitionProcess(new ProcessBuilder("/bin/sleep","0.15").redirectOutput(log.toFile()).start(),boundedConfirmation);
                 reference.set(child);return child;
             }
             @Override protected long probeRssKiB(long pid) throws IOException,InterruptedException {
@@ -188,9 +193,10 @@ class ReadingImageProcessTest {
     }
     private static final class ExitTransitionProcess extends Process {
         final Process delegate;
+        final boolean boundedConfirmation;
         boolean staleAlive,transientAliveObserved;
         int boundedExitConfirmations;
-        ExitTransitionProcess(Process delegate) { this.delegate=delegate; }
+        ExitTransitionProcess(Process delegate,boolean boundedConfirmation) { this.delegate=delegate;this.boundedConfirmation=boundedConfirmation; }
         @Override public OutputStream getOutputStream() { return delegate.getOutputStream(); }
         @Override public InputStream getInputStream() { return delegate.getInputStream(); }
         @Override public InputStream getErrorStream() { return delegate.getErrorStream(); }
@@ -200,6 +206,7 @@ class ReadingImageProcessTest {
             if(staleAlive) {
                 assertThat(unit.toMillis(timeout)).isEqualTo(ReadingImageProcess.RSS_EXIT_CONFIRMATION_MILLIS);
                 assertThat(exited).isTrue();boundedExitConfirmations++;staleAlive=false;
+                return boundedConfirmation;
             }
             return exited;
         }
@@ -212,6 +219,33 @@ class ReadingImageProcessTest {
             return delegate.isAlive();
         }
     }
+    @Test void interruptionRetainsCapacityUntilActualExitAndRestoresTheNextOperation() throws Exception {
+        var started=new CountDownLatch(1);
+        var workerThread=new java.util.concurrent.atomic.AtomicReference<Thread>();
+        var operationDirectory=new java.util.concurrent.atomic.AtomicReference<Path>();
+        var interrupted=new java.util.concurrent.atomic.AtomicBoolean();
+        var process=new ReadingImageProcess() {
+            @Override protected Process start(Path input,Path output,Path settings,Path log,TestProfile profile) throws IOException {
+                operationDirectory.set(input.getParent());
+                Process child=new ProcessBuilder("/bin/sleep","10").redirectOutput(log.toFile()).start();
+                started.countDown();return child;
+            }
+        };
+        try(var executor=Executors.newSingleThreadExecutor()) {
+            var result=executor.submit(()-> {
+                workerThread.set(Thread.currentThread());
+                try { process.convert(ReadingFixtures.image(80,60),ReadingFixtures.profile());return null; }
+                catch(IOException failure) { interrupted.set(Thread.currentThread().isInterrupted());return failure; }
+            });
+            assertThat(started.await(3,TimeUnit.SECONDS)).isTrue();
+            workerThread.get().interrupt();
+            assertThat(result.get(3,TimeUnit.SECONDS)).hasMessageContaining("CHILD_INTERRUPTED").hasCauseInstanceOf(InterruptedException.class);
+        }
+        assertThat(interrupted).isTrue();
+        assertThat(ProcessHandle.of(process.lastPid()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+        assertThat(operationDirectory.get()).doesNotExist();
+        assertThat(new ReadingImageProcess().convert(ReadingFixtures.image(80,60),ReadingFixtures.profile())).isNotEmpty();
+    }
     @Test void parentHeapAdmissionRejectsUnboundedReservationBeforeChildLaunch() throws Exception {
         var p=ReadingFixtures.profile();
         var excessive=new TestProfile(p.width(),p.height(),p.maxSourceBytes(),p.maxOutputBytes(),p.maxPixels(),Runtime.getRuntime().maxMemory(),
@@ -221,12 +255,16 @@ class ReadingImageProcessTest {
         assertThat(process.lastPid()).isZero();
         assertThat(ReadingProfiles.capture(Role.READING_PAGE,p).descriptor()).contains("parentAdmission","maxHeapDivisor","availableHeapDivisor","PARENT_ONLY");
     }
-    @Test void canonicalFramingAndRoleSpecificProfileIdentity() {
+    @Test void canonicalFramingAndRoleSpecificProfileIdentity() throws Exception {
         assertThat(ReadingIdentity.hash("tellpal.profile.fixture.v1",Map.of("schema",1,"fixtureSetting","A"))).isEqualTo("109be3ad7fffcd6e1a5aadd356ff20ee43fb10451b8cc72b5afe891e513bc6b1");
         assertThat(ReadingIdentity.canonical(Map.of("text","A/\"\\\b\f\n\r\t\0\u001f\u007f"))).isEqualTo("{\"text\":\"A/\\\"\\\\\\b\\f\\n\\r\\t\\u0000\\u001f\\u007f\"}");
         assertThatThrownBy(() -> ReadingIdentity.canonical("ö")).hasMessageContaining("Non-ASCII");
         var profile=ReadingProfiles.capture(Role.READING_COVER,ReadingFixtures.profile());
         assertThat(ReadingProfiles.capture(Role.READING_DETAIL,ReadingFixtures.profile()).fingerprint()).isNotEqualTo(profile.fingerprint());
+        try(var processClass=ReadingImageProcess.class.getResourceAsStream("/"+ReadingImageProcess.class.getName().replace('.','/')+".class")) {
+            assertThat(processClass).isNotNull();
+            assertThat(profile.descriptor()).contains("\""+ReadingImageProcess.class.getName()+"\":\""+ReadingIdentity.sha(processClass.readAllBytes())+"\"");
+        }
         assertThat(profile.descriptor()).contains("MaxDirect".replace("MaxDirect","directMiB"),"rssProbe","compressionQuality","LOCAL_TEST_ONLY",
                 "SDK_DEFAULT_NONIDEMPOTENT_HANDLER_FOR_BOTH_CLASSIFICATIONS", "SOCKET_INACTIVITY_WITH_BETWEEN_CALL_MONOTONIC_CHECKS",
                 "DEFERRED_UNQUALIFIED_SLOW_TRICKLE", "FirebaseStorageAssetClient$1", "DefaultStorageRetryStrategy$InterceptorImpl");

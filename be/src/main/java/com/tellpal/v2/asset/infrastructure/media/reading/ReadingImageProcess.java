@@ -105,21 +105,30 @@ public class ReadingImageProcess {
     private long treeResidentMemoryKiB(Process child) throws IOException, InterruptedException {
         long total = residentMemoryKiB(child);
         if (child instanceof ReadingProcessSupervisor.OwnedProcess owned) {
-            for (long pid : owned.members()) {
-                try { total = Math.addExact(total, probeRssKiB(pid)); }
-                catch (IOException failure) {
-                    // Guardian yalnız çalışabilir grup üyelerini yayımlar; exit yarışı RSS üretmez.
-                    if (owned.isAlive() && owned.members().contains(pid) && ProcessHandle.of(pid).map(ProcessHandle::isAlive).orElse(false)) {
-                        if (System.getProperty("os.name").equals("Linux") && Files.exists(Path.of("/proc", Long.toString(pid), "stat"))) {
-                            String stat = Files.readString(Path.of("/proc", Long.toString(pid), "stat"));
-                            if (stat.substring(stat.lastIndexOf(')') + 2).startsWith("Z")) continue;
-                        }
-                        throw failure;
-                    }
-                }
-            }
+            for (long pid : owned.members()) total = Math.addExact(total, descendantResidentMemoryKiB(pid));
         }
         return total;
+    }
+    private long descendantResidentMemoryKiB(long pid) throws IOException,InterruptedException {
+        try { return probeRssKiB(pid); }
+        catch(IOException | NumberFormatException failure) {
+            long deadline=System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(RSS_EXIT_CONFIRMATION_MILLIS);
+            var member=ProcessHandle.of(pid);
+            boolean linux=System.getProperty("os.name").equals("Linux");
+            for(;;) {
+                if(member.isEmpty() || !member.get().isAlive()) return 0;
+                if(System.nanoTime()>=deadline) break;
+                if(linux) {
+                    try { return probeRssKiB(pid); }
+                    catch(IOException | NumberFormatException pendingExit) { /* Sonraki gözlem terminal/exit kanıtı arar. */ }
+                }
+                long remaining=deadline-System.nanoTime();
+                if(remaining<=0) break;
+                TimeUnit.NANOSECONDS.sleep(Math.min(remaining,TimeUnit.MILLISECONDS.toNanos(1)));
+            }
+            if(member.isEmpty() || !member.get().isAlive()) return 0;
+            throw new IOException("RSS_PROBE_UNAVAILABLE:DESCENDANT:pid="+pid+":"+failure.getMessage(),failure);
+        }
     }
     private static String boundedLog(Path log) throws IOException {
         try(var stream=Files.newInputStream(log)) { return new String(stream.readNBytes(2048),java.nio.charset.StandardCharsets.UTF_8); }
@@ -127,17 +136,15 @@ public class ReadingImageProcess {
     private long residentMemoryKiB(Process child) throws IOException,InterruptedException {
         try { return probeRssKiB(child.pid()); }
         catch(IOException | NumberFormatException failure) {
-            // Process completion notification may trail the disappearing OS RSS entry.
-            if(!child.isAlive() || child.waitFor(RSS_EXIT_CONFIRMATION_MILLIS,TimeUnit.MILLISECONDS)) return 0;
-            throw new IOException("RSS_PROBE_UNAVAILABLE",failure);
+            // OS çıkışı, bounded wait sonucundan sonra Java bildiriminin önüne geçebilir.
+            if(!child.isAlive() || child.waitFor(RSS_EXIT_CONFIRMATION_MILLIS,TimeUnit.MILLISECONDS) || !child.isAlive()) return 0;
+            throw new IOException("RSS_PROBE_UNAVAILABLE:ROOT_PROCESS:pid="+child.pid()+":"+failure.getMessage(),failure);
         }
     }
     protected long probeRssKiB(long pid) throws IOException, InterruptedException {
         Path status=Path.of("/proc",Long.toString(pid),"status");
         if(System.getProperty("os.name").equals("Linux")) {
-            if(!Files.exists(status)) throw new IOException("RSS_PROBE_UNAVAILABLE");
-            for(String line:Files.readAllLines(status)) if(line.startsWith("VmRSS:")) return Long.parseLong(line.substring(6).trim().split("\\s+")[0]);
-            throw new IOException("RSS_PROBE_UNAVAILABLE");
+            return readLinuxRssKiB(pid,status);
         }
         Process probe=new ProcessBuilder("ps","-o","rss=","-p",Long.toString(pid)).start();
         try {
@@ -147,6 +154,33 @@ public class ReadingImageProcess {
             return Long.parseLong(value);
         } catch(NumberFormatException e) { throw new IOException("RSS_PROBE_UNAVAILABLE",e); }
         finally { terminateAndAwait(probe); }
+    }
+    protected static long readLinuxRssKiB(long pid,Path status) throws IOException {
+        List<String> lines;
+        try { lines=Files.readAllLines(status); }
+        catch(NoSuchFileException failure) { throw new IOException("RSS_PROBE_UNAVAILABLE:LINUX_STATUS_MISSING:pid="+pid+":path="+status,failure); }
+        catch(IOException failure) { throw new IOException("RSS_PROBE_UNAVAILABLE:LINUX_STATUS_READ_FAILED:pid="+pid+":path="+status,failure); }
+        return parseLinuxRssKiB(pid,lines);
+    }
+    /** Terminal kanıtı RSS'yi sıfırlar; gerçek wait ve kaynak bırakma dış döngünün sorumluluğundadır. */
+    protected static long parseLinuxRssKiB(long pid,List<String> lines) throws IOException {
+        String state="UNKNOWN",rss=null;
+        for(String line:lines) {
+            if(line.startsWith("State:")) {
+                String value=line.substring(6).trim().split("\\s+",2)[0];
+                if(value.length()==1) state=value;
+            }
+            if(line.startsWith("VmRSS:")) rss=line.substring(6).trim();
+        }
+        if(state.equals("Z") || state.equals("X")) return 0;
+        if(rss==null) throw new IOException("RSS_PROBE_UNAVAILABLE:LINUX_STATUS_MISSING_RSS:pid="+pid+":state="+state);
+        try {
+            String[] fields=rss.split("\\s+");
+            if(fields.length!=2 || !fields[1].equals("kB") || !fields[0].matches("[0-9]+")) throw new NumberFormatException("VmRSS kB biçiminde değil");
+            return Long.parseLong(fields[0]);
+        } catch(NumberFormatException failure) {
+            throw new IOException("RSS_PROBE_UNAVAILABLE:LINUX_STATUS_RSS_PARSE_FAILED:pid="+pid+":state="+state+":value="+rss,failure);
+        }
     }
     private static void terminateAndAwait(Process process) {
         boolean interrupted=Thread.interrupted();
