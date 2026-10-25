@@ -40,15 +40,20 @@ jobs:
                   raise SystemExit("Yalnız salt okunur sorgulara izin verilir")
               candidates = [auth] if auth else ["Project-Access-Token", "Authorization"]
               for header in candidates:
-                  headers = {"Content-Type": "application/json", header: token if header != "Authorization" else "Bearer " + token}
+                  headers = {"Content-Type": "application/json", "User-Agent": "tellpal-production-audit/1.0",
+                      header: token if header != "Authorization" else "Bearer " + token}
                   request = urllib.request.Request(endpoint, headers=headers, method="POST",
                       data=json.dumps({"query": document, "variables": variables}).encode())
                   try:
                       with urllib.request.urlopen(request, timeout=30) as response:
                           payload = json.load(response)
-                  except urllib.error.HTTPError:
+                  except urllib.error.HTTPError as failure:
+                      print("Railway HTTP:", failure.code, "auth:", header)
                       continue
                   if payload.get("errors"):
+                      errors = [str(error.get("message", "GraphQL hatası")).replace(token, "[REDACTED]")[:300]
+                          for error in payload["errors"]]
+                      print("Railway sorgu hatası:", json.dumps(errors, ensure_ascii=False))
                       if auth:
                           raise SystemExit("Railway salt okunur sorgusu başarısız; gizli yanıt yazdırılmadı")
                       continue
